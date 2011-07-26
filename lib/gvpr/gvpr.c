@@ -821,7 +821,7 @@ addOutputGraph (Gpr_t* state, gvpropts* uopts)
     Agraph_t* g = state->outgraph;
 
     if ((agroot(g) == state->curgraph) && !uopts->ingraphs)
-	g = (Agraph_t*)clone (0, (Agobj_t *)g);
+	g = (Agraph_t*)cloneO (0, (Agobj_t *)g);
 
     uopts->n_outgraphs++;
     uopts->outgraphs = oldof(uopts->outgraphs,Agraph_t*,uopts->n_outgraphs,0);
@@ -1017,7 +1017,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 
 		/* begin graph */
 		if (incoreGraphs && (opts.compflags & CLONE))
-		    state->curgraph = (Agraph_t*)clone (0, (Agobj_t*)(state->curgraph));
+		    state->curgraph = (Agraph_t*)cloneO (0, (Agobj_t*)(state->curgraph));
 		state->curobj = (Agobj_t *) state->curgraph;
 		state->tvroot = 0;
 		if (bp->begg_stmt)
