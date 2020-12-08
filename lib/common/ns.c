@@ -857,10 +857,6 @@ int rank2(graph_t * g, int balance, int maxiter, int search_size)
     feasible = init_graph(g);
     if (!feasible)
 	init_rank();
-    if (maxiter <= 0) {
-	freeTreeList (g);
-	return 0;
-    }
 
     if (search_size >= 0)
 	Search_size = search_size;
@@ -874,6 +870,11 @@ int rank2(graph_t * g, int balance, int maxiter, int search_size)
 	    return err;
 	}
     }
+    if (maxiter <= 0) {
+	freeTreeList (g);
+	return 0;
+    }
+
     while ((e = leave_edge())) {
 	int err;
 	f = enter_edge(e);

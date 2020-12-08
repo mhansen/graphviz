@@ -791,7 +791,6 @@ def test_1898():
   # has been reintroduced
   dot("svg", input)
 
-@pytest.mark.xfail(strict=not is_ndebug_defined()) # FIXME
 def test_1902():
   """
   test a segfault from https://gitlab.com/graphviz/graphviz/-/issues/1902 has
