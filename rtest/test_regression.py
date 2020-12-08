@@ -791,6 +791,21 @@ def test_1898():
   # has been reintroduced
   dot("svg", input)
 
+@pytest.mark.xfail(strict=not is_ndebug_defined()) # FIXME
+def test_1902():
+  '''
+  test a segfault from https://gitlab.com/graphviz/graphviz/-/issues/1902 has
+  not reappeared
+  '''
+
+  # locate our associated test case in this directory
+  input = os.path.join(os.path.dirname(__file__), '1902.dot')
+  assert os.path.exists(input), 'unexpectedly missing test case'
+
+  # ask Graphviz to process it, which should generate a segfault if this bug
+  # has been reintroduced
+  subprocess.check_call(['dot', '-Tsvg', '-o', os.devnull, input])
+
 # root directory of this checkout
 ROOT = Path(__file__).parent.parent.resolve()
 
