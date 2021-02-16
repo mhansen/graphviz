@@ -105,4 +105,15 @@ target_link_libraries(neatogen PRIVATE
   gvc
   pathplan
   sparse
+  rbtree
 )
+
+if(GTS_FOUND)
+  target_include_directories(neatogen PRIVATE
+    ${GTS_INCLUDE_DIRS}
+  )
+
+  target_link_libraries(neatogen PRIVATE
+    ${GTS_LINK_LIBRARIES}
+  )
+endif()

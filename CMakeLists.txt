@@ -113,6 +113,7 @@ if(with_expat)
 endif()
 
 find_package(GD)
+find_package(GTS)
 
 if(enable_ltdl)
   find_package(LTDL)
