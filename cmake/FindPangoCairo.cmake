@@ -4,11 +4,13 @@ if(WIN32)
     find_path(PangoCairo_INCLUDE_DIR pango/pangocairo.h PATH_SUFFIXES pango-1.0)
     find_path(GLIB_INCLUDE_DIR glib.h PATH_SUFFIXES glib-2.0)
     find_path(GLIBCONFIG_INCLUDE_DIR glibconfig.h PATH_SUFFIXES glib-2.0/include)
+    find_path(HARFBUZZ_INCLUDE_DIR hb.h PATH_SUFFIXES harfbuzz)
 
     find_library(GLIB_LIBRARY NAMES glib-2.0)
     find_library(GOBJECT_LIBRARY NAMES gobject-2.0)
     find_library(PANGO_LIBRARY NAMES pango-1.0)
     find_library(PangoCairo_LIBRARY NAMES pangocairo-1.0)
+    find_library(HARFBUZZ_LIBRARY NAMES harfbuzz)
 
     find_program(GLIB_RUNTIME_LIBRARY NAMES glib-2.dll)
     find_program(GOBJECT_RUNTIME_LIBRARY NAMES gobject-2.dll)
@@ -22,11 +24,13 @@ if(WIN32)
         GLIB_INCLUDE_DIR
         GLIBCONFIG_INCLUDE_DIR
         PangoCairo_INCLUDE_DIR
+        HARFBUZZ_INCLUDE_DIR
 
         GLIB_LIBRARY
         GOBJECT_LIBRARY
         PANGO_LIBRARY
         PangoCairo_LIBRARY
+        HARFBUZZ_LIBRARY
 
         GLIB_RUNTIME_LIBRARY
         GOBJECT_RUNTIME_LIBRARY
@@ -41,6 +45,7 @@ if(WIN32)
         ${GLIB_INCLUDE_DIR}
         ${GLIBCONFIG_INCLUDE_DIR}
         ${PangoCairo_INCLUDE_DIR}
+        ${HARFBUZZ_INCLUDE_DIR}
     )
 
     set(PangoCairo_LIBRARIES
@@ -55,6 +60,7 @@ if(WIN32)
         ${GOBJECT_LIBRARY}
         ${PANGO_LIBRARY}
         ${PangoCairo_LIBRARY}
+        ${HARFBUZZ_LIBRARY}
     )
 
     set(PangoCairo_RUNTIME_LIBRARIES
