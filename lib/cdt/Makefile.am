@@ -8,6 +8,10 @@ pkgconfigdir = $(libdir)/pkgconfig
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 
+if WITH_WIN32
+AM_CFLAGS = -DEXPORT_CDT=1
+endif
+
 pkginclude_HEADERS = cdt.h
 noinst_HEADERS = dthdr.h
 noinst_LTLIBRARIES = libcdt_C.la
