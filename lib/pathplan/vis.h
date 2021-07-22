@@ -38,8 +38,10 @@ extern "C" {
 	/* this is computed from the above */
 	array2 vis;
     };
-#ifdef _WIN32
-#ifndef PATHPLAN_EXPORTS
+#ifdef GVDLL
+#ifdef PATHPLAN_EXPORTS
+#define VIS_API __declspec(dllexport)
+#else
 #define VIS_API __declspec(dllimport)
 #endif
 #endif
