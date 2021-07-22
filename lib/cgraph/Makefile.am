@@ -7,6 +7,10 @@ pkgconfigdir = $(libdir)/pkgconfig
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib -I$(top_srcdir)/lib/cdt
 
+if WITH_WIN32
+AM_CFLAGS = -DEXPORT_CGRAPH -DEXPORT_AGXBUF -DEXPORT_CGHDR
+endif
+
 pkginclude_HEADERS = cgraph.h
 noinst_HEADERS = agxbuf.h cghdr.h itos.h likely.h prisize_t.h sprint.h \
   strcasecmp.h unreachable.h
