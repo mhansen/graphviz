@@ -14,7 +14,7 @@ AM_CPPFLAGS = \
 	$(INCLTDL) -DGVLIBDIR=\"$(pkglibdir)\"
 
 if WITH_WIN32
-AM_CFLAGS = -D_BLD_gvc=1
+AM_CFLAGS = -D_BLD_gvc=1 -DGVC_EXPORTS=1
 AM_CPPFLAGS += -O0
 endif
 
