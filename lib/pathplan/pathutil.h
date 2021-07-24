@@ -41,7 +41,7 @@ extern "C" {
     PATHUTIL_API int wind(Ppoint_t a, Ppoint_t b, Ppoint_t c);
     PATHUTIL_API COORD dist2(Ppoint_t, Ppoint_t);
 
-    int in_poly(Ppoly_t argpoly, Ppoint_t q);
+    PATHUTIL_API int in_poly(Ppoly_t argpoly, Ppoint_t q);
 
 #undef PATHUTIL_API
 #ifdef __cplusplus
