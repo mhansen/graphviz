@@ -17,13 +17,25 @@ extern "C" {
 #endif
 
 
+#ifdef GVDLL
+#ifdef PATHPLAN_EXPORTS
+#define VISPATH_API __declspec(dllexport)
+#else
+#define VISPATH_API __declspec(dllimport)
+#endif
+#endif
+
+#ifndef VISPATH_API
+#define VISPATH_API /* nothing */
+#endif
+
 /* open a visibility graph 
  * Points in polygonal obstacles must be in clockwise order.
  */
-    extern vconfig_t *Pobsopen(Ppoly_t ** obstacles, int n_obstacles);
+    VISPATH_API vconfig_t *Pobsopen(Ppoly_t ** obstacles, int n_obstacles);
 
 /* close a visibility graph, freeing its storage */
-    extern void Pobsclose(vconfig_t * config);
+    VISPATH_API void Pobsclose(vconfig_t * config);
 
 /* route a polyline from p0 to p1, avoiding obstacles.
  * if an endpoint is inside an obstacle, pass the polygon's index >=0
@@ -31,14 +43,14 @@ extern "C" {
  * if the endpoint location is not known, pass POLYID_UNKNOWN
  */
 
-    extern int Pobspath(vconfig_t * config, Ppoint_t p0, int poly0,
+    VISPATH_API int Pobspath(vconfig_t * config, Ppoint_t p0, int poly0,
 			Ppoint_t p1, int poly1,
 			Ppolyline_t * output_route);
 
 #define POLYID_NONE		-1111
 #define POLYID_UNKNOWN	-2222
 
-#undef extern
+#undef VISPATH_API
 
 #ifdef __cplusplus
 }
