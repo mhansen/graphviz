@@ -31,9 +31,6 @@ add_library(gvc SHARED
     gvtextlayout.c
     gvtool_tred.c
     gvusershape.c
-
-    # Link definition file for Windows
-    gvc.def
 )
 
 target_include_directories(gvc
