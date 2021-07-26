@@ -20,19 +20,13 @@ extern "C" {
 #endif
 
 #ifdef GVDLL
+#ifdef GVC_EXPORTS
 #define GVC_API __declspec(dllexport)
 #else
-#define GVC_API
-#endif
-
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#undef GVC_API
 #define GVC_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef GVC_API
 #define GVC_API extern
 #endif
