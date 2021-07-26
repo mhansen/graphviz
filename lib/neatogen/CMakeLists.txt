@@ -1,3 +1,5 @@
+add_definitions(-DNEATOGEN_EXPORTS)
+
 set(sources
     # Header files
     adjust.h
