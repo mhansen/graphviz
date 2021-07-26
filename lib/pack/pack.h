@@ -51,15 +51,16 @@ typedef unsigned int packval_t;
 	int flags;       
     } pack_info;
 
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
+#ifdef GVDLL
+#ifdef GVC_EXPORTS
+#define PACK_API __declspec(dllexport)
+#else
 #define PACK_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef PACK_API
-#define PACK_API extern
+#define PACK_API /* nothing */
 #endif
 
     PACK_API point *putRects(int ng, boxf* bbs, pack_info* pinfo);
