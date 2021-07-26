@@ -17,21 +17,15 @@ extern "C" {
 #endif
 
 #ifdef GVDLL
+#ifdef GVC_EXPORTS
 #define GVIO_API __declspec(dllexport)
 #else
-#define GVIO_API
-#endif
-
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#undef GVIO_API
 #define GVIO_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef GVIO_API
-#define GVIO_API extern
+#define GVIO_API /* nothing */
 #endif
 
     GVIO_API size_t gvwrite (GVJ_t * job, const char *s, size_t len);
