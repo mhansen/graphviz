@@ -22,6 +22,18 @@ extern "C" {
 #include "color.h"
 #include <stdbool.h>
 
+#ifdef GVDLL
+#ifdef GVC_EXPORTS
+#define GVCINT_API __declspec(dllexport)
+#else
+#define GVCINT_API __declspec(dllimport)
+#endif
+#endif
+
+#ifndef GVCINT_API
+#define GVCINT_API /* nothing */
+#endif
+
     /* active plugin headers */
     typedef struct gvplugin_active_layout_s {
         gvlayout_engine_t *engine;
@@ -141,14 +153,16 @@ extern "C" {
 	int fontrenaming;
     };
 
-extern GVC_t* gvCloneGVC (GVC_t *);
-extern void gvFreeCloneGVC (GVC_t *);
+GVCINT_API GVC_t* gvCloneGVC (GVC_t *);
+GVCINT_API void gvFreeCloneGVC (GVC_t *);
 
 #ifdef _WIN32
 #define DIRSEP "\\"
 #else
 #define DIRSEP "/"
 #endif
+
+#undef GVCINT_API
 
 #ifdef __cplusplus
 }
