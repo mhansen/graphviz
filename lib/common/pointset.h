@@ -19,22 +19,17 @@ extern "C" {
 
     typedef Dict_t PointSet;
     typedef Dict_t PointMap;
+
 #ifdef GVDLL
+#ifdef GVC_EXPORTS
 #define POINTSET_API __declspec(dllexport)
 #else
-#define POINTSET_API
-#endif
-
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#undef POINTSET_API
 #define POINTSET_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef POINTSET_API
-#define POINTSET_API extern
+#define POINTSET_API /* nothing */
 #endif
 
 	POINTSET_API PointSet *newPS(void);
