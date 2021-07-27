@@ -11,12 +11,11 @@
 #pragma once
 
 #include <color.h>
+#include <common/colorprocs.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-extern int colorxlate(char *str, gvcolor_t * color, color_type_t target_type);
 
 void rgb2hex(float r, float g, float b, char *cstring, const char* opacity);
   /* dimension of cstring must be >=7 */
