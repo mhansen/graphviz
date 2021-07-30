@@ -1,3 +1,5 @@
+add_definitions(-DNEATOGEN_EXPORTS)
+
 add_library(twopigen STATIC
     # Header files
     circle.h
