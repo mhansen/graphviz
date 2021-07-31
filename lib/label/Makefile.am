@@ -6,6 +6,10 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cgraph \
     -I$(top_srcdir)/lib/cdt
 
+if WITH_WIN32
+AM_CFLAGS = -DGVC_EXPORTS=1
+endif
+
 noinst_HEADERS = xlabels.h index.h node.h rectangle.h split.q.h
 noinst_LTLIBRARIES = liblabel_C.la
 
