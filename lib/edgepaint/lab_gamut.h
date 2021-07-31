@@ -14,8 +14,12 @@
 extern "C" {
 #endif
 
-#if defined(_WIN32) && !defined(LAB_GAMUT_EXPORTS)
+#ifdef GVDLL
+#ifdef LAB_GAMUT_EXPORTS
+#define EXTERN __declspec(dllexport)
+#else
 #define EXTERN __declspec(dllimport)
+#endif
 #else
 #define EXTERN /* nothing */
 #endif
