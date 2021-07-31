@@ -20,9 +20,6 @@ add_library(pathplan SHARED
     triang.c
     util.c
     visibility.c
-
-    # Link definition file for Windows
-    pathplan.def
 )
 
 target_include_directories(pathplan PRIVATE
