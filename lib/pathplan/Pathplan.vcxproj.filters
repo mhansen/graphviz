@@ -66,9 +66,4 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="pathplan.def">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
 </Project>
