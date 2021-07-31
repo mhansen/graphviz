@@ -48,6 +48,6 @@ pathplan.3.ps: $(srcdir)/pathplan.3
 endif
 endif
 
-EXTRA_DIST = $(man_MANS) $(pdf) path.lefty Pathplan.vcxproj* pathplan.def
+EXTRA_DIST = $(man_MANS) $(pdf) path.lefty Pathplan.vcxproj*
 
 DISTCLEANFILES = $(pdf) pathplan.3.ps
