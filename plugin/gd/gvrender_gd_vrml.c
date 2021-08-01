@@ -37,8 +37,6 @@
 /* for wind() */
 #include <pathplan/pathutil.h>
 
-extern pointf Bezier(pointf * V, int degree, double t, pointf * Left, pointf * Right);
-
 typedef enum { FORMAT_VRML, } format_type;
 
 #define BEZIERSUBDIVISION 10
