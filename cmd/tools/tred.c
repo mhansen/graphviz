@@ -21,7 +21,8 @@
 
 #include <cgraph/cgraph.h>
 #include <common/arith.h>
-#include <common/timing.h>
+#include <common/types.h>
+#include <common/utils.h>
 #include <stdlib.h>
 
 #define NEW(t)           malloc(sizeof(t))
