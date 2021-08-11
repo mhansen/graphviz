@@ -15,10 +15,24 @@ extern "C" {
 
 #include <pathgeom.h>
 
+#ifdef GVDLL
+#ifdef PATHPLAN_EXPORTS
+#define TRI_API __declspec(dllexport)
+#else
+#define TRI_API __declspec(dllimport)
+#endif
+#endif
+
+#ifndef TRI_API
+#define TRI_API /* nothing */
+#endif
+
 /* Points in polygon must be in CCW order */
-    int Ptriangulate(Ppoly_t * polygon,
+    TRI_API int Ptriangulate(Ppoly_t * polygon,
 		      void (*fn) (void *closure, Ppoint_t tri[]),
 		      void *vc);
+
+#undef TRI_API
 
 #ifdef __cplusplus
 }
