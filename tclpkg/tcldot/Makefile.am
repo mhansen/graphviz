@@ -87,7 +87,7 @@ libtcldot_builtin_la_SOURCES = \
 	tcldot-io.c \
 	tcldot_builtins.c $(GDTCLFT)
 libtcldot_builtin_la_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=1
-libtcldot_builtin_la_LDFLAGS =
+libtcldot_builtin_la_LDFLAGS = -no-undefined
 
 libtcldot_builtin_la_LIBADD = $(TCLHANDLE_LIBS) \
 	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout_C.la \
