@@ -22,7 +22,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt \
 	-I$(top_srcdir)/lib/pathplan $(TCLHANDLE_INCLUDES) $(GDLIB_CFLAGS) $(TCL_INCLUDES)
 
-LIBS = -lc
+LIBS = -lc @TCL_STUB_LIB_SPEC@
 
 AM_CFLAGS = $(TCL_CFLAGS)
 
