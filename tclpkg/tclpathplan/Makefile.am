@@ -11,6 +11,8 @@ AM_CPPFLAGS = \
 
 AM_CFLAGS = @TCL_CFLAGS@
 
+LIBS = -lc @TCL_STUB_LIB_SPEC@
+
 noinst_HEADERS = makecw.h simple.h
 if WITH_TCL
 pkgtcl_LTLIBRARIES = libtclplan.la
