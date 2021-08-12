@@ -68,7 +68,7 @@ GVC_API int gvLayout(GVC_t *gvc, graph_t *g, const char *engine);
 GVC_API int gvLayoutJobs(GVC_t *gvc, graph_t *g);
 
 /* Check if a layout has been done */
-extern bool gvLayoutDone(graph_t *g);
+GVC_API bool gvLayoutDone(graph_t *g);
 
 /* Render layout into string attributes of the graph */
 GVC_API void attach_attrs(graph_t *g);
