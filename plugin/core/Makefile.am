@@ -44,7 +44,7 @@ libgvplugin_core_la_LIBADD = $(top_builddir)/lib/gvc/libgvc.la \
 gvrender_core_ps.o gvrender_core_ps.lo: ps.h
 
 ps.h : $(srcdir)/ps.txt
-	$(AWK) -f $(top_srcdir)/awk/stringize.awk $(srcdir)/ps.txt > ps.h
+	$(AWK) -v RS="\r*\n" -f $(top_srcdir)/awk/stringize.awk $(srcdir)/ps.txt > ps.h
 
 if WITH_WIN32
 libgvplugin_core_la_LDFLAGS += -no-undefined
