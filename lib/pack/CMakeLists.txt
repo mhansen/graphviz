@@ -1,4 +1,4 @@
-add_definitions(-DGVC_EXPORTS)
+add_definitions(-D_BLD_gvc -DGVC_EXPORTS)
 
 add_library(pack_obj OBJECT
     # Header files
