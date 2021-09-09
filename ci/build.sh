@@ -84,14 +84,23 @@ else
         tar cfz graphviz-${GV_VERSION}-${ARCH}.tar.gz --options gzip:compression-level=9 build
         mv graphviz-${GV_VERSION}-${ARCH}.tar.gz ${DIR}/os/${ARCH}/
     elif [ "${OSTYPE}" = "cygwin" ]; then
-        tar xfz graphviz-${GV_VERSION}.tar.gz
-        pushd graphviz-${GV_VERSION}
-        ./configure --prefix=$( pwd )/build | tee >(../ci/extract-configure-log.sh >../${META_DATA_DIR}/configure.log)
-        make
-        make install
-        popd
-        tar cf - -C graphviz-${GV_VERSION}/build . | xz -9 -c - > graphviz-${GV_VERSION}-${ARCH}.tar.xz
-        mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/os/${ARCH}/
+        if [ "${use_autogen:-no}" = "yes" ]; then
+            ./autogen.sh
+            ./configure --prefix=$( pwd )/build | tee >(./ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
+            make
+            make install
+            tar cf - -C build . | xz -9 -c - > graphviz-${GV_VERSION}-${ARCH}.tar.xz
+            mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/os/${ARCH}/
+        else
+            tar xfz graphviz-${GV_VERSION}.tar.gz
+            pushd graphviz-${GV_VERSION}
+            ./configure --prefix=$( pwd )/build | tee >(../ci/extract-configure-log.sh >../${META_DATA_DIR}/configure.log)
+            make
+            make install
+            popd
+            tar cf - -C graphviz-${GV_VERSION}/build . | xz -9 -c - > graphviz-${GV_VERSION}-${ARCH}.tar.xz
+            mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/os/${ARCH}/
+        fi
     else
         echo "Error: OSTYPE=${OSTYPE} is unknown" >&2
         exit 1
