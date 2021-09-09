@@ -2,6 +2,8 @@
 
 set -eux
 
+/cygwinsetup.exe --quiet-mode --wait --packages autoconf2.5
+/cygwinsetup.exe --quiet-mode --wait --packages automake
 /cygwinsetup.exe --quiet-mode --wait --packages bison
 /cygwinsetup.exe --quiet-mode --wait --packages cmake
 /cygwinsetup.exe --quiet-mode --wait --packages flex
