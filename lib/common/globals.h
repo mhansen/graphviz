@@ -14,20 +14,13 @@
 extern "C" {
 #endif
 
-#ifndef __CYGWIN__
-#if defined(GVDLL)
-#if !defined(_BLD_gvc)
-#define DECLSPEC	__declspec(dllimport)
-#endif
-#endif
-#endif
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
+#if defined(GVDLL) || defined(WIN32_DLL)
+#if defined(GVC_EXPORTS) || defined(_BLD_gvc)
+#define DECLSPEC __declspec(dllexport)
+#else
 #define DECLSPEC __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
 
 #ifndef DECLSPEC
 #define DECLSPEC /* nothing */
