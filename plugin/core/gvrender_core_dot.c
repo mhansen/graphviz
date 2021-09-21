@@ -27,6 +27,7 @@
 #include <gvc/gvplugin_device.h>
 #include <cgraph/agxbuf.h>
 #include <common/utils.h>
+#include <gvc/gvc.h>
 #include <gvc/gvio.h>
 
 #define GNEW(t)          malloc(sizeof(t))
