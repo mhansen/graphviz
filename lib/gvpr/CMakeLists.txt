@@ -1,3 +1,5 @@
+add_definitions(-DEXPORT_GVPR)
+
 add_library(gvpr STATIC
     # Header files
     actions.h
