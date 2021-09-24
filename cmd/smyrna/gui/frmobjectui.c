@@ -24,7 +24,6 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/strcasecmp.h>
 
-static attr_t *binarySearch(attr_list * l, char *searchKey);
 static int sel_node;
 static int sel_edge;
 static int sel_graph;
