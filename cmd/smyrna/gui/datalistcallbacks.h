@@ -31,8 +31,6 @@ extern "C" {
     _BB void btnTVOK_clicked_cb(GtkWidget * widget, gpointer user_data);
     _BB void cgbTVSelect_toggled_cb(GtkWidget * widget,
 				    gpointer user_data);
-    _BB void btnTVFilterApply_clicked_cb(GtkWidget * widget,
-					 gpointer user_data);
     _BB void btnTVFilterClear_clicked_cb(GtkWidget * widget,
 					 gpointer user_data);
     _BB void btnTVSelectAll_clicked_cb(GtkWidget * widget,
