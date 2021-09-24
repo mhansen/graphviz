@@ -27,10 +27,6 @@ GtkWidget *statusbar1;
 GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;
 
-//1 subgraph 2 node 3 edge
-Agraph_t *frmObjectg;
-
-
 GtkComboBox *cbSelectGraph;	//combo at top left
 
 GtkWidget *AttrWidgets[MAXIMUM_WIDGET_COUNT];
