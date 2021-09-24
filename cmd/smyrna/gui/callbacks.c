@@ -18,15 +18,6 @@
 
 //Menu Items 
 
-void save_graph_clicked(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-
-    if (view->activeGraph > -1)
-	save_graph_with_file_name(view->g[view->activeGraph], NULL);
-}
-
 void save_as_graph_clicked(GtkWidget * widget, gpointer user_data)
 {
     (void)widget;
