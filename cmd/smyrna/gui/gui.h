@@ -32,8 +32,6 @@ extern "C" {
     extern GladeXML *xml;	//global libglade vars
     extern GtkWidget *gladewidget;
 
-    extern GtkComboBox *cbSelectGraph;	//combo at top left
-
     extern GtkWidget *AttrWidgets[MAXIMUM_WIDGET_COUNT];
     extern GtkWidget *AttrLabels[MAXIMUM_WIDGET_COUNT];
     extern int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];

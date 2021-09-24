@@ -27,8 +27,6 @@ GtkWidget *statusbar1;
 GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;
 
-GtkComboBox *cbSelectGraph;	//combo at top left
-
 GtkWidget *AttrWidgets[MAXIMUM_WIDGET_COUNT];
 GtkWidget *AttrLabels[MAXIMUM_WIDGET_COUNT];
 int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];
