@@ -10,10 +10,6 @@
 
 #include "datalistcallbacks.h"
 #include "tvnodes.h"
-void btnTVEdit_clicked_cb(GtkWidget * widget, gpointer user_data)
-{
-}
-
 
 void btnTVCancel_clicked_cb(GtkWidget * widget, gpointer user_data)
 {

@@ -17,7 +17,6 @@
 extern "C" {
 #endif
 
-    _BB void btnTVEdit_clicked_cb(GtkWidget * widget, gpointer user_data);
     _BB void btnTVDelete_clicked_cb(GtkWidget * widget,
 				    gpointer user_data);
     _BB void btnTVFilter_clicked_cb(GtkWidget * widget,
