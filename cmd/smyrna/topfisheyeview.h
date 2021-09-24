@@ -17,22 +17,9 @@
 extern "C" {
 #endif
 
-#if 0
-    void fisheye_polar(double x_focus, double y_focus, topview * t);
-    void fisheye_spherical(double x_focus, double y_focus, double z_focus,
-			   topview * t);
-#endif
     void drawtopologicalfisheye(topview * t);
     void changetopfishfocus(topview * t, float *x, float *y,
 			    float *z, int num_foci);
-#if 0
-    void drawtopologicalfisheye2(topview * t);
-    int get_active_frame(topview * t);
-    void get_interpolated_coords(double x0, double y0, double x1,
-				 double y1, int fr, int total_fr,
-				 double *x, double *y);
-    void refresh_old_values(topview * t);
-#endif
     void prepare_topological_fisheye(Agraph_t* g,topview * t);
 
 #ifdef __cplusplus
