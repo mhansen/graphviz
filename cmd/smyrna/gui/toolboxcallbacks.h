@@ -60,8 +60,6 @@ extern "C" {
     _BB void on_btnActivateGraph_clicked(GtkWidget * widget,
 					 gpointer user_data);
 
-    void write_to_console(char *text);
-
 #ifdef __cplusplus
 }				/* end extern "C" */
 #endif
