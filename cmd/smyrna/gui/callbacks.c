@@ -18,14 +18,6 @@
 
 //Menu Items 
 
-void new_graph_clicked(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-
-    g_print("new graph button fired\n");
-}
-
 void open_graph_clicked(GtkWidget * widget, gpointer user_data)
 {
     (void)widget;
