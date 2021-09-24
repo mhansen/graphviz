@@ -18,12 +18,6 @@
 
 //Menu Items 
 
-void open_graph_clicked(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-}
-
 void save_graph_clicked(GtkWidget * widget, gpointer user_data)
 {
     (void)widget;
