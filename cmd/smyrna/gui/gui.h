@@ -32,7 +32,6 @@ extern "C" {
     extern GladeXML *xml;	//global libglade vars
     extern GtkWidget *gladewidget;
 
-    extern gve_element frmObjectTypeIndex;
     extern Agraph_t *frmObjectg;
 
     extern GtkComboBox *cbSelectGraph;	//combo at top left

@@ -28,7 +28,6 @@ GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;
 
 //1 subgraph 2 node 3 edge
-int frmObjectTypeIndex;
 Agraph_t *frmObjectg;
 
 
