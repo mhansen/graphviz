@@ -348,7 +348,7 @@ static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
 	    attr_list_add(tl, new_attr_ref(at));
     }
 }
-void filter_attributes(char *prefix, topview * t)
+static void filter_attributes(char *prefix, topview * t)
 {
 
     int ind;
