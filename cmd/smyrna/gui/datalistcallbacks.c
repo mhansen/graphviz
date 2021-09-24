@@ -21,9 +21,6 @@ void on_TVNodes_close (GtkWidget * widget, gpointer user_data)
     gtk_widget_hide(glade_xml_get_widget(xml, "frmTVNodes"));
 }
 
-void btnTVReverse_clicked_cb(GtkWidget * widget, gpointer user_data)
-{
-}
 void cgbTVSelect_toggled_cb(GtkWidget * widget, gpointer user_data)
 {
 }
