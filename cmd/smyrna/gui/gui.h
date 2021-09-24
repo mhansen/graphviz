@@ -47,7 +47,6 @@ extern "C" {
     void object_properties_cluster_init(void);	//customize window for Cluster
     void object_properties_graph_init(void);	//customize window for Graph , this shows the graph default values
     void graph_properties_init(int newgraph);	//initialize little open graph dialog
-    GtkComboBox *get_SelectGraph(void);	//freaking GLADE!!!!!
     int update_graph_properties(Agraph_t * graph);	//updates graph from gui
     void load_graph_properties(Agraph_t * graph);	//load from graph to gui
 

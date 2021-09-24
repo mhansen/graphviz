@@ -75,29 +75,6 @@ void object_properties_graph_init(void)	//customize window for Graph , this show
 
 }
 
-
-
-GtkComboBox *get_SelectGraph(void)
-{
-    GtkComboBox *cb;
-    if (!cbSelectGraph) {
-
-	cb = (GtkComboBox *) gtk_combo_box_new_text();
-	gtk_widget_show((GtkWidget *) cb);
-	gtk_box_pack_start(GTK_BOX(gladewidget), (GtkWidget *) cb, FALSE,
-			   FALSE, 0);
-
-
-	gtk_layout_put((GtkLayout *) gladewidget, (GtkWidget *) cb, 780,
-		       3);
-	//signal
-
-
-	return cb;
-    } else
-	return cbSelectGraph;
-}
-
 void Color_Widget(char *colorstring, GtkWidget * widget)
 {
   GtkRcStyle *rc_style;
