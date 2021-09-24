@@ -11,9 +11,6 @@
 #include "datalistcallbacks.h"
 #include "tvnodes.h"
 
-void btnTVCancel_clicked_cb(GtkWidget * widget, gpointer user_data)
-{
-}
 void btnTVOK_clicked_cb(GtkWidget * widget, gpointer user_data)
 {
     gtk_widget_hide(glade_xml_get_widget(xml, "frmTVNodes"));
