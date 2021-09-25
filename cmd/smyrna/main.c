@@ -44,8 +44,6 @@ gchar *package_data_dir;
 gchar *package_locale_dir;
 static char *smyrnaDir;		/* path to directory containin smyrna data files */
 char *smyrnaGlade;
-int width,height;/*glut window size*/
-
 
 /* smyrnaPath:
  * Construct pathname for smyrna data file.
