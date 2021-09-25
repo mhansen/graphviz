@@ -439,7 +439,7 @@ void GFXredraw (void) {
     }
 }
 
-void GFXtextcb (int wi, char *s) {
+static void GFXtextcb (int wi, char *s) {
     Tobj wo, fo, co, to;
     long fm;
 
