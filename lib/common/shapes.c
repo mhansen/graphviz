@@ -173,7 +173,7 @@ static polygon_t p_signature = {
 static polygon_t p_rpromoter = {
     .peripheries = 1, .sides = 4, .option = RPROMOTER};
 static polygon_t p_rarrow = {.peripheries = 1, .sides = 4, .option = RARROW};
-static polygon_t p_larrow = { FALSE, 1, 4, 0., 0., 0., LARROW};
+static polygon_t p_larrow = {.peripheries = 1, .sides = 4, .option = LARROW};
 static polygon_t p_lpromoter = { FALSE, 1, 4, 0., 0., 0., LPROMOTER};
 
 #define IS_BOX(n) (ND_shape(n)->polygon == &p_box)
