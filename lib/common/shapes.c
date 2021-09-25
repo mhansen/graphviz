@@ -148,17 +148,26 @@ static polygon_t p_terminator = {
 static polygon_t p_utr = {.peripheries = 1, .sides = 4, .option = UTR};
 static polygon_t p_insulator = {
     .peripheries = 1, .sides = 4, .option = INSULATOR};
-static polygon_t p_ribosite = { FALSE, 1, 4, 0., 0., 0., RIBOSITE};
-static polygon_t p_rnastab = { FALSE, 1, 4, 0., 0., 0., RNASTAB};
-static polygon_t p_proteasesite = { FALSE, 1, 4, 0., 0., 0., PROTEASESITE};
-static polygon_t p_proteinstab = { FALSE, 1, 4, 0., 0., 0., PROTEINSTAB};
+static polygon_t p_ribosite = {
+    .peripheries = 1, .sides = 4, .option = RIBOSITE};
+static polygon_t p_rnastab = {.peripheries = 1, .sides = 4, .option = RNASTAB};
+static polygon_t p_proteasesite = {
+    .peripheries = 1, .sides = 4, .option = PROTEASESITE};
+static polygon_t p_proteinstab = {
+    .peripheries = 1, .sides = 4, .option = PROTEINSTAB};
 /** dna construction symbols **/
-static polygon_t p_primersite = { FALSE, 1, 4, 0., 0., 0., PRIMERSITE};
-static polygon_t p_restrictionsite = { FALSE, 1, 4, 0., 0., 0., RESTRICTIONSITE};
-static polygon_t p_fivepoverhang = { FALSE, 1, 4, 0., 0., 0., FIVEPOVERHANG};
-static polygon_t p_threepoverhang = { FALSE, 1, 4, 0., 0., 0., THREEPOVERHANG};
-static polygon_t p_noverhang = { FALSE, 1, 4, 0., 0., 0., NOVERHANG};
-static polygon_t p_assembly = { FALSE, 1, 4, 0., 0., 0., ASSEMBLY};
+static polygon_t p_primersite = {
+    .peripheries = 1, .sides = 4, .option = PRIMERSITE};
+static polygon_t p_restrictionsite = {
+    .peripheries = 1, .sides = 4, .option = RESTRICTIONSITE};
+static polygon_t p_fivepoverhang = {
+    .peripheries = 1, .sides = 4, .option = FIVEPOVERHANG};
+static polygon_t p_threepoverhang = {
+    .peripheries = 1, .sides = 4, .option = THREEPOVERHANG};
+static polygon_t p_noverhang = {
+    .peripheries = 1, .sides = 4, .option = NOVERHANG};
+static polygon_t p_assembly = {
+    .peripheries = 1, .sides = 4, .option = ASSEMBLY};
 static polygon_t p_signature = { FALSE, 1, 4, 0., 0., 0., SIGNATURE};
 static polygon_t p_rpromoter = { FALSE, 1, 4, 0., 0., 0., RPROMOTER};
 static polygon_t p_rarrow = { FALSE, 1, 4, 0., 0., 0., RARROW};
