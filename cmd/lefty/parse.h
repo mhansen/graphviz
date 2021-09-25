@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 typedef struct Psrc_t {
@@ -29,7 +25,3 @@ void Pterm (void);
 Tobj Punit (Psrc_t *);
 Tobj Pfcall (Tobj, Tobj);
 Tobj Pfunction (char *, int);
-
-#ifdef __cplusplus
-}
-#endif

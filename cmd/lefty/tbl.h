@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #pragma once
@@ -132,7 +128,3 @@ void Tdelo (Tobj, Tobj);
 Tobj Tcopy (Tobj);
 void Tgetfirst (Tobj, Tkvindex_t *);
 void Tgetnext (Tkvindex_t *);
-
-#ifdef __cplusplus
-}
-#endif

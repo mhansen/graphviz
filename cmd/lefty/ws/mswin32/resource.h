@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
 // Used by lefty.rc
@@ -31,8 +27,4 @@ extern "C" {
 #define _APS_NEXT_CONTROL_VALUE         1006
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
-#endif
-
-#ifdef __cplusplus
-}
 #endif

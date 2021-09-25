@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #define L_SEMI      0
@@ -69,8 +65,3 @@ void Lsetsrc (int, char *, FILE *, int, int);
 void Lgetsrc (int *, char **, FILE **, int *, int *);
 void Lprintpos (void);
 void Lgtok (void);
-
-#ifdef __cplusplus
-}
-#endif
-

@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Bell Laboratories */
 
 #ifndef _COMMON_H
@@ -76,7 +72,3 @@ extern "C" {
 #undef NORETURN
 
 #endif				/* _COMMON_H */
-
-#ifdef __cplusplus
-}
-#endif

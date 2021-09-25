@@ -10,12 +10,4 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     int C2Lopen(char *, char *, FILE **, FILE **);
-
-#ifdef __cplusplus
-}
-#endif

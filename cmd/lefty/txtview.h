@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 void TXTinit (Grect_t);
@@ -23,7 +19,3 @@ int TXTask (int argc, lvar_t *argv);
 void TXTprocess (int, char *);
 void TXTupdate (void);
 void TXTtoggle (int, void *);
-
-#ifdef __cplusplus
-}
-#endif

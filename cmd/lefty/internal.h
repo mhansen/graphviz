@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 typedef struct Ifunc_t {
@@ -28,8 +24,3 @@ int Igetfunc (char *);
 
 extern Ifunc_t Ifuncs[];
 extern int Ifuncn;
-
-#ifdef __cplusplus
-}
-#endif
-

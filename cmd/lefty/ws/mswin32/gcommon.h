@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 extern HANDLE hinstance, hprevinstance;
@@ -169,8 +165,3 @@ void Gawdeletechild (Gwidget_t *, Gwidget_t *);
 void Gadjustwrect (Gwidget_t *, PIXsize_t *);
 void Gadjustclip (Gwidget_t *);
 Gpoint_t ppixtodraw (Gwidget_t *, PIXpoint_t);
-
-#ifdef __cplusplus
-}
-#endif
-

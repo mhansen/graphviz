@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 typedef struct Tonm_t lvar_t;
@@ -27,8 +23,3 @@ void Einit (void);
 void Eterm (void);
 Tobj Eunit (Tobj);
 Tobj Efunction (Tobj, char *);
-
-#ifdef __cplusplus
-}
-#endif
-

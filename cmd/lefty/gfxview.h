@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 void GFXinit (void);
@@ -51,8 +47,3 @@ int GFXclearpick (int, lvar_t *);
 int GFXsetpick (int, lvar_t *);
 int GFXdisplaymenu (int, lvar_t *);
 int GFXcolormap (int, lvar_t *);
-
-#ifdef __cplusplus
-}
-#endif
-

@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #ifdef FEATURE_X11
@@ -546,8 +542,3 @@ void Gerr (char *, int, int, ...);
 #define G_ERRCANNOTCREATEBITMAP 20
 #define G_ERRNOBITMAP           21
 #define G_ERRCANNOTREADBITMAP   22
-
-#ifdef __cplusplus
-}
-#endif
-

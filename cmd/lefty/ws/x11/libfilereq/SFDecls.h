@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* SFDecls.h */
 
 /* We don't rely on compiler doing the right thing
@@ -39,8 +35,3 @@ void SFsetText (char *path);
 /* Dir.c */
 int SFcompareEntries (const void *vp, const void *vq);
 int SFgetDir (SFDir *dir);
-
-#ifdef __cplusplus
-}
-#endif
-

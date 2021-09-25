@@ -10,16 +10,8 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 void Dinit (void);
 void Dterm (void);
 void Dtrace (Tobj, int);
-
-#ifdef __cplusplus
-}   
-#endif

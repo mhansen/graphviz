@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif  
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #ifdef FEATURE_MINTSIZE
@@ -59,8 +55,3 @@ void Mresetmark (long, void *);
 void Mmkcurr (void *);
 void Mdogc (int);
 void Mreport (void);
-
-#ifdef __cplusplus
-}
-#endif
-

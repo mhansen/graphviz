@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 void Sinit (void);
@@ -24,7 +20,3 @@ char *Sabstract (Tobj, Tobj);
 char *Stfull (Tobj);
 char *Ssfull (Tobj, Tobj);
 char *Scfull (Tobj, int, int);
-
-#ifdef __cplusplus
-}
-#endif

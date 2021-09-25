@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #if XlibSpecificationRelease < 5
@@ -206,8 +202,3 @@ extern XtTranslations Gqwdeltable;
 extern XtTranslations Gwmdeltable;
 
 extern Atom Gqwdelatom, Gwmdelatom;
-
-#ifdef __cplusplus
-}
-#endif
-

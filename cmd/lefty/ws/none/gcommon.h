@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 typedef struct {
@@ -124,8 +120,3 @@ int GVgetwidgetattr (Gwidget_t *, int, Gwattr_t *);
 int GVdestroywidget (Gwidget_t *);
 
 void Gawdefcoordscb (int, Gawdata_t *);
-
-#ifdef __cplusplus
-}
-#endif
-

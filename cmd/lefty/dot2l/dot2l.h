@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define SMALLBUF 128
 
 int yyparse(void);
@@ -62,8 +58,3 @@ void D2Lbeginedge (int, Tobj, char *);
 void D2Lmidedge (int, Tobj, char *);
 void D2Lendedge (void);
 void D2Lsetattr (char *, char *);
-
-#ifdef __cplusplus
-}
-#endif
-

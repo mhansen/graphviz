@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #define C_NULL -1
@@ -94,8 +90,3 @@ int Cnew (int);
 int Cinteger (long);
 int Creal (double);
 int Cstring (char *);
-
-#ifdef __cplusplus
-}
-#endif
-

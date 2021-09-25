@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #define IO_FILE   0
@@ -68,8 +64,3 @@ int IOclose (int, char *);
 int IOreadline (int, char *, int);
 int IOread (int, char *, int);
 int IOwriteline (int, char *);
-
-#ifdef __cplusplus
-}
-#endif
-
