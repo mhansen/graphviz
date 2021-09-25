@@ -34,17 +34,11 @@ void on_settingsApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
     update_graph_from_settings(view->g[view->activeGraph]);
     set_viewport_settings_from_template(view, view->g[view->activeGraph]);
-#if 0
-    update_topview(view->g[view->activeGraph], view->Topview, 0);
-    settvcolorinfo(view->g[view->activeGraph],view->Topview);
-    init_node_size(view->g[view->activeGraph]);
-#endif
     updateSmGraph(view->g[view->activeGraph],view->Topview);
 }
 void on_dlgSettings_close (GtkWidget * widget, gpointer user_data)
 {
     gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
-    /* printf ("setting window is being closed\n"); */
 }
 
 void on_settingsCancelBtn_clicked(GtkWidget * widget, gpointer user_data)
