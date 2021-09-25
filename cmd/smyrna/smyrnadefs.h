@@ -719,7 +719,6 @@ typedef struct
 
     extern ViewInfo *view;
     extern GtkMessageDialog *Dlg;
-    extern int respond;
     extern char *smyrnaPath(char *suffix);
     extern char *smyrnaGlade;
 

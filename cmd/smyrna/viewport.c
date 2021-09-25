@@ -37,7 +37,6 @@ static colorschemaset *create_color_theme(int themeid);
 ViewInfo *view;
 /* these two global variables should be wrapped in something else */
 GtkMessageDialog *Dlg;
-int respond;
 
 static void clear_viewport(ViewInfo * view)
 {
