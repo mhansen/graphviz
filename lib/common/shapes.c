@@ -174,7 +174,8 @@ static polygon_t p_rpromoter = {
     .peripheries = 1, .sides = 4, .option = RPROMOTER};
 static polygon_t p_rarrow = {.peripheries = 1, .sides = 4, .option = RARROW};
 static polygon_t p_larrow = {.peripheries = 1, .sides = 4, .option = LARROW};
-static polygon_t p_lpromoter = { FALSE, 1, 4, 0., 0., 0., LPROMOTER};
+static polygon_t p_lpromoter = {
+    .peripheries = 1, .sides = 4, .option = LPROMOTER};
 
 #define IS_BOX(n) (ND_shape(n)->polygon == &p_box)
 #define IS_PLAIN(n) (ND_shape(n)->polygon == &p_plain)
