@@ -16,7 +16,7 @@
 
 Code_t *cbufp;
 int cbufn, cbufi;
-#define CBUFINCR 1000
+#define CBUFINCR 1000l
 #define CBUFSIZE sizeof (Code_t)
 
 static int Cstringoffset;
@@ -24,7 +24,7 @@ static int Cstringoffset;
 void Cinit (void) {
     Code_t c;
 
-    cbufp = Marrayalloc ((long) CBUFINCR * CBUFSIZE);
+    cbufp = Marrayalloc(CBUFINCR * CBUFSIZE);
     cbufn = CBUFINCR;
     cbufi = 0;
     Cstringoffset = (char *) &c.u.s[0] - (char *) &c + 1;
@@ -45,7 +45,7 @@ int Cnew (int ctype) {
     int i;
 
     if (cbufi >= cbufn) {
-        cbufp = Marraygrow (cbufp, (long) (cbufn + CBUFINCR) * CBUFSIZE);
+        cbufp = Marraygrow(cbufp, (cbufn + CBUFINCR) * CBUFSIZE);
         cbufn += CBUFINCR;
     }
     i = cbufi++;
@@ -58,7 +58,7 @@ int Cinteger (long i) {
     int j;
 
     if (cbufi >= cbufn) {
-        cbufp = Marraygrow (cbufp, (long) (cbufn + CBUFINCR) * CBUFSIZE);
+        cbufp = Marraygrow(cbufp, (cbufn + CBUFINCR) * CBUFSIZE);
         cbufn += CBUFINCR;
     }
     j = cbufi++;
@@ -72,7 +72,7 @@ int Creal (double d) {
     int i;
 
     if (cbufi >= cbufn) {
-        cbufp = Marraygrow (cbufp, (long) (cbufn + CBUFINCR) * CBUFSIZE);
+        cbufp = Marraygrow(cbufp, (cbufn + CBUFINCR) * CBUFSIZE);
         cbufn += CBUFINCR;
     }
     i = cbufi++;
@@ -88,7 +88,7 @@ int Cstring (char *s) {
     size = (strlen (s) + Cstringoffset + CBUFSIZE - 1) / CBUFSIZE;
     if (cbufi + size > cbufn) {
         incr = size > CBUFINCR ? size : CBUFINCR;
-        cbufp = Marraygrow (cbufp, (long) (cbufn + incr) * CBUFSIZE);
+        cbufp = Marraygrow(cbufp, (cbufn + incr) * CBUFSIZE);
         cbufn += incr;
     }
     i = cbufi, cbufi += size;
