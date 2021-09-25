@@ -477,8 +477,7 @@ extern int Gnocallbacks;
 #endif
 
 /* functions returning an int
-    return -1 if there's an error and
-    also set the Gerrno variable
+    return -1 if there's an error
 
     the rendering functions may return +1
     if the graphical object is completely hidden
@@ -548,7 +547,6 @@ void Gerr (char *, int, int, ...);
 #define G_ERRNOBITMAP           21
 #define G_ERRCANNOTREADBITMAP   22
 
-extern int Gerrno;
 #endif /* _G_H */
 
 #ifdef __cplusplus

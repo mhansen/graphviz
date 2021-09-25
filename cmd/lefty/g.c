@@ -28,7 +28,6 @@ char *Gdefaultfont;
 int Gneedredraw;
 int Gbuttonsdown;
 int Gerrflag;
-int Gerrno;
 
 char *texts;
 int textn;
@@ -831,7 +830,6 @@ void Gerr (char *file, int line, int errnum, ...) {
     va_list args;
 
 #ifdef FEATURE_X11
-    Gerrno = errnum;
     if (!Gerrflag)
         return;
 
@@ -844,7 +842,6 @@ void Gerr (char *file, int line, int errnum, ...) {
 #ifdef FEATURE_WIN32
     char buf[256];
 
-    Gerrno = errnum;
     if (!warnflag)
         return;
 
