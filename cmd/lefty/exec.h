@@ -17,7 +17,7 @@ typedef struct Tonm_t lvar_t;
 extern Tobj root, null;
 extern Tobj rtno;
 extern int Erun;
-extern int Eerrlevel, Estackdepth, Eshowbody, Eshowcalls, Eoktorun;
+extern int Eerrlevel, Estackdepth, Eshowbody, Eshowcalls;
 
 void Einit (void);
 void Eterm (void);

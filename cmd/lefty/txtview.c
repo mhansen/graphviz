@@ -307,7 +307,7 @@ void TXTprocess (int wi, char *sp) {
 
     src.s = sp;
     if ((co = Punit (&src)))
-        Eoktorun = TRUE, Eunit (co);
+        Eunit(co);
 }
 
 void TXTupdate (void) {
