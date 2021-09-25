@@ -1133,12 +1133,12 @@ static int make_map_internal(int exclude_random, int include_OK_points,
       if (bounding_box_margin[i] > 0){
 	xmin[i] -= bounding_box_margin[i];
 	xmax[i] += bounding_box_margin[i];
-      } else if (bounding_box_margin[i] == 0) {/* auto bounding box */
-	xmin[i] -= MAX(boxsize[i]*0.2, 2.*shore_depth_tol);
-	xmax[i] += MAX(boxsize[i]*0.2, 2*shore_depth_tol);
-      } else {
+      } else if (bounding_box_margin[i] < 0) {
 	xmin[i] -= boxsize[i]*(-bounding_box_margin[i]);
 	xmax[i] += boxsize[i]*(-bounding_box_margin[i]);
+      } else { // auto bounding box
+	xmin[i] -= MAX(boxsize[i]*0.2, 2.*shore_depth_tol);
+	xmax[i] += MAX(boxsize[i]*0.2, 2*shore_depth_tol);
       }
     }
     if (Verbose) {
@@ -1146,16 +1146,16 @@ static int make_map_internal(int exclude_random, int include_OK_points,
       real bbm1 = bounding_box_margin[1];
       if (bbm0 > 0)
 	fprintf (stderr, "bounding box margin: %.06f", bbm0);
-      else if (bbm0 == 0)
-	fprintf (stderr, "bounding box margin: %.06f", MAX(boxsize[0]*0.2, 2*shore_depth_tol));
-      else 
+      else if (bbm0 < 0)
 	fprintf (stderr, "bounding box margin: (%.06f * %.06f)", boxsize[0], -bbm0);
+      else
+	fprintf (stderr, "bounding box margin: %.06f", MAX(boxsize[0]*0.2, 2*shore_depth_tol));
       if (bbm1 > 0)
 	fprintf (stderr, " %.06f\n", bbm1);
-      else if (bbm1 == 0)
-	fprintf (stderr, " %.06f\n", MAX(boxsize[1]*0.2, 2*shore_depth_tol));
-      else 
+      else if (bbm1 < 0)
 	fprintf (stderr, " (%.06f * %.06f)\n", boxsize[1], -bbm1);
+      else
+	fprintf (stderr, " %.06f\n", MAX(boxsize[1]*0.2, 2*shore_depth_tol));
     }
     if (*nrandom < 0) {
       real n1, n2, area2;
