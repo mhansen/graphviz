@@ -39,7 +39,7 @@ static void **freearray;
 static long freen;
 
 #define MARKSIZE sizeof (void *)
-#define MARKINCR 100
+#define MARKINCR 100l
 static void **markarray;
 static long markn, marki;
 
@@ -80,7 +80,7 @@ void Minit (void (*func) (void)) {
     freearray = Marrayalloc ((long) FREESIZE);
     freen = 1;
     freearray[0] = NULL;
-    markarray = Marrayalloc ((long) MARKINCR * MARKSIZE);
+    markarray = Marrayalloc(MARKINCR * MARKSIZE);
     markn = MARKINCR;
     marki = 0;
     otarray[0] = Marrayalloc(OTINCR * OTSIZE);
@@ -233,9 +233,7 @@ void Marrayfree (void *p) {
 
 long Mpushmark (void *p) {
     if (marki == markn) {
-        markarray = Marraygrow (
-            markarray, (long) (markn + MARKINCR) * MARKSIZE
-        );
+        markarray = Marraygrow(markarray, (markn + MARKINCR) * MARKSIZE);
         markn += MARKINCR;
     }
     markarray[marki++] = p;
