@@ -172,7 +172,7 @@ static polygon_t p_signature = {
     .peripheries = 1, .sides = 4, .option = SIGNATURE};
 static polygon_t p_rpromoter = {
     .peripheries = 1, .sides = 4, .option = RPROMOTER};
-static polygon_t p_rarrow = { FALSE, 1, 4, 0., 0., 0., RARROW};
+static polygon_t p_rarrow = {.peripheries = 1, .sides = 4, .option = RARROW};
 static polygon_t p_larrow = { FALSE, 1, 4, 0., 0., 0., LARROW};
 static polygon_t p_lpromoter = { FALSE, 1, 4, 0., 0., 0., LPROMOTER};
 
