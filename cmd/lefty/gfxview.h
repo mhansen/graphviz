@@ -24,7 +24,6 @@ void GFXviewcb (Gevent_t *);
 void GFXevent (Gevent_t *);
 void GFXmove (void);
 void GFXredraw (void);
-void GFXbuttoncb (int, void *);
 void GFXmonitorfile (int);
 void GFXidle (void);
 
