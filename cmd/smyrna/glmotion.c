@@ -17,8 +17,6 @@
 #include <glcomp/glutils.h>
 #include "hotkeymap.h"
 
-gboolean redraw = FALSE;
-
 /*real zoom in out is done here, all other functions send this one what they desire, it is not guranteed,*/
 static void graph_zoom(float real_zoom)
 {
@@ -88,6 +86,4 @@ void glmotion_pan(ViewInfo * v)
 	v->cameras[v->active_camera]->targetx -= gldx;
 	v->cameras[v->active_camera]->targety += gldy;
     }
-
-    redraw = TRUE;
 }
