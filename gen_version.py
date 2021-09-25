@@ -24,12 +24,62 @@ Entry version   Entry collection          Output
 import argparse
 from datetime import datetime
 import os
+from pathlib import Path
+import re
 import subprocess
 import sys
+from typing import Tuple
 
-collection = "development"
+CHANGELOG = Path(__file__).parent / "CHANGELOG.md"
+assert CHANGELOG.exists(), "CHANGELOG.md file missing"
 
-version = "2.49.2"
+def get_version() -> Tuple[int, int, int, str]:
+  """
+  Derive a Graphviz version from the changelog information.
+
+  Returns a tuple of major version, minor version, patch version,
+  "stable"/"development".
+  """
+
+  # is this a development revision (as opposed to a stable release)?
+  is_development = False
+
+  with open(CHANGELOG, encoding="utf-8") as f:
+    for line in f:
+
+      # is this a version heading?
+      m = re.match(r"## \[(?P<heading>[^\]]*)\]", line)
+      if m is None:
+        continue
+      heading = m.group("heading")
+
+      # is this the leading unreleased heading of a development version?
+      UNRELEASED_PREFIX = "Unreleased ("
+      if heading.startswith(UNRELEASED_PREFIX):
+        is_development = True
+        heading = heading[len(UNRELEASED_PREFIX):]
+
+      # extract the version components
+      m = re.match(r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)", heading)
+      if m is None:
+        raise RuntimeError("non-version ## heading encountered before seeing a "
+                           "version heading")
+
+      major = int(m.group("major"))
+      minor = int(m.group("minor"))
+      patch = int(m.group("patch"))
+      break
+
+    else:
+      # we read the whole changelog without finding a version
+      raise RuntimeError("no version found")
+
+  if is_development:
+    coll = "development"
+  else:
+    coll = "stable"
+
+  return major, minor, patch, coll
 
 graphviz_date_format = "%Y%m%d.%H%M"
 iso_date_format = "%Y-%m-%d %H:%M:%S"
@@ -76,16 +126,12 @@ args = parser.parse_args()
 
 date_format = args.date_format or graphviz_date_format
 
-assert collection in ("stable", "development"), \
-    'The collection is not "stable" or "development"'
-assert len(version.split(".")) == 3, "Wrong number of version elements"
-assert all(part.isnumeric() for part in version.split(".")), \
-    "All version elements are not numeric"
+major_version, minor_version, patch_version, collection = get_version()
 
 if collection == "development":
-  version += "~dev"
-
-major_version, minor_version, patch_version = version.split(".")
+  patch_version = f"{patch_version}~dev"
+else:
+  patch_version = str(patch_version)
 
 if not patch_version.isnumeric() or args.date_format:
   os.environ["TZ"] = "UTC"

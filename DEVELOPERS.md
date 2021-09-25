@@ -52,6 +52,11 @@ This project adheres to
 Before making the release, it must be decided if it is a *major*, *minor* or
 *patch* release.
 
+If you are making a change that will require an upcoming major or minor version
+increment, update the planned version for the next release in parentheses after
+the `Unreleased` heading in `CHANGELOG.md`. Remember to also update the diff
+link for this heading at the bottom of `CHANGELOG.md`.
+
 #### Stable release versions and development versions numbering convention
 
 See [`gen_version.py`](https://gitlab.com/graphviz/graphviz/-/blob/main/gen_version.py).
@@ -73,30 +78,24 @@ is green
 
    Example: `stable-release-2.44.1`
 
-1. Edit `gen_version.py` according to instructions in that file.
-
 1. Edit `CHANGELOG.md`
 
-    Add the new version between `[Unreleased]` and the previous
-    version.
+    Change the `[Unreleased (…)]` heading to the upcoming release version and
+    target release date.
 
     At the bottom of the file, add an entry for the new version. These
     entries are not visible in the rendered page, but are essential
     for the version links to the GitLab commit comparisons to work.
 
-    Example (from
-    [commit 5e0d3b1841b7e358274c916b52276d251eabef3d](https://gitlab.com/graphviz/graphviz/-/commit/5e0d3b1841b7e358274c916b52276d251eabef3d#ab09011fa121d0a2bb9fa4ca76094f2482b902b7)):
+    Example:
 
     ```diff
-     ## [Unreleased]
-     
+    -## [Unreleased (2.44.1)]
     +## [2.44.1] - 2020-06-29
-    +
     ```
 
     ```diff
-    -[Unreleased]: https://gitlab.com/graphviz/graphviz/compare/2.44.0...main
-    +[Unreleased]: https://gitlab.com/graphviz/graphviz/compare/2.44.1...main
+    -[Unreleased (2.44.1)]: https://gitlab.com/graphviz/graphviz/compare/2.44.0...main
     +[2.44.1]: https://gitlab.com/graphviz/graphviz/compare/2.44.0...2.44.1
      [2.44.0]: https://gitlab.com/graphviz/graphviz/compare/2.42.4...2.44.0
      [2.42.4]: https://gitlab.com/graphviz/graphviz/compare/2.42.3...2.42.4
@@ -125,18 +124,34 @@ is green
 
 1. The “deployment” CI task will automatically create a release on the
    [Gitlab releases tab](https://gitlab.com/graphviz/graphviz/-/releases). If a
-   release is not created, check that your modifications to `gen_version.py`
-   correctly set a version conforming to the regular expression `\d+\.\d+\.\d+`.
-   The “deployment” CI task will also create a Git tag for the version, e.g.
-   `2.44.1`.
+   release is not created, double check your steps and/or inspect
+   `gen_version.py` to ensure it is operating correctly. The “deployment” CI
+   task will also create a Git tag for the version, e.g. `2.44.1`.
 
 #### Returning to the development series
 
 1. Create a new local branch and name it e.g. `return-to-<version>-dev`
 
-   Example: `return-to-2.45-dev`
+   Example: `return-to-2.44-dev`
 
-1. Edit `gen_version.py` again according to instructions in that file.
+1. Add a new `[Unreleased (…)]` heading to `CHANGELOG.md`. At the bottom of
+   the file, add a new entry for the next release.
+
+   Example:
+
+    ```diff
+    +## [Unreleased (2.44.2)]
+    +
+     ## [2.44.1] - 2020-06-29
+    ```
+
+    ```diff
+    +[Unreleased (2.44.2)]: https://gitlab.com/graphviz/graphviz/compare/2.44.1...main
+     [2.44.1]: https://gitlab.com/graphviz/graphviz/compare/2.44.0...2.44.1
+     [2.44.0]: https://gitlab.com/graphviz/graphviz/compare/2.42.4...2.44.0
+     [2.42.4]: https://gitlab.com/graphviz/graphviz/compare/2.42.3...2.42.4
+     [2.42.3]: https://gitlab.com/graphviz/graphviz/compare/2.42.2...2.42.3
+    ```
 
 1. Commit:
 
@@ -144,15 +159,15 @@ is green
 
     If patch version was incremented:
 
-    Example: `git commit -m "Move back to 2.45 development series"`
+    Example: `git commit -m "Move back to 2.44 development series"`
 
     else (if major or minor version was incremented):
 
-    Example: `git commit -m "Start 2.47 development series"`
+    Example: `git commit -m "Start 2.45 development series"`
 
 1. Push:
 
-   Example: `git push origin return-to-2.45-dev`
+   Example: `git push origin return-to-2.44-dev`
 
 1. Wait until the pipeline has run for your new branch and check that it's green
 
