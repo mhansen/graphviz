@@ -27,7 +27,7 @@ static int lvarn, llvari, flvari;
 Tobj root, null;
 Tobj rtno;
 int Erun;
-int Eerrlevel, Estackdepth, Eshowbody, Eshowcalls;
+int Eerrlevel, Estackdepth, Eshowbody;
 
 #define PUSHJMP(op, np, b) op = (volatile jmp_buf *) np, np = (jmp_buf *) &b
 #define POPJMP(op, np) np = (jmp_buf *) op
