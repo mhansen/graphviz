@@ -929,6 +929,7 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --with-ghostscript \
         --without-glitz \
         --with-ipsepcola \
+        --enable-lefty \
 %if ! %{ANN}
         --without-ann \
 %endif
