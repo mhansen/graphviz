@@ -1598,9 +1598,9 @@ dnl -----------------------------------
 dnl lefty
 
 AC_ARG_ENABLE([lefty],
-  AS_HELP_STRING([--disable-lefty], [Disable building the lefty binary. Requires X11, Xaw, Xmu, Xt.]))
+  AS_HELP_STRING([--enable-lefty], [Enable building the lefty binary. Requires X11, Xaw, Xmu, Xt.]))
 
-AS_IF([test "x$enable_lefty" != "xno"], [
+AS_IF([test "x$enable_lefty" = "xyes"], [
   use_lefty=Yes
 
   PKG_CHECK_MODULES([XMU], [xmu], [

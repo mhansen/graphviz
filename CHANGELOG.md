@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Lefty is disabled by default in the Autotools build system. To re-enable it,
+  pass `--enable-lefty` to `./configure`. In a future release, Lefty will be
+  removed.
+
 ### Fixed
 
 - Msys experimental packages are included in release artifacts #2130
