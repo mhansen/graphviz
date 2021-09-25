@@ -40,13 +40,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <string.h>
-#ifndef _MSC_VER
 #include <strings.h>
-#endif
-
-#ifdef SEL_FILE_IGNORE_CASE
-#include <ctype.h>
-#endif /* def SEL_FILE_IGNORE_CASE */
 
 #include "SFinternal.h"
 
@@ -61,11 +55,7 @@
 int SFcompareEntries (const void *vp, const void *vq) {
     const SFEntry *p = vp, *q = vq;
 #ifdef SEL_FILE_IGNORE_CASE
-#ifdef _MSC_VER
-    return _stricmp(p->real, q->real);
-#else
     return strcasecmp(p->real, q->real);
-#endif
 #else /* def SEL_FILE_IGNORE_CASE */
     return strcmp (p->real, q->real);
 #endif /* def SEL_FILE_IGNORE_CASE */
