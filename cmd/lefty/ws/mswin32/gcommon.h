@@ -8,14 +8,14 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _GCOMMON_H
-#define _GCOMMON_H
 extern HANDLE hinstance, hprevinstance;
 
 /* point and rect structures */
@@ -169,7 +169,6 @@ void Gawdeletechild (Gwidget_t *, Gwidget_t *);
 void Gadjustwrect (Gwidget_t *, PIXsize_t *);
 void Gadjustclip (Gwidget_t *);
 Gpoint_t ppixtodraw (Gwidget_t *, PIXpoint_t);
-#endif /* _GCOMMON_H */
 
 #ifdef __cplusplus
 }

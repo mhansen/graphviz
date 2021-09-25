@@ -8,13 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-#ifndef _DOT2L_H
-#define _DOT2L_H
 #define SMALLBUF 128
 
 int yyparse(void);
@@ -63,7 +62,6 @@ void D2Lbeginedge (int, Tobj, char *);
 void D2Lmidedge (int, Tobj, char *);
 void D2Lendedge (void);
 void D2Lsetattr (char *, char *);
-#endif /* _DOT2L_H */
 
 #ifdef __cplusplus
 }

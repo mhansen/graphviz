@@ -8,14 +8,14 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _CODE_H
-#define _CODE_H
 #define C_NULL -1
 
 #define C_ISSTMT(ct) (ct >= C_STMT && ct <= C_RETURN)
@@ -94,7 +94,6 @@ int Cnew (int);
 int Cinteger (long);
 int Creal (double);
 int Cstring (char *);
-#endif /* _CODE_H */
 
 #ifdef __cplusplus
 }

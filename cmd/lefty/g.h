@@ -8,14 +8,14 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _G_H
-#define _G_H
 #ifdef FEATURE_X11
 #include <X11/Intrinsic.h>
 #include <X11/StringDefs.h>
@@ -546,8 +546,6 @@ void Gerr (char *, int, int, ...);
 #define G_ERRCANNOTCREATEBITMAP 20
 #define G_ERRNOBITMAP           21
 #define G_ERRCANNOTREADBITMAP   22
-
-#endif /* _G_H */
 
 #ifdef __cplusplus
 }

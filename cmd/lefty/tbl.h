@@ -14,8 +14,8 @@ extern "C" {
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _TBL_H
-#define _TBL_H
+#pragma once
+
 #ifdef _WIN32
 #include "mem.h"
 #endif
@@ -132,7 +132,6 @@ void Tdelo (Tobj, Tobj);
 Tobj Tcopy (Tobj);
 void Tgetfirst (Tobj, Tkvindex_t *);
 void Tgetnext (Tkvindex_t *);
-#endif /* _TBL_H */
 
 #ifdef __cplusplus
 }

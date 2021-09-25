@@ -7,19 +7,18 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
-    
+
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _DISPLAY_H
-#define _DISPLAY_H
 void Dinit (void);
 void Dterm (void);
 void Dtrace (Tobj, int);
-#endif /* _DISPLAY_H */
 
 #ifdef __cplusplus
 }   

@@ -7,15 +7,15 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
-    
+
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _EXEC_H
-#define _EXEC_H
 typedef struct Tonm_t lvar_t;
 
 extern Tobj root, null;
@@ -27,7 +27,6 @@ void Einit (void);
 void Eterm (void);
 Tobj Eunit (Tobj);
 Tobj Efunction (Tobj, char *);
-#endif /* _EXEC_H */
 
 #ifdef __cplusplus
 }

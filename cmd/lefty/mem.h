@@ -7,15 +7,14 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
-            
+
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif  
 
 /* Lefteris Koutsofios - AT&T Labs Research */
-
-#ifndef _MEM_H
-#define _MEM_H
 
 #ifdef FEATURE_MINTSIZE
 typedef int Msize_t;
@@ -60,7 +59,6 @@ void Mresetmark (long, void *);
 void Mmkcurr (void *);
 void Mdogc (int);
 void Mreport (void);
-#endif /* _MEM_H */
 
 #ifdef __cplusplus
 }

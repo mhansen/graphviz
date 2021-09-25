@@ -8,14 +8,14 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _GFXVIEW_H
-#define _GFXVIEW_H
 void GFXinit (void);
 void GFXterm (void);
 void GFXprune (void);
@@ -51,7 +51,6 @@ int GFXclearpick (int, lvar_t *);
 int GFXsetpick (int, lvar_t *);
 int GFXdisplaymenu (int, lvar_t *);
 int GFXcolormap (int, lvar_t *);
-#endif /* _GFXVIEW_H */
 
 #ifdef __cplusplus
 }
