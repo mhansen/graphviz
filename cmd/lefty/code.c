@@ -27,7 +27,7 @@ void Cinit (void) {
     cbufp = Marrayalloc(CBUFINCR * CBUFSIZE);
     cbufn = CBUFINCR;
     cbufi = 0;
-    Cstringoffset = (char *) &c.u.s[0] - (char *) &c + 1;
+    Cstringoffset = &c.u.s[0] - (char *)&c + 1;
     /* the + 1 above accounts for the null character */
 }
 
@@ -93,7 +93,7 @@ int Cstring (char *s) {
     }
     i = cbufi, cbufi += size;
     cbufp[i].ctype = C_STRING;
-    strcpy ((char *) &cbufp[i].u.s[0], s);
+    strcpy(&cbufp[i].u.s[0], s);
     cbufp[i].next = C_NULL;
     return i;
 }

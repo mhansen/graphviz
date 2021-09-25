@@ -70,7 +70,7 @@ typedef struct Code_t {
 } Code_t;
 #define C_CODESIZE sizeof (Code_t)
 
-#define Cgetstring(i) (char *) &cbufp[i].u.s[0]
+#define Cgetstring(i) &cbufp[i].u.s[0]
 #define Cgetindex() cbufi
 
 #define Csettype(a, b) cbufp[a].ctype = b
