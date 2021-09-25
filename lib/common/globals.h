@@ -18,8 +18,6 @@ extern "C" {
 #if defined(GVDLL)
 #if !defined(_BLD_gvc)
 #define DECLSPEC	__declspec(dllimport)
-#else
-#define DECLSPEC __declspec(dllexport)
 #endif
 #endif
 #endif
