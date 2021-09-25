@@ -168,7 +168,8 @@ static polygon_t p_noverhang = {
     .peripheries = 1, .sides = 4, .option = NOVERHANG};
 static polygon_t p_assembly = {
     .peripheries = 1, .sides = 4, .option = ASSEMBLY};
-static polygon_t p_signature = { FALSE, 1, 4, 0., 0., 0., SIGNATURE};
+static polygon_t p_signature = {
+    .peripheries = 1, .sides = 4, .option = SIGNATURE};
 static polygon_t p_rpromoter = { FALSE, 1, 4, 0., 0., 0., RPROMOTER};
 static polygon_t p_rarrow = { FALSE, 1, 4, 0., 0., 0., RARROW};
 static polygon_t p_larrow = { FALSE, 1, 4, 0., 0., 0., LARROW};
