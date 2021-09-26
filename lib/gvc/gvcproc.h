@@ -113,8 +113,6 @@
 /* layout */
 
     int gvlayout_select(GVC_t * gvc, const char *str);
-    int gvFreeLayout(GVC_t * gvc, Agraph_t * g);
-    int gvLayoutJobs(GVC_t * gvc, Agraph_t * g);
 
 /* argvlist */
     gv_argvlist_t *gvNEWargvlist(void);

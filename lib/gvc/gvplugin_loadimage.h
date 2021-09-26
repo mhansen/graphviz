@@ -26,6 +26,7 @@ extern "C" {
 /*visual studio*/
 #ifdef _WIN32
 #ifndef GVC_EXPORTS
+#undef GVPLUGIN_LOADIMAGE_API
 #define GVPLUGIN_LOADIMAGE_API __declspec(dllimport)
 #endif
 #endif

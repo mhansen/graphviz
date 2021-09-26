@@ -10,6 +10,7 @@
 
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
+#include <gvc/gvc.h>
 #include <stdarg.h>
 #include <string.h>
 

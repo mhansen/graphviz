@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include <common/render.h>
+#include <gvc/gvc.h>
 #include <neatogen/neatoprocs.h>
 #include <pack/pack.h>
 

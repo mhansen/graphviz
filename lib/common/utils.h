@@ -36,7 +36,6 @@ extern "C" {
     UTILS_API void enqueue(nodequeue *, Agnode_t *);
     UTILS_API Agnode_t *dequeue(nodequeue *);
     UTILS_API pointf Bezier(pointf *, int, double, pointf *, pointf *);
-    UTILS_API void attach_attrs(graph_t * g);
     UTILS_API void attach_attrs_and_arrows(graph_t*, int*, int*);
     UTILS_API char *xml_string(char *str);
     UTILS_API char *xml_string0(char *str, boolean raw);
