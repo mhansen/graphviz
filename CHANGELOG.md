@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Msys experimental packages are included in release artifacts #2130
+
 ## [2.49.1] – 2021-09-22
 
 ### Changed

@@ -659,7 +659,8 @@ windows-mingw32-cmake-build:
     needs: []
     script:
         - choco install --yes --no-progress msys2
-        - echo experimental > COLLECTION
+        # avoid BOM in COLLECTION file
+        - echo experimental | Out-File COLLECTION -Encoding ascii
         - $Env:build_system = "cmake"
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
@@ -680,7 +681,8 @@ windows-mingw64-cmake-build:
     needs: []
     script:
         - choco install --yes --no-progress msys2
-        - echo experimental > COLLECTION
+        # avoid BOM in COLLECTION file
+        - echo experimental | Out-File COLLECTION -Encoding ascii
         - $Env:build_system = "cmake"
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
