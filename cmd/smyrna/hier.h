@@ -52,7 +52,6 @@ extern "C" {
 			double *, hierparms_t *);
 
     focus_t *initFocus(int ncnt);
-    void freeFocus(focus_t * fs);
 
 #ifdef __cplusplus
 }				/* end extern "C" */
