@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Msys experimental packages are included in release artifacts #2130
+- CMake build system incorrectly aliases gv2gml to gml2gv #2131
 
 ## [2.49.1] – 2021-09-22
 

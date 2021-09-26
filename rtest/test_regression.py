@@ -1205,7 +1205,6 @@ def test_2095():
 
 @pytest.mark.skipif(shutil.which("gv2gml") is None,
                     reason="gv2gml not available")
-@pytest.mark.xfail(strict=(os.getenv("build_system") == "cmake"))
 def test_2131():
   """
   gv2gml should be able to process basic Graphviz input
