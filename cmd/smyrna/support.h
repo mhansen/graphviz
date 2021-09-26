@@ -30,15 +30,6 @@
 #  define N_(String) (String)
 #endif
 
-/*
- * Private Functions.
- */
-
-/* This is used to set ATK action descriptions. */
-void glade_set_atk_action_description(AtkAction * action,
-				      const gchar * action_name,
-				      const gchar * description);
-
 /* These variables define various paths detected at runtime. */
 extern gchar *package_prefix;
 extern gchar *package_data_dir;
