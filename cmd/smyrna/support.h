@@ -29,8 +29,3 @@
 #  define Q_(String) g_strip_context ((String), (String))
 #  define N_(String) (String)
 #endif
-
-/* These variables define various paths detected at runtime. */
-extern gchar *package_prefix;
-extern gchar *package_data_dir;
-extern gchar *package_locale_dir;
