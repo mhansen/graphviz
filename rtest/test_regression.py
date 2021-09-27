@@ -1203,6 +1203,24 @@ def test_2095():
   # ask Graphviz to process it
   subprocess.check_call(["dot", "-Tpdf", "-o", os.devnull, input])
 
+@pytest.mark.skipif(shutil.which("gv2gml") is None,
+                    reason="gv2gml not available")
+def test_2131():
+  """
+  gv2gml should be able to process basic Graphviz input
+  https://gitlab.com/graphviz/graphviz/-/issues/2131
+  """
+
+  # a trivial graph
+  input = "digraph { a -> b; }"
+
+  # ask gv2gml what it thinks of this
+  p = subprocess.Popen(["gv2gml"], stdin=subprocess.PIPE,
+                       universal_newlines=True)
+  p.communicate(input)
+
+  assert p.returncode == 0, "gv2gml rejected a basic graph"
+
 def test_package_version():
   """
   The graphviz_version.h header should define a non-empty PACKAGE_VERSION
