@@ -48,12 +48,10 @@ libgvc_C_la_SOURCES = gvrender.c gvlayout.c gvdevice.c gvloadimage.c \
 
 libgvc_C_la_LIBADD = \
 	$(top_builddir)/lib/pack/libpack_C.la \
-	$(top_builddir)/lib/xdot/libxdot_C.la \
 	$(top_builddir)/lib/label/liblabel_C.la \
 	$(top_builddir)/lib/common/libcommon_C.la
 libgvc_C_la_DEPENDENCIES = \
 	$(top_builddir)/lib/pack/libpack_C.la \
-	$(top_builddir)/lib/xdot/libxdot_C.la \
 	$(top_builddir)/lib/label/liblabel_C.la \
 	$(top_builddir)/lib/common/libcommon_C.la
 if WITH_ORTHO
@@ -67,7 +65,6 @@ endif
 libgvc_la_LDFLAGS = -version-info $(GVC_VERSION) -no-undefined
 libgvc_la_SOURCES = $(libgvc_C_la_SOURCES)
 libgvc_la_LIBADD = $(libgvc_C_la_LIBADD) \
-	$(top_builddir)/lib/xdot/libxdot.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/pathplan/libpathplan.la \
