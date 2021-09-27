@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus 
-extern "C" {
-#endif
-
 #include <sys/stat.h>
 #if !defined(S_ISDIR) && defined(S_IFDIR)
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
@@ -34,8 +30,3 @@ extern "C" {
 #endif
 
 #define S_ISXXX(m) ((m) & (S_IXUSR | S_IXGRP | S_IXOTH))
-
-#ifdef __cplusplus
-}
-#endif
-

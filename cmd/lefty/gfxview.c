@@ -439,7 +439,7 @@ void GFXredraw (void) {
     }
 }
 
-void GFXtextcb (int wi, char *s) {
+static void GFXtextcb (int wi, char *s) {
     Tobj wo, fo, co, to;
     long fm;
 
@@ -459,7 +459,7 @@ void GFXtextcb (int wi, char *s) {
     Mpopmark (fm);
 }
 
-void GFXbuttoncb (int wi, void *data) {
+static void GFXbuttoncb (int wi, void *data) {
     Tobj wo, fo, co, to;
     long fm;
 

@@ -8,14 +8,9 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 /* Lefteris Koutsofios - AT&T Labs Research */
-
-#ifndef _GCOMMON_H
-#define _GCOMMON_H
 
 typedef struct {
     int x, y;
@@ -125,10 +120,3 @@ int GVgetwidgetattr (Gwidget_t *, int, Gwattr_t *);
 int GVdestroywidget (Gwidget_t *);
 
 void Gawdefcoordscb (int, Gawdata_t *);
-
-#endif /* _GCOMMON_H */
-
-#ifdef __cplusplus
-}
-#endif
-

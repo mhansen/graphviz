@@ -170,7 +170,7 @@ Tobj Tcode (Code_t *cp, int ci, int cl) {
             cp2[i] = cp[i];
             if (cp2[i].next != C_NULL)
                 cp2[i].next -= ci;
-            s = (char *) &cp[i].u.s;
+            s = &cp[i].u.s;
             while (*s)
                 s++;
             cn = (long) (s - (char *) &cp[i]) / sizeof (Code_t);

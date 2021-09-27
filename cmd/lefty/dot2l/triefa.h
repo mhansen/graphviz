@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*  File - TrieFA.h
     The data types for the generated trie-baseed finite automata.
 */
@@ -33,8 +29,3 @@ typedef struct TrieTrans TrieTrans;
 
 extern TrieState TrieStateTbl[];
 extern TrieTrans TrieTransTbl[];
-
-#ifdef __cplusplus
-}
-#endif
-

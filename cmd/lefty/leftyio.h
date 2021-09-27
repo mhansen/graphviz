@@ -8,14 +8,9 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 /* Lefteris Koutsofios - AT&T Labs Research */
-
-#ifndef _IO_H
-#define _IO_H
 
 #define IO_FILE   0
 #define IO_PTY    1
@@ -69,10 +64,3 @@ int IOclose (int, char *);
 int IOreadline (int, char *, int);
 int IOread (int, char *, int);
 int IOwriteline (int, char *);
-
-#endif /* _IO_H */
-
-#ifdef __cplusplus
-}
-#endif
-

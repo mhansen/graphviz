@@ -8,16 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 int XsraSelFile (
     Widget, char *, char *, char *, char *, char *, char *,
     int (*) (char *, char **, struct stat *), char *, int
 );
-
-#ifdef __cplusplus
-}
-#endif
-

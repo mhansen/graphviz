@@ -111,7 +111,6 @@ int main (int argc, char **argv) {
     Eerrlevel = 1;
     Estackdepth = 2;
     Eshowbody = 1;
-    Eshowcalls = 1;
 
     if (setjmp (exitljbuf))
         goto eop;
@@ -227,7 +226,6 @@ int APIENTRY WinMain (
     Eerrlevel = 1;
     Estackdepth = 2;
     Eshowbody = 1;
-    Eshowcalls = 1;
 
     processstr (leftyoptions);
     argv = CommandLineToArgvW(lpCmdLine, &argc);
@@ -450,7 +448,7 @@ static void processargs (int argc, char *argv[]) {
         else if (strcmp (argv[0], "-sb") == 0)
             Eshowbody = atoi (argv[1]), argv++, argc--;
         else if (strcmp (argv[0], "-sc") == 0)
-            Eshowcalls = atoi (argv[1]), argv++, argc--;
+            argv++, argc--;
         else if (strcmp (argv[0], "-df") == 0)
             Gdefaultfont = argv[1], argv++, argc--;
         else if (strcmp (argv[0], "-w") == 0)

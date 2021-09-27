@@ -7,15 +7,11 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
-    
-#ifdef __cplusplus
-extern "C" {
-#endif
+
+#pragma once
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _INTERNAL_H
-#define _INTERNAL_H
 typedef struct Ifunc_t {
     char *name;
     int (*func) (int, Tonm_t *);
@@ -28,9 +24,3 @@ int Igetfunc (char *);
 
 extern Ifunc_t Ifuncs[];
 extern int Ifuncn;
-#endif /* _INTERNAL_H */
-
-#ifdef __cplusplus
-}
-#endif
-

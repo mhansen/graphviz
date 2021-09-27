@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #ifndef _COMMON_H
@@ -106,7 +102,3 @@ NORETURN void panic2 (char *, int, char *, char *, ...);
 #undef NORETURN
 
 #endif /* _COMMON_H */
-
-#ifdef __cplusplus
-}
-#endif

@@ -8,14 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _G_H
-#define _G_H
 #ifdef FEATURE_X11
 #include <X11/Intrinsic.h>
 #include <X11/StringDefs.h>
@@ -477,8 +473,7 @@ extern int Gnocallbacks;
 #endif
 
 /* functions returning an int
-    return -1 if there's an error and
-    also set the Gerrno variable
+    return -1 if there's an error
 
     the rendering functions may return +1
     if the graphical object is completely hidden
@@ -547,11 +542,3 @@ void Gerr (char *, int, int, ...);
 #define G_ERRCANNOTCREATEBITMAP 20
 #define G_ERRNOBITMAP           21
 #define G_ERRCANNOTREADBITMAP   22
-
-extern int Gerrno;
-#endif /* _G_H */
-
-#ifdef __cplusplus
-}
-#endif
-

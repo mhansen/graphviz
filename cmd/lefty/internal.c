@@ -628,7 +628,7 @@ int Iload (int argc, lvar_t *argv) {
             src.flag = FILESRC, src.s = NULL, src.fp = fp;
             src.tok = -1, src.lnum = 1;
             while ((co = Punit (&src)))
-                Eoktorun = TRUE, Eunit (co);
+                Eunit(co);
             if (fp != stdin)
                 fclose (fp);
         } else
@@ -646,7 +646,7 @@ int Irun (int argc, lvar_t *argv) {
         src.flag = CHARSRC, src.s = s, src.fp = NULL;
         src.tok = -1, src.lnum = 1;
         while ((co = Punit (&src)))
-            Eoktorun = TRUE, Eunit (co);
+            Eunit(co);
     }
     return L_SUCCESS;
 }

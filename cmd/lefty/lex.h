@@ -8,14 +8,9 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 /* Lefteris Koutsofios - AT&T Labs Research */
-
-#ifndef _LEX_H
-#define _LEX_H
 
 #define L_SEMI      0
 #define L_ASSIGN    1
@@ -70,9 +65,3 @@ void Lsetsrc (int, char *, FILE *, int, int);
 void Lgetsrc (int *, char **, FILE **, int *, int *);
 void Lprintpos (void);
 void Lgtok (void);
-#endif /* _LEX_H */
-
-#ifdef __cplusplus
-}
-#endif
-

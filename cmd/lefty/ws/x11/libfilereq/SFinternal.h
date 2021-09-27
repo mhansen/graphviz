@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*
  * Copyright 1989 Software Research Associates, Inc., Tokyo, Japan
  *
@@ -148,8 +144,3 @@ char SFstatChar (struct stat *);
 extern XtIntervalId SFdirModTimerId;
 
 extern int (*SFfunc) (char *, char **, struct stat *);
-
-#ifdef __cplusplus
-}
-#endif
-

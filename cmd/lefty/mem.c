@@ -39,12 +39,12 @@ static void **freearray;
 static long freen;
 
 #define MARKSIZE sizeof (void *)
-#define MARKINCR 100
+#define MARKINCR 100l
 static void **markarray;
 static long markn, marki;
 
 #define OTSIZE sizeof (void *)
-#define OTINCR 1000
+#define OTINCR 1000l
 static void **otarray[2];
 static long otn, oti, otj;
 static char otarea[2];
@@ -80,11 +80,11 @@ void Minit (void (*func) (void)) {
     freearray = Marrayalloc ((long) FREESIZE);
     freen = 1;
     freearray[0] = NULL;
-    markarray = Marrayalloc ((long) MARKINCR * MARKSIZE);
+    markarray = Marrayalloc(MARKINCR * MARKSIZE);
     markn = MARKINCR;
     marki = 0;
-    otarray[0] = Marrayalloc ((long) OTINCR * OTSIZE);
-    otarray[1] = Marrayalloc ((long) OTINCR * OTSIZE);
+    otarray[0] = Marrayalloc(OTINCR * OTSIZE);
+    otarray[1] = Marrayalloc(OTINCR * OTSIZE);
     otn = OTINCR;
     oti = otj = 0;
     otarea[0] = 1, otarea[1] = 2;
@@ -233,9 +233,7 @@ void Marrayfree (void *p) {
 
 long Mpushmark (void *p) {
     if (marki == markn) {
-        markarray = Marraygrow (
-            markarray, (long) (markn + MARKINCR) * MARKSIZE
-        );
+        markarray = Marraygrow(markarray, (markn + MARKINCR) * MARKSIZE);
         markn += MARKINCR;
     }
     markarray[marki++] = p;
@@ -261,8 +259,8 @@ void Mmkcurr (void *p) {
     if (!p || M_AREAOF (p) == otarea[0])
         return;
     if (oti >= otn) {
-        otarray[0] = Marraygrow (otarray[0], (long) (otn +OTINCR) * OTSIZE);
-        otarray[1] = Marraygrow (otarray[1], (long) (otn +OTINCR) * OTSIZE);
+        otarray[0] = Marraygrow(otarray[0], (otn + OTINCR) * OTSIZE);
+        otarray[1] = Marraygrow(otarray[1], (otn + OTINCR) * OTSIZE);
         otn += OTINCR;
     }
     otarray[0][oti++] = p;

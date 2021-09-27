@@ -8,14 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _PARSE_H
-#define _PARSE_H
 typedef struct Psrc_t {
     int flag;
     char *s;
@@ -29,8 +25,3 @@ void Pterm (void);
 Tobj Punit (Psrc_t *);
 Tobj Pfcall (Tobj, Tobj);
 Tobj Pfunction (char *, int);
-#endif /* _PARSE_H */
-
-#ifdef __cplusplus
-}
-#endif

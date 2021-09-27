@@ -27,7 +27,7 @@ static int lvarn, llvari, flvari;
 Tobj root, null;
 Tobj rtno;
 int Erun;
-int Eerrlevel, Estackdepth, Eshowbody, Eshowcalls, Eoktorun;
+int Eerrlevel, Estackdepth, Eshowbody;
 
 #define PUSHJMP(op, np, b) op = (volatile jmp_buf *) np, np = (jmp_buf *) &b
 #define POPJMP(op, np) np = (jmp_buf *) op
@@ -137,7 +137,6 @@ void Einit(void)
     sinfoi = 0;
     Erun = FALSE;
     running = 0;
-    Eoktorun = FALSE;
 }
 
 void Eterm(void)
@@ -157,8 +156,6 @@ Tobj Eunit(Tobj co)
     volatile Tobj lrtno;
 
     jmp_buf eljbuf;
-
-    Eoktorun = FALSE;
 
     if (!co)
 	return NULL;
@@ -825,9 +822,7 @@ static int orderop(Tobj v1o, Ctype_t op, Tobj v2o)
     double d1, d2;
 
     if (!v1o || !v2o) {
-	if ((v1o || v2o) && op == C_NE)
-	    return TRUE;
-	return FALSE;
+	return (v1o || v2o) && op == C_NE;
     }
     t1 = Tgettype(v1o), t2 = Tgettype(v2o);
     if (t1 == T_STRING && t2 == T_STRING) {
@@ -853,17 +848,17 @@ static int orderop(Tobj v1o, Ctype_t op, Tobj v2o)
     }
     switch (op) {
     case C_EQ:
-	return (r == 0) ? TRUE : FALSE;
+	return r == 0;
     case C_NE:
-	return (r != 0) ? TRUE : FALSE;
+	return r != 0;
     case C_LT:
-	return (r < 0) ? TRUE : FALSE;
+	return r < 0;
     case C_LE:
-	return (r <= 0) ? TRUE : FALSE;
+	return r <= 0;
     case C_GT:
-	return (r > 0) ? TRUE : FALSE;
+	return r > 0;
     case C_GE:
-	return (r >= 0) ? TRUE : FALSE;
+	return r >= 0;
     }
     panic1(POS, "orderop", "bad op code");
     return FALSE;		/* NOT REACHED */

@@ -8,16 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
-
-#ifndef _C2L_H
-#define _C2L_H
     int C2Lopen(char *, char *, FILE **, FILE **);
-#endif				/* _C2L_H */
-
-#ifdef __cplusplus
-}
-#endif

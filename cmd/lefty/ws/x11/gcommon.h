@@ -8,14 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
-#ifndef _GCOMMON_H
-#define _GCOMMON_H
 #if XlibSpecificationRelease < 5
 typedef char *XPointer;
 #endif
@@ -206,10 +202,3 @@ extern XtTranslations Gqwdeltable;
 extern XtTranslations Gwmdeltable;
 
 extern Atom Gqwdelatom, Gwmdelatom;
-
-#endif /* _GCOMMON_H */
-
-#ifdef __cplusplus
-}
-#endif
-
