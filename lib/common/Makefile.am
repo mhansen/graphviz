@@ -11,7 +11,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt $(GD_INCLUDES) $(EXPAT_INCLUDES) $(Z_INCLUDES)
 
 if WITH_WIN32
-AM_CFLAGS = -D_BLD_gvc=1
+AM_CFLAGS = -D_BLD_gvc=1 -DGVC_EXPORTS
 AM_CPPFLAGS += -O0
 endif
 
