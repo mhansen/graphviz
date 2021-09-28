@@ -22,13 +22,6 @@
 #include <ctype.h>
 #include  "frmobjectui.h"
 
-//file
-char buf[255];
-void mAttributesSlot(GtkWidget * widget, gpointer user_data)
-{
-    showAttrsWidget(view->Topview);
-}
-
 void mOpenSlot(GtkWidget * widget, gpointer user_data)
 {
     GtkWidget *dialog;

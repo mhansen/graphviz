@@ -24,9 +24,6 @@ extern "C" {
 #define _BB
 #endif
 
-    _BB void new_graph_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void open_graph_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void save_graph_clicked(GtkWidget * widget, gpointer user_data);
     _BB void save_as_graph_clicked(GtkWidget * widget, gpointer user_data);
     _BB void remove_graph_clicked(GtkWidget * widget, gpointer user_data);
     void on_newNode(GtkWidget * button, gpointer user_data);

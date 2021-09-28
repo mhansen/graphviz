@@ -121,18 +121,6 @@ void btnToolFindEdge_clicked(GtkWidget * widget, gpointer user_data)
 void btnToolCursor_clicked(GtkWidget * widget, gpointer user_data)
 {
 }
-void write_to_console(char *text)
-{
-    //init console text
-    GtkTextIter iter;
-    if (!view->consoleText)
-	view->consoleText = gtk_text_buffer_new(NULL);
-    gtk_text_buffer_get_end_iter(view->consoleText, &iter);
-    gtk_text_buffer_insert(view->consoleText, &iter, text, -1);
-    gtk_text_view_set_buffer((GtkTextView *)
-			     glade_xml_get_widget(xml, "consoleText"),
-			     view->consoleText);
-}
 
 void on_btnActivateGraph_clicked(GtkWidget * widget, gpointer user_data)
 {
