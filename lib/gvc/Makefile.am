@@ -75,7 +75,14 @@ libgvc_la_LIBADD = $(libgvc_C_la_LIBADD) \
 libgvc_la_DEPENDENCIES = $(libgvc_C_la_DEPENDENCIES)
 
 if WITH_WIN32
+if WITH_CYGWIN
+cyggvc-6.def: $(top_srcdir)/lib/gvc/gvc.def
+	sed '/^LIBRARY/s/gvc/cyggvc-6/' $< > $@
+BUILT_SOURCES = cyggvc-6.def
+libgvc_la_LDFLAGS += -export-symbols cyggvc-6.def
+else
 libgvc_la_LDFLAGS += -export-symbols $(top_srcdir)/lib/gvc/gvc.def
+endif
 endif
 
 if ENABLE_MAN_PDFS

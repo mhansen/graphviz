@@ -12,7 +12,7 @@
 
 #include <render.h>
 
-#ifdef _WIN32
+#ifdef GVDLL
 #ifdef GVC_EXPORTS
 #define ORTHO_API __declspec(dllexport)
 #else

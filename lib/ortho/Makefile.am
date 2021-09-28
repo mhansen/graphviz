@@ -10,7 +10,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt
 
 if WITH_ORTHO
-AM_CFLAGS = -D_BLD_gvc=1
+AM_CFLAGS = -D_BLD_gvc=1 -DGVC_EXPORTS
 endif
 
 noinst_HEADERS = fPQ.h ortho.h maze.h partition.h rawgraph.h sgraph.h structures.h trap.h
