@@ -314,7 +314,7 @@ void show_gui_warning(char *str)
 						      GTK_MESSAGE_WARNING,
 						      GTK_BUTTONS_OK, "%s", str);
 
-    respond = gtk_dialog_run((GtkDialog *) Dlg);
+    gtk_dialog_run((GtkDialog *) Dlg);
     gtk_object_destroy((GtkObject *) Dlg);
 }
 

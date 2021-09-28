@@ -37,7 +37,6 @@ static colorschemaset *create_color_theme(int themeid);
 ViewInfo *view;
 /* these two global variables should be wrapped in something else */
 GtkMessageDialog *Dlg;
-int respond;
 
 static void clear_viewport(ViewInfo * view)
 {
@@ -701,35 +700,22 @@ void getcolorfromschema(colorschemaset * sc, float l, float maxl,
 /* set_color_theme_color:
  * Convert colors as strings to RGB
  */
-static void set_color_theme_color(colorschemaset * sc, char **colorstr, int smooth)
+static void set_color_theme_color(colorschemaset * sc, char **colorstr)
 {
     int ind;
     int colorcnt = sc->schemacount;
     gvcolor_t cl;
     float av_perc;
 
-    sc->smooth = smooth;
-    if (smooth) {
-	av_perc = 1.0 / (float) (colorcnt-1);
-	for (ind = 0; ind < colorcnt; ind++) {
-	    colorxlate(colorstr[ind], &cl, RGBA_DOUBLE);
-	    sc->s[ind].c.R = cl.u.RGBA[0];
-	    sc->s[ind].c.G = cl.u.RGBA[1];
-	    sc->s[ind].c.B = cl.u.RGBA[2];
-	    sc->s[ind].c.A = cl.u.RGBA[3];
-	    sc->s[ind].perc = ind * av_perc;
-	}
-    }
-    else {
-	av_perc = 1.0 / (float) (colorcnt);
-	for (ind = 0; ind < colorcnt; ind++) {
-	    colorxlate(colorstr[ind], &cl, RGBA_DOUBLE);
-	    sc->s[ind].c.R = cl.u.RGBA[0];
-	    sc->s[ind].c.G = cl.u.RGBA[1];
-	    sc->s[ind].c.B = cl.u.RGBA[2];
-	    sc->s[ind].c.A = cl.u.RGBA[3];
-	    sc->s[ind].perc = (ind+1) * av_perc;
-	}
+    sc->smooth = 1;
+    av_perc = 1.0 / (float) (colorcnt-1);
+    for (ind = 0; ind < colorcnt; ind++) {
+        colorxlate(colorstr[ind], &cl, RGBA_DOUBLE);
+        sc->s[ind].c.R = cl.u.RGBA[0];
+        sc->s[ind].c.G = cl.u.RGBA[1];
+        sc->s[ind].c.B = cl.u.RGBA[2];
+        sc->s[ind].c.A = cl.u.RGBA[3];
+        sc->s[ind].perc = ind * av_perc;
     }
 }
 
@@ -779,7 +765,7 @@ static colorschemaset *create_color_theme(int themeid)
 
     s->schemacount = palette[themeid].cnt;
     s->s = N_NEW(s->schemacount,colorschema);
-    set_color_theme_color(s, palette[themeid].colors, 1);
+    set_color_theme_color(s, palette[themeid].colors);
 
     return s;
 }

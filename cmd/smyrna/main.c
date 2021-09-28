@@ -37,15 +37,8 @@
 
 #include <getopt.h>
 
-#ifdef G_OS_WIN32
-gchar *package_prefix;
-gchar *package_data_dir;
-#endif
-gchar *package_locale_dir;
 static char *smyrnaDir;		/* path to directory containin smyrna data files */
 char *smyrnaGlade;
-int width,height;/*glut window size*/
-
 
 /* smyrnaPath:
  * Construct pathname for smyrna data file.
@@ -229,10 +222,11 @@ int main(int argc, char *argv[])
     }
     load_attributes();
 
+    gchar *package_locale_dir;
 #ifdef G_OS_WIN32
-    package_prefix =
+    gchar *package_prefix =
 	g_win32_get_package_installation_directory(NULL, NULL);
-    package_data_dir = g_build_filename(package_prefix, "share", NULL);
+    gchar *package_data_dir = g_build_filename(package_prefix, "share", NULL);
     package_locale_dir =
 	g_build_filename(package_prefix, "share", "locale", NULL);
 #else
