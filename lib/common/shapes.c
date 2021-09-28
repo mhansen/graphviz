@@ -168,11 +168,14 @@ static polygon_t p_noverhang = {
     .peripheries = 1, .sides = 4, .option = NOVERHANG};
 static polygon_t p_assembly = {
     .peripheries = 1, .sides = 4, .option = ASSEMBLY};
-static polygon_t p_signature = { FALSE, 1, 4, 0., 0., 0., SIGNATURE};
-static polygon_t p_rpromoter = { FALSE, 1, 4, 0., 0., 0., RPROMOTER};
-static polygon_t p_rarrow = { FALSE, 1, 4, 0., 0., 0., RARROW};
-static polygon_t p_larrow = { FALSE, 1, 4, 0., 0., 0., LARROW};
-static polygon_t p_lpromoter = { FALSE, 1, 4, 0., 0., 0., LPROMOTER};
+static polygon_t p_signature = {
+    .peripheries = 1, .sides = 4, .option = SIGNATURE};
+static polygon_t p_rpromoter = {
+    .peripheries = 1, .sides = 4, .option = RPROMOTER};
+static polygon_t p_rarrow = {.peripheries = 1, .sides = 4, .option = RARROW};
+static polygon_t p_larrow = {.peripheries = 1, .sides = 4, .option = LARROW};
+static polygon_t p_lpromoter = {
+    .peripheries = 1, .sides = 4, .option = LPROMOTER};
 
 #define IS_BOX(n) (ND_shape(n)->polygon == &p_box)
 #define IS_PLAIN(n) (ND_shape(n)->polygon == &p_plain)
@@ -256,73 +259,73 @@ static shape_functions cylinder_fns = {
 };
 
 static shape_desc Shapes[] = {	/* first entry is default for no such shape */
-    {"box", &poly_fns, &p_box},
-    {"polygon", &poly_fns, &p_polygon},
-    {"ellipse", &poly_fns, &p_ellipse},
-    {"oval", &poly_fns, &p_ellipse},
-    {"circle", &poly_fns, &p_circle},
-    {"point", &point_fns, &p_circle},
-    {"egg", &poly_fns, &p_egg},
-    {"triangle", &poly_fns, &p_triangle},
-    {"none", &poly_fns, &p_plaintext},
-    {"plaintext", &poly_fns, &p_plaintext},
-    {"plain", &poly_fns, &p_plain},
-    {"diamond", &poly_fns, &p_diamond},
-    {"trapezium", &poly_fns, &p_trapezium},
-    {"parallelogram", &poly_fns, &p_parallelogram},
-    {"house", &poly_fns, &p_house},
-    {"pentagon", &poly_fns, &p_pentagon},
-    {"hexagon", &poly_fns, &p_hexagon},
-    {"septagon", &poly_fns, &p_septagon},
-    {"octagon", &poly_fns, &p_octagon},
-    {"note", &poly_fns, &p_note},
-    {"tab", &poly_fns, &p_tab},
-    {"folder", &poly_fns, &p_folder},
-    {"box3d", &poly_fns, &p_box3d},
-    {"component", &poly_fns, &p_component},
-    {"cylinder", &cylinder_fns, &p_cylinder},
-    {"rect", &poly_fns, &p_box},
-    {"rectangle", &poly_fns, &p_box},
-    {"square", &poly_fns, &p_square},
-    {"doublecircle", &poly_fns, &p_doublecircle},
-    {"doubleoctagon", &poly_fns, &p_doubleoctagon},
-    {"tripleoctagon", &poly_fns, &p_tripleoctagon},
-    {"invtriangle", &poly_fns, &p_invtriangle},
-    {"invtrapezium", &poly_fns, &p_invtrapezium},
-    {"invhouse", &poly_fns, &p_invhouse},
-    {"underline", &poly_fns, &p_underline},
-    {"Mdiamond", &poly_fns, &p_Mdiamond},
-    {"Msquare", &poly_fns, &p_Msquare},
-    {"Mcircle", &poly_fns, &p_Mcircle},
+    {.name = "box", .fns = &poly_fns, .polygon = &p_box},
+    {.name = "polygon", .fns = &poly_fns, .polygon = &p_polygon},
+    {.name = "ellipse", .fns = &poly_fns, .polygon = &p_ellipse},
+    {.name = "oval", .fns = &poly_fns, .polygon = &p_ellipse},
+    {.name = "circle", .fns = &poly_fns, .polygon = &p_circle},
+    {.name = "point", .fns = &point_fns, .polygon = &p_circle},
+    {.name = "egg", .fns = &poly_fns, .polygon = &p_egg},
+    {.name = "triangle", .fns = &poly_fns, .polygon = &p_triangle},
+    {.name = "none", .fns = &poly_fns, .polygon = &p_plaintext},
+    {.name = "plaintext", .fns = &poly_fns, .polygon = &p_plaintext},
+    {.name = "plain", .fns = &poly_fns, .polygon = &p_plain},
+    {.name = "diamond", .fns = &poly_fns, .polygon = &p_diamond},
+    {.name = "trapezium", .fns = &poly_fns, .polygon = &p_trapezium},
+    {.name = "parallelogram", .fns = &poly_fns, .polygon = &p_parallelogram},
+    {.name = "house", .fns = &poly_fns, .polygon = &p_house},
+    {.name = "pentagon", .fns = &poly_fns, .polygon = &p_pentagon},
+    {.name = "hexagon", .fns = &poly_fns, .polygon = &p_hexagon},
+    {.name = "septagon", .fns = &poly_fns, .polygon = &p_septagon},
+    {.name = "octagon", .fns = &poly_fns, .polygon = &p_octagon},
+    {.name = "note", .fns = &poly_fns, .polygon = &p_note},
+    {.name = "tab", .fns = &poly_fns, .polygon = &p_tab},
+    {.name = "folder", .fns = &poly_fns, .polygon = &p_folder},
+    {.name = "box3d", .fns = &poly_fns, .polygon = &p_box3d},
+    {.name = "component", .fns = &poly_fns, .polygon = &p_component},
+    {.name = "cylinder", .fns = &cylinder_fns, .polygon = &p_cylinder},
+    {.name = "rect", .fns = &poly_fns, .polygon = &p_box},
+    {.name = "rectangle", .fns = &poly_fns, .polygon = &p_box},
+    {.name = "square", .fns = &poly_fns, .polygon = &p_square},
+    {.name = "doublecircle", .fns = &poly_fns, .polygon = &p_doublecircle},
+    {.name = "doubleoctagon", .fns = &poly_fns, .polygon = &p_doubleoctagon},
+    {.name = "tripleoctagon", .fns = &poly_fns, .polygon = &p_tripleoctagon},
+    {.name = "invtriangle", .fns = &poly_fns, .polygon = &p_invtriangle},
+    {.name = "invtrapezium", .fns = &poly_fns, .polygon = &p_invtrapezium},
+    {.name = "invhouse", .fns = &poly_fns, .polygon = &p_invhouse},
+    {.name = "underline", .fns = &poly_fns, .polygon = &p_underline},
+    {.name = "Mdiamond", .fns = &poly_fns, .polygon = &p_Mdiamond},
+    {.name = "Msquare", .fns = &poly_fns, .polygon = &p_Msquare},
+    {.name = "Mcircle", .fns = &poly_fns, .polygon = &p_Mcircle},
 	/* biological circuit shapes, as specified by SBOLv*/
 	/** gene expression symbols **/
-    {"promoter", &poly_fns, &p_promoter},
-    {"cds",  &poly_fns, &p_cds},
-    {"terminator",  &poly_fns, &p_terminator},
-    {"utr",  &poly_fns, &p_utr},
-    {"insulator", &poly_fns, &p_insulator},
-    {"ribosite", &poly_fns, &p_ribosite},
-    {"rnastab", &poly_fns, &p_rnastab},
-    {"proteasesite", &poly_fns, &p_proteasesite},
-    {"proteinstab", &poly_fns, &p_proteinstab},
+    {.name = "promoter", .fns = &poly_fns, .polygon = &p_promoter},
+    {.name = "cds", .fns =  &poly_fns, .polygon = &p_cds},
+    {.name = "terminator", .fns =  &poly_fns, .polygon = &p_terminator},
+    {.name = "utr", .fns =  &poly_fns, .polygon = &p_utr},
+    {.name = "insulator", .fns = &poly_fns, .polygon = &p_insulator},
+    {.name = "ribosite", .fns = &poly_fns, .polygon = &p_ribosite},
+    {.name = "rnastab", .fns = &poly_fns, .polygon = &p_rnastab},
+    {.name = "proteasesite", .fns = &poly_fns, .polygon = &p_proteasesite},
+    {.name = "proteinstab", .fns = &poly_fns, .polygon = &p_proteinstab},
 	/** dna construction symbols **/
-    {"primersite",  &poly_fns, &p_primersite},
-    {"restrictionsite", &poly_fns, &p_restrictionsite},
-    {"fivepoverhang", &poly_fns, &p_fivepoverhang},
-    {"threepoverhang", &poly_fns, &p_threepoverhang},
-    {"noverhang", &poly_fns, &p_noverhang},
-    {"assembly", &poly_fns, &p_assembly},
-    {"signature", &poly_fns, &p_signature},
-    {"rpromoter", &poly_fns, &p_rpromoter},
-    {"larrow",  &poly_fns, &p_larrow},
-    {"rarrow",  &poly_fns, &p_rarrow},
-    {"lpromoter",  &poly_fns, &p_lpromoter},
+    {.name = "primersite", .fns =  &poly_fns, .polygon = &p_primersite},
+    {.name = "restrictionsite", .fns = &poly_fns, .polygon = &p_restrictionsite},
+    {.name = "fivepoverhang", .fns = &poly_fns, .polygon = &p_fivepoverhang},
+    {.name = "threepoverhang", .fns = &poly_fns, .polygon = &p_threepoverhang},
+    {.name = "noverhang", .fns = &poly_fns, .polygon = &p_noverhang},
+    {.name = "assembly", .fns = &poly_fns, .polygon = &p_assembly},
+    {.name = "signature", .fns = &poly_fns, .polygon = &p_signature},
+    {.name = "rpromoter", .fns = &poly_fns, .polygon = &p_rpromoter},
+    {.name = "larrow", .fns =  &poly_fns, .polygon = &p_larrow},
+    {.name = "rarrow", .fns =  &poly_fns, .polygon = &p_rarrow},
+    {.name = "lpromoter", .fns =  &poly_fns, .polygon = &p_lpromoter},
 	/*  *** shapes other than polygons  *** */
-    {"record", &record_fns, NULL},
-    {"Mrecord", &record_fns, NULL},
-    {"epsf", &epsf_fns, NULL},
-    {"star", &star_fns, &p_star},
-    {NULL, NULL, NULL}
+    {.name = "record", .fns = &record_fns, .polygon = NULL},
+    {.name = "Mrecord", .fns = &record_fns, .polygon = NULL},
+    {.name = "epsf", .fns = &epsf_fns, .polygon = NULL},
+    {.name = "star", .fns = &star_fns, .polygon = &p_star},
+    {0}
 };
 
 static void unrecognized(node_t * n, char *p)
