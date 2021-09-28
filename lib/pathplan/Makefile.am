@@ -8,6 +8,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 
 if WITH_WIN32
+AM_CFLAGS = -DPATHPLAN_EXPORTS
 AM_CPPFLAGS += -O0
 endif
 
