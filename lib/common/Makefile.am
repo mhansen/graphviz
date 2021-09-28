@@ -30,6 +30,8 @@ libcommon_C_la_SOURCES = arrows.c colxlate.c ellipse.c textspan.c textspan_lut.c
 	timing.c labels.c ns.c shapes.c utils.c geom.c taper.c \
 	output.c emit.c xml.c \
 	color_names
+libcommon_C_la_LIBADD = \
+	$(top_builddir)/lib/xdot/libxdot.la
 
 colxlate.o colxlate.lo : colortbl.h
 
