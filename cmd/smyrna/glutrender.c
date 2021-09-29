@@ -39,7 +39,7 @@ static glMouseButtonType getGlCompMouseType(int n)
 }
 
 
-void cb_reshape(int width, int height)
+static void cb_reshape(int width, int height)
 {
     /* static int doonce=0; */
     int vPort[4];
