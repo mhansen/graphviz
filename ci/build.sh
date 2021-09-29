@@ -55,7 +55,7 @@ elif [[ "${CONFIGURE_OPTIONS:-}" =~ "--enable-static" ]]; then
     GV_VERSION=$( cat GRAPHVIZ_VERSION )
     tar xfz graphviz-${GV_VERSION}.tar.gz
     pushd graphviz-${GV_VERSION}
-    ./configure $CONFIGURE_OPTIONS --prefix=$( pwd )/build | tee >(../ci/extract-configure-log.sh >../${META_DATA_DIR}/configure.log)
+    ./configure --enable-lefty $CONFIGURE_OPTIONS --prefix=$( pwd )/build | tee >(../ci/extract-configure-log.sh >../${META_DATA_DIR}/configure.log)
     make
     make install
     popd
@@ -78,7 +78,7 @@ else
         fi
     elif [[ "${OSTYPE}" =~ "darwin" ]]; then
         ./autogen.sh
-        ./configure --prefix=$( pwd )/build --with-quartz=yes
+        ./configure --enable-lefty --prefix=$( pwd )/build --with-quartz=yes
         make
         make install
         tar cfz graphviz-${GV_VERSION}-${ARCH}.tar.gz --options gzip:compression-level=9 build

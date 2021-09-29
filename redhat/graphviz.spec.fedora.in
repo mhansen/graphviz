@@ -929,6 +929,7 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --with-ghostscript \
         --without-glitz \
         --with-ipsepcola \
+        --enable-lefty \
 %if ! %{ANN}
         --without-ann \
 %endif
@@ -1014,18 +1015,6 @@ find %{buildroot}%{_datadir}/%{name}/demo -type f -exec chmod a-x {} ';'
 
 # Rename python demos to prevent byte compilation
 find %{buildroot}%{_datadir}/%{name}/demo -type f -name "*.py" -exec mv {} {}.demo ';'
-
-# # Remove metadata from generated PDFs
-# pushd %{buildroot}%{_docdir}/%{name}/pdf
-# for f in prune lneato.1 lefty.1 gvgen.1 gc.1 dotty.1 dot.1 cluster.1
-# do
-#   if [ -f $f.pdf ]
-#   then
-# # ugly, but there is probably no better solution
-#     qpdf --empty --static-id --pages $f.pdf -- $f.pdf.$$
-#     mv -f $f.pdf.$$ $f.pdf
-#   fi
-# done
 
 # Ghost plugins config
 touch %{buildroot}%{_libdir}/graphviz/config%{pluginsver}

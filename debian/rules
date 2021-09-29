@@ -85,6 +85,7 @@ configure-stamp:
 	--disable-r \
 	--enable-ruby \
 	--enable-tcl \
+	--enable-lefty \
 	LDFLAGS="-Wl,--as-needed"
 	touch configure-stamp
 
@@ -96,15 +97,6 @@ build-stamp:
 	$(MAKE)
 	touch build-stamp
 
-#	# Build the manpage from SONAME-independent perlpod
-#	sed -e 's/##SONAME##/$(SONAME)/g' \
-#		debian/libgraphviz-config-update.pod.in > \
-#		debian/libgraphviz$(SONAME)-config-update.pod
-#	pod2man --center "GRAPHVIZ CONFIGURATION MANAGEMENT" \
-#		--release $(UPSTREAM_VERSION) \
-#		debian/libgraphviz$(SONAME)-config-update.pod \
-#		debian/libgraphviz$(SONAME)-config-update.1
-
 clean: clean-patched unpatch
 clean-patched:
 	dh_testdir
@@ -113,10 +105,6 @@ clean-patched:
 
 	# Clean up if a build already happened
 	[ ! -f Makefile ] || $(MAKE) distclean
-
-#	# Clean up intermediate and generated manpages
-#	rm -f debian/libgraphviz$(SONAME)-config-update.pod
-#	rm -f debian/libgraphviz$(SONAME)-config-update.1
 
 	dh_clean $(CONFIG_SCRIPTS) \
 		tclpkg/gv/gv.R tclpkg/gv/php_gv.h
@@ -185,10 +173,6 @@ install: build
 	# 2. Move the devel files where they belong
 	# dev files have been removed by recommendation of rpmlint
 
-	#install -d $(DEV_PACKAGE)/usr/lib/ocaml/$(OCAMLABI)/gv
-	#mv $(OCAML_PACKAGE)/usr/lib/graphviz/ocaml/*.cm* \
-	#	$(DEV_PACKAGE)/usr/lib/ocaml/$(OCAMLABI)/gv
-
 	# 3. Trash the (almost empty) directory (and its .la)
 	rm -rf $(OCAML_PACKAGE)/usr/lib/graphviz
 
@@ -205,10 +189,6 @@ install: build
 			$(PYTHON_PACKAGE)/usr/lib/$$i/site-packages ; \
 	done
 	rm -rf $(PYTHON_PACKAGE)/usr/lib/graphviz
-
-	# Debian-specific manpage
-#	dh_installman -plibgraphviz$(SONAME)      \
-#		$(CURDIR)/debian/libgraphviz$(SONAME)-config-update.1
 
 	# Some additional work for libgv-ruby
 	install -d $(RUBY_PACKAGE)/usr/lib/ruby/$(RUBY_VERSION)
