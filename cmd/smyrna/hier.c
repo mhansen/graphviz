@@ -10,6 +10,7 @@
 
 #include "smyrnadefs.h"
 #include "hier.h"
+#include <math.h>
 #include <neatogen/delaunay.h>
 #include <common/memory.h>
 
@@ -31,14 +32,10 @@ scale_coords(double *x_coords, double *y_coords, int n,
     minX = maxX = x_coords[0];
     minY = maxY = y_coords[0];
     for (i = 1; i < n; i++) {
-	if (x_coords[i] < minX)
-	    minX = x_coords[i];
-	if (y_coords[i] < minY)
-	    minY = y_coords[i];
-	if (x_coords[i] > maxX)
-	    maxX = x_coords[i];
-	if (y_coords[i] > maxY)
-	    maxY = y_coords[i];
+	minX = fmin(minX, x_coords[i]);
+	minY = fmin(minY, y_coords[i]);
+	maxX = fmax(maxX, x_coords[i]);
+	maxY = fmax(maxY, y_coords[i]);
     }
     for (i = 0; i < n; i++) {
 	x_coords[i] -= minX;
