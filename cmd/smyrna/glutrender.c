@@ -170,7 +170,8 @@ static void cb_keyboard(unsigned char key, int x, int y)
 
     appmouse_key_press(view,key);
 }
-void cb_keyboard_up(unsigned char key,int x, int y)
+
+static void cb_keyboard_up(unsigned char key, int x, int y)
 {
     (void)key;
 
