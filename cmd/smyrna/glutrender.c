@@ -187,7 +187,8 @@ static void cb_special_key(int key, int x, int y)
     appmouse_key_press(view,key);
 
 }
-void cb_special_key_up(int key, int x, int y)
+
+static void cb_special_key_up(int key, int x, int y)
 {
     if(key==GLUT_KEY_F1)
     {
