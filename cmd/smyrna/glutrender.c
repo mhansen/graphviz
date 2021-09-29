@@ -85,7 +85,8 @@ static void cb_display(void)
     }
 
 }
-void cb_mouseclick(int button, int state,int x, int y)
+
+static void cb_mouseclick(int button, int state, int x, int y)
 {
     Agraph_t* g;
 
