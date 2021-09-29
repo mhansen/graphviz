@@ -151,7 +151,7 @@ static void cb_drag(int X, int Y)
 
 }
 
-void cb_keyboard(unsigned char key,int x, int y)
+static void cb_keyboard(unsigned char key, int x, int y)
 {
     if (key==27)    /*ESC*/
 	exit (1);
