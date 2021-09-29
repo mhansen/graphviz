@@ -1268,7 +1268,7 @@ tclGdTextCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 int Gdtclft_Init(Tcl_Interp * interp)
 #else
 #ifdef __WIN32__
-EXPORT(int, Gdtclft_Init) (interp)
+__declspec(dllexport) int Gdtclft_Init(Tcl_Interp *interp)
 #else
 int Gdtclft_Init(Tcl_Interp * interp)
 #endif
@@ -1294,7 +1294,7 @@ int Gdtclft_Init(Tcl_Interp * interp)
 int Gdtclft_SafeInit(Tcl_Interp * interp)
 #else
 #ifdef __WIN32__
-EXPORT(int, Gdtclft_SafeInit) (interp)
+__declspec(dllexport) int Gdtclft_SafeInit(Tcl_Interp *interp)
 #else
 int Gdtclft_SafeInit(Tcl_Interp * interp)
 #endif
