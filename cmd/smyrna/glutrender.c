@@ -178,8 +178,7 @@ static void cb_keyboard_up(unsigned char key, int x, int y)
     appmouse_key_release(view);
 }
 
-
-void cb_special_key(int key, int x, int y)
+static void cb_special_key(int key, int x, int y)
 {
     if(key==GLUT_KEY_F1)
     {
