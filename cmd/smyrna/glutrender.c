@@ -125,7 +125,9 @@ static void cb_mouseclick(int button, int state, int x, int y)
 void cb_mouseover(int x,int y)/*no mouse click only mouse pointer moving on context*/
 {
 }
-void cb_drag(int X,int Y)/*mouse moving witha button clicked (dragging)*/
+
+// mouse moving with a button clicked (dragging)
+static void cb_drag(int X, int Y)
 {
 
     float x = (float) X;
