@@ -41,7 +41,6 @@ static glMouseButtonType getGlCompMouseType(int n)
 
 static void cb_reshape(int width, int height)
 {
-    /* static int doonce=0; */
     int vPort[4];
     float aspect;
     view->w = width;
