@@ -70,7 +70,8 @@ static void cb_reshape(int width, int height)
 	/*** OpenGL END ***/
 
 }
-void cb_display(void )
+
+static void cb_display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
