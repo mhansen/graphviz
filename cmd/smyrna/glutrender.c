@@ -153,18 +153,7 @@ static void cb_drag(int X, int Y)
     cb_display();
 
 }
-void cb_mouseentry(int state)
-{
-    if(state==GLUT_LEFT)
-    {
-	//TODO when mouse leaves the scene (which might be impossible in full screen modes with one monitor	
-    }
-    else // GLUT_ENTERED
-    {
-	//TODO mouse is back in scene 
-    }
 
-}
 void cb_keyboard(unsigned char key,int x, int y)
 {
     if (key==27)    /*ESC*/
@@ -279,7 +268,7 @@ int cb_glutinit(int x,int y,int w,int h, int bits,int s_rate,int fullscreen,int*
     glutMotionFunc(cb_drag);
     glutPassiveMotionFunc(cb_mouseover);
     glutVisibilityFunc(NULL);
-    glutEntryFunc(cb_mouseentry);//if mouse pointer left or entered the scene
+    glutEntryFunc(NULL);
     glutSpecialFunc(cb_special_key);
     glutSpecialUpFunc(cb_special_key_up);
 
