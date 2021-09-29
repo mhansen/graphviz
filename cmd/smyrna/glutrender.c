@@ -122,9 +122,6 @@ static void cb_mouseclick(int button, int state, int x, int y)
     cb_display();
 
 }
-void cb_mouseover(int x,int y)/*no mouse click only mouse pointer moving on context*/
-{
-}
 
 // mouse moving with a button clicked (dragging)
 static void cb_drag(int X, int Y)
@@ -266,7 +263,7 @@ int cb_glutinit(int x,int y,int w,int h, int bits,int s_rate,int fullscreen,int*
     glutKeyboardUpFunc( cb_keyboard_up);
     glutMouseFunc(cb_mouseclick);
     glutMotionFunc(cb_drag);
-    glutPassiveMotionFunc(cb_mouseover);
+    glutPassiveMotionFunc(NULL);
     glutVisibilityFunc(NULL);
     glutEntryFunc(NULL);
     glutSpecialFunc(cb_special_key);
