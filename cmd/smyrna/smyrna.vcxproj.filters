@@ -75,9 +75,6 @@
     <ClInclude Include="topview.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="topviewdefs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gui\topviewsettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>

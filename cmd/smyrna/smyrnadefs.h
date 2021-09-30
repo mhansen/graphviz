@@ -15,11 +15,6 @@
 #include "windows.h"
 #endif
 #endif
-#ifdef	_WIN32			//this  is needed on _WIN32 to get libglade see the callback
-#define _BB  __declspec(dllexport)
-#else
-#define _BB
-#endif
 
 #include <xdot/xdot.h>
 #include <gtk/gtk.h>

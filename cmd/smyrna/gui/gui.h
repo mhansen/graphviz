@@ -32,11 +32,6 @@ extern "C" {
     extern GladeXML *xml;	//global libglade vars
     extern GtkWidget *gladewidget;
 
-    extern gve_element frmObjectTypeIndex;
-    extern Agraph_t *frmObjectg;
-
-    extern GtkComboBox *cbSelectGraph;	//combo at top left
-
     extern GtkWidget *AttrWidgets[MAXIMUM_WIDGET_COUNT];
     extern GtkWidget *AttrLabels[MAXIMUM_WIDGET_COUNT];
     extern int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];
@@ -44,13 +39,7 @@ extern "C" {
     extern attribute attr[MAXIMUM_WIDGET_COUNT];
 
 
-    void create_object_properties(void);	//creates general purpose object properties template
-    void object_properties_node_init(void);	//customize window for Nodes
-    void object_properties_edge_init(void);	//customize window for Edges
-    void object_properties_cluster_init(void);	//customize window for Cluster
-    void object_properties_graph_init(void);	//customize window for Graph , this shows the graph default values
     void graph_properties_init(int newgraph);	//initialize little open graph dialog
-    GtkComboBox *get_SelectGraph(void);	//freaking GLADE!!!!!
     int update_graph_properties(Agraph_t * graph);	//updates graph from gui
     void load_graph_properties(Agraph_t * graph);	//load from graph to gui
 

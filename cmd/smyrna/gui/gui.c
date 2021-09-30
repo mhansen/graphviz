@@ -27,81 +27,11 @@ GtkWidget *statusbar1;
 GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;
 
-//1 subgraph 2 node 3 edge
-int frmObjectTypeIndex;
-Agraph_t *frmObjectg;
-
-
-GtkComboBox *cbSelectGraph;	//combo at top left
-
 GtkWidget *AttrWidgets[MAXIMUM_WIDGET_COUNT];
 GtkWidget *AttrLabels[MAXIMUM_WIDGET_COUNT];
 int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];
 int widgetcounter;		//number of attributes counted dynamically, might be removed in the future 
 attribute attr[MAXIMUM_WIDGET_COUNT];
-
-
-
-//loads object properties form and does some fixes
-//call this function only ones
-void create_object_properties(void)
-{
-    GladeXML *xml;
-    GtkWidget *widget;
-    xml = glade_xml_new(smyrnaGlade, NULL, NULL);
-
-    widget = glade_xml_get_widget(xml, "listPoints");
-    gtk_clist_set_column_title((GtkCList *) widget, 0, "Def");
-    gtk_clist_set_column_title((GtkCList *) widget, 1, "x");
-    gtk_clist_set_column_title((GtkCList *) widget, 2, "y");
-    gtk_clist_set_column_title((GtkCList *) widget, 3, "z");
-    gtk_clist_column_titles_show((GtkCList *) widget);
-    gtk_widget_show(widget);
-    widget = glade_xml_get_widget(xml, "win");
-    gtk_widget_show(widget);
-
-
-}
-
-//call this after create_object_properties()
-void object_properties_node_init(void)
-{
-
-}
-void object_properties_edge_init(void)	//customize window for Edges
-{
-}
-void object_properties_cluster_init(void)	//customize window for Cluster
-{
-
-}
-void object_properties_graph_init(void)	//customize window for Graph , this shows the graph default values
-{
-
-}
-
-
-
-GtkComboBox *get_SelectGraph(void)
-{
-    GtkComboBox *cb;
-    if (!cbSelectGraph) {
-
-	cb = (GtkComboBox *) gtk_combo_box_new_text();
-	gtk_widget_show((GtkWidget *) cb);
-	gtk_box_pack_start(GTK_BOX(gladewidget), (GtkWidget *) cb, FALSE,
-			   FALSE, 0);
-
-
-	gtk_layout_put((GtkLayout *) gladewidget, (GtkWidget *) cb, 780,
-		       3);
-	//signal
-
-
-	return cb;
-    } else
-	return cbSelectGraph;
-}
 
 void Color_Widget(char *colorstring, GtkWidget * widget)
 {

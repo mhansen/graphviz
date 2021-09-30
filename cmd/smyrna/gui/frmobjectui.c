@@ -24,7 +24,6 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/strcasecmp.h>
 
-static attr_t *binarySearch(attr_list * l, char *searchKey);
 static int sel_node;
 static int sel_edge;
 static int sel_graph;
@@ -349,7 +348,7 @@ static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
 	    attr_list_add(tl, new_attr_ref(at));
     }
 }
-void filter_attributes(char *prefix, topview * t)
+static void filter_attributes(char *prefix, topview * t)
 {
 
     int ind;
