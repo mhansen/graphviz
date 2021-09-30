@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Msys experimental packages are included in release artifacts #2130
 - CMake build system incorrectly aliases gv2gml to gml2gv #2131
 - Gv2gml Doesn't escape quotes in attributes #1276
+- GVPR incorrectly understands color schemes #1956
 
 ## [2.49.1] – 2021-09-22
 
