@@ -24,7 +24,6 @@ static char guibuffer[BUFSIZ];	//general purpose buffer
 GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;
 
-int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];
 attribute attr[MAXIMUM_WIDGET_COUNT];
 
 void Color_Widget_bg(char *colorstring, GtkWidget * widget)

@@ -28,7 +28,6 @@ extern "C" {
     extern GladeXML *xml;	//global libglade vars
     extern GtkWidget *gladewidget;
 
-    extern int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];
     extern attribute attr[MAXIMUM_WIDGET_COUNT];
 
     int update_graph_properties(Agraph_t * graph);	//updates graph from gui
