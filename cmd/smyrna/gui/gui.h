@@ -38,13 +38,9 @@ extern "C" {
     extern int widgetcounter;	//number of attributes counted dynamically, might be removed in the future 
     extern attribute attr[MAXIMUM_WIDGET_COUNT];
 
-
-    void graph_properties_init(int newgraph);	//initialize little open graph dialog
     int update_graph_properties(Agraph_t * graph);	//updates graph from gui
     void load_graph_properties(Agraph_t * graph);	//load from graph to gui
 
-    void update_object_properties(int typeIndex, Agraph_t * g);	//updates objects from gui(node ,edge, cluster)
-    int load_object_properties(gve_element typeIndex, Agraph_t * g);
     void load_attributes(void);	//loads attributes from a text file
 
 //GTK helpre functions
