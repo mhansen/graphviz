@@ -125,32 +125,6 @@ int update_graph_properties(Agraph_t * graph)	//updates graph from gui
     return 1;
 }
 
-
-
-char *get_attribute_string_value_from_widget(attribute * att)
-{
-    GdkColor color;
-    switch (att->Type) {
-    case 'F':
-	sprintf(guibuffer, "%f",
-		gtk_spin_button_get_value((GtkSpinButton *) att->
-					  attrWidget));
-	return guibuffer;
-	break;
-    case 'C':
-	gtk_color_button_get_color((GtkColorButton *) att->attrWidget,
-				   &color);
-	sprintf(guibuffer, "#%x%x%x", color.red / 255, color.green / 255,
-		color.blue / 255);
-	return guibuffer;
-	break;
-    default:
-	strcpy(guibuffer,
-	       gtk_entry_get_text((GtkEntry *) att->attrWidget));
-	return guibuffer;
-    }
-}
-
 void load_attributes(void)
 {
     FILE *file;

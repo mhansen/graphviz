@@ -46,8 +46,6 @@ extern "C" {
     void update_object_properties(int typeIndex, Agraph_t * g);	//updates objects from gui(node ,edge, cluster)
     int load_object_properties(gve_element typeIndex, Agraph_t * g);
     void load_attributes(void);	//loads attributes from a text file
-    char *get_attribute_string_value_from_widget(attribute * att);
-
 
 //GTK helpre functions
 //void Color_Widget_bg (int r, int g, int b, GtkWidget *widget);        //change background color 
