@@ -21,16 +21,10 @@
 
 static char guibuffer[BUFSIZ];	//general purpose buffer
 
-GdkWindow *window1;
-GtkWidget *statusbar1;
-
 GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;
 
-GtkWidget *AttrWidgets[MAXIMUM_WIDGET_COUNT];
-GtkWidget *AttrLabels[MAXIMUM_WIDGET_COUNT];
 int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];
-int widgetcounter;		//number of attributes counted dynamically, might be removed in the future 
 attribute attr[MAXIMUM_WIDGET_COUNT];
 
 void Color_Widget_bg(char *colorstring, GtkWidget * widget)

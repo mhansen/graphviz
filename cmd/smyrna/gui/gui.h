@@ -25,17 +25,10 @@
 extern "C" {
 #endif
 
-//GtkWidget *window1;           //main window
-    extern GdkWindow *window1;
-    extern GtkWidget *statusbar1;
-
     extern GladeXML *xml;	//global libglade vars
     extern GtkWidget *gladewidget;
 
-    extern GtkWidget *AttrWidgets[MAXIMUM_WIDGET_COUNT];
-    extern GtkWidget *AttrLabels[MAXIMUM_WIDGET_COUNT];
     extern int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];
-    extern int widgetcounter;	//number of attributes counted dynamically, might be removed in the future 
     extern attribute attr[MAXIMUM_WIDGET_COUNT];
 
     int update_graph_properties(Agraph_t * graph);	//updates graph from gui
