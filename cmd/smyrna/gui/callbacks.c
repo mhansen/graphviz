@@ -105,18 +105,6 @@ void dlgOpenGraph_OK_Clicked(GtkWidget * button, gpointer data)
     g_print("ok is pressed - %i was pressed\n", *(int *) data);
 }
 
-//dlgOpenGraph btncancelclicked
-void on_dlgOpenGraph_btncancel_clicked(GtkWidget * widget,
-				       gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-
-    gtk_dialog_response((GtkDialog *)
-			glade_xml_get_widget(xml, "dlgOpenGraph"),
-			GTK_RESPONSE_CANCEL);
-}
-
 void frmObjectBtnCancel_clicked(GtkWidget * widget, gpointer user_data)
 {
     (void)widget;

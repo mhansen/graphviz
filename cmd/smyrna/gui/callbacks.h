@@ -37,10 +37,6 @@ extern "C" {
     _BB void graph_select_change(GtkWidget * widget, gpointer user_data);
     _BB void mGraphPropertiesSlot(GtkWidget * widget, gpointer user_data);
 
-//dlgOpenGraph btncancelclicked
-    _BB void on_dlgOpenGraph_btncancel_clicked(GtkWidget * widget,
-					       gpointer user_data);
-
 //MENU 
 
 //frm Object Cancel button
