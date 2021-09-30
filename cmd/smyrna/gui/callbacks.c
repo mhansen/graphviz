@@ -129,14 +129,6 @@ void on_dlgOpenGraph_btncancel_clicked(GtkWidget * widget,
 			GTK_RESPONSE_CANCEL);
 }
 
-void attr_widgets_modifiedSlot(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-
-    g_print("attr changed signal..incoming data : %i\n",
-	    *(int *) user_data);
-}
-
 void frmObjectBtnOK_clicked(GtkWidget * widget, gpointer user_data)
 {
     (void)widget;
