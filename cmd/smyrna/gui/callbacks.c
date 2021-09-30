@@ -117,15 +117,6 @@ void on_dlgOpenGraph_btncancel_clicked(GtkWidget * widget,
 			GTK_RESPONSE_CANCEL);
 }
 
-void frmObjectBtnOK_clicked(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-
-    deselect_all(view->g[view->activeGraph]);
-    gtk_widget_hide(glade_xml_get_widget(xml, "frmObject"));
-}
-
 void frmObjectBtnCancel_clicked(GtkWidget * widget, gpointer user_data)
 {
     (void)widget;

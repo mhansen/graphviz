@@ -43,12 +43,6 @@ extern "C" {
 
 //MENU 
 
-
-//frm Object OK button
-//hides frmObject , set changed values to selected objects
-    _BB void frmObjectBtnOK_clicked(GtkWidget * widget,
-				    gpointer user_data);
-
 //frm Object Cancel button
 //hides frmObject , ignores changed values
 
