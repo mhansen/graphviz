@@ -105,14 +105,6 @@ void dlgOpenGraph_OK_Clicked(GtkWidget * button, gpointer data)
     g_print("ok is pressed - %i was pressed\n", *(int *) data);
 }
 
-void frmObjectBtnCancel_clicked(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-
-    gtk_widget_hide(glade_xml_get_widget(xml, "frmObject"));
-}
-
 /*console output widgets*/
 _BB void on_clearconsolebtn_clicked(GtkWidget * widget, gpointer user_data)
 {
