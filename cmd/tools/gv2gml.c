@@ -24,6 +24,8 @@
 #include <getopt.h>
 
 #include <cgraph/cgraph.h>
+#include <common/types.h>
+#include <common/utils.h>
 #include <ctype.h>
 #include <ingraphs/ingraphs.h>
 
@@ -78,12 +80,12 @@ typedef struct {
     char* fontName;
 } edge_attrs;
 
-typedef struct Agnodeinfo_t {
+typedef struct {
     Agrec_t h;
     uint64_t id;
-} Agnodeinfo_t;
+} Local_Agnodeinfo_t;
 
-#define ID(n)  (((Agnodeinfo_t*)(n->base.data))->id)
+#define ID(n)  (((Local_Agnodeinfo_t*)(n->base.data))->id)
 
 static void indent (int ix, FILE* outFile)
 {
@@ -222,7 +224,7 @@ emitAttr (char* name, char* value, FILE* outFile, int ix)
     if (isNumber (value))
 	fprintf (outFile, "%s %s\n", name, value);
     else  
-	fprintf (outFile, "%s \"%s\"\n", name, value);
+	fprintf (outFile, "%s \"%s\"\n", name, xml_string(value));
 }
 
 /* node attributes:
@@ -417,7 +419,7 @@ emitNodeAttrs (Agraph_t* G, Agnode_t* np, FILE* outFile, int ix)
 static void 
 emitNode (Agraph_t* G, Agnode_t* n, FILE* outFile)
 {
-    agbindrec (n, "nodeinfo", sizeof(Agnodeinfo_t), TRUE);
+    agbindrec(n, "nodeinfo", sizeof(Local_Agnodeinfo_t), TRUE);
     fprintf(outFile, "  node [\n    id %" PRIu64 "\n    name \"%s\"\n", id,
             agnameof(n));
     ID(n) = id++;
@@ -672,15 +674,15 @@ static void usage(int v)
     exit(v);
 }
 
-static char *cmdName(char *path)
+static char *cmdName(char *cmd)
 {
     char *sp;
 
-    sp = strrchr(path, '/');
+    sp = strrchr(cmd, '/');
     if (sp)
         sp++;
     else
-        sp = path;
+        sp = cmd;
     return sp;
 }
 
