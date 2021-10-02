@@ -46,16 +46,6 @@ static int xml_isentity(const char *s)
     return 0;
 }
 
-// options to tweak the behavior of XML escaping
-typedef struct {
-  // assume no embedded escapes, and escape "\n" and "\r"
-  unsigned raw : 1;
-  // escape '-'
-  unsigned dash : 1;
-  // escape consecutive ' '
-  unsigned nbsp : 1;
-} xml_flags_t;
-
 /** XML-escape a character
  *
  * \param previous The source character preceding the current one or '\0' if
@@ -110,6 +100,20 @@ static int xml_core(char previous, const char *current, xml_flags_t flags,
   // otherwise, output the character as-is
   char buffer[2] = {c, '\0'};
   return cb(state, buffer);
+}
+
+int xml_escape(const char *s, xml_flags_t flags,
+               int (*cb)(void *state, const char *s), void *state) {
+  char previous = '\0';
+  int rc = 0;
+  while (*s != '\0') {
+    rc = xml_core(previous, s, flags, cb, state);
+    if (rc < 0)
+      return rc;
+    previous = *s;
+    ++s;
+  }
+  return rc;
 }
 
 char *xml_string(char *s)
