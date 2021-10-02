@@ -39,9 +39,8 @@ static glMouseButtonType getGlCompMouseType(int n)
 }
 
 
-void cb_reshape(int width, int height)
+static void cb_reshape(int width, int height)
 {
-    /* static int doonce=0; */
     int vPort[4];
     float aspect;
     view->w = width;
@@ -71,7 +70,8 @@ void cb_reshape(int width, int height)
 	/*** OpenGL END ***/
 
 }
-void cb_display(void )
+
+static void cb_display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -85,7 +85,8 @@ void cb_display(void )
     }
 
 }
-void cb_mouseclick(int button, int state,int x, int y)
+
+static void cb_mouseclick(int button, int state, int x, int y)
 {
     Agraph_t* g;
 
@@ -121,10 +122,9 @@ void cb_mouseclick(int button, int state,int x, int y)
     cb_display();
 
 }
-void cb_mouseover(int x,int y)/*no mouse click only mouse pointer moving on context*/
-{
-}
-void cb_drag(int X,int Y)/*mouse moving witha button clicked (dragging)*/
+
+// mouse moving with a button clicked (dragging)
+static void cb_drag(int X, int Y)
 {
 
     float x = (float) X;
@@ -150,19 +150,8 @@ void cb_drag(int X,int Y)/*mouse moving witha button clicked (dragging)*/
     cb_display();
 
 }
-void cb_mouseentry(int state)
-{
-    if(state==GLUT_LEFT)
-    {
-	//TODO when mouse leaves the scene (which might be impossible in full screen modes with one monitor	
-    }
-    else // GLUT_ENTERED
-    {
-	//TODO mouse is back in scene 
-    }
 
-}
-void cb_keyboard(unsigned char key,int x, int y)
+static void cb_keyboard(unsigned char key, int x, int y)
 {
     if (key==27)    /*ESC*/
 	exit (1);
@@ -181,15 +170,15 @@ void cb_keyboard(unsigned char key,int x, int y)
 
     appmouse_key_press(view,key);
 }
-void cb_keyboard_up(unsigned char key,int x, int y)
+
+static void cb_keyboard_up(unsigned char key, int x, int y)
 {
     (void)key;
 
     appmouse_key_release(view);
 }
 
-
-void cb_special_key(int key, int x, int y)
+static void cb_special_key(int key, int x, int y)
 {
     if(key==GLUT_KEY_F1)
     {
@@ -198,7 +187,8 @@ void cb_special_key(int key, int x, int y)
     appmouse_key_press(view,key);
 
 }
-void cb_special_key_up(int key, int x, int y)
+
+static void cb_special_key_up(int key, int x, int y)
 {
     if(key==GLUT_KEY_F1)
     {
@@ -274,9 +264,9 @@ int cb_glutinit(int x,int y,int w,int h, int bits,int s_rate,int fullscreen,int*
     glutKeyboardUpFunc( cb_keyboard_up);
     glutMouseFunc(cb_mouseclick);
     glutMotionFunc(cb_drag);
-    glutPassiveMotionFunc(cb_mouseover);
+    glutPassiveMotionFunc(NULL);
     glutVisibilityFunc(NULL);
-    glutEntryFunc(cb_mouseentry);//if mouse pointer left or entered the scene
+    glutEntryFunc(NULL);
     glutSpecialFunc(cb_special_key);
     glutSpecialUpFunc(cb_special_key_up);
 
