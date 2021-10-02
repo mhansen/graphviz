@@ -623,7 +623,6 @@
 		      <property name="visible_horizontal">True</property>
 		      <property name="visible_vertical">True</property>
 		      <property name="is_important">False</property>
-		      <signal name="clicked" handler="btnToolCursor_clicked"/>
 		    </widget>
 		    <packing>
 		      <property name="expand">False</property>
