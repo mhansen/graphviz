@@ -12,12 +12,11 @@
 
 #include <stdlib.h>
 
+#include <common/types.h>
+#include <common/utils.h>
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
-
-extern char *xml_string(char *str);
-extern char *xml_url_string(char *str);
 
 typedef enum { FORMAT_IMAP, FORMAT_ISMAP, FORMAT_CMAP, FORMAT_CMAPX, } format_type;
 
