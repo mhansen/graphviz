@@ -27,8 +27,6 @@ extern "C" {
 				    gpointer user_data);
     _BB void btnToolFit_clicked(GtkWidget * widget, gpointer user_data);
     _BB void btnToolMove_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void btnToolDeleteNode_clicked(GtkWidget * widget,
-				       gpointer user_data);
     _BB void btnToolFindNode_clicked(GtkWidget * widget,
 				     gpointer user_data);
     _BB void btnToolAddEdge_clicked(GtkWidget * widget,

@@ -100,9 +100,6 @@ void btnToolMove_clicked(GtkWidget * widget, gpointer user_data)
 {
 }
 
-void btnToolDeleteNode_clicked(GtkWidget * widget, gpointer user_data)
-{
-}
 void btnToolFindNode_clicked(GtkWidget * widget, gpointer user_data)
 {
 }
