@@ -99,12 +99,12 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
 	}
         if (target && target[0]) {
             gvputs(job, " target=\"");
-	    gvputs(job, xml_string(target));
+	    gvputs_xml(job, target);
 	    gvputs(job, "\"");
 	}
         if (tooltip && tooltip[0]) {
             gvputs(job, " title=\"");
-	    gvputs(job, xml_string(tooltip));
+	    gvputs_xml(job, tooltip);
 	    gvputs(job, "\"");
 	}
         /*
@@ -146,32 +146,30 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
 static void map_begin_page(GVJ_t * job)
 {
     obj_state_t *obj = job->obj;
-    char *s;
 
     switch (job->render.id) {
     case FORMAT_IMAP:
         gvputs(job, "base referer\n");
         if (obj->url && obj->url[0]) {
 	    gvputs(job, "default ");
-	    gvputs(job, xml_string(obj->url));
+	    gvputs_xml(job, obj->url);
 	    gvputs(job, "\n");
 	}
         break;
     case FORMAT_ISMAP:
         if (obj->url && obj->url[0]) {
 	    gvputs(job, "default ");
-	    gvputs(job, xml_string(obj->url));
+	    gvputs_xml(job, obj->url);
 	    gvputs(job, " ");
-	    gvputs(job, xml_string(agnameof(obj->u.g)));
+	    gvputs_xml(job, agnameof(obj->u.g));
 	    gvputs(job, "\n");
 	}
         break;
     case FORMAT_CMAPX:
-	s = xml_string(agnameof(obj->u.g));
 	gvputs(job, "<map id=\"");
-	gvputs(job, s);
+	gvputs_xml(job, agnameof(obj->u.g));
 	gvputs(job, "\" name=\"");
-	gvputs(job, s);
+	gvputs_xml(job, agnameof(obj->u.g));
 	gvputs(job, "\">\n");
         break;
     default:

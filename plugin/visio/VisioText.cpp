@@ -64,8 +64,10 @@ namespace Visio
 	
 	void Run::Print(GVJ_t* job, unsigned int index) const
 	{
-		auto c_str = const_cast<char*>(_text.c_str());
-		gvprintf(job, "<pp IX='%u'/><cp IX='%u'/>%s\n", index, index, xml_string(c_str));	/* para mark + char mark + actual text */
+		// para mark + char mark + actual text
+		gvprintf(job, "<pp IX='%u'/><cp IX='%u'/>", index, index);
+		gvputs_xml(job, _text.c_str());
+		gvputs(job, "\n");
 	}
 	
 	Text Text::CreateText(GVJ_t* job, pointf p, textspan_t* span)
