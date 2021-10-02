@@ -100,9 +100,6 @@ void btnToolMove_clicked(GtkWidget * widget, gpointer user_data)
 {
 }
 
-void btnToolDeleteEdge_clicked(GtkWidget * widget, gpointer user_data)
-{
-}
 void btnToolFindEdge_clicked(GtkWidget * widget, gpointer user_data)
 {
 }
