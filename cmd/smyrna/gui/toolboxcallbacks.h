@@ -21,23 +21,6 @@
 extern "C" {
 #endif
 
-    _BB void btnToolSingleSelect_clicked(GtkWidget * widget,
-					 gpointer user_data);
-    _BB void btnToolRectSelect_clicked(GtkWidget * widget,
-				       gpointer user_data);
-    _BB void btnToolRectXSelect_clicked(GtkWidget * widget,
-					gpointer user_data);
-
-    _BB void btnToolAntiRectSelect_clicked(GtkWidget * widget,
-					   gpointer user_data);
-    _BB void btnToolAntiRectXSelect_clicked(GtkWidget * widget,
-					    gpointer user_data);
-
-
-
-    _BB void btnToolPan_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void btnToolZoom_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void btnToolZoomIn_clicked(GtkWidget * widget, gpointer user_data);
     _BB void btnToolZoomOut_clicked(GtkWidget * widget,
 				    gpointer user_data);
     _BB void btnToolZoomFit_clicked(GtkWidget * widget,
