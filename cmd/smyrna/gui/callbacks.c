@@ -105,56 +105,6 @@ void dlgOpenGraph_OK_Clicked(GtkWidget * button, gpointer data)
     g_print("ok is pressed - %i was pressed\n", *(int *) data);
 }
 
-//dlgOpenGraph btnOK clicked
-void on_dlgOpenGraph_btnOK_clicked(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-
-    if (update_graph_properties(view->g[view->activeGraph]))
-	gtk_dialog_response((GtkDialog *)
-			    glade_xml_get_widget(xml, "dlgOpenGraph"),
-			    GTK_RESPONSE_OK);
-}
-
-//dlgOpenGraph btncancelclicked
-void on_dlgOpenGraph_btncancel_clicked(GtkWidget * widget,
-				       gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-
-    gtk_dialog_response((GtkDialog *)
-			glade_xml_get_widget(xml, "dlgOpenGraph"),
-			GTK_RESPONSE_CANCEL);
-}
-
-void attr_widgets_modifiedSlot(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-
-    attr_widgets_modified[*(int *) user_data] = 1;
-    g_print("attr changed signal..incoming data : %i\n",
-	    *(int *) user_data);
-}
-
-void frmObjectBtnOK_clicked(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-
-    deselect_all(view->g[view->activeGraph]);
-    gtk_widget_hide(glade_xml_get_widget(xml, "frmObject"));
-}
-
-void frmObjectBtnCancel_clicked(GtkWidget * widget, gpointer user_data)
-{
-    (void)widget;
-    (void)user_data;
-
-    gtk_widget_hide(glade_xml_get_widget(xml, "frmObject"));
-}
-
 /*console output widgets*/
 _BB void on_clearconsolebtn_clicked(GtkWidget * widget, gpointer user_data)
 {

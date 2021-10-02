@@ -21,34 +21,10 @@
 
 static char guibuffer[BUFSIZ];	//general purpose buffer
 
-GdkWindow *window1;
-GtkWidget *statusbar1;
-
 GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;
 
-GtkWidget *AttrWidgets[MAXIMUM_WIDGET_COUNT];
-GtkWidget *AttrLabels[MAXIMUM_WIDGET_COUNT];
-int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];
-int widgetcounter;		//number of attributes counted dynamically, might be removed in the future 
 attribute attr[MAXIMUM_WIDGET_COUNT];
-
-void Color_Widget(char *colorstring, GtkWidget * widget)
-{
-  GtkRcStyle *rc_style;
-  GdkColor color;
-
-  gdk_color_parse (colorstring, &color);
-
-
-  rc_style = gtk_rc_style_new ();
-  /* Set foreground (fg) color in normal state to red */
-  rc_style->fg[GTK_STATE_NORMAL] = color;
-  rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_FG;
-
-  gtk_widget_modify_style (widget, rc_style);
-  gtk_rc_style_unref (rc_style);
-}
 
 void Color_Widget_bg(char *colorstring, GtkWidget * widget)
 {
@@ -123,32 +99,6 @@ int update_graph_properties(Agraph_t * graph)	//updates graph from gui
 				    glade_xml_get_widget(xml,
 							 "entryGraphFileName"));
     return 1;
-}
-
-
-
-char *get_attribute_string_value_from_widget(attribute * att)
-{
-    GdkColor color;
-    switch (att->Type) {
-    case 'F':
-	sprintf(guibuffer, "%f",
-		gtk_spin_button_get_value((GtkSpinButton *) att->
-					  attrWidget));
-	return guibuffer;
-	break;
-    case 'C':
-	gtk_color_button_get_color((GtkColorButton *) att->attrWidget,
-				   &color);
-	sprintf(guibuffer, "#%x%x%x", color.red / 255, color.green / 255,
-		color.blue / 255);
-	return guibuffer;
-	break;
-    default:
-	strcpy(guibuffer,
-	       gtk_entry_get_text((GtkEntry *) att->attrWidget));
-	return guibuffer;
-    }
 }
 
 void load_attributes(void)

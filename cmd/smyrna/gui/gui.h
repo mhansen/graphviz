@@ -25,40 +25,19 @@
 extern "C" {
 #endif
 
-//GtkWidget *window1;           //main window
-    extern GdkWindow *window1;
-    extern GtkWidget *statusbar1;
-
     extern GladeXML *xml;	//global libglade vars
     extern GtkWidget *gladewidget;
 
-    extern GtkWidget *AttrWidgets[MAXIMUM_WIDGET_COUNT];
-    extern GtkWidget *AttrLabels[MAXIMUM_WIDGET_COUNT];
-    extern int attr_widgets_modified[MAXIMUM_WIDGET_COUNT];
-    extern int widgetcounter;	//number of attributes counted dynamically, might be removed in the future 
     extern attribute attr[MAXIMUM_WIDGET_COUNT];
 
-
-    void graph_properties_init(int newgraph);	//initialize little open graph dialog
     int update_graph_properties(Agraph_t * graph);	//updates graph from gui
     void load_graph_properties(Agraph_t * graph);	//load from graph to gui
 
-    void update_object_properties(int typeIndex, Agraph_t * g);	//updates objects from gui(node ,edge, cluster)
-    int load_object_properties(gve_element typeIndex, Agraph_t * g);
     void load_attributes(void);	//loads attributes from a text file
-    void change_selected_graph_attributes(Agraph_t * g, char *attrname,
-					  char *attrvalue);
-    void change_selected_node_attributes(Agraph_t * g, char *attrname,
-					 char *attrvalue);
-    void change_selected_edge_attributes(Agraph_t * g, char *attrname,
-					 char *attrvalue);
-    char *get_attribute_string_value_from_widget(attribute * att);
-
 
 //GTK helpre functions
 //void Color_Widget_bg (int r, int g, int b, GtkWidget *widget);        //change background color 
     void Color_Widget_bg(char *colorstring, GtkWidget * widget);
-	void Color_Widget(char *colorstring, GtkWidget * widget);
 /*generic warning pop up*/
     void show_gui_warning(char *str);
 /*generic open file dialog*/

@@ -37,33 +37,6 @@ extern "C" {
     _BB void graph_select_change(GtkWidget * widget, gpointer user_data);
     _BB void mGraphPropertiesSlot(GtkWidget * widget, gpointer user_data);
 
-
-//dlgOpenGraph btnOK clicked
-    _BB void on_dlgOpenGraph_btnOK_clicked(GtkWidget * widget,
-					   gpointer user_data);
-//dlgOpenGraph btncancelclicked
-    _BB void on_dlgOpenGraph_btncancel_clicked(GtkWidget * widget,
-					       gpointer user_data);
-
-//MENU 
-
-
-//frm Object OK button
-//hides frmObject , set changed values to selected objects
-    _BB void frmObjectBtnOK_clicked(GtkWidget * widget,
-				    gpointer user_data);
-
-//frm Object Cancel button
-//hides frmObject , ignores changed values
-
-    _BB void frmObjectBtnCancel_clicked(GtkWidget * widget,
-					gpointer user_data);
-
-
-    _BB void attr_widgets_modifiedSlot(GtkWidget * widget,
-				       gpointer user_data);
-
-
 /*console output widgets*/
     _BB void on_clearconsolebtn_clicked(GtkWidget * widget,
 					gpointer user_data);
