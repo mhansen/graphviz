@@ -50,6 +50,10 @@ static int xml_isentity(const char *s)
 typedef struct {
   // assume no embedded escapes, and escape "\n" and "\r"
   unsigned raw : 1;
+  // escape '-'
+  unsigned dash : 1;
+  // escape consecutive ' '
+  unsigned nbsp : 1;
 } xml_flags_t;
 
 /** XML-escape a character
@@ -84,10 +88,10 @@ static int xml_core(char previous, const char *current, xml_flags_t flags,
     return cb(state, "&gt;");
 
   // '-' cannot be used in XML comment strings
-  if (c == '-')
+  if (c == '-' && flags.dash)
     return cb(state, "&#45;");
 
-  if (c == ' ' && previous == ' ')
+  if (c == ' ' && previous == ' ' && flags.nbsp)
     // substitute 2nd and subsequent spaces with required_spaces
     return cb(state, "&#160;"); // Inkscape does not recognize &nbsp;
 
@@ -163,7 +167,7 @@ char *xml_string0(char *s, boolean raw) {
   static size_t bufsize = 0;
   char prev = '\0';
 
-  const xml_flags_t flags = {.raw = raw != FALSE};
+  const xml_flags_t flags = {.raw = raw != FALSE, .dash = 1, .nbsp = 1};
 
   if (!buf) {
     bufsize = 64;
