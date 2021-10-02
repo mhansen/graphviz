@@ -1,6 +1,7 @@
 #include <common/memory.h>
 #include <common/types.h>
 #include <common/utils.h>
+#include <ctype.h>
 
 /* return true if *s points to &[A-Za-z]+;      (e.g. &Ccedil; )
  *                          or &#[0-9]*;        (e.g. &#38; )
@@ -16,12 +17,10 @@ static int xml_isentity(char *s)
 	s++;
 	if (*s == 'x' || *s == 'X') {
 	    s++;
-	    while ((*s >= '0' && *s <= '9')
-		   || (*s >= 'a' && *s <= 'f')
-		   || (*s >= 'A' && *s <= 'F'))
+	    while (isxdigit(*s))
 		s++;
 	} else {
-	    while (*s >= '0' && *s <= '9')
+	    while (isdigit(*s))
 		s++;
 	}
     } else {
