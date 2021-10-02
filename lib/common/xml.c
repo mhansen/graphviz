@@ -2,6 +2,16 @@
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
+#include <stdbool.h>
+
+// variant of `isalpha` that assumes a C locale
+static bool isalpha_no_locale(char c) {
+  if (c >= 'a' && c <= 'z')
+    return true;
+  if (c >= 'A' && c <= 'Z')
+    return true;
+  return false;
+}
 
 /* return true if *s points to &[A-Za-z]+;      (e.g. &Ccedil; )
  *                          or &#[0-9]*;        (e.g. &#38; )
@@ -24,8 +34,7 @@ static int xml_isentity(char *s)
 		s++;
 	}
     } else {
-	while ((*s >= 'a' && *s <= 'z')
-	       || (*s >= 'A' && *s <= 'Z'))
+	while (isalpha_no_locale(*s))
 	    s++;
     }
     if (*s == ';')
