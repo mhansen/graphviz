@@ -26,7 +26,6 @@ extern "C" {
     _BB void btnToolZoomFit_clicked(GtkWidget * widget,
 				    gpointer user_data);
     _BB void btnToolFit_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void btnToolMove_clicked(GtkWidget * widget, gpointer user_data);
     _BB void on_btnActivateGraph_clicked(GtkWidget * widget,
 					 gpointer user_data);
 
