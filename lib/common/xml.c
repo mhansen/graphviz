@@ -137,7 +137,8 @@ static int buffer_put(void *dst, const char *src) {
   size_t length = strlen(src);
 
   // do we need to expand this buffer?
-  assert(buffer->base != NULL && "buffer not initialized in xml_string0?");
+  assert(buffer->base != NULL &&
+         "buffer not initialized in xml_string0/xml_url_string?");
   while (length > buffer->capacity ||
          buffer->capacity - length <= buffer->length) {
     size_t capacity = buffer->capacity == 0 ? 64 : (buffer->capacity * 2);
@@ -192,58 +193,29 @@ char *xml_string0(char *s, boolean raw) {
 }
 
 /* a variant of xml_string for urls in hrefs */
-char *xml_url_string(char *s)
-{
-    static char *buf = NULL;
-    static int bufsize = 0;
-    char *p, *sub;
-    int len, pos = 0;
+char *xml_url_string(char *s) {
+  static char *buf = NULL;
+  static size_t bufsize = 0;
 
-    if (!buf) {
-	bufsize = 64;
-	buf = gmalloc(bufsize);
-    }
+  const xml_flags_t flags = {0};
 
-    p = buf;
-    while (s && *s) {
-	if (pos > (bufsize - 8)) {
-	    bufsize *= 2;
-	    buf = grealloc(buf, bufsize);
-	    p = buf + pos;
-	}
-	/* escape '&' only if not part of a legal entity sequence */
-	if (*s == '&' && !(xml_isentity(s))) {
-	    sub = "&amp;";
-	    len = 5;
-	}
-	/* '<' '>' are safe to substitute even if string is already UTF-8 coded
-	 * since UTF-8 strings won't contain '<' or '>' */
-	else if (*s == '<') {
-	    sub = "&lt;";
-	    len = 4;
-	}
-	else if (*s == '>') {
-	    sub = "&gt;";
-	    len = 4;
-	}
-	else if (*s == '"') {
-	    sub = "&quot;";
-	    len = 6;
-	}
-	else if (*s == '\'') {
-	    sub = "&#39;";
-	    len = 5;
-	}
-	else {
-	    sub = s;
-	    len = 1;
-	}
-	while (len--) {
-	    *p++ = *sub++;
-	    pos++;
-	}
-	s++;
-    }
-    *p = '\0';
-    return buf;
+  if (!buf) {
+    bufsize = 64;
+    buf = gmalloc(bufsize);
+  }
+
+  // generate n escaped version of this string into `buf`
+  buffer_t buffer = {.base = buf, .capacity = bufsize};
+  while (s && *s) {
+    (void)xml_core('\0', s, flags, buffer_put, &buffer);
+    s++;
+  }
+  assert(buffer.length < buffer.capacity && "no room for NUL");
+  buffer.base[buffer.length] = '\0';
+
+  // save the static buffer (it may have been realloced) for reuse next time
+  buf = buffer.base;
+  bufsize = buffer.capacity;
+
+  return buf;
 }
