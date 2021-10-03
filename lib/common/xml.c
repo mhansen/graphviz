@@ -136,8 +136,7 @@ static int buffer_put(void *dst, const char *src) {
   size_t length = strlen(src);
 
   // do we need to expand this buffer?
-  assert(buffer->base != NULL &&
-         "buffer not initialized in xml_string0/xml_url_string?");
+  assert(buffer->base != NULL && "buffer not initialized in xml_url_string?");
   while (length > buffer->capacity ||
          buffer->capacity - length <= buffer->length) {
     size_t capacity = buffer->capacity == 0 ? 64 : (buffer->capacity * 2);
@@ -153,42 +152,6 @@ static int buffer_put(void *dst, const char *src) {
   // `xml_core` should only have given us short data
   assert(length <= INT_MAX && "too large XML escape sequence");
   return (int)length;
-}
-
-/* xml_string0:
- * Encode input string as an xml string.
- * If raw is true, the input is interpreted as having no
- * embedded escape sequences, and \n and \r are changed
- * into &#10; and &#13;, respectively.
- * Uses a static buffer, so non-re-entrant.
- */
-char *xml_string0(char *s, boolean raw) {
-  static char *buf = NULL;
-  static size_t bufsize = 0;
-  char prev = '\0';
-
-  const xml_flags_t flags = {.raw = raw != FALSE, .dash = 1, .nbsp = 1};
-
-  if (!buf) {
-    bufsize = 64;
-    buf = gmalloc(bufsize);
-  }
-
-  // generate an escaped version of this string into `buf`
-  buffer_t buffer = {.base = buf, .capacity = bufsize};
-  while (s && *s) {
-    (void)xml_core(prev, s, flags, buffer_put, &buffer);
-    prev = *s;
-    s++;
-  }
-  assert(buffer.length < buffer.capacity && "no room for NUL");
-  buffer.base[buffer.length] = '\0';
-
-  // save the static buffer (it may have been realloced) for reuse next time
-  buf = buffer.base;
-  bufsize = buffer.capacity;
-
-  return buf;
 }
 
 /* a variant of xml_string for urls in hrefs */

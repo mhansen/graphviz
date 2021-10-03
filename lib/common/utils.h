@@ -61,7 +61,6 @@ extern "C" {
                              int (*cb)(void *state, const char *s),
                              void *state);
 
-    UTILS_API char *xml_string0(char *str, boolean raw);
     UTILS_API void write_plain(GVJ_t * job, graph_t * g, FILE * f, boolean extend);
     UTILS_API double yDir (double y);
     UTILS_API char *ps_string(char *s, int);
