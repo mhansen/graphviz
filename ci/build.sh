@@ -80,6 +80,10 @@ else
         tar cfz graphviz-${GV_VERSION}-${ARCH}.tar.gz --options gzip:compression-level=9 build
         mv graphviz-${GV_VERSION}-${ARCH}.tar.gz ${DIR}/
     elif [ "${OSTYPE}" = "cygwin" -o "${OSTYPE}" = "msys" ]; then
+        if [ "${OSTYPE}" = "msys" ]; then
+            # ensure that MinGW tcl shell is used in order to find tcl functions
+            CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS:-} --with-tclsh=${MSYSTEM_PREFIX}/bin/tclsh86"
+        fi
         if [ "${use_autogen:-no}" = "yes" ]; then
             ./autogen.sh
             ./configure ${CONFIGURE_OPTIONS:-} --prefix=$( pwd )/build | tee >(./ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
