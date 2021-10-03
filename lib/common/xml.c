@@ -116,11 +116,6 @@ int xml_escape(const char *s, xml_flags_t flags,
   return rc;
 }
 
-char *xml_string(char *s)
-{
-    return xml_string0 (s, FALSE);
-}
-
 // a dynamically resizable string
 typedef struct {
   char *base;
