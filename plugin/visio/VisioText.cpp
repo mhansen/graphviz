@@ -17,9 +17,7 @@
 #include <cstdlib>
 #include <string.h>
 
-// slight lie that this function takes a const pointer (it does not, but we know
-// it does not modify its argument)
-extern "C" char *xml_string(const char* str);
+#include <common/utils.h>
 
 namespace Visio
 {
@@ -66,7 +64,8 @@ namespace Visio
 	
 	void Run::Print(GVJ_t* job, unsigned int index) const
 	{
-		gvprintf(job, "<pp IX='%u'/><cp IX='%u'/>%s\n", index, index, xml_string(_text.c_str()));	/* para mark + char mark + actual text */
+		auto c_str = const_cast<char*>(_text.c_str());
+		gvprintf(job, "<pp IX='%u'/><cp IX='%u'/>%s\n", index, index, xml_string(c_str));	/* para mark + char mark + actual text */
 	}
 	
 	Text Text::CreateText(GVJ_t* job, pointf p, textspan_t* span)
