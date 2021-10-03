@@ -349,7 +349,8 @@ svg_begin_anchor(GVJ_t * job, char *href, char *tooltip, char *target,
     }
     if (tooltip && tooltip[0]) {
 	GVPUTS(job, " xlink:title=\"");
-	gvputs(job, xml_string0(tooltip, 1));
+	const xml_flags_t flags = {.raw = 1, .dash = 1, .nbsp = 1};
+	xml_escape(tooltip, flags, (int(*)(void*, const char*))gvputs, job);
 	GVPUTS(job, "\"");
     }
     if (target && target[0]) {
@@ -478,7 +479,8 @@ static void svg_textspan(GVJ_t * job, pointf p, textspan_t * span)
         gvprintdouble(job, -p.y);
         GVPUTS(job, "\">");
     }
-    gvputs(job, xml_string0(span->str, TRUE));
+    const xml_flags_t xml_flags = {.raw = 1, .dash = 1, .nbsp = 1};
+    xml_escape(span->str, xml_flags, (int(*)(void*, const char*))gvputs, job);
     if (obj->labeledgealigned)
 	GVPUTS(job, "</tspan></textPath>");
     GVPUTS(job, "</text>\n");
