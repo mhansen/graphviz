@@ -79,7 +79,7 @@ else
         make install
         tar cfz graphviz-${GV_VERSION}-${ARCH}.tar.gz --options gzip:compression-level=9 build
         mv graphviz-${GV_VERSION}-${ARCH}.tar.gz ${DIR}/
-    elif [ "${OSTYPE}" = "cygwin" ]; then
+    elif [ "${OSTYPE}" = "cygwin" -o "${OSTYPE}" = "msys" ]; then
         if [ "${use_autogen:-no}" = "yes" ]; then
             ./autogen.sh
             ./configure --prefix=$( pwd )/build | tee >(./ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
