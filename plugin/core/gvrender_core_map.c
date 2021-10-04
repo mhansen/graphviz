@@ -20,6 +20,12 @@
 
 typedef enum { FORMAT_IMAP, FORMAT_ISMAP, FORMAT_CMAP, FORMAT_CMAPX, } format_type;
 
+// wrapper around `xml_escape` to set flags for URL escaping
+static void xml_url_puts(GVJ_t *job, const char *s) {
+  const xml_flags_t flags = {0};
+  (void)xml_escape(s, flags, (int(*)(void*, const char*))gvputs, job);
+}
+
 static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, int nump,
                 char* url, char *tooltip, char *target, char *id)
 {
@@ -89,12 +95,12 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
         }
         if (id && id[0]) {
             gvputs(job, " id=\"");
-	    gvputs(job, xml_url_string(id));
+	    xml_url_puts(job, id);
 	    gvputs(job, "\"");
 	}
         if (url && url[0]) {
             gvputs(job, " href=\"");
-	    gvputs(job, xml_url_string(url));
+	    xml_url_puts(job, url);
 	    gvputs(job, "\"");
 	}
         if (target && target[0]) {

@@ -344,7 +344,8 @@ svg_begin_anchor(GVJ_t * job, char *href, char *tooltip, char *target,
                 "<a");
     if (href && href[0]) {
 	GVPUTS(job, " xlink:href=\"");
-	gvputs(job, xml_url_string(href));
+	const xml_flags_t flags = {0};
+	xml_escape(href, flags, (int(*)(void*, const char*))gvputs, job);
 	GVPUTS(job, "\"");
     }
     if (tooltip && tooltip[0]) {
