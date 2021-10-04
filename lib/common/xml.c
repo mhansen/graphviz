@@ -1,12 +1,7 @@
-#include <assert.h>
-#include <common/memory.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
-#include <limits.h>
 #include <stdbool.h>
-#include <stddef.h>
-#include <string.h>
 
 // variant of `isalpha` that assumes a C locale
 static bool isalpha_no_locale(char c) {
@@ -114,70 +109,4 @@ int xml_escape(const char *s, xml_flags_t flags,
     ++s;
   }
   return rc;
-}
-
-// a dynamically resizable string
-typedef struct {
-  char *base;
-  size_t length;
-  size_t capacity;
-} buffer_t;
-
-/** Write string data to a buffer
- *
- * \param dst A `buffer_t` to write to, but `void*` typed to align with the
- *   callback type `xml_core` expects.
- * \param src String to append.
- * \return Number of characters written.
- */
-static int buffer_put(void *dst, const char *src) {
-
-  buffer_t *buffer = dst;
-  size_t length = strlen(src);
-
-  // do we need to expand this buffer?
-  assert(buffer->base != NULL && "buffer not initialized in xml_url_string?");
-  while (length > buffer->capacity ||
-         buffer->capacity - length <= buffer->length) {
-    size_t capacity = buffer->capacity == 0 ? 64 : (buffer->capacity * 2);
-    char *base = grealloc(buffer->base, capacity);
-    buffer->base = base;
-    buffer->capacity = capacity;
-  }
-
-  // write source data into the buffer
-  strcpy(buffer->base + buffer->length, src);
-  buffer->length += length;
-
-  // `xml_core` should only have given us short data
-  assert(length <= INT_MAX && "too large XML escape sequence");
-  return (int)length;
-}
-
-/* a variant of xml_string for urls in hrefs */
-char *xml_url_string(char *s) {
-  static char *buf = NULL;
-  static size_t bufsize = 0;
-
-  const xml_flags_t flags = {0};
-
-  if (!buf) {
-    bufsize = 64;
-    buf = gmalloc(bufsize);
-  }
-
-  // generate n escaped version of this string into `buf`
-  buffer_t buffer = {.base = buf, .capacity = bufsize};
-  while (s && *s) {
-    (void)xml_core('\0', s, flags, buffer_put, &buffer);
-    s++;
-  }
-  assert(buffer.length < buffer.capacity && "no room for NUL");
-  buffer.base[buffer.length] = '\0';
-
-  // save the static buffer (it may have been realloced) for reuse next time
-  buf = buffer.base;
-  bufsize = buffer.capacity;
-
-  return buf;
 }

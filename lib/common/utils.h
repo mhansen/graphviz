@@ -65,7 +65,6 @@ extern "C" {
     UTILS_API double yDir (double y);
     UTILS_API char *ps_string(char *s, int);
     UTILS_API char *strdup_and_subst_obj(char *str, void *obj);
-    UTILS_API char *xml_url_string(char *s);
     UTILS_API void epsf_emit_body(GVJ_t *job, usershape_t *us);
     UTILS_API void epsf_define(GVJ_t * job);
     UTILS_API void undoClusterEdges(graph_t * g);
