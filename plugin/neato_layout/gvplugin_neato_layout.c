@@ -8,6 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include "config.h"
+
 #include <gvc/gvplugin.h>
 
 extern gvplugin_installed_t gvlayout_neato_types[];
@@ -17,7 +19,7 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-#ifdef _WIN32
+#ifdef GVDLL
 #   define GVPLUGIN_NEATO_LAYOUT_API __declspec(dllexport)
 #else
 #   define GVPLUGIN_NEATO_LAYOUT_API
