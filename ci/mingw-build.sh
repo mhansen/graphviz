@@ -2,22 +2,23 @@
 
 set -eux
 
-pacman -S --noconfirm --needed bison
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-cairo
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-cmake
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-diffutils
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-expat
-pacman -S --noconfirm --needed flex
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-gcc
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-libgd
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-libtool
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-pango
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-pkgconf
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-python
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-ninja
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-nsis
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-tcl
-pacman -S --noconfirm --needed ${MINGW_PACKAGE_PREFIX}-zlib
+pacman -S --noconfirm --needed \
+    bison \
+    ${MINGW_PACKAGE_PREFIX}-cairo \
+    ${MINGW_PACKAGE_PREFIX}-cmake \
+    ${MINGW_PACKAGE_PREFIX}-diffutils \
+    ${MINGW_PACKAGE_PREFIX}-expat \
+    flex \
+    ${MINGW_PACKAGE_PREFIX}-gcc \
+    ${MINGW_PACKAGE_PREFIX}-libgd \
+    ${MINGW_PACKAGE_PREFIX}-libtool \
+    ${MINGW_PACKAGE_PREFIX}-pango \
+    ${MINGW_PACKAGE_PREFIX}-pkgconf \
+    ${MINGW_PACKAGE_PREFIX}-python \
+    ${MINGW_PACKAGE_PREFIX}-ninja \
+    ${MINGW_PACKAGE_PREFIX}-nsis \
+    ${MINGW_PACKAGE_PREFIX}-tcl \
+    ${MINGW_PACKAGE_PREFIX}-zlib \
 
 export PATH=$PATH:/c/Git/cmd
 
