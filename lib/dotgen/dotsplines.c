@@ -418,8 +418,7 @@ static void _dot_splines(graph_t * g, int normalize)
      * alternatively, the edges would be routed identically if
      * routed separately.
      */
-    qsort((char *) &edges[0], n_edges, sizeof(edges[0]),
-	  (qsort_cmpf) edgecmp);
+    qsort(edges, n_edges, sizeof(edges[0]), (qsort_cmpf)edgecmp);
 
     /* FIXME: just how many boxes can there be? */
     P->boxes = N_NEW(n_nodes + 20 * 2 * NSUB, boxf);
