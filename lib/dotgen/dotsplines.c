@@ -18,6 +18,7 @@
 #include <dotgen/dot.h>
 #include <limits.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -1844,7 +1845,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     if ((et == ET_LINE) && (pointn = makeLineEdge (g, fe, pointfs, &hn))) {
     }
     else {
-	int splines = et == ET_SPLINE;
+	bool is_spline = et == ET_SPLINE;
 	boxes_t boxes = {0};
 	pointn = 0;
 	segfirst = e;
@@ -1887,7 +1888,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
 	    completeregularpath(P, segfirst, e, &tend, &hend, boxes.data,
 	                        (int)boxes.size, 1);
-	    if (splines) ps = routesplines(P, &pn);
+	    if (is_spline) ps = routesplines(P, &pn);
 	    else {
 		ps = routepolylines (P, &pn);
 		if ((et == ET_LINE) && (pn > 4)) {
@@ -1939,7 +1940,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	completeregularpath(P, segfirst, e, &tend, &hend, boxes.data, (int)boxes.size,
 	                    longedge);
 	boxes_free(&boxes);
-	if (splines) ps = routesplines(P, &pn);
+	if (is_spline) ps = routesplines(P, &pn);
 	else ps = routepolylines (P, &pn);
 	if (et == ET_LINE && pn > 4) {
 	    /* Here we have used the polyline case to handle
