@@ -152,7 +152,8 @@ portable-source:
         - echo "$CI_JOB_NAME-warnings $warnings_count" > metrics.txt
         - rm $logfile
         - cat metrics.txt
-        - python gen_version.py > GRAPHVIZ_VERSION
+        # avoid BOM in GRAPHVIZ_VERSION file
+        - python gen_version.py | Out-File GRAPHVIZ_VERSION -Encoding ascii
         - python gen_version.py --collection > COLLECTION
         # Package
         - $Env:GV_VERSION=$( cat GRAPHVIZ_VERSION )
