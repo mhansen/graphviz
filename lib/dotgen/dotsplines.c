@@ -2189,8 +2189,7 @@ void refineregularends(edge_t *left, edge_t *right, pathend_t *endp, int dir,
 	    pp = cp;
 	}
 	i = dir == 1 ? 0 : *boxnp - 1;
-	if (boxes[i].LL.x > endp->boxes[endp->boxn - 1].UR.x - MINW)
-	    boxes[i].LL.x = endp->boxes[endp->boxn - 1].UR.x - MINW;
+	boxes[i].LL.x = fmin(boxes[i].LL.x, endp->boxes[endp->boxn - 1].UR.x - MINW);
     }
     if (right) {
 	if (!(rspls = getsplinepoints(right))) return;
@@ -2208,8 +2207,7 @@ void refineregularends(edge_t *left, edge_t *right, pathend_t *endp, int dir,
 	    pp = cp;
 	}
 	i = dir == 1 ? 0 : *boxnp - 1;
-	if (boxes[i].UR.x < endp->boxes[endp->boxn - 1].LL.x + MINW)
-	    boxes[i].UR.x = endp->boxes[endp->boxn - 1].LL.x + MINW;
+	boxes[i].UR.x = fmax(boxes[i].UR.x, endp->boxes[endp->boxn - 1].LL.x + MINW);
     }
 }
 #endif
