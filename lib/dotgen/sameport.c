@@ -27,7 +27,7 @@ typedef struct same_t {
 } same_t;
 
 static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id);
-static void sameport(node_t * u, elist * l, double arr_len);
+static void sameport(node_t * u, elist * l);
 
 void dot_sameports(graph_t * g)
 /* merge edge ports in G */
@@ -58,13 +58,13 @@ void dot_sameports(graph_t * g)
 	}
 	for (i = 0; i < n_samehead; i++) {
 	    if (samehead[i].l.size > 1)
-		sameport(n, &samehead[i].l, samehead[i].arr_len);
+		sameport(n, &samehead[i].l);
 	    free_list(samehead[i].l);
 	    /* I sure hope I don't need to free the char* id */
 	}
 	for (i = 0; i < n_sametail; i++) {
 	    if (sametail[i].l.size > 1)
-		sameport(n, &sametail[i].l, sametail[i].arr_len);
+		sameport(n, &sametail[i].l);
 	    free_list(sametail[i].l);
 	    /* I sure hope I don't need to free the char* id */
 	}
@@ -101,7 +101,7 @@ static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id)
     return n_same;
 }
 
-static void sameport(node_t * u, elist * l, double arr_len)
+static void sameport(node_t * u, elist * l)
 /* make all edges in L share the same port on U. The port is placed on the
    node boundary and the average angle between the edges. FIXME: this assumes
    naively that the edges are straight lines, which is wrong if they are long.
