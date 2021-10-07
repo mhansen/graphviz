@@ -486,7 +486,8 @@ windows-cygwin-build-using-autogen:
         - $env:Path = "C:\Python3;" + $env:Path
         # avoid BOM in COLLECTION file
         - echo experimental | Out-File COLLECTION -Encoding ascii
-        - python gen_version.py > GRAPHVIZ_VERSION
+        # avoid BOM in GRAPHVIZ_VERSION file
+        - python gen_version.py | Out-File GRAPHVIZ_VERSION -Encoding ascii
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
         - C:\tools\cygwin\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/cygwin-build.sh'
