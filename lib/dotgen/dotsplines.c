@@ -2004,6 +2004,9 @@ completeregularpath(path * P, edge_t * first, edge_t * last,
 		    pathend_t * tendp, pathend_t * hendp, boxf * boxes,
 		    int boxn, int flag)
 {
+    // this implementation of completeregularpath ignores the flag
+    (void)flag;
+
     edge_t *uleft, *uright, *lleft, *lright;
     int i, fb, lb;
     splines *spl;
