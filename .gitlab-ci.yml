@@ -154,7 +154,8 @@ portable-source:
         - cat metrics.txt
         # avoid BOM in GRAPHVIZ_VERSION file
         - python gen_version.py | Out-File GRAPHVIZ_VERSION -Encoding ascii
-        - python gen_version.py --collection > COLLECTION
+        # avoid BOM in COLLECTION file
+        - python gen_version.py --collection | Out-File COLLECTION -Encoding ascii
         # Package
         - $Env:GV_VERSION=$( cat GRAPHVIZ_VERSION )
         - >-
