@@ -967,17 +967,8 @@ static edge_t*
 cloneEdge (graph_t* g, node_t* tn, node_t* hn, edge_t* orig)
 {
     edge_t* e = agedge(g, tn, hn,NULL,1);
-    /* for (; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig)); */
     agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
     agcopyattr (orig, e);
-/*
-    if (orig->tail != ND_alg(tn)) {
-	char* hdport = agget (orig, HEAD_ID);
-	char* tlport = agget (orig, TAIL_ID);
-	agset (e, TAIL_ID, (hdport ? hdport : ""));
-	agset (e, HEAD_ID, (tlport ? tlport : ""));
-    }
-*/
 
     return e;
 }
@@ -2206,7 +2197,6 @@ void refineregularends(edge_t *left, edge_t *right, pathend_t *endp, int dir,
 	pp = spline_at_y(rspls, boxes[0].UR.y);
 	for (i = 0; i < nsub; i++) {
 	    cp = spline_at_y(rspls, boxes[i].LL.y);
-	    /*boxes[i].UR.x = AVG (pp.x, cp.x); */
 	    boxes[i].UR.x = AVG(pp.x, cp.x);
 	    pp = cp;
 	}
@@ -2278,14 +2268,12 @@ static void adjustregularpath(path * P, int fb, int lb)
 static boxf rank_box(spline_info_t* sp, graph_t * g, int r)
 {
     boxf b;
-    node_t /* *right0, *right1, */  * left0, *left1;
+    node_t *left0, *left1;
 
     b = sp->Rank_box[r];
     if (b.LL.x == b.UR.x) {
 	left0 = GD_rank(g)[r].v[0];
-	/* right0 = GD_rank(g)[r].v[GD_rank(g)[r].n - 1]; */
 	left1 = GD_rank(g)[r + 1].v[0];
-	/* right1 = GD_rank(g)[r + 1].v[GD_rank(g)[r + 1].n - 1]; */
 	b.LL.x = sp->LeftBound;
 	b.LL.y = ND_coord(left1).y + GD_rank(g)[r + 1].ht2;
 	b.UR.x = sp->RightBound;
