@@ -170,15 +170,19 @@ static splineInfo sinfo = {.swapEnds = swap_ends_p,
 
 int portcmp(port p0, port p1)
 {
-    int rv;
     if (p1.defined == FALSE)
 	return (p0.defined ? 1 : 0);
     if (p0.defined == FALSE)
 	return -1;
-    rv = p0.p.x - p1.p.x;
-    if (rv == 0)
-	rv = p0.p.y - p1.p.y;
-    return rv;
+    if (p0.p.x < p1.p.x)
+	return -1;
+    if (p0.p.x > p1.p.x)
+	return 1;
+    if (p0.p.y < p1.p.y)
+	return -1;
+    if (p0.p.y > p1.p.y)
+	return 1;
+    return 0;
 }
 
 /* swap_bezier:
