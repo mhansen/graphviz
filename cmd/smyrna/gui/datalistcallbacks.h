@@ -45,8 +45,6 @@ extern "C" {
 				    gpointer user_data);
     _BB void cgbTVVisible_toggled_cb(GtkWidget * widget,
 				     gpointer user_data);
-    _BB void cgbTVHighlighted_toggled_cb(GtkWidget * widget,
-					 gpointer user_data);
     _BB void btnTVShowAll_clicked_cb(GtkWidget * widget,
 				     gpointer user_data);
     _BB void btnTVHideAll_clicked_cb(GtkWidget * widget,

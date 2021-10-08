@@ -28,10 +28,6 @@ void cgbTVVisible_toggled_cb(GtkWidget * widget, gpointer user_data)
 {
 
 }
-void cgbTVHighlighted_toggled_cb(GtkWidget * widget, gpointer user_data)
-{
-
-}
 
 void btnTVShowAll_clicked_cb(GtkWidget * widget, gpointer user_data)
 {
