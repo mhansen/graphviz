@@ -495,7 +495,6 @@ windows-cygwin-build-using-autogen:
         when: always
         expire_in: 1 week
         paths:
-            - GRAPHVIZ_VERSION
             - COLLECTION
             - Packages/*/*/*/*/*/*.xz
     tags:
