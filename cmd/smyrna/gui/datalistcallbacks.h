@@ -18,8 +18,6 @@ extern "C" {
 #endif
 
     _BB void btnTVOK_clicked_cb(GtkWidget * widget, gpointer user_data);
-    _BB void btnTVHighlightAll_clicked_cb(GtkWidget * widget,
-					  gpointer user_data);
     _BB void btnTVUnhighlightAll_clicked_cb(GtkWidget * widget,
 					    gpointer user_data);
     _BB void btnTVShowAll_clicked_cb(GtkWidget * widget,
