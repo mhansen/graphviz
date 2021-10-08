@@ -18,8 +18,6 @@ extern "C" {
 #endif
 
     _BB void btnTVOK_clicked_cb(GtkWidget * widget, gpointer user_data);
-    _BB void btnTVFilterClear_clicked_cb(GtkWidget * widget,
-					 gpointer user_data);
     _BB void btnTVSelectAll_clicked_cb(GtkWidget * widget,
 				       gpointer user_data);
     _BB void btnTVUnselectAll_clicked_cb(GtkWidget * widget,
