@@ -1017,6 +1017,7 @@ macos-cmake-test:
         - brew install libxaw || brew upgrade libxaw
         - python3 -m pip install --requirement requirements.txt
         - export build_system="cmake"
+        - python3 gen_version.py > GRAPHVIZ_VERSION
     needs:
         - job: "macos-cmake-build"
           artifacts: true
