@@ -17,8 +17,6 @@
 extern "C" {
 #endif
 
-    _BB void btnTVFilter_clicked_cb(GtkWidget * widget,
-				    gpointer user_data);
     _BB void btnTVFirst_clicked_cb(GtkWidget * widget, gpointer user_data);
     _BB void btnTVPrevious_clicked_cb(GtkWidget * widget,
 				      gpointer user_data);
