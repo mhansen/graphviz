@@ -80,23 +80,21 @@ lexname(int op, int subop)
  * Returns 1 if item existed, zero otherwise
  * 
  */
-static int
-evaldyn (Expr_t * ex, Exnode_t * expr, void *env, int delete)
-{
+static int evaldyn(Expr_t *ex, Exnode_t *exnode, void *env, int delete) {
 	Exassoc_t *b;
 	Extype_t v;
 	char buf[32];
 	Extype_t key;
 	char *keyname;
 
-	v = eval(ex, expr->data.variable.index, env);
-	if (expr->data.variable.symbol->index_type == INTEGER) {
-		if (!(b = dtmatch((Dt_t *) expr->data.variable.symbol->local.pointer, &v))) {
+	v = eval(ex, exnode->data.variable.index, env);
+	if (exnode->data.variable.symbol->index_type == INTEGER) {
+		if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local.pointer, &v))) {
 			return 0;
 		}
 	} 
 	else {
-		int type = expr->data.variable.index->type;
+		int type = exnode->data.variable.index->type;
 		if (type != STRING) {
 			if (!BUILTIN(type)) {
 				key = (*ex->disc->keyf) (ex, v, type, ex->disc);
@@ -106,13 +104,13 @@ evaldyn (Expr_t * ex, Exnode_t * expr, void *env, int delete)
 			keyname = buf;
 		} else
 			keyname = v.string;
-		if (!(b = dtmatch((Dt_t *) expr->data.variable.
+		if (!(b = dtmatch((Dt_t *)exnode->data.variable.
 			symbol->local.pointer, keyname))) {
 			return 0;
 		}
 	}
 	if (delete) {
-		dtdelete ((Dt_t*)expr->data.variable.symbol->local.pointer, b);
+		dtdelete((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
 		free (b);
 	}
 	return 1;
