@@ -120,30 +120,28 @@ static int evaldyn(Expr_t *ex, Exnode_t *exnode, void *env, int delete) {
  * return dynamic (associative array) variable value
  * assoc will point to the associative array bucket
  */
-
-static Extype_t
-getdyn(Expr_t* ex, Exnode_t* expr, void* env, Exassoc_t** assoc)
-{
+static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
+                       Exassoc_t **assoc) {
 	Exassoc_t*	b;
 	Extype_t	v;
 
-	if (expr->data.variable.index)
+	if (exnode->data.variable.index)
 	{
 		Extype_t key;
 		char	buf[2*sizeof(key.integer)+1];  /* no. of hex chars needed plus null byte */
 		char *keyname;
 
-		v = eval(ex, expr->data.variable.index, env);
-		if (expr->data.variable.symbol->index_type == INTEGER) {
-			if (!(b = dtmatch((Dt_t *) expr->data.variable.symbol->local.pointer, &v)))
+		v = eval(ex, exnode->data.variable.index, env);
+		if (exnode->data.variable.symbol->index_type == INTEGER) {
+			if (!(b = dtmatch((Dt_t *) exnode->data.variable.symbol->local.pointer, &v)))
 			{
 				if (!(b = newof(0, Exassoc_t, 1, 0)))
 					exnospace();
 				b->key = v;
-				dtinsert((Dt_t *) expr->data.variable.symbol->local.  pointer, b);
+				dtinsert((Dt_t *)exnode->data.variable.symbol->local.  pointer, b);
 			}
 		} else {
-			int type = expr->data.variable.index->type;
+			int type = exnode->data.variable.index->type;
 			if (type != STRING) {
 				if (!BUILTIN(type)) {
 					key = (*ex->disc->keyf) (ex, v, type, ex->disc);
@@ -153,27 +151,27 @@ getdyn(Expr_t* ex, Exnode_t* expr, void* env, Exassoc_t** assoc)
 				keyname = buf;
 			} else
 				keyname = v.string;
-			if (!(b = dtmatch((Dt_t *) expr->data.variable.symbol->local.pointer, keyname)))
+			if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local.pointer, keyname)))
 			{
 				if (!(b = newof(0, Exassoc_t, 1, strlen(keyname))))
 					exnospace();
 				strcpy(b->name, keyname);
 				b->key = v;
-				dtinsert((Dt_t *) expr->data.variable.symbol->local.pointer, b);
+				dtinsert((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
 			}
 		}
 		*assoc = b;
 		if (b)
 		{
-			if (expr->data.variable.symbol->type == STRING && !b->value.string)
-				b->value = exzero(expr->data.variable.symbol->type);
+			if (exnode->data.variable.symbol->type == STRING && !b->value.string)
+				b->value = exzero(exnode->data.variable.symbol->type);
 			return b->value;
 		}
-		v = exzero(expr->data.variable.symbol->type);
+		v = exzero(exnode->data.variable.symbol->type);
 		return v;
 	}
 	*assoc = 0;
-	return expr->data.variable.symbol->value->data.constant.value;
+	return exnode->data.variable.symbol->value->data.constant.value;
 }
 
 typedef struct
