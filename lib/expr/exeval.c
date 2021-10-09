@@ -384,17 +384,14 @@ static int prints(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
 /*
  * do printf
  */
-
-static int
-print(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
-{
+static int print(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
 	Print_t*	x;
 	Extype_t		v;
 	Fmt_t			fmt;
 
 	if (!sp)
 	{
-		v = eval(ex, expr->data.print.descriptor, env);
+		v = eval(ex, exnode->data.print.descriptor, env);
 		if (v.integer < 0 || v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = sfnew(NULL, NULL, SF_UNBOUND, v.integer, SF_READ|SF_WRITE))))
 		{
 			exerror("printf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
@@ -405,7 +402,7 @@ print(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
 	fmt.fmt.extf = prformat;
 	fmt.expr = ex;
 	fmt.env = env;
-	x = expr->data.print.args;
+	x = exnode->data.print.args;
 	if (x->format)
 		do
 		{
