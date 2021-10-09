@@ -392,7 +392,9 @@ static int print(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
 	if (!sp)
 	{
 		v = eval(ex, exnode->data.print.descriptor, env);
-		if (v.integer < 0 || v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = sfnew(NULL, NULL, SF_UNBOUND, v.integer, SF_READ|SF_WRITE))))
+		if (v.integer < 0 || (long long unsigned)v.integer >= elementsof(ex->file) ||
+		    (!(sp = ex->file[v.integer]) &&
+		    !(sp = ex->file[v.integer] = sfnew(NULL, NULL, SF_UNBOUND, v.integer, SF_READ|SF_WRITE))))
 		{
 			exerror("printf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
 			return -1;
