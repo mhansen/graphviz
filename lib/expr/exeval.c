@@ -23,7 +23,9 @@
 
 #include <expr/exlib.h>
 #include <expr/exop.h>
+#include <inttypes.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -402,7 +404,7 @@ print(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
 		v = eval(ex, expr->data.print.descriptor, env);
 		if (v.integer < 0 || v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = sfnew(NULL, NULL, SF_UNBOUND, v.integer, SF_READ|SF_WRITE))))
 		{
-			exerror("printf: %d: invalid descriptor", v.integer);
+			exerror("printf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
 			return -1;
 		}
 	}
@@ -528,7 +530,7 @@ scan(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
 			v.integer = 0;
 		if (v.integer < 0 || v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = sfnew(NULL, NULL, SF_UNBOUND, v.integer, SF_READ|SF_WRITE))))
 		{
-			exerror("scanf: %d: invalid descriptor", v.integer);
+			exerror("scanf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
 			return 0;
 		}
 	}
@@ -1063,11 +1065,13 @@ static Extype_t exsubstr(Expr_t * ex, Exnode_t * expr, void *env)
 	len = strlen(s.string);
 	i = eval(ex, expr->data.string.pat, env);
 	if (i.integer < 0 || len < i.integer)
-		exerror("illegal start index in substr(%s,%d)", s.string, i.integer);
+		exerror("illegal start index in substr(%s,%" PRIdMAX ")", s.string,
+		        (intmax_t)i.integer);
 	if (expr->data.string.repl) {
 		l = eval(ex, expr->data.string.repl, env);
 		if (l.integer < 0 || len - i.integer < l.integer)
-	    exerror("illegal length in substr(%s,%d,%d)", s.string, i.integer, l.integer);
+	    exerror("illegal length in substr(%s,%" PRIdMAX ",%" PRIdMAX ")",
+	            s.string, (intmax_t)i.integer, (intmax_t)l.integer);
 	} else
 		l.integer = len - i.integer;
 

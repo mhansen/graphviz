@@ -26,6 +26,7 @@
 #include <ast/error.h>
 #include <gvpr/actions.h>
 #include <ast/sfstr.h>
+#include <inttypes.h>
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -331,7 +332,7 @@ static Agobj_t *deref(Expr_t * pgm, Exnode_t * x, Exref_t * ref,
 	    if (isedge(objp))
 		return deref(pgm, x, ref->next, (Agobj_t *)AGTAIL((Agedge_t *)objp), state);
 	    else
-		exerror("tail of non-edge %x", objp);
+		exerror("tail of non-edge %p", objp);
 	    break;
 	default:
 	    exerror("%s : illegal reference", ref->symbol->name);
@@ -1710,8 +1711,8 @@ static tctype typeChk(tctype intype, Exid_t * sym)
 	    rng = Y(S);
 	    break;
 	default:
-	    exerror("unknown dynamic type %d of symbol %s", sym->type,
-		    sym->name);
+	    exerror("unknown dynamic type %" PRIdMAX " of symbol %s",
+	            (intmax_t)sym->type, sym->name);
 	    break;
 	}
 	break;
@@ -1750,8 +1751,8 @@ static tctype typeChk(tctype intype, Exid_t * sym)
 	rng = Y(S);
 	break;
     default:
-	exerror("unexpected symbol in typeChk: name %s, lex %d",
-		sym->name, sym->lex);
+	exerror("unexpected symbol in typeChk: name %s, lex %" PRIdMAX, sym->name,
+	        (intmax_t)sym->lex);
 	break;
     }
 
@@ -2167,8 +2168,8 @@ convert(Expr_t * prog, Exnode_t * x, int type,
 	else if (validTVT(x->data.constant.value.integer))
 	    ret = 0;
 	else
-	    exerror("Integer value %d not legal for type tvtype_t",
-		x->data.constant.value.integer);
+	    exerror("Integer value %" PRIdMAX " not legal for type tvtype_t",
+	            (intmax_t)x->data.constant.value.integer);
     }
     /* in case libexpr hands us the trivial case */
     else if (x->type == type) {
