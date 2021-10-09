@@ -367,14 +367,11 @@ prformat(void* vp, Sffmt_t* dp)
 /*
  * print a list of strings
  */
-
-static int
-prints(Expr_t * ex, Exnode_t * expr, void *env, Sfio_t * sp)
-{
+static int prints(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
     Extype_t v;
     Exnode_t *args;
 
-    args = expr->data.operand.left;
+    args = exnode->data.operand.left;
     while (args) {
 	v = eval(ex, args->data.operand.left, env);
 	sfputr(sp, v.string, -1);
