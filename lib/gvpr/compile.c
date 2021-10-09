@@ -299,28 +299,20 @@ static Agobj_t *deref(Expr_t * pgm, Exnode_t * x, Exref_t * ref,
 	switch (ref->symbol->index) {	/* sym->lex == ID */
 	case V_outgraph:
 	    return deref(pgm, x, ref->next, (Agobj_t *) state->outgraph, state);
-	    break;
 	case V_this:
 	    return deref(pgm, x, ref->next, state->curobj, state);
-	    break;
 	case V_thisg:
 	    return deref(pgm, x, ref->next, (Agobj_t *) state->curgraph, state);
-	    break;
 	case V_nextg:
 	    return deref(pgm, x, ref->next, (Agobj_t *) state->nextgraph, state);
-	    break;
 	case V_targt:
 	    return deref(pgm, x, ref->next, (Agobj_t *) state->target, state);
-	    break;
 	case V_travedge:
 	    return deref(pgm, x, ref->next, (Agobj_t *) state->tvedge, state);
-	    break;
 	case V_travroot:
 	    return deref(pgm, x, ref->next, (Agobj_t *) state->tvroot, state);
-	    break;
 	case V_travnext:
 	    return deref(pgm, x, ref->next, (Agobj_t *) state->tvnext, state);
-	    break;
 	case M_head:
 	    if (!objp && !(objp = state->curobj)) {
 		exerror("Current object $ not defined");
