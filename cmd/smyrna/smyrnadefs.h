@@ -61,9 +61,7 @@ typedef struct _ArcBall_t ArcBall_t;
 
 #define MAX_ZOOM	500.0f
 #define MIN_ZOOM	0.005f
-#define ZOOM_STEPS	100
 
-#define ZOOM_STEP	0.5
 #define DEG2RAD  G_PI/180
 #define RAD2DEG	  1/0.017453292519943
 
