@@ -17,6 +17,7 @@
 #include <common/render.h>
 #include <gvc/gvio.h>
 #include <cgraph/strcasecmp.h>
+#include <stdbool.h>
 
 static int N_EPSF_files;
 static Dict_t *EPSF_contents;
@@ -146,13 +147,13 @@ void cat_libfile(GVJ_t * job, const char **arglib, const char **stdlib)
     FILE *fp;
     const char **s, *bp, *p, *path;
     int i;
-    boolean use_stdlib = TRUE;
+    bool use_stdlib = true;
 
     /* check for empty string to turn off stdlib */
     if (arglib) {
         for (i = 0; use_stdlib && ((p = arglib[i])); i++) {
             if (*p == '\0')
-                use_stdlib = FALSE;
+                use_stdlib = false;
         }
     }
     if (use_stdlib)
