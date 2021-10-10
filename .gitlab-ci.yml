@@ -91,7 +91,6 @@ portable-source:
         - brew install pango || brew upgrade pango
         - brew install libxaw || brew upgrade libxaw
         - export PATH="/usr/local/opt/bison/bin:$PATH"
-        - python3 gen_version.py > GRAPHVIZ_VERSION # FIXME: remove when building from portable source
         - echo experimental > COLLECTION
         - logfile=`mktemp`
         - ci/build.sh 2>&1 | tee $logfile
@@ -443,6 +442,7 @@ out-of-source-build:
 macos-autotools-build:
     <<: *macos_build_definition
     before_script:
+        - python3 gen_version.py > GRAPHVIZ_VERSION # FIXME: remove when building from portable source
         - export build_system="autotools"
     tags:
         - shared-macos-amd64
