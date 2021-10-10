@@ -63,7 +63,6 @@ typedef struct _ArcBall_t ArcBall_t;
 #define MIN_ZOOM	0.005f
 
 #define DEG2RAD  G_PI/180
-#define RAD2DEG	  1/0.017453292519943
 
 #define UNHIGHLIGHTED_ALPHA	0.3
 #define Z_FORWARD_PLANE -0.00201
