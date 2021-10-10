@@ -64,9 +64,6 @@ typedef struct _ArcBall_t ArcBall_t;
 
 #define DEG2RAD  G_PI/180
 
-#define DOT_SIZE_CORRECTION_FAC 0.3
-
-
 #define EXPAND_CAPACITY_VALUE 50
 #define DEFAULT_ATTR_LIST_CAPACITY 100
 #define MAX_FILTERED_ATTR_COUNT 50
