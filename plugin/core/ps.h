@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 static const char *ps_txt[] = {
+    // clang-format off
     "%%BeginProlog",
     "/DotDict 200 dict def",
     "DotDict begin",
@@ -52,10 +53,8 @@ static const char *ps_txt[] = {
     "% styles",
     "/solid { [] 0 setdash } bind def",
     "/dashed { [9 InvScaleFactor mul dup ] 0 setdash } bind def",
-    "/dotted { [1 InvScaleFactor mul 6 InvScaleFactor mul] 0 setdash } bind "
-    "def",
-    "/invis {/fill {newpath} def /stroke {newpath} def /show {pop newpath} "
-    "def} bind def",
+    "/dotted { [1 InvScaleFactor mul 6 InvScaleFactor mul] 0 setdash } bind def",
+    "/invis {/fill {newpath} def /stroke {newpath} def /show {pop newpath} def} bind def",
     "/bold { 2 setlinewidth } bind def",
     "/filled { } bind def",
     "/unfilled { } bind def",
@@ -78,8 +77,7 @@ static const char *ps_txt[] = {
     "		gsave",
     "			coordfont setfont",
     "			0 0 moveto",
-    "			(\\() show i str cvs show (,) show j str cvs show "
-    "(\\)) show",
+    "			(\\() show i str cvs show (,) show j str cvs show (\\)) show",
     "		grestore",
     "	} if",
     "} bind def",
@@ -96,8 +94,7 @@ static const char *ps_txt[] = {
     "	gsave",
     "		width 0 gt {",
     "			[] 0 setdash",
-    "			text stringwidth pop width exch sub text length div 0 "
-    "text ashow",
+    "			text stringwidth pop width exch sub text length div 0 text ashow",
     "		} if",
     "	grestore",
     "} def",
@@ -179,4 +176,5 @@ static const char *ps_txt[] = {
     "",
     "%%EndSetup",
     NULL,
+    // clang-format on
 };
