@@ -45,7 +45,7 @@ static usershape_t *user_init(const char *str)
     char line[BUFSIZ];
     FILE *fp;
     struct stat statbuf;
-    int saw_bb, must_inline, rc;
+    int must_inline, rc;
     int lx, ly, ux, uy;
     usershape_t *us;
 
@@ -61,11 +61,12 @@ static usershape_t *user_init(const char *str)
 	return NULL;
     }
     /* try to find size */
-    saw_bb = must_inline = FALSE;
+    bool saw_bb = false;
+    must_inline = FALSE;
     while (fgets(line, sizeof(line), fp)) {
 	if (sscanf
 	    (line, "%%%%BoundingBox: %d %d %d %d", &lx, &ly, &ux, &uy) == 4) {
-	    saw_bb = TRUE;
+	    saw_bb = true;
 	}
 	if ((line[0] != '%') && strstr(line,"read")) must_inline = TRUE;
 	if (saw_bb && must_inline) break;
