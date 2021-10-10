@@ -64,7 +64,6 @@ typedef struct _ArcBall_t ArcBall_t;
 
 #define DEG2RAD  G_PI/180
 
-#define GL_DOTSIZE_CONSTANT -18
 #define DOUBLE_IT 10.00
 
 
