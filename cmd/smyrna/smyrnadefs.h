@@ -64,7 +64,6 @@ typedef struct _ArcBall_t ArcBall_t;
 
 #define DEG2RAD  G_PI/180
 
-#define SPHERE_SLICE_COUNT 6
 #define DOT_SIZE_CORRECTION_FAC 0.3
 
 
