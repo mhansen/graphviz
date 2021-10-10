@@ -64,10 +64,6 @@ typedef struct _ArcBall_t ArcBall_t;
 
 #define DEG2RAD  G_PI/180
 
-#define Z_FORWARD_PLANE -0.00201
-#define Z_MIDDLE_PLANE 0.0000
-#define Z_BACK_PLANE -0.00199
-
 #define NODE_ZOOM_LIMIT	-25.3
 #define NODE_CIRCLE_LIMIT	-7.3
 
