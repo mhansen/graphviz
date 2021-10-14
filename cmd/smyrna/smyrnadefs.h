@@ -646,7 +646,6 @@ typedef struct
 	char *glade_file;
 	char* temp;
 	char *template_file;
-	char *attr_file;
 	GtkComboBox *graphComboBox;	/*pointer to graph combo box at top right */
 	ArcBall_t *arcball;
 	keymap_t keymap;
