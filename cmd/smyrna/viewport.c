@@ -205,8 +205,6 @@ void set_viewport_settings_from_template(ViewInfo * view, Agraph_t * g)
     view->drawedgelabels=atoi(get_attribute_value("labelshowedges", view, g));
     view->nodeScale=atof(get_attribute_value("nodesize", view, g))*.30;
 
-    view->FontSizeConst = 0;	//this will be calculated later in topview.c while calculating optimum font size
-
     view->glutfont =
 	get_glut_font(atoi(get_attribute_value("labelglutfont", view, g)));
     colorxlate(get_attribute_value("nodelabelcolor", view, g), &cl,
