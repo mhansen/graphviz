@@ -617,7 +617,6 @@ typedef struct
 	GTimer *timer3;
 	int active_frame;
 	int total_frames;
-	int frame_length;
 	/*lately added */
 	int drawnodes;
 	int drawedges;

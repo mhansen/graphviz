@@ -393,7 +393,6 @@ void init_viewport(ViewInfo * view)
     g_timer_stop(view->timer);
     view->active_frame = 0;
     view->total_frames = 1500;
-    view->frame_length = 1;
     /*add a call back to the main() */
     g_timeout_add_full((gint) G_PRIORITY_DEFAULT, (guint) 100,
 		       gl_main_expose, NULL, NULL);
