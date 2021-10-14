@@ -648,8 +648,6 @@ typedef struct
 	char *template_file;
 	char *attr_file;
 	int flush;
-	gvprscript *scripts;
-	int script_count;	/*# of scripts */
 	GtkComboBox *graphComboBox;	/*pointer to graph combo box at top right */
 	ArcBall_t *arcball;
 	keymap_t keymap;
