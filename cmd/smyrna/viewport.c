@@ -255,11 +255,9 @@ static void get_data_dir(void)
 {
     if (view->template_file) {
 	free(view->template_file);
-	free(view->glade_file);
     }
 
     view->template_file = strdup(smyrnaPath("template.dot"));
-    view->glade_file = strdup(smyrnaPath("smyrna.glade"));
 }
 
 void init_viewport(ViewInfo * view)

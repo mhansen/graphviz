@@ -643,7 +643,6 @@ typedef struct
 	int initFile;
 	int drawSplines;
 	colorschemaset *colschms;
-	char *glade_file;
 	char* temp;
 	char *template_file;
 	GtkComboBox *graphComboBox;	/*pointer to graph combo box at top right */
