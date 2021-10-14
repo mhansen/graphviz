@@ -603,8 +603,6 @@ typedef struct
 	int topviewusermode;
 	/*this should not be confused with graphviz node shapes, it can be dot or circles (dots are rendered mych faster, circle looks handsome, if graph is ulta large go with dot */
 //      node_shape nodeshape;
-	/*if true and nodeshape is nodeshapecircle , radius of nodes changes with degree */
-	int nodesizewithdegree;
 
 	/*open gl canvas, used to be a globa variable before looks better wrapped in viewinfo */
 	GtkWidget *drawing_area;
