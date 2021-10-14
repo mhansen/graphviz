@@ -412,7 +412,6 @@ void init_viewport(ViewInfo * view)
     view->Topview->Graphdata.GraphFileName = (char *) 0;
     view->Topview->Graphdata.Modified = 0;
     view->colschms = NULL;
-    view->flush = 1;
     view->arcball = NEW(ArcBall_t);
     view->keymap.down=0;
     load_mouse_actions (view);
