@@ -634,7 +634,6 @@ typedef struct
 	int labelshowedges;
 
 	viewtype_t dfltViewType;
-	gvk_layout dfltEngine;
 	glCompSet *widgets;	//for novice user open gl menu
 	char *initFileName;	//file name from command line
 	int initFile;
