@@ -102,7 +102,6 @@ typedef struct
 }attr_list;
 
 
-    typedef enum { nodshapedot, nodeshapecircle } node_shape;
     typedef enum { leftmousebutton, rightmousebutton,
 	    thirdmousebutton } clicked_mouse_button;
     typedef enum { MOUSE_ROTATE_X, MOUSE_ROTATE_Y, MOUSE_ROTATE_XY,
@@ -601,8 +600,6 @@ typedef struct
 
 	/*0 advanced users with editing options 1 nonice users just navigate (glmenu system) */
 	int topviewusermode;
-	/*this should not be confused with graphviz node shapes, it can be dot or circles (dots are rendered mych faster, circle looks handsome, if graph is ulta large go with dot */
-//      node_shape nodeshape;
 
 	/*open gl canvas, used to be a globa variable before looks better wrapped in viewinfo */
 	GtkWidget *drawing_area;
