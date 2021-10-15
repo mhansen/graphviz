@@ -303,9 +303,8 @@ static void addEdge (GtsSegment * e, estate* es)
     es->n += 1;
 }
 
-/* If qsort_r ever becomes standardized, this should be used
- * instead of having a global variable.
- */
+// when moving to C11, qsort_s should be used instead of having a global
+// variable
 static double* _vals;
 typedef int (*qsort_cmpf) (const void *, const void *);
 
