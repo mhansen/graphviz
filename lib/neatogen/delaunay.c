@@ -764,8 +764,7 @@ static void remove_edge(v_data * graph, int source, int dest)
     int i;
     for (i = 1; i < graph[source].nedges; i++) {
 	if (graph[source].edges[i] == dest) {
-	    graph[source].edges[i] =
-		graph[source].edges[--graph[source].nedges];
+	    graph[source].edges[i] = graph[source].edges[--graph[source].nedges];
 	    break;
 	}
     }
@@ -817,22 +816,15 @@ v_data *UG_graph(double *x, double *y, int n, int accurate_computation)
 		}
 		x_j = x[neighbor_j];
 		y_j = y[neighbor_j];
-		dist_ij =
-		    (x_j - x_i) * (x_j - x_i) + (y_j - y_i) * (y_j - y_i);
+		dist_ij = (x_j - x_i) * (x_j - x_i) + (y_j - y_i) * (y_j - y_i);
 		removed = FALSE;
 		for (k = 0; k < n && !removed; k++) {
-		    dist_ik =
-			(x[k] - x_i) * (x[k] - x_i) + (y[k] -
-						       y_i) * (y[k] - y_i);
+		    dist_ik = (x[k] - x_i) * (x[k] - x_i) + (y[k] - y_i) * (y[k] - y_i);
 		    if (dist_ik < dist_ij) {
-			dist_jk =
-			    (x[k] - x_j) * (x[k] - x_j) + (y[k] -
-							   y_j) * (y[k] -
-								   y_j);
+			dist_jk = (x[k] - x_j) * (x[k] - x_j) + (y[k] - y_j) * (y[k] - y_j);
 			if (dist_jk < dist_ij) {
 			    // remove the edge beteween i and neighbor j
-			    delaunay[i].edges[j] =
-				delaunay[i].edges[--delaunay[i].nedges];
+			    delaunay[i].edges[j] = delaunay[i].edges[--delaunay[i].nedges];
 			    remove_edge(delaunay, neighbor_j, i);
 			    removed = TRUE;
 			}
@@ -852,24 +844,20 @@ v_data *UG_graph(double *x, double *y, int n, int accurate_computation)
 		neighbor_j = delaunay[i].edges[j];
 		x_j = x[neighbor_j];
 		y_j = y[neighbor_j];
-		dist_ij =
-		    (x_j - x_i) * (x_j - x_i) + (y_j - y_i) * (y_j - y_i);
+		dist_ij = (x_j - x_i) * (x_j - x_i) + (y_j - y_i) * (y_j - y_i);
 		// now look at i'th neighbors to see whether there is a node in the "forbidden region"
 		// we will also go through neighbor_j's neighbors when we traverse the edge from its other side
 		removed = FALSE;
 		for (k = 1; k < delaunay[i].nedges && !removed; k++) {
 		    neighbor_k = delaunay[i].edges[k];
-		    dist_ik =
-			(x[neighbor_k] - x_i) * (x[neighbor_k] - x_i) +
+		    dist_ik = (x[neighbor_k] - x_i) * (x[neighbor_k] - x_i) +
 			(y[neighbor_k] - y_i) * (y[neighbor_k] - y_i);
 		    if (dist_ik < dist_ij) {
-			dist_jk =
-			    (x[neighbor_k] - x_j) * (x[neighbor_k] - x_j) +
+			dist_jk = (x[neighbor_k] - x_j) * (x[neighbor_k] - x_j) +
 			    (y[neighbor_k] - y_j) * (y[neighbor_k] - y_j);
 			if (dist_jk < dist_ij) {
 			    // remove the edge beteween i and neighbor j
-			    delaunay[i].edges[j] =
-				delaunay[i].edges[--delaunay[i].nedges];
+			    delaunay[i].edges[j] = delaunay[i].edges[--delaunay[i].nedges];
 			    remove_edge(delaunay, neighbor_j, i);
 			    removed = TRUE;
 			}
