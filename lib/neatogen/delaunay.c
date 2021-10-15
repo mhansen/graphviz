@@ -544,7 +544,7 @@ get_triangles (double *x, int n, int* tris)
 
     in.numberofpoints = n;
     in.numberofpointattributes = 0;
-    in.pointlist = (REAL *) N_GNEW(in.numberofpoints * 2, REAL);
+    in.pointlist = N_GNEW(in.numberofpoints * 2, REAL);
 
     for (i = 0; i < n; i++){
 	in.pointlist[i*2] = x[i*2];
@@ -556,20 +556,20 @@ get_triangles (double *x, int n, int* tris)
     in.numberofholes = 0;
     in.numberofregions = 0;
     in.regionlist = NULL;
-    mid.pointlist = (REAL *) NULL;            /* Not needed if -N switch used. */
-    mid.pointattributelist = (REAL *) NULL;
-    mid.pointmarkerlist = (int *) NULL; /* Not needed if -N or -B switch used. */
-    mid.trianglelist = (int *) NULL;          /* Not needed if -E switch used. */
-    mid.triangleattributelist = (REAL *) NULL;
-    mid.neighborlist = (int *) NULL;         /* Needed only if -n switch used. */
-    mid.segmentlist = (int *) NULL;
-    mid.segmentmarkerlist = (int *) NULL;
-    mid.edgelist = (int *) NULL;             /* Needed only if -e switch used. */
-    mid.edgemarkerlist = (int *) NULL;   /* Needed if -e used and -B not used. */
-    vorout.pointlist = (REAL *) NULL;        /* Needed only if -v switch used. */
-    vorout.pointattributelist = (REAL *) NULL;
-    vorout.edgelist = (int *) NULL;          /* Needed only if -v switch used. */
-    vorout.normlist = (REAL *) NULL;         /* Needed only if -v switch used. */
+    mid.pointlist = NULL; // Not needed if -N switch used.
+    mid.pointattributelist = NULL;
+    mid.pointmarkerlist = NULL; /* Not needed if -N or -B switch used. */
+    mid.trianglelist = NULL; // Not needed if -E switch used.
+    mid.triangleattributelist = NULL;
+    mid.neighborlist = NULL; // Needed only if -n switch used.
+    mid.segmentlist = NULL;
+    mid.segmentmarkerlist = NULL;
+    mid.edgelist = NULL; // Needed only if -e switch used.
+    mid.edgemarkerlist = NULL; // Needed if -e used and -B not used.
+    vorout.pointlist = NULL; // Needed only if -v switch used.
+    vorout.pointattributelist = NULL;
+    vorout.edgelist = NULL; // Needed only if -v switch used.
+    vorout.normlist = NULL; // Needed only if -v switch used.
 
     /* Triangulate the points.  Switches are chosen to read and write a  */
     /*   PSLG (p), preserve the convex hull (c), number everything from  */
