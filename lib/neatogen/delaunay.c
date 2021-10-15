@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -776,7 +777,6 @@ v_data *UG_graph(double *x, double *y, int n, int accurate_computation)
     int i;
     double dist_ij, dist_ik, dist_jk, x_i, y_i, x_j, y_j;
     int j, k, neighbor_j, neighbor_k;
-    int removed;
 
     if (n == 2) {
 	int *edges = N_GNEW(4, int);
@@ -817,7 +817,7 @@ v_data *UG_graph(double *x, double *y, int n, int accurate_computation)
 		x_j = x[neighbor_j];
 		y_j = y[neighbor_j];
 		dist_ij = (x_j - x_i) * (x_j - x_i) + (y_j - y_i) * (y_j - y_i);
-		removed = FALSE;
+		bool removed = false;
 		for (k = 0; k < n && !removed; k++) {
 		    dist_ik = (x[k] - x_i) * (x[k] - x_i) + (y[k] - y_i) * (y[k] - y_i);
 		    if (dist_ik < dist_ij) {
@@ -826,7 +826,7 @@ v_data *UG_graph(double *x, double *y, int n, int accurate_computation)
 			    // remove the edge beteween i and neighbor j
 			    delaunay[i].edges[j] = delaunay[i].edges[--delaunay[i].nedges];
 			    remove_edge(delaunay, neighbor_j, i);
-			    removed = TRUE;
+			    removed = true;
 			}
 		    }
 		}
@@ -847,7 +847,7 @@ v_data *UG_graph(double *x, double *y, int n, int accurate_computation)
 		dist_ij = (x_j - x_i) * (x_j - x_i) + (y_j - y_i) * (y_j - y_i);
 		// now look at i'th neighbors to see whether there is a node in the "forbidden region"
 		// we will also go through neighbor_j's neighbors when we traverse the edge from its other side
-		removed = FALSE;
+		bool removed = false;
 		for (k = 1; k < delaunay[i].nedges && !removed; k++) {
 		    neighbor_k = delaunay[i].edges[k];
 		    dist_ik = (x[neighbor_k] - x_i) * (x[neighbor_k] - x_i) +
@@ -859,7 +859,7 @@ v_data *UG_graph(double *x, double *y, int n, int accurate_computation)
 			    // remove the edge beteween i and neighbor j
 			    delaunay[i].edges[j] = delaunay[i].edges[--delaunay[i].nedges];
 			    remove_edge(delaunay, neighbor_j, i);
-			    removed = TRUE;
+			    removed = true;
 			}
 		    }
 		}
