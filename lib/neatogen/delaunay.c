@@ -172,8 +172,8 @@ tri(double *x, double *y, int npt, int *segs, int nsegs, int sepArr)
      */
     for (i = 0; i < nsegs; i++) {
 	edges[i] = gts_edge_new(ecl,
-		 (GtsVertex *) (vertices[ segs[ 2 * i]]),
-		 (GtsVertex *) (vertices[ segs[ 2 * i + 1]]));
+		 (GtsVertex *)vertices[segs[2 * i]],
+		 (GtsVertex *)vertices[segs[2 * i + 1]]);
     }
 
     for (i = 0; i < npt; i++)
