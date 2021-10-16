@@ -1251,7 +1251,6 @@ def test_2131():
 @pytest.mark.skipif(shutil.which("gvpr") is None,
                     reason="gvpr not available")
 @pytest.mark.parametrize("examine", ("indices", "tokens"))
-@pytest.mark.xfail(strict=True)
 def test_2138(examine: str):
   """
   gvpr splitting and tokenizing should not result in trailing garbage
