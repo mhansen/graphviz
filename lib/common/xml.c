@@ -1,7 +1,12 @@
+#include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
+#include <inttypes.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // variant of `isalpha` that assumes a C locale
 static bool isalpha_no_locale(char c) {
@@ -62,7 +67,7 @@ static int xml_core(char previous, const char **current, xml_flags_t flags,
   const char *s = *current;
   char c = *s;
 
-  // we always consume one character for now
+  // we will consume at least one character, so note that now
   ++*current;
 
   // escape '&' only if not part of a legal entity sequence
@@ -96,6 +101,76 @@ static int xml_core(char previous, const char **current, xml_flags_t flags,
 
   if (c == '\r' && flags.raw)
     return cb(state, "&#13;");
+
+  unsigned char uc = (unsigned char)c;
+  if (uc > 0x7f && flags.utf8) {
+
+    // replicating a table from https://en.wikipedia.org/wiki/UTF-8:
+    //
+    //   ┌────────────────┬───────────────┬────────┬────────┬────────┬────────┐
+    //   │First code point│Last code point│Byte 1  │Byte 2  │Byte 3  │Byte 4  │
+    //   ├────────────────┼───────────────┼────────┼────────┼────────┼────────┤
+    //   │          U+0000│         U+007F│0xxxxxxx│        │        │        │
+    //   │          U+0080│         U+07FF│110xxxxx│10xxxxxx│        │        │
+    //   │          U+0800│         U+FFFF│1110xxxx│10xxxxxx│10xxxxxx│        │
+    //   │         U+10000│       U+10FFFF│11110xxx│10xxxxxx│10xxxxxx│10xxxxxx│
+    //   └────────────────┴───────────────┴────────┴────────┴────────┴────────┘
+    //
+    // from which we can calculate the byte length of the current character
+    size_t length =
+        (uc >> 5) == 6 ? 2 : (uc >> 4) == 14 ? 3 : (uc >> 3) == 30 ? 4 : 0;
+
+    // was the length malformed or is the follow on sequence truncated?
+    bool is_invalid = length == 0;
+    for (size_t l = 1; !is_invalid && length > l; ++l)
+      is_invalid |= s[l] == '\0';
+
+    // TODO: a better strategy than aborting on malformed data
+    if (is_invalid) {
+      fprintf(stderr, "Error during conversion to \"UTF-8\". Quiting.\n");
+      exit(EXIT_FAILURE);
+    }
+
+    // Decode the character. Refer again to the above table to understand this
+    // algorithm.
+    uint32_t utf8_char = 0;
+    switch (length) {
+    case 2: {
+      uint32_t low = ((uint32_t)s[1]) & ((1 << 6) - 1);
+      uint32_t high = ((uint32_t)s[0]) & ((1 << 5) - 1);
+      utf8_char = low | (high << 6);
+      break;
+    }
+    case 3: {
+      uint32_t low = ((uint32_t)s[2]) & ((1 << 6) - 1);
+      uint32_t mid = ((uint32_t)s[1]) & ((1 << 6) - 1);
+      uint32_t high = ((uint32_t)s[0]) & ((1 << 4) - 1);
+      utf8_char = low | (mid << 6) | (high << 12);
+      break;
+    }
+    case 4: {
+      uint32_t low = ((uint32_t)s[3]) & ((1 << 6) - 1);
+      uint32_t mid1 = ((uint32_t)s[2]) & ((1 << 6) - 1);
+      uint32_t mid2 = ((uint32_t)s[1]) & ((1 << 6) - 1);
+      uint32_t high = ((uint32_t)s[0]) & ((1 << 3) - 1);
+      utf8_char = low | (mid1 << 6) | (mid2 << 12) | (high << 18);
+      break;
+    }
+    default:
+      UNREACHABLE();
+    }
+
+    // setup a buffer that will fit the largest escape we need to print
+    char buffer[sizeof("&#xFFFFFFFF;")];
+
+    // emit the escape sequence itself
+    snprintf(buffer, sizeof(buffer), "&#x%" PRIx32 ";", utf8_char);
+
+    // note how many extra characters we consumed
+    *current += length - 1;
+
+    return cb(state, buffer);
+  }
 
   // otherwise, output the character as-is
   char buffer[2] = {c, '\0'};
