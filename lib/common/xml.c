@@ -45,8 +45,9 @@ static bool xml_isentity(const char *s)
  *
  * \param previous The source character preceding the current one or '\0' if
  *   there was no prior character.
- * \param current Pointer to the current position in a source string being
- *   escaped.
+ * \param[in, out] current Pointer to the current position in a source string
+ *   being escaped. The pointer is updated based on how many characters are
+ *   consumed.
  * \param flags Options for configuring behavior.
  * \param cb User function for emitting escaped data. This is expected to take a
  *   caller-defined state type as the first parameter and the string to emit as
@@ -55,13 +56,17 @@ static bool xml_isentity(const char *s)
  * \param state Data to pass as the first parameter when calling `cb`.
  * \return The return value of a call to `cb`.
  */
-static int xml_core(char previous, const char *current, xml_flags_t flags,
+static int xml_core(char previous, const char **current, xml_flags_t flags,
                     int (*cb)(void *state, const char *s), void *state) {
 
-  char c = *current;
+  const char *s = *current;
+  char c = *s;
+
+  // we always consume one character for now
+  ++*current;
 
   // escape '&' only if not part of a legal entity sequence
-  if (c == '&' && (flags.raw || !xml_isentity(current)))
+  if (c == '&' && (flags.raw || !xml_isentity(s)))
     return cb(state, "&amp;");
 
   // '<' '>' are safe to substitute even if string is already UTF-8 coded since
@@ -102,11 +107,11 @@ int xml_escape(const char *s, xml_flags_t flags,
   char previous = '\0';
   int rc = 0;
   while (*s != '\0') {
-    rc = xml_core(previous, s, flags, cb, state);
+    char p = *s;
+    rc = xml_core(previous, &s, flags, cb, state);
     if (rc < 0)
       return rc;
-    previous = *s;
-    ++s;
+    previous = p;
   }
   return rc;
 }
