@@ -263,7 +263,6 @@ char * gvconfig_libdir(GVC_t * gvc)
     static char line[BSZ];
     static char *libdir;
     static boolean dirShown = 0; 
-    char *tmp;
 
     if (!libdir) {
         libdir=getenv("GVBINDIR");
@@ -297,7 +296,7 @@ char * gvconfig_libdir(GVC_t * gvc)
 	    const char* path;
 	    for (i = 0; i < c; ++i) {
 		path = _dyld_get_image_name(i);
-		tmp = strstr(path, "/libgvc.");
+		const char* tmp = strstr(path, "/libgvc.");
 		if (tmp) {
 		    if (tmp > path) {
 			/* Check for real /lib dir. Don't accept pre-install /.libs */
@@ -332,7 +331,7 @@ char * gvconfig_libdir(GVC_t * gvc)
 		    path = strchr (line, '/');
 		    if (!path)
 		        continue;
-		    tmp = strstr (path, "/libgvc.");
+		    char* tmp = strstr (path, "/libgvc.");
 		    if (tmp) {
 			*tmp = 0;
 			/* Check for real /lib dir. Don't accept pre-install /.libs */
