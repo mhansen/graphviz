@@ -1110,6 +1110,20 @@ ubuntu21-04-cmake-test:
     variables:
       IMAGE: ubuntu-21.04
 
+ubuntu21-10-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py > GRAPHVIZ_VERSION
+        - echo experimental > COLLECTION
+    needs:
+        - job: "ubuntu21-10-cmake-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-21.10
+
 ubuntu21.04-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
     before_script:
