@@ -389,6 +389,18 @@ ubuntu21-04-build:
     variables:
       IMAGE: ubuntu-21.04
 
+ubuntu21-10-build:
+    <<: *deb_build_definition
+    needs:
+        - job: docker_build_ubuntu-21.10
+          artifacts: false
+        - job: portable-source
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-21.10
+
 ubuntu21-04-static-build:
     <<: *deb_build_definition
     before_script:
