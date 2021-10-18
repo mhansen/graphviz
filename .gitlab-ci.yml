@@ -1141,6 +1141,23 @@ ubuntu21.04-cmake-ASan-test-including-ctest:
     variables:
       IMAGE: ubuntu-21.04
 
+ubuntu21.10-cmake-ASan-test-including-ctest:
+    <<: *linux_test_definition_including_ctest
+    before_script:
+        - export build_system="cmake"
+        - export CFLAGS=" -g -fsanitize=address,undefined"
+        - export CXXFLAGS=" -g -fsanitize=address,undefined"
+        - export LDFLAGS=" -g -fsanitize=address,undefined"
+        - python3 gen_version.py > GRAPHVIZ_VERSION
+        - echo experimental > COLLECTION
+    needs:
+        - job: "ubuntu21-10-cmake-ASan-build-for-ctest"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-21.10
+
 centos7-cmake-test:
     <<: *linux_test_definition
     before_script:
