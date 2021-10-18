@@ -427,6 +427,32 @@ ubuntu21-04-static-build:
     variables:
       IMAGE: ubuntu-21.04
 
+ubuntu21-10-static-build:
+    <<: *deb_build_definition
+    before_script:
+        - export CONFIGURE_OPTIONS="--disable-shared --enable-static"
+        - echo experimental > COLLECTION
+    needs:
+        - job: docker_build_ubuntu-21.10
+          artifacts: false
+        - job: portable-source
+          artifacts: true
+    artifacts:
+        when: on_success
+        expire_in: 1 week
+        paths:
+            - Packages/*/*/*/*/*/*deb
+            - Packages/*/*/*/*/*/*.xz
+            - Metadata/*/*/*/configure.log
+            - GRAPHVIZ_VERSION
+            - COLLECTION
+        reports:
+            metrics: metrics.txt
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-21.10
+
 out-of-source-build:
     <<: *deb_build_definition
     script:
