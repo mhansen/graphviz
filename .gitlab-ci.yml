@@ -965,6 +965,18 @@ ubuntu21-04-test:
     variables:
       IMAGE: ubuntu-21.04
 
+ubuntu21-10-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="autotools"
+    needs:
+        - job: "ubuntu21-10-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-21.10
+
 centos7-test:
     <<: *linux_test_definition
     before_script:
