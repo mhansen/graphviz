@@ -65,7 +65,8 @@ Sfdisc_t *sfdisc(Sfio_t * f, Sfdisc_t * disc)
 
     /* save old readf, writef, and seekf to see if stream need reinit */
 #define GETDISCF(func,iof,type) \
-	{ for(d = f->disc; d && !d->iof; d = d->disc) ; \
+	{ for(d = f->disc; d && !d->iof; d = d->disc) \
+	      ; \
 	  func = d ? d->iof : NULL; \
 	}
     GETDISCF(oreadf, readf, Sfread_f);
