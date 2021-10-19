@@ -112,7 +112,8 @@ Sfdisc_t *sfdisc(Sfio_t * f, Sfdisc_t * disc)
 #define DISCF(dst,iof,type)	(dst ? dst->iof : NULL)
 #define REINIT(oiof,iof,type) \
 		if(!reinit) \
-		{	for(d = f->disc; d && !d->iof; d = d->disc) ; \
+		{	for(d = f->disc; d && !d->iof; d = d->disc) \
+				; \
 			if(DISCF(d,iof,type) != oiof) \
 				reinit = 1; \
 		}
