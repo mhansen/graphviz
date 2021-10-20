@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "config.h"
 
 #include <stdio.h>
@@ -26,8 +22,4 @@ extern "C" {
     extern void gv_to_gxl(Agraph_t *, FILE *);
 #ifdef HAVE_EXPAT
     extern Agraph_t *gxl_to_gv(FILE *);
-#endif
-
-#ifdef __cplusplus
-}
 #endif
