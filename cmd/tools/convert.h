@@ -8,12 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#ifndef CONVERT_H
-#define CONVERT_H
 
 #include "config.h"
 
@@ -27,8 +26,6 @@ extern "C" {
     extern void gv_to_gxl(Agraph_t *, FILE *);
 #ifdef HAVE_EXPAT
     extern Agraph_t *gxl_to_gv(FILE *);
-#endif
-
 #endif
 
 #ifdef __cplusplus
