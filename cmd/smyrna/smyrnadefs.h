@@ -596,9 +596,6 @@ typedef struct
 	/*open gl canvas, used to be a globa variable before looks better wrapped in viewinfo */
 	GtkWidget *drawing_area;
 
-	/*some boolean variable for variety hacks used in the software */
-	int SignalBlock;
-
 	/*Topview data structure, refer topview.h for more info */
 	topview *Topview;
 	/*timer for animations */

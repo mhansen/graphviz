@@ -367,7 +367,6 @@ void init_viewport(ViewInfo * view)
     view->fmg.active = 0;
     view->mouse.down = 0;
     view->activeGraph = -1;
-    view->SignalBlock = 0;
     view->Topview = GNEW(topview);
     view->Topview->fisheyeParams.fs = 0;
     view->Topview->xDot=NULL;
