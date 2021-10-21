@@ -540,9 +540,6 @@ typedef struct
 	int bdVisible;		//if borders are visible (boundries of the drawing,
 	/*border coordinates, needs to be calculated for each graph */
 
-	/*randomize node colors or use default node color */
-	int rndNodeColor;
-
 	/*Font Size */
 	float FontSize;
 
