@@ -586,10 +586,6 @@ typedef struct
 	int active_camera;
 	viewport_camera *selected_camera;	//selected camera does not have to nec. be active one 
 
-	/*data attributes are read from graph's attributes DataAttribute1 and DataAttribute2 */
-	char *node_data_attribute1;	/*for topview graphs this is the node data attribute to put as label */
-	char *node_data_attribute2;	/*for topview graphs this is the node data attribute to be stored and used for something else */
-
 	/*0 advanced users with editing options 1 nonice users just navigate (glmenu system) */
 	int topviewusermode;
 
