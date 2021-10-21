@@ -155,14 +155,6 @@ typedef struct
     } colorschemaset;
 
     typedef enum {
-	VT_NONE,
-	VT_XDOT,
-	VT_TOPVIEW,
-	VT_TOPFISH,
-    } viewtype_t;
-
-
-    typedef enum {
 	GVE_NONE = -1,
 	GVE_GRAPH,
 	GVE_CLUSTER,
@@ -632,7 +624,6 @@ typedef struct
 	int labelshownodes;
 	int labelshowedges;
 
-	viewtype_t dfltViewType;
 	glCompSet *widgets;	//for novice user open gl menu
 	char *initFileName;	//file name from command line
 	int initFile;

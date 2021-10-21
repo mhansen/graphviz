@@ -890,10 +890,7 @@ void initSmGraph(Agraph_t * g,topview* rv)
     /*set topologilca fisheye to NULL */
     rv->fisheyeParams.h = '\0';
 
-    if (view->dfltViewType == VT_TOPFISH)
-	rv->fisheyeParams.active = 1;
-    else
-	rv->fisheyeParams.active = 0;
+    rv->fisheyeParams.active = 0;
     rv->cache.node_id=-1;
     rv->cache.selnode_id=-1;
     rv->cache.edge_id=-1;

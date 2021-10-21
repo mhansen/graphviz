@@ -400,7 +400,6 @@ void init_viewport(ViewInfo * view)
     view->camera_count = 0;
     view->active_camera = -1;
     set_viewport_settings_from_template(view, view->systemGraphs.def_attrs);
-    view->dfltViewType = VT_NONE;
     view->Topview->Graphdata.GraphFileName = (char *) 0;
     view->Topview->Graphdata.Modified = 0;
     view->colschms = NULL;
