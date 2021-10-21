@@ -346,7 +346,6 @@ void init_viewport(ViewInfo * view)
     view->LineWidth = 1;
 
     //default view settings , camera is not active
-    view->GLDepth = 1;		//should be set before GetFixedOGLPos(int x, int y,float kts) funtion is used!!!!
     view->panx = 0;
     view->pany = 0;
     view->panz = 0;

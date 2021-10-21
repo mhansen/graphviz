@@ -566,8 +566,6 @@ typedef struct
 
 	/*texture data */
 	int texture;		/*1 texturing enabled, 0 disabled */
-	/*opengl depth value to convert mouse to GL coords */
-	float GLDepth;
 
 	/*stores the info about status of mouse,pressed? what button ? where? */
 //	mouse_attr mouse;
