@@ -564,9 +564,6 @@ typedef struct
 	/*active graph */
 	int activeGraph;
 
-	/*texture data */
-	int texture;		/*1 texturing enabled, 0 disabled */
-
 	/*stores the info about status of mouse,pressed? what button ? where? */
 //	mouse_attr mouse;
 	glCompMouse mouse;

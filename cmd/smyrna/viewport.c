@@ -352,7 +352,6 @@ void init_viewport(ViewInfo * view)
 
 
     view->zoom = -20;
-    view->texture = 1;
     view->FontSize = 52;
 
     view->topviewusermode = TOP_VIEW_USER_NOVICE_MODE;	//for demo
