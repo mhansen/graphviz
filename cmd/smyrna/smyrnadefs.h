@@ -543,8 +543,6 @@ typedef struct
 	/*randomize node colors or use default node color */
 	int rndNodeColor;
 
-	/*randomize edge colors or use default edge color */
-	int rndEdgeColor;
 	/*Font Size */
 	float FontSize;
 
