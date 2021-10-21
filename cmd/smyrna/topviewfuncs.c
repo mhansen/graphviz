@@ -77,8 +77,6 @@ static void set_boundaries(Agraph_t * g, topview * t)
     view->bdyTop = top;
     view->bdxRight = right;
     view->bdyBottom = bottom;
-
-    view->bdzBottom = 0;
 }
 
 static void draw_xdot(xdot* x,float base_z)

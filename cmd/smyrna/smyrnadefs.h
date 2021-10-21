@@ -545,7 +545,7 @@ typedef struct
 
 
 	float bdxLeft, bdyTop;
-	float bdxRight, bdyBottom, bdzBottom;
+	float bdxRight, bdyBottom;
 
 	/*reserved , not being used yet */
 	GEunit unit;		//default pixels :0  

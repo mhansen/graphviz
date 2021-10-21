@@ -302,7 +302,6 @@ void init_viewport(ViewInfo * view)
     view->bdxRight = 500;
     view->bdyBottom = 0;
     view->bdyTop = 500;
-    view->bdzBottom = 0;
 
     view->borderColor.R = 1;
     view->borderColor.G = 0;
