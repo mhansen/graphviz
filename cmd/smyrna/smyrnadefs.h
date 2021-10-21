@@ -584,7 +584,6 @@ typedef struct
 	viewport_camera **cameras;
 	int camera_count;	//number of cameras
 	int active_camera;
-	viewport_camera *selected_camera;	//selected camera does not have to nec. be active one 
 
 	/*0 advanced users with editing options 1 nonice users just navigate (glmenu system) */
 	int topviewusermode;
