@@ -78,7 +78,6 @@ static void set_boundaries(Agraph_t * g, topview * t)
     view->bdxRight = right;
     view->bdyBottom = bottom;
 
-    view->bdzTop = 0;
     view->bdzBottom = 0;
 }
 

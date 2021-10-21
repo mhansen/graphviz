@@ -544,7 +544,7 @@ typedef struct
 	float FontSize;
 
 
-	float bdxLeft, bdyTop, bdzTop;
+	float bdxLeft, bdyTop;
 	float bdxRight, bdyBottom, bdzBottom;
 
 	/*reserved , not being used yet */
