@@ -832,8 +832,7 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
     e = edges[ind];
     n = agtail(e);
 
-    stepx = sizex / 2.0 / cnt;
-    stepx = MAX(stepx,2.);
+    stepx = fmax(sizex / 2.0 / cnt, 2.0);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
     tp.x += np.x;
@@ -853,8 +852,8 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
       default:
 		break;
     }
-    ty = MIN(dy, 3*(tp.y + dy - np.y));
-    hy = MIN(dy, 3*(hp.y + dy - np.y));
+    ty = fmin(dy, 3 * (tp.y + dy - np.y));
+    hy = fmin(dy, 3 * (hp.y + dy - np.y));
     for (i = 0; i < cnt; i++) {
         e = edges[ind++];
         dy += stepy, ty += stepy, hy += stepy, dx += sgn*stepx;
@@ -902,8 +901,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
     e = edges[ind];
     n = agtail(e);
 
-    stepx = sizex / 2.0 / cnt;
-    stepx = MAX(stepx, 2.);
+    stepx = fmax(sizex / 2.0 / cnt, 2.0);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
     tp.x += np.x;
@@ -961,8 +959,8 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
 	default:
 		break;
     }
-    ty = MIN(dy, 3*(np.y + dy - tp.y));
-    hy = MIN(dy, 3*(np.y + dy - hp.y));
+    ty = fmin(dy, 3 * (np.y + dy - tp.y));
+    hy = fmin(dy, 3 * (np.y + dy - hp.y));
     for (i = 0; i < cnt; i++) {
         e = edges[ind++];
         dy += stepy, ty += stepy, hy += stepy, dx += sgn*stepx;
@@ -1010,8 +1008,7 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     e = edges[ind];
     n = agtail(e);
 
-    stepy = sizey / 2.0 / cnt;
-    stepy = MAX(stepy, 2.);
+    stepy = fmax(sizey / 2.0 / cnt, 2.0);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
     tp.x += np.x;
@@ -1033,8 +1030,8 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
       default:
 		break;
     }
-    tx = MIN(dx, 3*(np.x + dx - tp.x));
-    hx = MIN(dx, 3*(np.x + dx - hp.x));
+    tx = fmin(dx, 3 * (np.x + dx - tp.x));
+    hx = fmin(dx, 3 * (np.x + dx - hp.x));
     for (i = 0; i < cnt; i++) {
         e = edges[ind++];
         dx += stepx, tx += stepx, hx += stepx, dy += sgn*stepy;
@@ -1082,8 +1079,7 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     e = edges[ind];
     n = agtail(e);
 
-    stepy = sizey / 2.0 / cnt;
-    stepy = MAX(stepy,2.);
+    stepy = fmax(sizey / 2.0 / cnt, 2.0);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
     tp.x += np.x;
@@ -1108,8 +1104,8 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
       default:
 		break;
     }
-    tx = MIN(dx, 3*(tp.x + dx - np.x));
-    hx = MIN(dx, 3*(hp.x + dx - np.x));
+    tx = fmin(dx, 3 * (tp.x + dx - np.x));
+    hx = fmin(dx, 3 * (hp.x + dx - np.x));
     for (i = 0; i < cnt; i++) {
         e = edges[ind++];
         dx += stepx, tx += stepx, hx += stepx, dy += sgn*stepy;
