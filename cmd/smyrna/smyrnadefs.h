@@ -217,8 +217,6 @@ typedef struct
 	float angley;
 	float anglez;
 
-
-	float camera_vectorz;
 	float r;
 
 
