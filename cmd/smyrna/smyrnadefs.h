@@ -210,7 +210,6 @@ typedef struct
 	float targety;
 	float targetz;
 	int index;
-	float anglexy;
 	float anglexyz;
 
 	float r;
