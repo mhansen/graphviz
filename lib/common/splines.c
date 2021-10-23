@@ -21,11 +21,11 @@
 #ifdef DEBUG
 static int debugleveln(edge_t* e, int i)
 {
-    return (GD_showboxes(agraphof(aghead(e))) == i ||
+    return GD_showboxes(agraphof(aghead(e))) == i ||
 	    GD_showboxes(agraphof(agtail(e))) == i ||
 	    ED_showboxes(e) == i ||
 	    ND_showboxes(aghead(e)) == i ||
-	    ND_showboxes(agtail(e)) == i);
+	    ND_showboxes(agtail(e)) == i;
 }
 
 static void showPoints(pointf ps[], int pn)
@@ -257,7 +257,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
     for (orig = fe; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
 
     /* may be a reversed flat edge */
-    if (!info->ignoreSwap && (ND_rank(tn) == ND_rank(hn)) && (ND_order(tn) > ND_order(hn))) {
+    if (!info->ignoreSwap && ND_rank(tn) == ND_rank(hn) && ND_order(tn) > ND_order(hn)) {
 	node_t *tmp;
 	tmp = hn;
 	hn = tn;
@@ -343,10 +343,10 @@ conc_slope(node_t* n)
     p.x = ND_coord(n).x - (s_in / cnt_in);
     p.y = ND_coord(n).y - ND_coord(agtail(ND_in(n).list[0])).y;
     m_in = atan2(p.y, p.x);
-    p.x = (s_out / cnt_out) - ND_coord(n).x;
+    p.x = s_out / cnt_out - ND_coord(n).x;
     p.y = ND_coord(aghead(ND_out(n).list[0])).y - ND_coord(n).y;
     m_out = atan2(p.y, p.x);
-    return ((m_in + m_out) / 2.0);
+    return (m_in + m_out) / 2.0;
 }
 
 void add_box(path * P, boxf b)
@@ -419,7 +419,7 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
     P->nbox = 0;
     P->data = (void *) e;
     endp->np = P->start.p;
-    if ((et == REGULAREDGE) && (ND_node_type(n) == NORMAL) && ((side = ED_tail_port(e).side))) {
+    if (et == REGULAREDGE && ND_node_type(n) == NORMAL && (side = ED_tail_port(e).side)) {
 	edge_t* orig;
 	boxf b0, b = endp->nb;
 	if (side & TOP) {
@@ -485,7 +485,7 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
 	    ED_head_port(orig).clip = FALSE;
 	return;
     }
-    if ((et == FLATEDGE) && ((side = ED_tail_port(e).side))) {
+    if (et == FLATEDGE && (side = ED_tail_port(e).side)) {
 	boxf b0, b = endp->nb;
 	edge_t* orig;
 	if (side & TOP) {
@@ -613,7 +613,7 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
 	    P->end.constrained = FALSE;
     }
     endp->np = P->end.p;
-    if ((et == REGULAREDGE) && (ND_node_type(n) == NORMAL) && ((side = ED_head_port(e).side))) {
+    if (et == REGULAREDGE && ND_node_type(n) == NORMAL && (side = ED_head_port(e).side)) {
 	edge_t* orig;
 	boxf b0, b = endp->nb;
 	if (side & TOP) {
@@ -681,7 +681,7 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
 	return;
     }
 
-    if ((et == FLATEDGE) && ((side = ED_head_port(e).side))) {
+    if (et == FLATEDGE && (side = ED_head_port(e).side)) {
 	boxf b0, b = endp->nb;
 	edge_t* orig;
 	if (side & TOP) {
@@ -832,7 +832,7 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
     e = edges[ind];
     n = agtail(e);
 
-    stepx = (sizex / 2.) / cnt;
+    stepx = sizex / 2.0 / cnt;
     stepx = MAX(stepx,2.);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
@@ -902,7 +902,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
     e = edges[ind];
     n = agtail(e);
 
-    stepx = (sizex / 2.) / cnt;
+    stepx = sizex / 2.0 / cnt;
     stepx = MAX(stepx, 2.);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
@@ -938,7 +938,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
 	case 51:
 	case 57:
 	case 58:
-		dx = sgn*((((ND_lw(n)-(np.x-tp.x)) + (ND_rw(n)-(hp.x-np.x)))/3.));
+		dx = sgn * ((ND_lw(n) - (np.x - tp.x) + (ND_rw(n) - (hp.x - np.x))) / 3.0);
 		break;
 	case 73:
  		dx = sgn*(ND_lw(n)-(np.x-tp.x) + stepx);
@@ -947,13 +947,17 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
 		dx = sgn*(ND_lw(n)-(np.x-tp.x));
 		break;
 	case 84:
-		dx = sgn*((((ND_lw(n)-(np.x-tp.x)) + (ND_rw(n)-(hp.x-np.x)))/2.) + stepx);
-		break;
+          dx = sgn *
+               ((ND_lw(n) - (np.x - tp.x) + (ND_rw(n) - (hp.x - np.x))) / 2.0 +
+                stepx);
+          break;
 	case 74:
 	case 75:
 	case 85:
-		dx = sgn*((((ND_lw(n)-(np.x-tp.x)) + (ND_rw(n)-(hp.x-np.x)))/2.) + 2*stepx);
-		break;
+          dx = sgn *
+               ((ND_lw(n) - (np.x - tp.x) + (ND_rw(n) - (hp.x - np.x))) / 2.0 +
+                2 * stepx);
+          break;
 	default:
 		break;
     }
@@ -1006,7 +1010,7 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     e = edges[ind];
     n = agtail(e);
 
-    stepy = (sizey / 2.) / cnt;
+    stepy = sizey / 2.0 / cnt;
     stepy = MAX(stepy, 2.);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
@@ -1078,7 +1082,7 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     e = edges[ind];
     n = agtail(e);
 
-    stepy = (sizey / 2.) / cnt;
+    stepy = sizey / 2.0 / cnt;
     stepy = MAX(stepy,2.);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
@@ -1154,11 +1158,11 @@ selfRightSpace (edge_t* e)
     double label_width;
     textlabel_t* l = ED_label(e);
 
-    if (((!ED_tail_port(e).defined) && (!ED_head_port(e).defined)) ||
-        (!(ED_tail_port(e).side & LEFT) && 
+    if ((!ED_tail_port(e).defined && !ED_head_port(e).defined) ||
+        (!(ED_tail_port(e).side & LEFT) &&
          !(ED_head_port(e).side & LEFT) &&
-          ((ED_tail_port(e).side != ED_head_port(e).side) || 
-          (!(ED_tail_port(e).side & (TOP|BOTTOM)))))) {
+          (ED_tail_port(e).side != ED_head_port(e).side ||
+          !(ED_tail_port(e).side & (TOP|BOTTOM))))) {
 	sw = SELF_EDGE_SIZE;
 	if (l) {
 	    label_width = GD_flip(agraphof(aghead(e))) ? l->dimen.y : l->dimen.x;
@@ -1188,11 +1192,11 @@ makeSelfEdge(path * P, edge_t * edges[], int ind, int cnt, double sizex,
      * and at most 1 on bottom 
      */
     
-    if (((!ED_tail_port(e).defined) && (!ED_head_port(e).defined)) ||
-        (!(ED_tail_port(e).side & LEFT) && 
+    if ((!ED_tail_port(e).defined && !ED_head_port(e).defined) ||
+        (!(ED_tail_port(e).side & LEFT) &&
          !(ED_head_port(e).side & LEFT) &&
-          ((ED_tail_port(e).side != ED_head_port(e).side) || 
-          (!(ED_tail_port(e).side & (TOP|BOTTOM)))))) {
+          (ED_tail_port(e).side != ED_head_port(e).side ||
+          !(ED_tail_port(e).side & (TOP|BOTTOM))))) {
 	selfRight(edges, ind, cnt, sizex, sizey, sinfo);
     }
 
@@ -1293,8 +1297,8 @@ polylineMidpoint (splines* spl, pointf* pp, pointf* pq)
 	    if (d >= dist) {
 		*pp = pf;
 		*pq = qf;
-		mf.x = ((qf.x*dist) + (pf.x*(d-dist)))/d; 
-		mf.y = ((qf.y*dist) + (pf.y*(d-dist)))/d; 
+		mf.x = (qf.x * dist + pf.x * (d - dist)) / d;
+		mf.y = (qf.y * dist + pf.y * (d - dist)) / d;
 		return mf;
 	    }
 	    else
@@ -1314,7 +1318,7 @@ edgeMidpoint (graph_t* g, edge_t * e)
     if (APPROXEQPT(p, q, MILLIPOINT)) { /* degenerate spline */
 	spf = p;
     }
-    else if ((et == ET_SPLINE) || (et == ET_CURVED)) {
+    else if (et == ET_SPLINE || et == ET_CURVED) {
 	d.x = (q.x + p.x) / 2.;
 	d.y = (p.y + q.y) / 2.;
 	spf = dotneato_closest(ED_spl(e), d);
@@ -1367,8 +1371,8 @@ int place_portlabel(edge_t * e, boolean head_p)
     if (ED_edge_type(e) == IGNORED)
 	return 0;
     /* add label here only if labelangle or labeldistance is defined; else, use external label */
-    if ((!E_labelangle || (*(la = AGXGET(e,E_labelangle)) == '\0')) &&
-	(!E_labeldistance || (*(ld = AGXGET(e,E_labeldistance)) == '\0'))) {
+    if ((!E_labelangle || *(la = AGXGET(e,E_labelangle)) == '\0') &&
+	(!E_labeldistance || *(ld = AGXGET(e,E_labeldistance)) == '\0')) {
 	return 0;
     }
 
