@@ -449,14 +449,6 @@ typedef struct
 	
     } topview;
 
-
-
-    enum {
-	COL_NAME = 0,
-	COL_FILENAME,
-	NUM_COLS
-    };
-
     typedef struct _attribute {
 	char Type;
 	char *Name;
