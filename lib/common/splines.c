@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <common/render.h>
+#include <cgraph/unreachable.h>
 
 #ifdef DEBUG
 static int debugleveln(edge_t* e, int i)
@@ -1299,8 +1300,7 @@ polylineMidpoint (splines* spl, pointf* pp, pointf* pq)
 		dist -= d;
 	}
     }
-    assert (FALSE);   /* should never get here */
-    return mf;
+    UNREACHABLE();
 }
 
 pointf
