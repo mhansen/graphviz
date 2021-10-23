@@ -842,8 +842,9 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
     hp.y += np.y;
     if (tp.x >= hp.x) sgn = 1;
     else sgn = -1;
-    dy = ND_ht(n)/2., dx = 0.;
-    // certain adjustments are required for some point_pairs in order to improve the 
+    dy = ND_ht(n) / 2.0;
+    dx = 0.0;
+    // certain adjustments are required for some point_pairs in order to improve the
     // display of the edge path between them
     point_pair = convert_sides_to_points(ED_tail_port(e).side,ED_head_port(e).side);
     switch(point_pair){
@@ -856,7 +857,10 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
     hy = fmin(dy, 3 * (hp.y + dy - np.y));
     for (i = 0; i < cnt; i++) {
         e = edges[ind++];
-        dy += stepy, ty += stepy, hy += stepy, dx += sgn*stepx;
+        dy += stepy;
+        ty += stepy;
+        hy += stepy;
+        dx += sgn * stepx;
         pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = pointfof(tp.x + dx, tp.y - ty / 3);
@@ -963,7 +967,10 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
     hy = fmin(dy, 3 * (np.y + dy - hp.y));
     for (i = 0; i < cnt; i++) {
         e = edges[ind++];
-        dy += stepy, ty += stepy, hy += stepy, dx += sgn*stepx;
+        dy += stepy;
+        ty += stepy;
+        hy += stepy;
+        dx += sgn * stepx;
         pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = pointfof(tp.x + dx, tp.y + ty / 3);
@@ -1034,7 +1041,10 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     hx = fmin(dx, 3 * (np.x + dx - hp.x));
     for (i = 0; i < cnt; i++) {
         e = edges[ind++];
-        dx += stepx, tx += stepx, hx += stepx, dy += sgn*stepy;
+        dx += stepx;
+        tx += stepx;
+        hx += stepx;
+        dy += sgn * stepy;
         pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = pointfof(tp.x + tx / 3, tp.y + dy);
@@ -1108,7 +1118,10 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     hx = fmin(dx, 3 * (hp.x + dx - np.x));
     for (i = 0; i < cnt; i++) {
         e = edges[ind++];
-        dx += stepx, tx += stepx, hx += stepx, dy += sgn*stepy;
+        dx += stepx;
+        tx += stepx;
+        hx += stepx;
+        dy += sgn * stepy;
         pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = pointfof(tp.x - tx / 3, tp.y + dy);
