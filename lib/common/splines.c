@@ -16,6 +16,7 @@
 #include <math.h>
 #include <common/render.h>
 #include <cgraph/unreachable.h>
+#include <stdbool.h>
 
 #ifdef DEBUG
 static int debugleveln(edge_t* e, int i)
@@ -108,7 +109,7 @@ void bezier_clip(inside_t * inside_context,
 {
     pointf seg[4], best[4], pt, opt, *left, *right;
     double low, high, t, *idir, *odir;
-    boolean found;
+    bool found;
     int i;
 
     if (left_inside) {
@@ -124,7 +125,7 @@ void bezier_clip(inside_t * inside_context,
 	idir = &high;
 	odir = &low;
     }
-    found = FALSE;
+    found = false;
     low = 0.0;
     high = 1.0;
     do {
@@ -136,7 +137,7 @@ void bezier_clip(inside_t * inside_context,
 	} else {
 	    for (i = 0; i < 4; i++)
 		best[i] = seg[i];
-	    found = TRUE;
+	    found = true;
 	    *odir = t;
 	}
     } while (fabs(opt.x - pt.x) > .5 || fabs(opt.y - pt.y) > .5);
