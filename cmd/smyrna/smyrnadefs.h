@@ -146,12 +146,6 @@ typedef struct
 	int anglex;
 	int angley;
 	int anglez;
-    } rotation;
-
-    typedef struct {
-	int anglex;
-	int angley;
-	int anglez;
     } gl3DNav;
 
 
