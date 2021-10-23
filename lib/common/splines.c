@@ -87,11 +87,9 @@ arrow_clip(edge_t * fe, node_t * hn,
     }
     else {
 	if (sflag)
-	    *startp =
-		arrowStartClip(e, ps, *startp, *endp, spl, sflag);
+	    *startp = arrowStartClip(e, ps, *startp, *endp, spl, sflag);
 	if (eflag)
-	    *endp =
-		arrowEndClip(e, ps, *startp, *endp, spl, eflag);
+	    *endp = arrowEndClip(e, ps, *startp, *endp, spl, eflag);
     }
 }
 
@@ -170,8 +168,7 @@ shape_clip0(inside_t * inside_context, node_t * n, pointf curve[4],
 	c[i].y = curve[i].y - ND_coord(n).y;
     }
 
-    bezier_clip(inside_context, ND_shape(n)->fns->insidefn, c,
-		left_inside);
+    bezier_clip(inside_context, ND_shape(n)->fns->insidefn, c, left_inside);
 
     for (i = 0; i < 4; i++) {
 	curve[i].x = c[i].x + ND_coord(n).x;
