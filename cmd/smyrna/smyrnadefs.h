@@ -192,12 +192,6 @@ typedef struct
 	int edgeid;		/*for only edges,  > 0  multiedges */
 
     } element_data;
-    typedef struct _temp_node_record	//helper record to identofy head and tail of edges
-    {
-	Agrec_t h;
-	int ID;
-	int TVref;		//topview data structure reference
-    } temp_node_record;
 
 #define OD_Visible(p) (p.data.Visible)
 #define OD_Locked(p) (p.data.Locked)
