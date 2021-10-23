@@ -200,7 +200,6 @@ typedef struct
     }topviewcache;
 
     typedef struct xdot_set xdot_set;
-    typedef enum { GEpixels, GEinches, GEmm } GEunit;
     typedef struct {
 	int color;
 	int pos;
@@ -546,9 +545,6 @@ typedef struct
 
 	float bdxLeft, bdyTop;
 	float bdxRight, bdyBottom;
-
-	/*reserved , not being used yet */
-	GEunit unit;		//default pixels :0  
 
 	/*screen window size in 2d */
 	int w, h;
