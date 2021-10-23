@@ -142,10 +142,6 @@ typedef struct
 	GVK_SFDP		/* keep last */
     } gvk_layout;
 
-    typedef struct {
-
-	    int a;
-    } topviewdata;
     typedef struct
     {
 	int node_id;
@@ -369,7 +365,6 @@ typedef struct
 	topview_edge *Edges;
 	int Nodecount;
 	int Edgecount;
-	topviewdata *TopviewData;
 	void *customptr;
 	struct {
 	    int active;	//1 draw hierarchy 0 draw regular topview
