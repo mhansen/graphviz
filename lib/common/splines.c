@@ -280,7 +280,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
 	for (start = 0; start < pn - 4; start += 3) {
 	    p2.x = ps[start + 3].x - ND_coord(tn).x;
 	    p2.y = ps[start + 3].y - ND_coord(tn).y;
-	    if (ND_shape(tn)->fns->insidefn(&inside_context, p2) == FALSE)
+	    if (!ND_shape(tn)->fns->insidefn(&inside_context, p2))
 		break;
 	}
 	shape_clip0(&inside_context, tn, &ps[start], TRUE);
@@ -292,7 +292,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
 	for (end = pn - 4; end > 0; end -= 3) {
 	    p2.x = ps[end].x - ND_coord(hn).x;
 	    p2.y = ps[end].y - ND_coord(hn).y;
-	    if (ND_shape(hn)->fns->insidefn(&inside_context, p2) == FALSE)
+	    if (!ND_shape(hn)->fns->insidefn(&inside_context, p2))
 		break;
 	}
 	shape_clip0(&inside_context, hn, &ps[end], FALSE);
