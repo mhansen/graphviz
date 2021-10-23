@@ -107,13 +107,6 @@ typedef struct
     typedef enum { MOUSE_ROTATE_X, MOUSE_ROTATE_Y, MOUSE_ROTATE_XY,
 	    MOUSE_ROTATE_Z } mouse_rotate_axis;
 
-
-    typedef struct
-    {
-	unsigned char *data;
-	int w;
-	int h;
-    }image_data;
     typedef struct 
     {
 	xdot_op op;
@@ -123,7 +116,6 @@ typedef struct
 	int layer;
 	int listId;/*opengl list id*/
 	glCompImage* img;
-	/* image_data iData; */
     } sdot_op;	
 	
 	
