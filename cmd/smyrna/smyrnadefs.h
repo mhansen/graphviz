@@ -112,9 +112,6 @@ typedef struct
 	glCompImage* img;
     } sdot_op;	
 	
-	
-
-#define MAX_BTN_CNT 50
     typedef struct {
 	float perc;
 	glCompColor c;
