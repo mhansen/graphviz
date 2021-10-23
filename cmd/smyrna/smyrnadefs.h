@@ -101,10 +101,6 @@ typedef struct
 	int with_widgets;
 }attr_list;
 
-
-    typedef enum { leftmousebutton, rightmousebutton,
-	    thirdmousebutton } clicked_mouse_button;
-
     typedef struct 
     {
 	xdot_op op;
