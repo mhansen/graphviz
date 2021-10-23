@@ -501,7 +501,7 @@ typedef struct
 	float zoom;
 
 	/*clipping coordinates, to avoid unnecesarry rendering */
-	float clipX1, clipX2, clipY1, clipY2, clipZ1, clipZ2;
+	float clipX1, clipX2, clipY1, clipY2;
 
 	/*background color */
 	glCompColor bgColor;
