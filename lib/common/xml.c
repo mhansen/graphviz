@@ -190,3 +190,68 @@ int xml_escape(const char *s, xml_flags_t flags,
   }
   return rc;
 }
+
+#ifdef TEST_XML
+// compile the below test stub with:
+//
+//   ${CC} -std=c99 -DTEST_XML -Ilib -Ilib/gvc -Ilib/pathplan -Ilib/cgraph
+//     -Ilib/cdt lib/common/xml.c
+
+#include <getopt.h>
+
+static int put(void *stream, const char *s) { return fputs(s, stream); }
+
+// stub for testing above functionality
+int main(int argc, char **argv) {
+
+  xml_flags_t flags = {0};
+
+  while (true) {
+    static const struct option opts[] = {
+        {"dash", no_argument, 0, 'd'},
+        {"nbsp", no_argument, 0, 'n'},
+        {"raw", no_argument, 0, 'r'},
+        {"utf8", no_argument, 0, 'u'},
+        {0, 0, 0, 0},
+    };
+
+    int index;
+    int c = getopt_long(argc, argv, "dnru", opts, &index);
+
+    if (c == -1)
+      break;
+
+    switch (c) {
+
+    case 'd':
+      flags.dash = 1;
+      break;
+
+    case 'n':
+      flags.nbsp = 1;
+      break;
+
+    case 'r':
+      flags.raw = 1;
+      break;
+
+    case 'u':
+      flags.utf8 = 1;
+      break;
+
+    default:
+      fprintf(stderr, "unexpected error\n");
+      return EXIT_FAILURE;
+    }
+  }
+
+  // escape all input we received
+  for (int i = optind; i < argc; ++i) {
+    int r = xml_escape(argv[i], flags, put, stdout);
+    if (r < 0)
+      return EXIT_FAILURE;
+  }
+
+  return EXIT_SUCCESS;
+}
+#endif
