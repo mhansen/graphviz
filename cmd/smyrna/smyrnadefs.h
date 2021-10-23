@@ -213,7 +213,6 @@ typedef struct
 	float anglexy;
 	float anglexyz;
 
-	float anglex;
 	float angley;
 	float anglez;
 
