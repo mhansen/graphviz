@@ -143,13 +143,6 @@ typedef struct
     } gvk_layout;
 
     typedef struct {
-	int anglex;
-	int angley;
-	int anglez;
-    } gl3DNav;
-
-
-    typedef struct {
 
 	    int a;
     } topviewdata;
