@@ -52,7 +52,6 @@ void menu_click_add_camera(void *p)
     c->x = view->panx;
     c->y = view->pany;
     c->z = view->zoom;
-    c->camera_vectorx = 0;
     c->camera_vectory = 1;
     c->camera_vectorz = 0;
 

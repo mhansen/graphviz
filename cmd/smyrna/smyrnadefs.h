@@ -218,7 +218,6 @@ typedef struct
 	float anglez;
 
 
-	float camera_vectorx;
 	float camera_vectory;
 	float camera_vectorz;
 	float r;
