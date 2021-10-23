@@ -104,8 +104,6 @@ typedef struct
 
     typedef enum { leftmousebutton, rightmousebutton,
 	    thirdmousebutton } clicked_mouse_button;
-    typedef enum { MOUSE_ROTATE_X, MOUSE_ROTATE_Y, MOUSE_ROTATE_XY,
-	    MOUSE_ROTATE_Z } mouse_rotate_axis;
 
     typedef struct 
     {
