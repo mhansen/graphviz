@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -99,7 +99,7 @@ arrow_clip(edge_t * fe, node_t * hn,
  * Clip bezier to shape using binary search.
  * The details of the shape are passed in the inside_context;
  * The function providing the inside test is passed as a parameter.
- * left_inside specifies that sp[0] is inside the node, 
+ * left_inside specifies that sp[0] is inside the node,
  * else sp[3] is taken as inside.
  * The points p are in node coordinates.
  */
@@ -182,7 +182,7 @@ shape_clip0(inside_t * inside_context, node_t * n, pointf curve[4],
 
 /* shape_clip:
  * Clip Bezier to node shape
- * Uses curve[0] to determine which which side is inside the node. 
+ * Uses curve[0] to determine which which side is inside the node.
  * NOTE: This test is bad. It is possible for previous call to
  * shape_clip to produce a Bezier with curve[0] moved to the boundary
  * for which insidefn(curve[0]) is true. Thus, if the new Bezier is
@@ -301,7 +301,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
 	shape_clip0(&inside_context, hn, &ps[end], FALSE);
     } else
 	end = pn - 4;
-    for (; start < pn - 4; start += 3) 
+    for (; start < pn - 4; start += 3)
 	if (! APPROXEQPT(ps[start], ps[start + 3], MILLIPOINT))
 	    break;
     for (; end > 0; end -= 3)
@@ -327,7 +327,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
     newspl->size = end - start + 4;
 }
 
-static double 
+static double
 conc_slope(node_t* n)
 {
     double s_in, s_out, m_in, m_out;
@@ -357,13 +357,13 @@ void add_box(path * P, boxf b)
 
 /* beginpath:
  * Set up boxes near the tail node.
- * For regular nodes, the result should be a list of contiguous rectangles 
+ * For regular nodes, the result should be a list of contiguous rectangles
  * such that the last one has the smallest LL.y and its LL.y is above
  * the bottom of the rank (rank.ht1).
- * 
+ *
  * For flat edges, we assume endp->sidemask has been set. For regular
  * edges, we set this, but it doesn't appear to be needed any more.
- * 
+ *
  * In many cases, we tweak the x or y coordinate of P->start.p by 1.
  * This is because of a problem in the path routing code. If the starting
  * point actually lies on the polygon, in some cases, the router gets
@@ -449,7 +449,7 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
 		b.UR.x += 1;
 		endp->boxes[0] = b0;
 		endp->boxes[1] = b;
-	    } 
+	    }
 	    P->start.p.y += 1;
 	    endp->boxn = 2;
 	}
@@ -581,8 +581,8 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
 	    endp->sidemask = BOTTOM;
 	    P->start.p.y -= 1;
 	    break;
-	}    
-    }    
+	}
+    }
 }
 
 void endpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
@@ -593,7 +593,7 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
 
     n = aghead(e);
 
-    if (ED_head_port(e).dyna) 
+    if (ED_head_port(e).dyna)
 	ED_head_port(e) = resolvePort(aghead(e), agtail(e), &ED_head_port(e));
     if (ND_shape(n))
 	pboxfn = ND_shape(n)->fns->pboxfn;
@@ -650,7 +650,7 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
 		b.UR.x += 1;
 		endp->boxes[0] = b0;
 		endp->boxes[1] = b;
-	    } 
+	    }
 	    endp->boxn = 2;
 	    P->end.p.y -= 1;
 	}
@@ -759,8 +759,8 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
 
 	switch (et) {
 	case SELFEDGE:
-	    /* offset of -1 is symmetric w.r.t. beginpath() 
-	     * FIXME: is any of this right?  what if self-edge 
+	    /* offset of -1 is symmetric w.r.t. beginpath()
+	     * FIXME: is any of this right?  what if self-edge
 	     * doesn't connect from BOTTOM to TOP??? */
 	    assert(0);  /* at present, we don't use endpath for selfedges */
 	    endp->boxes[0].LL.y = P->end.p.y + 1;
@@ -819,7 +819,7 @@ else
 
 
 static void selfBottom (edge_t* edges[], int ind, int cnt,
-	double sizex, double stepy, splineInfo* sinfo) 
+	double sizex, double stepy, splineInfo* sinfo)
 {
     pointf tp, hp, np;
     node_t *n;
@@ -889,7 +889,7 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
 
 static void
 selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
-           splineInfo* sinfo) 
+           splineInfo* sinfo)
 {
     int i, sgn, point_pair;
     double hy, ty,  stepx, dx, dy, height;
@@ -914,7 +914,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
     if (tp.x >= hp.x) sgn = 1;
     else sgn = -1;
     dy = ND_ht(n)/2., dx = 0.;
-    // certain adjustments are required for some point_pairs in order to improve the 
+    // certain adjustments are required for some point_pairs in order to improve the
     // display of the edge path between them
     point_pair = convert_sides_to_points(ED_tail_port(e).side,ED_head_port(e).side);
     switch(point_pair){
@@ -997,7 +997,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
 
 static void
 selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
-           splineInfo* sinfo) 
+           splineInfo* sinfo)
 {
     int i, sgn, point_pair;
     double hx, tx, stepy, dx, dy, width;
@@ -1022,11 +1022,11 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     if (tp.y >= hp.y) sgn = 1;
     else sgn = -1;
     dx = ND_rw(n), dy = 0;
-    // certain adjustments are required for some point_pairs in order to improve the 
+    // certain adjustments are required for some point_pairs in order to improve the
     // display of the edge path between them
     point_pair = convert_sides_to_points(ED_tail_port(e).side,ED_head_port(e).side);
     switch(point_pair){
-      case 32: 
+      case 32:
       case 65:	if(tp.y == hp.y)
 		  sgn = -sgn;
 		break;
@@ -1069,7 +1069,7 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
 
 static void
 selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
-          splineInfo* sinfo) 
+          splineInfo* sinfo)
 {
     int i, sgn,point_pair;
     double hx, tx, stepy, dx, dy, width;
@@ -1091,12 +1091,12 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     hp = ED_head_port(e).p;
     hp.x += np.x;
     hp.y += np.y;
-    
-    
+
+
     if (tp.y >= hp.y) sgn = 1;
     else sgn = -1;
     dx = ND_lw(n), dy = 0.;
-    // certain adjustments are required for some point_pairs in order to improve the 
+    // certain adjustments are required for some point_pairs in order to improve the
     // display of the edge path between them
     point_pair = convert_sides_to_points(ED_tail_port(e).side,ED_head_port(e).side);
     switch(point_pair){
@@ -1120,7 +1120,7 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
         points[pointn++] = pointfof(np.x - dx, (tp.y+hp.y)/2);
         points[pointn++] = pointfof(np.x - dx, hp.y - dy);
         points[pointn++] = pointfof(hp.x - hx / 3, hp.y - dy);
-      
+
         points[pointn++] = hp;
         if (ED_label(e)) {
     	if (GD_flip(agraphof(agtail(e)))) {
@@ -1188,10 +1188,10 @@ makeSelfEdge(path * P, edge_t * edges[], int ind, int cnt, double sizex,
     e = edges[ind];
 
     /* self edge without ports or
-     * self edge with all ports inside, on the right, or at most 1 on top 
-     * and at most 1 on bottom 
+     * self edge with all ports inside, on the right, or at most 1 on top
+     * and at most 1 on bottom
      */
-    
+
     if ((!ED_tail_port(e).defined && !ED_head_port(e).defined) ||
         (!(ED_tail_port(e).side & LEFT) &&
          !(ED_head_port(e).side & LEFT) &&
@@ -1417,7 +1417,7 @@ splines *getsplinepoints(edge_t * e)
 
     for (le = e; !(sp = ED_spl(le)) && ED_edge_type(le) != NORMAL;
 	 le = ED_to_orig(le));
-    if (sp == NULL) 
+    if (sp == NULL)
 	agerr (AGERR, "getsplinepoints: no spline points available for edge (%s,%s)\n",
 	    agnameof(agtail(e)), agnameof(aghead(e)));
     return sp;
