@@ -536,7 +536,7 @@ static void gdgen_ellipse(GVJ_t * job, pointf * A, int filled)
     gdImagePtr im = (gdImagePtr) job->context;
     double dx, dy;
     int pen;
-    boolean pen_ok, fill_ok;
+    bool pen_ok, fill_ok;
     gdImagePtr brush = NULL;
 
     if (!im)
