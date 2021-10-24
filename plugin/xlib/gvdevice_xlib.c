@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -445,7 +446,7 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
 }
 #endif
 
-static boolean initialized;
+static bool initialized;
 
 static void xlib_initialize(GVJ_t *firstjob)
 {
@@ -485,7 +486,7 @@ static void xlib_initialize(GVJ_t *firstjob)
     firstjob->device_dpi.y = DisplayHeight(dpy, scr) * 25.4 / DisplayHeightMM(dpy, scr);
     firstjob->device_sets_dpi = TRUE;
 
-    initialized = TRUE;
+    initialized = true;
 }
 
 static void xlib_finalize(GVJ_t *firstjob)
