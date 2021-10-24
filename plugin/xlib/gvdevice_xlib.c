@@ -501,7 +501,7 @@ static void xlib_finalize(GVJ_t *firstjob)
 #ifdef HAVE_SYS_INOTIFY_H
     int wd=0;
     int inotify_fd=0;
-    boolean watching_file_p = FALSE;
+    bool watching_file_p = false;
     static char *dir;
     char *p, *cwd = NULL;
 
@@ -522,7 +522,7 @@ static void xlib_finalize(GVJ_t *firstjob)
     if (firstjob->input_filename) {
         if (firstjob->graph_index == 0) {
 #ifdef HAVE_SYS_INOTIFY_H
-	    watching_file_p = TRUE;
+	    watching_file_p = true;
 
 	    if (firstjob->input_filename[0] != '/') {
     	        cwd = getcwd(NULL, 0);
