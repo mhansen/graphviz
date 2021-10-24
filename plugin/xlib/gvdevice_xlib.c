@@ -77,7 +77,7 @@ static void handle_expose(GVJ_t * job, XExposeEvent * eev)
 {
     window_t *window;
 
-    window = (window_t *)job->window;
+    window = job->window;
     XCopyArea(eev->display, window->pix, eev->window, window->gc,
               eev->x, eev->y, eev->width, eev->height, eev->x, eev->y);
 }
@@ -86,7 +86,7 @@ static void handle_client_message(GVJ_t * job, XClientMessageEvent * cmev)
 {
     window_t *window;
 
-    window = (window_t *)job->window;
+    window = job->window;
     if (cmev->format == 32
         && (Atom) cmev->data.l[0] == window->wm_delete_window_atom)
         exit(0);
@@ -98,7 +98,7 @@ static boolean handle_keypress(GVJ_t *job, XKeyEvent *kev)
     int i;
     KeyCode *keycodes;
 
-    keycodes = (KeyCode *)job->keycodes;
+    keycodes = job->keycodes;
     for (i=0; i < job->numkeys; i++) {
 	if (kev->keycode == keycodes[i])
 	    return (job->keybindings[i].callback)(job);
@@ -171,7 +171,7 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
         XNextEvent(dpy, &xev);
 
         for (job = firstjob; job; job = job->next_active) {
-	    window = (window_t *)job->window;
+	    window = job->window;
 	    if (xev.xany.window == window->win) {
                 switch (xev.xany.type) {
                 case ButtonPress:
@@ -226,7 +226,7 @@ static void update_display(GVJ_t *job, Display *dpy)
     window_t *window;
     cairo_surface_t *surface;
 
-    window = (window_t *)job->window;
+    window = job->window;
 
     if (job->has_grown) {
 	XFreePixmap(dpy, window->pix);
@@ -283,7 +283,7 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     job->width  = w;    /* use window geometry */
     job->height = h;
 
-    job->window = (void *)window;
+    job->window = window;
     job->fit_mode = 0;
     job->needs_refresh = 1;
 
@@ -464,7 +464,7 @@ static void xlib_initialize(GVJ_t *firstjob)
     }
     scr = DefaultScreen(dpy);
 
-    firstjob->display = (void*)dpy;
+    firstjob->display = dpy;
     firstjob->screen = scr;
 
     keycodes = malloc(firstjob->numkeys * sizeof(KeyCode));
@@ -480,7 +480,7 @@ static void xlib_initialize(GVJ_t *firstjob)
         else
             keycodes[i] = XKeysymToKeycode(dpy, keysym);
     }
-    firstjob->keycodes = (void*)keycodes;
+    firstjob->keycodes = keycodes;
 
     firstjob->device_dpi.x = DisplayWidth(dpy, scr) * 25.4 / DisplayWidthMM(dpy, scr);
     firstjob->device_dpi.y = DisplayHeight(dpy, scr) * 25.4 / DisplayHeightMM(dpy, scr);
@@ -492,7 +492,7 @@ static void xlib_initialize(GVJ_t *firstjob)
 static void xlib_finalize(GVJ_t *firstjob)
 {
     GVJ_t *job;
-    Display *dpy = (Display *)(firstjob->display);
+    Display *dpy = firstjob->display;
     int scr = firstjob->screen;
     KeyCode *keycodes= firstjob->keycodes;
     int numfds, stdin_fd=0, xlib_fd, ret, events;
