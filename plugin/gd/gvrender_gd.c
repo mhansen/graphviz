@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -455,7 +456,7 @@ gdgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
     gdImagePtr im = (gdImagePtr) job->context;
     pointf p0, p1, V[4];
     int i, j, step, pen;
-    boolean pen_ok, fill_ok;
+    bool pen_ok, fill_ok;
     gdImagePtr brush = NULL;
     gdPoint F[4];
 
