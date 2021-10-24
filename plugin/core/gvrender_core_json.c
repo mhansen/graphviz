@@ -43,8 +43,8 @@ typedef enum {
 
 typedef struct {
     int Level;
-    boolean isLatin;
-    boolean doXDot;
+    bool isLatin;
+    bool doXDot;
 } state_t;
 
 typedef struct {
