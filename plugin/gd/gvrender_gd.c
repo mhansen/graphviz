@@ -502,7 +502,7 @@ static void gdgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
     gdImagePtr brush = NULL;
     int i;
     int pen;
-    boolean pen_ok, fill_ok;
+    bool pen_ok, fill_ok;
 
     if (!im)
 	return;
