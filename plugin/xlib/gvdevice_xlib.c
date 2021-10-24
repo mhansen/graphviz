@@ -497,7 +497,7 @@ static void xlib_finalize(GVJ_t *firstjob)
     KeyCode *keycodes= firstjob->keycodes;
     int numfds, stdin_fd=0, xlib_fd, ret, events;
     fd_set rfds;
-    boolean watching_stdin_p = FALSE;
+    bool watching_stdin_p = false;
 #ifdef HAVE_SYS_INOTIFY_H
     int wd=0;
     int inotify_fd=0;
@@ -546,7 +546,7 @@ static void xlib_finalize(GVJ_t *firstjob)
 	}
     }
     else {
-	watching_stdin_p = TRUE;
+	watching_stdin_p = true;
 	stdin_fd = fcntl(STDIN_FILENO, F_DUPFD, 0);
 	numfds = MAX(stdin_fd, numfds);
     }
@@ -575,7 +575,7 @@ static void xlib_finalize(GVJ_t *firstjob)
 	    if (FD_ISSET(stdin_fd, &rfds)) {
                 ret = handle_stdin_events(firstjob, stdin_fd);
 	        if (ret < 0) {
-	            watching_stdin_p = FALSE;
+	            watching_stdin_p = false;
                     FD_CLR(stdin_fd, &rfds);
                 }
 	        events += ret;
