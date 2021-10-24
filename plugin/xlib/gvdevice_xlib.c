@@ -35,10 +35,6 @@
 #include <fcntl.h>
 #endif
 
-#if 0
-#include <poll.h>
-#endif
-
 #include <gvc/gvplugin_device.h>
 
 #include <cairo.h>
