@@ -566,7 +566,7 @@ static void gdgen_polyline(GVJ_t * job, pointf * A, int n)
     pointf p, p1;
     int i;
     int pen;
-    boolean pen_ok;
+    bool pen_ok;
     gdImagePtr brush = NULL;
 
     if (!im)
