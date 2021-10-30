@@ -9,23 +9,9 @@
  *************************************************************************/
 #include "smyrna_utils.h"
 #include <common/memory.h>
-#include <cgraph/strcasecmp.h>
-/* many of these functions are available in libcommon.
- */
-int mapbool(char *p)
-{
-    if (p == NULL)
-	return FALSE;
-    if (!strcasecmp(p, "false"))
-	return FALSE;
-    if (!strcasecmp(p, "no"))
-	return FALSE;
-    if (!strcasecmp(p, "true"))
-	return TRUE;
-    if (!strcasecmp(p, "yes"))
-	return TRUE;
-    return atoi(p);
-}
+#include <common/types.h>
+#include <common/utils.h>
+#include <limits.h>
 
 /* return true if *s points to &[A-Za-z]+;      (e.g. &Ccedil; )
  *                          or &#[0-9]*;        (e.g. &#38; )
@@ -125,29 +111,9 @@ char *xml_string(char *s)
     return buf;
 }
 
-static char* late_string(void *obj, Agsym_t * attr, char *def)
-{
-    if (!attr || !obj)
-	return def;
-    return agxget(obj, attr);
-}
-
-static int late_bool(void *obj, Agsym_t * attr, int def)
-{
-    if (attr == NULL)
-	return def;
-    return mapbool(agxget(obj, attr));
-}
-
 int l_int(void *obj, Agsym_t * attr, int def)
 {
-    char *p;
-    if (attr == NULL)
-	return def;
-    p = agxget(obj, attr);
-    if (!p || p[0] == '\0')
-	return def;
-    return atoi(p);
+    return late_int(obj, attr, def, INT_MIN);
 }
 
 float l_float(void *obj, Agsym_t * attr, float def)
