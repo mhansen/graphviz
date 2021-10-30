@@ -11,6 +11,7 @@ AM_CPPFLAGS = \
         -I$(top_srcdir)/lib/xdot \
         -I$(top_srcdir)/lib/gvpr \
         -I$(top_srcdir)/lib/common \
+        -I$(top_srcdir)/lib/pathplan \
         -I$(top_srcdir)/cmd/smyrna/gui \
 	$(GTK_CFLAGS) $(GLUT_CFLAGS) $(GTKGLEXT_CFLAGS) $(GLADE_CFLAGS) $(FREETYPE2_CFLAGS) $(FONTCONFIG_CFLAGS) $(GTS_CFLAGS) $(XRENDER_CFLAGS)
 
