@@ -67,6 +67,7 @@ smyrna_LDADD = $(top_builddir)/lib/cgraph/libcgraph_C.la \
 		$(top_builddir)/lib/glcomp/libglcomp_C.la \
 		$(top_builddir)/lib/topfish/libtopfish_C.la \
 		$(top_builddir)/lib/common/libcommon_C.la \
+		$(top_builddir)/lib/gvc/libgvc_C.la \
 		$(top_builddir)/lib/gvpr/libgvpr_C.la \
 		$(top_builddir)/lib/expr/libexpr_C.la \
 		$(top_builddir)/lib/ingraphs/libingraphs_C.la \
@@ -80,6 +81,7 @@ smyrna_static_LDADD = $(top_builddir)/lib/cgraph/libcgraph_C.la \
 		$(top_builddir)/lib/glcomp/libglcomp_C.la \
 		$(top_builddir)/lib/topfish/libtopfish_C.la \
 		$(top_builddir)/lib/common/libcommon_C.la \
+		$(top_builddir)/lib/gvc/libgvc_C.la \
 		$(top_builddir)/lib/gvpr/libgvpr_C.la \
 		$(top_builddir)/lib/expr/libexpr_C.la \
 		$(top_builddir)/lib/ingraphs/libingraphs_C.la \
