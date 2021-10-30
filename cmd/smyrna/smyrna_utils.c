@@ -11,10 +11,6 @@
 #include <common/memory.h>
 #include <cgraph/strcasecmp.h>
 /* many of these functions are available in libcommon.
- * We cannot use those because dependencies cause a great
- * deal of libcommon to be brought in, which complicates
- * and makes possible conflicts as some parts of libcommon
- * rely on not using libcgraph.
  */
 int mapbool(char *p)
 {
