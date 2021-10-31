@@ -1342,8 +1342,6 @@ edgeMidpoint (graph_t* g, edge_t * e)
 /* addEdgeLabels:
  * rp and rq are the port points of the tail and head node.
  * Adds label, headlabel and taillabel.
- * The use of 2 and 4 in computing ld.x and ld.y are fudge factors, to
- * introduce a bit of spacing.
  * Updates bounding box.
  * We try to use the actual endpoints of the spline, as they may differ
  * significantly from rp and rq, but if the spline is degenerate (e.g.,
