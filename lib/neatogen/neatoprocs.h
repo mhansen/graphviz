@@ -34,7 +34,7 @@ extern "C" {
     extern void jitter_d(Agnode_t *, int, int);
     extern Ppoly_t *makeObstacle(node_t * n, expand_t*, boolean );
     extern void makeSelfArcs(edge_t * e, int stepx);
-    extern void makeSpline(graph_t*, edge_t *, Ppoly_t **, int, boolean);
+    extern void makeSpline(edge_t *, Ppoly_t **, int, boolean);
     extern void make_spring(graph_t *, Agnode_t *, Agnode_t *, double);
     extern void move_node(graph_t *, int, Agnode_t *);
     extern int init_nop(graph_t * g, int);
