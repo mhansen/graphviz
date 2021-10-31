@@ -472,9 +472,7 @@ getPath(edge_t * e, vconfig_t * vconfig, int chkPts, Ppoly_t ** obs,
 
 /* makePolyline:
  */
-static void
-makePolyline(graph_t* g, edge_t * e)
-{
+static void makePolyline(edge_t * e) {
     Ppolyline_t spl, line = ED_path(e);
     Ppoint_t p0, q0;
 
@@ -656,7 +654,7 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 		    if (edgetype == EDGETYPE_SPLINE)
 			makeSpline(g, e0, obs, npoly, TRUE);
 		    else
-			makePolyline(g, e0);
+			makePolyline(e0);
 		    e0 = ED_to_virt(e0);
 		}
 	    } else {
