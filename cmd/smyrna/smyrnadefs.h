@@ -371,7 +371,6 @@ typedef struct
 	int maxnodedegree;
 	float maxedgelen;
 	float minedgelen;
-	float avgedgelength;
 	float fitin_zoom;
 	xdot* xDot;
 	float global_z;

@@ -830,7 +830,6 @@ void updateSmGraph(Agraph_t * g,topview* t)
 
     t->Nodecount=0;
     t->Edgecount=0;
-    t->avgedgelength=0;
     t->maxedgelen=0;
     t->minedgelen=-1;
 
@@ -863,7 +862,6 @@ void updateSmGraph(Agraph_t * g,topview* t)
     aginit(g, AGEDGE, "edgeRec", sizeof(edgeRec), 0);
 
     set_boundaries(g,t);
-    t->avgedgelength = totalELength / t->Edgecount;
     view->Topview=t;
 
 
