@@ -779,9 +779,7 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
  * Finish edge generation, clipping to nodes and adding arrowhead
  * if necessary, and adding edge labels
  */
-static void
-finishEdge (graph_t* g, edge_t* e, Ppoly_t spl, int flip, pointf p, pointf q)
-{
+static void finishEdge(edge_t* e, Ppoly_t spl, int flip, pointf p, pointf q) {
     int j;
     pointf *spline = N_GNEW(spl.pn, pointf);
     pointf p1, q1;
@@ -906,7 +904,7 @@ genroute(graph_t* g, tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	    rv = 1;
 	    goto finish;
 	}
-	finishEdge (g, e, spl, aghead(e) != head, eps[0], eps[1]);
+	finishEdge(e, spl, aghead(e) != head, eps[0], eps[1]);
 	free(medges);
 
 	return 0;
@@ -959,7 +957,7 @@ genroute(graph_t* g, tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 		goto finish;
 	    }
 	}
-	finishEdge (g, e, spl, aghead(e) != head, eps[0], eps[1]);
+	finishEdge(e, spl, aghead(e) != head, eps[0], eps[1]);
 
 	e = ED_to_virt(e);
     }
