@@ -1206,7 +1206,7 @@ attachOrthoEdges (Agraph_t* g, maze* mp, size_t n_edges, route* route_list, spli
 	    fprintf(stderr, "ortho %s %s\n", agnameof(agtail(e)),agnameof(aghead(e)));
 	clip_and_install(e, aghead(e), ispline, npts, sinfo);
 	if (doLbls && (lbl = ED_label(e)) && !lbl->set)
-	    addEdgeLabels(g, e, p1, q1);
+	    addEdgeLabels(e, p1, q1);
     }
     free(ispline);
 }

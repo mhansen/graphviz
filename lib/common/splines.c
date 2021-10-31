@@ -1349,7 +1349,7 @@ edgeMidpoint (graph_t* g, edge_t * e)
  * significantly from rp and rq, but if the spline is degenerate (e.g.,
  * the nodes overlap), we use rp and rq.
  */
-void addEdgeLabels(graph_t* g, edge_t * e, pointf rp, pointf rq)
+void addEdgeLabels(edge_t * e, pointf rp, pointf rq)
 {
     makePortLabels(e);
 }

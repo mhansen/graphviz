@@ -484,7 +484,7 @@ makePolyline(graph_t* g, edge_t * e)
     if (Verbose > 1)
 	fprintf(stderr, "polyline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
     clip_and_install(e, aghead(e), spl.ps, spl.pn, &sinfo);
-    addEdgeLabels(g, e, p0, q0);
+    addEdgeLabels(e, p0, q0);
 }
 
 /* makeSpline:
@@ -532,7 +532,7 @@ void makeSpline(graph_t* g, edge_t * e, Ppoly_t ** obs, int npoly, boolean chkPt
 	fprintf(stderr, "spline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
     clip_and_install(e, aghead(e), spline.ps, spline.pn, &sinfo);
     free(barriers);
-    addEdgeLabels(g, e, p, q);
+    addEdgeLabels(e, p, q);
 }
 
   /* True if either head or tail has a port on its boundary */
@@ -620,7 +620,7 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 /* fprintf (stderr, "%s -- %s %d\n", agnameof(agtail(e)), agnameof(aghead(e)), ED_count(e)); */
 	    node_t *head = aghead(e);
 	    if (useEdges && ED_spl(e)) {
-		addEdgeLabels(g, e,
+		addEdgeLabels(e,
 			      add_pointf(ND_coord(n), ED_tail_port(e).p),
 			      add_pointf(ND_coord(head), ED_head_port(e).p));
 	    } 
