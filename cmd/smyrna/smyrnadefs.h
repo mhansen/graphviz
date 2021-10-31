@@ -368,7 +368,6 @@ typedef struct
 	int picked_edge_count;
 
 	graph_data Graphdata;
-	int maxnodedegree;
 	float maxedgelen;
 	float minedgelen;
 	float fitin_zoom;

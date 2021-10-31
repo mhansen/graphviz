@@ -876,10 +876,6 @@ void updateSmGraph(Agraph_t * g,topview* t)
 }
 void initSmGraph(Agraph_t * g,topview* rv)
 {
-    rv->maxnodedegree = 1;
-
-        
-
     /*create attribute list*/
     rv->attributes=load_attr_list(view->g[view->activeGraph]);
     rv->filtered_attr_list=NULL;
