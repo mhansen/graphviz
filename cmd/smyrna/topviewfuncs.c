@@ -833,8 +833,6 @@ void updateSmGraph(Agraph_t * g,topview* t)
     t->maxedgelen=0;
     t->minedgelen=-1;
 
-    t->picked_node_count = 0;
-    t->picked_nodes = '\0';
     t->global_z=0;
     t->sel.selPoly.cnt=0;
     t->sel.selPoly.pts=NULL;

@@ -362,9 +362,6 @@ typedef struct
 	    focus_t *fs;
     	} fisheyeParams;
 
-	topview_node **picked_nodes;
-	int picked_node_count;
-
 	graph_data Graphdata;
 	float maxedgelen;
 	float minedgelen;
