@@ -380,7 +380,6 @@ typedef struct
 	attr_list* filtered_attr_list;
 
 	topviewcache cache;
-	int xdotId;
 	selection sel;
 	
     } topview;
