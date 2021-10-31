@@ -349,7 +349,6 @@ typedef struct
 	topview_edge *Edges;
 	int Nodecount;
 	int Edgecount;
-	void *customptr;
 	struct {
 	    int active;	//1 draw hierarchy 0 draw regular topview
 	    reposition_t repos;
