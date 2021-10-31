@@ -364,8 +364,6 @@ typedef struct
 
 	topview_node **picked_nodes;
 	int picked_node_count;
-	topview_edge **picked_edges;
-	int picked_edge_count;
 
 	graph_data Graphdata;
 	float maxedgelen;
