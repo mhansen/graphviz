@@ -267,7 +267,7 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		    P = NEW(path);
 		    P->boxes = N_NEW(agnnodes(g) + 20 * 2 * 9, boxf);
 		}
-		makeSelfArcs(P, e, GD_nodesep(g));
+		makeSelfArcs(e, GD_nodesep(g));
 	    } else if (ED_count(e)) {
 		objl = objectList(e, pm);
 		if (Plegal_arrangement(objl->obs, objl->cnt)) {

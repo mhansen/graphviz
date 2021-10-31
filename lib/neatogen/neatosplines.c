@@ -234,7 +234,7 @@ static edge_t *equivEdge(Dt_t * map, edge_t * e)
  * We have to handle port labels here.
  * as well as update the bbox from edge labels.
  */
-void makeSelfArcs(path * P, edge_t * e, int stepx)
+void makeSelfArcs(edge_t * e, int stepx)
 {
     int cnt = ED_count(e);
 
@@ -630,7 +630,7 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 		    P = NEW(path);
 		    P->boxes = N_NEW(agnnodes(g) + 20 * 2 * 9, boxf);
 		}
-		makeSelfArcs(P, e, GD_nodesep(g->root));
+		makeSelfArcs(e, GD_nodesep(g->root));
 	    } else if (vconfig) { /* EDGETYPE_SPLINE or EDGETYPE_PLINE */
 #ifdef HAVE_GTS
 		if (ED_count(e) > 1 || BOUNDARY_PORT(e)) {
