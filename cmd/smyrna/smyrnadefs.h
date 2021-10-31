@@ -345,7 +345,6 @@ typedef struct
     } selection;
 
     typedef struct {
-	topview_node *Nodes;
 	topview_edge *Edges;
 	int Nodecount;
 	int Edgecount;
