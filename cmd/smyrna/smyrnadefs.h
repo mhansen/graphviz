@@ -314,7 +314,6 @@ typedef struct
 	char Type;
 	char *Name;
 	char *Default;
-	char ApplyTo[GVE_EDGE + 1];
 	char Engine[GVK_FDP + 1];
 	char **ComboValues;
 	int ComboValuesCount;
