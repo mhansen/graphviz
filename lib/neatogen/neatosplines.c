@@ -638,7 +638,7 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 			makeStraightEdge(g, e, edgetype, &sinfo);
 		    else { 
 			if (!rtr) rtr = mkRouter (obs, npoly);
-			fail = makeMultiSpline(g, e, rtr, edgetype == EDGETYPE_PLINE);
+			fail = makeMultiSpline(e, rtr, edgetype == EDGETYPE_PLINE);
 		    } 
 		    if (!fail) continue;
 		}

@@ -1341,8 +1341,7 @@ triPath(tgraph * g, int n, int v0, int v1, PQ * pq)
  * so avoid in neato spline code.
  * Return 0 on success.
  */
-int makeMultiSpline(graph_t* g,  edge_t* e, router_t * rtr, int doPolyline)
-{
+int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
     Ppolyline_t line = ED_path(e);
     node_t *t = agtail(e);
     node_t *h = aghead(e);
