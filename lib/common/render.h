@@ -98,8 +98,6 @@ extern "C" {
     RENDER_API Ppolyline_t* ellipticWedge (pointf ctr, double major, double minor, double angle0, double angle1);
     RENDER_API void emit_clusters(GVJ_t * job, Agraph_t * g, int flags);
     RENDER_API char* getObjId (GVJ_t* job, void* obj, agxbuf* xb);
-    /* RENDER_API void emit_begin_edge(GVJ_t * job, edge_t * e, char**); */
-    /* RENDER_API void emit_end_edge(GVJ_t * job); */
     RENDER_API void emit_graph(GVJ_t * job, graph_t * g);
     RENDER_API void emit_label(GVJ_t * job, emit_state_t emit_state, textlabel_t *);
     RENDER_API int emit_once(char *message);
