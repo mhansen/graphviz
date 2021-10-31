@@ -858,8 +858,7 @@ tweakPath (Ppoly_t poly, int s, int t, Ppolyline_t pl)
  * Edges go from s to t.
  * Return 0 on success.
  */
-static int 
-genroute(graph_t* g, tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
+static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 {
     pointf eps[2];
     Pvector_t evs[2];
@@ -1385,7 +1384,7 @@ int makeMultiSpline(graph_t* g,  edge_t* e, router_t * rtr, int doPolyline)
 	free(sp);
 
 	/* Generate multiple splines using polygon */
-	ret = genroute(g, poly, 0, idx, e, doPolyline);
+	ret = genroute(poly, 0, idx, e, doPolyline);
 	freeTripoly (poly);
     }
     else ret = -1;
