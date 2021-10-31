@@ -1147,7 +1147,7 @@ addPoints(pointf p0, pointf p1)
 }
 
 static void
-attachOrthoEdges (Agraph_t* g, maze* mp, size_t n_edges, route* route_list, splineInfo *sinfo, epair_t es[], int doLbls)
+attachOrthoEdges(maze* mp, size_t n_edges, route* route_list, splineInfo *sinfo, epair_t es[], int doLbls)
 {
     int ipt;
     pointf* ispline = 0;
@@ -1365,7 +1365,7 @@ orthoEdges (Agraph_t* g, int doLbls)
 #ifdef DEBUG
     if (odb_flags & ODB_ROUTE) emitGraph (stderr, mp, n_edges, route_list, es);
 #endif
-    attachOrthoEdges (g, mp, n_edges, route_list, &sinfo, es, doLbls);
+    attachOrthoEdges(mp, n_edges, route_list, &sinfo, es, doLbls);
 
 orthofinish:
     if (Concentrate)
