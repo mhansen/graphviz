@@ -1186,7 +1186,7 @@ selfRightSpace (edge_t* e)
  * Perhaps for self-edges, the label should be centered.
  */
 void
-makeSelfEdge(path * P, edge_t * edges[], int ind, int cnt, double sizex,
+makeSelfEdge(edge_t * edges[], int ind, int cnt, double sizex,
 	     double sizey, splineInfo * sinfo)
 {
     edge_t *e;

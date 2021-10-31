@@ -120,7 +120,7 @@ extern "C" {
     RENDER_API void* init_xdot (Agraph_t* g);
     RENDER_API int initMapData (GVJ_t*, char*, char*, char*, char*, char*, void*);
     RENDER_API boolean isPolygon(node_t *);
-    RENDER_API void makeSelfEdge(path * P, edge_t * edges[], int ind, int cnt,
+    RENDER_API void makeSelfEdge(edge_t * edges[], int ind, int cnt,
 	double sizex, double sizey, splineInfo * sinfo);
     RENDER_API textlabel_t *make_label(void *obj, char *str, int kind, double fontsize, char *fontname, char *fontcolor);
     RENDER_API bezier *new_spline(edge_t * e, int sz);
