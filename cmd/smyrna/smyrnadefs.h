@@ -372,7 +372,6 @@ typedef struct
 	float maxedgelen;
 	float minedgelen;
 	float avgedgelength;
-	float init_zoom;
 	float fitin_zoom;
 	xdot* xDot;
 	float global_z;
