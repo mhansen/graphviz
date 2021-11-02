@@ -1,6 +1,5 @@
 ## Process this file with automake to produce Makefile.in
 
-# SUBDIRS = dot neato lefty dotty info
 SUBDIRS = info schema
 
 pdf = dotguide.pdf dottyguide.pdf leftyguide.pdf neatoguide.pdf libgraph/Agraph.pdf libguide/libguide.pdf smyrna/smyrna.pdf
