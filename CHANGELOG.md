@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - remove Bashism from `gvmap.sh` #2151
 - Lefty artifacts are no longer installed when Lefty is disabled #2153
+- Smyrna artifacts are no longer installed when Smyrna is disabled
 
 ## [2.49.3] – 2021-10-22
 
