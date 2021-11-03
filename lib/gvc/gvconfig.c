@@ -552,7 +552,7 @@ static void config_rescan(GVC_t *gvc, char *config_path)
 void gvconfig(GVC_t * gvc, boolean rescan)
 {
 #ifdef ENABLE_LTDL
-    int sz, rc;
+    int rc;
     struct stat config_st, libdir_st;
     FILE *f = NULL;
     char *config_text = NULL;
@@ -609,7 +609,7 @@ void gvconfig(GVC_t * gvc, boolean rescan)
     	    }
     	    else {
     	        config_text = gmalloc((size_t)config_st.st_size + 1);
-    	        sz = fread(config_text, 1, config_st.st_size, f);
+    	        size_t sz = fread(config_text, 1, (size_t)config_st.st_size, f);
     	        if (sz == 0) {
     	            agerr(AGERR, "%s read error.\n", gvc->config_path);
     	        }
