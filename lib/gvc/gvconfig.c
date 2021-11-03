@@ -18,6 +18,7 @@
 
 #include <ctype.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include	<string.h>
 
 #ifdef ENABLE_LTDL
@@ -32,7 +33,7 @@
 #define GLOB_NOMATCH    3   /* No matches found.  */
 #define GLOB_NOSORT     4
 typedef struct {
-    int gl_pathc;           /* count of total paths so far */
+    size_t gl_pathc;        /* count of total paths so far */
     char **gl_pathv;        /* list of paths matching pattern */
 } glob_t;
 static void globfree (glob_t* pglob);
@@ -473,7 +474,7 @@ static void config_rescan(GVC_t *gvc, char *config_path)
     FILE *f = NULL;
     glob_t globbuf;
     char *config_glob, *path, *libdir;
-    int i, rc;
+    int rc;
     gvplugin_library_t *library;
 #if defined(DARWIN_DYLIB)
     char *plugin_glob = "libgvplugin_*";
@@ -516,7 +517,7 @@ static void config_rescan(GVC_t *gvc, char *config_path)
     rc = glob(config_glob, 0, NULL, &globbuf);
 #endif
     if (rc == 0) {
-	for (i = 0; i < globbuf.gl_pathc; i++) {
+	for (size_t i = 0; i < globbuf.gl_pathc; i++) {
 	    if (is_plugin(globbuf.gl_pathv[i])) {
 		library = gvplugin_library_load(gvc, globbuf.gl_pathv[i]);
 		if (library) {
@@ -525,7 +526,7 @@ static void config_rescan(GVC_t *gvc, char *config_path)
 	    }
 	}
 	/* rescan with all libs loaded to check cross dependencies */
-	for (i = 0; i < globbuf.gl_pathc; i++) {
+	for (size_t i = 0; i < globbuf.gl_pathc; i++) {
 	    if (is_plugin(globbuf.gl_pathv[i])) {
 		library = gvplugin_library_load(gvc, globbuf.gl_pathv[i]);
 		if (library) {
