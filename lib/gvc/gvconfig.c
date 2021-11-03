@@ -604,11 +604,14 @@ void gvconfig(GVC_t * gvc, boolean rescan)
     	        agerr (AGERR,"failed to open %s for read.\n", gvc->config_path);
 		return;
     	    }
+    	    else if (config_st.st_size == 0) {
+    	        agerr(AGERR, "%s is zero sized.\n", gvc->config_path);
+    	    }
     	    else {
     	        config_text = gmalloc((size_t)config_st.st_size + 1);
     	        sz = fread(config_text, 1, config_st.st_size, f);
     	        if (sz == 0) {
-    		    agerr(AGERR,"%s is zero sized, or other read error.\n", gvc->config_path);
+    	            agerr(AGERR, "%s read error.\n", gvc->config_path);
     	        }
     	        else {
     	            gvc->config_found = TRUE;
