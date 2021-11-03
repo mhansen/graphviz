@@ -551,9 +551,6 @@ static void config_rescan(GVC_t *gvc, char *config_path)
  */
 void gvconfig(GVC_t * gvc, boolean rescan)
 {
-#if 0
-    gvplugin_library_t **libraryp;
-#endif
 #ifdef ENABLE_LTDL
     int sz, rc;
     struct stat config_st, libdir_st;
