@@ -559,7 +559,6 @@ void gvconfig(GVC_t * gvc, boolean rescan)
     char *libdir;
     char *config_file_name = GVPLUGIN_CONFIG_FILE;
 
-#define MAX_SZ_CONFIG 100000
 #endif
     
     /* builtins don't require LTDL */
@@ -598,9 +597,6 @@ void gvconfig(GVC_t * gvc, boolean rescan)
 	    gvtextlayout_select(gvc);   /* choose best available textlayout plugin immediately */
     	    /* silently return without setting gvc->config_found = TRUE */
     	    return;
-        }
-        else if (config_st.st_size > MAX_SZ_CONFIG) {
-    	    agerr(AGERR,"%s is bigger than I can handle.\n", gvc->config_path);
         }
         else {
     	    f = fopen(gvc->config_path,"r");
