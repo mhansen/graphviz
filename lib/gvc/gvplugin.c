@@ -40,7 +40,7 @@
 /*
  * Define an apis array of name strings using an enumerated api_t as index.
  * The enumerated type is defined gvplugin.h.  The apis array is
- * inititialized here by redefining ELEM and reinvoking APIS.
+ * initialized here by redefining ELEM and reinvoking APIS.
  */
 #define ELEM(x) #x,
 static char *api_names[] = { APIS };    /* "render", "layout", ... */
@@ -306,7 +306,7 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
             }
         }
         if (!reqpkg || strcmp(reqpkg, pnext->package->name) == 0) {
-            /* found with no packagename constraints, or with required matching packagname */
+            // found with no packagename constraints, or with required matching packagename
 
             if (dep && (apidep != api)) /* load dependency if needed, continue if can't find */
                 if (!(gvplugin_load(gvc, apidep, dep)))
