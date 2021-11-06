@@ -19,7 +19,7 @@ else
 fi
 META_DATA_DIR=Metadata/${ID}/${VERSION_ID}
 mkdir -p ${META_DATA_DIR}
-DIR=Packages/${ID}/${VERSION_ID}
+DIR=$(pwd)/Packages/${ID}/${VERSION_ID}
 ARCH=$( uname -m )
 mkdir -p ${DIR}/os
 mkdir -p ${DIR}/debug
@@ -72,8 +72,13 @@ else
             rm -rf ${HOME}/rpmbuild
             rpmbuild -ta graphviz-${GV_VERSION}.tar.gz | tee >(ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
             mv ${HOME}/rpmbuild/SRPMS/*.src.rpm ${DIR}/source/
-            mv ${HOME}/rpmbuild/RPMS/*/*debuginfo*rpm ${DIR}/debug/
-            mv ${HOME}/rpmbuild/RPMS/*/*.rpm ${DIR}/os/
+            pushd ${HOME}/rpmbuild/RPMS
+            mv */*debuginfo*rpm ./
+            tar cf - *debuginfo*rpm | xz -9 -c - >${DIR}/debug/graphviz-${GV_VERSION}-debuginfo-rpms.tar.xz
+            find . -name "*debuginfo*rpm" -delete
+            mv */*.rpm ./
+            tar cf - *.rpm | xz -9 -c - >${DIR}/os/graphviz-${GV_VERSION}-rpms.tar.xz
+            popd
         fi
     elif [[ "${OSTYPE}" =~ "darwin" ]]; then
         ./autogen.sh

@@ -48,16 +48,17 @@ else
         tar xf ${DIR}/os/graphviz-${GV_VERSION}-${ARCH}.tar.gz
         cp -rp build/* /usr/local
     else
+        tar xvf ${DIR}/os/graphviz-${GV_VERSION}-rpms.tar.xz
         rpm --install --force \
-            ${DIR}/os/graphviz-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-libs-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-devel-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-plugins-core-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-plugins-x-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-x-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-gd-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-qt-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-plugins-gd-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-nox-${GV_VERSION}*.rpm
+            graphviz-${GV_VERSION}*.rpm \
+            graphviz-libs-${GV_VERSION}*.rpm \
+            graphviz-devel-${GV_VERSION}*.rpm \
+            graphviz-plugins-core-${GV_VERSION}*.rpm \
+            graphviz-plugins-x-${GV_VERSION}*.rpm \
+            graphviz-x-${GV_VERSION}*.rpm \
+            graphviz-gd-${GV_VERSION}*.rpm \
+            graphviz-qt-${GV_VERSION}*.rpm \
+            graphviz-plugins-gd-${GV_VERSION}*.rpm \
+            graphviz-nox-${GV_VERSION}*.rpm
     fi
 fi
