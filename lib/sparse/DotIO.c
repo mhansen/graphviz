@@ -260,7 +260,7 @@ done:
     FREE(J);
     FREE(val);
   }
-  if (valD) FREE(valD);
+  FREE(valD);
 
   return A;
 }

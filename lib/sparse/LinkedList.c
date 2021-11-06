@@ -37,7 +37,7 @@ void SingleLinkedList_delete(SingleLinkedList head,  void (*linklist_deallocator
   do {
     next = head->next;
     if (head->data) linklist_deallocator(head->data);
-    if (head) FREE(head);
+    FREE(head);
     head = next;
   } while (head);
 
@@ -91,7 +91,7 @@ void DoubleLinkedList_delete(DoubleLinkedList head,  void (*linklist_deallocator
   do {
     next = head->next;
     if (head->data) linklist_deallocator(head->data);
-    if (head) FREE(head);
+    FREE(head);
     head = next;
   } while (head);
 

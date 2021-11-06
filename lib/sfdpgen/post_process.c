@@ -748,7 +748,7 @@ void StressMajorizationSmoother_delete(StressMajorizationSmoother sm){
   if (!sm) return;
   if (sm->Lw) SparseMatrix_delete(sm->Lw);
   if (sm->Lwd) SparseMatrix_delete(sm->Lwd);
-  if (sm->lambda) FREE(sm->lambda);
+  FREE(sm->lambda);
   if (sm->data) sm->data_deallocator(sm->data);
   FREE(sm);
 }

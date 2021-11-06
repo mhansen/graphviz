@@ -258,7 +258,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
   FREE(x);
   if (xsplines){
     for (i = 0; i < ne; i++){
-      if (xsplines[i]) FREE(xsplines[i]);
+      FREE(xsplines[i]);
     }
     FREE(xsplines);
   }

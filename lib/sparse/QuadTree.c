@@ -421,7 +421,7 @@ void QuadTree_delete(QuadTree q){
   dim = q->dim;
   FREE(q->center);
   FREE(q->average);
-  if (q->data) FREE(q->data);
+  FREE(q->data);
   if (q->qts){
     for (i = 0; i < 1<<dim; i++){
       QuadTree_delete(q->qts[i]);

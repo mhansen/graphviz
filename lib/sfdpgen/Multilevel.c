@@ -1074,15 +1074,15 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
     goto RETURN;
   }
  RETURN:
-  if (matching) FREE(matching);
-  if (vset) FREE(vset);
-  if (irn) FREE(irn);
-  if (jcn) FREE(jcn);
-  if (val) FREE(val);
+  FREE(matching);
+  FREE(vset);
+  FREE(irn);
+  FREE(jcn);
+  FREE(val);
   if (B) SparseMatrix_delete(B);
 
-  if(cluster) FREE(cluster);
-  if(clusterp) FREE(clusterp);
+  FREE(cluster);
+  FREE(clusterp);
 }
 
 void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD, real *node_wgt, real **cnode_wgt,

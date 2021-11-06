@@ -261,9 +261,9 @@ static void relative_position_constraints_delete(void *d){
   relative_position_constraints data;
   if (!d) return;
   data = (relative_position_constraints) d;
-  if (data->irn) FREE(data->irn);
-  if (data->jcn) FREE(data->jcn);
-  if (data->val) FREE(data->val);
+  FREE(data->irn);
+  FREE(data->jcn);
+  FREE(data->val);
   /* other stuff inside relative_position_constraints is assed back to the user hence no need to deallocator*/
   FREE(d);
 }

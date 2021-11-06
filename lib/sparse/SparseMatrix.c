@@ -407,9 +407,9 @@ void SparseMatrix_delete(SparseMatrix A){
   /* return a sparse matrix skeleton with row dimension m and storage nz. If nz == 0, 
      only row pointers are allocated */
   if (!A) return;
-  if (A->ia) FREE(A->ia);
-  if (A->ja) FREE(A->ja);
-  if (A->a) FREE(A->a);
+  FREE(A->ia);
+  FREE(A->ja);
+  FREE(A->a);
   FREE(A);
 }
 static void SparseMatrix_print_csr(char *c, SparseMatrix A){
@@ -994,7 +994,7 @@ SparseMatrix SparseMatrix_add(SparseMatrix A, SparseMatrix B){
   C->nz = nz;
 
  RETURN:
-  if (mask) FREE(mask);
+  FREE(mask);
 
   return C;
 }
@@ -2003,7 +2003,7 @@ void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int *
     
   }
   if (A != A0) SparseMatrix_delete(A);
-  if (levelset_ptr) FREE(levelset_ptr);
+  FREE(levelset_ptr);
 
   FREE(mask);
 }
@@ -2289,11 +2289,10 @@ SparseMatrix SparseMatrix_get_augmented(SparseMatrix A){
   B = SparseMatrix_from_coordinate_arrays(nz, m + n, m + n, irn, jcn, val, type, A->size);
   SparseMatrix_set_symmetric(B);
   SparseMatrix_set_pattern_symmetric(B);
-  if (irn) FREE(irn);
-  if (jcn) FREE(jcn);
-  if (val) FREE(val);
+  FREE(irn);
+  FREE(jcn);
+  FREE(val);
   return B;
-
 }
 
 SparseMatrix SparseMatrix_to_square_matrix(SparseMatrix A, int bipartite_options){
@@ -2477,7 +2476,7 @@ SparseMatrix SparseMatrix_set_entries_to_real_one(SparseMatrix A){
   real *a;
   int i;
 
-  if (A->a) FREE(A->a);
+  FREE(A->a);
   A->a = MALLOC(sizeof(real)*((size_t)A->nz));
   a = (real*) (A->a);
   for (i = 0; i < A->nz; i++) a[i] = 1.;
@@ -2555,14 +2554,13 @@ int SparseMatrix_distance_matrix(SparseMatrix D0, int weighted, real **dist0){
     }
   }
 
-  if (levelset_ptr) FREE(levelset_ptr);
-  if (levelset) FREE(levelset);
-  if (mask) FREE(mask);
+  FREE(levelset_ptr);
+  FREE(levelset);
+  FREE(mask);
   
   if (D != D0) SparseMatrix_delete(D);
-  if (list) FREE(list);
+  FREE(list);
   return flag;
-
 }
 
 SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int weighted){
@@ -2640,13 +2638,13 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
   C = SparseMatrix_from_coordinate_format(B);
   SparseMatrix_delete(B);
 
-  if (levelset_ptr) FREE(levelset_ptr);
-  if (levelset) FREE(levelset);
-  if (mask) FREE(mask);
-  if (dist) FREE(dist);
+  FREE(levelset_ptr);
+  FREE(levelset);
+  FREE(mask);
+  FREE(dist);
 
   if (D != D0) SparseMatrix_delete(D);
-  if (list) FREE(list);
+  FREE(list);
   /* I can not find a reliable way to make the matrix symmetric. Right now I use a mask array to
      limit consider of only nodes with in k hops, but even this is not symmetric. e.g.,
      . 10  10    10  10

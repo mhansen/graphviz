@@ -902,14 +902,13 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
     oned_optimizer_delete(qtree_level_optimizer);
     ctrl->max_qtree_level = max_qtree_level;
   }
-  if (xold) FREE(xold);
+  FREE(xold);
   if (A != A0) SparseMatrix_delete(A);
-  if (f) FREE(f);
-  if (center) FREE(center);
-  if (supernode_wgts) FREE(supernode_wgts);
-  if (distances) FREE(distances);
+  FREE(f);
+  FREE(center);
+  FREE(supernode_wgts);
+  FREE(distances);
   FREE(force);
-
 }
 
 
@@ -1150,13 +1149,12 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
     oned_optimizer_delete(qtree_level_optimizer);
     ctrl->max_qtree_level = max_qtree_level;
   }
-  if (xold) FREE(xold);
+  FREE(xold);
   if (A != A0) SparseMatrix_delete(A);
-  if (f) FREE(f);
-  if (center) FREE(center);
-  if (supernode_wgts) FREE(supernode_wgts);
-  if (distances) FREE(distances);
-
+  FREE(f);
+  FREE(center);
+  FREE(supernode_wgts);
+  FREE(distances);
 }
 
 static void scale_coord(int n, int dim, real *x, int *id, int *jd, real *d, real dj){
@@ -1433,13 +1431,12 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
   if (ctrl->beautify_leaves) beautify_leaves(dim, A, x);
 
  RETURN:
-  if (xold) FREE(xold);
+  FREE(xold);
   if (A != A0) SparseMatrix_delete(A);
-  if (f) FREE(f);
-  if (center) FREE(center);
-  if (supernode_wgts) FREE(supernode_wgts);
-  if (distances) FREE(distances);
-
+  FREE(f);
+  FREE(center);
+  FREE(supernode_wgts);
+  FREE(distances);
 }
 
 
@@ -1631,13 +1628,12 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   if (ctrl->beautify_leaves) beautify_leaves(dim, A, x);
 
  RETURN:
-  if (xold) FREE(xold);
+  FREE(xold);
   if (A != A0) SparseMatrix_delete(A);
-  if (f) FREE(f);
-  if (center) FREE(center);
-  if (supernode_wgts) FREE(supernode_wgts);
-  if (distances) FREE(distances);
-
+  FREE(f);
+  FREE(center);
+  FREE(supernode_wgts);
+  FREE(distances);
 }
 
 
