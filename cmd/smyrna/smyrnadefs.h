@@ -194,8 +194,6 @@ typedef struct
     typedef struct _graph_data {
 	Agrec_t h;
 	char *GraphFileName;
-	//graph's location, change these to move the whole graph
-	int Modified;		//if graph has been modified after loading
     } graph_data;
 
 
