@@ -225,11 +225,9 @@ typedef struct
 	glCompPoint posTail;
 	glCompPoint posHead;
 	int selected;
-	int printLabel;
     }edgeRec;
 #define EREC(e) ((edgeRec*)(aggetrec(e,"edgeRec",0)))
 #define ED_selected(e) (EREC(e)->selected)
-#define ED_printLabel(e) (EREC(e)->printLabel)
 #define ED_posTail(e) (EREC(e)->posTail)
 #define ED_posHead(e) (EREC(e)->posHead)
 
