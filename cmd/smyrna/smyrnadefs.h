@@ -284,7 +284,6 @@ typedef struct
 
     typedef struct {
 	int Nodecount;
-	int Edgecount;
 	struct {
 	    int active;	//1 draw hierarchy 0 draw regular topview
 	    reposition_t repos;
