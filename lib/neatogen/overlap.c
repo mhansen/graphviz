@@ -85,8 +85,8 @@ typedef struct scan_point_struct scan_point;
 
 
 static int comp_scan_points(const void *p, const void *q){
-  const scan_point *pp = (const scan_point *) p;
-  const scan_point *qq = (const scan_point *) q;
+  const scan_point *pp = p;
+  const scan_point *qq = q;
   if (pp->x > qq->x){
     return 1;
   } else if (pp->x < qq->x){
