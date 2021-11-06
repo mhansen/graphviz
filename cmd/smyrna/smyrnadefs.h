@@ -152,7 +152,6 @@ typedef struct
 	int edgelabel_id;
     }topviewcache;
 
-    typedef struct xdot_set xdot_set;
     typedef struct {
 	int color;
 	int pos;
