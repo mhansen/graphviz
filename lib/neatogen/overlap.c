@@ -112,11 +112,8 @@ static int NodeComp(const void* a,const void* b) {
 }
 
 static void NodePrint(const void* a) {
-  const scan_point *aa;
-
-  aa = (const scan_point *) a;
+  const scan_point *aa = a;
   fprintf(stderr, "node {%d, %f, %d}\n", aa->node, aa->x, aa->status);
-
 }
 
 static void InfoPrint(void* a) {
