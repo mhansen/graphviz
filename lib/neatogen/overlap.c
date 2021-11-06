@@ -240,8 +240,8 @@ static SparseMatrix get_overlap_graph(int dim, int n, real *x, real *width, int 
   }
 
 check_overlap_RETURN:
-   FREE(scanpointsx);
-  FREE(scanpointsy);
+   free(scanpointsx);
+  free(scanpointsy);
   RBTreeDestroy(treey);
 
   B = SparseMatrix_from_coordinate_format(A);
@@ -261,11 +261,11 @@ static void relative_position_constraints_delete(void *d){
   relative_position_constraints data;
   if (!d) return;
   data = (relative_position_constraints) d;
-  FREE(data->irn);
-  FREE(data->jcn);
-  FREE(data->val);
+  free(data->irn);
+  free(data->jcn);
+  free(data->val);
   /* other stuff inside relative_position_constraints is assed back to the user hence no need to deallocator*/
-  FREE(d);
+  free(d);
 }
 
 static relative_position_constraints relative_position_constraints_new(SparseMatrix A_constr, int edge_labeling_scheme, int n_constr_nodes, int *constr_nodes){
@@ -529,8 +529,8 @@ static void print_bounding_box(int n, int dim, real *x){
   for (i = 0; i < dim; i++) fprintf(stderr,"{%f,%f}, ",xmin[i], xmax[i]);
   fprintf(stderr,"\n");
 
-  FREE(xmin);
-  FREE(xmax);
+  free(xmin);
+  free(xmax);
 }
 
 static int check_convergence(real max_overlap, real res, int has_penalty_terms, real epsilon){

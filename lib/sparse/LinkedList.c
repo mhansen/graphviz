@@ -10,9 +10,6 @@
 
 #include <sparse/LinkedList.h>
 #include <common/memory.h>
-#define FREE free
-
-
 
 SingleLinkedList SingleLinkedList_new(void *data){
   SingleLinkedList head;
@@ -37,7 +34,7 @@ void SingleLinkedList_delete(SingleLinkedList head,  void (*linklist_deallocator
   do {
     next = head->next;
     if (head->data) linklist_deallocator(head->data);
-    FREE(head);
+    free(head);
     head = next;
   } while (head);
 
@@ -91,7 +88,7 @@ void DoubleLinkedList_delete(DoubleLinkedList head,  void (*linklist_deallocator
   do {
     next = head->next;
     if (head->data) linklist_deallocator(head->data);
-    FREE(head);
+    free(head);
     head = next;
   } while (head);
 
@@ -134,7 +131,7 @@ void DoubleLinkedList_delete_element(DoubleLinkedList l, void (*linklist_dealloc
     prev = l->prev;
     
     if (l->data) linklist_deallocator(l->data);
-    FREE(l);
+    free(l);
     l = NULL;
 
     if (next) next->prev = prev;
