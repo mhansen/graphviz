@@ -173,12 +173,6 @@ typedef struct
 	smyrna_view_mode mode;
     }mouse_action_t;
 
-#define OD_Visible(p) (p.data.Visible)
-#define OD_Locked(p) (p.data.Locked)
-#define OD_Highlighted(p) (p.data.Highlighted)
-
-
-
     typedef enum { CAM_PERSPECTIVE, CAM_ORTHO } cam_t;
 
     typedef struct _viewport_camera {
