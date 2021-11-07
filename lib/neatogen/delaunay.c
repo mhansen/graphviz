@@ -254,8 +254,7 @@ static void add_edge (GtsSegment * e, v_data* delaunay)
     delaunay[dest].edges[delaunay[dest].nedges++] = source;
 }
 
-v_data *delaunay_triangulation(double *x, double *y, int n)
-{
+static v_data *delaunay_triangulation(double *x, double *y, int n) {
     v_data *delaunay;
     GtsSurface* s = tri(x, y, n, NULL, 0, 1);
     int i, nedges;
@@ -681,8 +680,7 @@ delaunay_tri (double *x, double *y, int n, int* nedges)
     return out.edgelist;
 }
 
-v_data *delaunay_triangulation(double *x, double *y, int n)
-{
+static v_data *delaunay_triangulation(double *x, double *y, int n) {
     v_data *delaunay;
     int nedges;
     int *edges;
@@ -738,8 +736,7 @@ int* get_triangles (double *x, int n, int* tris)
     agerr(AGERR, "get_triangles: %s\n", err);
     return 0;
 }
-v_data *delaunay_triangulation(double *x, double *y, int n)
-{
+static v_data *delaunay_triangulation(double *x, double *y, int n) {
     agerr(AGERR, "delaunay_triangulation: %s\n", err);
     return 0;
 }
