@@ -36,7 +36,8 @@ if [ "${build_system}" = "cmake" ]; then
         if [ "${ID_LIKE:-}" = "debian" ]; then
             mv build/*.deb ${DIR}/os/
         else
-            mv build/*.rpm ${DIR}/os/
+            GV_VERSION=$(python3 gen_version.py)
+            mv build/Graphviz-${GV_VERSION}-Linux.rpm ${DIR}/graphviz-${GV_VERSION}-cmake.rpm
         fi
     elif [[ "${OSTYPE}" =~ "darwin" ]]; then
         mv build/*.zip ${DIR}/os/

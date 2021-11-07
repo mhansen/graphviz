@@ -47,7 +47,7 @@ portable-source:
         expire_in: 1 week
         paths:
             - Packages/*/*/*.tar.xz
-            - Packages/*/*/*/*.rpm
+            - Packages/*/*/*.rpm
             - Metadata/*/*/configure.log
             - GRAPHVIZ_VERSION
         reports:
