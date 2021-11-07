@@ -403,7 +403,6 @@ void init_viewport(ViewInfo * view)
     view->refresh.color=1;
     view->refresh.pos=1;
     view->refresh.selection=1;
-    view->refresh.visibility=1;
     view->refresh.nodesize=1;
     view->edgerendertype=0;
     if(view->guiMode!=GUI_FULLSCREEN)
@@ -508,7 +507,6 @@ void refreshViewport(int doClear)
     view->refresh.nodesize=1;
     view->refresh.pos=1;
     view->refresh.selection=1;
-    view->refresh.visibility=1;
     load_settings_from_graph(graph);
 
     if(view->guiMode!=GUI_FULLSCREEN)

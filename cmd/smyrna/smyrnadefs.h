@@ -156,7 +156,6 @@ typedef struct
 	int color;
 	int pos;
 	int selection;
-	int visibility;
 	int nodesize;
 
 
