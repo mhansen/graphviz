@@ -193,14 +193,14 @@ tri(double *x, double *y, int npt, int *segs, int nsegs, int sepArr)
 					       t->e1, t->e2, t->e3));
 
     for (i = 0; i < npt; i++) {
-	GtsVertex *v1 = (GtsVertex *) vertices[i];
-	GtsVertex *v = gts_delaunay_add_vertex(surface, v1, NULL);
+	GtsVertex *v4 = (GtsVertex *)vertices[i];
+	GtsVertex *v = gts_delaunay_add_vertex(surface, v4, NULL);
 
 	/* if v != NULL, it is a previously added pt with the same
-	 * coordinates as v1, in which case we replace v1 with v
+	 * coordinates as v4, in which case we replace v4 with v
 	 */
 	if (v) {
-	    gts_vertex_replace (v1, v);
+	    gts_vertex_replace(v4, v);
 	}
     }
 
