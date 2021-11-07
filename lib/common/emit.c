@@ -2216,6 +2216,9 @@ static double revfunc (double curlen, double totallen, double initwid)
 
 static double nonefunc (double curlen, double totallen, double initwid)
 {
+    (void)curlen;
+    (void)totallen;
+
     return initwid / 2.0;
 }
 
