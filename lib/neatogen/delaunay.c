@@ -23,26 +23,27 @@
 #ifdef HAVE_GTS
 #include <gts.h>
 
-static gboolean triangle_is_hole(GtsTriangle * t)
+static gint triangle_is_hole(void *triangle, void *ignored)
 {
+    GtsTriangle *t = triangle;
+    (void)ignored;
+
     GtsEdge *e1, *e2, *e3;
     GtsVertex *v1, *v2, *v3;
-    gboolean ret;
 
     gts_triangle_vertices_edges(t, NULL, &v1, &v2, &v3, &e1, &e2, &e3);
 
     if ((GTS_IS_CONSTRAINT(e1) && GTS_SEGMENT(e1)->v1 != v1) ||
 	(GTS_IS_CONSTRAINT(e2) && GTS_SEGMENT(e2)->v1 != v2) ||
 	(GTS_IS_CONSTRAINT(e3) && GTS_SEGMENT(e3)->v1 != v3))
-	ret = TRUE;
-    else ret = FALSE;
-    return ret;
+	return TRUE;
+
+    return FALSE;
 }
 
 static guint delaunay_remove_holes(GtsSurface * surface)
 {
-    return gts_surface_foreach_face_remove(surface,
-				    (GtsFunc) triangle_is_hole, NULL);
+    return gts_surface_foreach_face_remove(surface, triangle_is_hole, NULL);
 }
 
 /* Derived classes for vertices and faces so we can assign integer ids
