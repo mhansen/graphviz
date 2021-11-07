@@ -28,9 +28,7 @@
  * Handle special neato arguments.
  * Return number of unprocessed arguments; return < 0 on error.
  */
-static int
-neato_extra_args(GVC_t *gvc, int argc, char** argv)
-{
+static int neato_extra_args(int argc, char** argv) {
   char** p = argv+1;
   int    i;
   char*  arg;
@@ -268,7 +266,7 @@ fdp_extra_args (GVC_t *gvc, int argc, char** argv)
 int gvParseArgs(GVC_t *gvc, int argc, char** argv)
 {
     int rv;
-    if ((argc = neato_extra_args(gvc, argc, argv)) < 0)
+    if ((argc = neato_extra_args(argc, argv)) < 0)
 	return (1-argc);
     if ((argc = fdp_extra_args(gvc, argc, argv)) < 0)
 	return (1-argc);
