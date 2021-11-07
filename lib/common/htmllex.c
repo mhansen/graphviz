@@ -673,6 +673,8 @@ static void startElement(void *user, const char *name, char **atts)
 
 static void endElement(void *user, const char *name)
 {
+    (void)user;
+
     if (strcasecmp(name, "TABLE") == 0) {
 	state.tok = T_end_table;
 	state.inCell = 1;
