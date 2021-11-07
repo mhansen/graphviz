@@ -230,19 +230,23 @@ typedef struct {
     v_data *delaunay;
 } estats;
     
-static void cnt_edge (GtsSegment * e, estats* sp)
-{
+static gint cnt_edge(void *edge, void *stats) {
+    GtsSegment *e = edge;
+    estats *sp = stats;
+
     sp->n++;
     if (sp->delaunay) {
 	sp->delaunay[((GVertex*)(e->v1))->idx].nedges++;
 	sp->delaunay[((GVertex*)(e->v2))->idx].nedges++;
     }
+
+    return 0;
 }
 
 static void
 edgeStats (GtsSurface* s, estats* sp)
 {
-    gts_surface_foreach_edge (s, (GtsFunc) cnt_edge, sp);
+    gts_surface_foreach_edge(s, cnt_edge, sp);
 }
 
 static void add_edge (GtsSegment * e, v_data* delaunay)
