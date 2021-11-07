@@ -173,8 +173,6 @@ typedef struct
 	smyrna_view_mode mode;
     }mouse_action_t;
 
-    typedef enum { CAM_PERSPECTIVE, CAM_ORTHO } cam_t;
-
     typedef struct _viewport_camera {
 	float x;
 	float y;
@@ -186,9 +184,6 @@ typedef struct
 	int index;
 
 	float r;
-
-
-	cam_t type;		//
     } viewport_camera;
 
     typedef struct _graph_data {
