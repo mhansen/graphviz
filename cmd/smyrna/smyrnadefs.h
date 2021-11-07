@@ -181,7 +181,6 @@ typedef struct
 	float targetx;
 	float targety;
 	float targetz;
-	int index;
 
 	float r;
     } viewport_camera;
