@@ -249,13 +249,17 @@ edgeStats (GtsSurface* s, estats* sp)
     gts_surface_foreach_edge(s, cnt_edge, sp);
 }
 
-static void add_edge (GtsSegment * e, v_data* delaunay)
-{
+static gint add_edge(void *edge, void *data) {
+    GtsSegment *e = edge;
+    v_data *delaunay = data;
+
     int source = ((GVertex*)(e->v1))->idx;
     int dest = ((GVertex*)(e->v2))->idx;
 
     delaunay[source].edges[delaunay[source].nedges++] = dest;
     delaunay[dest].edges[delaunay[dest].nedges++] = source;
+
+    return 0;
 }
 
 static v_data *delaunay_triangulation(double *x, double *y, int n) {
@@ -286,7 +290,7 @@ static v_data *delaunay_triangulation(double *x, double *y, int n) {
 	delaunay[i].edges[0] = i;
 	delaunay[i].nedges = 1;
     }
-    gts_surface_foreach_edge (s, (GtsFunc) add_edge, delaunay);
+    gts_surface_foreach_edge(s, add_edge, delaunay);
 
     gts_object_destroy (GTS_OBJECT (s));
 
