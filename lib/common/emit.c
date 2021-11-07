@@ -1644,7 +1644,7 @@ static void emit_background(GVJ_t * job, graph_t *g)
 	emit_xdot (job, xd);
 }
 
-static void setup_page(GVJ_t * job, graph_t * g)
+static void setup_page(GVJ_t * job)
 {
     point pagesArrayElem = job->pagesArrayElem, pagesArraySize = job->pagesArraySize;
 	
@@ -3419,7 +3419,7 @@ static void emit_page(GVJ_t * job, graph_t * g)
 	saveid = NULL;
 
     setColorScheme (agget (g, "colorscheme"));
-    setup_page(job, g);
+    setup_page(job);
     gvrender_begin_page(job);
     gvrender_set_pencolor(job, DEFAULT_COLOR);
     gvrender_set_fillcolor(job, DEFAULT_FILL);
