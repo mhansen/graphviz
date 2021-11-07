@@ -398,10 +398,14 @@ int *delaunay_tri(double *x, double *y, int n, int* pnedges)
     return edges;
 }
 
-static void cntFace (GFace* fp, int* ip)
-{
+static gint cntFace(void *face, void *data) {
+    GFace *fp = face;
+    int *ip = data;
+
     fp->idx = *ip;
     *ip += 1;
+
+    return 0;
 }
 
 typedef struct {
@@ -489,7 +493,7 @@ mkSurface (double *x, double *y, int n, int* segs, int nsegs)
     state.edges = segs;
     gts_surface_foreach_edge(s, addEdge, &state);
 
-    gts_surface_foreach_face (s, (GtsFunc) cntFace, &nfaces);
+    gts_surface_foreach_face(s, cntFace, &nfaces);
 
     faces = N_GNEW(3 * nfaces, int);
     neigh = N_GNEW(3 * nfaces, int);
@@ -528,7 +532,7 @@ get_triangles (double *x, int n, int* tris)
     s = tri(x, NULL, n, NULL, 0, 0);
     if (!s) return NULL;
 
-    gts_surface_foreach_face (s, (GtsFunc) cntFace, &nfaces);
+    gts_surface_foreach_face(s, cntFace, &nfaces);
     statf.faces = N_GNEW(3 * nfaces, int);
     gts_surface_foreach_face (s, (GtsFunc) addTri, &statf);
 
