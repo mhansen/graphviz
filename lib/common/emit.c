@@ -2733,9 +2733,7 @@ emit_edge_label(GVJ_t* job, textlabel_t* lbl, emit_state_t lkind, int explicit,
  * a hot spot around point p.
  */
 static void nodeIntersect (GVJ_t * job, pointf p, 
-    boolean explicit_iurl, char* iurl,
-    boolean explicit_itooltip, char* itarget)
-{
+    boolean explicit_iurl, char* iurl, boolean explicit_itooltip) {
     obj_state_t *obj = job->obj;
     char* url;
     bool explicit;
@@ -2791,7 +2789,7 @@ static void emit_end_edge(GVJ_t * job)
 	else /* No arrow at start of splines */
 	    p = bz.list[0];
 	nodeIntersect (job, p, obj->explicit_tailurl, obj->tailurl,
-	    obj->explicit_tailtooltip, obj->tailtarget);
+	    obj->explicit_tailtooltip);
         
 	/* process intersection with head node */
 	bz = ED_spl(e)->list[ED_spl(e)->size - 1];
@@ -2800,7 +2798,7 @@ static void emit_end_edge(GVJ_t * job)
 	else /* No arrow at end of splines */
 	    p = bz.list[bz.size - 1];
 	nodeIntersect (job, p, obj->explicit_headurl, obj->headurl,
-	    obj->explicit_headtooltip, obj->headtarget);
+	    obj->explicit_headtooltip);
     }
 
     emit_edge_label(job, ED_label(e), EMIT_ELABEL,
