@@ -735,6 +735,8 @@ static void endElement(void *user, const char *name)
  */
 static void characterData(void *user, const char *s, int length)
 {
+    (void)user;
+
     int i, cnt = 0;
     unsigned char c;
 
