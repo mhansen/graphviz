@@ -429,8 +429,10 @@ static gint addNeighbor(void *face, void *ni) {
     return 0;
 }
 
-static void addFace (GFace* f, fstate* es)
-{
+static gint addFace(void *face, void *state) {
+    GFace *f = face;
+    fstate *es = state;
+
     int i, myid = f->idx;
     int* ip = es->faces + 3*myid;
     int* neigh = es->neigh + 3*myid;
@@ -447,6 +449,8 @@ static void addFace (GFace* f, fstate* es)
     gts_face_foreach_neighbor((GtsFace*)f, 0, addNeighbor, &ni);
     for (i = ni.nneigh; i < 3; i++)
 	neigh[i] = -1;
+
+    return 0;
 }
 
 static gint addTri(void *face, void *state) {
@@ -504,7 +508,7 @@ mkSurface (double *x, double *y, int n, int* segs, int nsegs)
 
     statf.faces = faces;
     statf.neigh = neigh;
-    gts_surface_foreach_face (s, (GtsFunc) addFace, &statf);
+    gts_surface_foreach_face(s, addFace, &statf);
 
     sf->nedges = nsegs;
     sf->edges = segs;
