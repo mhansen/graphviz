@@ -411,10 +411,14 @@ typedef struct {
     int* neigh;
 } ninfo;
 
-static void addNeighbor (GFace* f, ninfo* es)
-{
+static gint addNeighbor(void *face, void *ni) {
+    GFace *f = face;
+    ninfo *es = ni;
+
     es->neigh[es->nneigh] = f->idx;
     es->nneigh++;
+
+    return 0;
 }
 
 static void addFace (GFace* f, fstate* es)
@@ -432,7 +436,7 @@ static void addFace (GFace* f, fstate* es)
 
     ni.nneigh = 0;
     ni.neigh = neigh;
-    gts_face_foreach_neighbor ((GtsFace*)f, 0, (GtsFunc) addNeighbor, &ni);
+    gts_face_foreach_neighbor((GtsFace*)f, 0, addNeighbor, &ni);
     for (i = ni.nneigh; i < 3; i++)
 	neigh[i] = -1;
 }
