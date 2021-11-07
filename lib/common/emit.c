@@ -1719,7 +1719,7 @@ static bool node_in_layer(GVJ_t *job, graph_t * g, node_t * n)
     return false;
 }
 
-static bool edge_in_layer(GVJ_t *job, graph_t * g, edge_t * e)
+static bool edge_in_layer(GVJ_t *job, edge_t * e)
 {
     char *pe, *pn;
     int cnt;
@@ -2832,7 +2832,7 @@ static void emit_edge(GVJ_t * job, edge_t * e)
     char **sp;
     char *p;
 
-    if (edge_in_box(e, job->clip) && edge_in_layer(job, agraphof(aghead(e)), e) ) {
+    if (edge_in_box(e, job->clip) && edge_in_layer(job, e) ) {
 
 	s = malloc(strlen(agnameof(agtail(e))) + 2 + strlen(agnameof(aghead(e))) + 1);
 	strcpy(s,agnameof(agtail(e)));
