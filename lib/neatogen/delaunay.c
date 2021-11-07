@@ -236,8 +236,8 @@ static gint cnt_edge(void *edge, void *stats) {
 
     sp->n++;
     if (sp->delaunay) {
-	sp->delaunay[((GVertex*)(e->v1))->idx].nedges++;
-	sp->delaunay[((GVertex*)(e->v2))->idx].nedges++;
+	sp->delaunay[((GVertex*)e->v1)->idx].nedges++;
+	sp->delaunay[((GVertex*)e->v2)->idx].nedges++;
     }
 
     return 0;
@@ -253,8 +253,8 @@ static gint add_edge(void *edge, void *data) {
     GtsSegment *e = edge;
     v_data *delaunay = data;
 
-    int source = ((GVertex*)(e->v1))->idx;
-    int dest = ((GVertex*)(e->v2))->idx;
+    int source = ((GVertex*)e->v1)->idx;
+    int dest = ((GVertex*)e->v2)->idx;
 
     delaunay[source].edges[delaunay[source].nedges++] = dest;
     delaunay[dest].edges[delaunay[dest].nedges++] = source;
@@ -306,11 +306,11 @@ static gint addEdge(void *edge, void *state) {
     GtsSegment *e = edge;
     estate *es = state;
 
-    int source = ((GVertex*)(e->v1))->idx;
-    int dest = ((GVertex*)(e->v2))->idx;
+    int source = ((GVertex*)e->v1)->idx;
+    int dest = ((GVertex*)e->v2)->idx;
 
-    es->edges[2*(es->n)] = source;
-    es->edges[2*(es->n)+1] = dest;
+    es->edges[2 * es->n] = source;
+    es->edges[2 * es->n + 1] = dest;
     es->n += 1;
 
     return 0;
@@ -440,9 +440,9 @@ static gint addFace(void *face, void *state) {
     GtsVertex *v1, *v2, *v3;
 
     gts_triangle_vertices (&f->v.triangle, &v1, &v2, &v3);
-    *ip++ = ((GVertex*)(v1))->idx;
-    *ip++ = ((GVertex*)(v2))->idx;
-    *ip++ = ((GVertex*)(v3))->idx;
+    *ip++ = ((GVertex*)v1)->idx;
+    *ip++ = ((GVertex*)v2)->idx;
+    *ip++ = ((GVertex*)v3)->idx;
 
     ni.nneigh = 0;
     ni.neigh = neigh;
@@ -462,9 +462,9 @@ static gint addTri(void *face, void *state) {
     GtsVertex *v1, *v2, *v3;
 
     gts_triangle_vertices (&f->v.triangle, &v1, &v2, &v3);
-    *ip++ = ((GVertex*)(v1))->idx;
-    *ip++ = ((GVertex*)(v2))->idx;
-    *ip++ = ((GVertex*)(v3))->idx;
+    *ip++ = ((GVertex*)v1)->idx;
+    *ip++ = ((GVertex*)v2)->idx;
+    *ip++ = ((GVertex*)v3)->idx;
 
     return 0;
 }
