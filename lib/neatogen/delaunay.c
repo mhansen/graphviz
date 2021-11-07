@@ -302,14 +302,18 @@ typedef struct {
     int* edges;
 } estate;
 
-static void addEdge (GtsSegment * e, estate* es)
-{
+static gint addEdge(void *edge, void *state) {
+    GtsSegment *e = edge;
+    estate *es = state;
+
     int source = ((GVertex*)(e->v1))->idx;
     int dest = ((GVertex*)(e->v2))->idx;
 
     es->edges[2*(es->n)] = source;
     es->edges[2*(es->n)+1] = dest;
     es->n += 1;
+
+    return 0;
 }
 
 // when moving to C11, qsort_s should be used instead of having a global
@@ -359,7 +363,7 @@ int *delaunay_tri(double *x, double *y, int n, int* pnedges)
 	edges = N_GNEW(2 * nedges, int);
 	state.n = 0;
 	state.edges = edges;
-	gts_surface_foreach_edge (s, (GtsFunc) addEdge, &state);
+	gts_surface_foreach_edge(s, addEdge, &state);
     }
     else {
 	int* vs = N_GNEW(n, int);
@@ -483,7 +487,7 @@ mkSurface (double *x, double *y, int n, int* segs, int nsegs)
 
     state.n = 0;
     state.edges = segs;
-    gts_surface_foreach_edge (s, (GtsFunc) addEdge, &state);
+    gts_surface_foreach_edge(s, addEdge, &state);
 
     gts_surface_foreach_face (s, (GtsFunc) cntFace, &nfaces);
 
