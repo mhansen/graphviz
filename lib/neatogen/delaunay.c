@@ -449,8 +449,10 @@ static void addFace (GFace* f, fstate* es)
 	neigh[i] = -1;
 }
 
-static void addTri (GFace* f, fstate* es)
-{
+static gint addTri(void *face, void *state) {
+    GFace *f = face;
+    fstate *es = state;
+
     int myid = f->idx;
     int* ip = es->faces + 3*myid;
     GtsVertex *v1, *v2, *v3;
@@ -459,6 +461,8 @@ static void addTri (GFace* f, fstate* es)
     *ip++ = ((GVertex*)(v1))->idx;
     *ip++ = ((GVertex*)(v2))->idx;
     *ip++ = ((GVertex*)(v3))->idx;
+
+    return 0;
 }
 
 /* mkSurface:
@@ -534,7 +538,7 @@ get_triangles (double *x, int n, int* tris)
 
     gts_surface_foreach_face(s, cntFace, &nfaces);
     statf.faces = N_GNEW(3 * nfaces, int);
-    gts_surface_foreach_face (s, (GtsFunc) addTri, &statf);
+    gts_surface_foreach_face(s, addTri, &statf);
 
     gts_object_destroy (GTS_OBJECT (s));
 
