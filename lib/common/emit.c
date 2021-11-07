@@ -1101,8 +1101,7 @@ static bool selectedlayer(GVJ_t *job, char *spec)
  * efficient way to do this, but this is simple and until we find people
  * using huge numbers of layers, it should be adequate.
  */
-static int* parse_layerselect(GVC_t *gvc, graph_t * g, char *p)
-{
+static int *parse_layerselect(GVC_t *gvc, char *p) {
     int* laylist = N_GNEW(gvc->numLayers+2,int);
     int i, cnt = 0;
     for (i = 1; i <=gvc->numLayers; i++) {
@@ -1199,7 +1198,7 @@ static void init_layering(GVC_t * gvc, graph_t * g)
     if ((str = agget(g, "layers")) != 0) {
 	gvc->numLayers = parse_layers(gvc, g, str);
  	if ((str = agget(g, "layerselect")) != 0 && *str) {
-	    gvc->layerlist = parse_layerselect(gvc, g, str);
+	    gvc->layerlist = parse_layerselect(gvc, str);
 	}
     } else {
 	gvc->layerIDs = NULL;
