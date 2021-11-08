@@ -840,32 +840,31 @@ windows-mingw64-cmake-build:
     except:
         - tags
 
-# FIXME: https://gitlab.com/graphviz/graphviz/-/issues/2145
-# windows-cygwin-cmake-build:
-#     stage: build
-#     needs: []
-#     script:
-#         # change line endings from crlf to lf
-#         - git rm --cached -r .
-#         - git -c core.autocrlf=false reset --hard
-#         - choco config set cacheLocation choco-cache
-#         - choco install --yes --no-progress cygwin
-#         - $Env:build_system = "cmake"
-#         - C:\tools\cygwin\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/cygwin-build.sh'
-#     artifacts:
-#         when: always
-#         expire_in: 1 week
-#         paths:
-#             - Packages/*/*/*.zip
-#             - Packages/*/*/*.bz2
-#     cache:
-#         key: windows-cygwin-cmake-build
-#         paths:
-#             - choco-cache
-#     tags:
-#         - windows
-#     except:
-#         - tags
+windows-cygwin-cmake-build:
+    stage: build
+    needs: []
+    script:
+        # change line endings from crlf to lf
+        - git rm --cached -r .
+        - git -c core.autocrlf=false reset --hard
+        - choco config set cacheLocation choco-cache
+        - choco install --yes --no-progress cygwin
+        - $Env:build_system = "cmake"
+        - C:\tools\cygwin\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/cygwin-build.sh'
+    artifacts:
+        when: always
+        expire_in: 1 week
+        paths:
+            - Packages/*/*/*.zip
+            - Packages/*/*/*.bz2
+    cache:
+        key: windows-cygwin-cmake-build
+        paths:
+            - choco-cache
+    tags:
+        - windows
+    except:
+        - tags
 
 meta-data:
     stage: test
