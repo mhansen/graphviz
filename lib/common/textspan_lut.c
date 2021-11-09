@@ -813,7 +813,7 @@ estimate_character_width_canonical(const short variant_metrics[128],
     width = 0;
   }
   assert(width >= 0);
-  return width;
+  return (unsigned short)width;
 }
 
 double estimate_text_width_1pt(const char *font_name, const char *text,
