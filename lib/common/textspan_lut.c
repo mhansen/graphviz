@@ -745,7 +745,8 @@ static bool font_in_list_permissive(const char *value, const char *list) {
 
   do {
     const char *next_pipe = strchr(list, '|');
-    size_t next_pipe_or_end_pos = next_pipe ? next_pipe - list : strlen(list);
+    size_t next_pipe_or_end_pos =
+        next_pipe ? (size_t)(next_pipe - list) : strlen(list);
     if (font_name_equal_permissive(value, list, next_pipe_or_end_pos)) {
       return true;
     }
