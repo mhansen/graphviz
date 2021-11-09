@@ -75,6 +75,8 @@ static void hsv2rgb(double h, double s, double v,
 	    *g = p;
 	    *b = q;
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
 }
