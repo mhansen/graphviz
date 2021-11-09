@@ -71,13 +71,9 @@ else
         else
             rm -rf ${HOME}/rpmbuild
             rpmbuild -ta graphviz-${GV_VERSION}.tar.gz | tee >(ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
-            mv ${HOME}/rpmbuild/SRPMS/*.src.rpm ${DIR}/source/
             pushd ${HOME}/rpmbuild/RPMS
-            mv */*debuginfo*rpm ./
-            tar cf - *debuginfo*rpm | xz -9 -c - >${DIR}/debug/graphviz-${GV_VERSION}-debuginfo-rpms.tar.xz
-            find . -name "*debuginfo*rpm" -delete
             mv */*.rpm ./
-            tar cf - *.rpm | xz -9 -c - >${DIR}/os/graphviz-${GV_VERSION}-rpms.tar.xz
+            tar cf - *.rpm | xz -9 -c - >${DIR}/graphviz-${GV_VERSION}-rpms.tar.xz
             popd
         fi
     elif [[ "${OSTYPE}" =~ "darwin" ]]; then

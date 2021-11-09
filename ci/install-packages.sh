@@ -48,7 +48,7 @@ else
         tar xf ${DIR}/os/graphviz-${GV_VERSION}-${ARCH}.tar.gz
         cp -rp build/* /usr/local
     else
-        tar xvf ${DIR}/os/graphviz-${GV_VERSION}-rpms.tar.xz
+        tar xvf ${DIR}/graphviz-${GV_VERSION}-rpms.tar.xz
         rpm --install --force \
             graphviz-${GV_VERSION}*.rpm \
             graphviz-libs-${GV_VERSION}*.rpm \
