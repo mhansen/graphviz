@@ -606,8 +606,7 @@ void gvrender_box(GVJ_t * job, boxf B, int filled)
 }
 
 void gvrender_beziercurve(GVJ_t * job, pointf * af, int n,
-			  int arrow_at_start, int arrow_at_end,
-			  boolean filled)
+			  int arrow_at_start, int arrow_at_end, int filled)
 {
     gvrender_engine_t *gvre = job->render.engine;
 
