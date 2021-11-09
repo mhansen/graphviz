@@ -158,6 +158,8 @@ static mpair *mkMPair(Dt_t * d, mpair * obj, MPairDisc * disc)
 
 static void freeMPair(Dt_t * d, mpair * ap, MPairDisc * disc)
 {
+    (void)d;
+
     ap->link.right = (Dtlink_t *) (disc->flist);
     disc->flist = ap;
 }
