@@ -134,6 +134,9 @@ static void textfont_freef(Dt_t* dt, void* obj, Dtdisc_t* disc)
 
 static int textfont_comparf (Dt_t* dt, void* key1, void* key2, Dtdisc_t* disc)
 {
+    (void)dt;
+    (void)disc;
+
     int rc;
     textfont_t *f1 = (textfont_t*)key1, *f2 = (textfont_t*)key2;
 
