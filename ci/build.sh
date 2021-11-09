@@ -59,8 +59,6 @@ elif [[ "${CONFIGURE_OPTIONS:-}" =~ "--enable-static" ]]; then
     make
     make install
     popd
-    tar cf - -C graphviz-${GV_VERSION}/build . | xz -9 -c - > graphviz-${GV_VERSION}-${ARCH}.tar.xz
-    mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/os/
 else
     GV_VERSION=$( cat GRAPHVIZ_VERSION )
     if [ "$OSTYPE" = "linux-gnu" ]; then
