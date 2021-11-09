@@ -67,8 +67,8 @@ else
         if [ "${ID_LIKE:-}" = "debian" ]; then
             tar xfz graphviz-${GV_VERSION}.tar.gz
             (cd graphviz-${GV_VERSION}; fakeroot make -f debian/rules binary) | tee >(ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
-            mv *.deb ${DIR}/os/
-            mv *.ddeb ${DIR}/debug/
+            tar cf - *.deb | xz -9 -c - >${DIR}/os/graphviz-${GV_VERSION}-debs.tar.xz
+            tar cf - *.ddeb | xz -9 -c - >${DIR}/debug/graphviz-${GV_VERSION}-ddebs.tar.xz
         else
             rm -rf ${HOME}/rpmbuild
             rpmbuild -ta graphviz-${GV_VERSION}.tar.gz | tee >(ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
