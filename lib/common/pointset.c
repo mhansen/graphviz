@@ -28,6 +28,9 @@ static pair *mkPair(point p)
 
 static void freePair(Dt_t * d, pair* pp, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     free (pp);
 }
 
