@@ -690,7 +690,7 @@ static const struct FontFamilyMetrics all_font_metrics[] = {
     },
 };
 
-const static size_t all_font_metrics_len =
+static const size_t all_font_metrics_len =
     sizeof(all_font_metrics) / sizeof(all_font_metrics[0]);
 
 /// Compares two font names for equality, ignoring case and special characters.
