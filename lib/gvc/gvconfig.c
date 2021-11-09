@@ -33,9 +33,6 @@
 #define GLOB_NOSORT     4
 typedef struct {
     int gl_pathc;           /* count of total paths so far */
-    int gl_matchc;          /* count of paths matching pattern */
-    int gl_offs;            /* reserved at beginning of gl_pathv */
-    int gl_flags;           /* returned flags */
     char **gl_pathv;        /* list of paths matching pattern */
 } glob_t;
 static void globfree (glob_t* pglob);
