@@ -142,6 +142,8 @@ typedef struct {
 
 static mpair *mkMPair(Dt_t * d, mpair * obj, MPairDisc * disc)
 {
+    (void)d;
+
     mpair *ap;
 
     if (disc->flist) {
