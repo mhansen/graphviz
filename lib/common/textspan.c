@@ -102,6 +102,9 @@ pointf textspan_size(GVC_t *gvc, textspan_t * span)
 
 static void* textfont_makef(Dt_t* dt, void* obj, Dtdisc_t* disc)
 {
+    (void)dt;
+    (void)disc;
+
     textfont_t *f1 = (textfont_t*)obj;
     textfont_t *f2 = calloc(1,sizeof(textfont_t));
     
