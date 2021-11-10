@@ -244,7 +244,7 @@ static real* jacobi(SparseMatrix A, int dim, real *x0, real *rhs, int maxit, int
   x = MALLOC(sizeof(real)*n);
   y = MALLOC(sizeof(real)*n);
   b = MALLOC(sizeof(real)*n);
-  assert(A->type = MATRIX_TYPE_REAL);
+  assert(A->type == MATRIX_TYPE_REAL);
   ia = A->ia; ja = A->ja; a = (real*) A->a;
 
   for (k = 0; k < dim; k++){
