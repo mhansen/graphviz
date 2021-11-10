@@ -26,15 +26,7 @@
 #include <gtk/gtkgl.h>
 #include <gdk/gdkcursor.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     gboolean expose_event(GtkWidget * widget, GdkEventExpose * event,
 			  gpointer data);
     extern GdkGLConfig *configure_gl(void);
     void create_window(GdkGLConfig * glconfig, GtkWidget * vbox);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

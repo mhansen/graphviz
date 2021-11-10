@@ -13,14 +13,7 @@
 #include "draw.h"
 #include <GL/gl.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern void pick_objects_rect(Agraph_t* g) ;
 extern void deselect_all(Agraph_t* g);
 extern void add_selpoly(Agraph_t* g,glCompPoly* selPoly,glCompPoint pt);
 extern void clear_selpoly(glCompPoly* sp);
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

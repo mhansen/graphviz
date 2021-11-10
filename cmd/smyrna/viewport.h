@@ -16,10 +16,6 @@
 #include <xdot/xdot.h>
 #include <cgraph/cgraph.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     void init_viewport(ViewInfo * view);
     void set_viewport_settings_from_template(ViewInfo * view, Agraph_t *);
     void switch_graph(int);
@@ -43,7 +39,3 @@ extern "C" {
     /* helper functions */
     extern char *get_attribute_value(char *attr, ViewInfo * view,
 				     Agraph_t * g);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

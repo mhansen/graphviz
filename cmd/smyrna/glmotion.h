@@ -12,14 +12,6 @@
 
 #include "viewport.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     void glmotion_zoom(void);
     void glmotion_pan(ViewInfo * v);
     void glmotion_zoom_inc(int zoomin);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

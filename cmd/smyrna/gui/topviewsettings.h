@@ -12,10 +12,6 @@
 
 #include "smyrnadefs.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     _BB void on_settingsOKBtn_clicked(GtkWidget * widget,
 				      gpointer user_data);
     _BB void on_settingsCancelBtn_clicked(GtkWidget * widget,
@@ -28,7 +24,3 @@ extern "C" {
     extern int load_settings_from_graph(Agraph_t * g);
     extern int update_graph_from_settings(Agraph_t * g);
     extern int show_settings_form(void);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

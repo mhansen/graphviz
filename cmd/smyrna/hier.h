@@ -12,10 +12,6 @@
 
 #include <topfish/hierarchy.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     typedef struct {
 	int num_foci;
 	int *foci_nodes;	/* Nodes in real graph */
@@ -52,7 +48,3 @@ extern "C" {
 			double *, hierparms_t *);
 
     focus_t *initFocus(int ncnt);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif
