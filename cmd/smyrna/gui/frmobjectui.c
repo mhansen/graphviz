@@ -49,8 +49,7 @@ static int get_object_type(void)
     return -1;
 }
 
-void free_attr(attr_t * at)
-{
+static void free_attr(attr_t *at) {
     free(at->defValG);
     free(at->defValN);
     free(at->defValE);
