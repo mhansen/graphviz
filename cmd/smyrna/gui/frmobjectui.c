@@ -128,9 +128,7 @@ static void free_attr_list_widgets(attr_list * l)
     }
 }
 
-
-void free_attr_list(attr_list * l)
-{
+static void free_attr_list(attr_list *l) {
     int id;
     for (id = 0; id < l->attr_count; id++) {
 	free_attr(l->attributes[id]);
