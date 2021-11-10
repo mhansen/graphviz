@@ -13,10 +13,10 @@
 #include <sparse/SparseMatrix.h>
 
 typedef struct rectangle_struct {
-  real x[2];/* center */
-  real size[2]; /* total width/height*/
+  double x[2];/* center */
+  double size[2]; /* total width/height*/
 } rectangle;
 
-extern rectangle* tree_map(int n, real *area, rectangle fillrec);
+extern rectangle* tree_map(int n, double *area, rectangle fillrec);
 
-extern rectangle rectangle_new(real x, real y, real width, real height);
+extern rectangle rectangle_new(double x, double y, double width, double height);

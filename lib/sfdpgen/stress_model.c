@@ -4,10 +4,10 @@
 #include <sfdpgen/post_process.h>
 #include <sfdpgen/stress_model.h>
 
-static void stress_model_core(int dim, SparseMatrix B, real **x, int edge_len_weighted, int maxit_sm, real tol, int *flag){
+static void stress_model_core(int dim, SparseMatrix B, double **x, int edge_len_weighted, int maxit_sm, double tol, int *flag){
   int m;
   SparseStressMajorizationSmoother sm;
-  real lambda = 0;
+  double lambda = 0;
   int i;
   SparseMatrix A = B;
 
@@ -24,7 +24,7 @@ static void stress_model_core(int dim, SparseMatrix B, real **x, int edge_len_we
   *flag = 0;
   m = A->m;
   if (!x) {
-    *x = MALLOC(sizeof(real)*m*dim);
+    *x = MALLOC(sizeof(double)*m*dim);
     srand(123);
     for (i = 0; i < dim*m; i++) (*x)[i] = drand();
   }
@@ -53,6 +53,6 @@ static void stress_model_core(int dim, SparseMatrix B, real **x, int edge_len_we
   if (A != B) SparseMatrix_delete(A);
 }
 
-void stress_model(int dim, SparseMatrix A, SparseMatrix D, real **x, int edge_len_weighted, int maxit_sm, real tol, int *flag){
+void stress_model(int dim, SparseMatrix A, SparseMatrix D, double **x, int edge_len_weighted, int maxit_sm, double tol, int *flag){
   stress_model_core(dim, D, x, edge_len_weighted, maxit_sm, tol, flag);
 }

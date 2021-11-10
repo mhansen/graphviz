@@ -13,22 +13,22 @@
 #include <sparse/SparseMatrix.h>
 #include <cgraph/cgraph.h>
 
-int make_map_from_rectangle_groups(int exclude_random, int include_OK_points, int n, int dim, real *x, real *sizes, 
-				   int *grouping, SparseMatrix graph, real bounding_box_margin[], int *nrandom,int *nart, int nedgep, 
-				   real shore_depth_tol, real edge_bridge_tol, real **xcombined, int *nverts, real **x_poly, 
+int make_map_from_rectangle_groups(int exclude_random, int include_OK_points, int n, int dim, double *x, double *sizes, 
+				   int *grouping, SparseMatrix graph, double bounding_box_margin[], int *nrandom,int *nart, int nedgep, 
+				   double shore_depth_tol, double edge_bridge_tol, double **xcombined, int *nverts, double **x_poly, 
 				   int *npolys, SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, 
 				   SparseMatrix *country_graph, int highlight_cluster, int *flag);
 
-void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_map, real *x, SparseMatrix graph);
+void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_map, double *x, SparseMatrix graph);
 
-void plot_dot_map(Agraph_t* gr, int n, int dim, real *x, SparseMatrix polys,
-                  SparseMatrix poly_lines, real line_width,
-                  const char *line_color, real *x_poly, int *polys_groups,
+void plot_dot_map(Agraph_t* gr, int n, int dim, double *x, SparseMatrix polys,
+                  SparseMatrix poly_lines, double line_width,
+                  const char *line_color, double *x_poly, int *polys_groups,
                   char **labels, float *fsz, float *r, float *g, float *b,
                   const char* opacity, SparseMatrix A, FILE*);
 
 void map_optimal_coloring(int seed, SparseMatrix A, float *rgb_r,  float *rgb_g, float *rgb_b);
-void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMatrix A, real accuracy, int seed, float **rgb_r, float **rgb_g, float **rgb_b);
+void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMatrix A, double accuracy, int seed, float **rgb_r, float **rgb_g, float **rgb_b);
 
 enum {POLY_LINE_REAL_EDGE, POLY_LINE_NOT_REAL_EDGE};
 #define neighbor(t, i, edim, elist) elist[(edim)*(t)+i]

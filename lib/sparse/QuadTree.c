@@ -15,24 +15,24 @@
 #include <sparse/LinkedList.h>
 #include <sparse/QuadTree.h>
 
-extern real distance_cropped(real *x, int dim, int i, int j);
+extern double distance_cropped(double *x, int dim, int i, int j);
 
 struct node_data_struct {
-  real node_weight;
-  real *coord;
-  real id;
+  double node_weight;
+  double *coord;
+  double id;
   void *data;
 };
 
 typedef struct node_data_struct *node_data;
 
 
-static node_data node_data_new(int dim, real weight, real *coord, int id){
+static node_data node_data_new(int dim, double weight, double *coord, int id){
   node_data nd;
   int i;
   nd = MALLOC(sizeof(struct node_data_struct));
   nd->node_weight = weight;
-  nd->coord = MALLOC(sizeof(real)*dim);
+  nd->coord = MALLOC(sizeof(double)*dim);
   nd->id = id;
   for (i = 0; i < dim; i++) nd->coord[i] = coord[i];
   nd->data = NULL;
@@ -46,12 +46,12 @@ static void node_data_delete(void *d){
   free(nd);
 }
 
-static real node_data_get_weight(void *d){
+static double node_data_get_weight(void *d){
   node_data nd = (node_data) d;
   return nd->node_weight;
 }
 
-static real* node_data_get_coord(void *d){
+static double* node_data_get_coord(void *d){
   node_data nd = (node_data) d;
   return nd->coord;
 }
@@ -64,19 +64,19 @@ static int node_data_get_id(void *d){
 #define node_data_get_data(d) (((node_data) (d))->data)
 
 
-static void check_or_realloc_arrays(int dim, int *nsuper, int *nsupermax, real **center, real **supernode_wgts, real **distances){
+static void check_or_realloc_arrays(int dim, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances){
   
   if (*nsuper >= *nsupermax) {
     *nsupermax = *nsuper + MAX(10, (int) 0.2*(*nsuper));
-    *center = REALLOC(*center, sizeof(real)*(*nsupermax)*dim);
-    *supernode_wgts = REALLOC(*supernode_wgts, sizeof(real)*(*nsupermax));
-    *distances = REALLOC(*distances, sizeof(real)*(*nsupermax));
+    *center = REALLOC(*center, sizeof(double)*(*nsupermax)*dim);
+    *supernode_wgts = REALLOC(*supernode_wgts, sizeof(double)*(*nsupermax));
+    *distances = REALLOC(*distances, sizeof(double)*(*nsupermax));
   }
 }
 
-static void QuadTree_get_supernodes_internal(QuadTree qt, real bh, real *point, int nodeid, int *nsuper, int *nsupermax, real **center, real **supernode_wgts, real **distances, real *counts, int *flag){
+static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *point, int nodeid, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts, int *flag){
   SingleLinkedList l;
-  real *coord, dist;
+  double *coord, dist;
   int dim, i;
 
   (*counts)++;
@@ -120,8 +120,8 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, real bh, real *point, 
 
 }
 
-void QuadTree_get_supernodes(QuadTree qt, real bh, real *point, int nodeid, int *nsuper, 
-			     int *nsupermax, real **center, real **supernode_wgts, real **distances, double *counts, int *flag){
+void QuadTree_get_supernodes(QuadTree qt, double bh, double *point, int nodeid, int *nsuper, 
+			     int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts, int *flag){
   int dim = qt->dim;
 
   (*counts) = 0;
@@ -130,41 +130,41 @@ void QuadTree_get_supernodes(QuadTree qt, real bh, real *point, int nodeid, int 
 
   *flag = 0;
   *nsupermax = 10;
-  if (!*center) *center = MALLOC(sizeof(real)*(*nsupermax)*dim);
-  if (!*supernode_wgts) *supernode_wgts = MALLOC(sizeof(real)*(*nsupermax));
-  if (!*distances) *distances = MALLOC(sizeof(real)*(*nsupermax));
+  if (!*center) *center = MALLOC(sizeof(double)*(*nsupermax)*dim);
+  if (!*supernode_wgts) *supernode_wgts = MALLOC(sizeof(double)*(*nsupermax));
+  if (!*distances) *distances = MALLOC(sizeof(double)*(*nsupermax));
   QuadTree_get_supernodes_internal(qt, bh, point, nodeid, nsuper, nsupermax, center, supernode_wgts, distances, counts, flag);
 
 }
 
 
-static real *get_or_assign_node_force(real *force, int i, SingleLinkedList l, int dim){
+static double *get_or_assign_node_force(double *force, int i, SingleLinkedList l, int dim){
 
-  real *f = (real*) node_data_get_data(SingleLinkedList_get_data(l));
+  double *f = (double*) node_data_get_data(SingleLinkedList_get_data(l));
 
   if (!f){
     node_data_get_data(SingleLinkedList_get_data(l)) = &(force[i*dim]);
-    f = (real*) node_data_get_data(SingleLinkedList_get_data(l));
+    f = (double*) node_data_get_data(SingleLinkedList_get_data(l));
   }
   return f;
 }
-static real *get_or_alloc_force_qt(QuadTree qt, int dim){
+static double *get_or_alloc_force_qt(QuadTree qt, int dim){
   int i;
-  real *force = (real*) qt->data;
+  double *force = (double*) qt->data;
   if (!force){
-    qt->data = MALLOC(sizeof(real)*dim);
-    force = (real*) qt->data;
+    qt->data = MALLOC(sizeof(double)*dim);
+    force = (double*) qt->data;
     for (i = 0; i < dim; i++) force[i] = 0.;
   }
   return force;
 }
 
-static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, real *x, real *force, real bh, real p, real KP, real *counts){
+static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double *x, double *force, double bh, double p, double KP, double *counts){
   /* calculate the all to all reopulsive force and accumulate on each node of the quadtree if an interaction is possible.
      force[i*dim+j], j=1,...,dim is the force on node i 
    */
   SingleLinkedList l1, l2;
-  real *x1, *x2, dist, wgt1, wgt2, f, *f1, *f2, w1, w2;
+  double *x1, *x2, dist, wgt1, wgt2, f, *f1, *f2, w1, w2;
   int dim, i, j, i1, i2, k;
   QuadTree qt11, qt12; 
 
@@ -272,10 +272,10 @@ static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, real *
   }
 }
 
-static void QuadTree_repulsive_force_accumulate(QuadTree qt, real *force, real *counts){
+static void QuadTree_repulsive_force_accumulate(QuadTree qt, double *force, double *counts){
   /* push down forces on cells into the node level */
-  real wgt, wgt2;
-  real *f, *f2;
+  double wgt, wgt2;
+  double *f, *f2;
   SingleLinkedList l = qt->l;
   int i, k, dim;
   QuadTree qt2;
@@ -311,7 +311,7 @@ static void QuadTree_repulsive_force_accumulate(QuadTree qt, real *force, real *
 
 }
 
-void QuadTree_get_repulsive_force(QuadTree qt, real *force, real *x, real bh, real p, real KP, real *counts, int *flag){
+void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double bh, double p, double KP, double *counts, int *flag){
   /* get repulsice force by a more efficient algortihm: we consider two cells, if they are well separated, we
      calculate the overall repulsive force on the cell level, if not well separated, we divide one of the cell.
      If both cells are at the leaf level, we calcuaulate repulsicve force among individual nodes. Finally
@@ -341,18 +341,18 @@ void QuadTree_get_repulsive_force(QuadTree qt, real *force, real *x, real bh, re
   for (i = 0; i < 4; i++) counts[i] /= n;
 
 }
-QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, real *coord, real *weight){
+QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coord, double *weight){
   /* form a new QuadTree data structure from a list of coordinates of n points
      coord: of length n*dim, point i sits at [i*dim, i*dim+dim - 1]
      weight: node weight of lentgth n. If NULL, unit weight assumed.
    */
-  real *xmin, *xmax, *center, width;
+  double *xmin, *xmax, *center, width;
   QuadTree qt = NULL;
   int i, k;
 
-  xmin = MALLOC(sizeof(real)*dim);
-  xmax = MALLOC(sizeof(real)*dim);
-  center = MALLOC(sizeof(real)*dim);
+  xmin = MALLOC(sizeof(double)*dim);
+  xmax = MALLOC(sizeof(double)*dim);
+  center = MALLOC(sizeof(double)*dim);
   if (!xmin || !xmax || !center) {
       free(xmin);
       free(xmax);
@@ -396,13 +396,13 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, real *coord
   return qt;
 }
 
-QuadTree QuadTree_new(int dim, real *center, real width, int max_level){
+QuadTree QuadTree_new(int dim, double *center, double width, int max_level){
   QuadTree q;
   int i;
   q = MALLOC(sizeof(struct QuadTree_struct));
   q->dim = dim;
   q->n = 0;
-  q->center = MALLOC(sizeof(real)*dim);
+  q->center = MALLOC(sizeof(double)*dim);
   for (i = 0; i < dim; i++) q->center[i] = center[i];
   assert(width > 0);
   q->width = width;
@@ -432,7 +432,7 @@ void QuadTree_delete(QuadTree q){
   free(q);
 }
 
-static int QuadTree_get_quadrant(int dim, real *center, real *coord){
+static int QuadTree_get_quadrant(int dim, double *center, double *coord){
   /* find the quadrant that a point of coordinates coord is going into with reference to the center.
      if coord - center == {+,-,+,+} = {1,0,1,1}, then it will sit in the i-quadrant where
      i's binary representation is 1011 (that is, decimal 11).
@@ -449,7 +449,7 @@ static int QuadTree_get_quadrant(int dim, real *center, real *coord){
   return d;
 }
 
-QuadTree QuadTree_new_in_quadrant(int dim, real *center, real width, int max_level, int i){
+QuadTree QuadTree_new_in_quadrant(int dim, double *center, double width, int max_level, int i){
   /* a new quadtree in quadrant i of the original cell. The original cell is centered at 'center".
      The new cell have width "width".
    */
@@ -471,7 +471,7 @@ QuadTree QuadTree_new_in_quadrant(int dim, real *center, real width, int max_lev
   return qt;
 
 }
-static QuadTree QuadTree_add_internal(QuadTree q, real *coord, real weight, int id, int level){
+static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, int id, int level){
   int i, dim = q->dim, ii;
   node_data nd = NULL;
 
@@ -493,7 +493,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, real *coord, real weight, int 
     /* if this node is empty right now */
     q->n = 1;
     q->total_weight = weight;
-    q->average = MALLOC(sizeof(real)*dim);
+    q->average = MALLOC(sizeof(double)*dim);
     for (i = 0; i < q->dim; i++) q->average[i] = coord[i];
     nd = node_data_new(q->dim, weight, coord, id);
     assert(!(q->l));
@@ -548,13 +548,13 @@ static QuadTree QuadTree_add_internal(QuadTree q, real *coord, real weight, int 
 }
 
 
-QuadTree QuadTree_add(QuadTree q, real *coord, real weight, int id){
+QuadTree QuadTree_add(QuadTree q, double *coord, double weight, int id){
   if (!q) return q;
   return QuadTree_add_internal(q, coord, weight, id, 0);
   
 }
 
-static void draw_polygon(FILE *fp, int dim, real *center, real width){
+static void draw_polygon(FILE *fp, int dim, double *center, double width){
   /* pliot the enclosing square */
   if (dim < 2 || dim > 3) return;
   fprintf(fp,"(*in c*){Line[{");
@@ -612,7 +612,7 @@ static void draw_polygon(FILE *fp, int dim, real *center, real width){
 static void QuadTree_print_internal(FILE *fp, QuadTree q, int level){
   /* dump a quad tree in Mathematica format. */
   SingleLinkedList l, l0;
-  real *coord;
+  double *coord;
   int i, dim;
 
   if (!q) return;
@@ -668,13 +668,13 @@ void QuadTree_print(FILE *fp, QuadTree q){
 
 
 
-static void QuadTree_get_nearest_internal(QuadTree qt, real *x, real *y, real *min, int *imin, int tentative, int *flag){
+static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, double *min, int *imin, int tentative, int *flag){
   /* get the narest point years to {x[0], ..., x[dim]} and store in y.*/
   SingleLinkedList l;
-  real *coord, dist;
+  double *coord, dist;
   int dim, i, iq = -1;
-  real qmin;
-  real *point = x;
+  double qmin;
+  double *point = x;
 
   *flag = 0;
   if (!qt) return;
@@ -695,7 +695,7 @@ static void QuadTree_get_nearest_internal(QuadTree qt, real *x, real *y, real *m
   
   if (qt->qts){
     dist = point_distance(qt->center, point, dim); 
-    if (*min >= 0 && (dist - sqrt((real) dim) * qt->width > *min)){
+    if (*min >= 0 && (dist - sqrt((double) dim) * qt->width > *min)){
       return;
     } else {
       if (tentative){/* quick first approximation*/
@@ -721,7 +721,7 @@ static void QuadTree_get_nearest_internal(QuadTree qt, real *x, real *y, real *m
 }
 
 
-void QuadTree_get_nearest(QuadTree qt, real *x, real *ymin, int *imin, real *min, int *flag){
+void QuadTree_get_nearest(QuadTree qt, double *x, double *ymin, int *imin, double *min, int *flag){
 
   *flag = 0;
   *min = -1;

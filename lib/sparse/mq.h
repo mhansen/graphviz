@@ -31,13 +31,13 @@ struct Multilevel_MQ_Clustering_struct {
    .   = mq_in/k - mq_out/(k*(k-1))
   */
 
-  real mq;
-  real mq_in, mq_out;/* mqs(A) = deg_in(A)/|A|^2 - deg_out(A)/|A|/(|V|-|A|) */
+  double mq;
+  double mq_in, mq_out;/* mqs(A) = deg_in(A)/|A|^2 - deg_out(A)/|A|/(|V|-|A|) */
   int ncluster; /* number of clusters */
 
-  real *deg_intra;/* dimension n. deg[i] equal to the sum of edge weights within cluster i */
-  real *dout;/* dimension n, dout[i] = \sum_{j -- i} a(i,j)/|j| is the scaled sum of outdegree */
-  real *wgt; /* total vertex weight each coarse grid vertex represent */
+  double *deg_intra;/* dimension n. deg[i] equal to the sum of edge weights within cluster i */
+  double *dout;/* dimension n, dout[i] = \sum_{j -- i} a(i,j)/|j| is the scaled sum of outdegree */
+  double *wgt; /* total vertex weight each coarse grid vertex represent */
 };
 
 /* find a clustering of vertices by maximize modularity quality
@@ -54,4 +54,4 @@ struct Multilevel_MQ_Clustering_struct {
    mq: achieve modularity
 */
 void mq_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
-			   int *nclusters, int **assignment, real *mq, int *flag);
+			   int *nclusters, int **assignment, double *mq, int *flag);

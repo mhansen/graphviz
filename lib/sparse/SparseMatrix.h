@@ -68,12 +68,12 @@ int SparseMatrix_is_symmetric(SparseMatrix A, int test_pattern_symmetry_only);
 SparseMatrix SparseMatrix_transpose(SparseMatrix A);
 SparseMatrix SparseMatrix_symmetrize(SparseMatrix A, int pattern_symmetric_only);
 SparseMatrix SparseMatrix_symmetrize_nodiag(SparseMatrix A);
-void SparseMatrix_multiply_vector(SparseMatrix A, real *v, real **res, int transposed);/* if v = NULL, v is assumed to be {1,1,...,1}*/
+void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res, int transposed);/* if v = NULL, v is assumed to be {1,1,...,1}*/
 SparseMatrix SparseMatrix_remove_diagonal(SparseMatrix A);
 SparseMatrix SparseMatrix_remove_upper(SparseMatrix A);/* remove diag and upper diag */
 SparseMatrix SparseMatrix_divide_row_by_degree(SparseMatrix A);
 SparseMatrix SparseMatrix_get_real_adjacency_matrix_symmetrized(SparseMatrix A);  /* symmetric, all entries to 1, diaginal removed */
-void SparseMatrix_multiply_dense(SparseMatrix A, real *v, real **res, int dim);
+void SparseMatrix_multiply_dense(SparseMatrix A, double *v, double **res, int dim);
 SparseMatrix SparseMatrix_apply_fun(SparseMatrix A, double (*fun)(double x));/* for real only! */
 SparseMatrix SparseMatrix_copy(SparseMatrix A);
 int SparseMatrix_has_diagonal(SparseMatrix A);
@@ -98,10 +98,10 @@ SparseMatrix SparseMatrix_sort(SparseMatrix A);
 
 SparseMatrix SparseMatrix_set_entries_to_real_one(SparseMatrix A);
 
-int SparseMatrix_distance_matrix(SparseMatrix A, int weighted,  real **dist_matrix);
+int SparseMatrix_distance_matrix(SparseMatrix A, int weighted,  double **dist_matrix);
 SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix A, int weighted);
 
-SparseMatrix SparseMatrix_from_dense(int m, int n, real *x);
+SparseMatrix SparseMatrix_from_dense(int m, int n, double *x);
 
 #define SparseMatrix_set_undirected(A) set_flag((A)->property, MATRIX_UNDIRECTED)
 #define SparseMatrix_set_symmetric(A) set_flag((A)->property, MATRIX_SYMMETRIC)

@@ -68,7 +68,7 @@ color_lab RGB2LAB(color_rgb color){
   return color_lab_init(L, A, B);
 }
 
-void LAB2RGB_real_01(real *color){
+void LAB2RGB_real_01(double *color){
   /* convert an array[3] of LAB colors to RGB between 0 to 1, in place */
   color_rgb rgb;
   color_lab lab;

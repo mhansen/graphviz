@@ -28,7 +28,7 @@ typedef struct lab_struct color_lab;
 color_xyz RGB2XYZ(color_rgb color);
 color_rgb XYZ2RGB(color_xyz color);
 color_lab RGB2LAB(color_rgb color);
-void LAB2RGB_real_01(real *color);  /* convert an array[3] of LAB colors to RGB between 0 to 1, in place */
+void LAB2RGB_real_01(double *color);  /* convert an array[3] of LAB colors to RGB between 0 to 1, in place */
 color_rgb LAB2RGB(color_lab color);
 color_rgb color_rgb_init(double r, double g, double b);
 color_xyz color_xyz_init(double x, double y, double z);

@@ -29,7 +29,7 @@ void rgb2hex(float r, float g, float b, char *cstring, const char *opacity) {
   }
 }
 
-static real Hue2RGB(real v1, real v2, real H) {
+static double Hue2RGB(double v1, double v2, double H) {
   if(H < 0.0) H += 1.0;
   if(H > 1.0) H -= 1.0;
   if((6.0*H) < 1.0) return (v1 + (v2 - v1) * 6.0 * H);
@@ -38,8 +38,8 @@ static real Hue2RGB(real v1, real v2, real H) {
   return v1;
 }
 
-char * hue2rgb(real hue, char *color){
-  real v1, v2, lightness = .5, saturation = 1;
+char * hue2rgb(double hue, char *color){
+  double v1, v2, lightness = .5, saturation = 1;
   int red, blue, green;
 
   if(lightness < 0.5) 

@@ -30,40 +30,40 @@ extern pedge *edges_global;
 extern int *clusters_global;
 #endif
 
-static real norm(int n, real *x){
-  real res = 0;
+static double norm(int n, double *x){
+  double res = 0;
   int i;
 
   for (i = 0; i < n; i++) res += x[i]*x[i];
   return sqrt(res);
 
 }
-static real sqr_dist(int dim, real *x, real *y){
+static double sqr_dist(int dim, double *x, double *y){
   int i;
-  real res = 0;
+  double res = 0;
   for (i = 0; i < dim; i++) res += (x[i] - y[i])*(x[i] - y[i]);
   return res;
 }
-static real dist(int dim, real *x, real *y){
+static double dist(int dim, double *x, double *y){
   return sqrt(sqr_dist(dim,x,y));
 }
 
-pedge pedge_new(int np, int dim, real *x){
+pedge pedge_new(int np, int dim, double *x){
   pedge e;
 
   e = MALLOC(sizeof(struct pedge_struct));
   e->npoints = np;
   e->dim = dim;
   e->len = np;
-  e->x = MALLOC(dim*e->len*sizeof(real));
-  memcpy(e->x, x, dim*e->len*sizeof(real));
+  e->x = MALLOC(dim*e->len*sizeof(double));
+  memcpy(e->x, x, dim*e->len*sizeof(double));
   e->edge_length = dist(dim, &x[0*dim], &x[(np-1)*dim]);
   e->wgt = 1.;
   e->wgts = NULL;
   return e;
 
 }
-pedge pedge_wgt_new(int np, int dim, real *x, real wgt){
+pedge pedge_wgt_new(int np, int dim, double *x, double wgt){
   pedge e;
   int i;
 
@@ -71,11 +71,11 @@ pedge pedge_wgt_new(int np, int dim, real *x, real wgt){
   e->npoints = np;
   e->dim = dim;
   e->len = np;
-  e->x = MALLOC(dim*e->len*sizeof(real));
-  memcpy(e->x, x, dim*e->len*sizeof(real));
+  e->x = MALLOC(dim*e->len*sizeof(double));
+  memcpy(e->x, x, dim*e->len*sizeof(double));
   e->edge_length = dist(dim, &x[0*dim], &x[(np-1)*dim]);
   e->wgt = wgt;
-  e->wgts = MALLOC(sizeof(real)*(np - 1));
+  e->wgts = MALLOC(sizeof(double)*(np - 1));
   for (i = 0; i < np - 1; i++) e->wgts[i] = wgt;
   return e;
 
@@ -87,26 +87,26 @@ void pedge_delete(pedge e){
 
 pedge pedge_flip(pedge e){
   /* flip the polyline so that last point becomes the first, second last the second, etc*/
-  real *y;
-  real *x = e->x;
+  double *y;
+  double *x = e->x;
   int i, dim = e->dim;
   int n = e->npoints;
 
-  y = MALLOC(sizeof(real)*e->dim);
+  y = MALLOC(sizeof(double)*e->dim);
   for (i = 0; i < e->npoints/2; i++){
-    memcpy(y, &x[i*dim], sizeof(real)*dim);
-    memcpy(&x[(n-1-i)*dim], &x[i*dim], sizeof(real)*dim);
-    memcpy(&x[i*dim], y, sizeof(real)*dim);
+    memcpy(y, &x[i*dim], sizeof(double)*dim);
+    memcpy(&x[(n-1-i)*dim], &x[i*dim], sizeof(double)*dim);
+    memcpy(&x[i*dim], y, sizeof(double)*dim);
   }
   free(y);
   return e;
 }
 
-static real edge_compatibility(pedge e1, pedge e2){
+static double edge_compatibility(pedge e1, pedge e2){
   /* two edges are u1->v1, u2->v2.
      return 1 if two edges are exactly the same, 0 if they are very different.
    */
-  real *u1, *v1, *u2, *v2, *u, dist1, dist2, len1, len2;
+  double *u1, *v1, *u2, *v2, *u, dist1, dist2, len1, len2;
   int dim = e1->dim, flipped = FALSE;
 
   u1 = e1->x;
@@ -132,13 +132,13 @@ static real edge_compatibility(pedge e1, pedge e2){
   }
 }
 
-static real edge_compatibility_full(pedge e1, pedge e2){
+static double edge_compatibility_full(pedge e1, pedge e2){
   /* two edges are u1->v1, u2->v2.
      return 1 if two edges are exactly the same, 0 if they are very different.
      This is based on Holten and van Wijk's paper
    */
-  real *u1, *v1, *u2, *v2, *u, dist1, dist2, len1, len2, len;
-  real tmp, ca, cp, cs;
+  double *u1, *v1, *u2, *v2, *u, dist1, dist2, len1, len2, len;
+  double tmp, ca, cp, cs;
   int dim = e1->dim, flipped = FALSE, i;
 
   u1 = e1->x;
@@ -216,13 +216,13 @@ static void fprint_rgb(FILE* fp, int r, int g, int b, int alpha){
 
 void pedge_export_gv(FILE *fp, int ne, pedge *edges){
   pedge edge;
-  real *x, t;
+  double *x, t;
   int i, j, k, kk, dim, sta, sto;
-  real maxwgt = 0, len, len_total, len_total0;
+  double maxwgt = 0, len, len_total, len_total0;
   int r, g, b;
-  real tt1[3]={0.15,0.5,0.85};
-  real tt2[4]={0.15,0.4,0.6,0.85};
-  real *tt;
+  double tt1[3]={0.15,0.5,0.85};
+  double tt2[4]={0.15,0.4,0.6,0.85};
+  double *tt;
 
   fprintf(fp,"strict graph{\n");
   /* points */
@@ -337,7 +337,7 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
 
 void pedge_export_mma(FILE *fp, int ne, pedge *edges){
   pedge edge;
-  real *x;
+  double *x;
   int i, j, k, dim;
   
   fprintf(fp,"Graphics[{");
@@ -409,8 +409,8 @@ static void pedge_print(char *comments, pedge e){
 
 pedge pedge_realloc(pedge e, int n){
   if (n <= e->npoints) return e;
-  e->x = REALLOC(e->x, e->dim*n*sizeof(real));
-  if (e->wgts) e->wgts = REALLOC(e->wgts, (n-1)*sizeof(real));
+  e->x = REALLOC(e->x, e->dim*n*sizeof(double));
+  if (e->wgts) e->wgts = REALLOC(e->wgts, (n-1)*sizeof(double));
   e->len = n;
   return e;
 }
@@ -418,12 +418,12 @@ pedge pedge_wgts_realloc(pedge e, int n){
   /* diff from pedge_alloc: allocate wgts if do not exist and initialize to wgt */
   int i;
   if (n <= e->npoints) return e;
-  e->x = REALLOC(e->x, e->dim*n*sizeof(real));
+  e->x = REALLOC(e->x, e->dim*n*sizeof(double));
   if (!(e->wgts)){
-    e->wgts = REALLOC(e->wgts, (n-1)*sizeof(real));
+    e->wgts = REALLOC(e->wgts, (n-1)*sizeof(double));
     for (i = 0; i < e->npoints; i++) e->wgts[i] = e->wgt;
   } else {
-    e->wgts = REALLOC(e->wgts, (n-1)*sizeof(real));
+    e->wgts = REALLOC(e->wgts, (n-1)*sizeof(double));
   }
   e->len = n;
   return e;
@@ -433,13 +433,13 @@ pedge pedge_wgts_realloc(pedge e, int n){
 pedge pedge_double(pedge e){
   /* double the number of points (more precisely, add a point between two points in the polyline */
   int npoints = e->npoints, len = e->len, i, dim = e->dim;
-  real *x;
+  double *x;
   int j, ii, ii2, np;
 
   assert(npoints >= 2);
   if (npoints*2-1 > len){
     len = 3*npoints;
-    e->x = REALLOC(e->x, dim*len*sizeof(real));
+    e->x = REALLOC(e->x, dim*len*sizeof(double));
   }
   x = e->x;
 
@@ -464,12 +464,12 @@ pedge pedge_double(pedge e){
   return e;
 }
 
-static void edge_tension_force(real *force, pedge e){
-  real *x = e->x;
+static void edge_tension_force(double *force, pedge e){
+  double *x = e->x;
   int dim = e->dim;
   int np = e->npoints;
   int i, left, right, j;
-  real s;
+  double s;
 
   /* tention force = ((np-1)*||2x-xleft-xright||)/||e||, so the force is norminal and unitless
   */
@@ -482,14 +482,14 @@ static void edge_tension_force(real *force, pedge e){
   }
 }
 
-static void  edge_attraction_force(real similarity, pedge e1, pedge e2, real *force){
+static void  edge_attraction_force(double similarity, pedge e1, pedge e2, double *force){
   /* attrractive force from x2 applied to x1 */
-  real *x1 = e1->x, *x2 = e2->x;
+  double *x1 = e1->x, *x2 = e2->x;
   int dim = e1->dim;
   int np = e1->npoints;
   int i, j;
-  real dist, s, ss;
-  real edge_length = e1->edge_length;
+  double dist, s, ss;
+  double edge_length = e1->edge_length;
 
 
   assert(e1->npoints == e2->npoints);
@@ -519,22 +519,22 @@ static void  edge_attraction_force(real similarity, pedge e1, pedge e2, real *fo
 
 }
 
-static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int maxit, real step0, real K, int open_gl){
+static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int maxit, double step0, double K, int open_gl){
   int i, j, ne = A->n, k;
   int *ia = A->ia, *ja = A->ja, iter = 0;
-  real *a = (real*) A->a;
+  double *a = (double*) A->a;
   pedge e1, e2;
-  real *force_t, *force_a;
+  double *force_t, *force_a;
   int np = edges[0]->npoints, dim = edges[0]->dim;
-  real *x;
-  real step = step0;
-  real fnorm_a, fnorm_t, edge_length, start;
+  double *x;
+  double step = step0;
+  double fnorm_a, fnorm_t, edge_length, start;
   
   if (Verbose > 1)
-    fprintf(stderr, "total interaction pairs = %d out of %d, avg neighbors per edge = %f\n",A->nz, A->m*A->m, A->nz/(real) A->m);
+    fprintf(stderr, "total interaction pairs = %d out of %d, avg neighbors per edge = %f\n",A->nz, A->m*A->m, A->nz/(double) A->m);
 
-  force_t = MALLOC(sizeof(real)*dim*np);
-  force_a = MALLOC(sizeof(real)*dim*np);
+  force_t = MALLOC(sizeof(double)*dim*np);
+  force_a = MALLOC(sizeof(double)*dim*np);
   while (step > 0.001 && iter < maxit){
     start = clock();
     iter++;
@@ -563,7 +563,7 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
     }
     step = step*0.9;
   if (Verbose > 1)
-    fprintf(stderr, "iter ==== %d cpu = %f npoints = %d\n",iter, ((real) (clock() - start))/CLOCKS_PER_SEC, np - 2);
+    fprintf(stderr, "iter ==== %d cpu = %f npoints = %d\n",iter, ((double) (clock() - start))/CLOCKS_PER_SEC, np - 2);
 
 #ifdef OPENGL
     if (open_gl){
@@ -579,13 +579,13 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
   return edges;
 }
 
-static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* edges, real angle_param, real angle){
+static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* edges, double angle_param, double angle){
   int *assignment = NULL, flag, nclusters;
-  real modularity;
+  double modularity;
   int *clusterp, *clusters;
   SparseMatrix D, C;
   point_t meet1, meet2;
-  real ink0, ink1;
+  double ink0, ink1;
   pedge e;
   int i, j, jj;
   int use_value_for_clustering = TRUE;
@@ -643,12 +643,12 @@ static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* ed
   return edges;
 }
 
-static SparseMatrix check_compatibility(SparseMatrix A, int ne, pedge *edges, int compatibility_method, real tol){
+static SparseMatrix check_compatibility(SparseMatrix A, int ne, pedge *edges, int compatibility_method, double tol){
   /* go through the links and make sure edges are compatible */
   SparseMatrix B, C;
   int *ia, *ja, i, j, jj;
-  real start;
-  real dist;
+  double start;
+  double dist;
 
   B = SparseMatrix_new(1, 1, 1, MATRIX_TYPE_REAL, FORMAT_COORD);
   ia = A->ia; ja = A->ja;
@@ -673,12 +673,12 @@ static SparseMatrix check_compatibility(SparseMatrix A, int ne, pedge *edges, in
   SparseMatrix_delete(B);
   B = C;
   if (Verbose > 1)
-    fprintf(stderr, "edge compatibilitu time = %f\n",((real) (clock() - start))/CLOCKS_PER_SEC);
+    fprintf(stderr, "edge compatibilitu time = %f\n",((double) (clock() - start))/CLOCKS_PER_SEC);
   return B;
 }
 
-pedge* edge_bundling(SparseMatrix A0, int dim, real *x, int maxit_outer, real K, int method, int nneighbor, int compatibility_method,
-		     int max_recursion, real angle_param, real angle, int open_gl){
+pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, double K, int method, int nneighbor, int compatibility_method,
+		     int max_recursion, double angle_param, double angle, int open_gl){
   /* bundle edges. 
      A: edge graph
      x: edge i is at {p,q}, 
@@ -697,9 +697,9 @@ pedge* edge_bundling(SparseMatrix A0, int dim, real *x, int maxit_outer, real K,
   pedge *edges;
   SparseMatrix A = A0, B = NULL;
   int i;
-  real tol = 0.001;
+  double tol = 0.001;
   int k;
-  real step0 = 0.1, start = 0.0;
+  double step0 = 0.1, start = 0.0;
   int maxit = 10;
   int flag; 
 
@@ -751,7 +751,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, real *x, int maxit_outer, real K,
     assert(0);
   }
   if (Verbose)
-    fprintf(stderr, "total edge bundling cpu = %f\n",((real) (clock() - start))/CLOCKS_PER_SEC);
+    fprintf(stderr, "total edge bundling cpu = %f\n",((double) (clock() - start))/CLOCKS_PER_SEC);
   if (B != A) SparseMatrix_delete(B);
   if (A != A0) SparseMatrix_delete(A);
 

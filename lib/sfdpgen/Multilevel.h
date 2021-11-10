@@ -22,7 +22,7 @@ struct Multilevel_struct {
 		    but different entry values. For spring-electrical method, D = NULL. */
   SparseMatrix P; 
   SparseMatrix R; 
-  real *node_weights;
+  double *node_weights;
   Multilevel next;
   Multilevel prev;
   int delete_top_level_A;
@@ -39,7 +39,7 @@ enum {COARSEN_MODE_GENTLE, COARSEN_MODE_FORCEFUL};
 
 struct Multilevel_control_struct {
   int minsize;
-  real min_coarsen_factor;
+  double min_coarsen_factor;
   int maxlevel;
   int randomize;
   int coarsen_scheme;
@@ -54,7 +54,7 @@ void Multilevel_control_delete(Multilevel_control ctrl);
 
 void Multilevel_delete(Multilevel grid);
 
-Multilevel Multilevel_new(SparseMatrix A, SparseMatrix D, real *node_weights, Multilevel_control ctrl);
+Multilevel Multilevel_new(SparseMatrix A, SparseMatrix D, double *node_weights, Multilevel_control ctrl);
 
 Multilevel Multilevel_get_coarsest(Multilevel grid);
 
@@ -63,5 +63,5 @@ void print_padding(int n);
 #define Multilevel_is_finest(grid) (!((grid)->prev))
 #define Multilevel_is_coarsest(grid) (!((grid)->next))
 
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD, real *node_wgt, real **cnode_wgt,
+void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD, double *node_wgt, double **cnode_wgt,
 			SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl, int *coarsen_scheme_used);

@@ -33,22 +33,22 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
   grid->next = NULL;
   grid->prev = NULL;
   grid->delete_top_level_A = FALSE;
-  grid->matching = MALLOC(sizeof(real)*(n));
+  grid->matching = MALLOC(sizeof(double)*(n));
   grid->deg = NULL;
   grid->agglomerate_regardless = FALSE;
 
   if (level == 0){
-    real modularity = 0;
+    double modularity = 0;
     int *ia = A->ia, *ja = A->ja, n = A->n;
-    real deg_total = 0;
-    real *deg, *a = (real*) (A->a);
-    real *indeg;
+    double deg_total = 0;
+    double *deg, *a = (double*) (A->a);
+    double *indeg;
 
     grid->deg_total = 0.;
-    grid->deg = MALLOC(sizeof(real)*(n));
+    grid->deg = MALLOC(sizeof(double)*(n));
     deg = grid->deg;
 
-    indeg = MALLOC(sizeof(real)*n);
+    indeg = MALLOC(sizeof(double)*n);
     for (i = 0; i < n; i++){
       deg[i] = 0;
       indeg[i] = 0.;
@@ -94,21 +94,21 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
   int *matching = grid->matching;
   SparseMatrix A = grid->A;
   int n = grid->n, level = grid->level, nc = 0;
-  real modularity = 0;
+  double modularity = 0;
   int *ia = A->ia, *ja = A->ja;
-  real *a;
-  real *deg = grid->deg;
-  real *deg_new;
+  double *a;
+  double *deg = grid->deg;
+  double *deg_new;
   int i, j, jj, jc, jmax;
-  real inv_deg_total = 1./(grid->deg_total);
-  real *deg_inter, gain;
+  double inv_deg_total = 1./(grid->deg_total);
+  double *deg_inter, gain;
   int *mask;
-  real maxgain;
-  real total_gain = 0;
+  double maxgain;
+  double total_gain = 0;
   modularity = grid->modularity;
 
-  deg_new = MALLOC(sizeof(real)*n);
-  deg_inter = MALLOC(sizeof(real)*n);
+  deg_new = MALLOC(sizeof(double)*n);
+  deg_inter = MALLOC(sizeof(double)*n);
   mask = MALLOC(sizeof(int)*n);
   for (i = 0; i < n; i++) mask[i] = -1;
 
@@ -118,7 +118,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
   /* gain in merging node i into cluster j is
      deg(i,j)/deg_total - 2*deg(i)*deg(j)/deg_total^2
   */
-  a = (real*) A->a;
+  a = (double*) A->a;
   for (i = 0; i < n; i++){
     if (matching[i] != UNMATCHED) continue;
     /* accumulate connections between i and clusters */
@@ -208,7 +208,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
   if (nc >= 1 && (total_gain > 0 || nc < n)){
     /* now set up restriction and prolongation operator */
     SparseMatrix P, R, R0, B, cA;
-    real one = 1.;
+    double one = 1.;
     Multilevel_Modularity_Clustering cgrid;
 
     R0 = SparseMatrix_new(nc, n, 1, MATRIX_TYPE_REAL, FORMAT_COORD);
@@ -234,7 +234,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
     grid->R = R;
     level++;
     cgrid = Multilevel_Modularity_Clustering_init(cA, level); 
-    deg_new = REALLOC(deg_new, nc*sizeof(real));
+    deg_new = REALLOC(deg_new, nc*sizeof(double));
     cgrid->deg = deg_new;
     cgrid->modularity = grid->modularity + total_gain;
     cgrid->deg_total = grid->deg_total;
@@ -286,7 +286,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_new(Spa
 
 
 static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_target,
-					      int *nclusters, int **assignment, real *modularity, int *flag){
+					      int *nclusters, int **assignment, double *modularity, int *flag){
   /* find a clustering of vertices by maximize modularity
      A: symmetric square matrix n x n. If real value, value will be used as edges weights, otherwise edge weights are considered as 1.
 
@@ -305,7 +305,7 @@ static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_targe
   Multilevel_Modularity_Clustering grid, cgrid;
   int *matching, i;
   SparseMatrix P;
-  real *u;
+  double *u;
   assert(A->m == A->n);
 
   *modularity = 0.;
@@ -321,13 +321,13 @@ static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_targe
   }
 
   /* project clustering up */
-  u =  MALLOC(sizeof(real)*cgrid->n);
-  for (i = 0; i < cgrid->n; i++) u[i] = (real) (cgrid->matching)[i];
+  u =  MALLOC(sizeof(double)*cgrid->n);
+  for (i = 0; i < cgrid->n; i++) u[i] = (double) (cgrid->matching)[i];
   *nclusters = cgrid->n;
   *modularity = cgrid->modularity;
 
   while (cgrid->prev){
-    real *v = NULL;
+    double *v = NULL;
     P = cgrid->prev->P;
     SparseMatrix_multiply_vector(P, u, &v, FALSE);
     free(u);
@@ -350,7 +350,7 @@ static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_targe
 
 
 void modularity_clustering(SparseMatrix A, int inplace, int ncluster_target, int use_value,
-			   int *nclusters, int **assignment, real *modularity, int *flag){
+			   int *nclusters, int **assignment, double *modularity, int *flag){
   /* find a clustering of vertices by maximize modularity
      A: symmetric square matrix n x n. If real value, value will be used as edges weights, otherwise edge weights are considered as 1.
      inplace: whether A can e modified. If true, A will be modified by removing diagonal.
