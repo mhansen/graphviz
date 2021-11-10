@@ -38,7 +38,7 @@
 #include <getopt.h>
 
 static char *smyrnaDir;		/* path to directory containin smyrna data files */
-char *smyrnaGlade;
+static char *smyrnaGlade;
 
 /* smyrnaPath:
  * Construct pathname for smyrna data file.

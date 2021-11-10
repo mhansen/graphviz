@@ -450,6 +450,5 @@ typedef struct
     extern ViewInfo *view;
     extern GtkMessageDialog *Dlg;
     extern char *smyrnaPath(char *suffix);
-    extern char *smyrnaGlade;
 
     extern void glexpose(void);
