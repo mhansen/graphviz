@@ -22,12 +22,6 @@
 #include <sparse/colorutil.h>
 #include <neatogen/delaunay.h>
 
-#ifdef SINGLE
-#define REAL float
-#else /* not SINGLE */
-#define REAL double
-#endif /* not SINGLE */
-
 #include <edgepaint/lab.h>
 #include <edgepaint/node_distinct_coloring.h>
 
