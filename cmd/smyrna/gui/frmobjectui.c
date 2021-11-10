@@ -58,9 +58,7 @@ static void free_attr(attr_t *at) {
     free(at);
 }
 
-
-attr_t *new_attr(void)
-{
+static attr_t *new_attr(void) {
     attr_t *attr = malloc(sizeof(attr_t));
     attr->defValG = (char *) 0;
     attr->defValN = (char *) 0;
