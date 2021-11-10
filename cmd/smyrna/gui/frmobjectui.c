@@ -167,19 +167,6 @@ attr_list *attr_list_new(Agraph_t * g, int with_widgets)
     return l;
 }
 
-void print_attr_list(attr_list * l)
-{
-    int id;
-    for (id = 0; id < l->attr_count; id++) {
-	printf("%d  %s (%d %d %d) \n", l->attributes[id]->index,
-	       l->attributes[id]->name, l->attributes[id]->objType[0],
-	       l->attributes[id]->objType[1],
-	       l->attributes[id]->objType[2]);
-	printf("defG:%s defN:%s defE:%s\n", l->attributes[id]->defValG,
-	       l->attributes[id]->defValN, l->attributes[id]->defValE);
-    }
-}
-
 static int attr_compare(const void *a, const void *b)
 {
     const attr_t *a1 = *(attr_t *const *) a;
