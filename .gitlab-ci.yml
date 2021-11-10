@@ -68,7 +68,7 @@ portable-source:
         when: on_success
         expire_in: 1 week
         paths:
-            - Packages/*/*/*/*.tar.xz
+            - Packages/*/*/*.tar.xz
             - Packages/*/*/*/*deb
             - Metadata/*/*/configure.log
             - GRAPHVIZ_VERSION
