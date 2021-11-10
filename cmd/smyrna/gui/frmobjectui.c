@@ -514,11 +514,6 @@ _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
     doApply (widget, 0);
 }
 
-_BB void on_attrApplyAllBtn_clicked(GtkWidget * widget, gpointer user_data)
-{
-    doApply (widget, 1);
-}
-
 _BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)
 {
     filter_attributes((char *)
