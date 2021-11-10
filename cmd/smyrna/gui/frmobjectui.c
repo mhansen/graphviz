@@ -444,7 +444,7 @@ static void filter_attributes(char *prefix, topview * t)
 			     tmp);
 }
 
-/*asttribute text changed call back*/
+// attribute text changed call back
 
 _BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data)
 {

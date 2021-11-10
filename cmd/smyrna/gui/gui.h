@@ -31,7 +31,7 @@
 
     void load_attributes(void);	//loads attributes from a text file
 
-//GTK helpre functions
+//GTK helper functions
 //void Color_Widget_bg (int r, int g, int b, GtkWidget *widget);        //change background color 
     void Color_Widget_bg(char *colorstring, GtkWidget * widget);
 /*generic warning pop up*/

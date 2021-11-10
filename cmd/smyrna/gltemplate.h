@@ -11,7 +11,7 @@
 #pragma once
 
 /*
-	this code is used to set up a opngl window and set
+	this code is used to set up a OpenGL window and set
 	some basic features (panning zooming and rotating)
 	Viewport.h provides a higher level control such as drawing primitives
 */
