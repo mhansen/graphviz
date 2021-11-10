@@ -195,8 +195,7 @@ static void attr_list_sort(attr_list * l)
 
 }
 
-void attr_list_add(attr_list * l, attr_t * a)
-{
+static void attr_list_add(attr_list *l, attr_t *a) {
     int id;
     if ((!l) || (!a))
 	return;
