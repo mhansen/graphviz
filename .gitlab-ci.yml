@@ -99,7 +99,6 @@ portable-source:
             - GRAPHVIZ_VERSION
             - Packages/*/*/*/*.zip
             - Packages/*/*/*/*.tar.gz
-            - Metadata/*/*/configure.log
         reports:
             metrics: metrics.txt
     except:
@@ -651,7 +650,6 @@ ubuntu21-04-cmake-ASan-build-for-ctest:
             - build/cmd/dot/dot
             # the packages need to be installed for the post-install tests
             - Packages/*/*/*/*deb
-            - Metadata/*/*/configure.log
         reports:
             metrics: metrics.txt
     tags:
@@ -695,7 +693,6 @@ ubuntu21-10-cmake-ASan-build-for-ctest:
             - build/cmd/dot/dot
             # the packages need to be installed for the post-install tests
             - Packages/*/*/*/*deb
-            - Metadata/*/*/configure.log
         reports:
             metrics: metrics.txt
     tags:
