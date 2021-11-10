@@ -16,5 +16,5 @@
 	GLUtesselator *tobj;
 	GLenum windingRule;
     }tessPoly;
-    extern int drawTessPolygon(sdot_op* p);
+    extern void drawTessPolygon(sdot_op* p);
     extern int testDraw(void);

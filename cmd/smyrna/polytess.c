@@ -91,7 +91,7 @@ static void End_Contour(GLUtesselator *tobj)
     gluTessEndContour(tobj);
 }
 
-int drawTessPolygon(sdot_op* p)
+void drawTessPolygon(sdot_op* p)
 {
     if (!TP.tobj)
     {
@@ -104,5 +104,4 @@ int drawTessPolygon(sdot_op* p)
     Render_Contour2(TP.tobj,p); 
     End_Contour(TP.tobj);
     End_Polygon(TP.tobj);
-    return 1;
 }
