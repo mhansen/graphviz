@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -113,17 +114,17 @@ static int imagetype (usershape_t *us)
     return FT_NULL;
 }
     
-static boolean get_int_lsb_first(FILE *f, size_t sz, unsigned int *val) {
+static bool get_int_lsb_first(FILE *f, size_t sz, unsigned int *val) {
     int ch;
 
     *val = 0;
     for (size_t i = 0; i < sz; i++) {
 	ch = fgetc(f);
 	if (feof(f))
-	    return FALSE;
+	    return false;
 	*val |= (unsigned)ch << 8 * i;
     }
-    return TRUE;
+    return true;
 }
 	
 static boolean get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
