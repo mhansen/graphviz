@@ -81,10 +81,9 @@ static int imagetype (usershape_t *us)
 {
     char header[HDRLEN];
     char line[200];
-    int i;
 
     if (us->f && fread(header, 1, HDRLEN, us->f) == HDRLEN) {
-        for (i = 0; i < sizeof(knowntypes) / sizeof(knowntype_t); i++) {
+        for (size_t i = 0; i < sizeof(knowntypes) / sizeof(knowntype_t); i++) {
 	    if (!memcmp (header, knowntypes[i].template, knowntypes[i].size)) {
 	        us->stringtype = knowntypes[i].stringtype;
 		us->type = knowntypes[i].type;
