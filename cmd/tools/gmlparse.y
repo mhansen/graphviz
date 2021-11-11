@@ -38,7 +38,7 @@ static size_t liststk_sz;
 static size_t liststk_cnt;
 
 static void free_attr (Dt_t*d, gmlattr* p, Dtdisc_t* ds); /* forward decl */
-static char* sortToStr (int sort);    /* forward decl */
+static char *sortToStr(unsigned short sort);
 
 static void
 free_node (Dt_t*d, gmlnode* p, Dtdisc_t* ds)
@@ -234,9 +234,8 @@ mkEdge (void)
     return ep;
 }
 
-static gmlattr*
-mkAttr (char* name, int sort, int kind, char* str, Dt_t* list)
-{
+static gmlattr *mkAttr(char* name, unsigned short sort, int kind, char* str,
+                       Dt_t* list) {
     gmlattr* gp = NEW(gmlattr);
 
     assert (name || sort);
@@ -254,7 +253,7 @@ mkAttr (char* name, int sort, int kind, char* str, Dt_t* list)
 	}
 	gp->u.lp = list;
     }
-/* fprintf (stderr, "[%x] %d %d \"%s\" \"%s\" \n", gp, sort, kind, (name?name:""),  (str?str:"")); */
+/* fprintf (stderr, "[%x] %hu %d \"%s\" \"%s\" \n", gp, sort, kind, (name?name:""),  (str?str:"")); */
     return gp;
 }
 
@@ -819,9 +818,7 @@ gml_to_gv (char* name, FILE* fp, int cnt, int* errors)
     return g;
 }
 
-static char*
-sortToStr (int sort)
-{
+static char *sortToStr(unsigned short sort) {
     char* s;
 
     switch (sort) {
