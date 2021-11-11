@@ -406,6 +406,9 @@ alistitem : NAME INTEGER { $$ = mkAttr ($1, 0, INTEGER, $2, 0); }
 static void
 free_attr (Dt_t*d, gmlattr* p, Dtdisc_t* ds)
 {
+    (void)d;
+    (void)ds;
+
     if (!p) return;
     if ((p->kind == LIST) && p->u.lp)
 	dtclose (p->u.lp);
