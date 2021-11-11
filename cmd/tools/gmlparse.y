@@ -29,8 +29,6 @@
 #define N_NEW(n,t)   calloc((n),sizeof(t))
 #define RALLOC(size,ptr,type) realloc(ptr,(size)*sizeof(type))
 
-typedef unsigned short ushort;
-
 static gmlgraph* G;
 static gmlnode* N;
 static gmledge* E;
