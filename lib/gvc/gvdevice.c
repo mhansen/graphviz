@@ -221,9 +221,9 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	while (z->avail_in) {
 	    z->next_out = df;
 	    z->avail_out = dfallocated;
-	    ret=deflate (z, Z_NO_FLUSH);
-	    if (ret != Z_OK) {
-                (job->common->errorfn) ("deflation problem %d\n", ret);
+	    int r = deflate(z, Z_NO_FLUSH);
+	    if (r != Z_OK) {
+                (job->common->errorfn) ("deflation problem %d\n", r);
 	        exit(1);
 	    }
 
