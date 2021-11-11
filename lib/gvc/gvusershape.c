@@ -284,22 +284,6 @@ static void ico_size (usershape_t *us)
     }
 }
 
-
-// FIXME - how to get the size of a tiff image?
-#if 0
-static void tiff_size (usershape_t *us)
-{
-    unsigned int w, h;
-
-    us->dpi = 0;
-    fseek(us->f, 6, SEEK_SET);
-    if (get_int_msb_first(us->f, 1, &w) && get_int_msb_first(us->f, 1, &h)) {
-        us->w = w;
-        us->h = h;
-    }
-}
-#endif
-
 static void webp_size (usershape_t *us)
 {
     unsigned int w, h;
