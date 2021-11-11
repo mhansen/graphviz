@@ -410,7 +410,7 @@ free_attr (Dt_t*d, gmlattr* p, Dtdisc_t* ds)
     (void)ds;
 
     if (!p) return;
-    if ((p->kind == LIST) && p->u.lp)
+    if (p->kind == LIST && p->u.lp)
 	dtclose (p->u.lp);
     else
 	free (p->u.value);
@@ -591,10 +591,10 @@ addNodeGraphics (Agnode_t* np, Dt_t* alist, agxbuf* xb, agxbuf* unk)
 	else if (ap->sort == OUTLINE) {
 	    agsafeset (np, "pencolor", ap->u.value, "");
 	}
-	else if ((ap->sort == WIDTH) || (ap->sort == OUTLINEWIDTH )) {
+	else if (ap->sort == WIDTH || ap->sort == OUTLINEWIDTH) {
 	    agsafeset (np, "penwidth", ap->u.value, "");
 	}
-	else if ((ap->sort == STYLE) || (ap->sort == OUTLINESTYLE )) {
+	else if (ap->sort == STYLE || ap->sort == OUTLINESTYLE) {
 	    agsafeset (np, "style", ap->u.value, "");
 	}
 	else {
@@ -721,7 +721,7 @@ addAttrs (Agobj_t* obj, Dt_t* alist, agxbuf* xb, agxbuf* unk)
 	    else
 		unknown (obj, ap, xb);
 	}
-	else if ((ap->sort == LABEL) && (AGTYPE(obj) != AGRAPH)) {
+	else if (ap->sort == LABEL && AGTYPE(obj) != AGRAPH) {
 	    agsafeset (obj, "name", ap->u.value, "");
 	}
 	else
