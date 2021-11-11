@@ -127,18 +127,18 @@ static bool get_int_lsb_first(FILE *f, size_t sz, unsigned int *val) {
     return true;
 }
 	
-static boolean get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
+static bool get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
     int ch;
 
     *val = 0;
     for (size_t i = 0; i < sz; i++) {
 	ch = fgetc(f);
 	if (feof(f))
-	    return FALSE;
+	    return false;
         *val <<= 8;
 	*val |= ch;
     }
-    return TRUE;
+    return true;
 }
 
 static unsigned int svg_units_convert(double n, char *u)
