@@ -33,10 +33,10 @@ if [ "${build_system}" = "cmake" ]; then
     cpack
     popd
     if [ "${OSTYPE}" = "linux-gnu" ]; then
+        GV_VERSION=$(python3 gen_version.py)
         if [ "${ID_LIKE:-}" = "debian" ]; then
-            mv build/*.deb ${DIR}/os/
+            mv build/Graphviz-${GV_VERSION}-Linux.deb ${DIR}/graphviz-${GV_VERSION}-cmake.deb
         else
-            GV_VERSION=$(python3 gen_version.py)
             mv build/Graphviz-${GV_VERSION}-Linux.rpm ${DIR}/graphviz-${GV_VERSION}-cmake.rpm
         fi
     elif [[ "${OSTYPE}" =~ "darwin" ]]; then

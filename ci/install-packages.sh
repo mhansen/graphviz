@@ -32,7 +32,7 @@ if [ "${ID}" = "centos" -o "${ID}" = "fedora" ]; then
 fi
 if [ "${build_system}" = "cmake" ]; then
     if [ "${ID_LIKE}" = "debian" ]; then
-        apt install ./${DIR}/os/Graphviz-${GV_VERSION}-Linux.deb
+        apt install ./${DIR}/graphviz-${GV_VERSION}-cmake.deb
     elif [ "${ID}" = "Darwin" ]; then
         unzip ${DIR}/os/Graphviz-${GV_VERSION}-Darwin.zip
         cp -rp Graphviz-${GV_VERSION}-Darwin/* /usr/local

@@ -69,7 +69,7 @@ portable-source:
         expire_in: 1 week
         paths:
             - Packages/*/*/*.tar.xz
-            - Packages/*/*/*/*deb
+            - Packages/*/*/*deb
             - Metadata/*/*/configure.log
             - GRAPHVIZ_VERSION
         reports:
@@ -651,7 +651,7 @@ ubuntu21-04-cmake-ASan-build-for-ctest:
             # the dot program is needed to configure the plugins before running pre-install tests
             - build/cmd/dot/dot
             # the packages need to be installed for the post-install tests
-            - Packages/*/*/*/*deb
+            - Packages/*/*/*deb
         reports:
             metrics: metrics.txt
     tags:
@@ -694,7 +694,7 @@ ubuntu21-10-cmake-ASan-build-for-ctest:
             # the dot program is needed to configure the plugins before running pre-install tests
             - build/cmd/dot/dot
             # the packages need to be installed for the post-install tests
-            - Packages/*/*/*/*deb
+            - Packages/*/*/*deb
         reports:
             metrics: metrics.txt
     tags:
