@@ -464,9 +464,7 @@ unknown (Agobj_t* obj, gmlattr* ap, agxbuf* xb)
     agsafeset (obj, ap->name, str, "");
 }
 
-static void
-addNodeLabelGraphics (Agnode_t* np, Dt_t* alist, agxbuf* xb, agxbuf* unk)
-{
+static void addNodeLabelGraphics(Agnode_t* np, Dt_t* alist, agxbuf* unk) {
     gmlattr* ap;
     int cnt = 0;
 
@@ -717,7 +715,7 @@ addAttrs (Agobj_t* obj, Dt_t* alist, agxbuf* xb, agxbuf* unk)
 	}
 	else if (ap->sort == LABELGRAPHICS) {
 	    if (AGTYPE(obj) == AGNODE)
-		addNodeLabelGraphics ((Agnode_t*)obj, ap->u.lp, xb, unk);
+		addNodeLabelGraphics ((Agnode_t*)obj, ap->u.lp, unk);
 	    else if (AGTYPE(obj) == AGEDGE)
 		addEdgeLabelGraphics ((Agedge_t*)obj, ap->u.lp, xb, unk);
 	    else
