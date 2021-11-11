@@ -729,9 +729,8 @@ addAttrs (Agobj_t* obj, Dt_t* alist, agxbuf* xb, agxbuf* unk)
     }
 }
 
-static Agraph_t*
-mkGraph (gmlgraph* G, Agraph_t* parent, char* name, agxbuf* xb, agxbuf* unk)
-{
+static Agraph_t *mkGraph(gmlgraph *graph, Agraph_t *parent, char *name,
+                         agxbuf *xb, agxbuf *unk) {
     Agraph_t* g;
     Agnode_t* n;
     Agnode_t* h;
@@ -743,7 +742,7 @@ mkGraph (gmlgraph* G, Agraph_t* parent, char* name, agxbuf* xb, agxbuf* unk)
     if (parent) {
 	g = agsubg (parent, NULL, 1);
     }
-    else if (G->directed >= 1)
+    else if (graph->directed >= 1)
 	g = agopen (name, Agdirected, 0);
     else
 	g = agopen (name, Agundirected, 0);
@@ -751,7 +750,7 @@ mkGraph (gmlgraph* G, Agraph_t* parent, char* name, agxbuf* xb, agxbuf* unk)
     if (!parent && L) {
 	addAttrs ((Agobj_t*)g, L, xb, unk);
     } 
-    for (np = dtfirst(G->nodelist); np; np = dtnext (G->nodelist, np)) {
+    for (np = dtfirst(graph->nodelist); np; np = dtnext(graph->nodelist, np)) {
 	if (!np->id) {
 	   fprintf (stderr, "node without an id attribute"); 
 	   exit (1);
@@ -760,7 +759,7 @@ mkGraph (gmlgraph* G, Agraph_t* parent, char* name, agxbuf* xb, agxbuf* unk)
 	addAttrs ((Agobj_t*)n, np->attrlist, xb, unk);
     }
 
-    for (ep = dtfirst(G->edgelist); ep; ep = dtnext (G->edgelist, ep)) {
+    for (ep = dtfirst(graph->edgelist); ep; ep = dtnext(graph->edgelist, ep)) {
 	if (!ep->source) {
 	   fprintf (stderr, "edge without an source attribute"); 
 	   exit (1);
@@ -774,11 +773,11 @@ mkGraph (gmlgraph* G, Agraph_t* parent, char* name, agxbuf* xb, agxbuf* unk)
 	e = agedge (g, n, h, NULL, 1);
 	addAttrs ((Agobj_t*)e, ep->attrlist, xb, unk);
     }
-    for (gp = dtfirst(G->graphlist); gp; gp = dtnext (G->graphlist, gp)) {
+    for (gp = dtfirst(graph->graphlist); gp; gp = dtnext(graph->graphlist, gp)) {
 	mkGraph (gp, g, NULL, xb, unk);
     }
 
-    addAttrs ((Agobj_t*)g, G->attrlist, xb, unk);
+    addAttrs ((Agobj_t*)g, graph->attrlist, xb, unk);
 
     return g;
 }
