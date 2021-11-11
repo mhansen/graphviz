@@ -68,13 +68,6 @@ def checksum(path: Path) -> Generator[Path, None, None]:
 
   assert path.exists()
 
-  log.info(f"MD5 summing {path}")
-  check = Path(f"{path}.md5")
-  with open(check, "wt") as f:
-    with open(path, "rb") as data:
-      f.write(f"{hashlib.md5(data.read()).hexdigest()}  {path}\n")
-  yield check
-
   log.info(f"SHA256 summing {path}")
   check = Path(f"{path}.sha256")
   with open(check, "wt") as f:
