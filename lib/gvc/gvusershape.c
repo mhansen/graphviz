@@ -127,12 +127,11 @@ static boolean get_int_lsb_first(FILE *f, size_t sz, unsigned int *val) {
     return TRUE;
 }
 	
-static boolean get_int_msb_first (FILE *f, unsigned int sz, unsigned int *val)
-{
-    int ch, i;
+static boolean get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
+    int ch;
 
     *val = 0;
-    for (i = 0; i < sz; i++) {
+    for (size_t i = 0; i < sz; i++) {
 	ch = fgetc(f);
 	if (feof(f))
 	    return FALSE;
