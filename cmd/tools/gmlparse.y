@@ -56,6 +56,9 @@ free_node (Dt_t*d, gmlnode* p, Dtdisc_t* ds)
 static void
 free_edge (Dt_t*d, gmledge* p, Dtdisc_t* ds)
 {
+    (void)d;
+    (void)ds;
+
     if (!p) return;
     if (p->attrlist) dtclose (p->attrlist);
     free (p);
