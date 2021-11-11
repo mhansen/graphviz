@@ -122,7 +122,7 @@ static boolean get_int_lsb_first(FILE *f, size_t sz, unsigned int *val) {
 	ch = fgetc(f);
 	if (feof(f))
 	    return FALSE;
-	*val |= (ch << 8*i);
+	*val |= (unsigned)ch << 8 * i;
     }
     return TRUE;
 }
