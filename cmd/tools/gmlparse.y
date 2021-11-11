@@ -234,8 +234,8 @@ mkEdge (void)
     return ep;
 }
 
-static gmlattr *mkAttr(char* name, unsigned short sort, int kind, char* str,
-                       Dt_t* list) {
+static gmlattr *mkAttr(char* name, unsigned short sort, unsigned short kind,
+                       char* str,  Dt_t* list) {
     gmlattr* gp = NEW(gmlattr);
 
     assert (name || sort);
@@ -253,7 +253,7 @@ static gmlattr *mkAttr(char* name, unsigned short sort, int kind, char* str,
 	}
 	gp->u.lp = list;
     }
-/* fprintf (stderr, "[%x] %hu %d \"%s\" \"%s\" \n", gp, sort, kind, (name?name:""),  (str?str:"")); */
+/* fprintf (stderr, "[%x] %hu %hu \"%s\" \"%s\" \n", gp, sort, kind, (name?name:""),  (str?str:"")); */
     return gp;
 }
 
