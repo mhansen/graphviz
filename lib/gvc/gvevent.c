@@ -360,15 +360,6 @@ static void gvevent_select_current_obj(GVJ_t * job)
 	    break;
         }
     }
-
-#if 0
-for (i = 0; i < job->selected_obj_type_name.argc; i++)
-    fprintf(stderr,"%s%s", job->selected_obj_type_name.argv[i],
-	(i==(job->selected_obj_type_name.argc - 1))?"\n":" ");
-for (i = 0; i < job->selected_obj_attributes.argc; i++)
-    fprintf(stderr,"%s%s", job->selected_obj_attributes.argv[i], (i%2)?"\n":" = ");
-fprintf(stderr,"\n");
-#endif
 }
 
 static void gvevent_button_press(GVJ_t * job, int button, pointf pointer)
