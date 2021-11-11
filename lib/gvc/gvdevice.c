@@ -57,8 +57,7 @@ static uint64_t crc;
 
 static const int PAGE_ALIGN = 4095;		/* align to a 4K boundary (less one), typical for Linux, Mac OS X and Windows memory allocation */
 
-static size_t gvwrite_no_z (GVJ_t * job, const char *s, size_t len)
-{
+static size_t gvwrite_no_z(GVJ_t * job, const void *s, size_t len) {
     if (job->gvc->write_fn)   /* externally provided write discipline */
 	return (job->gvc->write_fn)(job, s, len);
     if (job->output_data) {
@@ -229,7 +228,7 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	    }
 
 	    if ((olen = z->next_out - df)) {
-		ret = gvwrite_no_z (job, (char*)df, olen);
+		ret = gvwrite_no_z(job, df, olen);
 	        if (ret != olen) {
                     (job->common->errorfn) ("gvwrite_no_z problem %d\n", ret);
 	            exit(1);
@@ -338,7 +337,7 @@ void gvdevice_finalize(GVJ_t * job)
 	z->next_out = df;
 	z->avail_out = dfallocated;
 	while ((ret = deflate (z, Z_FINISH)) == Z_OK && (cnt++ <= 100)) {
-	    gvwrite_no_z(job, (char*)df, z->next_out - df);
+	    gvwrite_no_z(job, df, z->next_out - df);
 	    z->next_out = df;
 	    z->avail_out = dfallocated;
 	}
@@ -346,7 +345,7 @@ void gvdevice_finalize(GVJ_t * job)
             (job->common->errorfn) ("deflation finish problem %d cnt=%d\n", ret, cnt);
 	    exit(1);
 	}
-	gvwrite_no_z(job, (char*)df, z->next_out - df);
+	gvwrite_no_z(job, df, z->next_out - df);
 
 	ret = deflateEnd(z);
 	if (ret != Z_OK) {
@@ -361,7 +360,7 @@ void gvdevice_finalize(GVJ_t * job)
 	out[5] = (unsigned char)(z->total_in >> 8);
 	out[6] = (unsigned char)(z->total_in >> 16);
 	out[7] = (unsigned char)(z->total_in >> 24);
-	gvwrite_no_z(job, (char*)out, sizeof(out));
+	gvwrite_no_z(job, out, sizeof(out));
 #else
 	(job->common->errorfn) ("No libz support\n");
 	exit(1);
