@@ -327,15 +327,15 @@ static void gvevent_select_current_obj(GVJ_t * job)
         switch (agobjkind(obj)) {
         case AGRAPH:
 	    GD_gui_state(obj) |= GUI_STATE_VISITED;
-	    GD_gui_state(obj) &= ~GUI_STATE_SELECTED;
+	    GD_gui_state(obj) &= (unsigned char)~GUI_STATE_SELECTED;
 	    break;
         case AGNODE:
 	    ND_gui_state(obj) |= GUI_STATE_VISITED;
-	    ND_gui_state(obj) &= ~GUI_STATE_SELECTED;
+	    ND_gui_state(obj) &= (unsigned char)~GUI_STATE_SELECTED;
 	    break;
         case AGEDGE:
 	    ED_gui_state(obj) |= GUI_STATE_VISITED;
-	    ED_gui_state(obj) &= ~GUI_STATE_SELECTED;
+	    ED_gui_state(obj) &= (unsigned char)~GUI_STATE_SELECTED;
 	    break;
         }
     }
