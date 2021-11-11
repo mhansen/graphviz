@@ -404,12 +404,12 @@ void gvprintf(GVJ_t * job, const char *format, ...)
     /* C99 vsnprintf returns the length that would be required
      * to write the string without truncation. 
      */
-	bp = gmalloc(len + 1);
+	bp = gmalloc((size_t)len + 1);
 	len = vsprintf(bp, format, argp);
     }
     va_end(argp);
 
-    gvwrite(job, bp, len);
+    gvwrite(job, bp, (size_t)len);
     if (bp != buf)
 	free (bp);
 }
