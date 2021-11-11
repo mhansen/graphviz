@@ -35,7 +35,7 @@
 #ifndef OS_CODE
 #  define OS_CODE  0x03  /* assume Unix */
 #endif
-static char z_file_header[] =
+static const unsigned char z_file_header[] =
    {0x1f, 0x8b, /*magic*/ Z_DEFLATED, 0 /*flags*/, 0,0,0,0 /*time*/, 0 /*xflags*/, OS_CODE};
 
 static z_stream z_strm;
