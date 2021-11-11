@@ -899,18 +899,3 @@ static char *sortToStr(unsigned short sort) {
 
     return s;
 }
-
-#if 0
-int gmllex ()
-{
-    int tok = _gmllex();
-    char* s = sortToStr (tok);
-
-    if (s)
-        fprintf (stderr, "token = %s\n", s);
-    else
-        fprintf (stderr, "token = <%d>\n", tok);
-    return tok;
-}
-#endif
-
