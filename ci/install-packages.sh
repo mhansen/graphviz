@@ -34,7 +34,7 @@ if [ "${build_system}" = "cmake" ]; then
     if [ "${ID_LIKE}" = "debian" ]; then
         apt install ./${DIR}/graphviz-${GV_VERSION}-cmake.deb
     elif [ "${ID}" = "Darwin" ]; then
-        unzip ${DIR}/os/Graphviz-${GV_VERSION}-Darwin.zip
+        unzip ${DIR}/Graphviz-${GV_VERSION}-Darwin.zip
         cp -rp Graphviz-${GV_VERSION}-Darwin/* /usr/local
     else
         rpm --install --force ${DIR}/graphviz-${GV_VERSION}-cmake.rpm
@@ -46,7 +46,7 @@ else
         apt install ./libgraphviz-dev_${GV_VERSION}-1_amd64.deb
         apt install ./graphviz_${GV_VERSION}-1_amd64.deb
     elif [ "${ID}" = "Darwin" ]; then
-        tar xf ${DIR}/os/graphviz-${GV_VERSION}-${ARCH}.tar.gz
+        tar xf ${DIR}/graphviz-${GV_VERSION}-${ARCH}.tar.gz
         cp -rp build/* /usr/local
     else
         tar xvf ${DIR}/graphviz-${GV_VERSION}-rpms.tar.xz

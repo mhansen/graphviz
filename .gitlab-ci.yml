@@ -99,8 +99,8 @@ portable-source:
         expire_in: 1 week
         paths:
             - GRAPHVIZ_VERSION
-            - Packages/*/*/*/*.zip
-            - Packages/*/*/*/*.tar.gz
+            - Packages/*/*/*.zip
+            - Packages/*/*/*.tar.gz
         reports:
             metrics: metrics.txt
     except:
@@ -477,7 +477,7 @@ windows-cygwin-build:
         expire_in: 1 week
         paths:
             - GRAPHVIZ_VERSION
-            - Packages/*/*/*/*.xz
+            - Packages/*/*/*.xz
     cache:
         key: windows-cygwin-build
         paths:
@@ -507,7 +507,7 @@ windows-cygwin-build-using-autogen:
         when: always
         expire_in: 1 week
         paths:
-            - Packages/*/*/*/*.xz
+            - Packages/*/*/*.xz
     cache:
         key: windows-cygwin-build-using-autogen
         paths:
@@ -806,8 +806,8 @@ windows-mingw32-cmake-build:
         when: always
         expire_in: 1 week
         paths:
-            - Packages/*/*/*/*.exe
-            - Packages/*/*/*/*.zip
+            - Packages/*/*/*.exe
+            - Packages/*/*/*.zip
     cache:
         key: windows-mingw32-cmake-build
         paths:
@@ -829,8 +829,8 @@ windows-mingw64-cmake-build:
         when: always
         expire_in: 1 week
         paths:
-            - Packages/*/*/*/*.exe
-            - Packages/*/*/*/*.zip
+            - Packages/*/*/*.exe
+            - Packages/*/*/*.zip
     cache:
         key: windows-mingw64-cmake-build
         paths:
@@ -856,8 +856,8 @@ windows-mingw64-cmake-build:
 #         when: always
 #         expire_in: 1 week
 #         paths:
-#             - Packages/*/*/*/*.zip
-#             - Packages/*/*/*/*.bz2
+#             - Packages/*/*/*.zip
+#             - Packages/*/*/*.bz2
 #     cache:
 #         key: windows-cygwin-cmake-build
 #         paths:
