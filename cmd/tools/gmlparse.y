@@ -45,6 +45,9 @@ static char* sortToStr (int sort);    /* forward decl */
 static void
 free_node (Dt_t*d, gmlnode* p, Dtdisc_t* ds)
 {
+    (void)d;
+    (void)ds;
+
     if (!p) return;
     if (p->attrlist) dtclose (p->attrlist);
     free (p);
