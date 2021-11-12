@@ -112,6 +112,8 @@ else()
   )
 endif()
 
-install(
+if(NOT CMAKE_CROSSCOMPILING)
+  install(
       SCRIPT ${TOP_SOURCE_DIR}/cmake/configure_plugins.cmake
-)
+  )
+endif()
