@@ -219,6 +219,8 @@ static void mp_end_graph(GVJ_t * job)
 
 static void mp_begin_page(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 2;
 }
 
