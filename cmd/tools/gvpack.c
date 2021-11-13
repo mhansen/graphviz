@@ -172,7 +172,7 @@ static Agsym_t *agedgeattr(Agraph_t *g, char *name, char *value)
  */
 static void init(int argc, char *argv[], pack_info* pinfo)
 {
-    int c, len;
+    int c;
     char buf[BUFSIZ];
     char* bp;
 
@@ -186,8 +186,8 @@ static void init(int argc, char *argv[], pack_info* pinfo)
     opterr = 0;
     while ((c = getopt(argc, argv, ":na:gvum:s:o:G:?")) != -1) {
 	switch (c) {
-	case 'a':
-	    len = strlen(optarg) + 2;
+	case 'a': {
+	    size_t len = strlen(optarg) + 2;
 	    if (len > BUFSIZ)
 		bp = N_GNEW(len, char);
 	    else
@@ -197,6 +197,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
 	    if (bp != buf)
 		free (bp);
 	    break;
+	}
 	case 'n':
 	    parsePackModeInfo ("node", pinfo->mode, pinfo);
 	    break;
