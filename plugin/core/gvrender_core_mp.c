@@ -240,6 +240,8 @@ static void mp_end_node(GVJ_t * job)
 
 static void mp_begin_edge(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 0;
 }
 
