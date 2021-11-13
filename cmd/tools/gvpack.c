@@ -547,10 +547,10 @@ static void redoBB(Agraph_t * g, char *s, Agsym_t * G_bb, point delta)
 static char *xName(Dt_t * names, char *oldname)
 {
     static char* name = NULL;
-    static int namelen = 0;
+    static size_t namelen = 0;
     char *namep;
     pair_t *p;
-    int len;
+    size_t len;
 
     p = dtmatch(names, oldname);
     if (p) {
