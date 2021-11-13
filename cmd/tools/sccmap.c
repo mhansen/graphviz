@@ -44,14 +44,6 @@ typedef struct Agnodeinfo_t {
     Agraph_t *scc;
 } Agnodeinfo_t;
 
-#ifdef INLINE
-#define getrep(g)  (((Agraphinfo_t*)(g->base.data))->rep)
-#define setrep(g,rep)  (getrep(g) = rep)
-#define getscc(n)    (((Agnodeinfo_t*)((n)->base.data))->scc)
-#define setscc(n,sub)    (getscc(n) = sub)
-#define getval(n)    (((Agnodeinfo_t*)((n)->base.data))->val)
-#define setval(n,newval)    (getval(n) = newval)
-#else
 static Agnode_t *getrep(Agraph_t * g)
 {
     return (((Agraphinfo_t *) (g->base.data))->rep);
@@ -74,7 +66,6 @@ static unsigned getval(Agnode_t *n) {
 static void setval(Agnode_t *n, unsigned v) {
     ((Agnodeinfo_t *) (n->base.data))->val = v;
 }
-#endif
 
 /********* stack ***********/
 typedef struct {
@@ -93,11 +84,6 @@ static void freeStack(Stack * sp)
     free(sp->data);
 }
 
-#ifdef INLINE
-#define push(sp,n) (*((sp)->ptr++) = n)
-#define top(sp) (*((sp)->ptr - 1))
-#define pop(sp) (*(--((sp)->ptr)))
-#else
 static void push(Stack * sp, Agnode_t * n)
 {
     *(sp->ptr++) = n;
@@ -113,7 +99,6 @@ static Agnode_t *pop(Stack * sp)
     sp->ptr--;
     return *(sp->ptr);
 }
-#endif
 
 
 /********* end stack ***********/
