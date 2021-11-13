@@ -47,25 +47,25 @@ typedef struct Agnodeinfo_t {
 
 static Agnode_t *getrep(Agraph_t * g)
 {
-    return (((Agraphinfo_t *) (g->base.data))->rep);
+    return ((Agraphinfo_t *)g->base.data)->rep;
 }
 static void setrep(Agraph_t * g, Agnode_t * rep)
 {
-    ((Agraphinfo_t *) (g->base.data))->rep = rep;
+    ((Agraphinfo_t *)g->base.data)->rep = rep;
 }
 static Agraph_t *getscc(Agnode_t * n)
 {
-    return (((Agnodeinfo_t *) (n->base.data))->scc);
+    return ((Agnodeinfo_t *)n->base.data)->scc;
 }
 static void setscc(Agnode_t * n, Agraph_t * scc)
 {
-    ((Agnodeinfo_t *) (n->base.data))->scc = scc;
+    ((Agnodeinfo_t *)n->base.data)->scc = scc;
 }
 static unsigned getval(Agnode_t *n) {
-    return (((Agnodeinfo_t *) (n->base.data))->val);
+    return ((Agnodeinfo_t *)n->base.data)->val;
 }
 static void setval(Agnode_t *n, unsigned v) {
-    ((Agnodeinfo_t *) (n->base.data))->val = v;
+    ((Agnodeinfo_t *)n->base.data)->val = v;
 }
 
 /********* stack ***********/
@@ -98,7 +98,7 @@ static Agnode_t *top(Stack * sp)
 static Agnode_t *pop(Stack * sp)
 {
     sp->ptr--;
-    return *(sp->ptr);
+    return *sp->ptr;
 }
 
 
@@ -147,7 +147,7 @@ static unsigned visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
     Agraph_t *subg;
     Agedge_t *e;
 
-    min = ++(st->ID);
+    min = ++st->ID;
     setval(n, min);
     push(sp, n);
 
@@ -162,7 +162,7 @@ static unsigned visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
     }
 
     if (getval(n) == min) {
-	if (!wantDegenerateComp && (top(sp) == n)) {
+	if (!wantDegenerateComp && top(sp) == n) {
 	    setval(n, INF);
 	    pop(sp);
 	} else {
@@ -194,7 +194,7 @@ static int label(Agnode_t * n, int nodecnt, int *edgecnt)
     setval(n, 1);
     nodecnt++;
     for (e = agfstedge(n->root, n); e; e = agnxtedge(n->root, e, n)) {
-	(*edgecnt) += 1;
+	*edgecnt += 1;
 	if (e->node == n)
 	    e = agopp(e);
 	if (!getval(e->node))
@@ -220,7 +220,7 @@ countComponents(Agraph_t * g, int *max_degree, float *nontree_frac)
 	    n_edges = 0;
 	    n_nodes = label(n, 0, &n_edges);
 	    sum_edges += n_edges;
-	    sum_nontree += (n_edges - n_nodes + 1);
+	    sum_nontree += n_edges - n_nodes + 1;
 	}
     }
     if (max_degree) {
