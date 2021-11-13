@@ -27,6 +27,7 @@
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
@@ -482,6 +483,8 @@ static void dot_begin_graph(GVJ_t *job)
 	    attach_attrs_and_arrows(g, &s_arrows, &e_arrows);
 	    xdot_begin_graph(g, s_arrows, e_arrows, job->render.id);
 	    break;
+	default:
+	    UNREACHABLE();
     }
 }
 
