@@ -235,6 +235,8 @@ static void fig_end_node(GVJ_t * job)
 
 static void fig_begin_edge(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 0;
 }
 
