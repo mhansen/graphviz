@@ -33,7 +33,6 @@ typedef struct Agnodeinfo_t {
 
 #include <ingraphs/ingraphs.h>
 #include <stdio.h>
-#include <stdlib.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
