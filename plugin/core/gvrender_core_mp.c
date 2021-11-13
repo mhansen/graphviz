@@ -226,6 +226,8 @@ static void mp_begin_page(GVJ_t * job)
 
 static void mp_begin_node(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 1;
 }
 
