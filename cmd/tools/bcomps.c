@@ -113,7 +113,7 @@ static char *getName(int ng, int nb)
     char *name;
     static char *buf;
 
-    if ((ng == 0) && (nb == 0))
+    if (ng == 0 && nb == 0)
 	name = outfile;
     else {
 	if (!buf) {
