@@ -104,8 +104,8 @@ static Agnode_t *pop(Stack * sp)
 /********* end stack ***********/
 
 typedef struct {
-    int Comp;
-    int ID;
+    unsigned Comp;
+    unsigned ID;
     int N_nodes_in_nontriv_SCC;
 } sccstate;
 
@@ -167,7 +167,7 @@ static int visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
 	} else {
 	    char name[32];
 	    Agraph_t *G = agraphof(n);;
-	    snprintf(name, sizeof(name), "cluster_%d", (st->Comp)++);
+	    snprintf(name, sizeof(name), "cluster_%u", st->Comp++);
 	    subg = agsubg(G, name, TRUE);
 	    agbindrec(subg, "scc_graph", sizeof(Agraphinfo_t), TRUE);
 	    setrep(subg, agnode(map, name, TRUE));
@@ -270,12 +270,12 @@ static void process(Agraph_t * G)
     agclose(map);
 
     if (Verbose)
-	fprintf(stderr, "%d %d %d %d %.4f %d %.4f\n",
+	fprintf(stderr, "%d %d %d %u %.4f %d %.4f\n",
 		agnnodes(G), agnedges(G), nc, state.Comp,
 		state.N_nodes_in_nontriv_SCC / (double) agnnodes(G),
 		Maxdegree, nontree_frac);
     else if (!Silent)
-	fprintf(stderr, "%d nodes, %d edges, %d strong components\n",
+	fprintf(stderr, "%d nodes, %d edges, %u strong components\n",
 		agnnodes(G), agnedges(G), state.Comp);
 
 }
