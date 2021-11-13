@@ -738,6 +738,8 @@ static void xdot_polyline(GVJ_t * job, pointf * A, int n)
 
 void core_loadimage_xdot(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
 {
+    (void)filled;
+
     emit_state_t emit_state = job->obj->emit_state;
     char buf[BUFSIZ];
     
