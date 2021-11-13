@@ -1743,8 +1743,7 @@ void setEdgeType (graph_t* g, int dflt)
  * By default, this assumes a left-hand coordinate system (for svg); if RHS = 2 flag
  * is set, use standard coordinate system.
  */
-void get_gradient_points(pointf * A, pointf * G, int n, float angle, int flags)
-{
+void get_gradient_points(pointf *A, pointf *G, int n, double angle, int flags) {
     int i;
     double rx, ry;
     pointf min,max,center;

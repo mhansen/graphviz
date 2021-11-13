@@ -614,7 +614,7 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
     unsigned char buf0[BUFSIZ];
     agxbuf xb;
     obj_state_t* obj = job->obj;
-    float angle = obj->gradient_angle * M_PI / 180;
+    double angle = obj->gradient_angle * M_PI / 180;
     float r1,r2;
     pointf G[2],c1,c2;
 
