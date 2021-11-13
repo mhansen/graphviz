@@ -409,6 +409,9 @@ static void cloneCluster(Agraph_t * old, Agraph_t * new)
  */
 static void freef(Dt_t * dt, void * obj, Dtdisc_t * disc)
 {
+    (void)dt;
+    (void)disc;
+
     free(obj);
 }
 
