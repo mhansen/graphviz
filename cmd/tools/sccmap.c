@@ -21,6 +21,7 @@
  */
 #include "config.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
@@ -31,7 +32,7 @@
 
 #include <getopt.h>
 
-#define INF ((unsigned int)(-1))
+#define INF UINT_MAX
 
 typedef struct Agraphinfo_t {
     Agrec_t h;
