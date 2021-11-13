@@ -112,13 +112,12 @@ static char *getName(int ng, int nb)
 {
     char *name;
     static char *buf;
-    int sz;
 
     if ((ng == 0) && (nb == 0))
 	name = outfile;
     else {
 	if (!buf) {
-	    sz = strlen(outfile) + 100;	/* enough to handle '_<g>_<b>' */
+	    size_t sz = strlen(outfile) + 100; // enough to handle '_<g>_<b>'
 	    buf = malloc(sz);
 	}
 	if (suffix) {
