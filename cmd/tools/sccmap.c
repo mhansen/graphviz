@@ -71,8 +71,7 @@ static void setscc(Agnode_t * n, Agraph_t * scc)
 static unsigned getval(Agnode_t *n) {
     return (((Agnodeinfo_t *) (n->base.data))->val);
 }
-static void setval(Agnode_t * n, int v)
-{
+static void setval(Agnode_t *n, unsigned v) {
     ((Agnodeinfo_t *) (n->base.data))->val = v;
 }
 #endif
