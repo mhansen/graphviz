@@ -19,6 +19,7 @@
 /* if NC changes, a bunch of scanf calls below are in trouble */
 #define	NC	3		/* size of HSB color vector */
 
+#include <assert.h>
 #include <cgraph/cgraph.h>
 #include <stdlib.h>
 typedef struct Agnodeinfo_t {
@@ -111,7 +112,7 @@ static void init(int argc, char *argv[])
 
 static void color(Agraph_t * g)
 {
-    int nn, i, j, cnt;
+    int nn, j, cnt;
     Agnode_t *n, *v, **nlist;
     Agedge_t *e;
     char *p;
@@ -143,8 +144,10 @@ static void color(Agraph_t * g)
 
     /* assemble the sorted list of nodes and store the initial colors */
     nn = agnnodes(g);
-    nlist = malloc(nn * sizeof(Agnode_t *));
-    i = 0;
+    assert(nn >= 0);
+    size_t nnodes = (size_t)nn;
+    nlist = malloc(nnodes * sizeof(Agnode_t *));
+    size_t i = 0;
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	nlist[i++] = n;
 	if ((p = agget(n, "color")))
@@ -156,15 +159,15 @@ static void color(Agraph_t * g)
 	    maxrank = ND_relrank(n);
     }
     if (LR != Forward)
-	for (i = 0; i < nn; i++) {
+	for (i = 0; i < nnodes; i++) {
 	    n = nlist[i];
 	    ND_relrank(n) = maxrank - ND_relrank(n);
 	}
-    qsort((void *) nlist, (size_t) nn, sizeof(Agnode_t *),
+    qsort((void *) nlist, nnodes, sizeof(Agnode_t *),
 	  (int (*)(const void *, const void *)) cmpf);
 
     /* this is the pass that pushes the colors through the edges */
-    for (i = 0; i < nn; i++) {
+    for (i = 0; i < nnodes; i++) {
 	n = nlist[i];
 
 	/* skip nodes that were manually colored */
@@ -199,7 +202,7 @@ static void color(Agraph_t * g)
     }
 
     /* apply saturation adjustment and convert color to string */
-    for (i = 0; i < nn; i++) {
+    for (i = 0; i < nnodes; i++) {
 	double h, s, b, t;
 	char buf[64];
 
