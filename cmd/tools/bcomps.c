@@ -87,10 +87,9 @@ typedef struct {
 static char *blockName(char *gname, int d)
 {
     static char *buf;
-    static int bufsz;
-    int sz;
+    static size_t bufsz;
 
-    sz = strlen(gname) + 128;
+    size_t sz = strlen(gname) + 128;
     if (sz > bufsz) {
 	free(buf);
 	buf = malloc(sz);
