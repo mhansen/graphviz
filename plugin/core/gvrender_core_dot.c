@@ -16,6 +16,7 @@
 
 #include <limits.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -524,10 +525,10 @@ static void dot_end_graph(GVJ_t *job)
     g->clos->disc.io = &io;
     switch (job->render.id) {
 	case FORMAT_PLAIN:
-	    write_plain(job, g, (FILE*)job, FALSE);
+	    write_plain(job, g, (FILE*)job, false);
 	    break;
 	case FORMAT_PLAIN_EXT:
-	    write_plain(job, g, (FILE*)job, TRUE);
+	    write_plain(job, g, (FILE*)job, true);
 	    break;
 	case FORMAT_DOT:
 	case FORMAT_CANON:
