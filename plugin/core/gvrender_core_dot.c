@@ -545,6 +545,8 @@ static void dot_end_graph(GVJ_t *job)
 	    if (!(job->flags & OUTPUT_NOT_REQUIRED))
 		agwrite(g, job);
 	    break;
+	default:
+	    UNREACHABLE();
     }
     g->clos->disc.io = io_save;
 }
