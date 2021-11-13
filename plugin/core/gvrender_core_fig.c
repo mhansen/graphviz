@@ -221,6 +221,8 @@ static void fig_begin_page(GVJ_t * job)
 
 static void fig_begin_node(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 1;
 }
 
