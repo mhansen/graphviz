@@ -162,7 +162,7 @@ static void color(Agraph_t * g)
 	    n = nlist[i];
 	    ND_relrank(n) = maxrank - ND_relrank(n);
 	}
-    qsort((void *) nlist, nnodes, sizeof(Agnode_t *),
+    qsort(nlist, nnodes, sizeof(Agnode_t *),
 	  (int (*)(const void *, const void *)) cmpf);
 
     /* this is the pass that pushes the colors through the edges */
