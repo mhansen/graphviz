@@ -63,7 +63,7 @@ static int cmpf(Agnode_t ** n0, Agnode_t ** n1)
 static void setcolor(char *p, double *v)
 {
     char buf[64];
-    if ((sscanf(p, "%lf %lf %lf", v, v + 1, v + 2) != 3) && p[0]) {
+    if (sscanf(p, "%lf %lf %lf", v, v + 1, v + 2) != 3 && p[0]) {
 	colorxlate(p, buf);
 	sscanf(buf, "%lf %lf %lf", v, v + 1, v + 2);
     }
@@ -129,9 +129,9 @@ static void color(Agraph_t * g)
     if ((p = agget(g, "Defcolor")))
 	setcolor(p, Defcolor);
 
-    if ((p = agget(g, "rankdir")) && (p[0] == 'L'))
+    if ((p = agget(g, "rankdir")) && p[0] == 'L')
 	LR = 1;
-    if ((p = agget(g, "flow")) && (p[0] == 'b'))
+    if ((p = agget(g, "flow")) && p[0] == 'b')
 	Forward = 0;
     if ((p = agget(g, "saturation"))) {
 	if (sscanf(p, "%lf,%lf", &lowsat, &highsat) == 2) {
