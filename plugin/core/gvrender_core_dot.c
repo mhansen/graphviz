@@ -615,7 +615,6 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
     agxbuf xb;
     obj_state_t* obj = job->obj;
     double angle = obj->gradient_angle * M_PI / 180;
-    float r1,r2;
     pointf G[2],c1,c2;
 
     if (xd->version < 14) {
@@ -633,7 +632,7 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
     else {
 	get_gradient_points(A, G, n, 0, 3);
 	  // r2 is outer radius
-	r2 = G[1].y;
+	double r2 = G[1].y;
 	if (angle == 0) {
 	    c1.x = G[0].x;
 	    c1.y = G[0].y;
@@ -644,7 +643,7 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
 	}
 	c2.x = G[0].x;
 	c2.y = G[0].y;
-	r1 = r2/4;
+	double r1 = r2 / 4;
 	agxbputc(&xb, '(');
 	xdot_point (&xb, c1);
 	xdot_num (&xb, r1);
