@@ -632,8 +632,7 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
     }
     else {
 	get_gradient_points(A, G, n, 0, 3);
-	  //r1 is inner radius, r2 is outer radius
-	r1 = G[1].x;
+	  // r2 is outer radius
 	r2 = G[1].y;
 	if (angle == 0) {
 	    c1.x = G[0].x;
