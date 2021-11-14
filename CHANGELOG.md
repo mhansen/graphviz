@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lefty artifacts are no longer installed when Lefty is disabled #2153
 - Smyrna artifacts are no longer installed when Smyrna is disabled
 - calling convention mismatches in delaunay.c’s GTS code
+- impure assertion in `jacobi`
 
 ## [2.49.3] – 2021-10-22
 
