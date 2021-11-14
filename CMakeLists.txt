@@ -56,7 +56,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(AWK REQUIRED)
 find_package(BISON 3.0 REQUIRED)
 find_package(FLEX REQUIRED)
-find_package(Git REQUIRED)
+find_program(GIT git)
+if(NOT GIT)
+  message(FATAL_ERROR "git not found")
+endif(NOT GIT)
 find_program(GZIP gzip)
 
 # ================== Convenient values for CMake configuration =================
