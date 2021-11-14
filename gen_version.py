@@ -157,7 +157,7 @@ if not patch_version.isnumeric() or args.date_format:
 
 if not patch_version.isnumeric():
   # Non-numerical patch version; add committer date
-  patch_version += "." + committer_date
+  patch_version += f".{committer_date}"
 
 if args.date_format:
   if args.definition:
