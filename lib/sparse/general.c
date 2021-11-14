@@ -17,8 +17,8 @@
 double _statistics[10];
 #endif
 
-real drand(){
-  return rand()/(real) RAND_MAX;
+double drand(){
+  return rand()/(double) RAND_MAX;
 }
 
 int irand(int n){
@@ -47,34 +47,34 @@ int *random_permutation(int n){
 }
 
 
-real* vector_subtract_to(int n, real *x, real *y){
+double* vector_subtract_to(int n, double *x, double *y){
   /* y = x-y */
   int i;
   for (i = 0; i < n; i++) y[i] = x[i] - y[i];
   return y;
 }
-real vector_product(int n, real *x, real *y){
-  real res = 0;
+double vector_product(int n, double *x, double *y){
+  double res = 0;
   int i;
   for (i = 0; i < n; i++) res += x[i]*y[i];
   return res;
 }
 
-real* vector_saxpy(int n, real *x, real *y, real beta){
+double* vector_saxpy(int n, double *x, double *y, double beta){
   /* y = x+beta*y */
   int i;
   for (i = 0; i < n; i++) y[i] = x[i] + beta*y[i];
   return y;
 }
 
-real* vector_saxpy2(int n, real *x, real *y, real beta){
+double* vector_saxpy2(int n, double *x, double *y, double beta){
   /* x = x+beta*y */
   int i;
   for (i = 0; i < n; i++) x[i] = x[i] + beta*y[i];
   return x;
 }
 
-void vector_print(char *s, int n, real *x){
+void vector_print(char *s, int n, double *x){
   int i;
     printf("%s{",s); 
     for (i = 0; i < n; i++) {
@@ -98,8 +98,8 @@ void vector_float_take(int n, float *v, int m, int *p, float **u){
 }
 
 static int comp_ascend(const void *s1, const void *s2){
-  const real *ss1 = s1;
-  const real *ss2 = s2;
+  const double *ss1 = s1;
+  const double *ss2 = s2;
 
   if ((ss1)[0] > (ss2)[0]){
     return 1;
@@ -121,23 +121,23 @@ static int comp_ascend_int(const void *s1, const void *s2){
   return 0;
 }
 
-void vector_ordering(int n, real *v, int **p){
+void vector_ordering(int n, double *v, int **p){
   /* give the position of the smallest, second smallest etc in vector v.
      results in p. If *p == NULL, p is assigned.
   */
 
-  real *u;
+  double *u;
   int i;
 
   if (!*p) *p = MALLOC(sizeof(int)*n);
-  u = MALLOC(sizeof(real)*2*n);
+  u = MALLOC(sizeof(double)*2*n);
 
   for (i = 0; i < n; i++) {
     u[2*i+1] = i;
     u[2*i] = v[i];
   }
 
-  qsort(u, n, sizeof(real)*2, comp_ascend);
+  qsort(u, n, sizeof(double)*2, comp_ascend);
 
   for (i = 0; i < n; i++) (*p)[i] = (int) u[2*i+1];
   free(u);
@@ -147,25 +147,25 @@ void vector_sort_int(int n, int *v){
   qsort(v, n, sizeof(int), comp_ascend_int);
 }
 
-real distance_cropped(real *x, int dim, int i, int j){
+double distance_cropped(double *x, int dim, int i, int j){
   int k;
-  real dist = 0.;
+  double dist = 0.;
   for (k = 0; k < dim; k++) dist += (x[i*dim+k] - x[j*dim + k])*(x[i*dim+k] - x[j*dim + k]);
   dist = sqrt(dist);
   return MAX(dist, MINDIST);
 }
 
-real distance(real *x, int dim, int i, int j){
+double distance(double *x, int dim, int i, int j){
   int k;
-  real dist = 0.;
+  double dist = 0.;
   for (k = 0; k < dim; k++) dist += (x[i*dim+k] - x[j*dim + k])*(x[i*dim+k] - x[j*dim + k]);
   dist = sqrt(dist);
   return dist;
 }
 
-real point_distance(real *p1, real *p2, int dim){
+double point_distance(double *p1, double *p2, int dim){
   int i;
-  real dist;
+  double dist;
   dist = 0;
   for (i = 0; i < dim; i++) dist += (p1[i] - p2[i])*(p1[i] - p2[i]);
   return sqrt(dist);
@@ -187,8 +187,8 @@ char *strip_dir(char *s){
   return s;
 }
 
-void scale_to_box(real xmin, real ymin, real xmax, real ymax, int n, int dim, real *x){
-  real min[3], max[3], min0[3], ratio = 1;
+void scale_to_box(double xmin, double ymin, double xmax, double ymax, int n, int dim, double *x){
+  double min[3], max[3], min0[3], ratio = 1;
   int i, k;
 
   for (i = 0; i < dim; i++) {

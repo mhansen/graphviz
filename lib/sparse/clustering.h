@@ -22,9 +22,9 @@ struct Multilevel_Modularity_Clustering_struct {
   Multilevel_Modularity_Clustering prev;
   int delete_top_level_A;
   int *matching; /* dimension n. matching[i] is the clustering assignment of node i */
-  real modularity;
-  real deg_total; /* total edge weights, including self-edges */
-  real *deg;/* dimension n. deg[i] equal to the sum of edge weights connected to vertex i. I.e., sum of  row i */
+  double modularity;
+  double deg_total; /* total edge weights, including self-edges */
+  double *deg;/* dimension n. deg[i] equal to the sum of edge weights connected to vertex i. I.e., sum of  row i */
   int agglomerate_regardless;/* whether to agglomerate nodes even if this causes modularity reduction. This is used if we want to force
 				agglomeration so as to get less clusters
 			      */
@@ -48,4 +48,4 @@ enum {CLUSTERING_MODULARITY = 0, CLUSTERING_MQ};
    modularity: achieve modularity
 */
 void modularity_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
-			   int *nclusters, int **assignment, real *modularity, int *flag);
+			   int *nclusters, int **assignment, double *modularity, int *flag);

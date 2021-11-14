@@ -57,7 +57,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 {
     int ret_code, type;
     MM_typecode matcode;
-    real *val = NULL, *v;
+    double *val = NULL, *v;
     int *vali = NULL, i, m, n, *I = NULL, *J = NULL, nz;
     void *vp = NULL;
     SparseMatrix A = NULL;
@@ -114,7 +114,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	type = mm_get_type(matcode);
 	switch (type) {
 	case MATRIX_TYPE_REAL:
-	    val = malloc(nz * sizeof(real));
+	    val = malloc(nz * sizeof(double));
 	    for (i = 0; i < nz; i++) {
 		fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
 		I[i]--;		/* adjust from 1-based to 0-based */
@@ -123,7 +123,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    if (mm_is_symmetric(matcode)) {
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 2 * sizeof(real) * nz);
+		val = REALLOC(val, 2 * sizeof(double) * nz);
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
@@ -135,7 +135,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    } else if (mm_is_skew(matcode)) {
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 2 * sizeof(real) * nz);
+		val = REALLOC(val, 2 * sizeof(double) * nz);
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -204,7 +204,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    }
 	    break;
 	case MATRIX_TYPE_COMPLEX:
-	    val = malloc(2 * nz * sizeof(real));
+	    val = malloc(2 * nz * sizeof(double));
 	    v = val;
 	    for (i = 0; i < nz; i++) {
 		fscanf(f, "%d %d %lg %lg\n", &I[i], &J[i], &v[0], &v[1]);
@@ -215,7 +215,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    if (mm_is_symmetric(matcode)) {
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 4 * sizeof(real) * nz);
+		val = REALLOC(val, 4 * sizeof(double) * nz);
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
@@ -229,7 +229,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    } else if (mm_is_skew(matcode)) {
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 4 * sizeof(real) * nz);
+		val = REALLOC(val, 4 * sizeof(double) * nz);
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -243,7 +243,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    } else if (mm_is_hermitian(matcode)) {
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 4 * sizeof(real) * nz);
+		val = REALLOC(val, 4 * sizeof(double) * nz);
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
@@ -263,7 +263,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 
 	if (format == FORMAT_CSR) {
 	    A = SparseMatrix_from_coordinate_arrays(nz, m, n, I, J, vp,
-						    type, sizeof(real));
+						    type, sizeof(double));
 	} else {
 	    A = SparseMatrix_new(m, n, 1, type, FORMAT_COORD);
 	    A = SparseMatrix_coordinate_form_add_entries(A, nz, I, J, vp);

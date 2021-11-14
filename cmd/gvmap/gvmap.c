@@ -35,19 +35,19 @@ typedef struct {
     char **infiles; 
     FILE* outfile;
     int dim;
-    real shore_depth_tol;
+    double shore_depth_tol;
     int nrandom; 
     int show_points; 
-    real bbox_margin[2]; 
+    double bbox_margin[2]; 
     int useClusters;
     int clusterMethod;
     bool plotedges;
     int color_scheme;
-    real line_width;
+    double line_width;
     char *color_scheme_str;
     const char *opacity;
     char *plot_label;
-    real *bg_color;
+    double *bg_color;
     int improve_contiguity_n;
     int nart;
     bool color_optimize;
@@ -148,7 +148,7 @@ init(int argc, char **argv, params_t* pm)
 {
   char* cmd = argv[0];
   int c;
-  real s;
+  double s;
   int v, r;
   char stmp[3];  /* two character string plus '\0' */
 
@@ -284,7 +284,7 @@ init(int argc, char **argv, params_t* pm)
     case 'g': {
       gvcolor_t color;
       if (colorxlate(optarg, &color, RGBA_DOUBLE) == COLOR_OK) {
-        if (!pm->bg_color) pm->bg_color = N_NEW(3,real);
+        if (!pm->bg_color) pm->bg_color = N_NEW(3,double);
         pm->bg_color[0] = color.u.RGBA[0];
         pm->bg_color[1] = color.u.RGBA[1];
         pm->bg_color[2] = color.u.RGBA[2];
@@ -340,15 +340,15 @@ validateCluster (int n, int* grouping, int clust_num)
 }
 
 static void 
-makeMap (SparseMatrix graph, int n, real* x, real* width, int* grouping, 
+makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping, 
   char** labels, float* fsz, float* rgb_r, float* rgb_g, float* rgb_b, params_t* pm, Agraph_t* g )
 {
   int dim = pm->dim;
   int i, flag = 0;
   SparseMatrix poly_lines, polys, poly_point_map;
-  real edge_bridge_tol = 0.;
+  double edge_bridge_tol = 0.;
   int npolys, nverts, *polys_groups, exclude_random;
-  real *x_poly, *xcombined;
+  double *x_poly, *xcombined;
   SparseMatrix country_graph;
   int improve_contiguity_n = pm->improve_contiguity_n;
 #ifdef TIME
@@ -382,7 +382,7 @@ makeMap (SparseMatrix graph, int n, real* x, real* width, int* grouping,
   }
 
 #ifdef TIME
-  fprintf(stderr, "map making time = %f\n",((real) (clock() - cpu)) / CLOCKS_PER_SEC);
+  fprintf(stderr, "map making time = %f\n",((double) (clock() - cpu)) / CLOCKS_PER_SEC);
 #endif
 
 
@@ -432,8 +432,8 @@ static void mapFromGraph (Agraph_t* g, params_t* pm)
 {
     SparseMatrix graph;
   int n;
-  real* width = NULL;
-  real* x;
+  double* width = NULL;
+  double* x;
   char** labels = NULL;
   int* grouping;
   float* rgb_r;

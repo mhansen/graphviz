@@ -25,7 +25,6 @@
 
 #define MALLOC malloc
 #define test_flag(a, flag) ((a)&(flag))
-#define real double
 #define BUFS         1024
 
 typedef struct {
@@ -37,7 +36,7 @@ typedef struct {
 
 static char *cmd;
 
-static real Hue2RGB(real v1, real v2, real H)
+static double Hue2RGB(double v1, double v2, double H)
 {
     if (H < 0.0)
 	H += 1.0;
@@ -52,9 +51,9 @@ static real Hue2RGB(real v1, real v2, real H)
     return v1;
 }
 
-static char *hue2rgb(real hue, char *color)
+static char *hue2rgb(double hue, char *color)
 {
-    real v1, v2, lightness = .5, saturation = 1;
+    double v1, v2, lightness = .5, saturation = 1;
     int red, blue, green;
 
     if (lightness < 0.5)
@@ -72,7 +71,7 @@ static char *hue2rgb(real hue, char *color)
 }
 
 static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
-			      real * x, int with_color, int with_label, int with_val)
+			      double * x, int with_color, int with_label, int with_val)
 {
     Agraph_t *g;
     Agnode_t *n;
@@ -85,9 +84,9 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     Agsym_t *sym, *sym2 = NULL, *sym3 = NULL;
     int *ia = A->ia;
     int *ja = A->ja;
-    real *val = (real *) (A->a);
+    double *val = (double *) (A->a);
     Agnode_t **arr = N_NEW(A->m, Agnode_t *);
-    real *color = NULL;
+    double *color = NULL;
     char cstring[8];
 
     name = strip_dir(name);
@@ -127,14 +126,14 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     }
 
     if (with_color) {
-	real maxdist = 0.;
-	real mindist = 0.;
+	double maxdist = 0.;
+	double mindist = 0.;
 	int first = TRUE;
 
 	sym2 = agattr(g, AGEDGE, "color", "");
 	sym3 = agattr(g, AGEDGE, "wt", "");
 	agattr(g, AGRAPH, "bgcolor", "black");
-	color = N_NEW(A->nz, real);
+	color = N_NEW(A->nz, double);
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    i = ND_id(n);
 	    if (A->type != MATRIX_TYPE_REAL) {

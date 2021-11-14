@@ -10,4 +10,4 @@
 
 #pragma once
 
-real intersection_angle(real *p1, real *p2, real *q1, real *q2);
+double intersection_angle(double *p1, double *p2, double *q1, double *q2);

@@ -57,10 +57,10 @@ static void sfdp_init_graph(Agraph_t * g)
 
 /* getPos:
  */
-static real *getPos(Agraph_t * g)
+static double *getPos(Agraph_t * g)
 {
     Agnode_t *n;
-    real *pos = N_NEW(Ndim * agnnodes(g), real);
+    double *pos = N_NEW(Ndim * agnnodes(g), double);
     int ix, i;
 
     if (agfindnodeattr(g, "pos") == NULL)
@@ -81,8 +81,8 @@ static real *getPos(Agraph_t * g)
 static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
 		       int hops, pointf pad)
 {
-    real *sizes;
-    real *pos;
+    double *sizes;
+    double *pos;
     Agnode_t *n;
     int flag, i;
     int n_edge_label_nodes = 0, *edge_label_nodes = NULL;
@@ -114,7 +114,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
 	break;
     case METHOD_STRESS:{
 	int maxit = 200;
-	real tol = 0.001;
+	double tol = 0.001;
 	int weighted = TRUE;
 
 	if (!D){
@@ -141,7 +141,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
     }
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	real *npos = pos + (Ndim * ND_id(n));
+	double *npos = pos + (Ndim * ND_id(n));
 	for (i = 0; i < Ndim; i++) {
 	    ND_pos(n)[i] = npos[i];
 	}

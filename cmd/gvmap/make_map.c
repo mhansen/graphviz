@@ -22,16 +22,10 @@
 #include <sparse/colorutil.h>
 #include <neatogen/delaunay.h>
 
-#ifdef SINGLE
-#define REAL float
-#else /* not SINGLE */
-#define REAL double
-#endif /* not SINGLE */
-
 #include <edgepaint/lab.h>
 #include <edgepaint/node_distinct_coloring.h>
 
-void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMatrix A0, real accuracy, int seed, 
+void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMatrix A0, double accuracy, int seed, 
 				  float **rgb_r, float **rgb_g, float **rgb_b){
   /*
     for a graph A, get a distinctive color of its nodes so that the color distanmce among all nodes are maximized. Here
@@ -50,14 +44,14 @@ void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMat
  
   /*color: On input an array of size n*cdim, if NULL, will be allocated. On exit the final color assignment for node i is [cdim*i,cdim*(i+1)), in RGB (between 0 to 1)
   */
-  real *colors = NULL;
+  double *colors = NULL;
   int n = A0->m, i, cdim;
 
   SparseMatrix A;
   int weightedQ = TRUE;
   int iter_max = 100;
 
-  {real *dist = NULL;
+  {double *dist = NULL;
     A = SparseMatrix_symmetrize(A0, FALSE);
     SparseMatrix_distance_matrix(A, 0, &dist);
     SparseMatrix_delete(A);
@@ -106,25 +100,25 @@ static int get_poly_id(int ip, SparseMatrix point_poly_map){
   return point_poly_map->ja[point_poly_map->ia[ip]];
 }
  
-void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_map, real *x, SparseMatrix graph){
+void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_map, double *x, SparseMatrix graph){
  /* 
      grouping: which group each of the vertex belongs to
      poly_point_map: a matrix of dimension npolys x (n + nrandom), poly_point_map[i,j] != 0 if polygon i contains the point j.
      .  If j < n, it is the original point, otherwise it is artificial point (forming the rectangle around a label) or random points.
   */
   int i, j, *ia, *ja, u, v;
-  real *a;
+  double *a;
   SparseMatrix point_poly_map, D;
-  real dist;
+  double dist;
   int nbad = 0, flag;
   int maxit = 10;
-  real tol = 0.001;
+  double tol = 0.001;
 
   D = SparseMatrix_get_real_adjacency_matrix_symmetrized(graph);
 
   assert(graph->m == n);
   ia = D->ia; ja = D->ja;
-  a = (real*) D->a;
+  a = (double*) D->a;
 
   /* point_poly_map: each row i has only 1 entry at column j, which says that point i is in polygon j */
   point_poly_map = SparseMatrix_transpose(poly_point_map);
@@ -146,7 +140,7 @@ void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_m
     }
   }
 
-  if (Verbose) fprintf(stderr,"ratio (edges among discontiguous regions vs total edges)=%f\n",((real) nbad)/ia[n]);
+  if (Verbose) fprintf(stderr,"ratio (edges among discontiguous regions vs total edges)=%f\n",((double) nbad)/ia[n]);
   stress_model(dim, D, D, &x, FALSE, maxit, tol, &flag);
 
   assert(!flag);
@@ -157,10 +151,10 @@ void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_m
 
 struct Triangle {
   int vertices[3];/* 3 points */
-  real center[2]; /* center of the triangle */
+  double center[2]; /* center of the triangle */
 };
 
-static void normal(real v[], real normal[]){
+static void normal(double v[], double normal[]){
   if (v[0] == 0){
     normal[0] = 1; normal[1] = 0;
   } else {
@@ -169,7 +163,7 @@ static void normal(real v[], real normal[]){
   }
 }
 
-static void triangle_center(real x[], real y[], real z[], real c[]){
+static void triangle_center(double x[], double y[], double z[], double c[]){
   /* find the "center" c, which is the intersection of the 3 vectors that are normal to each
      of the edges respectively, and which passes through the center of the edges respectively
      center[{x_, y_, z_}] := Module[
@@ -184,7 +178,7 @@ static void triangle_center(real x[], real y[], real z[], real c[]){
      
      ]
  */
-  real xy[2], yz[2], nxy[2], nyz[2], ymx[2], ymz[2], beta, bot;
+  double xy[2], yz[2], nxy[2], nyz[2], ymx[2], ymz[2], beta, bot;
   int i;
 
   for (i = 0; i < 2; i++) ymx[i] = y[i] - x[i];
@@ -229,7 +223,7 @@ static void plot_dot_edges(FILE *f, SparseMatrix A){
   }
 }
 
-static void plot_dot_labels(FILE *f, int n, int dim, real *x, char **labels, float *fsz){
+static void plot_dot_labels(FILE *f, int n, int dim, double *x, char **labels, float *fsz){
   int i;
 
   for (i = 0; i < n; i++){
@@ -242,7 +236,7 @@ static void plot_dot_labels(FILE *f, int n, int dim, real *x, char **labels, flo
 
 }
 
-static void dot_polygon(agxbuf *sbuff, int np, float *xp, float *yp, real line_width,  
+static void dot_polygon(agxbuf *sbuff, int np, float *xp, float *yp, double line_width,  
                         int fill, const char *cstring){
 
   if (np > 0){
@@ -263,14 +257,14 @@ static void dot_polygon(agxbuf *sbuff, int np, float *xp, float *yp, real line_w
   }
 }
 
-static void dot_one_poly(agxbuf *sbuff, real line_width, int fill, int np,
+static void dot_one_poly(agxbuf *sbuff, double line_width, int fill, int np,
                          float *xp, float *yp, const char *cstring) {
   dot_polygon(sbuff, np, xp, yp, line_width, fill, cstring);
 }
 
-static void plot_dot_polygons(agxbuf *sbuff, real line_width,
+static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               const char *line_color, SparseMatrix polys,
-                              real *x_poly, int *polys_groups, float *r,
+                              double *x_poly, int *polys_groups, float *r,
                               float *g, float *b, const char *opacity) {
   int i, j, *ia = polys->ia, *ja = polys->ja, *a = (int*) polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
   int np = 0, maxlen = 0;
@@ -311,9 +305,9 @@ static void plot_dot_polygons(agxbuf *sbuff, real line_width,
   free(yp);
 }
 
-void plot_dot_map(Agraph_t* gr, int n, int dim, real *x, SparseMatrix polys,
-                  SparseMatrix poly_lines, real line_width,
-                  const char *line_color, real *x_poly, int *polys_groups,
+void plot_dot_map(Agraph_t* gr, int n, int dim, double *x, SparseMatrix polys,
+                  SparseMatrix poly_lines, double line_width,
+                  const char *line_color, double *x_poly, int *polys_groups,
                   char **labels, float *fsz, float *r, float *g, float *b,
                   const char* opacity, SparseMatrix A, FILE* f) {
   /* if graph object exist, we just modify some attributes, otherwise we dump the whole graph */
@@ -368,7 +362,7 @@ void plot_dot_map(Agraph_t* gr, int n, int dim, real *x, SparseMatrix polys,
   agxbfree(&sbuff);
 }
 
-static void get_tri(int n, int dim, real *x, int *nt, struct Triangle **T, SparseMatrix *E) {
+static void get_tri(int n, int dim, double *x, int *nt, struct Triangle **T, SparseMatrix *E) {
    /* always contains a self edge and is symmetric.
      input:
      n: number of points
@@ -636,9 +630,9 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
   free(elist);
 }
 
-static void plot_cycle(int head, int *cycle, int *edge_table, real *x){
+static void plot_cycle(int head, int *cycle, int *edge_table, double *x){
   int cur, next;
-  real x1, x2, y1, y2;
+  double x1, x2, y1, y2;
 
   printf("Graphics[{");
   cur = head;
@@ -685,7 +679,7 @@ static int same_edge(int ecur, int elast, int *edge_table){
 }
 
 static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_ptr, int *comps,
-			       int *mask, real *x_poly, SparseMatrix *polys){
+			       int *mask, double *x_poly, SparseMatrix *polys){
   /*============================================================
 
     polygon slids that will be colored
@@ -944,7 +938,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 }
 
 static void get_polygons(int exclude_random, int n, int nrandom, int dim, SparseMatrix graph, int *grouping,
-			 int nt, struct Triangle *Tp, SparseMatrix E, int *nverts, real **x_poly, 
+			 int nt, struct Triangle *Tp, SparseMatrix E, int *nverts, double **x_poly, 
 			 int *npolys, SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, SparseMatrix *country_graph){
   int i, j;
   int *mask;
@@ -998,7 +992,7 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
   }
   *npolys = ncomps;
 
-  *x_poly = MALLOC(sizeof(real)*dim*nt);
+  *x_poly = MALLOC(sizeof(double)*dim*nt);
   for (i = 0; i < nt; i++){
     for (j = 0; j < dim; j++){
       (*x_poly)[i*dim+j] = Tp[i].center[j];
@@ -1027,23 +1021,23 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
 }
 
 static int make_map_internal(int exclude_random, int include_OK_points,
-		      int n, int dim, real *x0, int *grouping0, SparseMatrix graph, real bounding_box_margin[], int *nrandom, int nedgep, 
-		      real shore_depth_tol, real **xcombined, int *nverts, real **x_poly, 
+		      int n, int dim, double *x0, int *grouping0, SparseMatrix graph, double bounding_box_margin[], int *nrandom, int nedgep, 
+		      double shore_depth_tol, double **xcombined, int *nverts, double **x_poly, 
 		      int *npolys, SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map,
 		      SparseMatrix *country_graph, int highlight_cluster, int *flag){
 
 
-  real xmax[2], xmin[2], area, *x = x0;
+  double xmax[2], xmin[2], area, *x = x0;
   int i, j;
   QuadTree qt;
   int dim2 = 2, nn = 0;
   int max_qtree_level = 10;
-  real ymin[2], min;
+  double ymin[2], min;
   int imin, nz, nzok = 0, nzok0 = 0, nt;
-  real *xran, point[2];
+  double *xran, point[2];
   struct Triangle *Tp;
   SparseMatrix E;
-  real boxsize[2];
+  double boxsize[2];
   int INCLUDE_OK_POINTS = include_OK_points;/* OK points are random points inserted and found to be within shore_depth_tol of real/artificial points,
 			      including them instead of throwing away increase realism of boundary */
   int *grouping = grouping0;
@@ -1076,7 +1070,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
     *nrandom -= 4;
   }
 
-  if (shore_depth_tol < 0) shore_depth_tol = sqrt(area/(real) n); /* set to average distance for random distribution */
+  if (shore_depth_tol < 0) shore_depth_tol = sqrt(area/(double) n); /* set to average distance for random distribution */
   if (Verbose) fprintf(stderr,"nrandom=%d shore_depth_tol=%.08f\n",*nrandom, shore_depth_tol);
 
 
@@ -1084,12 +1078,12 @@ static int make_map_internal(int exclude_random, int include_OK_points,
      two connected components be separated due to small shore depth */
   {
     int nz;
-    real *y;
+    double *y;
     int k, t, np=nedgep;
     if (graph && np){
       fprintf(stderr,"add art np = %d\n",np);
       nz = graph->nz;
-      y = MALLOC(sizeof(real)*(dim*n + dim*nz*np));
+      y = MALLOC(sizeof(double)*(dim*n + dim*nz*np));
       for (i = 0; i < n*dim; i++) y[i] = x[i];
       grouping = MALLOC(sizeof(int)*(n + nz*np));
       for (i = 0; i < n; i++) grouping[i] = grouping0[i];
@@ -1100,10 +1094,10 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 	  if (!HIGHLIGHT_SET || (grouping[i] == grouping[graph->ja[j]] && grouping[i] == HIGHLIGHT_SET)){
 	    for (t = 0; t < np; t++){
 	      for (k = 0; k < dim; k++){
-		y[nz*dim+k] = t/((real) np)*x[i*dim+k] + (1-t/((real) np))*x[(graph->ja[j])*dim + k];
+		y[nz*dim+k] = t/((double) np)*x[i*dim+k] + (1-t/((double) np))*x[(graph->ja[j])*dim + k];
 	      }
 	      assert(n + (nz-n)*np + t < n + nz*np && n + (nz-n)*np + t >= 0);
-	      if (t/((real) np) > 0.5){
+	      if (t/((double) np) > 0.5){
 		grouping[nz] = grouping[i];
 	      } else {
 		grouping[nz] = grouping[graph->ja[j]];
@@ -1139,8 +1133,8 @@ static int make_map_internal(int exclude_random, int include_OK_points,
       }
     }
     if (Verbose) {
-      real bbm0 = bounding_box_margin[0];
-      real bbm1 = bounding_box_margin[1];
+      double bbm0 = bounding_box_margin[0];
+      double bbm1 = bounding_box_margin[1];
       if (bbm0 > 0)
 	fprintf (stderr, "bounding box margin: %.06f", bbm0);
       else if (bbm0 < 0)
@@ -1155,14 +1149,14 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 	fprintf (stderr, " %.06f\n", MAX(boxsize[1]*0.2, 2*shore_depth_tol));
     }
     if (*nrandom < 0) {
-      real n1, n2, area2;
+      double n1, n2, area2;
       area2 = (xmax[1] - xmin[1])*(xmax[0] - xmin[0]);
       n1 = (int) area2/(shore_depth_tol*shore_depth_tol);
       n2 = n*((int) area2/area);
       *nrandom = MAX(n1, n2);
     }
     srand(123);
-    xran = MALLOC(sizeof(real)*(*nrandom + 4)*dim2);
+    xran = MALLOC(sizeof(double)*(*nrandom + 4)*dim2);
     nz = 0;
     if (INCLUDE_OK_POINTS){
       nzok0 = nzok = *nrandom - 1;/* points that are within tolerance of real or artificial points */
@@ -1203,7 +1197,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
     *nrandom = nz;
     if (Verbose) fprintf( stderr, "nn nrandom=%d\n",*nrandom);
   } else {
-    xran = MALLOC(sizeof(real)*4*dim2);
+    xran = MALLOC(sizeof(double)*4*dim2);
   }
 
 
@@ -1223,9 +1217,9 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 
 
   if (INCLUDE_OK_POINTS){
-    *xcombined = MALLOC(sizeof(real)*(nn+*nrandom)*dim2);
+    *xcombined = MALLOC(sizeof(double)*(nn+*nrandom)*dim2);
   } else {
-    *xcombined = MALLOC(sizeof(real)*(n+*nrandom)*dim2);
+    *xcombined = MALLOC(sizeof(double)*(n+*nrandom)*dim2);
   }
   for (i = 0; i < n; i++) {
     for (j = 0; j < dim2; j++) (*xcombined)[i*dim2+j] = x[i*dim+j];
@@ -1244,10 +1238,10 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 
   {
     int nz, nh = 0;/* the set to highlight */
-    real *xtemp;
+    double *xtemp;
     if (HIGHLIGHT_SET){
       if (Verbose) fprintf(stderr," highlight cluster %d, n = %d\n",HIGHLIGHT_SET, n);
-      xtemp = MALLOC(sizeof(real)*n*dim);
+      xtemp = MALLOC(sizeof(double)*n*dim);
       /* shift set to the beginning */
       nz = 0;
       for (i = 0; i < n; i++){
@@ -1272,7 +1266,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
       for (i = nh; i < n; i++){
 	grouping[i] = 2;
       }
-      memcpy(*xcombined, xtemp, n*dim*sizeof(real));
+      memcpy(*xcombined, xtemp, n*dim*sizeof(double));
       *nrandom += n - nh;/* count everything except cluster HIGHLIGHT_SET as random */
       n = nh;
       if (Verbose) fprintf(stderr,"nh = %d\n",nh);
@@ -1292,11 +1286,11 @@ static int make_map_internal(int exclude_random, int include_OK_points,
   return 0;
 }
 
-static void add_point(int *n, int igrp, real **x, int *nmax, real point[], int **groups){
+static void add_point(int *n, int igrp, double **x, int *nmax, double point[], int **groups){
 
   if (*n >= *nmax){
     *nmax = MAX((int) 0.2*(*n), 20) + *n;
-    *x = REALLOC(*x, sizeof(real)*2*(*nmax));
+    *x = REALLOC(*x, sizeof(double)*2*(*nmax));
     *groups = REALLOC(*groups, sizeof(int)*(*nmax));
   }
 
@@ -1306,7 +1300,7 @@ static void add_point(int *n, int igrp, real **x, int *nmax, real point[], int *
   (*n)++;
 }
 
-static void get_boundingbox(int n, int dim, real *x, real *width, real *bbox){
+static void get_boundingbox(int n, int dim, double *x, double *width, double *bbox){
   int i;
   bbox[0] = bbox[1] = x[0];
   bbox[2] = bbox[3] = x[1];
@@ -1320,10 +1314,10 @@ static void get_boundingbox(int n, int dim, real *x, real *width, real *bbox){
 }
 
 int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
-				   int n, int dim, real *x, real *sizes, 
-				   int *grouping, SparseMatrix graph0, real bounding_box_margin[], int *nrandom, int *nart, int nedgep, 
-				   real shore_depth_tol, real edge_bridge_tol,
-				   real **xcombined, int *nverts, real **x_poly, 
+				   int n, int dim, double *x, double *sizes, 
+				   int *grouping, SparseMatrix graph0, double bounding_box_margin[], int *nrandom, int *nart, int nedgep, 
+				   double shore_depth_tol, double edge_bridge_tol,
+				   double **xcombined, int *nverts, double **x_poly, 
 				   int *npolys, SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, 
 				   SparseMatrix *country_graph, int highlight_cluster, int *flag){
 
@@ -1386,18 +1380,18 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
 
      
   */
-    real dist, avgdist;
-  real *X;
+    double dist, avgdist;
+  double *X;
   int N, nmax, i, j, k, igrp;
   int *groups, K = *nart;/* average number of points added per side of rectangle */
 
-  real avgsize[2],  avgsz, h[2], p1, p0;
-  real point[2];
+  double avgsize[2],  avgsz, h[2], p1, p0;
+  double point[2];
   int nadded[2];
   int res;
-  real delta[2];
+  double delta[2];
   SparseMatrix graph = graph0;
-  real bbox[4];
+  double bbox[4];
 
   if (K < 0){
     K = (int) 10/(1+n/400.);/* 0 if n > 3600*/
@@ -1432,7 +1426,7 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
     if (Verbose) fprintf(stderr, "avgsize = {%f, %f}\n",avgsize[0], avgsize[1]);
 
     nmax = 2*n;
-    X = MALLOC(sizeof(real)*dim*(n+nmax));
+    X = MALLOC(sizeof(double)*dim*(n+nmax));
     groups = MALLOC(sizeof(int)*(n+nmax));
     for (i = 0; i < n; i++) {
       groups[i] = grouping[i];
@@ -1445,10 +1439,10 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
     if (shore_depth_tol < 0) {
       shore_depth_tol = -(shore_depth_tol)*avgsz;
     } else if (shore_depth_tol == 0){
-      real area;
+      double area;
       get_boundingbox(n, dim, x, sizes, bbox);
       area = (bbox[1] - bbox[0])*(bbox[3] - bbox[2]);
-      shore_depth_tol = sqrt(area/(real) n); 
+      shore_depth_tol = sqrt(area/(double) n); 
       if (Verbose) fprintf(stderr,"setting shore length ======%f\n",shore_depth_tol);
     } else {
     }

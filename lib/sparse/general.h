@@ -27,8 +27,6 @@
 #include <common/memory.h>
 #endif  /* STANDALONE */
 
-#define real double
-
 #define set_flag(a, flag) ((a)=((a)|(flag)))
 #define test_flag(a, flag) ((a)&(flag))
 #define clear_flag(a, flag) ((a) &=(~(flag)))
@@ -72,18 +70,18 @@ extern double _statistics[10];
 
 
 extern int irand(int n);
-extern real drand(void);
+extern double drand(void);
 extern int *random_permutation(int n);/* random permutation of 0 to n-1 */
 
 
-real* vector_subtract_to(int n, real *x, real *y);/* y = x-y */
+double* vector_subtract_to(int n, double *x, double *y);/* y = x-y */
 
-real vector_product(int n, real *x, real *y);
+double vector_product(int n, double *x, double *y);
 
-real* vector_saxpy(int n, real *x, real *y, real beta); /* y = x+beta*y */
+double* vector_saxpy(int n, double *x, double *y, double beta); /* y = x+beta*y */
 
 
-real* vector_saxpy2(int n, real *x, real *y, real beta);/* x = x+beta*y */
+double* vector_saxpy2(int n, double *x, double *y, double beta);/* x = x+beta*y */
 
 /* take m elements v[p[i]]],i=1,...,m and oput in u. u will be assigned if *u = NULL */
 void vector_float_take(int n, float *v, int m, int *p, float **u);
@@ -91,10 +89,10 @@ void vector_float_take(int n, float *v, int m, int *p, float **u);
 /* give the position of the smallest, second smallest etc in vector v.
    results in p. If *p == NULL, p is assigned.
 */
-void vector_ordering(int n, real *v, int **p);
+void vector_ordering(int n, double *v, int **p);
 void vector_sort_int(int n, int *v);
 
-void vector_print(char *s, int n, real *x);
+void vector_print(char *s, int n, double *x);
 
 #define MACHINEACC 1.0e-16
 #define SQRT_MACHINEACC 1.0e-8
@@ -104,11 +102,11 @@ void vector_print(char *s, int n, real *x);
 enum {UNMATCHED = -1};
 
 
-real distance(real *x, int dim, int i, int j);
-real distance_cropped(real *x, int dim, int i, int j);
+double distance(double *x, int dim, int i, int j);
+double distance_cropped(double *x, int dim, int i, int j);
 
-real point_distance(real *p1, real *p2, int dim);
+double point_distance(double *p1, double *p2, int dim);
 
 char *strip_dir(char *s);
 
-void scale_to_box(real xmin, real ymin, real xmax, real ymax, int n, int dim, real *x);
+void scale_to_box(double xmin, double ymin, double xmax, double ymax, int n, int dim, double *x);

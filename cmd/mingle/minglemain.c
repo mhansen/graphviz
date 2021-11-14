@@ -37,12 +37,12 @@ typedef struct {
 	int outer_iter;
 	int method; 
 	int compatibility_method;
-	real K;
+	double K;
 	fmt_t fmt;
 	int nneighbors;
 	int max_recursion;
-	real angle_param;
-	real angle;
+	double angle_param;
+	double angle;
 } opts_t;
 
 static char *fname;
@@ -109,7 +109,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 {
 	int c;
 	char* cmd = argv[0];
-	real s;
+	double s;
 	int i;
 
 	opterr = 0;
@@ -240,10 +240,10 @@ genBundleSpline (pedge edge, agxbuf* xb)
 {
 	int k, j, mm, kk;
 	int dim = edge->dim;
-	real* x = edge->x;
-	real tt1[3]={0.15,0.5,0.85};
-	real tt2[4]={0.15,0.4,0.6,0.85};
-	real t, *tt;
+	double* x = edge->x;
+	double tt1[3]={0.15,0.5,0.85};
+	double tt2[4]={0.15,0.4,0.6,0.85};
+	double t, *tt;
 
 	for (j = 0; j < edge->npoints; j++){
 		if (j != 0) {
@@ -278,7 +278,7 @@ genBundleInfo (pedge edge, agxbuf* xb)
 {
 	int k, j;
 	int dim = edge->dim;
-	real* x = edge->x;
+	double* x = edge->x;
 
 	for (j = 0; j < edge->npoints; j++){
 		if (j != 0)  agxbputc(xb, ':');
@@ -294,13 +294,13 @@ genBundleInfo (pedge edge, agxbuf* xb)
 }
 
 static void
-genBundleColors (pedge edge, agxbuf* xb, real maxwgt)
+genBundleColors (pedge edge, agxbuf* xb, double maxwgt)
 {
 	int k, j, r, g, b;
-	real len, t, len_total0 = 0;
+	double len, t, len_total0 = 0;
 	int dim = edge->dim;
-	real* x = edge->x;
-	real* lens = MALLOC(sizeof(real)*edge->npoints);
+	double* x = edge->x;
+	double* lens = MALLOC(sizeof(double)*edge->npoints);
 
 	for (j = 0; j < edge->npoints - 1; j++){
 		len = 0;
@@ -332,7 +332,7 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 	Agnode_t* n;
 	Agedge_t* e;
 	int i, j;
-	real maxwgt = 0;
+	double maxwgt = 0;
 	pedge edge;
 	agxbuf xbuf;
 	unsigned char buf[BUFSIZ];
@@ -372,14 +372,14 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 static int
 bundle (Agraph_t* g, opts_t* opts)
 {
-	real *x = NULL;
-	real *label_sizes = NULL;
+	double *x = NULL;
+	double *label_sizes = NULL;
 	int n_edge_label_nodes;
 	int dim = 2;
 	SparseMatrix A;
 	SparseMatrix B;
 	pedge* edges;
-    real *xx, eps = 0.;
+    double *xx, eps = 0.;
     int nz = 0;
     int *ia, *ja, i, j, k;
 	int rv = 0;
@@ -437,7 +437,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		
 	ia = A->ia; ja = A->ja;
 	nz = A->nz;
-	xx = MALLOC(sizeof(real)*nz*4);
+	xx = MALLOC(sizeof(double)*nz*4);
 	nz = 0;
 	dim = 4;
 	for (i = 0; i < A->m; i++){

@@ -16,31 +16,31 @@
 #include <sparse/color_palette.h>
 #include <string.h>
 
-static real mydist(int dim, real *x, real *y){
+static double mydist(int dim, double *x, double *y){
   int k;
-  real d = 0;
+  double d = 0;
   for (k = 0; k < dim; k++) d += (x[k] - y[k])*(x[k]-y[k]);
   return sqrt(d);
 }
 
 
-static void node_distinct_coloring_internal2(int scheme, QuadTree qt, int weightedQ, SparseMatrix A, int cdim, real accuracy, int iter_max, int seed, real *colors, 
-					     real *color_diff0, real *color_diff_sum0){
+static void node_distinct_coloring_internal2(int scheme, QuadTree qt, int weightedQ, SparseMatrix A, int cdim, double accuracy, int iter_max, int seed, double *colors, 
+					     double *color_diff0, double *color_diff_sum0){
   /* here we assume the graph is connected. And that the matrix is symmetric */
   int i, j, *ia, *ja, n, k = 0;
   int max_level;
-  real center[3];
-  real width;
-  real *a = NULL;
-  real *x;
-  real dist_max;
-  real color_diff = 0, color_diff_old;
-  real color_diff_sum = 0, color_diff_sum_old, *cc;
+  double center[3];
+  double width;
+  double *a = NULL;
+  double *x;
+  double dist_max;
+  double color_diff = 0, color_diff_old;
+  double color_diff_sum = 0, color_diff_sum_old, *cc;
   int iter = 0;
-  real cspace_size = 0.7;
-  real red[3], black[3], min;
+  double cspace_size = 0.7;
+  double red[3], black[3], min;
   int flag = 0, imin;
-  real *wgt = NULL;
+  double *wgt = NULL;
 
   assert(accuracy > 0);
   max_level = MAX(1, -log(accuracy)/log(2.));
@@ -89,7 +89,7 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt, int weight
   ia = A->ia;
   ja = A->ja;
   if (A->type == MATRIX_TYPE_REAL && A->a){
-    a = (real*) A->a;
+    a = (double*) A->a;
   } 
 
   /* cube [0, cspace_size]^3: only uised if not LAB */
@@ -100,8 +100,8 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt, int weight
   srand(seed);
   for (i = 0; i < n*cdim; i++) colors[i] = cspace_size*drand();
 
-  x = MALLOC(sizeof(real)*cdim*n);
-  if (weightedQ) wgt = MALLOC(sizeof(real)*n);
+  x = MALLOC(sizeof(double)*cdim*n);
+  if (weightedQ) wgt = MALLOC(sizeof(double)*n);
 
   color_diff = 0; color_diff_old = -1;
   color_diff_sum = 0; color_diff_sum_old = -1;
@@ -113,7 +113,7 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt, int weight
       k = 0;
       for (j = ia[i]; j < ia[i+1]; j++){
 	if (ja[j] == i) continue;
-	memcpy(&(x[k*cdim]), &(colors[ja[j]*cdim]), sizeof(real)*cdim);
+	memcpy(&(x[k*cdim]), &(colors[ja[j]*cdim]), sizeof(double)*cdim);
 	if (wgt && a) wgt[k] = a[j];
 	k++;
       }
@@ -154,14 +154,14 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt, int weight
   free(x);
 }
  
-static void node_distinct_coloring_internal(int scheme, QuadTree qt, int weightedQ,  SparseMatrix A, int cdim, real accuracy, int iter_max, int seed, real *colors){
+static void node_distinct_coloring_internal(int scheme, QuadTree qt, int weightedQ,  SparseMatrix A, int cdim, double accuracy, int iter_max, int seed, double *colors){
   int i;
-  real color_diff;
-  real color_diff_sum;
+  double color_diff;
+  double color_diff_sum;
   if (seed < 0) {
     /* do multiple iterations and pick the best */
     int iter, seed_max = -1;
-    real color_diff_max = -1;
+    double color_diff_max = -1;
     srand(123);
     iter = -seed;
     for (i = 0; i < iter; i++){
@@ -177,7 +177,7 @@ static void node_distinct_coloring_internal(int scheme, QuadTree qt, int weighte
  
 }
 
-int node_distinct_coloring(char *color_scheme, char *lightness, int weightedQ, SparseMatrix A0, real accuracy, int iter_max, int seed, int *cdim0, real **colors){
+int node_distinct_coloring(char *color_scheme, char *lightness, int weightedQ, SparseMatrix A0, double accuracy, int iter_max, int seed, int *cdim0, double **colors){
   /* 
      for a graph A, get a distinctive color of its nodes so that the color distance among all neighboring nodes are maximized. Here
      color distance on a node is defined as the minimum of color differences between a node and its neighbors (or the minimum of weighted color differences if weightedQ = true,
@@ -197,7 +197,7 @@ int node_distinct_coloring(char *color_scheme, char *lightness, int weightedQ, S
   SparseMatrix B, A = A0;
   int ncomps, *comps = NULL, *comps_ptr = NULL;
   int nn, n;
-  real *ctmp;
+  double *ctmp;
   int i, j, jj, nnodes = 0;
   QuadTree qt = NULL;
   int cdim;
@@ -245,9 +245,9 @@ int node_distinct_coloring(char *color_scheme, char *lightness, int weightedQ, S
   }
  
   if (!(*colors)) {
-    *colors = MALLOC(sizeof(real)*cdim*n);
+    *colors = MALLOC(sizeof(double)*cdim*n);
   }
-  ctmp = MALLOC(sizeof(real)*cdim*n);
+  ctmp = MALLOC(sizeof(double)*cdim*n);
 
   B = SparseMatrix_symmetrize(A, FALSE);
   A = B;
@@ -264,7 +264,7 @@ int node_distinct_coloring(char *color_scheme, char *lightness, int weightedQ, S
 
     for (j = comps_ptr[i]; j < comps_ptr[i+1]; j++){
       jj = j - comps_ptr[i];
-      memcpy(&((*colors)[comps[j]*cdim]), &(ctmp[jj*cdim]), cdim*sizeof(real));
+      memcpy(&((*colors)[comps[j]*cdim]), &(ctmp[jj*cdim]), cdim*sizeof(double));
     }
     SparseMatrix_delete(B);
   }

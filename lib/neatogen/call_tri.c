@@ -16,15 +16,15 @@
 #include <neatogen/delaunay.h>
 #include <stddef.h>
 
-SparseMatrix call_tri(int n, int dim, real * x)
+SparseMatrix call_tri(int n, int dim, double * x)
 {
-    real one = 1;
+    double one = 1;
     int i, ii, jj;
     SparseMatrix A;
     SparseMatrix B;
     int* edgelist = NULL;
-    real* xv = N_GNEW(n, real);
-    real* yv = N_GNEW(n, real);
+    double* xv = N_GNEW(n, double);
+    double* yv = N_GNEW(n, double);
     int numberofedges = 0;
 
     for (i = 0; i < n; i++) {
@@ -62,16 +62,16 @@ SparseMatrix call_tri(int n, int dim, real * x)
     return B;
 }
 
-SparseMatrix call_tri2(int n, int dim, real * xx)
+SparseMatrix call_tri2(int n, int dim, double * xx)
 {
-    real *x, *y;
+    double *x, *y;
     v_data *delaunay;
     int i, j;
     SparseMatrix A;
     SparseMatrix B;
-    real one = 1;
-    x = N_GNEW(n, real);
-    y = N_GNEW(n, real);
+    double one = 1;
+    x = N_GNEW(n, double);
+    y = N_GNEW(n, double);
 
     for (i = 0; i < n; i++) {
 	x[i] = xx[dim * i];

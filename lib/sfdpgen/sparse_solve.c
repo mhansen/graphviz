@@ -22,15 +22,15 @@
 /* #define DEBUG_PRINT */
 
 struct uniform_stress_matmul_data{
-  real alpha;
+  double alpha;
   SparseMatrix A;
 };
 
-static real *Operator_uniform_stress_matmul_apply(Operator o, real *x, real *y){
+static double *Operator_uniform_stress_matmul_apply(Operator o, double *x, double *y){
   struct uniform_stress_matmul_data *d = (struct uniform_stress_matmul_data*) (o->data);
   SparseMatrix A = d->A;
-  real alpha = d->alpha;
-  real xsum = 0.;
+  double alpha = d->alpha;
+  double xsum = 0.;
   int m = A->m, i;
 
   SparseMatrix_multiply_vector(A, x, &y, FALSE);
@@ -45,7 +45,7 @@ static real *Operator_uniform_stress_matmul_apply(Operator o, real *x, real *y){
 
 
 
-Operator Operator_uniform_stress_matmul(SparseMatrix A, real alpha){
+Operator Operator_uniform_stress_matmul(SparseMatrix A, double alpha){
   Operator o;
   struct uniform_stress_matmul_data *d;
 
@@ -58,7 +58,7 @@ Operator Operator_uniform_stress_matmul(SparseMatrix A, real alpha){
 }
 
 
-static real *Operator_matmul_apply(Operator o, real *x, real *y){
+static double *Operator_matmul_apply(Operator o, double *x, double *y){
   SparseMatrix A = (SparseMatrix) o->data;
   SparseMatrix_multiply_vector(A, x, &y, FALSE);
   return y;
@@ -79,9 +79,9 @@ static void Operator_matmul_delete(Operator o){
 }
 
 
-static real* Operator_diag_precon_apply(Operator o, real *x, real *y){
+static double* Operator_diag_precon_apply(Operator o, double *x, double *y){
   int i, m;
-  real *diag = (real*) o->data;
+  double *diag = (double*) o->data;
   m = (int) diag[0];
   diag++;
   for (i = 0; i < m; i++) y[i] = x[i]*diag[i];
@@ -89,19 +89,19 @@ static real* Operator_diag_precon_apply(Operator o, real *x, real *y){
 }
 
 
-Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, real alpha){
+Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, double alpha){
   Operator o;
-  real *diag;
+  double *diag;
   int i, j, m = A->m, *ia = A->ia, *ja = A->ja;
-  real *a = (real*) A->a;
+  double *a = (double*) A->a;
 
   assert(A->type == MATRIX_TYPE_REAL);
 
   assert(a);
 
   o = MALLOC(sizeof(struct Operator_struct));
-  o->data = MALLOC(sizeof(real)*(m + 1));
-  diag = (real*) o->data;
+  o->data = MALLOC(sizeof(double)*(m + 1));
+  diag = (double*) o->data;
 
   diag[0] = m;
   diag++;
@@ -120,17 +120,17 @@ Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, real alpha){
 
 static Operator Operator_diag_precon_new(SparseMatrix A){
   Operator o;
-  real *diag;
+  double *diag;
   int i, j, m = A->m, *ia = A->ia, *ja = A->ja;
-  real *a = (real*) A->a;
+  double *a = (double*) A->a;
 
   assert(A->type == MATRIX_TYPE_REAL);
 
   assert(a);
 
   o = N_GNEW(1,struct Operator_struct);
-  o->data = N_GNEW((A->m + 1),real);
-  diag = (real*) o->data;
+  o->data = N_GNEW((A->m + 1),double);
+  diag = (double*) o->data;
 
   diag[0] = m;
   diag++;
@@ -151,17 +151,17 @@ static void Operator_diag_precon_delete(Operator o){
   free(o);
 }
 
-static real conjugate_gradient(Operator A, Operator precon, int n, real *x, real *rhs, real tol, int maxit){
-  real *z, *r, *p, *q, res = 10*tol, alpha;
-  real rho = 1.0e20, rho_old = 1, res0, beta;
-  real* (*Ax)(Operator o, real *in, real *out) = A->Operator_apply;
-  real* (*Minvx)(Operator o, real *in, real *out) = precon->Operator_apply;
+static double conjugate_gradient(Operator A, Operator precon, int n, double *x, double *rhs, double tol, int maxit){
+  double *z, *r, *p, *q, res = 10*tol, alpha;
+  double rho = 1.0e20, rho_old = 1, res0, beta;
+  double* (*Ax)(Operator o, double *in, double *out) = A->Operator_apply;
+  double* (*Minvx)(Operator o, double *in, double *out) = precon->Operator_apply;
   int iter = 0;
 
-  z = N_GNEW(n,real);
-  r = N_GNEW(n,real);
-  p = N_GNEW(n,real);
-  q = N_GNEW(n,real);
+  z = N_GNEW(n,double);
+  r = N_GNEW(n,double);
+  p = N_GNEW(n,double);
+  q = N_GNEW(n,double);
 
   r = Ax(A, x, r);
   r = vector_subtract_to(n, rhs, r);
@@ -181,7 +181,7 @@ static real conjugate_gradient(Operator A, Operator precon, int n, real *x, real
       beta = rho/rho_old;
       p = vector_saxpy(n, z, p, beta);
     } else {
-      memcpy(p, z, sizeof(real)*n);
+      memcpy(p, z, sizeof(double)*n);
     }
 
     q = Ax(A, p, q);
@@ -216,11 +216,11 @@ static real conjugate_gradient(Operator A, Operator precon, int n, real *x, real
   return res;
 }
 
-real cg(Operator Ax, Operator precond, int n, int dim, real *x0, real *rhs, real tol, int maxit){
-  real *x, *b, res = 0;
+double cg(Operator Ax, Operator precond, int n, int dim, double *x0, double *rhs, double tol, int maxit){
+  double *x, *b, res = 0;
   int k, i;
-  x = N_GNEW(n, real);
-  b = N_GNEW(n, real);
+  x = N_GNEW(n, double);
+  b = N_GNEW(n, double);
   for (k = 0; k < dim; k++){
     for (i = 0; i < n; i++) {
       x[i] = x0[i*dim+k];
@@ -237,15 +237,15 @@ real cg(Operator Ax, Operator precond, int n, int dim, real *x0, real *rhs, real
   return res;
 }
 
-static real* jacobi(SparseMatrix A, int dim, real *x0, real *rhs, int maxit, int *flag){
+static double* jacobi(SparseMatrix A, int dim, double *x0, double *rhs, int maxit, int *flag){
   /* maxit iteration of jacobi */
-  real *x, *y, *b, sum, diag, *a;
+  double *x, *y, *b, sum, diag, *a;
   int k, i, j, n = A->n, *ia, *ja, iter;
-  x = MALLOC(sizeof(real)*n);
-  y = MALLOC(sizeof(real)*n);
-  b = MALLOC(sizeof(real)*n);
+  x = MALLOC(sizeof(double)*n);
+  y = MALLOC(sizeof(double)*n);
+  b = MALLOC(sizeof(double)*n);
   assert(A->type == MATRIX_TYPE_REAL);
-  ia = A->ia; ja = A->ja; a = (real*) A->a;
+  ia = A->ia; ja = A->ja; a = (double*) A->a;
 
   for (k = 0; k < dim; k++){
     for (i = 0; i < n; i++) {
@@ -268,7 +268,7 @@ static real* jacobi(SparseMatrix A, int dim, real *x0, real *rhs, int maxit, int
 	y[i] = (b[i] - sum)/diag;
 
       }
-      memcpy(x, y, sizeof(real)*n);
+      memcpy(x, y, sizeof(double)*n);
     }
 
     for (i = 0; i < n; i++) {
@@ -283,10 +283,10 @@ static real* jacobi(SparseMatrix A, int dim, real *x0, real *rhs, int maxit, int
   return rhs;
 }
 
-real SparseMatrix_solve(SparseMatrix A, int dim, real *x0, real *rhs, real tol, int maxit, int method, int *flag){
+double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit, int method, int *flag){
   Operator Ax, precond;
   int n = A->m;
-  real res = 0;
+  double res = 0;
   *flag = 0;
 
   switch (method){

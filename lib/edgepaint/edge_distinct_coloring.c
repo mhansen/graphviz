@@ -18,7 +18,7 @@
 #include <sparse/QuadTree.h>
 
 static int splines_intersect(int dim, int u1, int v1, int u2, int v2, 
-			     real cos_critical, int check_edges_with_same_endpoint, 
+			     double cos_critical, int check_edges_with_same_endpoint, 
 			     char *xsplines1, char *xsplines2){
   /* u1, v2 an u2, v2: the node index of the two edn points of two edges.
      cos_critical: cos of critical angle
@@ -29,15 +29,15 @@ static int splines_intersect(int dim, int u1, int v1, int u2, int v2,
   */
   int itmp;
   int len1 = 100, len2 = 100;
-  real *x1, *x2;
+  double *x1, *x2;
   int ns1 = 0, ns2 = 0;
   int i, j, iter1 = 0, iter2 = 0;
-  real cos_a, tmp[2];
+  double cos_a, tmp[2];
   int endp1 = 0, endp2 = 0;
 
   tmp[0] = tmp[1] = 0;
-  x1 = MALLOC(sizeof(real)*len1);
-  x2 = MALLOC(sizeof(real)*len2);
+  x1 = MALLOC(sizeof(double)*len1);
+  x2 = MALLOC(sizeof(double)*len2);
 
   assert(dim <= 3);
   /* if two end points are the same, make sure they are the first in each edge */
@@ -75,14 +75,14 @@ static int splines_intersect(int dim, int u1, int v1, int u2, int v2,
     xsplines1++;
     if (ns1*dim >= len1){
       len1 = ns1*dim + (int)MAX(10, 0.2*ns1*dim);
-      x1 = REALLOC(x1, sizeof(real)*len1);
+      x1 = REALLOC(x1, sizeof(double)*len1);
     }
   }
   if (endp1){/* pad the end point at the last position */
     ns1++;
     if (ns1*dim >= len1){
       len1 = ns1*dim + (int)MAX(10, 0.2*ns1*dim);
-      x1 = REALLOC(x1, sizeof(real)*len1);
+      x1 = REALLOC(x1, sizeof(double)*len1);
     }
     x1[(ns1-1)*dim] = tmp[0];  x1[(ns1-1)*dim + 1] = tmp[1]; 
   }
@@ -113,14 +113,14 @@ static int splines_intersect(int dim, int u1, int v1, int u2, int v2,
     xsplines2++;
     if (ns2*dim >= len2){
       len2 = ns2*dim + (int)MAX(10, 0.2*ns2*dim);
-      x2 = REALLOC(x2, sizeof(real)*len2);
+      x2 = REALLOC(x2, sizeof(double)*len2);
     }
   }
   if (endp2){/* pad the end point at the last position */
     ns2++;
     if (ns2*dim >= len2){
       len2 = ns2*dim + (int)MAX(10, 0.2*ns2*dim);
-      x2 = REALLOC(x2, sizeof(real)*len2);
+      x2 = REALLOC(x2, sizeof(double)*len2);
     }
     x2[(ns2-1)*dim] = tmp[0];  x2[(ns2-1)*dim + 1] = tmp[1]; 
   }
@@ -142,7 +142,7 @@ for (i = 0; i < ns1 - 1; i++){
 }
 
 
-Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* g, real angle, real accuracy, int check_edges_with_same_endpoint, int seed){
+Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* g, double angle, double accuracy, int check_edges_with_same_endpoint, int seed){
   /* color the edges of a graph so that conflicting edges are as dinstrinct in color as possibl.
      color_scheme: rgb, lab, gray, or a list of comma separaterd RGB colors in hex, like #ff0000,#00ff00
      lightness: of the form 0,70, specifying the range of lightness of LAB color. Ignored if scheme is not COLOR_LAB.
@@ -155,13 +155,13 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
      .                   are not consider conflict.
      seed: random_seed. If negative, consider -seed as the number of random start iterations
   */
-  real *x = NULL;
+  double *x = NULL;
   int dim = 2;
   SparseMatrix A, B, C;
   int *irn, *jcn, nz, nz2 = 0;
-  real cos_critical = cos(angle/180*3.14159), cos_a;
+  double cos_critical = cos(angle/180*3.14159), cos_a;
   int u1, v1, u2, v2, i, j;
-  real *colors = NULL;
+  double *colors = NULL;
   int flag, ne;
   char **xsplines = NULL;
   int cdim;
@@ -205,7 +205,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
       }
     }
 #ifdef TIME
-    fprintf(stderr, "cpu for dual graph =%10.3f", ((real) (clock() - start))/CLOCKS_PER_SEC);
+    fprintf(stderr, "cpu for dual graph =%10.3f", ((double) (clock() - start))/CLOCKS_PER_SEC);
 #endif
     
   } else {
@@ -227,7 +227,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
       }
     }
 #ifdef TIME
-    fprintf(stderr, "cpu for dual graph (splines) =%10.3f\n", ((real) (clock() - start))/CLOCKS_PER_SEC);
+    fprintf(stderr, "cpu for dual graph (splines) =%10.3f\n", ((double) (clock() - start))/CLOCKS_PER_SEC);
 #endif
   } 
   C = SparseMatrix_from_coordinate_format(B);
@@ -242,7 +242,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
     flag = node_distinct_coloring(color_scheme, lightness, weightedQ, C, accuracy, iter_max, seed, &cdim, &colors);
     if (flag) goto RETURN;
 #ifdef TIME
-    fprintf(stderr, "cpu for color assignmment =%10.3f\n", ((real) (clock() - start))/CLOCKS_PER_SEC);
+    fprintf(stderr, "cpu for color assignmment =%10.3f\n", ((double) (clock() - start))/CLOCKS_PER_SEC);
 #endif
   }
 

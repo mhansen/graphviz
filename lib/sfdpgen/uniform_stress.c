@@ -25,12 +25,12 @@ This is somewhat similar to the binary stress model
 
 */
 
-UniformStressSmoother UniformStressSmoother_new(int dim, SparseMatrix A, real *x, real alpha, real M, int *flag){
+UniformStressSmoother UniformStressSmoother_new(int dim, SparseMatrix A, double *x, double alpha, double M, int *flag){
   UniformStressSmoother sm;
   int i, j, k, m = A->m, *ia = A->ia, *ja = A->ja, *iw, *jw, *id, *jd;
   int nz;
-  real *d, *w, *a = (real*) A->a;
-  real diag_d, diag_w, dist, epsilon = 0.01;
+  double *d, *w, *a = (double*) A->a;
+  double diag_d, diag_w, dist, epsilon = 0.01;
 
   assert(SparseMatrix_is_symmetric(A, FALSE));
 
@@ -38,9 +38,9 @@ UniformStressSmoother UniformStressSmoother_new(int dim, SparseMatrix A, real *x
   sm->data = NULL;
   sm->scheme = SM_SCHEME_UNIFORM_STRESS;
   sm->lambda = NULL;
-  sm->data = MALLOC(sizeof(real)*2);
-  ((real*) sm->data)[0] = alpha;
-  ((real*) sm->data)[1] = M;
+  sm->data = MALLOC(sizeof(double)*2);
+  ((double*) sm->data)[0] = alpha;
+  ((double*) sm->data)[1] = M;
   sm->data_deallocator = free;
   sm->tol_cg = 0.01;
   sm->maxit_cg = (int)sqrt((double) A->m);
@@ -56,7 +56,7 @@ UniformStressSmoother UniformStressSmoother_new(int dim, SparseMatrix A, real *x
 
   iw = sm->Lw->ia; jw = sm->Lw->ja;
   id = sm->Lwd->ia; jd = sm->Lwd->ja;
-  w = (real*) sm->Lw->a; d = (real*) sm->Lwd->a;
+  w = (double*) sm->Lw->a; d = (double*) sm->Lwd->a;
   iw[0] = id[0] = 0;
 
   nz = 0;
@@ -98,17 +98,17 @@ void UniformStressSmoother_delete(UniformStressSmoother sm){
 
 }
 
-static real UniformStressSmoother_smooth(UniformStressSmoother sm, int dim, real *x, int maxit_sm) {
+static double UniformStressSmoother_smooth(UniformStressSmoother sm, int dim, double *x, int maxit_sm) {
 
   return StressMajorizationSmoother_smooth(sm, dim, x, maxit_sm, 0.001);
 
 }
 
-static SparseMatrix get_distance_matrix(SparseMatrix A, real scaling){
+static SparseMatrix get_distance_matrix(SparseMatrix A, double scaling){
   /* get a distance matrix from a graph, at the moment we just symmetrize the matrix. At the moment if the matrix is not real,
    we just assume distance of 1 among edges. Then we apply scaling to the entire matrix */
   SparseMatrix B;
-  real *val;
+  double *val;
   int i;
 
   if (A->type == MATRIX_TYPE_REAL){
@@ -116,16 +116,16 @@ static SparseMatrix get_distance_matrix(SparseMatrix A, real scaling){
   } else {
     B = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   }
-  val = (real*) B->a;
+  val = (double*) B->a;
   if (scaling != 1) for (i = 0; i < B->nz; i++) val[i] *= scaling;
   return B;
 }
 
-extern void scale_to_box(real xmin, real ymin, real xmax, real ymax, int n, int dim, real *x);
+extern void scale_to_box(double xmin, double ymin, double xmax, double ymax, int n, int dim, double *x);
 
-void uniform_stress(int dim, SparseMatrix A, real *x, int *flag){
+void uniform_stress(int dim, SparseMatrix A, double *x, int *flag){
   UniformStressSmoother sm;
-  real lambda0 = 10.1, M = 100, scaling = 1.;
+  double lambda0 = 10.1, M = 100, scaling = 1.;
   int maxit = 300, samepoint = TRUE, i, k, n = A->m;
   SparseMatrix B = NULL;
 

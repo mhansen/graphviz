@@ -627,7 +627,7 @@ static void updateGraph(void)
 double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
 {
     Agnode_t *n;
-    real *sizes = N_GNEW(Ndim * agnnodes(g), real);
+    double *sizes = N_GNEW(Ndim * agnnodes(g), double);
     int i, nedge_nodes = 0;
     int* elabs;
 
@@ -668,11 +668,11 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
     int i, row;
     int *I;
     int *J;
-    real *val;
-    real v;
+    double *val;
+    double v;
     int type = MATRIX_TYPE_REAL;
     Agsym_t* symD = NULL;
-    real* valD = NULL;
+    double* valD = NULL;
 
     if (!g)
 	return NULL;
@@ -686,12 +686,12 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
 
     I = N_GNEW(nedges, int);
     J = N_GNEW(nedges, int);
-    val = N_GNEW(nedges, real);
+    val = N_GNEW(nedges, double);
 
     sym = agfindedgeattr(g, "weight");
     if (D) {
 	symD = agfindedgeattr(g, "len");
-	valD = N_NEW(nedges, real);
+	valD = N_NEW(nedges, double);
     }
 
     i = 0;
@@ -713,9 +713,9 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
     }
 
     A = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J,
-					    val, type, sizeof(real));
+					    val, type, sizeof(double));
 
-    if (D) *D = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J, valD, type, sizeof(real));
+    if (D) *D = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J, valD, type, sizeof(double));
 
     free(I);
     free(J);
@@ -731,8 +731,8 @@ fdpAdjust (graph_t* g, adjust_data* am)
 {
     SparseMatrix A0 = makeMatrix(g, NULL);
     SparseMatrix A = A0;
-    real *sizes;
-    real *pos = N_NEW(Ndim * agnnodes(g), real);
+    double *sizes;
+    double *pos = N_NEW(Ndim * agnnodes(g), double);
     Agnode_t *n;
     int flag = 0, i;
     expand_t sep = sepFactor(g);
@@ -748,7 +748,7 @@ fdpAdjust (graph_t* g, adjust_data* am)
     sizes = getSizes(g, pad, NULL, NULL);
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	real* npos = pos + Ndim * ND_id(n);
+	double* npos = pos + Ndim * ND_id(n);
 	for (i = 0; i < Ndim; i++) {
 	    npos[i] = ND_pos(n)[i];
 	}
@@ -764,7 +764,7 @@ fdpAdjust (graph_t* g, adjust_data* am)
 		   ELSCHEME_NONE, 0, NULL, NULL, mapBool (agget(g, "overlap_shrink"), TRUE));
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	real *npos = pos + Ndim * ND_id(n);
+	double *npos = pos + Ndim * ND_id(n);
 	for (i = 0; i < Ndim; i++) {
 	    ND_pos(n)[i] = npos[i];
 	}

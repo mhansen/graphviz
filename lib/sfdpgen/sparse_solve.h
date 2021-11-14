@@ -18,13 +18,13 @@ typedef struct Operator_struct *Operator;
 
 struct Operator_struct {
   void *data;
-  real* (*Operator_apply)(Operator o, real *in, real *out);
+  double* (*Operator_apply)(Operator o, double *in, double *out);
 };
 
-real cg(Operator Ax, Operator precond, int n, int dim, real *x0, real *rhs, real tol, int maxit);
+double cg(Operator Ax, Operator precond, int n, int dim, double *x0, double *rhs, double tol, int maxit);
 
-real SparseMatrix_solve(SparseMatrix A, int dim, real *x0, real *rhs, real tol, int maxit, int method, int *flag);
+double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit, int method, int *flag);
 
-Operator Operator_uniform_stress_matmul(SparseMatrix A, real alpha);
+Operator Operator_uniform_stress_matmul(SparseMatrix A, double alpha);
 
-Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, real alpha);
+Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, double alpha);

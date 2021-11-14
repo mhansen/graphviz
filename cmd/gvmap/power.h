@@ -13,4 +13,4 @@
 #include <sparse/general.h>
 
 void power_method(void *A, int n, int K, int random_seed,
-  real **eigv, real *eigs);
+  double **eigv, double *eigs);

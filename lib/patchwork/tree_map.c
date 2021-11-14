@@ -11,8 +11,8 @@
 #include <common/render.h>
 #include <patchwork/tree_map.h>
 
-static void squarify(int n, real *area, rectangle *recs, int nadded, real maxarea, real minarea, real totalarea,
-		     real asp, rectangle fillrec){
+static void squarify(int n, double *area, rectangle *recs, int nadded, double maxarea, double minarea, double totalarea,
+		     double asp, rectangle fillrec){
   /* add a list of area in fillrec using squarified treemap alg.
      n: number of items to add
      area: area of these items, Sum to 1 (?).
@@ -22,7 +22,7 @@ static void squarify(int n, real *area, rectangle *recs, int nadded, real maxare
      asp: current worst aspect ratio of the already added items so far
      fillrec: the rectangle to be filled in.
    */
-  real w = MIN(fillrec.size[0], fillrec.size[1]);
+  double w = MIN(fillrec.size[0], fillrec.size[1]);
   int i;
 
   if (n <= 0) return;
@@ -39,7 +39,7 @@ static void squarify(int n, real *area, rectangle *recs, int nadded, real maxare
     totalarea = area[0];
     squarify(n, area, recs, nadded, maxarea, minarea, totalarea, asp, fillrec);
   } else {
-    real newmaxarea, newminarea, s, h, maxw, minw, newasp, hh, ww, xx, yy;
+    double newmaxarea, newminarea, s, h, maxw, minw, newasp, hh, ww, xx, yy;
     if (nadded < n){
       newmaxarea = MAX(maxarea, area[nadded]);
       newminarea = MIN(minarea, area[nadded]);
@@ -95,11 +95,11 @@ static void squarify(int n, real *area, rectangle *recs, int nadded, real maxare
  *  fillred - rectangle to be filled
  *  return array of rectangles 
  */
-rectangle* tree_map(int n, real *area, rectangle fillrec){
+rectangle* tree_map(int n, double *area, rectangle fillrec){
   /* fill a rectangle rec with n items, each item i has area[i] area. */
   rectangle *recs;
   int i;
-  real total = 0, minarea = 1., maxarea = 0., asp = 1, totalarea = 0;
+  double total = 0, minarea = 1., maxarea = 0., asp = 1, totalarea = 0;
   int nadded = 0;
 
   for (i = 0; i < n; i++) total += area[i]; 
@@ -115,7 +115,7 @@ rectangle* tree_map(int n, real *area, rectangle fillrec){
 /* rectangle_new:
  * Create and initialize a new rectangle structure
  */
-rectangle rectangle_new(real x, real y, real width, real height){
+rectangle rectangle_new(double x, double y, double width, double height){
   rectangle r;
   r.x[0] = x;
   r.x[1] = y;

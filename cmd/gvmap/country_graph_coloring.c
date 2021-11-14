@@ -18,7 +18,7 @@
 #include <time.h>
 
 static void get_local_12_norm(int n, int i, const int *ia, const int *ja,
-    const int *p, real *norm){
+    const int *p, double *norm){
   int j, nz = 0;
   norm[0] = n; norm[1] = 0;
   for (j = ia[i]; j < ia[i+1]; j++){
@@ -29,13 +29,13 @@ static void get_local_12_norm(int n, int i, const int *ia, const int *ja,
   }
   if (nz > 0) norm[1] /= nz;
 }
-static void get_12_norm(int n, int *ia, int *ja, int *p, real *norm){
+static void get_12_norm(int n, int *ia, int *ja, int *p, double *norm){
   /* norm[0] := antibandwidth
      norm[1] := (\sum_{{i,j}\in E} |p[i] - p[j]|)/|E|
      norm[2] := (\sum_{i\in V} (Min_{{j,i}\in E} |p[i] - p[j]|)/|V|
   */
   int i, j, nz = 0;
-  real tmp;
+  double tmp;
   norm[0] = n; norm[1] = 0; norm[2] = 0;
   for (i = 0; i < n; i++){
     tmp = n;
@@ -55,8 +55,8 @@ static void get_12_norm(int n, int *ia, int *ja, int *p, real *norm){
 void improve_antibandwidth_by_swapping(SparseMatrix A, int *p){
   bool improved = true;
   int cnt = 1, n = A->m, i, j, *ia = A->ia, *ja = A->ja;
-  real norm1[3], norm2[3], norm11[3], norm22[3];
-  real pi, pj;
+  double norm1[3], norm2[3], norm11[3], norm22[3];
+  double pi, pj;
   clock_t start = clock();
   FILE *fp = NULL;
   
@@ -109,9 +109,9 @@ static void country_graph_coloring_internal(int seed, SparseMatrix A, int **p){
   SparseMatrix L, A2;
   int *ia = A->ia, *ja = A->ja;
   int a = -1;
-  real nrow;
-  real *v = NULL;
-  real norm1[3];
+  double nrow;
+  double *v = NULL;
+  double norm1[3];
   clock_t start, start2;
 
   start = clock();
@@ -136,7 +136,7 @@ static void country_graph_coloring_internal(int seed, SparseMatrix A, int **p){
 
   /* largest eigen vector */
   {
-    real eig;
+    double eig;
     power_method(L, L->n, 1, seed, &v, &eig);
   }
 

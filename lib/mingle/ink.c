@@ -48,7 +48,7 @@ static const point_t Origin;
 
 /* sumLengths:
  */
-static double sumLengths_avoid_bad_angle(point_t* points, int npoints, point_t end, point_t meeting, real angle_param) 
+static double sumLengths_avoid_bad_angle(point_t* points, int npoints, point_t end, point_t meeting, double angle_param) 
 {
   /* avoid sharp turns, we want cos_theta to be as close to -1 as possible */
   int i;
@@ -94,7 +94,7 @@ static double sumLengths(point_t* points, int npoints, point_t end, point_t meet
 
 /* bestInk:
  */
-static double bestInk(point_t* points, int npoints, point_t begin, point_t end, double prec, point_t *meet, real angle_param)
+static double bestInk(point_t* points, int npoints, point_t begin, point_t end, double prec, point_t *meet, double angle_param)
 {
   point_t first, second, third, fourth, diff, meeting;
   double value1, value2, value3, value4;
@@ -172,7 +172,7 @@ static double bestInk(point_t* points, int npoints, point_t begin, point_t end, 
 
 }
 
-static double project_to_line(point_t pt, point_t left, point_t right, real angle){
+static double project_to_line(point_t pt, point_t left, point_t right, double angle){
   /* pt
      ^  ^          
      .   \ \ 
@@ -199,8 +199,8 @@ static double project_to_line(point_t pt, point_t left, point_t right, real angl
 
 
   point_t b, a;
-  real bnorm, dnorm;
-  real alpha, ccord;
+  double bnorm, dnorm;
+  double alpha, ccord;
 
   if (angle <=0 || angle >= M_PI) return 2;/* return outside of the interval which should be handled as a sign of infeasible turning angle */
   alpha = angle;
@@ -222,12 +222,12 @@ static double project_to_line(point_t pt, point_t left, point_t right, real angl
  * Compute minimal ink used the input edges are bundled.
  * Assumes tails all occur on one side and heads on the other.
  */
-double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, point_t *meet2, real angle_param, real angle)
+double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, point_t *meet2, double angle_param, double angle)
 {
   int i;
   point_t begin, end, mid, diff;
   pedge e;
-  real *x;
+  double *x;
   point_t* sources = N_NEW(numEdges, point_t);
   point_t* targets = N_NEW(numEdges, point_t);
   double inkUsed;
@@ -322,9 +322,9 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
 }
 
 double ink1(pedge e){
-  real *x, xx, yy;
+  double *x, xx, yy;
 
-  real ink0 = 0;
+  double ink0 = 0;
 
   x = e->x;
   xx = x[0] - x[e->dim*e->npoints - e->dim];

@@ -100,7 +100,7 @@ static bool strprefix(const char *s1, const char *s2) {
   return strncmp(s1, s2, strlen(s2)) == 0;
 }
 
-static void init(int argc, char *argv[], real *angle, real *accuracy, int *check_edges_with_same_endpoint, int *seed, char **color_scheme, char **lightness){
+static void init(int argc, char *argv[], double *angle, double *accuracy, int *check_edges_with_same_endpoint, int *seed, char **color_scheme, char **lightness){
 
   char* cmd = argv[0];
   outfile = NULL;
@@ -258,7 +258,7 @@ static void init(int argc, char *argv[], real *angle, real *accuracy, int *check
 }
 
 
-static int clarify(Agraph_t* g, real angle, real accuracy, int check_edges_with_same_endpoint, int seed, char *color_scheme, char *lightness){
+static int clarify(Agraph_t* g, double angle, double accuracy, int check_edges_with_same_endpoint, int seed, char *color_scheme, char *lightness){
 
   if (checkG(g)) {
     agerr (AGERR, "Graph %s contains loops or multiedges\n", agnameof(g));
@@ -280,8 +280,8 @@ static Agraph_t *gread(FILE * fp)
 
 int main(int argc, char *argv[])
 {
-  real accuracy;
-  real angle;
+  double accuracy;
+  double angle;
   int check_edges_with_same_endpoint, seed;
   char *color_scheme = NULL;
   char *lightness = NULL;

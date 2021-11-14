@@ -15,10 +15,10 @@
 static const int maxit = 100;
 
 // Accuracy control (convergence criterion) for power_method
-static const real tolerance = 0.00001;
+static const double tolerance = 0.00001;
 
 void power_method(void *A, int n, int K, int random_seed,
-    real **eigv, real *eigs){
+    double **eigv, double *eigs){
   /* find k-largest eigenvectors of a matrix A. Result in eigv. if eigv == NULL; memory will be allocated.
 
      This converges only if the largest eigenvectors/values are real (e.g., if A is symmetric) and the 
@@ -54,20 +54,20 @@ void power_method(void *A, int n, int K, int random_seed,
      end for
      return v1,v2,...
    */
-  real **v, *u, *vv;
+  double **v, *u, *vv;
   int iter = 0;
-  real res, unorm;
+  double res, unorm;
   int i, j, k;
-  real uij;
+  double uij;
 
   K = MAX(0, MIN(n, K));
   assert(K <= n && K > 0);
 
-  if (!(*eigv)) *eigv = MALLOC(sizeof(real)*n*K);
-  v = MALLOC(sizeof(real*)*K);
+  if (!(*eigv)) *eigv = MALLOC(sizeof(double)*n*K);
+  v = MALLOC(sizeof(double*)*K);
 
-  vv = MALLOC(sizeof(real)*n);
-  u = MALLOC(sizeof(real)*n);
+  vv = MALLOC(sizeof(double)*n);
+  u = MALLOC(sizeof(double)*n);
 
   srand(random_seed);
 
