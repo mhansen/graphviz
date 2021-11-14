@@ -83,11 +83,11 @@ def test_tools(tool):
   environ_copy.pop("DISPLAY", None)
 
   # Test usage
-  p = subprocess.Popen([tool, "-?"], env=environ_copy, stdin=subprocess.DEVNULL,
-                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                       universal_newlines=True)
-  output, _ = p.communicate()
-  ret = p.returncode
+  with subprocess.Popen([tool, "-?"], env=environ_copy,
+                        stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT, universal_newlines=True) as p:
+    output, _ = p.communicate()
+    ret = p.returncode
 
   # FIXME: https://gitlab.com/graphviz/graphviz/-/issues/1934
   # cope with flaky failures, while also failing if this flakiness has been
@@ -98,16 +98,17 @@ def test_tools(tool):
     for _ in range(100):
       if has_pass and has_fail:
         break
-      p = subprocess.Popen([tool, "-?"], env=environ_copy,
-                           stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT, universal_newlines=True)
-      out, _ = p.communicate()
-      if p.returncode == 0:
-        has_pass = True
-        ret = p.returncode
-        output = out
-      else:
-        has_fail = True
+      with subprocess.Popen([tool, "-?"], env=environ_copy,
+                            stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT,
+                            universal_newlines=True) as p:
+        out, _ = p.communicate()
+        if p.returncode == 0:
+          has_pass = True
+          ret = p.returncode
+          output = out
+        else:
+          has_fail = True
     assert has_pass, "could not find passing execution"
     assert has_fail, "could not find failing execution (#1934 fixed?)"
 
