@@ -28,11 +28,17 @@ static pair *mkPair(point p)
 
 static void freePair(Dt_t * d, pair* pp, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     free (pp);
 }
 
 static int cmppair(Dt_t * d, point * key1, point * key2, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     if (key1->x > key2->x)
 	return 1;
     else if (key1->x < key2->x)
@@ -136,6 +142,8 @@ typedef struct {
 
 static mpair *mkMPair(Dt_t * d, mpair * obj, MPairDisc * disc)
 {
+    (void)d;
+
     mpair *ap;
 
     if (disc->flist) {
@@ -150,6 +158,8 @@ static mpair *mkMPair(Dt_t * d, mpair * obj, MPairDisc * disc)
 
 static void freeMPair(Dt_t * d, mpair * ap, MPairDisc * disc)
 {
+    (void)d;
+
     ap->link.right = (Dtlink_t *) (disc->flist);
     disc->flist = ap;
 }

@@ -690,7 +690,7 @@ static const struct FontFamilyMetrics all_font_metrics[] = {
     },
 };
 
-const static size_t all_font_metrics_len =
+static const size_t all_font_metrics_len =
     sizeof(all_font_metrics) / sizeof(all_font_metrics[0]);
 
 /// Compares two font names for equality, ignoring case and special characters.
@@ -745,7 +745,8 @@ static bool font_in_list_permissive(const char *value, const char *list) {
 
   do {
     const char *next_pipe = strchr(list, '|');
-    size_t next_pipe_or_end_pos = next_pipe ? next_pipe - list : strlen(list);
+    size_t next_pipe_or_end_pos =
+        next_pipe ? (size_t)(next_pipe - list) : strlen(list);
     if (font_name_equal_permissive(value, list, next_pipe_or_end_pos)) {
       return true;
     }
@@ -812,7 +813,7 @@ estimate_character_width_canonical(const short variant_metrics[128],
     width = 0;
   }
   assert(width >= 0);
-  return width;
+  return (unsigned short)width;
 }
 
 double estimate_text_width_1pt(const char *font_name, const char *text,
