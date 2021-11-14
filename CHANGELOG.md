@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Check for existence of `dl_iterate_phdr(3)` and if it is available, prefer
   using it instead of iterating over `/proc/self/maps` for computing `libdir`.
 - A limit on GVC config files of 100000 bytes has been removed.
+- MD5 checksums of release artifacts are no longer provided. SHA256 checksums
+  are still provided and these should be used instead.
 
 ### Fixed
 

@@ -32,32 +32,34 @@ if [ "${ID}" = "centos" -o "${ID}" = "fedora" ]; then
 fi
 if [ "${build_system}" = "cmake" ]; then
     if [ "${ID_LIKE}" = "debian" ]; then
-        apt install ./${DIR}/os/Graphviz-${GV_VERSION}-Linux.deb
+        apt install ./${DIR}/graphviz-${GV_VERSION}-cmake.deb
     elif [ "${ID}" = "Darwin" ]; then
-        unzip ${DIR}/os/Graphviz-${GV_VERSION}-Darwin.zip
+        unzip ${DIR}/Graphviz-${GV_VERSION}-Darwin.zip
         cp -rp Graphviz-${GV_VERSION}-Darwin/* /usr/local
     else
-        rpm --install --force ${DIR}/os/Graphviz-${GV_VERSION}-Linux.rpm
+        rpm --install --force ${DIR}/graphviz-${GV_VERSION}-cmake.rpm
     fi
 else
     if [ "${ID_LIKE}" = "debian" ]; then
-        apt install ./${DIR}/os/libgraphviz4_${GV_VERSION}-1_amd64.deb
-        apt install ./${DIR}/os/libgraphviz-dev_${GV_VERSION}-1_amd64.deb
-        apt install ./${DIR}/os/graphviz_${GV_VERSION}-1_amd64.deb
+        tar xf ${DIR}/graphviz-${GV_VERSION}-debs.tar.xz
+        apt install ./libgraphviz4_${GV_VERSION}-1_amd64.deb
+        apt install ./libgraphviz-dev_${GV_VERSION}-1_amd64.deb
+        apt install ./graphviz_${GV_VERSION}-1_amd64.deb
     elif [ "${ID}" = "Darwin" ]; then
-        tar xf ${DIR}/os/graphviz-${GV_VERSION}-${ARCH}.tar.gz
+        tar xf ${DIR}/graphviz-${GV_VERSION}-${ARCH}.tar.gz
         cp -rp build/* /usr/local
     else
+        tar xvf ${DIR}/graphviz-${GV_VERSION}-rpms.tar.xz
         rpm --install --force \
-            ${DIR}/os/graphviz-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-libs-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-devel-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-plugins-core-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-plugins-x-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-x-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-gd-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-qt-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-plugins-gd-${GV_VERSION}*.rpm \
-            ${DIR}/os/graphviz-nox-${GV_VERSION}*.rpm
+            graphviz-${GV_VERSION}*.rpm \
+            graphviz-libs-${GV_VERSION}*.rpm \
+            graphviz-devel-${GV_VERSION}*.rpm \
+            graphviz-plugins-core-${GV_VERSION}*.rpm \
+            graphviz-plugins-x-${GV_VERSION}*.rpm \
+            graphviz-x-${GV_VERSION}*.rpm \
+            graphviz-gd-${GV_VERSION}*.rpm \
+            graphviz-qt-${GV_VERSION}*.rpm \
+            graphviz-plugins-gd-${GV_VERSION}*.rpm \
+            graphviz-nox-${GV_VERSION}*.rpm
     fi
 fi

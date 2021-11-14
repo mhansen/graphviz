@@ -19,11 +19,9 @@ else
 fi
 META_DATA_DIR=Metadata/${ID}/${VERSION_ID}
 mkdir -p ${META_DATA_DIR}
-DIR=Packages/${ID}/${VERSION_ID}
+DIR=$(pwd)/Packages/${ID}/${VERSION_ID}
+mkdir -p ${DIR}
 ARCH=$( uname -m )
-mkdir -p ${DIR}/os
-mkdir -p ${DIR}/debug
-mkdir -p ${DIR}/source
 build_system=${build_system:-autotools}
 if [ "${build_system}" = "cmake" ]; then
     mkdir build
@@ -33,19 +31,20 @@ if [ "${build_system}" = "cmake" ]; then
     cpack
     popd
     if [ "${OSTYPE}" = "linux-gnu" ]; then
+        GV_VERSION=$(python3 gen_version.py)
         if [ "${ID_LIKE:-}" = "debian" ]; then
-            mv build/*.deb ${DIR}/os/
+            mv build/Graphviz-${GV_VERSION}-Linux.deb ${DIR}/graphviz-${GV_VERSION}-cmake.deb
         else
-            mv build/*.rpm ${DIR}/os/
+            mv build/Graphviz-${GV_VERSION}-Linux.rpm ${DIR}/graphviz-${GV_VERSION}-cmake.rpm
         fi
     elif [[ "${OSTYPE}" =~ "darwin" ]]; then
-        mv build/*.zip ${DIR}/os/
+        mv build/*.zip ${DIR}/
     elif [ "${OSTYPE}" = "msys" ]; then
-        mv build/*.zip ${DIR}/os/
-        mv build/*.exe ${DIR}/os/
+        mv build/*.zip ${DIR}/
+        mv build/*.exe ${DIR}/
     elif [[ "${OSTYPE}" =~ "cygwin" ]]; then
-        mv build/*.zip ${DIR}/os/
-        mv build/*.tar.bz2 ${DIR}/os/
+        mv build/*.zip ${DIR}/
+        mv build/*.tar.bz2 ${DIR}/
     else
         echo "Error: OSTYPE=${OSTYPE} is unknown" >&2
         exit 1
@@ -58,22 +57,20 @@ elif [[ "${CONFIGURE_OPTIONS:-}" =~ "--enable-static" ]]; then
     make
     make install
     popd
-    tar cf - -C graphviz-${GV_VERSION}/build . | xz -9 -c - > graphviz-${GV_VERSION}-${ARCH}.tar.xz
-    mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/os/
 else
     GV_VERSION=$( cat GRAPHVIZ_VERSION )
     if [ "$OSTYPE" = "linux-gnu" ]; then
         if [ "${ID_LIKE:-}" = "debian" ]; then
             tar xfz graphviz-${GV_VERSION}.tar.gz
             (cd graphviz-${GV_VERSION}; fakeroot make -f debian/rules binary) | tee >(ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
-            mv *.deb ${DIR}/os/
-            mv *.ddeb ${DIR}/debug/
+            tar cf - *.deb *.ddeb | xz -9 -c - >${DIR}/graphviz-${GV_VERSION}-debs.tar.xz
         else
             rm -rf ${HOME}/rpmbuild
             rpmbuild -ta graphviz-${GV_VERSION}.tar.gz | tee >(ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
-            mv ${HOME}/rpmbuild/SRPMS/*.src.rpm ${DIR}/source/
-            mv ${HOME}/rpmbuild/RPMS/*/*debuginfo*rpm ${DIR}/debug/
-            mv ${HOME}/rpmbuild/RPMS/*/*.rpm ${DIR}/os/
+            pushd ${HOME}/rpmbuild/RPMS
+            mv */*.rpm ./
+            tar cf - *.rpm | xz -9 -c - >${DIR}/graphviz-${GV_VERSION}-rpms.tar.xz
+            popd
         fi
     elif [[ "${OSTYPE}" =~ "darwin" ]]; then
         ./autogen.sh
@@ -81,7 +78,7 @@ else
         make
         make install
         tar cfz graphviz-${GV_VERSION}-${ARCH}.tar.gz --options gzip:compression-level=9 build
-        mv graphviz-${GV_VERSION}-${ARCH}.tar.gz ${DIR}/os/
+        mv graphviz-${GV_VERSION}-${ARCH}.tar.gz ${DIR}/
     elif [ "${OSTYPE}" = "cygwin" ]; then
         if [ "${use_autogen:-no}" = "yes" ]; then
             ./autogen.sh
@@ -89,7 +86,7 @@ else
             make
             make install
             tar cf - -C build . | xz -9 -c - > graphviz-${GV_VERSION}-${ARCH}.tar.xz
-            mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/os/
+            mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/
         else
             tar xfz graphviz-${GV_VERSION}.tar.gz
             pushd graphviz-${GV_VERSION}
@@ -98,7 +95,7 @@ else
             make install
             popd
             tar cf - -C graphviz-${GV_VERSION}/build . | xz -9 -c - > graphviz-${GV_VERSION}-${ARCH}.tar.xz
-            mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/os/
+            mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/
         fi
     else
         echo "Error: OSTYPE=${OSTYPE} is unknown" >&2
