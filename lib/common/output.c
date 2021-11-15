@@ -12,6 +12,7 @@
 #include <cgraph/agxbuf.h>
 #include <gvc/gvc.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <string.h>
 
 #define YDIR(y) (Y_invert ? (Y_off - (y)) : (y))
@@ -108,8 +109,7 @@ static void writenodeandport(FILE * f, node_t * node, char *port)
 
 /* _write_plain:
  */
-void write_plain(GVJ_t * job, graph_t * g, FILE * f, boolean extend)
-{
+void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     int i, j, splinePoints;
     char *tport, *hport;
     node_t *n;

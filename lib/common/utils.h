@@ -63,7 +63,7 @@ extern "C" {
                              int (*cb)(void *state, const char *s),
                              void *state);
 
-    UTILS_API void write_plain(GVJ_t * job, graph_t * g, FILE * f, boolean extend);
+    UTILS_API void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend);
     UTILS_API double yDir (double y);
     UTILS_API char *ps_string(char *s, int);
     UTILS_API char *strdup_and_subst_obj(char *str, void *obj);
@@ -106,7 +106,8 @@ extern "C" {
     UTILS_API bool overlap_label(textlabel_t *lp, boxf b);
     UTILS_API bool overlap_edge(edge_t *e, boxf b);
 
-    UTILS_API void get_gradient_points(pointf * A, pointf * G, int n, float angle, int flags);
+    UTILS_API void get_gradient_points(pointf *A, pointf *G, int n,
+                                       double angle, int flags);
 
     UTILS_API void processClusterEdges(graph_t * g);
 

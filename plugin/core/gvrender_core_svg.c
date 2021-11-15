@@ -493,12 +493,11 @@ static void svg_textspan(GVJ_t * job, pointf p, textspan_t * span)
 static int svg_gradstyle(GVJ_t * job, pointf * A, int n)
 {
     pointf G[2];
-    float angle;
     static int gradId;
     int id = gradId++;
 
     obj_state_t *obj = job->obj;
-    angle = obj->gradient_angle * M_PI / 180;	//angle of gradient line
+    double angle = obj->gradient_angle * M_PI / 180; //angle of gradient line
     G[0].x = G[0].y = G[1].x = G[1].y = 0.;
     get_gradient_points(A, G, n, angle, 0);	//get points on gradient line
 

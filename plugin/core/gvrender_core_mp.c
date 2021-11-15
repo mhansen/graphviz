@@ -219,26 +219,36 @@ static void mp_end_graph(GVJ_t * job)
 
 static void mp_begin_page(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 2;
 }
 
 static void mp_begin_node(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 1;
 }
 
 static void mp_end_node(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 2;
 }
 
 static void mp_begin_edge(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 0;
 }
 
 static void mp_end_edge(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 2;
 }
 

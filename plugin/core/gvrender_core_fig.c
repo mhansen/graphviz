@@ -214,26 +214,36 @@ static void fig_end_graph(GVJ_t * job)
 
 static void fig_begin_page(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 2;
 }
 
 static void fig_begin_node(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 1;
 }
 
 static void fig_end_node(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 2;
 }
 
 static void fig_begin_edge(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 0;
 }
 
 static void fig_end_edge(GVJ_t * job)
 {
+    (void)job;
+
     Depth = 2;
 }
 

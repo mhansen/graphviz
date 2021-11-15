@@ -16,6 +16,7 @@
 
 #include <limits.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -26,6 +27,7 @@
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
@@ -481,6 +483,8 @@ static void dot_begin_graph(GVJ_t *job)
 	    attach_attrs_and_arrows(g, &s_arrows, &e_arrows);
 	    xdot_begin_graph(g, s_arrows, e_arrows, job->render.id);
 	    break;
+	default:
+	    UNREACHABLE();
     }
 }
 
@@ -524,10 +528,10 @@ static void dot_end_graph(GVJ_t *job)
     g->clos->disc.io = &io;
     switch (job->render.id) {
 	case FORMAT_PLAIN:
-	    write_plain(job, g, (FILE*)job, FALSE);
+	    write_plain(job, g, (FILE*)job, false);
 	    break;
 	case FORMAT_PLAIN_EXT:
-	    write_plain(job, g, (FILE*)job, TRUE);
+	    write_plain(job, g, (FILE*)job, true);
 	    break;
 	case FORMAT_DOT:
 	case FORMAT_CANON:
@@ -541,6 +545,8 @@ static void dot_end_graph(GVJ_t *job)
 	    if (!(job->flags & OUTPUT_NOT_REQUIRED))
 		agwrite(g, job);
 	    break;
+	default:
+	    UNREACHABLE();
     }
     g->clos->disc.io = io_save;
 }
@@ -608,8 +614,7 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
     unsigned char buf0[BUFSIZ];
     agxbuf xb;
     obj_state_t* obj = job->obj;
-    float angle = obj->gradient_angle * M_PI / 180;
-    float r1,r2;
+    double angle = obj->gradient_angle * M_PI / 180;
     pointf G[2],c1,c2;
 
     if (xd->version < 14) {
@@ -626,9 +631,8 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
     }
     else {
 	get_gradient_points(A, G, n, 0, 3);
-	  //r1 is inner radius, r2 is outer radius
-	r1 = G[1].x;
-	r2 = G[1].y;
+	  // r2 is outer radius
+	double r2 = G[1].y;
 	if (angle == 0) {
 	    c1.x = G[0].x;
 	    c1.y = G[0].y;
@@ -639,7 +643,7 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
 	}
 	c2.x = G[0].x;
 	c2.y = G[0].y;
-	r1 = r2/4;
+	double r1 = r2 / 4;
 	agxbputc(&xb, '(');
 	xdot_point (&xb, c1);
 	xdot_num (&xb, r1);
@@ -734,6 +738,8 @@ static void xdot_polyline(GVJ_t * job, pointf * A, int n)
 
 void core_loadimage_xdot(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
 {
+    (void)filled;
+
     emit_state_t emit_state = job->obj->emit_state;
     char buf[BUFSIZ];
     

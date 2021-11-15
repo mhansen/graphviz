@@ -306,7 +306,7 @@ static void cairogen_set_penstyle(GVJ_t *job, cairo_t *cr)
 static void cairo_gradient_fill (cairo_t* cr, obj_state_t* obj, int filled, pointf* A, int n)
 {
     cairo_pattern_t* pat;
-    float angle = obj->gradient_angle * M_PI / 180;
+    double angle = obj->gradient_angle * M_PI / 180;
     float r1,r2;
     pointf G[2],c1;
 
