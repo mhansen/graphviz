@@ -33,9 +33,6 @@ typedef struct Pedge_t {
 } Pedge_t;
 
 
-void find_ints(struct vertex vertex_list[], struct polygon polygon_list[],
-	       struct data *input, struct intersection ilist[]);
-
 int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 {
 
