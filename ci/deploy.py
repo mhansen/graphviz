@@ -195,6 +195,12 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
         for c in checksum(path):
           assets.append(upload(package_version, c, str(c)[len("Packages/"):]))
 
+  # various release pages truncate the viewable artifacts to 100 or even 50
+  if not options.force and len(assets) > 50:
+    log.error(f"upload has {len(assets)} assets, which will result in some of "
+              "them being unviewable in web page lists")
+    return -1
+
   # we only create Gitlab releases for stable version numbers
   if not options.force:
     if re.match(r"\d+\.\d+\.\d+$", options.version) is None:
