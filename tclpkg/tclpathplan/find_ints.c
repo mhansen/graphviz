@@ -93,6 +93,8 @@ void find_ints(struct vertex vertex_list[],
 		templ->active = NIL;
 		break;		/* end of case 1        */
 
+	    default:
+		break;
 	    }			/* end switch   */
 
 	    pt2 = after(pvertex[i]);
