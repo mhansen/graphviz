@@ -11,7 +11,7 @@ AM_CPPFLAGS = \
 
 AM_CFLAGS = @TCL_CFLAGS@
 
-noinst_HEADERS = simple.h
+noinst_HEADERS = makecw.h simple.h
 if WITH_TCL
 pkgtcl_LTLIBRARIES = libtclplan.la
 endif
