@@ -399,6 +399,8 @@ static int
 vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	  char *argv[])
 {
+    (void)clientData;
+
     int vargc, i, j, n, result;
     char *s, **vargv, vbuf[30];
     vgpane_t *vgp, **vgpp;
