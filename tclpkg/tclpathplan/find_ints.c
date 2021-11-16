@@ -17,7 +17,6 @@ void find_intersection(struct vertex *l, struct vertex *m,
 static int gt(const void *a, const void *b);
 
 void find_ints(struct vertex vertex_list[],
-	struct polygon polygon_list[],
 	struct data *input,
 	struct intersection ilist[])
 {

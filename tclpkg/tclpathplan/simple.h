@@ -59,8 +59,8 @@ extern "C" {
 	int npolygons, ninters;
     };
 
-void find_ints(struct vertex vertex_list[], struct polygon polygon_list[],
-               struct data *input, struct intersection ilist[]);
+void find_ints(struct vertex vertex_list[], struct data *input,
+               struct intersection ilist[]);
 
 #ifdef __cplusplus
 }
