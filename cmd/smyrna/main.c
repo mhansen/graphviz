@@ -36,9 +36,10 @@
 #include "glutrender.h"
 
 #include <getopt.h>
+#include <stddef.h>
 
 static char *smyrnaDir;		/* path to directory containin smyrna data files */
-char *smyrnaGlade;
+static char *smyrnaGlade;
 
 /* smyrnaPath:
  * Construct pathname for smyrna data file.
@@ -52,8 +53,7 @@ char *smyrnaGlade;
 char *smyrnaPath(char *suffix)
 {
     char *buf;
-    static int baselen;
-    int slen;
+    static size_t baselen;
 #ifdef _WIN32
     char *pathSep = "\\";
 #else
@@ -62,9 +62,9 @@ char *smyrnaPath(char *suffix)
     assert(smyrnaDir);
 
     if (baselen == 0) {
-	baselen = (int)strlen(smyrnaDir) + 2;
+	baselen = strlen(smyrnaDir) + 2;
     }
-    slen = (int)strlen(suffix);
+    size_t slen = strlen(suffix);
     buf = N_NEW(baselen+slen, char);
     sprintf(buf, "%s%s%s", smyrnaDir, pathSep, suffix);
     return buf;

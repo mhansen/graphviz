@@ -12,12 +12,4 @@
 
 #include <cgraph/cgraph.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
     extern int run_gvpr(Agraph_t * srcGraph, int argc, char *argv[]);
-
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

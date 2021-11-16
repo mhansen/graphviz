@@ -49,8 +49,7 @@ static int get_object_type(void)
     return -1;
 }
 
-void free_attr(attr_t * at)
-{
+static void free_attr(attr_t *at) {
     free(at->defValG);
     free(at->defValN);
     free(at->defValE);
@@ -59,9 +58,7 @@ void free_attr(attr_t * at)
     free(at);
 }
 
-
-attr_t *new_attr(void)
-{
+static attr_t *new_attr(void) {
     attr_t *attr = malloc(sizeof(attr_t));
     attr->defValG = (char *) 0;
     attr->defValN = (char *) 0;
@@ -131,9 +128,7 @@ static void free_attr_list_widgets(attr_list * l)
     }
 }
 
-
-void free_attr_list(attr_list * l)
-{
+static void free_attr_list(attr_list *l) {
     int id;
     for (id = 0; id < l->attr_count; id++) {
 	free_attr(l->attributes[id]);
@@ -172,19 +167,6 @@ attr_list *attr_list_new(Agraph_t * g, int with_widgets)
     return l;
 }
 
-void print_attr_list(attr_list * l)
-{
-    int id;
-    for (id = 0; id < l->attr_count; id++) {
-	printf("%d  %s (%d %d %d) \n", l->attributes[id]->index,
-	       l->attributes[id]->name, l->attributes[id]->objType[0],
-	       l->attributes[id]->objType[1],
-	       l->attributes[id]->objType[2]);
-	printf("defG:%s defN:%s defE:%s\n", l->attributes[id]->defValG,
-	       l->attributes[id]->defValN, l->attributes[id]->defValE);
-    }
-}
-
 static int attr_compare(const void *a, const void *b)
 {
     const attr_t *a1 = *(attr_t *const *) a;
@@ -198,8 +180,7 @@ static void attr_list_sort(attr_list * l)
 
 }
 
-void attr_list_add(attr_list * l, attr_t * a)
-{
+static void attr_list_add(attr_list *l, attr_t *a) {
     int id;
     if ((!l) || (!a))
 	return;
@@ -444,7 +425,7 @@ static void filter_attributes(char *prefix, topview * t)
 			     tmp);
 }
 
-/*asttribute text changed call back*/
+// attribute text changed call back
 
 _BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data)
 {
@@ -531,11 +512,6 @@ static void doApply (GtkWidget * widget, int doAll)
 _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
     doApply (widget, 0);
-}
-
-_BB void on_attrApplyAllBtn_clicked(GtkWidget * widget, gpointer user_data)
-{
-    doApply (widget, 1);
 }
 
 _BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)

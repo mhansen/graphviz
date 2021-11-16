@@ -18,9 +18,6 @@
 #include <math.h>
 #include <glcomp/glcompfont.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 /* DRAWING FUNCTIONS 
  * these are opengl based xdot drawing functions 
  * topview drawings are not here
@@ -29,7 +26,3 @@ extern drawfunc_t OpFns[];
 extern void drawCircle(float x, float y, float radius, float zdepth);
 extern void drawBorders(ViewInfo * view);
 extern void draw_selpoly(glCompPoly* selPoly);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

@@ -11,7 +11,7 @@
 #pragma once
 
 /*
-	this code is used to set up a opngl window and set
+	this code is used to set up a OpenGL window and set
 	some basic features (panning zooming and rotating)
 	Viewport.h provides a higher level control such as drawing primitives
 */
@@ -26,15 +26,7 @@
 #include <gtk/gtkgl.h>
 #include <gdk/gdkcursor.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     gboolean expose_event(GtkWidget * widget, GdkEventExpose * event,
 			  gpointer data);
     extern GdkGLConfig *configure_gl(void);
     void create_window(GdkGLConfig * glconfig, GtkWidget * vbox);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

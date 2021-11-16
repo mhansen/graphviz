@@ -12,15 +12,9 @@
 
 #include "smyrnadefs.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
     typedef struct {
 	GLUtesselator *tobj;
 	GLenum windingRule;
     }tessPoly;
-    extern int drawTessPolygon(sdot_op* p);
+    extern void drawTessPolygon(sdot_op* p);
     extern int testDraw(void);
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

@@ -14,10 +14,6 @@
 #include "toolboxcallbacks.h"
 #include "gui.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef	_WIN32			//this is needed on _WIN32 to get libglade see the callback
 #define _BB  __declspec(dllexport)
 #else
@@ -46,7 +42,3 @@ extern "C" {
 				      gpointer user_data);
     _BB void on_consoleincbtn_clicked(GtkWidget * widget,
 				      gpointer user_data);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

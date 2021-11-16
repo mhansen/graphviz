@@ -12,12 +12,4 @@
 
 #include "viewport.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     int glexpose_main(ViewInfo * v);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

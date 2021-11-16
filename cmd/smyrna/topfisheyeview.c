@@ -363,7 +363,7 @@ static void get_interpolated_coords(double x0, double y0, double x1, double y1,
     *y = y0 + (y1 - y0) / (double) total_fr *(double) (fr + 1);
 }
 
-int get_temp_coords(topview * t, int level, int v, double *coord_x,
+static int get_temp_coords(topview * t, int level, int v, double *coord_x,
 		    double *coord_y)
 {
     Hierarchy *hp = t->fisheyeParams.h;

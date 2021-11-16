@@ -13,10 +13,6 @@
 #include "gui.h"
 #include "tvnodes.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     _BB void btnTVOK_clicked_cb(GtkWidget * widget, gpointer user_data);
     _BB void btnTVShowAll_clicked_cb(GtkWidget * widget,
 				     gpointer user_data);
@@ -25,7 +21,3 @@ extern "C" {
 
     _BB void btnTVSaveAs_clicked_cb(GtkWidget * widget,
 				    gpointer user_data);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

@@ -12,10 +12,6 @@
 
 #include "gui.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //file
     _BB void mOpenSlot(GtkWidget * widget, gpointer user_data);
     _BB void mSaveSlot(GtkWidget * widget, gpointer user_data);
@@ -86,7 +82,3 @@ extern "C" {
 				       gpointer user_data);
     _BB void on_gvprbuttonsave_clicked(GtkWidget * widget,
 				       gpointer user_data);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

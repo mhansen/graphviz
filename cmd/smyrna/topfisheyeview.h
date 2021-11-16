@@ -13,15 +13,7 @@
 #include "smyrnadefs.h"
 #include "hier.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     void drawtopologicalfisheye(topview * t);
     void changetopfishfocus(topview * t, float *x, float *y,
 			    float *z, int num_foci);
     void prepare_topological_fisheye(Agraph_t* g,topview * t);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif

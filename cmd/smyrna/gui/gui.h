@@ -21,10 +21,6 @@
 
 #define MAXIMUM_WIDGET_COUNT	97
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     extern GladeXML *xml;	//global libglade vars
     extern GtkWidget *gladewidget;
 
@@ -35,7 +31,7 @@ extern "C" {
 
     void load_attributes(void);	//loads attributes from a text file
 
-//GTK helpre functions
+//GTK helper functions
 //void Color_Widget_bg (int r, int g, int b, GtkWidget *widget);        //change background color 
     void Color_Widget_bg(char *colorstring, GtkWidget * widget);
 /*generic warning pop up*/
@@ -45,7 +41,3 @@ extern "C" {
 /*generic save file dialog*/
     int savefiledlg(int filtercnt, char **filters, agxbuf * xbuf);
     void append_textview(GtkTextView * textv, const char *s, size_t bytes);
-
-#ifdef __cplusplus
-}				/* end extern "C" */
-#endif
