@@ -21,7 +21,7 @@ void find_ints(struct vertex vertex_list[],
 	struct data *input,
 	struct intersection ilist[])
 {
-    int i, j, k;
+    int j, k;
     struct active_edge_list all;
     struct active_edge *new, *tempa;
     struct vertex *pt1, *pt2, *templ, **pvertex;
@@ -32,14 +32,14 @@ void find_ints(struct vertex vertex_list[],
 
     pvertex = malloc((input->nvertices) * sizeof(struct vertex *));
 
-    for (i = 0; i < input->nvertices; i++)
+    for (size_t i = 0; i < input->nvertices; i++)
 	pvertex[i] = vertex_list + i;
 
 /* sort vertices by x coordinate	*/
     qsort(pvertex, input->nvertices, sizeof(struct vertex *), gt);
 
 /* walk through the vertices in order of increasing x coordinate	*/
-    for (i = 0; i < input->nvertices; i++) {
+    for (size_t i = 0; i < input->nvertices; i++) {
 	pt1 = pvertex[i];
 	templ = pt2 = prior(pvertex[i]);
 	for (k = 0; k < 2; k++) {	/* each vertex has 2 edges */

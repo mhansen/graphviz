@@ -36,7 +36,7 @@ typedef struct Pedge_t {
 int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 {
 
-    int i, j, vno, nverts, rv;
+    int i, j, vno, rv;
 
     struct vertex *vertex_list;
     struct polygon *polygon_list;
@@ -45,7 +45,8 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 
     polygon_list = malloc(n_polys * sizeof(struct polygon));
 
-    for (i = nverts = 0; i < n_polys; i++)
+    size_t nverts = 0;
+    for (i = 0; i < n_polys; i++)
 	nverts += polys[i]->pn;
 
     vertex_list = malloc(nverts * sizeof(struct vertex));

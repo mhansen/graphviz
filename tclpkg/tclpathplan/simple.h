@@ -8,6 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -53,7 +55,8 @@ extern "C" {
 	int number;
     };
     struct data {
-	int nvertices, npolygons, ninters;
+	size_t nvertices;
+	int npolygons, ninters;
     };
 
 void find_ints(struct vertex vertex_list[], struct polygon polygon_list[],
