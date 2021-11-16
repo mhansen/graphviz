@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/unreachable.h>
 #include <math.h>
 #include <stdio.h>
 #include "simple.h"
@@ -138,6 +139,10 @@ static int intpoint(struct vertex *l, struct vertex *m, float *x, float *y, int 
 	    *x = me.x;
 	    *y = me.y;
 	}
+	break;
+
+    default:
+	UNREACHABLE();
     }				/* end switch  */
     return 1;
 }
