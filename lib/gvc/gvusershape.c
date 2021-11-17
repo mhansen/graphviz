@@ -413,13 +413,12 @@ static void jpeg_size (usershape_t *us) {
 static void ps_size (usershape_t *us)
 {
     char line[BUFSIZ];
-    boolean saw_bb;
     int lx, ly, ux, uy;
     char* linep;
 
     us->dpi = 72;
     fseek(us->f, 0, SEEK_SET);
-    saw_bb = FALSE;
+    bool saw_bb = false;
     while (fgets(line, sizeof(line), us->f)) {
 	/* PostScript accepts \r as EOL, so using fgets () and looking for a
 	 * bounding box comment at the beginning doesn't work in this case. 
@@ -432,7 +431,7 @@ static void ps_size (usershape_t *us)
 	if (!(linep = strstr (line, "%%BoundingBox:")))
 	    continue;
         if (sscanf (linep, "%%%%BoundingBox: %d %d %d %d", &lx, &ly, &ux, &uy) == 4) {
-            saw_bb = TRUE;
+            saw_bb = true;
 	    break;
         }
     }
