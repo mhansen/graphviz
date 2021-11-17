@@ -137,8 +137,12 @@ static void free_attr_list(attr_list *l) {
 	free_attr_list_widgets(l);
     free(l);
 }
-attr_list *attr_list_new(Agraph_t * g, int with_widgets)
-{
+
+// creates a new attr_list
+// attr_list is a basic stack implementation
+// with alphanumeric sorting functions
+// that uses quicksort
+static attr_list *attr_list_new(Agraph_t *g, int with_widgets) {
     int id;
     attr_list *l = malloc(sizeof(attr_list));
     l->attr_count = 0;

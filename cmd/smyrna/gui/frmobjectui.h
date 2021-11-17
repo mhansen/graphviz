@@ -13,17 +13,7 @@
 #include "smyrnadefs.h"
 
 
-/*
-	creates a new attr_list
-	attr_list is a basic stack implementation
-	with alphanumeric sorting functions 
-	that uses quicksort
-
-*/
-
 #define ATTR_NOTEBOOK_IDX 6
-
-extern attr_list* attr_list_new(Agraph_t * g,int with_widgets );
 
 _BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data);
 _BB void attr_label_motion(GtkWidget * widget,GdkEventMotion * event, gpointer data);
