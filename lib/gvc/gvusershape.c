@@ -10,7 +10,7 @@
 
 #include "config.h"
 
-#include <stddef.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -81,10 +81,9 @@ static int imagetype (usershape_t *us)
 {
     char header[HDRLEN];
     char line[200];
-    int i;
 
     if (us->f && fread(header, 1, HDRLEN, us->f) == HDRLEN) {
-        for (i = 0; i < sizeof(knowntypes) / sizeof(knowntype_t); i++) {
+        for (size_t i = 0; i < sizeof(knowntypes) / sizeof(knowntype_t); i++) {
 	    if (!memcmp (header, knowntypes[i].template, knowntypes[i].size)) {
 	        us->stringtype = knowntypes[i].stringtype;
 		us->type = knowntypes[i].type;
@@ -115,33 +114,31 @@ static int imagetype (usershape_t *us)
     return FT_NULL;
 }
     
-static boolean get_int_lsb_first (FILE *f, unsigned int sz, unsigned int *val)
-{
-    int ch, i;
+static bool get_int_lsb_first(FILE *f, size_t sz, unsigned int *val) {
+    int ch;
 
     *val = 0;
-    for (i = 0; i < sz; i++) {
+    for (size_t i = 0; i < sz; i++) {
 	ch = fgetc(f);
 	if (feof(f))
-	    return FALSE;
-	*val |= (ch << 8*i);
+	    return false;
+	*val |= (unsigned)ch << 8 * i;
     }
-    return TRUE;
+    return true;
 }
 	
-static boolean get_int_msb_first (FILE *f, unsigned int sz, unsigned int *val)
-{
-    int ch, i;
+static bool get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
+    int ch;
 
     *val = 0;
-    for (i = 0; i < sz; i++) {
+    for (size_t i = 0; i < sz; i++) {
 	ch = fgetc(f);
 	if (feof(f))
-	    return FALSE;
+	    return false;
         *val <<= 8;
 	*val |= ch;
     }
-    return TRUE;
+    return true;
 }
 
 static unsigned int svg_units_convert(double n, char *u)
@@ -286,22 +283,6 @@ static void ico_size (usershape_t *us)
         us->h = h;
     }
 }
-
-
-// FIXME - how to get the size of a tiff image?
-#if 0
-static void tiff_size (usershape_t *us)
-{
-    unsigned int w, h;
-
-    us->dpi = 0;
-    fseek(us->f, 6, SEEK_SET);
-    if (get_int_msb_first(us->f, 1, &w) && get_int_msb_first(us->f, 1, &h)) {
-        us->w = w;
-        us->h = h;
-    }
-}
-#endif
 
 static void webp_size (usershape_t *us)
 {
