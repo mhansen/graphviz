@@ -210,7 +210,7 @@ static void svg_size (usershape_t *us)
     char u[10];
     char *attribute, *value, *re_string;
     char line[200];
-    boolean wFlag = FALSE, hFlag = FALSE;
+    bool wFlag = false, hFlag = false;
 
     fseek(us->f, 0, SEEK_SET);
     while (fgets(line, sizeof(line), us->f) != NULL && (!wFlag || !hFlag)) {
@@ -226,11 +226,11 @@ static void svg_size (usershape_t *us)
 	        strncmp(attribute, "width", match.key_extent) == 0) {
 	        if (sscanf(value, "%lf%2s", &n, u) == 2) {
 	            w = svg_units_convert(n, u);
-	            wFlag = TRUE;
+	            wFlag = true;
 		}
 		else if (sscanf(value, "%lf", &n) == 1) {
 	            w = svg_units_convert(n, "pt");
-	            wFlag = TRUE;
+	            wFlag = true;
 		}
 		if (hFlag)
 		    break;
@@ -239,11 +239,11 @@ static void svg_size (usershape_t *us)
 	             strncmp(attribute, "height", match.key_extent) == 0) {
 	        if (sscanf(value, "%lf%2s", &n, u) == 2) {
 	            h = svg_units_convert(n, u);
-	            hFlag = TRUE;
+	            hFlag = true;
 		}
 	        else if (sscanf(value, "%lf", &n) == 1) {
 	            h = svg_units_convert(n, "pt");
-	            hFlag = TRUE;
+	            hFlag = true;
 		}
                 if (wFlag)
 		    break;
@@ -253,8 +253,8 @@ static void svg_size (usershape_t *us)
 	      && sscanf(value, "%lf %lf %lf %lf", &x0,&y0,&x1,&y1) == 4) {
 		w = x1 - x0 + 1;
 		h = y1 - y0 + 1;
-	        wFlag = TRUE;
-	        hFlag = TRUE;
+	        wFlag = true;
+	        hFlag = true;
 	        break;
 	    }
 	}
