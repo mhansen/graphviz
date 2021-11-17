@@ -76,25 +76,6 @@ void mQuitSlot(GtkWidget * widget, gpointer user_data)
     gtk_main_quit();
 }
 
-int show_close_nosavedlg(void)
-{
-    GtkWidget *dialog;
-    int rv;			/*return value */
-    dialog =
-	gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL,
-			       GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
-			       "%s has been modified. Do you want to save it before closing?",
-                               view->Topview->Graphdata.GraphFileName);
-
-    gtk_window_set_title(GTK_WINDOW(dialog), "Smyrna Warning");
-    gtk_dialog_add_button((GtkDialog *) dialog, "Yes", 0);
-    gtk_dialog_add_button((GtkDialog *) dialog, "No", 1);
-    gtk_dialog_add_button((GtkDialog *) dialog, "Cancel", 2);
-    rv = gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
-    return rv;
-}
-
 //edit
 void mCutSlot(GtkWidget * widget, gpointer user_data)
 {
