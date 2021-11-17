@@ -193,26 +193,6 @@ int savefiledlg(int filtercnt, char **filters, agxbuf * xbuf)
     return rv;
 }
 
-/*
-	this function is designed to return a GtkTextView object's text in agxbuf
-	send an initialized agxbuf and a GtkTextView object
-	null termination is taken care by agxbuf
-*/
-void get_gtktextview_text(GtkTextView * w, agxbuf * xbuf)
-{
-    int charcnt;
-    GtkTextBuffer *gtkbuf;
-    GtkTextIter startit;
-    GtkTextIter endit;
-    gtkbuf = gtk_text_view_get_buffer(w);
-    charcnt = gtk_text_buffer_get_char_count(gtkbuf);
-    gtk_text_buffer_get_start_iter(gtkbuf, &startit);
-    gtk_text_buffer_get_end_iter(gtkbuf, &endit);
-
-    agxbput(xbuf, gtk_text_buffer_get_text(gtkbuf, &startit, &endit, 0));
-}
-
-
 void append_textview(GtkTextView * textv, const char *s, size_t bytes)
 {
 
