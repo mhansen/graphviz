@@ -195,10 +195,6 @@ void mAbout(GtkWidget * widget, gpointer user_data)
 {
 }
 
-void mHelp(GtkWidget * widget, gpointer user_data)
-{
-}
-
 void change_cursor(GdkCursorType C)
 {
     GdkCursor *cursor;
