@@ -190,40 +190,6 @@ void mEdgePropertiesSlot(GtkWidget * widget, gpointer user_data)
 void mShowCodeSlot(GtkWidget * widget, gpointer user_data)
 {
 }
-static void mSlot(GtkWidget * widget, gpointer user_data,
-		  gvk_layout layout, int doCursor)
-{
-}
-
-void mDotSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_DOT, 1);
-}
-
-void mNeatoSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_NEATO, 0);
-}
-
-void mTwopiSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_TWOPI, 0);
-}
-
-void mCircoSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_CIRCO, 0);
-}
-
-void mFdpSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_FDP, 0);
-}
-
-void mSfdpSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_SFDP, 0);
-}
 
 void mAbout(GtkWidget * widget, gpointer user_data)
 {
