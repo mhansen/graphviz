@@ -33,6 +33,9 @@
 #define _BLD_gvc 1
 #include <common/utils.h>
 #include <gvc/gvplugin_loadimage.h>
+#include <gvc/gvplugin.h>
+#include <gvc/gvcint.h>
+#include <gvc/gvcproc.h>
 
 extern char *Gvimagepath;
 extern char *HTTPServerEnVar;
