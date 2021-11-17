@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -333,7 +334,7 @@ static void bmp_size (usershape_t *us) {
 }
 
 static void jpeg_size (usershape_t *us) {
-    unsigned int marker, length, size_x, size_y, junk;
+    unsigned int marker, length, size_x, size_y;
 
     /* These are the markers that follow 0xff in the file.
      * Other markers implicitly have a 2-byte length field that follows.
@@ -373,7 +374,7 @@ static void jpeg_size (usershape_t *us) {
         /* Incase of a 0xc0 marker: */
         if (marker == 0xc0) {
             /* Skip length and 2 lengths. */
-            if ( get_int_msb_first (us->f, 3, &junk)   &&
+            if (fseek(us->f, 3, SEEK_CUR) == 0 &&
                  get_int_msb_first (us->f, 2, &size_x) &&
                  get_int_msb_first (us->f, 2, &size_y) ) {
 
@@ -387,7 +388,7 @@ static void jpeg_size (usershape_t *us) {
         /* Incase of a 0xc2 marker: */
         if (marker == 0xc2) {
             /* Skip length and one more byte */
-            if (! get_int_msb_first (us->f, 3, &junk))
+            if (fseek(us->f, 3, SEEK_CUR) != 0)
                 return;
 
             /* Get length and store. */
