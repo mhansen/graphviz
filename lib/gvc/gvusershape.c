@@ -339,7 +339,7 @@ static void jpeg_size (usershape_t *us) {
     /* These are the markers that follow 0xff in the file.
      * Other markers implicitly have a 2-byte length field that follows.
      */
-    static unsigned char standalone_markers [] = {
+    static const unsigned char standalone_markers[] = {
         0x01,                       /* Temporary */
         0xd0, 0xd1, 0xd2, 0xd3,     /* Reset */
             0xd4, 0xd5, 0xd6,
