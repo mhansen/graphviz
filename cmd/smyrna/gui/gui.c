@@ -39,65 +39,6 @@ void load_graph_properties(Agraph_t * graph)
 		       view->Topview->Graphdata.GraphFileName);
 }
 
-int update_graph_properties(Agraph_t * graph)	//updates graph from gui
-{
-    FILE *file;
-    int respond = 0;
-
-    //check if file is changed
-    if (strcasecmp
-	(gtk_entry_get_text
-	 ((GtkEntry *) glade_xml_get_widget(xml, "entryGraphFileName")),
-	 view->Topview->Graphdata.GraphFileName) != 0) {
-
-
-	if ((file = fopen(gtk_entry_get_text((GtkEntry *)
-					     glade_xml_get_widget(xml,
-								  "entryGraphFileName")),
-			  "r"))) {
-	    fclose(file);
-	    Dlg = (GtkMessageDialog *) gtk_message_dialog_new(NULL,
-							      GTK_DIALOG_MODAL,
-							      GTK_MESSAGE_QUESTION,
-							      GTK_BUTTONS_YES_NO,
-							      "File name you have entered already exists\n,this will cause overwriting on existing file.\nAre you sure?");
-	    respond = gtk_dialog_run((GtkDialog *) Dlg);
-	    gtk_object_destroy((GtkObject *) Dlg);
-
-	    if (respond == GTK_RESPONSE_NO)
-		return 0;
-	}
-	//now check if filename is legal, try to open it to write
-	if ((file = fopen(gtk_entry_get_text((GtkEntry *)
-					     glade_xml_get_widget(xml,
-								  "entryGraphFileName")),
-			  "w")))
-	    fclose(file);
-	else {
-	    Dlg = (GtkMessageDialog *) gtk_message_dialog_new(NULL,
-							      GTK_DIALOG_MODAL,
-							      GTK_MESSAGE_WARNING,
-							      GTK_BUTTONS_OK,
-							      "File name is invalid or I/O error!");
-
-	    respond = gtk_dialog_run((GtkDialog *) Dlg);
-	    gtk_object_destroy((GtkObject *) Dlg);
-	    GTK_DIALOG(Dlg);
-
-	    return 0;
-	}
-
-    }
-
-    //if it comes so far graph deserves new values
-
-    view->Topview->Graphdata.GraphFileName =
-	(char *) gtk_entry_get_text((GtkEntry *)
-				    glade_xml_get_widget(xml,
-							 "entryGraphFileName"));
-    return 1;
-}
-
 void load_attributes(void)
 {
     FILE *file;
