@@ -346,7 +346,6 @@ static void jpeg_size (usershape_t *us) {
             0xd7,
         0xd8,                       /* Start of image */
         0xd9,                       /* End of image */
-        0
     };
 
     us->dpi = 0;
@@ -368,7 +367,7 @@ static void jpeg_size (usershape_t *us) {
          */
 
         /* A stand-alone... */
-        if (strchr ((char*)standalone_markers, marker))
+        if (memchr(standalone_markers, (int)marker, sizeof(standalone_markers)))
             continue;
 
         /* Incase of a 0xc0 marker: */
