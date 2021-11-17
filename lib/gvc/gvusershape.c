@@ -137,7 +137,7 @@ static bool get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
 	if (feof(f))
 	    return false;
         *val <<= 8;
-	*val |= ch;
+	*val |= (unsigned)ch;
     }
     return true;
 }
