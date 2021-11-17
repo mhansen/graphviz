@@ -16,7 +16,6 @@
 #define ATTR_NOTEBOOK_IDX 6
 
 _BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data);
-_BB void attr_label_motion(GtkWidget * widget,GdkEventMotion * event, gpointer data);
 _BB void on_attrApplyBtn_clicked (GtkWidget * widget, gpointer user_data);
 _BB void on_attrAddBtn_clicked (GtkWidget * widget, gpointer user_data);
 _BB void on_attrSearchBtn_clicked (GtkWidget * widget, gpointer user_data);

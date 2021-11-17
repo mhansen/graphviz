@@ -536,10 +536,6 @@ _BB void on_attrProg_toggled(GtkWidget * widget, gpointer user_data)
   /* FIX */
 }
 
-_BB void attr_label_motion(GtkWidget * widget, GdkEventMotion * event,
-			   gpointer data)
-{
-}
 _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
     char *attr_name;
