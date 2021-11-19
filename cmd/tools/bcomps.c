@@ -87,10 +87,9 @@ typedef struct {
 static char *blockName(char *gname, int d)
 {
     static char *buf;
-    static int bufsz;
-    int sz;
+    static size_t bufsz;
 
-    sz = strlen(gname) + 128;
+    size_t sz = strlen(gname) + 128;
     if (sz > bufsz) {
 	free(buf);
 	buf = malloc(sz);
@@ -113,13 +112,12 @@ static char *getName(int ng, int nb)
 {
     char *name;
     static char *buf;
-    int sz;
 
-    if ((ng == 0) && (nb == 0))
+    if (ng == 0 && nb == 0)
 	name = outfile;
     else {
 	if (!buf) {
-	    sz = strlen(outfile) + 100;	/* enough to handle '_<g>_<b>' */
+	    size_t sz = strlen(outfile) + 100; // enough to handle '_<g>_<b>'
 	    buf = malloc(sz);
 	}
 	if (suffix) {

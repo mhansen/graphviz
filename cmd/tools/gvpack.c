@@ -172,7 +172,7 @@ static Agsym_t *agedgeattr(Agraph_t *g, char *name, char *value)
  */
 static void init(int argc, char *argv[], pack_info* pinfo)
 {
-    int c, len;
+    int c;
     char buf[BUFSIZ];
     char* bp;
 
@@ -186,8 +186,8 @@ static void init(int argc, char *argv[], pack_info* pinfo)
     opterr = 0;
     while ((c = getopt(argc, argv, ":na:gvum:s:o:G:?")) != -1) {
 	switch (c) {
-	case 'a':
-	    len = strlen(optarg) + 2;
+	case 'a': {
+	    size_t len = strlen(optarg) + 2;
 	    if (len > BUFSIZ)
 		bp = N_GNEW(len, char);
 	    else
@@ -197,6 +197,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
 	    if (bp != buf)
 		free (bp);
 	    break;
+	}
 	case 'n':
 	    parsePackModeInfo ("node", pinfo->mode, pinfo);
 	    break;
@@ -408,6 +409,9 @@ static void cloneCluster(Agraph_t * old, Agraph_t * new)
  */
 static void freef(Dt_t * dt, void * obj, Dtdisc_t * disc)
 {
+    (void)dt;
+    (void)disc;
+
     free(obj);
 }
 
@@ -543,10 +547,10 @@ static void redoBB(Agraph_t * g, char *s, Agsym_t * G_bb, point delta)
 static char *xName(Dt_t * names, char *oldname)
 {
     static char* name = NULL;
-    static int namelen = 0;
+    static size_t namelen = 0;
     char *namep;
     pair_t *p;
-    int len;
+    size_t len;
 
     p = dtmatch(names, oldname);
     if (p) {

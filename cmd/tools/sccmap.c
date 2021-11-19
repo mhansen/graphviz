@@ -21,6 +21,7 @@
  */
 #include "config.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
@@ -31,7 +32,7 @@
 
 #include <getopt.h>
 
-#define INF ((unsigned int)(-1))
+#define INF UINT_MAX
 
 typedef struct Agraphinfo_t {
     Agrec_t h;
@@ -44,39 +45,28 @@ typedef struct Agnodeinfo_t {
     Agraph_t *scc;
 } Agnodeinfo_t;
 
-#ifdef INLINE
-#define getrep(g)  (((Agraphinfo_t*)(g->base.data))->rep)
-#define setrep(g,rep)  (getrep(g) = rep)
-#define getscc(n)    (((Agnodeinfo_t*)((n)->base.data))->scc)
-#define setscc(n,sub)    (getscc(n) = sub)
-#define getval(n)    (((Agnodeinfo_t*)((n)->base.data))->val)
-#define setval(n,newval)    (getval(n) = newval)
-#else
 static Agnode_t *getrep(Agraph_t * g)
 {
-    return (((Agraphinfo_t *) (g->base.data))->rep);
+    return ((Agraphinfo_t *)g->base.data)->rep;
 }
 static void setrep(Agraph_t * g, Agnode_t * rep)
 {
-    ((Agraphinfo_t *) (g->base.data))->rep = rep;
+    ((Agraphinfo_t *)g->base.data)->rep = rep;
 }
 static Agraph_t *getscc(Agnode_t * n)
 {
-    return (((Agnodeinfo_t *) (n->base.data))->scc);
+    return ((Agnodeinfo_t *)n->base.data)->scc;
 }
 static void setscc(Agnode_t * n, Agraph_t * scc)
 {
-    ((Agnodeinfo_t *) (n->base.data))->scc = scc;
+    ((Agnodeinfo_t *)n->base.data)->scc = scc;
 }
-static int getval(Agnode_t * n)
-{
-    return (((Agnodeinfo_t *) (n->base.data))->val);
+static unsigned getval(Agnode_t *n) {
+    return ((Agnodeinfo_t *)n->base.data)->val;
 }
-static void setval(Agnode_t * n, int v)
-{
-    ((Agnodeinfo_t *) (n->base.data))->val = v;
+static void setval(Agnode_t *n, unsigned v) {
+    ((Agnodeinfo_t *)n->base.data)->val = v;
 }
-#endif
 
 /********* stack ***********/
 typedef struct {
@@ -95,11 +85,6 @@ static void freeStack(Stack * sp)
     free(sp->data);
 }
 
-#ifdef INLINE
-#define push(sp,n) (*((sp)->ptr++) = n)
-#define top(sp) (*((sp)->ptr - 1))
-#define pop(sp) (*(--((sp)->ptr)))
-#else
 static void push(Stack * sp, Agnode_t * n)
 {
     *(sp->ptr++) = n;
@@ -113,16 +98,15 @@ static Agnode_t *top(Stack * sp)
 static Agnode_t *pop(Stack * sp)
 {
     sp->ptr--;
-    return *(sp->ptr);
+    return *sp->ptr;
 }
-#endif
 
 
 /********* end stack ***********/
 
 typedef struct {
-    int Comp;
-    int ID;
+    unsigned Comp;
+    unsigned ID;
     int N_nodes_in_nontriv_SCC;
 } sccstate;
 
@@ -156,14 +140,14 @@ static void nodeInduce(Agraph_t * g, Agraph_t* map)
     }
 }
 
-static int visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
+static unsigned visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
 {
     unsigned int m, min;
     Agnode_t *t;
     Agraph_t *subg;
     Agedge_t *e;
 
-    min = ++(st->ID);
+    min = ++st->ID;
     setval(n, min);
     push(sp, n);
 
@@ -178,13 +162,13 @@ static int visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
     }
 
     if (getval(n) == min) {
-	if (!wantDegenerateComp && (top(sp) == n)) {
+	if (!wantDegenerateComp && top(sp) == n) {
 	    setval(n, INF);
 	    pop(sp);
 	} else {
 	    char name[32];
 	    Agraph_t *G = agraphof(n);;
-	    snprintf(name, sizeof(name), "cluster_%d", (st->Comp)++);
+	    snprintf(name, sizeof(name), "cluster_%u", st->Comp++);
 	    subg = agsubg(G, name, TRUE);
 	    agbindrec(subg, "scc_graph", sizeof(Agraphinfo_t), TRUE);
 	    setrep(subg, agnode(map, name, TRUE));
@@ -210,7 +194,7 @@ static int label(Agnode_t * n, int nodecnt, int *edgecnt)
     setval(n, 1);
     nodecnt++;
     for (e = agfstedge(n->root, n); e; e = agnxtedge(n->root, e, n)) {
-	(*edgecnt) += 1;
+	*edgecnt += 1;
 	if (e->node == n)
 	    e = agopp(e);
 	if (!getval(e->node))
@@ -236,7 +220,7 @@ countComponents(Agraph_t * g, int *max_degree, float *nontree_frac)
 	    n_edges = 0;
 	    n_nodes = label(n, 0, &n_edges);
 	    sum_edges += n_edges;
-	    sum_nontree += (n_edges - n_nodes + 1);
+	    sum_nontree += n_edges - n_nodes + 1;
 	}
     }
     if (max_degree) {
@@ -287,12 +271,12 @@ static void process(Agraph_t * G)
     agclose(map);
 
     if (Verbose)
-	fprintf(stderr, "%d %d %d %d %.4f %d %.4f\n",
+	fprintf(stderr, "%d %d %d %u %.4f %d %.4f\n",
 		agnnodes(G), agnedges(G), nc, state.Comp,
 		state.N_nodes_in_nontriv_SCC / (double) agnnodes(G),
 		Maxdegree, nontree_frac);
     else if (!Silent)
-	fprintf(stderr, "%d nodes, %d edges, %d strong components\n",
+	fprintf(stderr, "%d nodes, %d edges, %u strong components\n",
 		agnnodes(G), agnedges(G), state.Comp);
 
 }
