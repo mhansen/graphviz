@@ -116,6 +116,10 @@ parser.add_argument("--patch",
 parser.add_argument("--definition",
                     action="store_true",
                     help="Print a C-style preprocessor #define")
+parser.add_argument("--output",
+                    type=argparse.FileType("wt", encoding="ascii"),
+                    default=sys.stdout,
+                    help="Path to write result to")
 
 args = parser.parse_args()
 
@@ -157,27 +161,27 @@ if not patch_version.isnumeric():
 
 if args.date_format:
   if args.definition:
-    print(f'#define BUILDDATE "{committer_date}"')
+    args.output.write(f'#define BUILDDATE "{committer_date}"\n')
   else:
-    print(committer_date)
+    args.output.write(f"{committer_date}\n")
 elif args.component == "major":
   if args.definition:
-    print(f'#define VERSION_MAJOR "{major_version}"')
+    args.output.write(f'#define VERSION_MAJOR "{major_version}"\n')
   else:
-    print(major_version)
+    args.output.write(f"{major_version}\n")
 elif args.component == "minor":
   if args.definition:
-    print(f'#define VERSION_MINOR "{minor_version}"')
+    args.output.write(f'#define VERSION_MINOR "{minor_version}"\n')
   else:
-    print(minor_version)
+    args.output.write(f"{minor_version}\n")
 elif args.component == "patch":
   if args.definition:
-    print(f'#define VERSION_PATCH "{patch_version}"')
+    args.output.write(f'#define VERSION_PATCH "{patch_version}"\n')
   else:
-    print(patch_version)
+    args.output.write(f"{patch_version}\n")
 else:
   if args.definition:
-    print(f'#define VERSION "{major_version}.{minor_version}.'
-          f'{patch_version}"')
+    args.output.write(f'#define VERSION "{major_version}.{minor_version}.'
+                      f'{patch_version}"\n')
   else:
-    print(f"{major_version}.{minor_version}.{patch_version}")
+    args.output.write(f"{major_version}.{minor_version}.{patch_version}\n")
