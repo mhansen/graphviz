@@ -801,6 +801,9 @@ windows-mingw32-cmake-build:
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "cmake"
+        # fail on any compiler warnings
+        - $Env:CFLAGS = "-Werror"
+        - $Env:CXXFLAGS = "-Werror"
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
@@ -824,6 +827,9 @@ windows-mingw64-cmake-build:
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "cmake"
+        # fail on any compiler warnings
+        - $Env:CFLAGS = "-Werror"
+        - $Env:CXXFLAGS = "-Werror"
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
