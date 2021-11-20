@@ -12,6 +12,7 @@
 #include <cgraph/cghdr.h>
 #include <inttypes.h>
 #include <stddef.h>
+#include <stdint.h>
 
 /* a default ID allocator that works off the shared string lib */
 
@@ -35,7 +36,7 @@ static long idmap(void *state, int objtype, char *str, IDTYPE *id,
             s = agstrdup(g, str);
         else
             s = agstrbind(g, str);
-        *id = (IDTYPE) s;
+        *id = (IDTYPE)(uintptr_t)s;
     } else {
         *id = ctr;
         ctr += 2;
@@ -56,7 +57,7 @@ static void idfree(void *state, int objtype, IDTYPE id)
 {
     NOTUSED(objtype);
     if (id % 2 == 0)
-	agstrfree(state, (char *) id);
+	agstrfree(state, (char *)(uintptr_t)id);
 }
 
 static char *idprint(void *state, int objtype, IDTYPE id)
@@ -64,7 +65,7 @@ static char *idprint(void *state, int objtype, IDTYPE id)
     NOTUSED(state);
     NOTUSED(objtype);
     if (id % 2 == 0)
-	return (char *) id;
+	return (char *)(uintptr_t)id;
     else
 	return NULL;
 }
