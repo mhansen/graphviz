@@ -470,7 +470,6 @@ windows-cygwin-build:
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress cygwin
         - $Env:build_system = "autotools"
-        # change line endings from crlf to lf by git checkout
         - C:\tools\cygwin\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/cygwin-build.sh'
     artifacts:
         when: always
