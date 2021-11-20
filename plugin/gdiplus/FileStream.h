@@ -81,6 +81,8 @@ public:
 	virtual HRESULT STDMETHODCALLTYPE  Clone( 
         	IStream **ppstm);
         
+	virtual ~FileStream() = default;
+
 private:
 	FileStream(char *name, FILE *file);
 	
