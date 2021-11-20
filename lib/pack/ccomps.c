@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <cgraph/prisize_t.h>
 #include <common/render.h>
 #include <pack/pack.h>
 
@@ -227,7 +228,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, boolean * pinned)
 	if (MARKED(&stk,n) || !isPinned(n))
 	    continue;
 	if (!out) {
-	    sprintf(name + len, "%zu", c_cnt);
+	    sprintf(name + len, "%" PRISIZE_T, c_cnt);
 	    out = agsubg(g, name,1);
 	    agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
 	    ccs[c_cnt] = out;
@@ -244,7 +245,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, boolean * pinned)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (MARKED(&stk,n))
 	    continue;
-	sprintf(name + len, "%zu", c_cnt);
+	sprintf(name + len, "%" PRISIZE_T, c_cnt);
 	out = agsubg(g, name,1);
 	agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
 	if (dfs(g, n, out, &stk) == SIZE_MAX) {
@@ -315,7 +316,7 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (MARKED(&stk,n))
 	    continue;
-	sprintf(name + len, "%zu", c_cnt);
+	sprintf(name + len, "%" PRISIZE_T, c_cnt);
 	out = agsubg(g, name,1);
 	agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
 	if (dfs(g, n, out, &stk) == SIZE_MAX) {
@@ -644,7 +645,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
     for (dn = agfstnode(dg); dn; dn = agnxtnode(dg, dn)) {
 	if (MARKED(&stk,dn))
 	    continue;
-	sprintf(name + len, "%zu", c_cnt);
+	sprintf(name + len, "%" PRISIZE_T, c_cnt);
 	dout = agsubg(dg, name, 1);
 	out = agsubg(g, name, 1);
 	agbindrec(out, GRECNAME, sizeof(ccgraphinfo_t), FALSE);
@@ -667,13 +668,13 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
 	ccs[c_cnt] = out;
 	agdelete(dg, dout);
 	if (Verbose)
-	    fprintf(stderr, "(%4zu) %7zu nodes %7zu edges\n",
-		    c_cnt, n_cnt, e_cnt);
+	    fprintf(stderr, "(%4" PRISIZE_T ") %7" PRISIZE_T " nodes %7" PRISIZE_T
+	            " edges\n", c_cnt, n_cnt, e_cnt);
 	c_cnt++;
     }
 
     if (Verbose)
-	fprintf(stderr, "       %7d nodes %7d edges %7zu components %s\n",
+	fprintf(stderr, "       %7d nodes %7d edges %7" PRISIZE_T " components %s\n",
 	    agnnodes(g), agnedges(g), c_cnt, agnameof(g));
 
     agclose(dg);

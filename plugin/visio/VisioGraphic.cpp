@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include "VisioGraphic.h"
 
+#include <cgraph/prisize_t.h>
 #include <gvc/gvcjob.h>
 #include <gvc/gvio.h>
 
@@ -233,7 +234,8 @@ namespace Visio
 				gvprintf(job, "<Y F='Height*%f'/>", (_points.back().y - first.y) * yscale);
 				
 				/* Knot[P-1] */
-				gvprintf(job, "<A>%zu</A>", _points.size() < 4 ? 0 : (_points.size() - 4));
+				gvprintf(job, "<A>%" PRISIZE_T "</A>",
+				         _points.size() < 4 ? 0 : (_points.size() - 4));
 				
 				/* Ctl[P-1].Weight */
 				gvputs(job, "<B>1</B>");	
@@ -245,10 +247,11 @@ namespace Visio
 				gvputs(job, "<D>1</D>");	
 				
 				/* Knot[P], Degree, XType, YType */
-				gvprintf(job, "<E F='NURBS(%zu, 3, 0, 0", _points.size() < 3 ? 0 : (_points.size() - 3));
+				gvprintf(job, "<E F='NURBS(%" PRISIZE_T ", 3, 0, 0",
+				         _points.size() < 3 ? 0 : (_points.size() - 3));
 				for (size_t i = 1; i < _points.size(); ++i)
 				/* Ctl[i].X, Ctl[i].Y, Knot[i], Ctl[i].Weight */
-					gvprintf(job, ", %f, %f, %zu, 1",					
+					gvprintf(job, ", %f, %f, %" PRISIZE_T ", 1",					
 							 (_points[i].x - first.x) * xscale,
 							 (_points[i].y - first.y) * yscale,
 							 i < 3 ? 0 : (i - 3));	

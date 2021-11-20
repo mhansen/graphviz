@@ -14,6 +14,7 @@ add_library(cgraph SHARED
     cgraph.h
     itos.h
     likely.h
+    prisize_t.h
     sprint.h
     strcasecmp.h
     unreachable.h
