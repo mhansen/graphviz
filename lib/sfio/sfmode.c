@@ -37,7 +37,9 @@
 /* the below is for protecting the application from SIGPIPE */
 #include		<signal.h>
 typedef void (*Sfsignal_f) (int);
+#ifdef SIGPIPE
 static int _Sfsigp = 0;		/* # of streams needing SIGPIPE protection */
+#endif
 
 /* done at exiting time */
 static void _sfcleanup(void)
