@@ -252,9 +252,7 @@ static void gdiplusgen_polygon(GVJ_t *job, pointf *A, int n, int filled)
 }
 
 static void
-gdiplusgen_bezier(GVJ_t *job, pointf *A, int n, int arrow_at_start,
-	     int arrow_at_end, int filled)
-{
+gdiplusgen_bezier(GVJ_t *job, pointf *A, int n, int, int, int filled) {
 	/* convert the beziers into path */
 	GraphicsPath path;
 	path.AddBeziers(&points(A,n).front(), n);
