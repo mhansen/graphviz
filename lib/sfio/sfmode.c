@@ -205,7 +205,7 @@ int _sfpopen(Sfio_t * f, int fd, int pid, int stdio)
 int _sfpclose(Sfio_t * f)
 {
     Sfproc_t *p;
-    int pid, status;
+    int pid = 0, status;
 
     if (!(p = f->proc))
 	return -1;
