@@ -885,7 +885,7 @@ void initSmGraph(Agraph_t * g,topview* rv)
     updateSmGraph(g,rv);
 }
 
-void renderSmGraph(Agraph_t * g,topview* t)
+void renderSmGraph(topview* t)
 {
     /*
 	we like to have blending affect where node and edge  overlap

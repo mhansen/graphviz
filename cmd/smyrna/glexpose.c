@@ -134,7 +134,7 @@ static int glexpose_drawgraph(ViewInfo * vi)
 
     if (vi->activeGraph > -1) {
 	if (!vi->Topview->fisheyeParams.active)
-	    renderSmGraph(vi->g[vi->activeGraph],vi->Topview);
+	    renderSmGraph(vi->Topview);
 	else {
 	    drawtopologicalfisheye(vi->Topview);
 	}
