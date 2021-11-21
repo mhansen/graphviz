@@ -759,53 +759,53 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
     agxbinit (&xb, BUFSIZ, buf);
     switch (op->kind) {
     case xd_filled_ellipse:
-	print("{E : ", info);
+	print("{\"E\" : ", info);
 	jsonRect(&op->u.ellipse, print, info);
 	break;
     case xd_unfilled_ellipse:
-	print("{e : ", info);
+	print("{\"e\" : ", info);
 	jsonRect(&op->u.ellipse, print, info);
 	break;
     case xd_filled_polygon:
-	print("{P : ", info);
+	print("{\"P\" : ", info);
 	jsonPolyline(&op->u.polygon, print, info);
 	break;
     case xd_unfilled_polygon:
-	print("{p : ", info);
+	print("{\"p\" : ", info);
 	jsonPolyline(&op->u.polygon, print, info);
 	break;
     case xd_filled_bezier:
-	print("{b : ", info);
+	print("{\"b\" : ", info);
 	jsonPolyline(&op->u.bezier, print, info);
 	break;
     case xd_unfilled_bezier:
-	print("{B : ", info);
+	print("{\"B\" : ", info);
 	jsonPolyline(&op->u.bezier, print, info);
 	break;
     case xd_pen_color:
-	print("{c : ", info);
+	print("{\"c\" : ", info);
 	jsonString(op->u.color, print, info);
 	break;
     case xd_grad_pen_color:
-	print("{c : ", info);
+	print("{\"c\" : ", info);
 	toGradString (&xb, &op->u.grad_color);
 	jsonString(agxbuse(&xb), print, info);
 	break;
     case xd_fill_color:
-	print("{C : ", info);
+	print("{\"C\" : ", info);
 	jsonString(op->u.color, print, info);
 	break;
     case xd_grad_fill_color:
-	print("{C : ", info);
+	print("{\"C\" : ", info);
 	toGradString (&xb, &op->u.grad_color);
 	jsonString(agxbuse(&xb), print, info);
 	break;
     case xd_polyline:
-	print("{L :", info);
+	print("{\"L\" :", info);
 	jsonPolyline(&op->u.polyline, print, info);
 	break;
     case xd_text:
-	print("{T : [", info);
+	print("{\"T\" : [", info);
 	printInt(op->u.text.x, print, info);
 	print(",", info);
 	printInt(op->u.text.y, print, info);
@@ -818,7 +818,7 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 	print("]", info);
 	break;
     case xd_font:
-	print("{F : [", info);
+	print("{\"F\" : [", info);
 	op->kind = xd_font;
 	printFloat(op->u.font.size, print, info, 1);
 	print(",", info);
@@ -826,15 +826,15 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 	print("]", info);
 	break;
     case xd_fontchar:
-	print("{t : ", info);
+	print("{\"t\" : ", info);
 	printInt(op->u.fontchar, print, info);
 	break;
     case xd_style:
-	print("{S : ", info);
+	print("{\"S\" : ", info);
 	jsonString(op->u.style, print, info);
 	break;
     case xd_image:
-	print("{I : [", info);
+	print("{\"I\" : [", info);
 	jsonRect(&op->u.image.pos, print, info);
 	print(",", info);
 	jsonString(op->u.image.name, print, info);
