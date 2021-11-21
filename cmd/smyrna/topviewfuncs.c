@@ -696,7 +696,6 @@ static void renderNodeLabels(Agraph_t * g)
     glCompPoint pos;
     Agsym_t* data_attr = GN_labelattribute(g);
     Agsym_t* l_color_attr = GG_nodelabelcolor(g);
-    GLfloat nodeSize;
     glCompColor c;
 
     glCompColorxlate(&c,agxget(g,l_color_attr));
@@ -709,7 +708,6 @@ static void renderNodeLabels(Agraph_t * g)
 	    continue;
 
 	pos = ND_A(v);
-	nodeSize = ND_size(v);
 	glColor4f(c.R,c.G,c.B,c.A);
 	if(!data_attr)
             glprintfglut(view->glutfont,pos.x,pos.y,pos.z,agnameof(v));
