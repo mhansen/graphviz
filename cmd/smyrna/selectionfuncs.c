@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <limits.h>
 #include "selectionfuncs.h"
 #include "topviewfuncs.h"
 #include "smyrna_utils.h"
@@ -111,7 +112,7 @@ static void* pick_object(Agraph_t* g,glCompPoint p)
     glCompPoint posH;
     glCompPoint posN;
     int defaultNodeShape;
-    float dist=999999999;
+    float dist = FLT_MAX;
     GLfloat nd; /*node distance to point*/
     GLfloat ed; /*edge distance to point*/
     GLfloat nodeSize=0;
