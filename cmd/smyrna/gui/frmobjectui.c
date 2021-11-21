@@ -515,6 +515,7 @@ static void doApply (GtkWidget * widget, int doAll)
 
 _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)user_data;
     doApply (widget, 0);
 }
 
@@ -523,6 +524,8 @@ _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
  */
 _BB void on_attrProg_toggled(GtkWidget * widget, gpointer user_data)
 {
+  (void)widget;
+  (void)user_data;
   /* FIX */
 }
 
