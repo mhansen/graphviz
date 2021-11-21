@@ -23,7 +23,6 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
-/* #include <math.h> */
 
 #define MAX_DIST (double)INT_MAX
 
