@@ -1350,12 +1350,12 @@ def test_xdot_json():
                   "Graphviz header. Remove the above try-catch? (#1777)")
 
   # confirm the output was what we expected
-  assert output == '[\n'                                                   \
-                   '{c : "#fffffe00"},\n'                                  \
-                   '{C : "#ffffff"},\n'                                    \
-                   '{P : [0.000000,0.000000,0.000000,36.000000,54.000000,' \
-                     '36.000000,54.000000,0.000000]}\n'                    \
-                   ']\n'
+  data = json.loads(output)
+  assert data == [
+                  {"c" : "#fffffe00"},
+                  {"C" : "#ffffff"},
+                  {"P" : [0.0, 0.0, 0.0, 36.0, 54.0, 36.0, 54.0, 0.0]}
+                 ]
 
 # find all .vcxproj files
 VCXPROJS: List[Path] = []
