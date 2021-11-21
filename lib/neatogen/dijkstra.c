@@ -291,10 +291,10 @@ initHeap_f(heap * h, int startVertex, int index[], float dist[], int n)
 	heapify_f(h, j, index, dist);
 }
 
-static boolean extractMax_f(heap * h, int *max, int index[], float dist[])
+static bool extractMax_f(heap * h, int *max, int index[], float dist[])
 {
     if (h->heapSize == 0)
-	return FALSE;
+	return false;
 
     *max = h->data[0];
     h->data[0] = h->data[h->heapSize - 1];
@@ -302,7 +302,7 @@ static boolean extractMax_f(heap * h, int *max, int index[], float dist[])
     h->heapSize--;
     heapify_f(h, 0, index, dist);
 
-    return TRUE;
+    return true;
 }
 
 static void
