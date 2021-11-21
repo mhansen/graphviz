@@ -14,6 +14,5 @@
 #include "hier.h"
 
     void drawtopologicalfisheye(topview * t);
-    void changetopfishfocus(topview * t, float *x, float *y,
-			    float *z, int num_foci);
+    void changetopfishfocus(topview * t, float *x, float *y, int num_foci);
     void prepare_topological_fisheye(Agraph_t* g,topview * t);

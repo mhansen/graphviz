@@ -65,7 +65,7 @@ static void apply_actions(ViewInfo* v,int x,int y)
     case MM_FISHEYE_PICK :
 	if (view->activeGraph >= 0) {
 	    if (view->Topview->fisheyeParams.active) 
-		changetopfishfocus(view->Topview,&view->mouse.GLpos.x,&view->mouse.GLpos.y,  0, 1);
+		changetopfishfocus(view->Topview, &view->mouse.GLpos.x, &view->mouse.GLpos.y, 1);
 
 	}
 	break;

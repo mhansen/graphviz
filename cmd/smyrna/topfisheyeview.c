@@ -419,8 +419,7 @@ static int get_temp_coords(topview * t, int level, int v, double *coord_x,
     return 1;
 }
 
-void changetopfishfocus(topview * t, float *x, float *y,
-			float *z, int num_foci)
+void changetopfishfocus(topview * t, float *x, float *y, int num_foci)
 {
 
     gvcolor_t cl;
