@@ -26,7 +26,6 @@
 
     extern attribute attr[MAXIMUM_WIDGET_COUNT];
 
-    int update_graph_properties(Agraph_t * graph);	//updates graph from gui
     void load_graph_properties(Agraph_t * graph);	//load from graph to gui
 
     void load_attributes(void);	//loads attributes from a text file

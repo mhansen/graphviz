@@ -39,65 +39,6 @@ void load_graph_properties(Agraph_t * graph)
 		       view->Topview->Graphdata.GraphFileName);
 }
 
-int update_graph_properties(Agraph_t * graph)	//updates graph from gui
-{
-    FILE *file;
-    int respond = 0;
-
-    //check if file is changed
-    if (strcasecmp
-	(gtk_entry_get_text
-	 ((GtkEntry *) glade_xml_get_widget(xml, "entryGraphFileName")),
-	 view->Topview->Graphdata.GraphFileName) != 0) {
-
-
-	if ((file = fopen(gtk_entry_get_text((GtkEntry *)
-					     glade_xml_get_widget(xml,
-								  "entryGraphFileName")),
-			  "r"))) {
-	    fclose(file);
-	    Dlg = (GtkMessageDialog *) gtk_message_dialog_new(NULL,
-							      GTK_DIALOG_MODAL,
-							      GTK_MESSAGE_QUESTION,
-							      GTK_BUTTONS_YES_NO,
-							      "File name you have entered already exists\n,this will cause overwriting on existing file.\nAre you sure?");
-	    respond = gtk_dialog_run((GtkDialog *) Dlg);
-	    gtk_object_destroy((GtkObject *) Dlg);
-
-	    if (respond == GTK_RESPONSE_NO)
-		return 0;
-	}
-	//now check if filename is legal, try to open it to write
-	if ((file = fopen(gtk_entry_get_text((GtkEntry *)
-					     glade_xml_get_widget(xml,
-								  "entryGraphFileName")),
-			  "w")))
-	    fclose(file);
-	else {
-	    Dlg = (GtkMessageDialog *) gtk_message_dialog_new(NULL,
-							      GTK_DIALOG_MODAL,
-							      GTK_MESSAGE_WARNING,
-							      GTK_BUTTONS_OK,
-							      "File name is invalid or I/O error!");
-
-	    respond = gtk_dialog_run((GtkDialog *) Dlg);
-	    gtk_object_destroy((GtkObject *) Dlg);
-	    GTK_DIALOG(Dlg);
-
-	    return 0;
-	}
-
-    }
-
-    //if it comes so far graph deserves new values
-
-    view->Topview->Graphdata.GraphFileName =
-	(char *) gtk_entry_get_text((GtkEntry *)
-				    glade_xml_get_widget(xml,
-							 "entryGraphFileName"));
-    return 1;
-}
-
 void load_attributes(void)
 {
     FILE *file;
@@ -251,26 +192,6 @@ int savefiledlg(int filtercnt, char **filters, agxbuf * xbuf)
     gtk_widget_destroy(dialog);
     return rv;
 }
-
-/*
-	this function is designed to return a GtkTextView object's text in agxbuf
-	send an initialized agxbuf and a GtkTextView object
-	null termination is taken care by agxbuf
-*/
-void get_gtktextview_text(GtkTextView * w, agxbuf * xbuf)
-{
-    int charcnt;
-    GtkTextBuffer *gtkbuf;
-    GtkTextIter startit;
-    GtkTextIter endit;
-    gtkbuf = gtk_text_view_get_buffer(w);
-    charcnt = gtk_text_buffer_get_char_count(gtkbuf);
-    gtk_text_buffer_get_start_iter(gtkbuf, &startit);
-    gtk_text_buffer_get_end_iter(gtkbuf, &endit);
-
-    agxbput(xbuf, gtk_text_buffer_get_text(gtkbuf, &startit, &endit, 0));
-}
-
 
 void append_textview(GtkTextView * textv, const char *s, size_t bytes)
 {

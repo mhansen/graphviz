@@ -48,12 +48,6 @@
     _BB void mNodePropertiesSlot(GtkWidget * widget, gpointer user_data);
     _BB void mEdgePropertiesSlot(GtkWidget * widget, gpointer user_data);
     _BB void mShowCodeSlot(GtkWidget * widget, gpointer user_data);
-    _BB void mDotSlot(GtkWidget * widget, gpointer user_data);
-    _BB void mNeatoSlot(GtkWidget * widget, gpointer user_data);
-    _BB void mTwopiSlot(GtkWidget * widget, gpointer user_data);
-    _BB void mCircoSlot(GtkWidget * widget, gpointer user_data);
-    _BB void mFdpSlot(GtkWidget * widget, gpointer user_data);
-    _BB void mSfdpSlot(GtkWidget * widget, gpointer user_data);
 
 //select
     _BB void mSelectAllSlot(GtkWidget * widget, gpointer user_data);
@@ -72,10 +66,8 @@
 
 //help
     _BB void mAbout(GtkWidget * widget, gpointer user_data);
-    _BB void mHelp(GtkWidget * widget, gpointer user_data);
     _BB void mTestgvpr(GtkWidget * widget, gpointer user_data);
     void change_cursor(GdkCursorType C);
-    int show_close_nosavedlg(void);
 
 /*others from settings dialog*/
     _BB void on_gvprbuttonload_clicked(GtkWidget * widget,

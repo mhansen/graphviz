@@ -137,8 +137,12 @@ static void free_attr_list(attr_list *l) {
 	free_attr_list_widgets(l);
     free(l);
 }
-attr_list *attr_list_new(Agraph_t * g, int with_widgets)
-{
+
+// creates a new attr_list
+// attr_list is a basic stack implementation
+// with alphanumeric sorting functions
+// that uses quicksort
+static attr_list *attr_list_new(Agraph_t *g, int with_widgets) {
     int id;
     attr_list *l = malloc(sizeof(attr_list));
     l->attr_count = 0;
@@ -532,10 +536,6 @@ _BB void on_attrProg_toggled(GtkWidget * widget, gpointer user_data)
   /* FIX */
 }
 
-_BB void attr_label_motion(GtkWidget * widget, GdkEventMotion * event,
-			   gpointer data)
-{
-}
 _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
     char *attr_name;
@@ -759,18 +759,3 @@ static void gvpr_select(char *attr, char *regex_str, int objType)
     free(argv);
     set_header_text();
 }
-
-
-_BB void on_attrSearchBtn_clicked(GtkWidget * widget, gpointer user_data)
-{
-
-    char *attr =
-	(char *) gtk_entry_get_text((GtkEntry *)
-				    glade_xml_get_widget(xml, "txtAttr"));
-    char *regex_str =
-	(char *) gtk_entry_get_text((GtkEntry *)
-				    glade_xml_get_widget(xml, "txtValue"));
-    gvpr_select(attr, regex_str, get_object_type());
-
-}
-

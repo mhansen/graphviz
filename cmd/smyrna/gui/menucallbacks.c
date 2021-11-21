@@ -52,73 +52,81 @@ void mOpenSlot(GtkWidget * widget, gpointer user_data)
 
 void mSaveSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     save_graph();		//save without prompt
 }
 
 void mSaveAsSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     save_as_graph();		//save with prompt
 }
 
 void mCloseSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     if (view->activeGraph == 0)
 	close_graph(view, 0);
 }
 
 void mOptionsSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
 }
 
 void mQuitSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     if (close_graph(view, view->activeGraph));
     gtk_main_quit();
-}
-
-int show_close_nosavedlg(void)
-{
-    GtkWidget *dialog;
-    int rv;			/*return value */
-    dialog =
-	gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL,
-			       GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
-			       "%s has been modified. Do you want to save it before closing?",
-                               view->Topview->Graphdata.GraphFileName);
-
-    gtk_window_set_title(GTK_WINDOW(dialog), "Smyrna Warning");
-    gtk_dialog_add_button((GtkDialog *) dialog, "Yes", 0);
-    gtk_dialog_add_button((GtkDialog *) dialog, "No", 1);
-    gtk_dialog_add_button((GtkDialog *) dialog, "Cancel", 2);
-    rv = gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
-    return rv;
 }
 
 //edit
 void mCutSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
 }
 
 void mCopySlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
 }
 
 void mPasteSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
 }
 
 void mDeleteSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
 }
 void mTopviewSettingsSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
     show_settings_form();
 }
 
 //view
 void mShowToolBoxSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     if (!gtk_widget_set_gl_capability
 	(glade_xml_get_widget(xml, "glfixed"), configure_gl(),
 	 gtk_widget_get_gl_context(view->drawing_area), 0, 0))
@@ -127,6 +135,9 @@ void mShowToolBoxSlot(GtkWidget * widget, gpointer user_data)
 
 void mShowConsoleSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     static int state = 0;  // off by default
 
     if (state) {
@@ -146,23 +157,36 @@ void mShowConsoleSlot(GtkWidget * widget, gpointer user_data)
 //Graph
 void mNodeListSlot(GtkWidget * widget, gpointer user_data)
 {
+	(void)widget;
+	(void)user_data;
+
 	gtk_widget_show(glade_xml_get_widget(xml, "frmTVNodes"));
 	setup_tree (view->g[view->activeGraph]);
 }
 
 void mNewNodeSlot(GtkWidget * widget, gpointer user_data)
 {
+  (void)widget;
+  (void)user_data;
 }
 
 void mNewEdgeSlot(GtkWidget * widget, gpointer user_data)
 {
+  (void)widget;
+  (void)user_data;
 }
+
 void mNewClusterSlot(GtkWidget * widget, gpointer user_data)
 {
+  (void)widget;
+  (void)user_data;
 }
 
 void mGraphPropertiesSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     //there has to be an active graph to open the graph prop page
     if (view->activeGraph > -1) {
 	load_graph_properties(view->g[view->activeGraph]);	//load from graph to gui              
@@ -182,6 +206,8 @@ void mGraphPropertiesSlot(GtkWidget * widget, gpointer user_data)
 
 void mNodeFindSlot(GtkWidget * widget, gpointer user_data)
 {
+  (void)widget;
+  (void)user_data;
 }
 
 static void mPropertiesSlot(gve_element element)
@@ -193,63 +219,38 @@ static void mPropertiesSlot(gve_element element)
 
 void mClusterPropertiesSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     mPropertiesSlot(GVE_CLUSTER);
 }
 
 void mNodePropertiesSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     mPropertiesSlot(GVE_NODE);
 }
 
 void mEdgePropertiesSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     mPropertiesSlot(GVE_EDGE);
 }
 
 void mShowCodeSlot(GtkWidget * widget, gpointer user_data)
 {
-}
-static void mSlot(GtkWidget * widget, gpointer user_data,
-		  gvk_layout layout, int doCursor)
-{
-}
-
-void mDotSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_DOT, 1);
-}
-
-void mNeatoSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_NEATO, 0);
-}
-
-void mTwopiSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_TWOPI, 0);
-}
-
-void mCircoSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_CIRCO, 0);
-}
-
-void mFdpSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_FDP, 0);
-}
-
-void mSfdpSlot(GtkWidget * widget, gpointer user_data)
-{
-    mSlot(widget, user_data, GVK_SFDP, 0);
+  (void)widget;
+  (void)user_data;
 }
 
 void mAbout(GtkWidget * widget, gpointer user_data)
 {
-}
-
-void mHelp(GtkWidget * widget, gpointer user_data)
-{
+  (void)widget;
+  (void)user_data;
 }
 
 void change_cursor(GdkCursorType C)
@@ -263,6 +264,9 @@ void change_cursor(GdkCursorType C)
 
 void mTestgvpr(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     char *bf2;
     GtkTextBuffer *gtkbuf;
     GtkTextIter startit;
@@ -323,6 +327,9 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
 */
 void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     FILE *input_file = NULL;
     char *str;
     agxbuf xbuf;
@@ -363,6 +370,9 @@ void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
 */
 void on_gvprbuttonsave_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     FILE *output_file = NULL;
     agxbuf xbuf;
     GtkTextBuffer *gtkbuf;	/*GTK buffer from glade GUI */
