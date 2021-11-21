@@ -37,6 +37,7 @@
 #include <cdt/cdt.h>
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #define DEFAULT_BORDER    1
 #define DEFAULT_CELLPADDING  2
@@ -389,7 +390,7 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
 	agxbinit(&xb, SMALLBUF, buf);
 	if (!env->objid) {
 	    env->objid = strdup(getObjId(job, obj->u.n, &xb));
-	    env->objid_set = 1;
+	    env->objid_set = true;
 	}
 	agxbprint(&xb, "%s_%d", env->objid, anchorId++);
 	id = agxbuse(&xb);
@@ -765,7 +766,7 @@ void emit_html_label(GVJ_t * job, htmllabel_t * lp, textlabel_t * tp)
     env.finfo.size = tp->fontsize;
     env.imgscale = agget(job->obj->u.n, "imagescale");
     env.objid = job->obj->id;
-    env.objid_set = 0;
+    env.objid_set = false;
     if ((env.imgscale == NULL) || (env.imgscale[0] == '\0'))
 	env.imgscale = "false";
     if (lp->kind == HTML_TBL) {

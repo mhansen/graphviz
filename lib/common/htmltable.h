@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -156,7 +158,7 @@ extern "C" {
         graph_t *g;
         char *imgscale;
         char *objid;
-        boolean objid_set;
+        bool objid_set;
     } htmlenv_t;
 
     extern htmllabel_t *parseHTML(char *, int *, htmlenv_t *);
