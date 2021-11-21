@@ -16,7 +16,6 @@
 #include <gdk/gdk.h>
 #include "viewport.h"
 #include <common/memory.h>
-#include <cgraph/strcasecmp.h>
 
 GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;
