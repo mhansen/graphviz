@@ -21,6 +21,7 @@
 #include <neatogen/bfs.h>
 #include <neatogen/dijkstra.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stdlib.h>
 /* #include <math.h> */
 
@@ -97,10 +98,10 @@ initHeap(heap * h, int startVertex, int index[], Word dist[], int n)
 	heapify(h, j, index, dist);
 }
 
-static boolean extractMax(heap * h, int *max, int index[], Word dist[])
+static bool extractMax(heap * h, int *max, int index[], Word dist[])
 {
     if (h->heapSize == 0)
-	return FALSE;
+	return false;
 
     *max = h->data[0];
     h->data[0] = h->data[h->heapSize - 1];
@@ -108,7 +109,7 @@ static boolean extractMax(heap * h, int *max, int index[], Word dist[])
     h->heapSize--;
     heapify(h, 0, index, dist);
 
-    return TRUE;
+    return true;
 }
 
 static void
