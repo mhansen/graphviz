@@ -636,6 +636,9 @@ static void renderEdgesFn (Agraph_t * g, edgefn ef, int skipSelected)
 
 static void edge_xdot (Agraph_t* g, Agedge_t* e, glCompColor c)
 {
+    (void)g;
+    (void)c;
+
     xdot * x;
     x=parseXdotwithattrs(e);
     draw_xdot(x,0);
