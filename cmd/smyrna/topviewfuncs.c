@@ -47,7 +47,7 @@ static xdot *parseXdotwithattrs(void *e)
 
 }
 
-static void set_boundaries(Agraph_t * g, topview * t)
+static void set_boundaries(Agraph_t * g)
 {
     Agnode_t *v;
     Agsym_t* pos_attr = GN_pos(g);
@@ -852,7 +852,7 @@ void updateSmGraph(Agraph_t * g,topview* t)
     aginit(g, AGNODE, "nodeRec", sizeof(nodeRec), 0);
     aginit(g, AGEDGE, "edgeRec", sizeof(edgeRec), 0);
 
-    set_boundaries(g,t);
+    set_boundaries(g);
     view->Topview=t;
 
 
