@@ -1,5 +1,3 @@
-LIBRARY    "gvc"
-
 EXPORTS
 add_box    
 addPS    
