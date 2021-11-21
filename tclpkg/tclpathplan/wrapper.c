@@ -33,13 +33,10 @@ typedef struct Pedge_t {
 } Pedge_t;
 
 
-void find_ints(struct vertex vertex_list[], struct polygon polygon_list[],
-	       struct data *input, struct intersection ilist[]);
-
 int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 {
 
-    int i, j, vno, nverts, rv;
+    int i, j, vno, rv;
 
     struct vertex *vertex_list;
     struct polygon *polygon_list;
@@ -48,7 +45,8 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 
     polygon_list = malloc(n_polys * sizeof(struct polygon));
 
-    for (i = nverts = 0; i < n_polys; i++)
+    size_t nverts = 0;
+    for (i = 0; i < n_polys; i++)
 	nverts += polys[i]->pn;
 
     vertex_list = malloc(nverts * sizeof(struct vertex));
@@ -67,7 +65,7 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
     input.nvertices = nverts;
     input.npolygons = n_polys;
 
-    find_ints(vertex_list, polygon_list, &input, ilist);
+    find_ints(vertex_list, &input, ilist);
 
 
 #define EQ_PT(v,w) (((v).x == (w).x) && ((v).y == (w).y))

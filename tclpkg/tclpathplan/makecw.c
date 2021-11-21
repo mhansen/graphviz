@@ -17,6 +17,7 @@
  * ellson@graphviz.org    October 2nd, 1996
  */
 
+#include "makecw.h"
 #include <pathplan/pathutil.h>
 
 void make_CW(Ppoly_t * poly)

@@ -32,6 +32,7 @@
 
 #include <inttypes.h>
 #include <assert.h>
+#include "makecw.h"
 #include <math.h>
 #include <pathplan/pathutil.h>
 #include <pathplan/vispath.h>
@@ -74,7 +75,6 @@ extern void sincos(double x, double *s, double *c);
 
 tblHeader_pt vgpaneTable;
 
-extern void make_CW(Ppoly_t * poly);
 extern int Plegal_arrangement(Ppoly_t ** polys, int n_polys);
 
 static int polyid = 0;		/* unique and unchanging id for each poly */
@@ -399,6 +399,8 @@ static int
 vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	  char *argv[])
 {
+    (void)clientData;
+
     int vargc, i, j, n, result;
     char *s, **vargv, vbuf[30];
     vgpane_t *vgp, **vgpp;
@@ -842,6 +844,10 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 static int
 vgpane(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[])
 {
+    (void)clientData;
+    (void)argc;
+    (void)argv;
+
     char vbuf[30];
     vgpane_t *vgp;
 
