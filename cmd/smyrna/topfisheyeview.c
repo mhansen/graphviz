@@ -134,7 +134,6 @@ void prepare_topological_fisheye(Agraph_t* g,topview * t)
     int closest_fine_node;
     int cur_level = 0;
     Hierarchy *hp;
-    ex_vtx_data *gg;
     gvcolor_t cl;
     Agnode_t *np;
 
@@ -155,7 +154,6 @@ void prepare_topological_fisheye(Agraph_t* g,topview * t)
     free(y_coords);
 
     fs = t->fisheyeParams.fs = initFocus(agnnodes(g));	// create focus set
-    gg = hp->geom_graphs[0];
 
     closest_fine_node = 0;	/* first node */
     fs->num_foci = 1;
