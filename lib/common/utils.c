@@ -649,16 +649,16 @@ initFontLabelEdgeAttr(edge_t * e, struct fontinfo *fi,
  * Return true if head/tail end of edge should not be clipped
  * to node.
  */
-static boolean
+static bool
 noClip(edge_t *e, attrsym_t* sym)
 {
     char		*str;
-    boolean		rv = FALSE;
+    bool rv = false;
 
     if (sym) {	/* mapbool isn't a good fit, because we want "" to mean true */
 	str = agxget(e,sym);
 	if (str && str[0]) rv = !mapbool(str);
-	else rv = FALSE;
+	else rv = false;
     }
     return rv;
 }
