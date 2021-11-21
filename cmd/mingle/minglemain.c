@@ -79,7 +79,7 @@ static void
 usage (int eval)
 {
 	fputs (use_msg, stderr);
-	if (eval >= 0) exit (eval);
+	exit(eval);
 }
 
 /* checkG:

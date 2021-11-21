@@ -56,7 +56,7 @@
 /* usershapes */
     point gvusershape_size_dpi(usershape_t *us, pointf dpi);
     point gvusershape_size(graph_t *g, char *name);
-    usershape_t *gvusershape_find(char *name);
+    usershape_t *gvusershape_find(const char *name);
 
 /* device */
     int gvdevice_initialize(GVJ_t * job);

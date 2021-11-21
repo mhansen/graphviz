@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -32,6 +33,9 @@
 #define _BLD_gvc 1
 #include <common/utils.h>
 #include <gvc/gvplugin_loadimage.h>
+#include <gvc/gvplugin.h>
+#include <gvc/gvcint.h>
+#include <gvc/gvcproc.h>
 
 extern char *Gvimagepath;
 extern char *HTTPServerEnVar;
@@ -136,7 +140,7 @@ static bool get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
 	if (feof(f))
 	    return false;
         *val <<= 8;
-	*val |= ch;
+	*val |= (unsigned)ch;
     }
     return true;
 }
@@ -206,7 +210,7 @@ static void svg_size (usershape_t *us)
     char u[10];
     char *attribute, *value, *re_string;
     char line[200];
-    boolean wFlag = FALSE, hFlag = FALSE;
+    bool wFlag = false, hFlag = false;
 
     fseek(us->f, 0, SEEK_SET);
     while (fgets(line, sizeof(line), us->f) != NULL && (!wFlag || !hFlag)) {
@@ -222,11 +226,11 @@ static void svg_size (usershape_t *us)
 	        strncmp(attribute, "width", match.key_extent) == 0) {
 	        if (sscanf(value, "%lf%2s", &n, u) == 2) {
 	            w = svg_units_convert(n, u);
-	            wFlag = TRUE;
+	            wFlag = true;
 		}
 		else if (sscanf(value, "%lf", &n) == 1) {
 	            w = svg_units_convert(n, "pt");
-	            wFlag = TRUE;
+	            wFlag = true;
 		}
 		if (hFlag)
 		    break;
@@ -235,11 +239,11 @@ static void svg_size (usershape_t *us)
 	             strncmp(attribute, "height", match.key_extent) == 0) {
 	        if (sscanf(value, "%lf%2s", &n, u) == 2) {
 	            h = svg_units_convert(n, u);
-	            hFlag = TRUE;
+	            hFlag = true;
 		}
 	        else if (sscanf(value, "%lf", &n) == 1) {
 	            h = svg_units_convert(n, "pt");
-	            hFlag = TRUE;
+	            hFlag = true;
 		}
                 if (wFlag)
 		    break;
@@ -249,8 +253,8 @@ static void svg_size (usershape_t *us)
 	      && sscanf(value, "%lf %lf %lf %lf", &x0,&y0,&x1,&y1) == 4) {
 		w = x1 - x0 + 1;
 		h = y1 - y0 + 1;
-	        wFlag = TRUE;
-	        hFlag = TRUE;
+	        wFlag = true;
+	        hFlag = true;
 	        break;
 	    }
 	}
@@ -333,23 +337,22 @@ static void bmp_size (usershape_t *us) {
 }
 
 static void jpeg_size (usershape_t *us) {
-    unsigned int marker, length, size_x, size_y, junk;
+    unsigned int marker, length, size_x, size_y;
 
     /* These are the markers that follow 0xff in the file.
      * Other markers implicitly have a 2-byte length field that follows.
      */
-    static unsigned char standalone_markers [] = {
+    static const unsigned char standalone_markers[] = {
         0x01,                       /* Temporary */
         0xd0, 0xd1, 0xd2, 0xd3,     /* Reset */
             0xd4, 0xd5, 0xd6,
             0xd7,
         0xd8,                       /* Start of image */
         0xd9,                       /* End of image */
-        0
     };
 
     us->dpi = 0;
-    while (TRUE) {
+    while (true) {
         /* Now we must be at a 0xff or at a series of 0xff's.
          * If that is not the case, or if we're at EOF, then there's
          * a parsing error.
@@ -367,13 +370,13 @@ static void jpeg_size (usershape_t *us) {
          */
 
         /* A stand-alone... */
-        if (strchr ((char*)standalone_markers, marker))
+        if (memchr(standalone_markers, (int)marker, sizeof(standalone_markers)))
             continue;
 
         /* Incase of a 0xc0 marker: */
         if (marker == 0xc0) {
             /* Skip length and 2 lengths. */
-            if ( get_int_msb_first (us->f, 3, &junk)   &&
+            if (fseek(us->f, 3, SEEK_CUR) == 0 &&
                  get_int_msb_first (us->f, 2, &size_x) &&
                  get_int_msb_first (us->f, 2, &size_y) ) {
 
@@ -387,7 +390,7 @@ static void jpeg_size (usershape_t *us) {
         /* Incase of a 0xc2 marker: */
         if (marker == 0xc2) {
             /* Skip length and one more byte */
-            if (! get_int_msb_first (us->f, 3, &junk))
+            if (fseek(us->f, 3, SEEK_CUR) != 0)
                 return;
 
             /* Get length and store. */
@@ -410,13 +413,12 @@ static void jpeg_size (usershape_t *us) {
 static void ps_size (usershape_t *us)
 {
     char line[BUFSIZ];
-    boolean saw_bb;
     int lx, ly, ux, uy;
     char* linep;
 
     us->dpi = 72;
     fseek(us->f, 0, SEEK_SET);
-    saw_bb = FALSE;
+    bool saw_bb = false;
     while (fgets(line, sizeof(line), us->f)) {
 	/* PostScript accepts \r as EOL, so using fgets () and looking for a
 	 * bounding box comment at the beginning doesn't work in this case. 
@@ -429,7 +431,7 @@ static void ps_size (usershape_t *us)
 	if (!(linep = strstr (line, "%%BoundingBox:")))
 	    continue;
         if (sscanf (linep, "%%%%BoundingBox: %d %d %d %d", &lx, &ly, &ux, &uy) == 4) {
-            saw_bb = TRUE;
+            saw_bb = true;
 	    break;
         }
     }
@@ -552,7 +554,10 @@ static void pdf_size (usershape_t *us)
 
 static void usershape_close (Dict_t * dict, void * p, Dtdisc_t * disc)
 {
-    usershape_t *us = (usershape_t *)p;
+    (void)dict;
+    (void)disc;
+
+    usershape_t *us = p;
 
     if (us->f)
 	fclose(us->f);
