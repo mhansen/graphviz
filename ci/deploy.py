@@ -83,6 +83,14 @@ def is_windows_artifact(path: Path) -> bool:
   """is this a deployment artifact for Windows?"""
   return re.search(r"\bwindows\b", str(path)) is not None
 
+def get_format(path: Path) -> str:
+  """a human readable description of the format of this file"""
+  if path.suffix[1:].lower() == "exe":
+    return "EXE installer"
+  if path.suffix[1:].lower() == "zip":
+    return "ZIP installer"
+  return path.suffix[1:].lower()
+
 def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
 
   # setup logging to print to stderr
@@ -167,7 +175,7 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
     url = upload(package_version, tarball)
     assets.append(url)
     webentry = {
-      "format": tarball.suffix[1:],
+      "format": get_format(tarball),
       "url": url
     }
     for check in checksum(tarball):
