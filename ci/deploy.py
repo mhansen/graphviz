@@ -195,13 +195,31 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
       # fixup permissions, o-rwx g-wx
       os.chmod(path, mode & ~stat.S_IRWXO & ~stat.S_IWGRP & ~stat.S_IXGRP)
 
-      assets.append(upload(package_version, path, str(path)[len("Packages/"):]))
+      url = upload(package_version, path, str(path)[len("Packages/"):])
+      assets.append(url)
+
+      webentry = {
+        "format": get_format(path),
+        "url": url,
+      }
+      if "win32" in str(path):
+        webentry["bits"] = 32
+      elif "win64" in str(path):
+        webentry["bits"] = 64
 
       # if this is a standalone Windows or macOS package, also provide
       # checksum(s)
       if is_macos_artifact(path) or is_windows_artifact(path):
         for c in checksum(path):
-          assets.append(upload(package_version, c, str(c)[len("Packages/"):]))
+          url = upload(package_version, c, str(c)[len("Packages/"):])
+          assets.append(url)
+          webentry[c.suffix[1:]] = url
+
+      # only expose a subset of the Windows artifacts
+      if "stable_windows_10_cmake_Release_Win32" in str(path) or \
+         "stable_windows_10_cmake_Release_x64" in str(path) or \
+         "stable_windows_10_msbuild_Release_Win32" in str(path):
+        webdata["windows"].append(webentry)
 
   # various release pages truncate the viewable artifacts to 100 or even 50
   if not options.force and len(assets) > 50:
