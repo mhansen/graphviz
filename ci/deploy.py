@@ -18,7 +18,7 @@ import shutil
 import stat
 import subprocess
 import sys
-from typing import Generator, List, Optional
+from typing import List, Optional
 
 # logging output stream, setup in main()
 log = None
@@ -63,8 +63,8 @@ def upload(version: str, path: Path, name: Optional[str] = None) -> str:
 
   return target
 
-def checksum(path: Path) -> Generator[Path, None, None]:
-  """generate checksum(s) for the given file"""
+def checksum(path: Path) -> Path:
+  """generate checksum for the given file"""
 
   assert path.exists()
 
@@ -73,7 +73,7 @@ def checksum(path: Path) -> Generator[Path, None, None]:
   with open(check, "wt") as f:
     with open(path, "rb") as data:
       f.write(f"{hashlib.sha256(data.read()).hexdigest()}  {path}\n")
-  yield check
+  return check
 
 def is_macos_artifact(path: Path) -> bool:
   """is this a deployment artifact for macOS?"""
@@ -171,17 +171,17 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
       log.error(f"source {tarball} not found")
       return -1
 
-    # accrue the source tarball and accompanying checksum(s)
+    # accrue the source tarball and accompanying checksum
     url = upload(package_version, tarball)
     assets.append(url)
     webentry = {
       "format": get_format(tarball),
       "url": url
     }
-    for check in checksum(tarball):
-      url = upload(package_version, check)
-      assets.append(url)
-      webentry[check.suffix[1:]] = url
+    check = checksum(tarball)
+    url = upload(package_version, check)
+    assets.append(url)
+    webentry[check.suffix[1:]] = url
 
     webdata["sources"].append(webentry)
 
@@ -210,10 +210,10 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
       # if this is a standalone Windows or macOS package, also provide
       # checksum(s)
       if is_macos_artifact(path) or is_windows_artifact(path):
-        for c in checksum(path):
-          url = upload(package_version, c, str(c)[len("Packages/"):])
-          assets.append(url)
-          webentry[c.suffix[1:]] = url
+        c = checksum(path)
+        url = upload(package_version, c, str(c)[len("Packages/"):])
+        assets.append(url)
+        webentry[c.suffix[1:]] = url
 
       # only expose a subset of the Windows artifacts
       if "stable_windows_10_cmake_Release_Win32" in str(path) or \
