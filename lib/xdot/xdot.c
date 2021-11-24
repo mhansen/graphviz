@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/prisize_t.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
 #include <string.h>
@@ -541,7 +542,7 @@ static void printString(char *p, pf print, void *info)
 {
     char buf[30];
 
-    snprintf(buf, sizeof(buf), " %zu -", strlen(p));
+    snprintf(buf, sizeof(buf), " %" PRISIZE_T " -", strlen(p));
     print(buf, info);
     print(p, info);
 }

@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - parameter `name` in `gvusershape_find` prototype corrected to a const pointer,
   to match the implementation
 - xdot JSON output is not valid JSON #1958
+- fix uninitialized read of `pid` in `_sfpopen` on Windows
 
 ## [2.49.3] – 2021-10-22
 

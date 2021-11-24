@@ -27,6 +27,7 @@
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
@@ -85,7 +86,7 @@ static xdot_state_t* xd;
 
 static void xdot_str_xbuf (agxbuf* xb, char* pfx, const char* s)
 {
-    agxbprint (xb, "%s%zu -%s ", pfx, strlen(s), s);
+    agxbprint (xb, "%s%" PRISIZE_T " -%s ", pfx, strlen(s), s);
 }
 
 static void xdot_str (GVJ_t *job, char* pfx, const char* s)

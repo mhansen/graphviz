@@ -15,6 +15,7 @@
 #include <sparse/QuadTree.h>
 #include <string.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/cgraph.h>
 #include "make_map.h"
 #include <sfdpgen/stress_model.h>
@@ -241,14 +242,16 @@ static void dot_polygon(agxbuf *sbuff, int np, float *xp, float *yp, double line
 
   if (np > 0){
     if (fill >= 0){
-      agxbprint(sbuff, " c %zu -%s C %zu -%s P %d ", strlen(cstring), cstring, strlen(cstring), cstring, np);
+      agxbprint(sbuff, " c %" PRISIZE_T " -%s C %" PRISIZE_T " -%s P %d ",
+                strlen(cstring), cstring, strlen(cstring), cstring, np);
     } else {
       if (line_width > 0){
 	size_t len_swidth = (size_t)snprintf(NULL, 0, "%f", line_width);
-	agxbprint(sbuff, " c %zu -%s S %zu -setlinewidth(%f) L %d ",
-	          strlen(cstring), cstring, len_swidth + 14, line_width, np);
+	agxbprint(sbuff, " c %" PRISIZE_T " -%s S %" PRISIZE_T
+	          " -setlinewidth(%f) L %d ", strlen(cstring), cstring,
+	          len_swidth + 14, line_width, np);
       } else {
-	agxbprint(sbuff, " c %zu -%s L %d ", strlen(cstring), cstring, np);
+	agxbprint(sbuff, " c %" PRISIZE_T " -%s L %d ", strlen(cstring), cstring, np);
       }
     }
     for (int i = 0; i < np; i++){

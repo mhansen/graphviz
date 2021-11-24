@@ -124,24 +124,16 @@ HRESULT FileStream::Seek(
 	return S_OK;
 }
 
-HRESULT FileStream::SetSize( 
-    ULARGE_INTEGER libNewSize)
-{
+HRESULT FileStream::SetSize(ULARGE_INTEGER) {
 	return E_NOTIMPL;
 }
 
-HRESULT FileStream::CopyTo( 
-    IStream *pstm,
-	ULARGE_INTEGER cb,
-    ULARGE_INTEGER *pcbRead,
-    ULARGE_INTEGER *pcbWritten)
-{
+HRESULT FileStream::CopyTo(IStream *, ULARGE_INTEGER, ULARGE_INTEGER *,
+                           ULARGE_INTEGER *) {
 	return E_NOTIMPL;
 }
 
-HRESULT FileStream::Commit( 
-    DWORD grfCommitFlags)
-{
+HRESULT FileStream::Commit(DWORD) {
 	return E_NOTIMPL;
 }
 
@@ -150,19 +142,11 @@ HRESULT FileStream::Revert()
 	return 0;
 }
 
-HRESULT FileStream::LockRegion( 
-    ULARGE_INTEGER libOffset,
-    ULARGE_INTEGER cb,
-    DWORD dwLockType)
-{
+HRESULT FileStream::LockRegion(ULARGE_INTEGER, ULARGE_INTEGER, DWORD) {
 	return E_NOTIMPL;
 }
 
-HRESULT FileStream::UnlockRegion( 
-    ULARGE_INTEGER libOffset,
-    ULARGE_INTEGER cb,
-    DWORD dwLockType)
-{
+HRESULT FileStream::UnlockRegion(ULARGE_INTEGER, ULARGE_INTEGER, DWORD) {
 	return E_NOTIMPL;
 }
 
@@ -203,9 +187,7 @@ HRESULT FileStream::Stat(
 	return S_OK;
 }
 
-HRESULT FileStream::Clone( 
-    IStream **ppstm)
-{
+HRESULT FileStream::Clone(IStream **) {
 	return E_NOTIMPL;
 }
     

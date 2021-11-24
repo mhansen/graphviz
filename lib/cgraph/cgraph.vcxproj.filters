@@ -30,6 +30,9 @@
     <ClInclude Include="likely.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="prisize_t.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="sprint.h">
       <Filter>Header Files</Filter>
     </ClInclude>

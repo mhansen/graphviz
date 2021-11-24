@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/prisize_t.h>
 #include <limits.h>
 #include <sparse/BinaryHeap.h>
 #include <stdlib.h>
@@ -282,7 +283,7 @@ void BinaryHeap_print(BinaryHeap h, void (*pnt)(void*)){
   }
   fprintf(stderr, "\nSpare keys =");
   for (size_t i = 0; i <= h->id_stack->last; i++) {
-    fprintf(stderr, "%d(%zu) ", h->id_stack->stack[i],
+    fprintf(stderr, "%d(%" PRISIZE_T ") ", h->id_stack->stack[i],
             h->id_to_pos[h->id_stack->stack[i]]);
   }
   fprintf(stderr, "\n");
