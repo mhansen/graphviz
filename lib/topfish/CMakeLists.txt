@@ -1,4 +1,4 @@
-if (with_smyrna)
+if(with_smyrna)
 
 add_library(topfish STATIC
     # Header files
@@ -14,4 +14,4 @@ target_include_directories(topfish PRIVATE
     ${GRAPHVIZ_LIB_DIR}/common
 )
 
-endif (with_smyrna)
+endif()

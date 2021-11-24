@@ -27,9 +27,9 @@
 
 set(ROOT $ENV{DESTDIR}${CMAKE_INSTALL_PREFIX})
 
-if (APPLE)
+if(APPLE)
   set(ENV{DYLD_LIBRARY_PATH} "${ROOT}/lib")
-elseif (UNIX)
+elseif(UNIX)
   set(ENV{LD_LIBRARY_PATH} "${ROOT}/lib")
 endif()
 

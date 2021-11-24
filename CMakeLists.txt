@@ -18,7 +18,7 @@ option(with_cxx_api    "enables building the C++ API" OFF)
 option(with_cxx_tests  "enables building the C++ tests" OFF)
 option(use_win_pre_inst_libs "enables building using pre-installed Windows libraries" ON)
 
-if (WIN32)
+if(WIN32)
     # Build dynamic-link libraries on Windows, including MinGW. The
     # CMake build system does not currently support building static
     # libraries, so the GVDLL symbol can be unconditionally set until
@@ -28,26 +28,26 @@ if (WIN32)
     option(install_win_dependency_dlls "Install 3rd party dependencies" ON)
 endif()
 
-if (with_digcola)
+if(with_digcola)
     add_definitions(-DDIGCOLA)
-endif (with_digcola)
+endif()
 
-if (with_ipsepcola)
+if(with_ipsepcola)
     add_definitions(-DIPSEPCOLA)
-endif (with_ipsepcola)
+endif()
 
-if (with_ortho)
+if(with_ortho)
     add_definitions(-DORTHO)
-endif (with_ortho)
+endif()
 
-if (with_sfdp)
+if(with_sfdp)
     add_definitions(-DSFDP)
-endif (with_sfdp)
+endif()
 
-if (with_smyrna)
+if(with_smyrna)
     # TODO include dependency checks
     add_definitions(-DSMYRNA)
-endif (with_smyrna)
+endif()
 
 # ===================== Append local CMake module directory ====================
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -59,7 +59,7 @@ find_package(FLEX REQUIRED)
 find_program(GIT git)
 if(NOT GIT)
   message(FATAL_ERROR "git not found")
-endif(NOT GIT)
+endif()
 find_program(GZIP gzip)
 
 # ================== Convenient values for CMake configuration =================
@@ -76,7 +76,7 @@ set(TOP_BINARY_DIR          "${CMAKE_CURRENT_BINARY_DIR}")
 set(GRAPHVIZ_LIB_DIR        "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 set(WINDOWS_DEPENDENCY_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/windows/dependencies/libraries")
 set(WINDOWS_DEPENDENCY_VCPKG_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/windows/dependencies/libraries/vcpkg/installed")
-if (CMAKE_CL_64)
+if(CMAKE_CL_64)
     set(WINDOWS_DEPENDENCY_DIR "${WINDOWS_DEPENDENCY_DIR}/x64")
     set(WINDOWS_DEPENDENCY_VCPKG_DIR "${WINDOWS_DEPENDENCY_VCPKG_DIR}/x64-windows")
 else()
@@ -89,8 +89,8 @@ set(GRAPHVIZ_PLUGIN_VERSION 6)
 set(GVPLUGIN_CONFIG_FILE config${GRAPHVIZ_PLUGIN_VERSION})
 
 # ============================ Library dependencies ============================
-if (WIN32)
-    if (use_win_pre_inst_libs)
+if(WIN32)
+    if(use_win_pre_inst_libs)
         list(APPEND CMAKE_PREFIX_PATH ${WINDOWS_DEPENDENCY_DIR})
         list(APPEND CMAKE_PREFIX_PATH ${WINDOWS_DEPENDENCY_VCPKG_DIR})
     endif()
@@ -112,7 +112,7 @@ if(enable_ltdl)
   if(LTDL_FOUND)
     add_definitions(-DENABLE_LTDL)
   endif()
-endif ()
+endif()
 
 find_package(PangoCairo)
 
@@ -120,16 +120,16 @@ if(with_zlib)
   find_package(ZLIB)
 endif()
 
-if (UNIX)
+if(UNIX)
     find_library(MATH_LIB m)
-endif ()
+endif()
 
-if (WIN32)
+if(WIN32)
     # Find Windows specific dependencies
 
     # Find DLLs on Windows
     find_program(EXPAT_RUNTIME_LIBRARIES NAMES libexpat.dll expat.dll msys-expat-1.dll)
-    if (CMAKE_CL_64)
+    if(CMAKE_CL_64)
         find_program(MSYS_RUNTIME_LIBRARIES NAMES msys-2.0.dll)
     endif()
 endif()
@@ -142,7 +142,7 @@ else()
   find_package(Python3 COMPONENTS Interpreter)
 endif()
 
-if (DEFINED VERSION)
+if(DEFINED VERSION)
     set(GRAPHVIZ_VERSION_STRING "${VERSION}")
 else()
     if(NOT Python3_EXECUTABLE)
@@ -157,7 +157,7 @@ else()
         OUTPUT_STRIP_TRAILING_WHITESPACE
         ERROR_STRIP_TRAILING_WHITESPACE
         )
-    if (NOT gen_version_result EQUAL 0)
+    if(NOT gen_version_result EQUAL 0)
         message(FATAL_ERROR "Failed to set version: ${gen_version_error}")
     endif()
 endif()
@@ -175,7 +175,7 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
     ERROR_STRIP_TRAILING_WHITESPACE
     )
-if (NOT gen_date_result EQUAL 0)
+if(NOT gen_date_result EQUAL 0)
     message(FATAL_ERROR "Failed to set date: ${gen_date_error}")
 endif()
 
@@ -198,7 +198,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/graphviz_version.h DESTINATION ${HEADE
 message(STATUS "Graphviz version: ${GRAPHVIZ_VERSION_FULL}")
 
 include(config_checks)
-if (NOT HAVE_GETOPT_H)
+if(NOT HAVE_GETOPT_H)
     find_package(Getopt REQUIRED)
 endif()
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -235,10 +235,10 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 endif()
 
-if (use_sanitizers)
+if(use_sanitizers)
     add_compile_options("-fsanitize=address,undefined")
     add_compile_options("-g")
-    if (${CMAKE_VERSION} VERSION_LESS "3.13.0")
+    if(${CMAKE_VERSION} VERSION_LESS "3.13.0")
         link_libraries("-fsanitize=address,undefined")
         link_libraries("-g")
     else()
@@ -247,9 +247,9 @@ if (use_sanitizers)
     endif()
 endif()
 
-if (use_coverage)
+if(use_coverage)
     add_compile_options("-coverage")
-    if (${CMAKE_VERSION} VERSION_LESS "3.16.0")
+    if(${CMAKE_VERSION} VERSION_LESS "3.16.0")
         link_libraries("-coverage")
     else()
         add_link_options("-coverage")
@@ -268,7 +268,7 @@ Include(CTest)
 add_subdirectory(lib)
 add_subdirectory(plugin)
 add_subdirectory(cmd)
-if (with_cxx_tests)
+if(with_cxx_tests)
     add_subdirectory(tests)
 endif()
 

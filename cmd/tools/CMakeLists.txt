@@ -5,7 +5,7 @@
 function(tool_defaults name)
     if(NOT HAVE_GETOPT_H)
         target_link_libraries(${name} ${Getopt_LINK_LIBRARIES})
-    endif(NOT HAVE_GETOPT_H)
+    endif()
 
     install(
         TARGETS ${name}
@@ -143,7 +143,7 @@ target_include_directories(gv2gml PRIVATE
 target_link_libraries(gv2gml cgraph gvc ingraphs)
 if(NOT HAVE_GETOPT_H)
     target_link_libraries(gv2gml ${Getopt_LINK_LIBRARIES})
-endif(NOT HAVE_GETOPT_H)
+endif()
 install(TARGETS gv2gml RUNTIME DESTINATION ${BINARY_INSTALL_DIR})
 
 # ================================= graphml2gv =================================
@@ -175,7 +175,7 @@ target_link_libraries(graphml2gv
 
 tool_defaults(graphml2gv)
 
-endif(EXPAT_FOUND)
+endif()
 
 # ================================== gvcolor ===================================
 add_executable(gvcolor
@@ -230,9 +230,9 @@ target_include_directories(gvgen PRIVATE
 target_link_libraries(gvgen cgraph)
 
 # Link to math library
-if (UNIX)
+if(UNIX)
     target_link_libraries(gvgen m)
-endif (UNIX)
+endif()
 
 tool_defaults(gvgen)
 
@@ -301,7 +301,7 @@ target_link_libraries(gxl2gv
 
 tool_defaults(gxl2gv)
 
-endif(EXPAT_FOUND)
+endif()
 
 # ==================================== mm2gv ===================================
 add_executable(mm2gv
@@ -360,14 +360,14 @@ tool_defaults(sccmap)
 
 # ===================== Install third party DLLs on Windows ====================
 
-if (WIN32 AND install_win_dependency_dlls AND EXPAT_FOUND)
+if(WIN32 AND install_win_dependency_dlls AND EXPAT_FOUND)
     install(
         FILES ${EXPAT_RUNTIME_LIBRARIES}
         DESTINATION ${BINARY_INSTALL_DIR}
     )
 endif()
 
-if (WIN32 AND install_win_dependency_dlls)
+if(WIN32 AND install_win_dependency_dlls)
     install(
         FILES ${Getopt_RUNTIME_LIBRARIES}
         DESTINATION ${BINARY_INSTALL_DIR}

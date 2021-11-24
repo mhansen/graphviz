@@ -1,4 +1,4 @@
-if (WIN32)
+if(WIN32)
 
 add_library(gvplugin_gdiplus SHARED
     # Header files
@@ -43,4 +43,4 @@ set_target_properties(gvplugin_gdiplus PROPERTIES
     SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
 )
 
-endif (WIN32)
+endif()

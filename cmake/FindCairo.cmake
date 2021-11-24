@@ -1,6 +1,6 @@
 include(FindPackageHandleStandardArgs)
 
-if (WIN32)
+if(WIN32)
     find_path(Cairo_INCLUDE_DIR cairo/cairo.h)
 
     find_library(Cairo_LIBRARY NAMES cairo)
@@ -39,7 +39,7 @@ else()
 
     # prior to CMake 3.12, PkgConfig does not set *_LINK_LIBRARIES, so do it
     # manually
-    if (${CMAKE_VERSION} VERSION_LESS 3.12)
+    if(${CMAKE_VERSION} VERSION_LESS 3.12)
         find_library(Cairo_LINK_LIBRARIES cairo PATHS ENV LIBRARY_PATH)
     endif()
 

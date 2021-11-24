@@ -4,7 +4,7 @@ find_path(Getopt_INCLUDE_DIR getopt.h)
 find_library(Getopt_LIBRARY NAMES getopt)
 find_program(Getopt_RUNTIME_LIBRARY NAMES getopt.dll)
 
-if (WIN32)
+if(WIN32)
     find_package_handle_standard_args(Getopt DEFAULT_MSG
         Getopt_INCLUDE_DIR
         Getopt_LIBRARY

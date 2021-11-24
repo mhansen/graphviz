@@ -46,4 +46,4 @@ target_link_libraries(gvpr
 
 if(NOT HAVE_GETOPT_H)
     target_link_libraries(gvpr ${Getopt_LINK_LIBRARIES})
-endif(NOT HAVE_GETOPT_H)
+endif()

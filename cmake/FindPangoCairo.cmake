@@ -1,6 +1,6 @@
 include(FindPackageHandleStandardArgs)
 
-if (WIN32)
+if(WIN32)
     find_path(PangoCairo_INCLUDE_DIR pango/pangocairo.h PATH_SUFFIXES pango-1.0)
     find_path(GLIB_INCLUDE_DIR glib.h PATH_SUFFIXES glib-2.0)
     find_path(GLIBCONFIG_INCLUDE_DIR glibconfig.h PATH_SUFFIXES glib-2.0/include)
@@ -72,7 +72,7 @@ else()
 
     # prior to CMake 3.12, PkgConfig does not set *_LINK_LIBRARIES, so do it
     # manually
-    if (${CMAKE_VERSION} VERSION_LESS 3.12)
+    if(${CMAKE_VERSION} VERSION_LESS 3.12)
         find_library(PangoCairo_LINK_LIBRARIES pangocairo-1.0
           PATHS ENV LIBRARY_PATH)
     endif()
