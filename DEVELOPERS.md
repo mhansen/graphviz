@@ -279,7 +279,10 @@ env PATH=${PREFIX}/bin:${PATH} C_INCLUDE_PATH=${PREFIX}/include \
   python3 -m pytest tests rtest --verbose
 ```
 
-*TODO: on macOS and Windows, you probably need to override different environment variables?*
+On macOS, use the same command except replacing `LD_LIBRARY_PATH` with
+`DYLD_LIBRARY_PATH`.
+
+*TODO: on Windows, you probably need to override different environment variables?*
 
 ## Performance and profiling
 
