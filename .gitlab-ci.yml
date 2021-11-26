@@ -147,8 +147,7 @@ portable-source:
         - echo "$CI_JOB_NAME-warnings $warnings_count" > metrics.txt
         - rm $logfile
         - cat metrics.txt
-        # avoid BOM in GRAPHVIZ_VERSION file
-        - python gen_version.py | Out-File GRAPHVIZ_VERSION -Encoding ascii
+        - python gen_version.py --output GRAPHVIZ_VERSION
         # Package
         - $Env:GV_VERSION=$( cat GRAPHVIZ_VERSION )
         - >-
@@ -453,7 +452,7 @@ out-of-source-build:
 macos-autotools-build:
     <<: *macos_build_definition
     before_script:
-        - python3 gen_version.py > GRAPHVIZ_VERSION # FIXME: remove when building from portable source
+        - python3 gen_version.py --output GRAPHVIZ_VERSION # FIXME: remove when building from portable source
         - export build_system="autotools"
     tags:
         - shared-macos-amd64
@@ -497,8 +496,7 @@ windows-cygwin-build-using-autogen:
         - choco install --yes --no-progress cygwin
         - choco install --yes --no-progress --params "/InstallDir:C:\Python3" python3
         - $env:Path = "C:\Python3;" + $env:Path
-        # avoid BOM in GRAPHVIZ_VERSION file
-        - python gen_version.py | Out-File GRAPHVIZ_VERSION -Encoding ascii
+        - python gen_version.py --output GRAPHVIZ_VERSION
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
         - C:\tools\cygwin\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/cygwin-build.sh'
@@ -1008,7 +1006,7 @@ ubuntu18-04-cmake-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="cmake"
-        - python3 gen_version.py > GRAPHVIZ_VERSION
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu18-04-cmake-build"
           artifacts: true
@@ -1021,7 +1019,7 @@ ubuntu21-04-cmake-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="cmake"
-        - python3 gen_version.py > GRAPHVIZ_VERSION
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu21-04-cmake-build"
           artifacts: true
@@ -1034,7 +1032,7 @@ ubuntu21-10-cmake-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="cmake"
-        - python3 gen_version.py > GRAPHVIZ_VERSION
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu21-10-cmake-build"
           artifacts: true
@@ -1050,7 +1048,7 @@ ubuntu21.04-cmake-ASan-test-including-ctest:
         - export CFLAGS=" -g -fsanitize=address,undefined"
         - export CXXFLAGS=" -g -fsanitize=address,undefined"
         - export LDFLAGS=" -g -fsanitize=address,undefined"
-        - python3 gen_version.py > GRAPHVIZ_VERSION
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu21-04-cmake-ASan-build-for-ctest"
           artifacts: true
@@ -1066,7 +1064,7 @@ ubuntu21.10-cmake-ASan-test-including-ctest:
         - export CFLAGS=" -g -fsanitize=address,undefined"
         - export CXXFLAGS=" -g -fsanitize=address,undefined"
         - export LDFLAGS=" -g -fsanitize=address,undefined"
-        - python3 gen_version.py > GRAPHVIZ_VERSION
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu21-10-cmake-ASan-build-for-ctest"
           artifacts: true
@@ -1079,7 +1077,7 @@ centos7-cmake-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="cmake"
-        - python3 gen_version.py > GRAPHVIZ_VERSION
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
         # Graphviz libs are installed in /usr/lib, but Centos 7 doesn't look there by default
         - export LD_LIBRARY_PATH=/usr/lib
     needs:
@@ -1098,7 +1096,7 @@ macos-cmake-test:
         - brew install libxaw || brew upgrade libxaw
         - python3 -m pip install --requirement requirements.txt
         - export build_system="cmake"
-        - python3 gen_version.py > GRAPHVIZ_VERSION
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "macos-cmake-build"
           artifacts: true
