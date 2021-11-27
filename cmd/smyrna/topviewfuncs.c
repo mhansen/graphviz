@@ -47,7 +47,7 @@ static xdot *parseXdotwithattrs(void *e)
 
 }
 
-static void set_boundaries(Agraph_t * g, topview * t)
+static void set_boundaries(Agraph_t * g)
 {
     Agnode_t *v;
     Agsym_t* pos_attr = GN_pos(g);
@@ -636,6 +636,9 @@ static void renderEdgesFn (Agraph_t * g, edgefn ef, int skipSelected)
 
 static void edge_xdot (Agraph_t* g, Agedge_t* e, glCompColor c)
 {
+    (void)g;
+    (void)c;
+
     xdot * x;
     x=parseXdotwithattrs(e);
     draw_xdot(x,0);
@@ -693,7 +696,6 @@ static void renderNodeLabels(Agraph_t * g)
     glCompPoint pos;
     Agsym_t* data_attr = GN_labelattribute(g);
     Agsym_t* l_color_attr = GG_nodelabelcolor(g);
-    GLfloat nodeSize;
     glCompColor c;
 
     glCompColorxlate(&c,agxget(g,l_color_attr));
@@ -706,7 +708,6 @@ static void renderNodeLabels(Agraph_t * g)
 	    continue;
 
 	pos = ND_A(v);
-	nodeSize = ND_size(v);
 	glColor4f(c.R,c.G,c.B,c.A);
 	if(!data_attr)
             glprintfglut(view->glutfont,pos.x,pos.y,pos.z,agnameof(v));
@@ -852,7 +853,7 @@ void updateSmGraph(Agraph_t * g,topview* t)
     aginit(g, AGNODE, "nodeRec", sizeof(nodeRec), 0);
     aginit(g, AGEDGE, "edgeRec", sizeof(edgeRec), 0);
 
-    set_boundaries(g,t);
+    set_boundaries(g);
     view->Topview=t;
 
 
@@ -885,7 +886,7 @@ void initSmGraph(Agraph_t * g,topview* rv)
     updateSmGraph(g,rv);
 }
 
-void renderSmGraph(Agraph_t * g,topview* t)
+void renderSmGraph(topview* t)
 {
     /*
 	we like to have blending affect where node and edge  overlap

@@ -515,17 +515,8 @@ static void doApply (GtkWidget * widget, int doAll)
 
 _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)user_data;
     doApply (widget, 0);
-}
-
-_BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)
-{
-    filter_attributes((char *)
-		      gtk_entry_get_text((GtkEntry *)
-					 glade_xml_get_widget(xml,
-							      "txtAttr")),
-		      view->Topview);
-
 }
 
 /* This is the action attached to the publish button on the attributes
@@ -533,6 +524,8 @@ _BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)
  */
 _BB void on_attrProg_toggled(GtkWidget * widget, gpointer user_data)
 {
+  (void)widget;
+  (void)user_data;
   /* FIX */
 }
 

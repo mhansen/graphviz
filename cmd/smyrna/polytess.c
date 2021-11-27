@@ -17,6 +17,9 @@ tessPoly TP;
 #endif
 static void CALLBACK combineCallback(GLdouble coords[3], GLdouble *vertex_data[4],GLfloat weight[4], GLdouble **dataOut)
 {
+    (void)vertex_data;
+    (void)weight;
+
     GLdouble *vertex;
     int i;
     vertex = malloc(6 * sizeof(GLdouble));

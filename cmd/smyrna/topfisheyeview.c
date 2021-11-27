@@ -134,7 +134,6 @@ void prepare_topological_fisheye(Agraph_t* g,topview * t)
     int closest_fine_node;
     int cur_level = 0;
     Hierarchy *hp;
-    ex_vtx_data *gg;
     gvcolor_t cl;
     Agnode_t *np;
 
@@ -155,7 +154,6 @@ void prepare_topological_fisheye(Agraph_t* g,topview * t)
     free(y_coords);
 
     fs = t->fisheyeParams.fs = initFocus(agnnodes(g));	// create focus set
-    gg = hp->geom_graphs[0];
 
     closest_fine_node = 0;	/* first node */
     fs->num_foci = 1;
@@ -326,7 +324,7 @@ static void drawtopfishedges(topview * t)
 
 }
 
-static int get_active_frame(topview * t)
+static int get_active_frame()
 {
     gulong microseconds;
     gdouble seconds;
@@ -351,7 +349,7 @@ static int get_active_frame(topview * t)
 
 void drawtopologicalfisheye(topview * t)
 {
-    get_active_frame(t);
+    get_active_frame();
     drawtopfishnodes(t);
     drawtopfishedges(t);
 }
@@ -421,8 +419,7 @@ static int get_temp_coords(topview * t, int level, int v, double *coord_x,
     return 1;
 }
 
-void changetopfishfocus(topview * t, float *x, float *y,
-			float *z, int num_foci)
+void changetopfishfocus(topview * t, float *x, float *y, int num_foci)
 {
 
     gvcolor_t cl;
