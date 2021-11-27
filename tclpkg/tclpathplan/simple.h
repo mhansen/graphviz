@@ -10,10 +10,6 @@
 
 #include <stddef.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define MAXINTS  10000		/* modify this line to reflect the max no. of 
 				   intersections you want reported -- 50000 seems to break the program */
 
@@ -61,7 +57,3 @@ extern "C" {
 
 void find_ints(struct vertex vertex_list[], struct data *input,
                struct intersection ilist[]);
-
-#ifdef __cplusplus
-}
-#endif
