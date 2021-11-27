@@ -18,6 +18,7 @@
 ******************************************/
 
 #include <neatogen/bfs.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 void bfs(int vertex, vtx_data * graph, int n, DistType * dist, Queue * Q)
@@ -129,18 +130,18 @@ void initQueue(Queue * qp, int startVertex)
     qp->end = 1;
 }
 
-boolean deQueue(Queue * qp, int *vertex)
+bool deQueue(Queue * qp, int *vertex)
 {
     if (qp->start >= qp->end)
-	return FALSE;		/* underflow */
+	return false;		/* underflow */
     *vertex = qp->data[qp->start++];
-    return TRUE;
+    return true;
 }
 
-boolean enQueue(Queue * qp, int vertex)
+bool enQueue(Queue * qp, int vertex)
 {
     if (qp->end >= qp->queueSize)
-	return FALSE;		/* overflow */
+	return false;		/* overflow */
     qp->data[qp->end++] = vertex;
-    return TRUE;
+    return true;
 }

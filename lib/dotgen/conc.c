@@ -14,6 +14,7 @@
  */
 
 #include	<dotgen/dot.h>
+#include	<stdbool.h>
 
 #define		UP		0
 #define		DOWN	1
@@ -24,25 +25,25 @@ static boolean samedir(edge_t * e, edge_t * f)
 
     for (e0 = e; e0 != NULL && ED_edge_type(e0) != NORMAL; e0 = ED_to_orig(e0));
     if (e0 == NULL)
-	return FALSE;
+	return false;
     for (f0 = f; f0 != NULL && ED_edge_type(f0) != NORMAL; f0 = ED_to_orig(f0));
     if (f0 == NULL)
-	return FALSE;
+	return false;
     if (ED_conc_opp_flag(e0))
-	return FALSE;
+	return false;
     if (ED_conc_opp_flag(f0))
-	return FALSE;
+	return false;
     return ((ND_rank(agtail(f0)) - ND_rank(aghead(f0)))
 	    * (ND_rank(agtail(e0)) - ND_rank(aghead(e0))) > 0);
 }
 
-static boolean downcandidate(node_t * v)
+static bool downcandidate(node_t * v)
 {
     return ND_node_type(v) == VIRTUAL && ND_in(v).size == 1
 	    && ND_out(v).size == 1 && ND_label(v) == NULL;
 }
 
-static boolean bothdowncandidates(node_t * u, node_t * v)
+static bool bothdowncandidates(node_t * u, node_t * v)
 {
     edge_t *e, *f;
     e = ND_in(u).list[0];
@@ -51,16 +52,16 @@ static boolean bothdowncandidates(node_t * u, node_t * v)
 	return samedir(e, f)
 	    && portcmp(ED_tail_port(e), ED_tail_port(f)) == 0;
     }
-    return FALSE;
+    return false;
 }
 
-static boolean upcandidate(node_t * v)
+static bool upcandidate(node_t * v)
 {
     return ND_node_type(v) == VIRTUAL && ND_out(v).size == 1
 	    && ND_in(v).size == 1 && ND_label(v) == NULL;
 }
 
-static boolean bothupcandidates(node_t * u, node_t * v)
+static bool bothupcandidates(node_t * u, node_t * v)
 {
     edge_t *e, *f;
     e = ND_out(u).list[0];
@@ -69,7 +70,7 @@ static boolean bothupcandidates(node_t * u, node_t * v)
 	return samedir(e, f)
 	    && portcmp(ED_head_port(e), ED_head_port(f)) == 0;
     }
-    return FALSE;
+    return false;
 }
 
 static void mergevirtual(graph_t * g, int r, int lpos, int rpos, int dir)

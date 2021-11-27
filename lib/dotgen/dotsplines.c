@@ -114,7 +114,7 @@ typedef struct {
 
 static void adjustregularpath(path *, int, int);
 static Agedge_t *bot_bound(Agedge_t *, int);
-static boolean pathscross(Agnode_t *, Agnode_t *, Agedge_t *, Agedge_t *);
+static bool pathscross(Agnode_t *, Agnode_t *, Agedge_t *, Agedge_t *);
 static Agraph_t *cl_bound(graph_t*, Agnode_t *, Agnode_t *);
 static int cl_vninside(Agraph_t *, Agnode_t *);
 static void completeregularpath(path *, Agedge_t *, Agedge_t *,
@@ -2520,7 +2520,7 @@ neighbor(graph_t* g, node_t *vn, edge_t *ie, edge_t *oe, int dir)
 	    rv = n;
 	    break;
 	}
-	if (pathscross(n, vn, ie, oe) == FALSE) {
+	if (!pathscross(n, vn, ie, oe)) {
 	    rv = n;
 	    break;
 	}
@@ -2528,7 +2528,7 @@ neighbor(graph_t* g, node_t *vn, edge_t *ie, edge_t *oe, int dir)
     return rv;
 }
 
-static boolean pathscross(node_t *n0, node_t *n1, edge_t *ie1, edge_t *oe1)
+static bool pathscross(node_t *n0, node_t *n1, edge_t *ie1, edge_t *oe1)
 {
     edge_t *e0, *e1;
     node_t *na, *nb;
@@ -2536,7 +2536,7 @@ static boolean pathscross(node_t *n0, node_t *n1, edge_t *ie1, edge_t *oe1)
 
     order = ND_order(n0) > ND_order(n1);
     if (ND_out(n0).size != 1 && ND_out(n1).size != 1)
-	return FALSE;
+	return false;
     e1 = oe1;
     if (ND_out(n0).size == 1 && e1) {
 	e0 = ND_out(n0).list[0];
@@ -2544,7 +2544,7 @@ static boolean pathscross(node_t *n0, node_t *n1, edge_t *ie1, edge_t *oe1)
 	    if ((na = aghead(e0)) == (nb = aghead(e1)))
 		break;
 	    if (order != (ND_order(na) > ND_order(nb)))
-		return TRUE;
+		return true;
 	    if (ND_out(na).size != 1 || ND_node_type(na) == NORMAL)
 		break;
 	    e0 = ND_out(na).list[0];
@@ -2560,7 +2560,7 @@ static boolean pathscross(node_t *n0, node_t *n1, edge_t *ie1, edge_t *oe1)
 	    if ((na = agtail(e0)) == (nb = agtail(e1)))
 		break;
 	    if (order != (ND_order(na) > ND_order(nb)))
-		return TRUE;
+		return true;
 	    if (ND_in(na).size != 1 || ND_node_type(na) == NORMAL)
 		break;
 	    e0 = ND_in(na).list[0];
@@ -2569,7 +2569,7 @@ static boolean pathscross(node_t *n0, node_t *n1, edge_t *ie1, edge_t *oe1)
 	    e1 = ND_in(nb).list[0];
 	}
     }
-    return FALSE;
+    return false;
 }
 
 #ifdef DEBUG

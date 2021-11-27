@@ -17,6 +17,7 @@
 #include <pathplan/pathplan.h>
 #include <pathplan/vispath.h>
 #include <neatogen/multispline.h>
+#include <stdbool.h>
 
 #ifdef ORTHO
 #include <ortho/ortho.h>
@@ -1000,18 +1001,18 @@ void neato_translate(Agraph_t * g)
  * Return false if no transform is performed. This includes
  * the possibility that a translation was done.
  */
-static boolean _neato_set_aspect(graph_t * g)
+static bool _neato_set_aspect(graph_t * g)
 {
     double xf, yf, actual, desired;
     node_t *n;
-    boolean translated = FALSE;
+    bool translated = false;
 
     if (g->root != g)
-	return FALSE;
+	return false;
 
     if (GD_drawing(g)->ratio_kind) {
 	if (GD_bb(g).LL.x || GD_bb(g).LL.y) {
-	    translated = TRUE;
+	    translated = true;
 	    neato_translate (g);
 	}
 	/* normalize */
@@ -1080,10 +1081,10 @@ static boolean _neato_set_aspect(graph_t * g)
 	    ND_pos(n)[1] *= yf;
 	}
 	scaleBB(g, xf, yf);
-        return TRUE;
+        return true;
     }
     else
-	return FALSE;
+	return false;
 }
 
 /* neato_set_aspect:
@@ -1093,10 +1094,10 @@ static boolean _neato_set_aspect(graph_t * g)
  *
  * Return true if some node moved.
  */
-boolean neato_set_aspect(graph_t * g)
+bool neato_set_aspect(graph_t * g)
 {
     node_t *n;
-    boolean moved = FALSE;
+    bool moved = false;
 
 	/* setting aspect ratio only makes sense on root graph */
     moved = _neato_set_aspect(g);

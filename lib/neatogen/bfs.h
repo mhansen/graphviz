@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,8 +28,8 @@ extern "C" {
     extern void mkQueue(Queue *, int);
     extern void freeQueue(Queue *);
     extern void initQueue(Queue *, int startVertex);
-    extern boolean deQueue(Queue *, int *);
-    extern boolean enQueue(Queue *, int);
+    extern bool deQueue(Queue *, int *);
+    extern bool enQueue(Queue *, int);
 
     extern void bfs(int, vtx_data *, int, DistType *, Queue *);
     extern int bfs_bounded(int, vtx_data *, int, DistType *, Queue *, int,

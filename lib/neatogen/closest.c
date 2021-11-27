@@ -11,6 +11,7 @@
 
 #include <neatogen/kkutils.h>
 #include <neatogen/closest.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 /*****************************************
@@ -138,16 +139,16 @@ static void initHeap(PairHeap * h, double *place, int *ordering, int n)
     }
 }
 
-static boolean extractMax(PairHeap * h, Pair * max)
+static bool extractMax(PairHeap * h, Pair * max)
 {
     if (h->heapSize == 0)
-	return FALSE;
+	return false;
 
     *max = h->data[0];
     h->data[0] = h->data[h->heapSize - 1];
     h->heapSize--;
     heapify(h, 0);
-    return TRUE;
+    return true;
 }
 
 static void insert(PairHeap * h, Pair edge)

@@ -19,6 +19,7 @@
 
 #include <dotgen/dot.h>
 #include <dotgen/aspect.h>
+#include <stdbool.h>
 
 static int nsiter2(graph_t * g);
 static void create_aux_edges(graph_t * g);
@@ -29,7 +30,7 @@ static void set_aspect(graph_t * g, aspect_t* );
 static void expand_leaves(graph_t * g);
 static void make_lrvn(graph_t * g);
 static void contain_nodes(graph_t * g);
-static boolean idealsize(graph_t * g, double);
+static bool idealsize(graph_t * g, double);
 
 #if DEBUG > 1
 static void
@@ -946,7 +947,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 {
     double xf = 0.0, yf = 0.0, actual, desired;
     node_t *n;
-    boolean scale_it, filled;
+    bool scale_it, filled;
     point sz;
 
     rec_bb(g, g);
@@ -1218,7 +1219,7 @@ static void contain_nodes(graph_t * g)
  * set g->drawing->size to a reasonable default.
  * returns a boolean to indicate if drawing is to
  * be scaled and filled */
-static boolean idealsize(graph_t * g, double minallowed)
+static bool idealsize(graph_t * g, double minallowed)
 {
     double xf, yf, f, R;
     pointf b, relpage, margin;
@@ -1226,7 +1227,7 @@ static boolean idealsize(graph_t * g, double minallowed)
     /* try for one page */
     relpage = GD_drawing(g)->page;
     if (relpage.x < 0.001 || relpage.y < 0.001)
-	return FALSE;		/* no page was specified */
+	return false;		/* no page was specified */
     margin = GD_drawing(g)->margin;
     relpage = sub_pointf(relpage, margin);
     relpage = sub_pointf(relpage, margin);
@@ -1235,7 +1236,7 @@ static boolean idealsize(graph_t * g, double minallowed)
     xf = relpage.x / b.x;
     yf = relpage.y / b.y;
     if ((xf >= 1.0) && (yf >= 1.0))
-	return FALSE;		/* fits on one page */
+	return false;		/* fits on one page */
 
     f = MIN(xf, yf);
     xf = yf = MAX(f, minallowed);
@@ -1246,5 +1247,5 @@ static boolean idealsize(graph_t * g, double minallowed)
     yf = ((R * relpage.y) / b.y);
     GD_drawing(g)->size.x = b.x * xf;
     GD_drawing(g)->size.y = b.y * yf;
-    return TRUE;
+    return true;
 }
