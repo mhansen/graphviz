@@ -18,7 +18,7 @@ import shutil
 import stat
 import subprocess
 import sys
-from typing import Generator, List, Optional
+from typing import List, Optional
 
 # logging output stream, setup in main()
 log = None
@@ -63,8 +63,8 @@ def upload(version: str, path: Path, name: Optional[str] = None) -> str:
 
   return target
 
-def checksum(path: Path) -> Generator[Path, None, None]:
-  """generate checksum(s) for the given file"""
+def checksum(path: Path) -> Path:
+  """generate checksum for the given file"""
 
   assert path.exists()
 
@@ -73,7 +73,7 @@ def checksum(path: Path) -> Generator[Path, None, None]:
   with open(check, "wt") as f:
     with open(path, "rb") as data:
       f.write(f"{hashlib.sha256(data.read()).hexdigest()}  {path}\n")
-  yield check
+  return check
 
 def is_macos_artifact(path: Path) -> bool:
   """is this a deployment artifact for macOS?"""
@@ -82,6 +82,14 @@ def is_macos_artifact(path: Path) -> bool:
 def is_windows_artifact(path: Path) -> bool:
   """is this a deployment artifact for Windows?"""
   return re.search(r"\bwindows\b", str(path)) is not None
+
+def get_format(path: Path) -> str:
+  """a human readable description of the format of this file"""
+  if path.suffix[1:].lower() == "exe":
+    return "EXE installer"
+  if path.suffix[1:].lower() == "zip":
+    return "ZIP installer"
+  return path.suffix[1:].lower()
 
 def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
 
@@ -163,17 +171,17 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
       log.error(f"source {tarball} not found")
       return -1
 
-    # accrue the source tarball and accompanying checksum(s)
+    # accrue the source tarball and accompanying checksum
     url = upload(package_version, tarball)
     assets.append(url)
     webentry = {
-      "format": tarball.suffix[1:],
+      "format": get_format(tarball),
       "url": url
     }
-    for check in checksum(tarball):
-      url = upload(package_version, check)
-      assets.append(url)
-      webentry[check.suffix[1:]] = url
+    check = checksum(tarball)
+    url = upload(package_version, check)
+    assets.append(url)
+    webentry[check.suffix[1:]] = url
 
     webdata["sources"].append(webentry)
 
@@ -187,13 +195,31 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
       # fixup permissions, o-rwx g-wx
       os.chmod(path, mode & ~stat.S_IRWXO & ~stat.S_IWGRP & ~stat.S_IXGRP)
 
-      assets.append(upload(package_version, path, str(path)[len("Packages/"):]))
+      url = upload(package_version, path, str(path)[len("Packages/"):])
+      assets.append(url)
+
+      webentry = {
+        "format": get_format(path),
+        "url": url,
+      }
+      if "win32" in str(path):
+        webentry["bits"] = 32
+      elif "win64" in str(path):
+        webentry["bits"] = 64
 
       # if this is a standalone Windows or macOS package, also provide
       # checksum(s)
       if is_macos_artifact(path) or is_windows_artifact(path):
-        for c in checksum(path):
-          assets.append(upload(package_version, c, str(c)[len("Packages/"):]))
+        c = checksum(path)
+        url = upload(package_version, c, str(c)[len("Packages/"):])
+        assets.append(url)
+        webentry[c.suffix[1:]] = url
+
+      # only expose a subset of the Windows artifacts
+      if "stable_windows_10_cmake_Release_Win32" in str(path) or \
+         "stable_windows_10_cmake_Release_x64" in str(path) or \
+         "stable_windows_10_msbuild_Release_Win32" in str(path):
+        webdata["windows"].append(webentry)
 
   # various release pages truncate the viewable artifacts to 100 or even 50
   if not options.force and len(assets) > 50:
