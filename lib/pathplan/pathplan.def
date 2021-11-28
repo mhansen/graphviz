@@ -1,6 +1,3 @@
-LIBRARY	"Pathplan"
-
-
 EXPORTS
 area2
 directVis
