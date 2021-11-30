@@ -1,4 +1,4 @@
-if (GD_FOUND)
+if(GD_FOUND)
 
 add_library(gvplugin_gd SHARED
     # Source files
@@ -36,7 +36,7 @@ install(
 )
 
 # Include DLLs with this library on Windows
-if (WIN32 AND install_win_dependency_dlls)
+if(WIN32 AND install_win_dependency_dlls)
     install(
         FILES
             ${GD_RUNTIME_LIBRARIES}
@@ -50,4 +50,4 @@ set_target_properties(gvplugin_gd PROPERTIES
     SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
 )
 
-endif (GD_FOUND)
+endif()

@@ -3,7 +3,7 @@ BISON_TARGET(HTMLparse ${CMAKE_CURRENT_SOURCE_DIR}/htmlparse.y ${CMAKE_CURRENT_B
 add_definitions(-DGVC_EXPORTS -D_BLD_gvc=1)
 
 if(CYGWIN)
-set(AWK_OPTIONS, -v RS="\\r*\\n")
+  set(AWK_OPTIONS, -v RS="\\r*\\n")
 endif()
 
 # Generate colortbl.h from sources
@@ -109,14 +109,14 @@ target_include_directories(common_obj PRIVATE
     ${EXPAT_INCLUDE_DIRS}
 )
 
-if (WIN32)
+if(WIN32)
     target_include_directories(common_obj PRIVATE ${WINDOWS_DEPENDENCY_DIR}/include)
 endif()
 
 # From https://gitlab.com/graphviz/graphviz/-/issues/1613 @mdwies 20093010
 if(APPLE)
     target_compile_options(common_obj PRIVATE "-fno-common")
-endif(APPLE)
+endif()
 
 add_library(common STATIC
     $<TARGET_OBJECTS:common_obj>

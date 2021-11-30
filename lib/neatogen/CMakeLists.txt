@@ -77,14 +77,14 @@ set(sources
     randomkit.c
 )
 
-if (with_ipsepcola)
+if(with_ipsepcola)
     list(APPEND ${sources}
         constrained_majorization_ipsep.c
 	    mosek_quad_solve.c
         mosek_quad_solve.h
         quad_prog_vpsc.c
     )
-endif (with_ipsepcola)
+endif()
 
 
 add_library(neatogen STATIC

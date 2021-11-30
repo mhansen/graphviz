@@ -1,4 +1,4 @@
-if (with_ortho)
+if(with_ortho)
 
 add_definitions(-D_BLD_gvc=1 -DGVC_EXPORTS)
 
@@ -37,4 +37,4 @@ add_library(ortho STATIC
     $<TARGET_OBJECTS:ortho_obj>
 )
 
-endif (with_ortho)
+endif()

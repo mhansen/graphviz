@@ -65,18 +65,18 @@ target_link_libraries(gvc PUBLIC
     ${MATH_LIB}
 )
 
-if (LTDL_FOUND)
+if(LTDL_FOUND)
     target_include_directories(gvc PRIVATE ${LTDL_INCLUDE_DIRS})
-    if (NOT WIN32 OR MINGW)
+    if(NOT WIN32 OR MINGW)
         target_link_libraries(gvc PUBLIC ${LTDL_LIBRARIES})
     endif()
 endif()
 
-if (ZLIB_FOUND)
+if(ZLIB_FOUND)
    target_link_libraries(gvc PUBLIC ${ZLIB_LIBRARIES})
 endif()
 
-if (${with_ortho})
+if(${with_ortho})
     target_link_libraries(gvc PRIVATE
         $<TARGET_OBJECTS:ortho_obj>
     )
@@ -134,7 +134,7 @@ set_target_properties(gvc PROPERTIES
 )
 
 # Include DLLs with this library on Windows
-if (WIN32 AND EXPAT_FOUND AND install_win_dependency_dlls)
+if(WIN32 AND EXPAT_FOUND AND install_win_dependency_dlls)
     install(
         FILES
             ${EXPAT_RUNTIME_LIBRARIES}

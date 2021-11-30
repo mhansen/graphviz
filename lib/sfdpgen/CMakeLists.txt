@@ -1,4 +1,4 @@
-if (with_sfdp)
+if(with_sfdp)
 
 add_library(sfdpgen STATIC
     # Header files
@@ -39,4 +39,4 @@ target_link_libraries(sfdpgen PRIVATE
     sparse
 )
 
-endif (with_sfdp)
+endif()

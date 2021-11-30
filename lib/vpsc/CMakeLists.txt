@@ -1,4 +1,4 @@
-if (with_ipsepcola)
+if(with_ipsepcola)
 
 add_library(vpsc STATIC
     # Header files
@@ -27,4 +27,4 @@ target_include_directories(vpsc PRIVATE
     ${GRAPHVIZ_LIB_DIR}
 )
 
-endif (with_ipsepcola)
+endif()

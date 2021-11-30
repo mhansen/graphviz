@@ -26,13 +26,13 @@ target_link_libraries(gvplugin_neato_layout
     twopigen
 )
 
-if (with_ipsepcola)
+if(with_ipsepcola)
     target_link_libraries(gvplugin_neato_layout vpsc)
-endif (with_ipsepcola)
+endif()
 
-if (with_sfdp)
+if(with_sfdp)
     target_link_libraries(gvplugin_neato_layout sfdpgen)
-endif (with_sfdp)
+endif()
 
 # Installation location of library files
 install(

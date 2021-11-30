@@ -1,4 +1,4 @@
-if (ANN_FOUND)
+if(ANN_FOUND)
 
 add_library(libmingle STATIC
     # Header files
@@ -26,4 +26,4 @@ target_include_directories(libmingle PRIVATE
     ${ANN_INCLUDE_DIR}
 )
 
-endif (ANN_FOUND)
+endif()
