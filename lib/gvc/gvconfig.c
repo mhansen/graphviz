@@ -65,7 +65,7 @@ extern Dt_t * textfont_dict_open(GVC_t *gvc);
 
 /*
     A config for gvrender is a text file containing a
-    list of plugin librariess and their capabilities using a tcl-like
+    list of plugin libraries and their capabilities using a tcl-like
     syntax
 
     Lines beginning with '#' are ignored as comments
@@ -235,8 +235,7 @@ static void gvconfig_plugin_install_builtins(GVC_t * gvc)
 
     for (s = gvc->common.builtins; (name = s->name); s++)
 	if (name[0] == 'g' && strstr(name, "_LTX_library")) 
-	    gvconfig_plugin_install_from_library(gvc, NULL,
-		    (gvplugin_library_t *)(s->address));
+	    gvconfig_plugin_install_from_library(gvc, NULL, s->address);
 }
 
 #ifdef ENABLE_LTDL
