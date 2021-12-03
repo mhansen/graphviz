@@ -226,17 +226,6 @@ void gvrender_begin_graph(GVJ_t * job, graph_t * g)
 	/* render specific init */
 	if (gvre->begin_graph)
 	    gvre->begin_graph(job);
-
-#if 0
-	/* background color */
-	if (((s = agget(g, "bgcolor")) != 0) && s[0]) {
-	    gvrender_resolve_color(job->render.features, s,
-				   &(gvc->bgcolor));
-	    if (gvre->resolve_color)
-		gvre->resolve_color(job, &(gvc->bgcolor));
-	}
-#endif
-
     }
 }
 
