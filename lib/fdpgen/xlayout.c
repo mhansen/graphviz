@@ -55,11 +55,12 @@ static expand_t X_marg;
 static double X_nonov;
 static double X_ov;
 
-void pr2graphs(Agraph_t *g0, Agraph_t *g1)
-{
+#ifdef DEBUG
+static void pr2graphs(Agraph_t *g0, Agraph_t *g1) {
 	fprintf(stderr,"%s",agnameof(g0));
 	fprintf(stderr,"(%s)",agnameof(g1));
 }
+#endif
 
 static double RAD(Agnode_t * n)
 {
