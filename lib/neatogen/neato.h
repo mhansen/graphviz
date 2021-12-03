@@ -32,3 +32,6 @@
 #include	"pathplan.h"
 #include	<neatogen/neatoprocs.h>
 #include	<neatogen/adjust.h>
+
+int lu_decompose(double **a, int n);
+void lu_solve(double *x, double *b, int n);

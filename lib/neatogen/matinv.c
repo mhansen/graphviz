@@ -33,8 +33,7 @@
 
 #include <stdlib.h>
 #include <common/render.h>
-extern int lu_decompose(double **a, int n);
-extern void lu_solve(double *x, double *b, int n);
+#include <neatogen/neato.h>
 
 int matinv(double **A, double **Ainv, int n)
 {
