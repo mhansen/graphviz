@@ -19,7 +19,6 @@ glCompPanel *glCompPanelNew(glCompObj * parentObj, GLfloat x, GLfloat y,
 			    GLfloat w, GLfloat h)
 {
     glCompPanel *p;
-//      glCompCommon* parent=&parentObj->common;
     p = NEW(glCompPanel);
     glCompInitCommon((glCompObj *) p, parentObj, (GLfloat) x, (GLfloat) y);
 
@@ -59,8 +58,6 @@ int glCompPanelDraw(glCompObj * o)
     ref = p->common;
     glCompCalcWidget((glCompCommon *) p->common.parent, &p->common, &ref);
     p->objType = glPanelObj;
-    //typedef enum {glPanelObj,glbuttonObj,glLabelObj,glImageObj}glObjType;
-
 
     if (!p->common.visible)
 	return 0;
@@ -86,29 +83,19 @@ int glCompPanelDraw(glCompObj * o)
     if (p->image) {
 	p->image->common.callbacks.draw((void *) p->image);
     }
-    if (p->text) {
-
-
-    }
     return 1;
 }
 
-
 int glCompPanelHide(glCompPanel * p)
 {
-    /* int ind = 0; */
     p->common.visible = 0;
     return 1;
-
-
 }
 
 int glCompPanelShow(glCompPanel * p)
 {
-    /* int ind = 0; */
     p->common.visible = 1;
     return 1;
-
 }
 
 void glCompPanelClick(glCompObj * o, GLfloat x, GLfloat y,
@@ -162,12 +149,3 @@ void glCompPanelMouseUp(glCompObj * obj, GLfloat x, GLfloat y,
     if (((glCompPanel *) obj)->common.callbacks.mouseup)
 	((glCompPanel *) obj)->common.callbacks.mouseup(obj, x, y, t);
 }
-
-
-#if 0
-
-void glCompPanelSetText(glCompPanel * p, char *str)
-{
-//    replacestr(str, &p->text);
-}
-#endif
