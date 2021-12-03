@@ -938,64 +938,6 @@ boxf *html_port(node_t * n, char *pname, int *sides)
 
 }
 
-/* html_path:
- * Return a box in a table containing the given endpoint.
- * If the top flow is text (no internal structure), return 
- * the box of the flow
- * Else return the box of the subtable containing the point.
- * Because of spacing, the point might not be in any subtable.
- * In that case, return the top flow's box.
- * Note that box[0] must contain the edge point. Additional boxes
- * move out to the boundary.
- *
- * At present, unimplemented, since the label may be inside a
- * non-box node and we need to figure out what this means.
- */
-int html_path(node_t * n, port * p, int side, boxf * rv, int *k)
-{
-#ifdef UNIMPL
-    point p;
-    tbl_t *info;
-    tbl_t *t;
-    boxf b;
-    int i;
-
-    info = (tbl_t *) ND_shape_info(n);
-    assert(info->tbls);
-    info = info->tbls[0];	/* top-level flow */
-    assert(IS_FLOW(info));
-
-    b = info->box;
-    if (info->tbl) {
-	info = info->tbl;
-	if (pt == 1)
-	    p = ED_tail_port(e).p;
-	else
-	    p = ED_head_port(e).p;
-	p = flip_pt(p, GD_rankdir(n->graph));	/* move p to node's coordinate system */
-	for (i = 0; (t = info->tbls[i]) != 0; i++)
-	    if (INSIDE(p, t->box)) {
-		b = t->box;
-		break;
-	    }
-    }
-
-    /* move box into layout coordinate system */
-    if (GD_flip(n->graph))
-	b = flip_trans_box(b, ND_coord_i(n));
-    else
-	b = move_box(b, ND_coord_i(n));
-
-    *k = 1;
-    *rv = b;
-    if (pt == 1)
-	return BOTTOM;
-    else
-	return TOP;
-#endif
-    return 0;
-}
-
 static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
 {
     double xsize = 0.0;		/* width of text block */
