@@ -74,6 +74,8 @@ static double RAD(Agnode_t * n)
  */
 static void xinit_params(graph_t* g, int n, xparams * xpms)
 {
+    (void)g;
+
     xParams.K = xpms->K;
     xParams.numIters = xpms->numIters;
     xParams.T0 = xpms->T0;
