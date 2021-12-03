@@ -1014,7 +1014,7 @@ static bool is_natural_number(const char *sstr)
     const char *str = sstr;
 
     while (*str)
-	if (!isdigit(*str++))
+	if (!isdigit((int)*str++))
 	    return false;
     return true;
 }
@@ -1995,7 +1995,7 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
     const char *s;
 
     for (s = lp->text; *s; s++) {
-	if (!isspace(*s))
+	if (!isspace((int)*s))
 	    break;
     }
     if (*s == '\0')
@@ -3770,7 +3770,7 @@ static int style_token(char **s, agxbuf * xb)
     int token;
     char c;
 
-    while (*p && (isspace(*p) || *p == ','))
+    while (*p && (isspace((int)*p) || *p == ','))
 	p++;
     switch (*p) {
     case '\0':

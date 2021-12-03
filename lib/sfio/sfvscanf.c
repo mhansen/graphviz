@@ -241,7 +241,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 
 	case '.':		/* width & base */
 	    dot += 1;
-	    if (isdigit(*form)) {
+	    if (isdigit((int)*form)) {
 		fmt = *form++;
 		goto dot_size;
 	    } else if (*form == '*') {
@@ -284,7 +284,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 	case '8':
 	case '9':
 	  dot_size:
-	    for (v = fmt - '0'; isdigit(*form); ++form)
+	    for (v = fmt - '0'; isdigit((int)*form); ++form)
 		v = v * 10 + (*form - '0');
 
 	    if (*form == '$') {
@@ -305,7 +305,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 	case 'I':		/* object size */
 	    size = 0;
 	    flags = (flags & ~SFFMT_TYPES) | SFFMT_IFLAG;
-	    if (isdigit(*form)) {
+	    if (isdigit((int)*form)) {
 		for (n = *form; isdigit(n); n = *++form)
 		    size = size * 10 + (n - '0');
 	    } else if (*form == '*') {

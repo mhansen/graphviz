@@ -218,7 +218,7 @@ static int isAnonGraph(char *name)
 {
     if (*name++ != '%')
 	return 0;
-    while (isdigit(*name))
+    while (isdigit((int)*name))
 	name++;			/* skip over digits */
     return (*name == '\0');
 }

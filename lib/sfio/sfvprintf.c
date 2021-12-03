@@ -226,7 +226,7 @@ int sfvprintf(Sfio_t * f, const char *form, va_list args)
 		base = 0;	/* for %s,%c */
 		if (*form == 'c' || *form == 's')
 		    goto loop_flags;
-		if (*form && !isalnum(*form) &&
+		if (*form && !isalnum((int)*form) &&
 		    (form[1] == 'c' || form[1] == 's')) {
 		    if (*form == '*')
 			goto do_star;
@@ -237,7 +237,7 @@ int sfvprintf(Sfio_t * f, const char *form, va_list args)
 		}
 	    }
 
-	    if (isdigit(*form)) {
+	    if (isdigit((int)*form)) {
 		fmt = *form++;
 		goto dot_size;
 	    } else if (*form != '*')
@@ -279,7 +279,7 @@ int sfvprintf(Sfio_t * f, const char *form, va_list args)
 	case '8':
 	case '9':
 	  dot_size:
-	    for (v = fmt - '0'; isdigit(*form); ++form)
+	    for (v = fmt - '0'; isdigit((int)*form); ++form)
 		v = v * 10 + (*form - '0');
 	    if (*form == '$') {
 		form += 1;
@@ -303,7 +303,7 @@ int sfvprintf(Sfio_t * f, const char *form, va_list args)
 	case 'I':		/* object length */
 	    size = 0;
 	    flags = (flags & ~SFFMT_TYPES) | SFFMT_IFLAG;
-	    if (isdigit(*form)) {
+	    if (isdigit((int)*form)) {
 		for (n = *form; isdigit(n); n = *++form)
 		    size = size * 10 + (n - '0');
 	    } else if (*form == '*') {
@@ -815,7 +815,7 @@ int sfvprintf(Sfio_t * f, const char *form, va_list args)
 	    }
 
 	  e_format:		/* build the x.yyyy string */
-	    if (isalpha(*ep))
+	    if (isalpha((int)*ep))
 		goto infinite;
 	    sp = endsp = buf + 1;	/* reserve space for sign */
 	    *endsp++ = *ep ? *ep++ : '0';
@@ -851,7 +851,7 @@ int sfvprintf(Sfio_t * f, const char *form, va_list args)
 	    goto end_efg;
 
 	  f_format:		/* data before the decimal point */
-	    if (isalpha(*ep)) {
+	    if (isalpha((int)*ep)) {
 	      infinite:
 		endsp = (sp = ep) + sfslen();
 		ep = endep;

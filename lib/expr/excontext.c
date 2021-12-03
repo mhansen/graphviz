@@ -36,7 +36,7 @@ excontext(Expr_t* p, char* buf, int n)
 		if (p->linewrap)
 		{
 			t = p->linep + 1;
-			while (t < &p->line[sizeof(p->line)] && isspace(*t))
+			while (t < &p->line[sizeof(p->line)] && isspace((int)*t))
 				t++;
 			if ((n = (sizeof(p->line) - (t - (p->linep + 1))) - (e - s)) > 0)
 			{
@@ -50,7 +50,7 @@ excontext(Expr_t* p, char* buf, int n)
 		t = p->line;
 		if (p->linewrap)
 			p->linewrap = 0;
-		else while (t < p->linep && isspace(*t))
+		else while (t < p->linep && isspace((int)*t))
 			t++;
 		if ((n = (p->linep - t) - (e - s)) > 0)
 			t += n;

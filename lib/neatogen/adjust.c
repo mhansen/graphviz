@@ -1198,7 +1198,7 @@ parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
     int i;
     float x, y;
 
-    while (isspace(*s)) s++;
+    while (isspace((int)*s)) s++;
     if (*s == '+') {
 	s++;
 	pp->doAdd = 1;

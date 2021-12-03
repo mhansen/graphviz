@@ -163,7 +163,7 @@ late_smooth (graph_t* g, Agsym_t* sym, int dflt)
 
     if (!sym) return dflt;
     s = agxget (g, sym);
-    if (isdigit(*s)) {
+    if (isdigit((int)*s)) {
 #if (defined(HAVE_GTS) || defined(HAVE_TRIANGLE))
 	if ((v = atoi (s)) <= SMOOTHING_RNG)
 #else
@@ -173,7 +173,7 @@ late_smooth (graph_t* g, Agsym_t* sym, int dflt)
 	else
 	    rv = dflt;
     }
-    else if (isalpha(*s)) {
+    else if (isalpha((int)*s)) {
 	if (!strcasecmp(s, "avg_dist"))
 	    rv = SMOOTHING_STRESS_MAJORIZATION_AVG_DIST;
 	else if (!strcasecmp(s, "graph_dist"))
@@ -209,13 +209,13 @@ late_quadtree_scheme (graph_t* g, Agsym_t* sym, int dflt)
 
     if (!sym) return dflt;
     s = agxget (g, sym);
-    if (isdigit(*s)) {
+    if (isdigit((int)*s)) {
       if ((v = atoi (s)) <= QUAD_TREE_FAST && v >= QUAD_TREE_NONE){
 	rv = v;
       }	else {
 	rv = dflt;
       }
-    } else if (isalpha(*s)) {
+    } else if (isalpha((int)*s)) {
       if (!strcasecmp(s, "none") || !strcasecmp(s, "false") ){
 	rv = QUAD_TREE_NONE;
       } else if (!strcasecmp(s, "normal") || !strcasecmp(s, "true") || !strcasecmp(s, "yes")){

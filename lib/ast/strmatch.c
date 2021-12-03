@@ -449,7 +449,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			    (void)mbgetchar(p);
 			    range = oldp;
 			} else
-			    if ((isalpha(*oldp) && isalpha(*olds)
+			    if ((isalpha((int)*oldp) && isalpha((int)*olds)
 				 && tolower(*oldp) == tolower(*olds))
 				|| sc == mbgetchar(oldp))
 			    ok = 1;

@@ -19,7 +19,7 @@
 
 static char *sffmtint(const char *str, int *v)
 {
-    for (*v = 0; isdigit(*str); ++str)
+    for (*v = 0; isdigit((int)*str); ++str)
 	*v = *v * 10 + (*str - '0');
     *v -= 1;
     return (char *) str;
@@ -145,7 +145,7 @@ static Fmtpos_t *sffmtpos(Sfio_t * f, const char *form, va_list args,
 	case '.':
 	    if ((dot += 1) == 2)
 		base = 0;	/* for %s,%c */
-	    if (isdigit(*form)) {
+	    if (isdigit((int)*form)) {
 		fmt = *form++;
 		goto dot_size;
 	    } else if (*form != '*')
@@ -194,7 +194,7 @@ static Fmtpos_t *sffmtpos(Sfio_t * f, const char *form, va_list args,
 	case 'I':		/* object length */
 	    size = 0;
 	    flags = (flags & ~SFFMT_TYPES) | SFFMT_IFLAG;
-	    if (isdigit(*form)) {
+	    if (isdigit((int)*form)) {
 		for (n = *form; isdigit(n); n = *++form)
 		    size = size * 10 + (n - '0');
 	    } else if (*form == '*') {
