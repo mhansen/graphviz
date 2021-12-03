@@ -952,11 +952,7 @@ expr		:	'(' expr ')'
 				{
 					if (!$1->type)
 						$1->type = $2->type;
-#if 0
-					else if ($2->type != $1->type && $1->type >= 0200)
-#else
 					else if ($2->type != $1->type)
-#endif
 					{
 						$2->type = $1->type;
 						$2->data.operand.right = excast(expr.program, $2->data.operand.right, $1->type, NULL, 0);
