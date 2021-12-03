@@ -212,17 +212,6 @@ maxmatch(v_data * graph,	/* array of vtx data for graph */
 	*(jptr++) = -1;
     }
 
-    // Option 1: random permutation
-#if 0
-    int temp;
-    for (i=0; i<nvtxs-1; i++) {
-          // use long_rand() (not rand()), as n may be greater than RAND_MAX
-	j=i+long_rand()%(nvtxs-i); 
-	temp=order[i];
-	order[i]=order[j];
-	order[j]=temp;
-    }
-#endif
     // Option 2: sort the nodes beginning with the ones highly approriate for matching
 
 #ifdef DEBUG
@@ -1101,23 +1090,6 @@ find_closest_active_node(Hierarchy * hierarchy, double x, double y,
 
     return min_dist;
 }
-
-#if 0
-int find_random_descendant(Hierarchy * hierarchy, int node, int level,
-			   int cur_level)
-{
-    int inc;
-    while (level > cur_level) {
-	if (hierarchy->cv2v[level][2 * node + 1] >= 0) {
-	    inc = rand() % 2;
-	} else {
-	    inc = 0;
-	}
-	node = hierarchy->cv2v[level--][2 * node + inc];
-    }
-    return node;
-}
-#endif
 
 int
 init_ex_graph(v_data * graph1, v_data * graph2, int n,
