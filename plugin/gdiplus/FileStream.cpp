@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,33 +15,33 @@
 
 
 
-IStream *FileStream::Create(char *name, FILE *file)
+IStream *FileStream::Create(const char *name, FILE *file)
 {
 	return new FileStream(name, file);
 }
-	
+
 /* IUnknown methods */
 
-HRESULT FileStream::QueryInterface( 
+HRESULT FileStream::QueryInterface(
     REFIID riid,
     void **ppvObject)
 {
 	if (riid == IID_IUnknown)
 	{
 		*ppvObject = this;
-		++_ref;
+		AddRef();
 		return S_OK;
 	}
 	else if (riid == IID_ISequentialStream)
 	{
 		*ppvObject = this;
-		++_ref;
+		AddRef();
 		return S_OK;
 	}
 	else if (riid == IID_IStream)
 	{
 		*ppvObject = this;
-		++_ref;
+		AddRef();
 		return S_OK;
 	}
 	else
@@ -53,20 +53,20 @@ HRESULT FileStream::QueryInterface(
 
 ULONG FileStream::AddRef()
 {
-	return ++_ref;
+	return (ULONG)InterlockedIncrement((ULONG*)&_ref);
 }
 
 ULONG FileStream::Release()
 {
-	ULONG ref = --_ref;
+	ULONG ref = (ULONG)InterlockedDecrement((ULONG*)&_ref);
 	if (ref == 0)
 		delete this;
 	return ref;
 }
-        
+
 /* ISequentialStream methods */
 
-HRESULT FileStream::Read( 
+HRESULT FileStream::Read(
     void *pv,
     ULONG cb,
     ULONG *pcbRead)
@@ -77,7 +77,7 @@ HRESULT FileStream::Read(
 	return S_OK;
 }
 
-HRESULT FileStream::Write( 
+HRESULT FileStream::Write(
     const void *pv,
     ULONG cb,
     ULONG *pcbWritten)
@@ -90,7 +90,7 @@ HRESULT FileStream::Write(
 
 /* IStream methods */
 
-HRESULT FileStream::Seek( 
+HRESULT FileStream::Seek(
     LARGE_INTEGER dlibMove,
     DWORD dwOrigin,
     ULARGE_INTEGER *plibNewPosition)
@@ -116,11 +116,11 @@ HRESULT FileStream::Seek(
 		long pos = ftell(_file);
 		if (pos == -1L)
 			return S_FALSE;
-		
+
 		plibNewPosition->HighPart = 0;
 		plibNewPosition->LowPart = pos;
 	}
-	
+
 	return S_OK;
 }
 
@@ -150,7 +150,7 @@ HRESULT FileStream::UnlockRegion(ULARGE_INTEGER, ULARGE_INTEGER, DWORD) {
 	return E_NOTIMPL;
 }
 
-HRESULT FileStream::Stat( 
+HRESULT FileStream::Stat(
     STATSTG *pstatstg,
     DWORD grfStatFlag)
 {
@@ -158,20 +158,21 @@ HRESULT FileStream::Stat(
 	struct _stat file_stat;
 	if (_fstat(_fileno(_file), &file_stat) != 0)
 		return S_FALSE;
-	
+
 	/* fill in filename, if needed */
 	if (grfStatFlag != STATFLAG_NONAME)
 	{
-		int wide_count = MultiByteToWideChar(CP_UTF8, 0, _name, -1, nullptr, 0);
+		int wide_count = MultiByteToWideChar(CP_UTF8, 0, _name.c_str(), -1, nullptr,
+		                                     0);
 		if (wide_count > 0)
 		{
 			pstatstg->pwcsName = (LPOLESTR)CoTaskMemAlloc(wide_count * 2);
-			MultiByteToWideChar(CP_UTF8, 0, _name, -1, pstatstg->pwcsName, wide_count);
+			MultiByteToWideChar(CP_UTF8, 0, _name.c_str(), -1, pstatstg->pwcsName, wide_count);
 		}
 		else
 			pstatstg->pwcsName = nullptr;
 	}
-	
+
 	/* fill out rest of STATSTG */
 	pstatstg->type = STGTY_STREAM;
 	pstatstg->cbSize.QuadPart = file_stat.st_size;
@@ -183,17 +184,16 @@ HRESULT FileStream::Stat(
 	pstatstg->clsid = CLSID_NULL;
 	pstatstg->grfStateBits = 0;
 	pstatstg->reserved = 0;
-	
+
 	return S_OK;
 }
 
 HRESULT FileStream::Clone(IStream **) {
 	return E_NOTIMPL;
 }
-    
-FileStream::FileStream(char *name, FILE *file): _ref(1), _name(name), _file(file)
-{
-}
+
+FileStream::FileStream(const char *name, FILE *file)
+    : _ref(1), _name(name), _file(file) {}
 
 void FileStream::UnixTimeToFileTime(time_t unixTime, FILETIME &fileTime)
 {
