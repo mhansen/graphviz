@@ -34,8 +34,6 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global WEBP       1
 %global PYTHON3    1
 %global QT5        1
-# Not yet.
-%global MING       0
 
 # Overrides for RHEL
 %if 0%{?rhel}
@@ -493,30 +491,6 @@ LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 %{_libdir}/graphviz/libgvplugin_devil.so.*
 %endif
 
-#-- graphviz-plugins-ming rpm --------------------------------------------------
-%if %{MING}
-%package plugins-ming
-Group:            Applications/Multimedia
-Summary:          Graphviz plugin for flash renderer based on ming
-Requires:         %{name}-x = %{version}-%{release}
-Obsoletes:        %{name}-ming <= 2.41
-Provides:         %{name}-ming = %{version}-%{release}
-
-%description plugins-ming
-Graphviz plugin for -Tswf (flash) renderer based on ming.
-
-# run "dot -c" to generate plugin config in {_libdir}/graphviz/config6
-%post plugins-ming
-LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
-
-%postun plugins-ming
-[ -x %{_bindir}/dot ] && LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c || :
-
-%files plugins-ming
-%{_libdir}/graphviz/libgvplugin_ming.so.*
-%{_libdir}/graphviz/*fdb
-%endif
-
 #-- graphviz-qt rpm --------------------------------------------------
 %package qt
 Group:            Applications/Multimedia
@@ -960,9 +934,6 @@ CFLAGS="$RPM_OPT_FLAGS" \
 %endif
 %if ! %{OCAML}
         --disable-ocaml \
-%endif
-%if ! %{MING}
-        --without-ming \
 %endif
 %if ! %{ARRRR}
         --disable-r \

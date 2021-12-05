@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (2.50.1)]
 
+### Changed
+
+- The Ming plugin that produced Shockwave files has been removed. This format
+  was EOLed by Adobe in April 2019. #2160
+
 ### Fixed
 
 - fix detection of unavailable output format

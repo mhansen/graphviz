@@ -2113,28 +2113,6 @@ fi
 AM_CONDITIONAL(WITH_GLADE, [test "x$use_glade" = "xYes"])
 
 dnl -----------------------------------
-dnl INCLUDES and LIBS for MING (SWF renderer)
-
-AC_ARG_WITH(ming,
-  [AS_HELP_STRING([--with-ming=no],[ming library (plugin for -Tswf)])],
-  [], [with_ming=no])
-
-if test "x$with_ming" != "xyes"; then
-  use_ming="No (disabled by default - incomplete)"
-else
-  PKG_CHECK_MODULES(MING, [libming >= 0.4],[
-    use_ming="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_MING,1,
-      [Define if you have the ming library for SWF support])
-    AC_SUBST([MING_CFLAGS])
-    AC_SUBST([MING_LIBS])
-  ],[
-    use_ming="No (ming library not available)"
-  ])
-fi
-AM_CONDITIONAL(WITH_MING, [test "x$use_ming" = "xYes"])
-
-dnl -----------------------------------
 dnl INCLUDES and LIBS for QT
 
 AC_ARG_WITH(qt,
@@ -2713,7 +2691,6 @@ AC_CONFIG_FILES(Makefile
 	plugin/gs/Makefile
 	plugin/gtk/Makefile
 	plugin/lasi/Makefile
-	plugin/ming/Makefile
 	plugin/pango/Makefile
 	plugin/poppler/Makefile
 	plugin/quartz/Makefile
@@ -2860,7 +2837,6 @@ echo "  ghostscript:   $use_ghostscript"
 echo "  glitz:         $use_glitz"
 echo "  gtk:           $use_gtk"
 echo "  lasi:          $use_lasi"
-echo "  ming:          $use_ming"
 echo "  pangocairo:    $use_pangocairo"
 echo "  poppler:       $use_poppler"
 echo "  quartz:        $use_quartz"

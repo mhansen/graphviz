@@ -144,9 +144,6 @@
 /* Define to 1 if you have the `lrand48' function. */
 /* #undef HAVE_LRAND48 */
 
-/* Define if you have the ming library for SWF support */
-/* #undef HAVE_MING */
-
 /* Define if you have the pangocairo library */
 #define HAVE_PANGOCAIRO 1
 

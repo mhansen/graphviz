@@ -53,7 +53,7 @@ extern "C" {
  GVDEVICE_DOES_TRUECOLOR	supports alpha channel -Tpng, -Tgtk, -Txlib 
  GVDEVICE_BINARY_FORMAT		Suppresses \r\n substitution for linends 
  GVDEVICE_COMPRESSED_FORMAT	controls libz compression		
- GVDEVICE_NO_WRITER		used when gvdevice is not used because device uses its own writer, -Tming, devil outputs   (FIXME seems to overlap OUTPUT_NOT_REQUIRED)
+ GVDEVICE_NO_WRITER		used when gvdevice is not used because device uses its own writer, devil outputs   (FIXME seems to overlap OUTPUT_NOT_REQUIRED)
 
  GVRENDER_Y_GOES_DOWN		device origin top left, y goes down, otherwise
   				device origin lower left, y goes up	
