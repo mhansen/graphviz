@@ -174,7 +174,7 @@ static int gvconfig_plugin_install_from_config(GVC_t * gvc, char *s)
     char *package_path, *name, *api;
     const char *type;
     api_t gv_api;
-    int quality, rc;
+    int quality;
     int nest = 0;
     gvplugin_package_t *package;
 
@@ -196,8 +196,7 @@ static int gvconfig_plugin_install_from_config(GVC_t * gvc, char *s)
 		        quality = atoi(token(&nest, &s));
 		    else
 		        quality = 0;
-		    rc = gvplugin_install (gvc, gv_api,
-				    type, quality, package, NULL);
+		    bool rc = gvplugin_install(gvc, gv_api, type, quality, package, NULL);
 		    if (!rc) {
 		        agerr(AGERR, "config error: %s %s %s\n", package_path, api, type);
 		        return 0;
@@ -563,7 +562,7 @@ void gvconfig(GVC_t * gvc, boolean rescan)
     /* builtins don't require LTDL */
     gvconfig_plugin_install_builtins(gvc);
    
-    gvc->config_found = FALSE;
+    gvc->config_found = false;
 #ifdef ENABLE_LTDL
     if (gvc->common.demand_loading) {
         /* see if there are any new plugins */
@@ -584,7 +583,7 @@ void gvconfig(GVC_t * gvc, boolean rescan)
     	
         if (rescan) {
     	    config_rescan(gvc, gvc->config_path);
-    	    gvc->config_found = TRUE;
+    	    gvc->config_found = true;
 	    gvtextlayout_select(gvc);   /* choose best available textlayout plugin immediately */
     	    return;
         }
@@ -613,7 +612,7 @@ void gvconfig(GVC_t * gvc, boolean rescan)
     	            agerr(AGERR, "%s read error.\n", gvc->config_path);
     	        }
     	        else {
-    	            gvc->config_found = TRUE;
+    	            gvc->config_found = true;
     	            config_text[sz] = '\0';  /* make input into a null terminated string */
     	            rc = gvconfig_plugin_install_from_config(gvc, config_text);
     	        }

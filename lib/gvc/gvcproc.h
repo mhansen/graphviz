@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 /* these are intended to be private entry points - see gvc.h for the public ones */
 
 /* configuration */
@@ -22,7 +24,7 @@
 
 /* plugins */
 
-    boolean gvplugin_install(GVC_t * gvc, api_t api,
+    bool gvplugin_install(GVC_t *gvc, api_t api,
 		    const char *typestr, int quality, gvplugin_package_t *package,
 		    gvplugin_installed_t * typeptr);
     gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *type);
@@ -37,7 +39,7 @@
 /* job */
 
     void gvjobs_output_filename(GVC_t * gvc, const char *name);
-    boolean gvjobs_output_langname(GVC_t * gvc, const char *name);
+    bool gvjobs_output_langname(GVC_t * gvc, const char *name);
     GVJ_t *gvjobs_first(GVC_t * gvc);
     GVJ_t *gvjobs_next(GVC_t * gvc);
     void gvjobs_delete(GVC_t * gvc);
