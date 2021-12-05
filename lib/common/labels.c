@@ -12,6 +12,7 @@
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <limits.h>
+#include <stdbool.h>
 
 static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash);
 
@@ -289,7 +290,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
     char *tp_str = "", *hp_str = "";
     char *g_str = "\\G", *n_str = "\\N", *e_str = "\\E",
 	*h_str = "\\H", *t_str = "\\T", *l_str = "\\L";
-    boolean has_hp = FALSE;
+    bool has_hp = false;
     boolean has_tp = FALSE;
     int isEdge = 0;
     textlabel_t *tl;
