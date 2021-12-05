@@ -150,9 +150,6 @@
 /* Define if you have the ming library for SWF support */
 /* #undef HAVE_MING */
 
-/* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
-/* #undef HAVE_NDIR_H */
-
 /* Define if you have the pangocairo library */
 #define HAVE_PANGOCAIRO 1
 
@@ -198,10 +195,6 @@
 
 /* Define to 1 if you have the <sys/mman.h> header file. */
 /* #undef HAVE_SYS_MMAN_H */
-
-/* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
-   */
-/* #undef HAVE_SYS_NDIR_H */
 
 /* Define to 1 if you have the <sys/select.h> header file. */
 /* #undef HAVE_SYS_SELECT_H */
