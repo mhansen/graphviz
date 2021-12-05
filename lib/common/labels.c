@@ -24,7 +24,7 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, char *line, char terminator)
     int oldsz = lp->u.txt.nspans + 1;
 
     lp->u.txt.span = ZALLOC(oldsz + 1, lp->u.txt.span, textspan_t, oldsz);
-    span = &(lp->u.txt.span[lp->u.txt.nspans]);
+    span = &lp->u.txt.span[lp->u.txt.nspans];
     span->str = line;
     span->just = terminator;
     if (line && line[0]) {
@@ -66,7 +66,7 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
          * the second in 0x40-0x7e or 0xa1-0xfe. We assume that the input
          * is well-formed, but check that we don't go past the ending '\0'.
          */
-	if ((lp->charset == CHAR_BIG5) && 0xA1 <= byte && byte <= 0xFE) {
+	if (lp->charset == CHAR_BIG5 && 0xA1 <= byte && byte <= 0xFE) {
 	    *lineptr++ = c;
 	    c = *p++;
 	    *lineptr++ = c;
@@ -320,11 +320,11 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
 	    t_str = agnameof(agtail(((edge_t *)obj)));
 	    pt = ED_tail_port((edge_t *)obj);
 	    if ((tp_str = pt.name))
-	        has_tp = (*tp_str != '\0');
+	        has_tp = *tp_str != '\0';
 	    h_str = agnameof(aghead(((edge_t *)obj)));
 	    pt = ED_head_port((edge_t *)obj);
 	    if ((hp_str = pt.name))
-		has_hp = (*hp_str != '\0');
+		has_hp = *hp_str != '\0';
 	    tl = ED_label((edge_t *)obj);
 	    if (tl) {
 		l_str = tl->text;
