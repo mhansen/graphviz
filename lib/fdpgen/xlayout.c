@@ -55,11 +55,12 @@ static expand_t X_marg;
 static double X_nonov;
 static double X_ov;
 
-void pr2graphs(Agraph_t *g0, Agraph_t *g1)
-{
+#ifdef DEBUG
+static void pr2graphs(Agraph_t *g0, Agraph_t *g1) {
 	fprintf(stderr,"%s",agnameof(g0));
 	fprintf(stderr,"(%s)",agnameof(g1));
 }
+#endif
 
 static double RAD(Agnode_t * n)
 {
@@ -73,6 +74,8 @@ static double RAD(Agnode_t * n)
  */
 static void xinit_params(graph_t* g, int n, xparams * xpms)
 {
+    (void)g;
+
     xParams.K = xpms->K;
     xParams.numIters = xpms->numIters;
     xParams.T0 = xpms->T0;

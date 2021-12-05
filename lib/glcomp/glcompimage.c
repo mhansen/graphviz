@@ -21,13 +21,9 @@ glCompImage *glCompImageNew(glCompObj * par, GLfloat x, GLfloat y)
     p = NEW(glCompImage);
     glCompInitCommon((glCompObj *) p, par, x, y);
     p->objType = glImageObj;
-    //typedef enum {glPanelObj,glbuttonObj,glLabelObj,glImageObj}glObjType;
 
     p->objType = glImageObj;
     p->stretch = 0;
-#if 0
-    p->pngFile = (char *) 0;
-#endif
     p->texture = NULL;
     p->common.functions.draw = glCompImageDraw;
     return p;
@@ -56,10 +52,6 @@ glCompImage *glCompImageNewFile (glCompObj * par, GLfloat x, GLfloat y, char* im
 void glCompImageDelete(glCompImage * p)
 {
     glCompEmptyCommon(&p->common);
-#if 0
-    if (p->pngFile)
-	free(p->pngFile);
-#endif
     if (p->texture)
 	glCompDeleteTexture(p->texture);
     free(p);
@@ -93,16 +85,6 @@ int glCompImageLoadPng(glCompImage * i, char *pngFile,int is2D)
     return glCompImageLoad(i, data, imageWidth, imageHeight,is2D);
 }
 
-#if 0
-int glCompImageLoadRaw(glCompSet * s, glCompImage * i, char *rawFile,int is2D)
-{
-    int imageWidth, imageHeight;
-    unsigned char *data;
-    data = glCompLoadPng (rawFile, &imageWidth, &imageHeight);
-    return glCompImageLoad(i, data, imageWidth, imageHeight,is2D);
-}
-#endif
-
 void glCompImageDraw(void *obj)
 {
     glCompImage *p = (glCompImage *) obj;
@@ -122,10 +104,6 @@ void glCompImageDraw(void *obj)
     }
     else
     {
-#if 0
-	w=ref.width;
-	h=ref.height;
-#endif
 	w = p->width;
 	h = p->height;
 	d=(GLfloat)p->common.layer* (GLfloat)GLCOMPSET_BEVEL_DIFF;

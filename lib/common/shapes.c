@@ -2369,19 +2369,16 @@ static boolean poly_inside(inside_t * inside_context, pointf p)
 }
 
 /* poly_path:
- * Generate box path from port to border.
- * Store boxes in rv and number of boxes in kptr.
- * side gives preferred side of bounding box for last node.
- * Return actual side. Returning 0 indicates nothing done.
  */
 static int poly_path(node_t * n, port * p, int side, boxf rv[], int *kptr)
 {
-    side = 0;
+  (void)n;
+  (void)p;
+  (void)side;
+  (void)rv;
+  (void)kptr;
 
-    if (ND_label(n)->html && ND_has_port(n)) {
-	side = html_path(n, p, side, rv, kptr);
-    }
-    return side;
+  return 0;
 }
 
 /* invflip_side:

@@ -24,10 +24,6 @@
 
 #include <ming.h>
 
-//static char *script = 
-//    "createTextField(\"greet\", 0, 0, 0, 100, 100);\n"
-//    "greet.text = \"Hello, world!\";\n";
-	
 #define SWFVERSION 6
 #define SWFCOMPRESSION 9
 #define SWFFRAMERATE .5
@@ -46,10 +42,6 @@ static void ming_begin_job(GVJ_t * job)
     SWFMovie_setRate(movie, SWFFRAMERATE);
     SWFMovie_setDimension(movie, job->width, job->height);
 
-// Works, but why is it here?
-//    action = newSWFAction(script);
-//    SWFMovie_add(movie, (SWFBlock)action);
-
     job->context = (void*) movie;
 }
 
@@ -59,21 +51,11 @@ static void ming_end_job(GVJ_t * job)
 
     SWFMovie_output_to_stream(movie, job->output_file);
     destroySWFMovie(movie);
-//    destroySWFAction(action);
     job->context = NULL;
 }
 
 static void ming_begin_page(GVJ_t * job)
 {
-//    SWFMovie movie = (SWFMovie)(job->context);
-
-//    SWFMovie_setNumberOfFrames(movie, job->common->viewNum + 1);
-
-#if 0
-    cairo_scale(cr, job->scale.x, job->scale.y);
-    cairo_rotate(cr, -job->rotation * M_PI / 180.);
-    cairo_translate(cr, job->translation.x, -job->translation.y);
-#endif
 }
 
 static void ming_end_page(GVJ_t * job)

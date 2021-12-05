@@ -103,6 +103,8 @@ bool gvLayoutDone(Agraph_t * g)
  */
 int gvFreeLayout(GVC_t * gvc, Agraph_t * g)
 {
+    (void)gvc;
+
     /* skip if no Agraphinfo_t yet */
     if (! agbindrec(g, "Agraphinfo_t", 0, TRUE))
 	    return 0;

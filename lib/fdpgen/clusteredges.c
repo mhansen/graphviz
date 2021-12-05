@@ -250,6 +250,8 @@ static objlist *objectList(edge_t * ep, expand_t* pm)
  */
 int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 {
+    (void)edgetype;
+
     node_t *n;
     node_t *head;
     edge_t *e;

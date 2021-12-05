@@ -515,28 +515,6 @@ static void cloneGraphAttr(Agraph_t * g, Agraph_t * ng)
     cloneDfltAttrs(g, ng, AGEDGE);
 }
 
-#ifdef UNIMPL
-/* redoBB:
- * If "bb" attribute is valid, translate to reflect graph's
- * new packed position.
- */
-static void redoBB(Agraph_t * g, char *s, Agsym_t * G_bb, point delta)
-{
-    box bb;
-    char buf[100];
-
-    if (sscanf(s, "%d,%d,%d,%d", &bb.LL.x, &bb.LL.y, &bb.UR.x, &bb.UR.y) ==
-	4) {
-	bb.LL.x += delta.x;
-	bb.LL.y += delta.y;
-	bb.UR.x += delta.x;
-	bb.UR.y += delta.y;
-	snprintf(buf, sizeof(buf), "%d,%d,%d,%d", bb.LL.x, bb.LL.y, bb.UR.x, bb.UR.y);
-	agxset(g, G_bb->index, buf);
-    }
-}
-#endif
-
 /* xName:
  * Create a name for an object in the new graph using the
  * dictionary names and the old name. If the old name has not
