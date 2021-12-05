@@ -28,6 +28,7 @@
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
 #include <neatogen/overlap.h>
 #endif
+#include <stdbool.h>
 #ifdef IPSEPCOLA
 #include <vpsc/csolve_VPSC.h>
 #include <neatogen/quad_prog_vpsc.h>
@@ -1201,9 +1202,9 @@ parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
     while (isspace((int)*s)) s++;
     if (*s == '+') {
 	s++;
-	pp->doAdd = 1;
+	pp->doAdd = true;
     }
-    else pp->doAdd = 0;
+    else pp->doAdd = false;
 
     if ((i = sscanf(s, "%f,%f", &x, &y))) {
 	if (i == 1) y = x;
@@ -1244,7 +1245,7 @@ sepFactor(graph_t* g)
     }
     else { /* default */
 	pmargin.x = pmargin.y = DFLT_MARGIN;
-	pmargin.doAdd = 1;
+	pmargin.doAdd = true;
     }
     if (Verbose)
 	fprintf (stderr, "Node separation: add=%d (%f,%f)\n",
@@ -1270,7 +1271,7 @@ esepFactor(graph_t* g)
     }
     else {
 	pmargin.x = pmargin.y = SEPFACT*DFLT_MARGIN;
-	pmargin.doAdd = 1;
+	pmargin.doAdd = true;
     }
     if (Verbose)
 	fprintf (stderr, "Edge separation: add=%d (%f,%f)\n",

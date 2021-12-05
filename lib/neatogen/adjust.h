@@ -16,6 +16,7 @@ extern "C" {
 
 #include "geom.h"
 #include <sparse/SparseMatrix.h>
+#include <stdbool.h>
 
 #define DFLT_MARGIN     4   /* 4 points */
 
@@ -36,7 +37,7 @@ typedef struct {
 
 typedef struct {
     float x, y;
-    boolean doAdd;  /* if true, x and y are in points */
+    bool doAdd;  /* if true, x and y are in points */
 } expand_t;
 
     extern expand_t sepFactor(graph_t * G);
