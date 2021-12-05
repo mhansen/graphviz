@@ -77,8 +77,7 @@ else
         ./configure --enable-lefty --prefix=$( pwd )/build --with-quartz=yes
         make
         make install
-        tar cfz graphviz-${GV_VERSION}-${ARCH}.tar.gz --options gzip:compression-level=9 build
-        mv graphviz-${GV_VERSION}-${ARCH}.tar.gz ${DIR}/
+        tar cfz ${DIR}/graphviz-${GV_VERSION}-${ARCH}.tar.gz --options gzip:compression-level=9 build
     elif [ "${OSTYPE}" = "cygwin" -o "${OSTYPE}" = "msys" ]; then
         if [ "${OSTYPE}" = "msys" ]; then
             # ensure that MinGW tcl shell is used in order to find tcl functions
@@ -89,8 +88,7 @@ else
             ./configure ${CONFIGURE_OPTIONS:-} --prefix=$( pwd )/build | tee >(./ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
             make
             make install
-            tar cf - -C build . | xz -9 -c - > graphviz-${GV_VERSION}-${ARCH}.tar.xz
-            mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/
+            tar cf - -C build . | xz -9 -c - > ${DIR}/graphviz-${GV_VERSION}-${ARCH}.tar.xz
         else
             tar xfz graphviz-${GV_VERSION}.tar.gz
             pushd graphviz-${GV_VERSION}
@@ -98,8 +96,7 @@ else
             make
             make install
             popd
-            tar cf - -C graphviz-${GV_VERSION}/build . | xz -9 -c - > graphviz-${GV_VERSION}-${ARCH}.tar.xz
-            mv graphviz-${GV_VERSION}-${ARCH}.tar.xz ${DIR}/
+            tar cf - -C graphviz-${GV_VERSION}/build . | xz -9 -c - > ${DIR}/graphviz-${GV_VERSION}-${ARCH}.tar.xz
         fi
     else
         echo "Error: OSTYPE=${OSTYPE} is unknown" >&2
