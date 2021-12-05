@@ -291,7 +291,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
     char *g_str = "\\G", *n_str = "\\N", *e_str = "\\E",
 	*h_str = "\\H", *t_str = "\\T", *l_str = "\\L";
     bool has_hp = false;
-    boolean has_tp = FALSE;
+    bool has_tp = false;
     int isEdge = 0;
     textlabel_t *tl;
     port pt;
