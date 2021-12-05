@@ -12,6 +12,7 @@
 #include <neatogen/matrix_ops.h>
 #include <neatogen/conjgrad.h>
 /* #include <math.h> */
+#include <stdbool.h>
 #include <stdlib.h>
 
 
@@ -94,7 +95,7 @@ cleanup0 :
 
 int conjugate_gradient_f
     (float **A, double *x, double *b, int n, double tol,
-     int max_iterations, boolean ortho1) {
+     int max_iterations, bool ortho1) {
     /* Solves Ax=b using Conjugate-Gradients method */
     /* 'x' and 'b' are orthogonalized against 1 if 'ortho1=true' */
 
