@@ -1437,7 +1437,7 @@ cvtAndAppend (unsigned char c, agxbuf* xb)
 char* htmlEntityUTF8 (char* s, graph_t* g)
 {
     static graph_t* lastg;
-    static boolean warned;
+    static bool warned;
     char*  ns;
     agxbuf xb;
     unsigned char c;
@@ -1448,7 +1448,7 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
 
     if (lastg != g) {
 	lastg = g;
-	warned = 0;
+	warned = false;
     }
 
     agxbinit(&xb, 0, NULL);
@@ -1472,7 +1472,7 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
             uc = -1;
             if (!warned) {
                 agerr(AGWARN, "UTF8 codes > 4 bytes are not currently supported (graph %s) - treated as Latin-1. Perhaps \"-Gcharset=latin1\" is needed?\n", agnameof(g));
-                warned = 1;
+                warned = true;
             }
             c = cvtAndAppend (c, &xb);
         }
@@ -1504,7 +1504,7 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
                 else {
 		            if (!warned) {
 		                agerr(AGWARN, "Invalid %d-byte UTF8 found in input of graph %s - treated as Latin-1. Perhaps \"-Gcharset=latin1\" is needed?\n", uc + 1, agnameof(g));
-		                warned = 1;
+		                warned = true;
 		            }
 		            c = cvtAndAppend (c, &xb);
                     break;
