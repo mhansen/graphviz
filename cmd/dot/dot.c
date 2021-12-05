@@ -19,7 +19,7 @@
 #include <gvc/gvio.h>
 
 #ifdef WIN32_DLL
-__declspec(dllimport) extern boolean MemTest;
+__declspec(dllimport) extern int MemTest;
 __declspec(dllimport) extern int GvExitOnUsage;
 /*gvc.lib cgraph.lib*/
 #else   /* not WIN32_DLL */
