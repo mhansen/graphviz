@@ -19,7 +19,7 @@
 #define		UP		0
 #define		DOWN	1
 
-static boolean samedir(edge_t * e, edge_t * f)
+static bool samedir(edge_t * e, edge_t * f)
 {
     edge_t *e0, *f0;
 
