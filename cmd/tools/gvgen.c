@@ -14,6 +14,7 @@
 
 #include "config.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
@@ -94,9 +95,8 @@ static void usage(int v)
     exit(v);
 }
 
-static void errexit(char opt)
-{
-    fprintf(stderr, "in flag -%c\n", opt);
+static void errexit(int opt) {
+    fprintf(stderr, "in flag -%c\n", (char)opt);
     usage(1);
 }
 
@@ -107,10 +107,8 @@ static void errexit(char opt)
  */
 static int readPos(char *s, char **e, int min)
 {
-    int d;
-
-    d = strtol(s, e, 10);
-    if (s == *e) {
+    long d = strtol(s, e, 10);
+    if (s == *e || d > INT_MAX) {
 	fprintf(stderr, "ill-formed integer \"%s\" ", s);
 	return -1;
     }
@@ -118,7 +116,7 @@ static int readPos(char *s, char **e, int min)
 	fprintf(stderr, "integer \"%s\" less than %d", s, min);
 	return -1;
     }
-    return d;
+    return (int)d;
 }
 
 /* readOne:
@@ -304,6 +302,7 @@ static GraphType init(int argc, char *argv[], opts_t* opts)
 	    break;
 	case 'G':
 	    opts->isPartial = 1;
+	    // fall through
 	case 'g':
 	    graphType = grid;
 	    optarg = setFold (optarg, opts);
@@ -384,7 +383,7 @@ static GraphType init(int argc, char *argv[], opts_t* opts)
 		errexit(c);
 	    break;
 	case 'i':
-	    if (readOne(optarg,&(opts->cnt)))
+	    if (readOne(optarg, &opts->cnt))
 		errexit(c);
 	    break;
 	case 'v':
@@ -402,6 +401,9 @@ static GraphType init(int argc, char *argv[], opts_t* opts)
 		fprintf(stderr, "Unrecognized flag \"-%c\" - ignored\n",
 			optopt);
 	    break;
+	default:
+	    fprintf(stderr, "Unexpected error\n");
+	    usage(EXIT_FAILURE);
 	}
     }
 
@@ -488,7 +490,7 @@ int main(int argc, char *argv[])
 	makeBall(opts.graphSize1, opts.graphSize2, ef);
 	break;
     case torus:
-	if ((opts.parm1 == 0) && (opts.parm2 == 0))
+	if (opts.parm1 == 0 && opts.parm2 == 0)
 	    makeTorus(opts.graphSize1, opts.graphSize2, ef);
 	else
 	    makeTwistedTorus(opts.graphSize1, opts.graphSize2, opts.parm1, opts.parm2, ef);
