@@ -40,11 +40,6 @@ GtkMessageDialog *Dlg;
 
 static void clear_viewport(ViewInfo * view)
 {
-    /*free topview if there is one */
-    if (view->activeGraph >= 0)
-    {
-	freeSmGraph(view->g[view->activeGraph],view->Topview);
-    }
     if (view->graphCount)
 	agclose(view->g[view->activeGraph]);
 }
@@ -76,7 +71,7 @@ static void *get_glut_font(int ind)
 
 }
 
-int close_graph(ViewInfo * view, int graphid)
+int close_graph(ViewInfo * view)
 {
     if (view->activeGraph < 0)
 	return 1;
@@ -241,6 +236,8 @@ void set_viewport_settings_from_template(ViewInfo * view, Agraph_t * g)
 
 static gboolean gl_main_expose(gpointer data)
 {
+    (void)data;
+
     if (view->activeGraph >= 0) {
 	if (view->Topview->fisheyeParams.animate == 1)
 	    expose_event(view->drawing_area, NULL, NULL);
@@ -500,7 +497,7 @@ graphRecord (Agraph_t* g)
     updateRecord (g);
 }
 
-void refreshViewport(int doClear)
+void refreshViewport(void)
 {
     Agraph_t *graph = view->g[view->activeGraph];
     view->refresh.color=1;
@@ -518,10 +515,10 @@ void refreshViewport(int doClear)
     expose_event(view->drawing_area, NULL, NULL);
 }
 
-static void activate(int id, int doClear)
+static void activate(int id)
 {
     view->activeGraph = id;
-    refreshViewport(doClear);
+    refreshViewport();
 }
 
 int add_graph_to_viewport(Agraph_t * graph, char *id)
@@ -534,7 +531,7 @@ int add_graph_to_viewport(Agraph_t * graph, char *id)
 
 	gtk_combo_box_append_text(view->graphComboBox, id);
 	gtk_combo_box_set_active(view->graphComboBox,view->graphCount-1);
-	activate(view->graphCount - 1, 0);
+	activate(view->graphCount - 1);
 	return 1;
     } else {
 	return 0;
@@ -546,7 +543,7 @@ void switch_graph(int graphId)
     if ((graphId >= view->graphCount) || (graphId < 0))
 	return;			/*wrong entry */
     else
-	activate(graphId, 0);
+	activate(graphId);
 }
 
 /* save_graph_with_file_name:
@@ -736,7 +733,7 @@ static colorschemaset *create_color_theme(int themeid)
 {
     colorschemaset *s;
 
-    if ((themeid < 0) || (NUM_SCHEMES <= themeid)) {
+    if (themeid < 0 || (int)NUM_SCHEMES <= themeid) {
 	fprintf (stderr, "colorschemaset: illegal themeid %d\n", themeid);
 	return view->colschms;
     }

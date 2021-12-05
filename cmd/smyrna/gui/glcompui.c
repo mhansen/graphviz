@@ -95,12 +95,14 @@ void menu_click_center(glCompObj *obj, GLfloat x, GLfloat y,
 void switch2D3D(glCompObj *obj, GLfloat x, GLfloat y,
 		       glMouseButtonType t)
 {
+    (void)obj;
+
     if (t == glMouseLeftButton) {
 
 	if (view->active_camera == -1) {
 
 	    if (view->camera_count == 0) {
-		menu_click_add_camera(obj);
+		menu_click_add_camera();
 	    } else {
 		view->active_camera = 0;	/*set to camera */
 	    }
