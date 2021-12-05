@@ -849,6 +849,9 @@ windows-cygwin-cmake-build:
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress cygwin
         - $Env:build_system = "cmake"
+        # fail on any compiler warnings
+        - $Env:CFLAGS = "-Werror"
+        - $Env:CXXFLAGS = "-Werror"
         # change line endings from crlf to lf
         - C:\tools\cygwin\bin\sed -i 's/\r//g' ci/*.sh lib/common/color_names lib/common/brewer_colors lib/common/svgcolor_names
         - C:\tools\cygwin\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/cygwin-build.sh'

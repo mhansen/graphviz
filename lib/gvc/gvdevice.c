@@ -545,7 +545,7 @@ static void gv_trim_zeros(char* buf)
   }
 
   // check this really is the result of %.02f printing
-  assert(isdigit(dotp[1]) && isdigit(dotp[2]) && dotp[3] == '\0');
+  assert(isdigit((int)dotp[1]) && isdigit((int)dotp[2]) && dotp[3] == '\0');
 
   if (dotp[2] == '0') {
     if (dotp[1] == '0') {

@@ -429,10 +429,10 @@ static bool is_plugin(const char *filepath) {
 
 #else
     // does this filename have a version?
-    if (len == 0 || !isdigit(filepath[len - 1])) {
+    if (len == 0 || !isdigit((int)filepath[len - 1])) {
 	return false;
     }
-    while (len > 0 && isdigit(filepath[len - 1])) {
+    while (len > 0 && isdigit((int)filepath[len - 1])) {
 	--len;
     }
 
@@ -444,11 +444,11 @@ static bool is_plugin(const char *filepath) {
 	return false;
     }
 #elif defined(__MINGW32__) || defined(__CYGWIN__)
-    if (len < 2 || isdigit(filepath[len - 2]) || filepath[len - 1] != '-') {
+    if (len < 2 || isdigit((int)filepath[len - 2]) || filepath[len - 1] != '-') {
 	return false;
     }
 #elif defined(_WIN32)
-    if (len < 1 || isdigit(filepath[len - 1])) {
+    if (len < 1 || isdigit((int)filepath[len - 1])) {
 	return false;
     }
 #elif ((defined(__hpux__) || defined(__hpux)) && !(defined(__ia64)))

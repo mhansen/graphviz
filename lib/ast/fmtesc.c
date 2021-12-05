@@ -113,7 +113,7 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n,
 		       (isspace(c) ||
 			(((flags & FMT_SHELL) || shell) &&
 			 (strchr("\";~&|()<>[]*?", c) ||
-			  (c == '#' && (b == f || isspace(*(b - 1)))
+			  (c == '#' && (b == f || isspace((int)*(b - 1)))
 			  )
 			 )
 			)

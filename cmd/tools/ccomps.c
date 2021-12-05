@@ -188,12 +188,12 @@ static void init(int argc, char *argv[])
 		char *p = optarg + 1;
 		if (*optarg == '#') x_mode = BY_INDEX;
 		else x_mode = BY_SIZE;
-		if (isdigit(*p)) {
+		if (isdigit((int)*p)) {
 		    x_index = (int)strtol (p, &endp, 10);
 		    printMode = EXTRACT;
 		    if (*endp == '-') {
 			p = endp + 1;
-			if (isdigit(*p)) {
+			if (isdigit((int)*p)) {
 			    x_final = atoi (p);
 			    if (x_final < x_index) {
 				printMode = INTERNAL;

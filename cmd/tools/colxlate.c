@@ -59,7 +59,7 @@ char *colorxlate(char *str, char *buf)
 	               sizeof(fake), colorcmpf);
     }
     if (last == NULL) {
-	if (!isdigit(canon[0])) {
+	if (!isdigit((int)canon[0])) {
 	    fprintf(stderr, "warning: %s is not a known color\n", str);
 	    strcpy(buf, str);
 	} else

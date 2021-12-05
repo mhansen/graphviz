@@ -127,7 +127,7 @@ config_extra_args(GVC_t *gvc, int argc, char** argv)
       switch (arg[1]) {
       case 'v':
 	gvc->common.verbose = 1;
-	if (isdigit(arg[2]))
+	if (isdigit((int)arg[2]))
 	  gvc->common.verbose = atoi(&arg[2]);
         break;
       case 'O' :

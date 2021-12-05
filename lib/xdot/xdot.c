@@ -245,7 +245,7 @@ static char *parseOp(xdot_op * op, char *s, drawfunc_t ops[], int* error)
     xdot_color clr;
 
     *error = 0;
-    while (isspace(*s))
+    while (isspace((int)*s))
 	s++;
     switch (*s++) {
     case 'E':

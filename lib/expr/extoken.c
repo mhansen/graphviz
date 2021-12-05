@@ -463,7 +463,7 @@ extoken_fn(Expr_t* ex)
 			if (!ex->linewrap && !(ex->disc->flags & EX_PURE))
 			{
 				s = ex->linep - 1;
-				while (s > ex->line && isspace(*(s - 1)))
+				while (s > ex->line && isspace((int)*(s - 1)))
 					s--;
 				if (s == ex->line)
 				{

@@ -106,7 +106,7 @@ static char *gettok(char **sp)
     char c;
     char q = '\0';		/* if non-0, in quote mode with quote char q */
 
-    while (isspace(*rs))
+    while (isspace((int)*rs))
 	rs++;
     if ((c = *rs) == '\0')
 	return NULL;

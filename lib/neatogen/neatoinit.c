@@ -317,7 +317,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    pp++;
 	    n--;
 	}
- 	while (isspace(*pos)) pos++;
+ 	while (isspace((int)*pos)) pos++;
 	if (*pos == '\0')
 	    more = 0;
 	else

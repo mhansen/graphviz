@@ -1306,7 +1306,7 @@ const char *exop(size_t index) {
       {
         size_t k;
         for (k = 0; yytname[i][k] != '\0'; ++k) {
-          if (yytname[i][k] != '_' && !isalnum(yytname[i][k])) {
+          if (yytname[i][k] != '_' && !isalnum((int)yytname[i][k])) {
             break;
           }
         }

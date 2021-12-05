@@ -22,10 +22,10 @@ static bool xml_isentity(const char *s)
 	s++;
 	if (*s == 'x' || *s == 'X') {
 	    s++;
-	    while (isxdigit(*s))
+	    while (isxdigit((int)*s))
 		s++;
 	} else {
-	    while (isdigit(*s))
+	    while (isdigit((int)*s))
 		s++;
 	}
     } else {

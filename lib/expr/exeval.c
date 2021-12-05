@@ -301,36 +301,36 @@ prformat(void* vp, Sffmt_t* dp)
 		{
 			if (streqn(txt, "identifier", txt_len))
 			{
-				if (*s && !isalpha(*s))
+				if (*s && !isalpha((int)*s))
 					*s++ = '_';
 				for (; *s; s++)
-					if (!isalnum(*s))
+					if (!isalnum((int)*s))
 						*s = '_';
 			}
 			else if (streqn(txt, "invert", txt_len))
 			{
 				for (; *s; s++)
-					if (isupper(*s))
+					if (isupper((int)*s))
 						*s = (char)tolower(*s);
-					else if (islower(*s))
+					else if (islower((int)*s))
 						*s = (char)toupper(*s);
 			}
 			else if (streqn(txt, "lower", txt_len))
 			{
 				for (; *s; s++)
-					if (isupper(*s))
+					if (isupper((int)*s))
 						*s = (char)tolower(*s);
 			}
 			else if (streqn(txt, "upper", txt_len))
 			{
 				for (; *s; s++)
-					if (islower(*s))
+					if (islower((int)*s))
 						*s = (char)toupper(*s);
 			}
 			else if (streqn(txt, "variable", txt_len))
 			{
 				for (; *s; s++)
-					if (!isalnum(*s) && *s != '_')
+					if (!isalnum((int)*s) && *s != '_')
 						*s = '.';
 			}
 		}

@@ -102,7 +102,7 @@ isNumber (char* s)
     char* ep = s;
     strtod(s, &ep);
     if (s != ep) {
-	while (*ep && isspace(*ep)) ep++;
+	while (*ep && isspace((int)*ep)) ep++;
 	if (*ep) return 0;
 	else return 1;
     }
@@ -158,7 +158,7 @@ emitPoint (double x, double y, FILE* outFile, int ix)
 static char*
 skipWS (char* s)
 {
-    while (isspace(*s)) s++;
+    while (isspace((int)*s)) s++;
     return s;
 }
 
