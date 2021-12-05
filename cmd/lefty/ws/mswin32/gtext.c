@@ -113,10 +113,6 @@ int GTsetwidgetattr (Gwidget_t *widget, int attrn, Gwattr_t *attrp) {
             SendMessage (widget->w, EM_SETSEL, -1, 32760);
             SendMessage (widget->w, EM_REPLACESEL, 0, (LPARAM) attrp[ai].u.t);
             SendMessage (widget->w, EM_SETSEL, -1, 32760);
-#if 0
-            SendMessage (widget->w, EM_REPLACESEL, 0, (LPARAM) "\r\n");
-            SendMessage (widget->w, EM_SETSEL, -1, 32760);
-#endif
             Gnocallbacks = FALSE;
             break;
         case G_ATTRAPPENDTEXT:
