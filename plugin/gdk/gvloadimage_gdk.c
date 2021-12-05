@@ -37,18 +37,6 @@ typedef enum {
     FORMAT_TIFF_CAIRO,
 } format_type;
 
-#if 0
-// FIXME - should be using a stream reader
-static cairo_status_t
-reader (void *closure, unsigned char *data, unsigned int length)
-{
-    if (length == fread(data, 1, length, (FILE *)closure)
-     || feof((FILE *)closure))
-        return CAIRO_STATUS_SUCCESS;
-    return CAIRO_STATUS_READ_ERROR;
-}
-#endif
-
 #ifdef HAVE_CAIRO_SURFACE_SET_MIME_DATA
 static void gdk_set_mimedata_from_file (cairo_surface_t *image, const char *mime_type, const char *file)
 {
