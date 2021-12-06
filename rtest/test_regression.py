@@ -832,7 +832,6 @@ def test_html(src: Path):
   assert p.returncode == 0
   assert stderr == ""
 
-@pytest.mark.xfail(strict=True)
 def test_1855():
   """
   SVGs should have a scale with sufficient precision

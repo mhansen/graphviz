@@ -251,9 +251,8 @@ static void svg_begin_page(GVJ_t * job)
      * and it is the entire graph if we're not currently paging */
     svg_print_id_class(job, obj->id, NULL, "graph", obj->u.g);
     GVPUTS(job, " transform=\"scale(");
-    gvprintdouble(job, job->scale.x);
-    GVPUTS(job, " ");
-    gvprintdouble(job, job->scale.y);
+    // cannot be gvprintdouble because 2 digits precision insufficient
+    gvprintf(job, "%g %g", job->scale.x, job->scale.y);
     gvprintf(job, ") rotate(%d) translate(", -job->rotation);
     gvprintdouble(job, job->translation.x);
     GVPUTS(job, " ");
