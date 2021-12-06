@@ -46,6 +46,9 @@ static struct {
 static void
 free_ritem(Dt_t* d, pitem* p,Dtdisc_t* ds)
 {
+  (void)d;
+  (void)ds;
+
   dtclose (p->u.rp);
   free (p);
 }
@@ -57,6 +60,9 @@ free_ritem(Dt_t* d, pitem* p,Dtdisc_t* ds)
 static void
 free_item(Dt_t* d, void* p,Dtdisc_t* ds)
 {
+  (void)d;
+  (void)ds;
+
   free (p);
 }
 
@@ -89,6 +95,9 @@ cleanCell (htmlcell_t* cp)
 static void
 free_citem(Dt_t* d, pitem* p,Dtdisc_t* ds)
 {
+  (void)d;
+  (void)ds;
+
   cleanCell (p->u.cp);
   free (p);
 }
@@ -129,6 +138,9 @@ typedef struct {
 static void 
 free_fitem(Dt_t* d, fitem* p, Dtdisc_t* ds)
 {
+    (void)d;
+    (void)ds;
+
     free (p->ti.str);
     free (p);
 }
@@ -136,6 +148,9 @@ free_fitem(Dt_t* d, fitem* p, Dtdisc_t* ds)
 static void 
 free_fspan(Dt_t* d, fspan* p, Dtdisc_t* ds)
 {
+    (void)d;
+    (void)ds;
+
     textspan_t* ti;
 
     if (p->lp.nitems) {

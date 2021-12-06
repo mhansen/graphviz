@@ -36,16 +36,16 @@ typedef struct {
 #ifdef HAVE_EXPAT
     XML_Parser parser;
 #endif
-    char* ptr;			/* input source */
-    int tok;			/* token type   */
-    agxbuf* xb;			/* buffer to gather T_string data */
-    agxbuf  lb;			/* buffer for translating lexical data */
-    char warn;			/* set if warning given */
-    char error;			/* set if error given */
-    char inCell;		/* set if in TD to allow T_string */
-    char mode;			/* for handling artificial <HTML>..</HTML> */
-    char *currtok;		/* for error reporting */
-    char *prevtok;		/* for error reporting */
+    char* ptr;         // input source
+    int tok;           // token type
+    agxbuf* xb;        // buffer to gather T_string data
+    agxbuf lb;         // buffer for translating lexical data
+    int warn;          // set if warning given
+    int error;         // set if error given
+    char inCell;       // set if in TD to allow T_string
+    char mode;         // for handling artificial <HTML>..</HTML>
+    char *currtok;     // for error reporting
+    char *prevtok;     // for error reporting
     size_t currtoklen;
     size_t prevtoklen;
 } lexstate_t;
@@ -175,7 +175,7 @@ static int stylefn(htmldata_t * p, char *v)
     for (tk = strtok (buf, DELIM); tk; tk = strtok (NULL, DELIM)) {
 	if (!strcasecmp(tk, "ROUNDED")) p->style |= ROUNDED;
 	else if (!strcasecmp(tk, "RADIAL")) p->style |= RADIAL;
-	else if(!strcasecmp(tk,"SOLID")) p->style &= ~(DOTTED|DASHED);
+	else if(!strcasecmp(tk,"SOLID")) p->style &= (unsigned short)~(DOTTED|DASHED);
 	else if(!strcasecmp(tk,"INVISIBLE") || !strcasecmp(tk,"INVIS")) p->style |= INVISIBLE;
 	else if(!strcasecmp(tk,"DOTTED")) p->style |= DOTTED;
 	else if(!strcasecmp(tk,"DASHED")) p->style |= DASHED;
@@ -278,7 +278,7 @@ static int cellborderfn(htmltbl_t * p, char *v)
 
     if (doInt(v, "CELLSBORDER", 0, SCHAR_MAX, &u))
 	return 1;
-    p->cb = (unsigned char) u;
+    p->cb = (signed char)u;
     return 0;
 }
 
@@ -581,12 +581,13 @@ static htmlimg_t *mkImg(char **atts)
     return img;
 }
 
-static textfont_t *mkFont(GVC_t *gvc, char **atts, int flags)
-{
+static textfont_t *mkFont(GVC_t *gvc, char **atts, unsigned char flags) {
     textfont_t tf = {NULL,NULL,NULL,0.0,0,0};
 
     tf.size = -1.0;		/* unassigned */
-    tf.flags = flags;
+    enum { FLAGS_MAX = (1 << GV_TEXTFONT_FLAGS_WIDTH) - 1  };
+    assert(flags <= FLAGS_MAX);
+    tf.flags = (unsigned char)(flags & FLAGS_MAX);
     if (atts)
 	doAttrs(&tf, font_items, sizeof(font_items) / ISIZE, atts, "<FONT>");
 
