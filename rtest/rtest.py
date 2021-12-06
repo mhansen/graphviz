@@ -124,8 +124,8 @@ def doDiff(OUTFILE, testname, subtest_index, fmt):
     return
   if F in ["ps", "ps2"]:
 
-    with open(FILE1, "rt") as src:
-      with open(TMPFILE1, "wt") as dst:
+    with open(FILE1, "rt", encoding="latin-1") as src:
+      with open(TMPFILE1, "wt", encoding="latin-1") as dst:
         done_setup = False
         for line in src:
           if done_setup:
@@ -133,8 +133,8 @@ def doDiff(OUTFILE, testname, subtest_index, fmt):
           else:
             done_setup = re.match(r"%%End.*Setup", line) is not None
 
-    with open(FILE2, "rt") as src:
-      with open(TMPFILE2, "wt") as dst:
+    with open(FILE2, "rt", encoding="latin-1") as src:
+      with open(TMPFILE2, "wt", encoding="latin-1") as dst:
         done_setup = False
         for line in src:
           if done_setup:
