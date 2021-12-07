@@ -13,7 +13,7 @@ import tempfile
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import compile_c, ROOT #pylint: disable=C0413
+from gvtest import compile_c, dot, ROOT #pylint: disable=C0413
 
 def test_json_node_order():
   """
@@ -36,8 +36,7 @@ def test_json_node_order():
           '}'
 
   # turn it into JSON
-  output = subprocess.check_output(["dot", "-Tjson"], input=input,
-    universal_newlines=True)
+  output = dot("json", source=input)
 
   # parse this into a data structure we can inspect
   data = json.loads(output)
@@ -69,8 +68,7 @@ def test_json_edge_order():
           '}'
 
   # turn it into JSON
-  output = subprocess.check_output(["dot", "-Tjson"], input=input,
-    universal_newlines=True)
+  output = dot("json", source=input)
 
   # parse this into a data structure we can inspect
   data = json.loads(output)

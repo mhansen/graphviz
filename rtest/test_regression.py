@@ -21,7 +21,7 @@ import xml.etree.ElementTree as ET
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import ROOT, run_c #pylint: disable=C0413
+from gvtest import dot, ROOT, run_c #pylint: disable=C0413
 
 def is_ndebug_defined() -> bool:
   """
@@ -79,7 +79,7 @@ def test_14():
   assert input.exists(), "unexpectedly missing test case"
 
   # process it with Graphviz
-  subprocess.check_call(["dot", "-Tsvg", "-o", os.devnull, input])
+  dot("svg", input)
 
 def test_56():
   """
@@ -95,11 +95,11 @@ def test_56():
   # FIXME: remove this block when this #56 is fixed
   if not is_ndebug_defined() and platform.system() != "Windows":
     with pytest.raises(subprocess.CalledProcessError):
-      subprocess.check_call(["dot", "-Tsvg", "-o", os.devnull, input])
+      dot("svg", input)
     return
 
   # process it with Graphviz
-  subprocess.check_call(["dot", "-Tsvg", "-o", os.devnull, input])
+  dot("svg", input)
 
 def test_131():
   """
@@ -108,11 +108,10 @@ def test_131():
   """
 
   # a basic graph
-  dot = "digraph { a -> b; c -> d; }"
+  src = "digraph { a -> b; c -> d; }"
 
   # ask Graphviz to process this to PIC
-  pic = subprocess.check_output(["dot", "-Tpic"], input=dot,
-    universal_newlines=True)
+  pic = dot("pic", source=src)
 
   if shutil.which("gpic") is None:
     pytest.skip("GNU PIC not available")
@@ -133,8 +132,7 @@ def test_144(testcase: str):
   assert input.exists(), "unexpectedly missing test case"
 
   # process the non-ortho one into JSON
-  out = subprocess.check_output(["dot", "-Tjson", input],
-    universal_newlines=True)
+  out = dot("json", input)
   data = json.loads(out)
 
   # find the two nodes, “A” and “B”
@@ -183,8 +181,7 @@ def test_165():
   assert input.exists(), "unexpectedly missing test case"
 
   # ask Graphviz to translate it to xdot
-  output = subprocess.check_output(["dot", "-Txdot", input],
-    universal_newlines=True)
+  output = dot("xdot", input)
 
   # find the line containing the _ldraw_ attribute
   ldraw = re.search(r"^\s*_ldraw_\s*=(?P<value>.*?)$", output, re.MULTILINE)
@@ -205,8 +202,7 @@ def test_165_2():
   assert input.exists(), "unexpectedly missing test case"
 
   # ask Graphviz to translate it to xdot
-  output = subprocess.check_output(["dot", "-Txdot", input],
-    universal_newlines=True)
+  output = dot("xdot", input)
 
   # find the lines containing _ldraw_ attributes
   ldraw = re.findall(r"^\s*_ldraw_\s*=(.*?)$", output, re.MULTILINE)
@@ -227,8 +223,7 @@ def test_165_3():
   assert input.exists(), "unexpectedly missing test case"
 
   # ask Graphviz to translate it to xdot
-  output = subprocess.check_output(["dot", "-Txdot", input],
-    universal_newlines=True)
+  output = dot("xdot", input)
 
   # find the lines containing _ldraw_ attributes
   ldraw = re.findall(r"^\s*_ldraw_\s*=(.*?)$", output, re.MULTILINE)
@@ -322,11 +317,7 @@ def test_797():
           '}'
 
   # process this with the client-side imagemap back end
-  p = subprocess.Popen(["dot", "-Tcmapx"], stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE, universal_newlines=True)
-  output, _ = p.communicate(input)
-
-  assert p.returncode == 0
+  output = dot("cmapx", source=input)
 
   # the escape sequences should have been preserved
   assert "&amp; &amp;" in output
@@ -342,7 +333,7 @@ def test_1221():
   assert input.exists(), "unexpectedly missing test case"
 
   # process this with dot
-  subprocess.check_call(["dot", "-Tsvg", "-o", os.devnull, input])
+  dot("svg", input)
 
 @pytest.mark.skipif(shutil.which("gv2gml") is None,
                     reason="gv2gml not available")
@@ -383,7 +374,7 @@ def test_1314():
 
   # ask Graphviz to process it, which should fail
   try:
-    subprocess.check_call(["dot", "-Tsvg", "-o", os.devnull, input])
+    dot("svg", input)
   except subprocess.CalledProcessError:
     return
 
@@ -402,7 +393,7 @@ def test_1408():
   assert input.exists(), "unexpectedly missing test case"
 
   # process it with Graphviz
-  subprocess.check_call(["dot", "-Tsvg", "-o", os.devnull, input])
+  dot("svg", input)
 
 def test_1411():
   """
@@ -436,7 +427,7 @@ def test_1436():
 
   # ask Graphviz to process it, which should generate a segfault if this bug
   # has been reintroduced
-  subprocess.check_call(["dot", "-Tsvg", "-o", os.devnull, input])
+  dot("svg", input)
 
 def test_1444():
   """
@@ -528,7 +519,7 @@ def test_1658():
   assert input.exists(), "unexpectedly missing test case"
 
   # process it with Graphviz
-  subprocess.check_call(["dot", "-Tpng", "-o", os.devnull, input])
+  dot("png", input)
 
 def test_1676():
   """
@@ -665,7 +656,7 @@ def test_1845():
   assert input.exists(), "unexpectedly missing test case"
 
   # generate a multipage PS file from this input
-  subprocess.check_call(["dot", "-Tps", "-o", os.devnull, input])
+  dot("ps", input)
 
 @pytest.mark.xfail(strict=True) # FIXME
 def test_1856():
@@ -679,8 +670,7 @@ def test_1856():
   assert input.exists(), "unexpectedly missing test case"
 
   # process it into JSON
-  out = subprocess.check_output(["dot", "-Tjson", input],
-    universal_newlines=True)
+  out = dot("json", input)
   data = json.loads(out)
 
   # find the two nodes, “3” and “5”
@@ -786,11 +776,11 @@ def test_1880():
   # FIXME: remove this block when this #1880 is fixed
   if not is_ndebug_defined() and platform.system() != "Windows":
     with pytest.raises(subprocess.CalledProcessError):
-      subprocess.check_call(["dot", "-Tpng", "-o", os.devnull, input])
+      dot("png", input)
     return
 
   # process it with Graphviz
-  subprocess.check_call(["dot", "-Tpng", "-o", os.devnull, input])
+  dot("png", input)
 
 def test_1898():
   """
@@ -804,7 +794,7 @@ def test_1898():
 
   # ask Graphviz to process it, which should generate a segfault if this bug
   # has been reintroduced
-  subprocess.check_call(["dot", "-Tsvg", "-o", os.devnull, input])
+  dot("svg", input)
 
 # root directory of this checkout
 ROOT = Path(__file__).parent.parent.resolve()
@@ -900,18 +890,12 @@ def test_1893():
   input = "digraph { 0 [label=<<TABLE><TR><TD>]</TD></TR></TABLE>>] }"
 
   # ask Graphviz to process this
-  p = subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull],
-                       stdin=subprocess.PIPE, universal_newlines=True)
-  p.communicate(input)
-  assert p.returncode == 0
+  dot("svg", source=input)
 
   # we should be able to do the same with an escaped ]
   input = "digraph { 0 [label=<<TABLE><TR><TD>&#93;</TD></TR></TABLE>>] }"
 
-  p = subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull],
-                       stdin=subprocess.PIPE, universal_newlines=True)
-  p.communicate(input)
-  assert p.returncode == 0
+  dot("svg", source=input)
 
 def test_1906():
   """
@@ -1073,10 +1057,7 @@ def test_1931():
           '}'
 
   # ask Graphviz to process this to dot output
-  p = subprocess.Popen(["dot", "-Txdot"], stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE, universal_newlines=True)
-  xdot, _ = p.communicate(graph)
-  assert p.returncode == 0
+  xdot = dot("xdot", source=graph)
 
   # all new lines in strings should have been preserved
   assert "line 1\nline 2\n" in xdot
@@ -1201,7 +1182,7 @@ def test_2082():
 
   # ask Graphviz to process it, which should generate an assertion failure if
   # this bug has been reintroduced
-  subprocess.check_call(["dot", "-Tpng", "-o", os.devnull, input])
+  dot("png", input)
 
 @pytest.mark.xfail(strict=True)
 @pytest.mark.parametrize("html_like_first", (False, True))
@@ -1224,11 +1205,7 @@ def test_2089(html_like_first: bool): # FIXME
             '}'
 
   # normalize the graph
-  p = subprocess.Popen(["dot", "-Tdot"], stdin=subprocess.PIPE,
-                       stdout=subprocess.PIPE, universal_newlines=True)
-  canonical, _ = p.communicate(graph)
-
-  assert p.returncode == 0
+  canonical = dot("dot", source=graph)
 
   assert 'label=foo' in canonical, "non-HTML-like label not found"
   assert "label=<foo>" in canonical, "HTML-like label not found"
@@ -1265,7 +1242,7 @@ def test_2095():
   assert input.exists(), "unexpectedly missing test case"
 
   # ask Graphviz to process it
-  subprocess.check_call(["dot", "-Tpdf", "-o", os.devnull, input])
+  dot("pdf", input)
 
 @pytest.mark.skipif(shutil.which("gv2gml") is None,
                     reason="gv2gml not available")

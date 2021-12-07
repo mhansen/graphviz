@@ -58,6 +58,39 @@ def compile_c(src: Path, cflags: List[str] = None, link: List[str] = None,
 
   return dst
 
+def dot(T: str, source_file: Optional[Path] = None, source: Optional[str] = None
+       ) -> Union[bytes, str]:
+  """
+  run Graphviz on the given source file or text
+
+  Args:
+    T: Output format, as would be supplied to `-T` on the command line.
+    source_file: Input file to parse. Can be `None` if `source` is provided
+      instead.
+    source: Input text to parse. Can be `None` if `source_file` is provided
+      instead.
+
+  Returns:
+    Dot output as text if a textual format was selected or as binary if not.
+  """
+
+  assert source_file is not None or source is not None, \
+    "one of `source_file` or `source` needs to be provided"
+
+  # is the output format a textual format?
+  kwargs = {}
+  if T in ("cmapx", "json", "pic", "svg", "xdot"):
+    kwargs["universal_newlines"] = True
+
+  args = ["dot", f"-T{T}"]
+
+  if source_file is not None:
+    args += [source_file]
+  else:
+    kwargs["input"] = source
+
+  return subprocess.check_output(args, **kwargs)
+
 def run_c(src: Path, args: List[str] = None, input: str = "",
           cflags: List[str] = None, link: List[str] = None
           ) -> Tuple[int, str, str]:
