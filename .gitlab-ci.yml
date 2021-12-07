@@ -457,6 +457,112 @@ macos-autotools-build:
     tags:
         - shared-macos-amd64
 
+# We do the MinGW autotools builds in two steps in separate jobs to
+# get below the one hour per job limit of the GitLab shared Windows
+# runners
+
+windows-mingw32-build-step1-configure:
+    stage: build
+    needs:
+        - job: portable-source
+          artifacts: true
+    script:
+        - choco config set cacheLocation choco-cache
+        - choco install --yes --no-progress msys2
+        - $Env:build_system = "autotools"
+        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
+    cache:
+        key: windows-mingw32-build-step1-configure
+        paths:
+            - choco-cache
+    artifacts:
+        when: always
+        expire_in: 1 week
+        paths:
+            - GRAPHVIZ_VERSION
+            - graphviz-*
+            - build
+    tags:
+        - windows
+    except:
+        - tags
+
+windows-mingw32-build-step2-make:
+    stage: build
+    needs:
+        - job: windows-mingw32-build-step1-configure
+          artifacts: true
+    script:
+        - choco config set cacheLocation choco-cache
+        - choco install --yes --no-progress msys2
+        - $Env:build_system = "autotools"
+        - $Env:use_autogen = "yes"
+        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+    cache:
+        key: windows-mingw32-build-step2-make
+        paths:
+            - choco-cache
+    artifacts:
+        when: always
+        expire_in: 1 week
+        paths:
+            - GRAPHVIZ_VERSION
+    tags:
+        - windows
+    except:
+        - tags
+
+windows-mingw64-build-step1-configure:
+    stage: build
+    needs:
+        - job: portable-source
+          artifacts: true
+    script:
+        - choco config set cacheLocation choco-cache
+        - choco install --yes --no-progress msys2
+        - $Env:build_system = "autotools"
+        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
+    cache:
+        key: windows-mingw64-build-step1-configure
+        paths:
+            - choco-cache
+    artifacts:
+        when: always
+        expire_in: 1 week
+        paths:
+            - GRAPHVIZ_VERSION
+            - graphviz-*
+            - build
+    tags:
+        - windows
+    except:
+        - tags
+
+windows-mingw64-build-step2-make:
+    stage: build
+    needs:
+        - job: windows-mingw64-build-step1-configure
+          artifacts: true
+    script:
+        - choco config set cacheLocation choco-cache
+        - choco install --yes --no-progress msys2
+        - $Env:build_system = "autotools"
+        - $Env:use_autogen = "yes"
+        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+    cache:
+        key: windows-mingw64-build-step2-make
+        paths:
+            - choco-cache
+    artifacts:
+        when: always
+        expire_in: 1 week
+        paths:
+            - GRAPHVIZ_VERSION
+    tags:
+        - windows
+    except:
+        - tags
+
 windows-cygwin-build:
     stage: build
     needs:

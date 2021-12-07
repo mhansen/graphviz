@@ -17,59 +17,72 @@ extern "C" {
 #endif
 #include <neatogen/adjust.h>
 
-    extern void avoid_cycling(graph_t *, Agnode_t *, double *);
-    extern int checkStart(graph_t * G, int nG, int);
-    extern Agnode_t *choose_node(graph_t *, int);
-    extern int circuit_model(graph_t *, int);
-    extern void D2E(Agraph_t *, int, int, double *);
-    extern void diffeq_model(graph_t *, int);
-    extern double distvec(double *, double *, double *);
-    extern void final_energy(graph_t *, int);
-    extern double fpow32(double);
-    extern Ppolyline_t getPath(edge_t *, vconfig_t *, int, Ppoly_t **,
-			       int);
-    extern void heapdown(Agnode_t *);
-    extern void heapup(Agnode_t *);
-    extern void initial_positions(graph_t *, int);
-    extern int init_port(Agnode_t *, Agedge_t *, char *, boolean);
-    extern void jitter3d(Agnode_t *, int);
-    extern void jitter_d(Agnode_t *, int, int);
-    extern Ppoly_t *makeObstacle(node_t * n, expand_t*, boolean );
-    extern void makeSelfArcs(edge_t * e, int stepx);
-    extern void makeSpline(edge_t *, Ppoly_t **, int, boolean);
-    extern void make_spring(graph_t *, Agnode_t *, Agnode_t *, double);
-    extern void move_node(graph_t *, int, Agnode_t *);
-    extern int init_nop(graph_t * g, int);
-    extern void neato_cleanup(graph_t * g);
-    extern node_t *neato_dequeue(void);
-    extern void neato_enqueue(node_t *);
-    extern void neato_init_node(node_t * n);
-    extern void neato_layout(Agraph_t * g);
-    extern int Plegal_arrangement(Ppoly_t ** polys, int n_polys);
-    extern void randompos(Agnode_t *, int);
-    extern void s1(graph_t *, node_t *);
-    extern int scan_graph(graph_t *);
-    extern int scan_graph_mode(graph_t * G, int mode);
-    extern void free_scan_graph(graph_t *);
-    extern int setSeed (graph_t*, int dflt, long* seedp);
-    extern void shortest_path(graph_t *, int);
-    extern void solve(double *, double *, double *, int);
-    extern void solve_model(graph_t *, int);
-    extern int solveCircuit(int nG, double **Gm, double **Gm_inv);
-    extern void spline_edges(Agraph_t *);
-    extern void spline_edges0(Agraph_t *, boolean);
-    extern int spline_edges1(graph_t * g, int);
-    extern int splineEdges(graph_t *,
-			   int (*edgefn) (graph_t *, expand_t*, int), int);
-    extern void neato_translate(Agraph_t * g);
-    extern bool neato_set_aspect(graph_t * g);
-    extern void toggle(int);
-    extern int user_pos(Agsym_t *, Agsym_t *, Agnode_t *, int);
-    extern double **new_array(int i, int j, double val);
-    extern void free_array(double **rv);
-    extern int matinv(double **A, double **Ainv, int n);
+#ifdef GVDLL
+#ifdef NEATOGEN_EXPORTS
+#define NEATOPROCS_API __declspec(dllexport)
+#else
+#define NEATOPROCS_API __declspec(dllimport)
+#endif
+#endif
 
-#undef extern
+#ifndef NEATOPROCS_API
+#define NEATOPROCS_API /* nothing */
+#endif
+
+    NEATOPROCS_API void avoid_cycling(graph_t *, Agnode_t *, double *);
+    NEATOPROCS_API int checkStart(graph_t * G, int nG, int);
+    NEATOPROCS_API Agnode_t *choose_node(graph_t *, int);
+    NEATOPROCS_API int circuit_model(graph_t *, int);
+    NEATOPROCS_API void D2E(Agraph_t *, int, int, double *);
+    NEATOPROCS_API void diffeq_model(graph_t *, int);
+    NEATOPROCS_API double distvec(double *, double *, double *);
+    NEATOPROCS_API void final_energy(graph_t *, int);
+    NEATOPROCS_API double fpow32(double);
+    NEATOPROCS_API Ppolyline_t getPath(edge_t *, vconfig_t *, int, Ppoly_t **,
+			       int);
+    NEATOPROCS_API void heapdown(Agnode_t *);
+    NEATOPROCS_API void heapup(Agnode_t *);
+    NEATOPROCS_API void initial_positions(graph_t *, int);
+    NEATOPROCS_API int init_port(Agnode_t *, Agedge_t *, char *, boolean);
+    NEATOPROCS_API void jitter3d(Agnode_t *, int);
+    NEATOPROCS_API void jitter_d(Agnode_t *, int, int);
+    NEATOPROCS_API Ppoly_t *makeObstacle(node_t * n, expand_t*, boolean );
+    NEATOPROCS_API void makeSelfArcs(edge_t * e, int stepx);
+    NEATOPROCS_API void makeSpline(edge_t *, Ppoly_t **, int, boolean);
+    NEATOPROCS_API void make_spring(graph_t *, Agnode_t *, Agnode_t *, double);
+    NEATOPROCS_API void move_node(graph_t *, int, Agnode_t *);
+    NEATOPROCS_API int init_nop(graph_t * g, int);
+    NEATOPROCS_API void neato_cleanup(graph_t * g);
+    NEATOPROCS_API node_t *neato_dequeue(void);
+    NEATOPROCS_API void neato_enqueue(node_t *);
+    NEATOPROCS_API void neato_init_node(node_t * n);
+    NEATOPROCS_API void neato_layout(Agraph_t * g);
+    NEATOPROCS_API int Plegal_arrangement(Ppoly_t ** polys, int n_polys);
+    NEATOPROCS_API void randompos(Agnode_t *, int);
+    NEATOPROCS_API void s1(graph_t *, node_t *);
+    NEATOPROCS_API int scan_graph(graph_t *);
+    NEATOPROCS_API int scan_graph_mode(graph_t * G, int mode);
+    NEATOPROCS_API void free_scan_graph(graph_t *);
+    NEATOPROCS_API int setSeed (graph_t*, int dflt, long* seedp);
+    NEATOPROCS_API void shortest_path(graph_t *, int);
+    NEATOPROCS_API void solve(double *, double *, double *, int);
+    NEATOPROCS_API void solve_model(graph_t *, int);
+    NEATOPROCS_API int solveCircuit(int nG, double **Gm, double **Gm_inv);
+    NEATOPROCS_API void spline_edges(Agraph_t *);
+    NEATOPROCS_API void spline_edges0(Agraph_t *, boolean);
+    NEATOPROCS_API int spline_edges1(graph_t * g, int);
+    NEATOPROCS_API int splineEdges(graph_t *,
+			   int (*edgefn) (graph_t *, expand_t*, int), int);
+    NEATOPROCS_API void neato_translate(Agraph_t * g);
+    NEATOPROCS_API bool neato_set_aspect(graph_t * g);
+    NEATOPROCS_API void toggle(int);
+    NEATOPROCS_API int user_pos(Agsym_t *, Agsym_t *, Agnode_t *, int);
+    NEATOPROCS_API double **new_array(int i, int j, double val);
+    NEATOPROCS_API void free_array(double **rv);
+    NEATOPROCS_API int matinv(double **A, double **Ainv, int n);
+
+#undef NEATOPROCS_API
+
 #ifdef __cplusplus
 }
 #endif

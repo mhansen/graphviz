@@ -22,7 +22,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt \
 	-I$(top_srcdir)/lib/pathplan $(TCLHANDLE_INCLUDES) $(GDLIB_CFLAGS) $(TCL_INCLUDES)
 
-LIBS = -lc
+LIBS = -lc @TCL_STUB_LIB_SPEC@
 
 AM_CFLAGS = $(TCL_CFLAGS)
 
@@ -87,7 +87,7 @@ libtcldot_builtin_la_SOURCES = \
 	tcldot-io.c \
 	tcldot_builtins.c $(GDTCLFT)
 libtcldot_builtin_la_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=1
-libtcldot_builtin_la_LDFLAGS =
+libtcldot_builtin_la_LDFLAGS = -no-undefined
 
 libtcldot_builtin_la_LIBADD = $(TCLHANDLE_LIBS) \
 	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout_C.la \

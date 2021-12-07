@@ -8,6 +8,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 
 if WITH_WIN32
+AM_CFLAGS = -DPATHPLAN_EXPORTS
 AM_CPPFLAGS += -O0
 endif
 
@@ -34,6 +35,9 @@ libpathplan_C_la_SOURCES = cvt.c inpoly.c route.c shortest.c \
 	shortestpth.c solvers.c triang.c util.c visibility.c
 
 libpathplan_la_LDFLAGS = -version-info $(PATHPLAN_VERSION) -no-undefined
+if WITH_WIN32
+libpathplan_la_LDFLAGS += -export-symbols $(top_srcdir)/lib/pathplan/pathplan.def
+endif
 libpathplan_la_SOURCES = $(libpathplan_C_la_SOURCES)
 libpathplan_la_LIBADD = @MATH_LIBS@
 

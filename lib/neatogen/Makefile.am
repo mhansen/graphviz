@@ -9,6 +9,10 @@ AM_CPPFLAGS = \
         -I$(top_srcdir)/lib/cgraph \
         -I$(top_srcdir)/lib/cdt $(IPSEPCOLA_INCLUDES) $(GTS_CFLAGS)
 
+if WITH_WIN32
+AM_CFLAGS = -DNEATOGEN_EXPORTS=1
+endif
+
 noinst_LTLIBRARIES = libneatogen_C.la
 
 noinst_HEADERS = adjust.h edges.h geometry.h heap.h hedges.h info.h mem.h \

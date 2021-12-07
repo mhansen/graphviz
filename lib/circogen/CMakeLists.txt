@@ -1,3 +1,5 @@
+add_definitions(-DNEATOGEN_EXPORTS=1)
+
 add_library(circogen STATIC
     # Header files
     block.h

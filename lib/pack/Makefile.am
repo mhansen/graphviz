@@ -12,7 +12,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt
 
 if WITH_WIN32
-AM_CFLAGS = -D_BLD_gvc=1
+AM_CFLAGS = -D_BLD_gvc=1 -DGVC_EXPORTS=1
 endif
 
 pkginclude_HEADERS = pack.h

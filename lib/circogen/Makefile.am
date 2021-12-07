@@ -11,6 +11,10 @@ AM_CPPFLAGS = \
         -I$(top_srcdir)/lib/cgraph \
         -I$(top_srcdir)/lib/cdt
 
+if WITH_WIN32
+AM_CFLAGS = -DNEATOGEN_EXPORTS=1
+endif
+
 noinst_HEADERS = block.h blockpath.h blocktree.h circo.h \
 	circpos.h circular.h deglist.h edgelist.h nodelist.h \
 	nodeset.h 

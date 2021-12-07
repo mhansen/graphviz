@@ -9,6 +9,10 @@ AM_CPPFLAGS = \
         -I$(top_srcdir)/lib/cgraph \
         -I$(top_srcdir)/lib/cdt
 
+if WITH_WIN32
+AM_CFLAGS = -DNEATOGEN_EXPORTS=1
+endif
+
 noinst_HEADERS = comp.h dbg.h fdp.h grid.h tlayout.h xlayout.h \
 	clusteredges.h
 noinst_LTLIBRARIES = libfdpgen_C.la
