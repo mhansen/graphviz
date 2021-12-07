@@ -279,16 +279,16 @@ def test_517():
   # translate this back to Dot
   p = subprocess.Popen(["gxl2gv"], stdin=subprocess.PIPE,
     stdout=subprocess.PIPE, universal_newlines=True)
-  dot, _ = p.communicate(gxl)
+  dot_output, _ = p.communicate(gxl)
   assert p.returncode == 0
 
   # the result should have both expected labels somewhere
   assert \
-    "label=<<TABLE><TR><TD>(</TD><TD>A</TD><TD>)</TD></TR></TABLE>>" in dot, \
-    "HTML label missing"
+    "label=<<TABLE><TR><TD>(</TD><TD>A</TD><TD>)</TD></TR></TABLE>>" in \
+    dot_output, "HTML label missing"
   assert \
-    'label="<TABLE><TR><TD>(</TD><TD>B</TD><TD>)</TD></TR></TABLE>"' in dot, \
-    "regular label missing"
+    'label="<TABLE><TR><TD>(</TD><TD>B</TD><TD>)</TD></TR></TABLE>"' in \
+    dot_output, "regular label missing"
 
 def test_793():
   """
@@ -353,14 +353,14 @@ def test_1276():
   """
 
   # DOT input containing a label with quotes
-  dot = 'digraph test {\n' \
+  src = 'digraph test {\n' \
         '  x[label=<"Label">];\n' \
         '}'
 
   # process this to GML
   p = subprocess.Popen(["gv2gml"], stdin=subprocess.PIPE,
                        stdout=subprocess.PIPE, universal_newlines=True)
-  gml, _ = p.communicate(dot)
+  gml, _ = p.communicate(src)
 
   assert p.returncode == 0, "gv2gml failed"
 
@@ -576,10 +576,10 @@ def test_1767():
   assert c_src.exists(), "missing test case"
 
   # find our co-located dot input
-  dot = (Path(__file__).parent / "1767.dot").resolve()
-  assert dot.exists(), "missing test case"
+  src = (Path(__file__).parent / "1767.dot").resolve()
+  assert src.exists(), "missing test case"
 
-  ret, _, _ = run_c(c_src, [dot], link=["cgraph", "gvc"])
+  ret, _, _ = run_c(c_src, [src], link=["cgraph", "gvc"])
   assert ret == 0
 
   # FIXME: uncomment this when #1767 is fixed
