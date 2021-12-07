@@ -266,16 +266,12 @@ def test_517():
     '}'
 
   # translate it to GXL
-  p = subprocess.Popen(["gv2gxl"], stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE, universal_newlines=True)
-  gxl, _ = p.communicate(input)
-  assert p.returncode == 0
+  gxl = subprocess.check_output(["gv2gxl"], input=input,
+    universal_newlines=True)
 
   # translate this back to Dot
-  p = subprocess.Popen(["gxl2gv"], stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE, universal_newlines=True)
-  dot_output, _ = p.communicate(gxl)
-  assert p.returncode == 0
+  dot_output = subprocess.check_output(["gxl2gv"], input=gxl,
+    universal_newlines=True)
 
   # the result should have both expected labels somewhere
   assert \
@@ -349,11 +345,7 @@ def test_1276():
         '}'
 
   # process this to GML
-  p = subprocess.Popen(["gv2gml"], stdin=subprocess.PIPE,
-                       stdout=subprocess.PIPE, universal_newlines=True)
-  gml, _ = p.communicate(src)
-
-  assert p.returncode == 0, "gv2gml failed"
+  gml = subprocess.check_output(["gv2gml"], input=src, universal_newlines=True)
 
   # the unescaped label should not appear in the output
   assert '""Label""' not in gml, "quotes not escaped in label"
@@ -737,11 +729,11 @@ def test_1876():
   input = "graph { a }"
 
   # process this with fdp
-  p = subprocess.Popen(["fdp"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-    universal_newlines=True)
-  output, _ = p.communicate(input)
-
-  assert p.returncode == 0, "fdp failed to process trivial graph"
+  try:
+    output = subprocess.check_output(["fdp"], input=input,
+      universal_newlines=True)
+  except subprocess.CalledProcessError as e:
+    raise RuntimeError("fdp failed to process trivial graph") from e
 
   # we should not see any internal names like "%3"
   assert "%" not in output, "internal name in fdp output"
@@ -928,9 +920,8 @@ def test_1907():
   input = "digraph { A -> B -> C }"
 
   # generate an SVG from this input with twopi
-  p = subprocess.Popen(["twopi", "-Tsvg"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+  output = subprocess.check_output(["twopi", "-Tsvg"], input=input,
     universal_newlines=True)
-  output, _ = p.communicate(input)
 
   assert "<title>A&#45;&gt;B</title>" in output, \
     "element title not found in SVG"
@@ -947,11 +938,8 @@ def test_1909():
   graph = Path(__file__).parent / "1909.dot"
 
   # run GVPR with the given input
-  p = subprocess.Popen(["gvpr", "-c", "-f", prog, graph],
-    stdout=subprocess.PIPE, universal_newlines=True)
-  output, _ = p.communicate()
-
-  assert p.returncode == 0, "gvpr failed to process graph"
+  output = subprocess.check_output(["gvpr", "-c", "-f", prog, graph],
+    universal_newlines=True)
 
   # we should have produced this graph without names like "%2" in it
   assert output == "// begin\n" \

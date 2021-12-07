@@ -92,11 +92,8 @@ def test_gvpr_clustg():
   input = "digraph { N1; N2; N1 -> N2; N3; }"
 
   # run GVPR on this input
-  p = subprocess.Popen(["gvpr", "-f", path], stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE, cwd=wd, universal_newlines=True)
-  output, _ = p.communicate(input)
-
-  assert p.returncode == 0, "GVPR exited with non-zero status"
+  output = subprocess.check_output(["gvpr", "-f", path], input=input, cwd=wd,
+    universal_newlines=True)
 
   assert output.strip() == 'strict digraph "clust%1" {\n' \
                            '\tnode [_cnt=0];\n' \
