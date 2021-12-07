@@ -832,6 +832,44 @@ def test_html(src: Path):
   assert p.returncode == 0
   assert stderr == ""
 
+@pytest.mark.xfail(strict=True)
+def test_1855():
+  """
+  SVGs should have a scale with sufficient precision
+  https://gitlab.com/graphviz/graphviz/-/issues/1855
+  """
+
+  # locate our associated test case in this directory
+  src = Path(__file__).parent / "1855.dot"
+  assert src.exists(), "unexpectedly missing test case"
+
+  # run it through Graphviz
+  svg = subprocess.check_output(["dot", "-Tsvg", src], universal_newlines=True)
+
+  # find the graph element
+  root = ET.fromstring(svg)
+  graph = root[0]
+  assert graph.get("class") == "graph", "could not find graph element"
+
+  # extract its `transform` attribute
+  transform = graph.get("transform")
+
+  # this should begin with a scale directive
+  m = re.match(r"scale\((?P<x>\d+(\.\d*)?) (?P<y>\d+(\.\d*))\)", transform)
+  assert m is not None, f"failed to find 'scale' in '{transform}'"
+
+  x = m.group("x")
+  y = m.group("y")
+
+  # the scale should be somewhere in reasonable range of what is expected
+  assert float(x) >= 0.32 and float(x) <= 0.34, "inaccurate x scale"
+  assert float(y) >= 0.32 and float(y) <= 0.34, "inaccurate y scale"
+
+  # two digits of precision are insufficient for this example, so require a
+  # greater number of digits in both scale components
+  assert len(x) > 4, "insufficient precision in x scale"
+  assert len(y) > 4, "insufficient precision in y scale"
+
 @pytest.mark.parametrize("variant", [1, 2])
 @pytest.mark.skipif(shutil.which("gml2gv") is None, reason="gml2gv not available")
 def test_1869(variant: int):
