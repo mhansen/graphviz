@@ -106,7 +106,7 @@ def test_existence(binary: str):
 
   # FIXME: Remove skip when
   # https://gitlab.com/graphviz/graphviz/-/issues/1835 is fixed
-  if os_id in ["ubuntu", "centos"] and binary == "mingle":
+  if os_id == "ubuntu" and binary == "mingle":
     check_that_tool_does_not_exist(binary, os_id)
     pytest.skip(f"mingle is not built for {os_id} (#1835)")
 

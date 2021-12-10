@@ -38,7 +38,6 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 # Overrides for RHEL
 %if 0%{?rhel}
 %global LICENSE    0
-%global ANN        0
 %global ARRRR      0
 %global DEEEE      0
 %global DEVIL      0
