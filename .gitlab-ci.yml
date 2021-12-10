@@ -470,6 +470,7 @@ windows-mingw32-build-step1-configure:
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "autotools"
+        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     cache:
         key: windows-mingw32-build-step1-configure
@@ -497,6 +498,7 @@ windows-mingw32-build-step2-make:
         - choco install --yes --no-progress msys2
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
+        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     cache:
         key: windows-mingw32-build-step2-make
@@ -521,6 +523,7 @@ windows-mingw64-build-step1-configure:
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "autotools"
+        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     cache:
         key: windows-mingw64-build-step1-configure
@@ -548,6 +551,7 @@ windows-mingw64-build-step2-make:
         - choco install --yes --no-progress msys2
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
+        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     cache:
         key: windows-mingw64-build-step2-make
@@ -908,6 +912,7 @@ windows-mingw32-cmake-build:
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror"
         - $Env:CXXFLAGS = "-Werror"
+        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
@@ -934,6 +939,7 @@ windows-mingw64-cmake-build:
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror"
         - $Env:CXXFLAGS = "-Werror"
+        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
