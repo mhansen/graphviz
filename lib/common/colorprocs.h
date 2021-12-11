@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "color.h"
 
 #ifdef __cplusplus
