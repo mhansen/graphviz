@@ -19,7 +19,6 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 
 # Assuming Fedora
 %global LICENSE    1
-%global ANN        1
 %global ARRRR      1
 %global DEEEE      0
 %global DEVIL      1
@@ -63,10 +62,8 @@ BuildRequires: gmp-devel gd gd-devel librsvg2-devel
 BuildRequires: ghostscript ghostscript-devel poppler-glib-devel libtool-ltdl libtool-ltdl-devel
 BuildRequires: ruby ruby-devel php-devel lua-devel
 BuildRequires: perl-devel perl-libs perl-ExtUtils-Embed tcl tcl-devel tk tk-devel
-
-%if %{ANN}
 BuildRequires: ann-devel
-%endif
+
 %if %{ARRRR}
 BuildRequires: R-devel
 %endif
@@ -199,9 +196,7 @@ LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 %{_bindir}/gvpr
 %{_bindir}/gxl2dot
 %{_bindir}/gxl2gv
-%if %{ANN}
 %{_bindir}/mingle
-%endif
 %{_bindir}/edgepaint
 %{_bindir}/mm2gv
 %{_bindir}/neato
@@ -903,9 +898,6 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --without-glitz \
         --with-ipsepcola \
         --enable-lefty \
-%if ! %{ANN}
-        --without-ann \
-%endif
         --disable-python \
 %if ! %{PYTHON3}
         --disable-python3 \
