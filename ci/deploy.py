@@ -216,9 +216,8 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
         webentry[c.suffix[1:]] = url
 
       # only expose a subset of the Windows artifacts
-      if "stable_windows_10_cmake_Release_Win32" in str(path) or \
-         "stable_windows_10_cmake_Release_x64" in str(path) or \
-         "stable_windows_10_msbuild_Release_Win32" in str(path):
+      if "windows_10_cmake_Release" in str(path) or \
+         "windows_10_msbuild_Release" in str(path):
         webdata["windows"].append(webentry)
 
   # various release pages truncate the viewable artifacts to 100 or even 50
