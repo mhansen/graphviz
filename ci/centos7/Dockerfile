@@ -22,6 +22,8 @@ cmake3 \
 https://repo.ius.io/7/x86_64/packages/g/git224-2.24.3-1.el7.ius.x86_64.rpm \
 # Option glut
 freeglut-devel \
+# Option ann
+ann-devel \
 # Option gts
 # Option swig
 swig \
