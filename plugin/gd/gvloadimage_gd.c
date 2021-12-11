@@ -51,14 +51,6 @@ static gdImagePtr gd_loadimage(GVJ_t * job, usershape_t *us)
 	if (!gvusershape_file_access(us))
 	    return NULL;
 	switch (us->type) {
-#if 0
-	    case FT_GD:
-		im = gdImageCreateFromGd(us->f);
-		break;
-	    case FT_GD2:
-		im = gdImageCreateFromGd2(us->f);
-		break;
-#endif
 #ifdef HAVE_GD_PNG
 	    case FT_PNG:
 		us->data = gdImageCreateFromPng(us->f);
@@ -73,18 +65,6 @@ static gdImagePtr gd_loadimage(GVJ_t * job, usershape_t *us)
 	    case FT_JPEG:
 		us->data = gdImageCreateFromJpeg(us->f);
 		break;
-#endif
-#if 0
-#ifdef HAVE_GD_XPM
-	    case FT_XPM:
-		us->data = gdImageCreateFromXpm(us->f);
-		break;
-#endif
-#ifdef HAVE_GD_WBMP
-	    case FT_WBMP:
-		us->data = gdImageCreateFromWbmp(us->f);
-		break;
-#endif
 #endif
 	    default:
 		break;

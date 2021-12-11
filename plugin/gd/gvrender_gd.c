@@ -224,12 +224,6 @@ static void gdgen_end_page(GVJ_t * job)
 #endif
 
 	case FORMAT_XBM:
-#if 0
-/* libgd support only reading .xpm files */
-#ifdef HAVE_GD_XPM
-	    gdImageXbm(im, job->output_file);
-#endif
-#endif
 	    break;
 	}
 	gdImageDestroy(im);
@@ -249,28 +243,14 @@ static void gdgen_missingfont(char *err, char *fontreq)
     if (n_errors >= 20)
 	return;
     if ((lastmissing == 0) || (strcmp(lastmissing, fontreq))) {
-#ifdef HAVE_GD_FONTCONFIG
-#if 0
-/* FIXME - error function */
-	agerr(AGERR, "%s : %s\n", err, fontreq);
-#endif
-#else
+#ifndef HAVE_GD_FONTCONFIG
 	char *p = getenv("GDFONTPATH");
 	if (!p)
 	    p = DEFAULT_FONTPATH;
-#if 0
-/* FIXME - error function */
-	agerr(AGERR, "%s : %s in %s\n", err, fontreq, p);
-#endif
 #endif
 	free(lastmissing);
 	lastmissing = strdup(fontreq);
 	n_errors++;
-#if 0
-/* FIXME - error function */
-	if (n_errors >= 20)
-	    agerr(AGWARN, "(font errors suppressed)\n");
-#endif
     }
 }
 #endif
@@ -682,11 +662,5 @@ gvplugin_installed_t gvdevice_gd_types2[] = {
     {FORMAT_GD2, "gd2:gd", 1, NULL, &device_features_gd_tc_no_writer},
 #endif
 
-#if 0
-/* libgd has no support for xbm as output */
-#ifdef HAVE_GD_XPM
-    {FORMAT_XBM, "xbm:gd", 1, NULL, &device_features_gd},
-#endif
-#endif
     {0, NULL, 0, NULL, NULL}
 };

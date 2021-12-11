@@ -607,13 +607,6 @@ tclGdWriteCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 	   color for the B&W wbmp image. */
 	int foreground = gdImageColorClosest(im, 0, 0, 0);
 	gdImageWBMP(im, foreground, filePtr);
-#if 0
-/* libgd only supports reading xbm format */
-#ifdef HAVE_GD_XPM
-    } else if (strcmp(&cmd[5], "XBM") == 0) {
-	gdImageXbm(im, filePtr);
-#endif
-#endif
     } else {
 	/* cannot happen - but would result in an empty output file */
     }
@@ -677,13 +670,8 @@ tclGdColorCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 		    if (Tcl_GetIntFromObj(interp, objv[i + 4], &args[i]) !=
 			TCL_OK) {
 
-
-#if 0
-			if (args[i] < 0 || args[i] > 255) {
-#else
 /* gd text uses -ve colors to turn off anti-aliasing */
 			if (args[i] < -255 || args[i] > 255) {
-#endif
 			    Tcl_SetResult(interp,
 					  "argument out of range 0-255",
 					  TCL_STATIC);
