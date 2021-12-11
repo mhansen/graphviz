@@ -281,18 +281,6 @@ centos7-build:
     variables:
       IMAGE: centos7
 
-centos8-build:
-    <<: *rpm_build_definition
-    needs:
-        - job: docker_build_centos8
-          artifacts: false
-        - job: portable-source
-          artifacts: true
-    tags:
-        - linux
-    variables:
-      IMAGE: centos8
-
 fedora34-build:
     <<: *rpm_build_definition
     needs:
@@ -1073,18 +1061,6 @@ centos7-test:
     variables:
       IMAGE: centos7
 
-centos8-test:
-    <<: *linux_test_definition
-    before_script:
-        - export build_system="autotools"
-    needs:
-        - job: "centos8-build"
-          artifacts: true
-    tags:
-        - linux
-    variables:
-      IMAGE: centos8
-
 fedora34-test:
     <<: *linux_test_definition
     before_script:
@@ -1310,11 +1286,6 @@ docker_build_centos7:
   variables:
     IMAGE: centos7
 
-docker_build_centos8:
-  <<: *docker_build_definition
-  variables:
-    IMAGE: centos8
-
 docker_build_fedora34:
   <<: *docker_build_definition
   variables:
@@ -1351,13 +1322,6 @@ docker_push_centos7:
     IMAGE: centos7
   needs:
     - docker_build_centos7
-
-docker_push_centos8:
-  <<: *docker_push_definition
-  variables:
-    IMAGE: centos8
-  needs:
-    - docker_build_centos8
 
 docker_push_fedora34:
   <<: *docker_push_definition
