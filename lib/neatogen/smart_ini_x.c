@@ -13,6 +13,7 @@
 #include <neatogen/kkutils.h>
 #include <neatogen/matrix_ops.h>
 #include <neatogen/conjgrad.h>
+#include <stdbool.h>
 
 static void
 standardize(double* orthog, int nvtxs) 
@@ -343,7 +344,7 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 	}
 
 	for (converged=FALSE,iterations2=0; iterations2<200 && !converged; iterations2++) {
-		if (conjugate_gradient_f(lap, y, balance, n, conj_tol, n, TRUE) < 0) {
+		if (conjugate_gradient_f(lap, y, balance, n, conj_tol, n, true) < 0) {
 		    rv = 1;
 		    goto cleanup;
 		}

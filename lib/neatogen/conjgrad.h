@@ -15,6 +15,7 @@ extern "C" {
 #endif
 
 #include <neatogen/defs.h>
+#include <stdbool.h>
 
 /*************************
  * C.G. method - SPARSE  *
@@ -28,7 +29,7 @@ extern "C" {
  ************************/
 
     extern int conjugate_gradient_f(float **, double *, double *, int,
-				     double, int, boolean);
+				     double, int, bool);
 
     extern int conjugate_gradient_mkernel(float *, float *, float *, int,
 					   double, int);

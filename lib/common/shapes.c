@@ -12,6 +12,7 @@
 #include <common/htmltable.h>
 #include <limits.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #define RBCONST 12
 #define RBCURVE .5
@@ -1849,7 +1850,7 @@ static void poly_init(node_t * n)
     int regular, peripheries, sides;
     int i, j, isBox, outp;
     polygon_t *poly = NEW(polygon_t);
-    boolean isPlain = IS_PLAIN(n);
+    bool isPlain = IS_PLAIN(n);
 
     regular = ND_shape(n)->polygon->regular;
     peripheries = ND_shape(n)->polygon->peripheries;

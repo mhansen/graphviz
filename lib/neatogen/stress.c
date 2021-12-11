@@ -651,7 +651,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 				     b_restricted);
 	    if (conjugate_gradient_f(matrix, directions[k], b_restricted,
 				 subspace_dim, conj_tol, subspace_dim,
-				 FALSE)) {
+				 false)) {
 		iterations = -1;
 		goto finish0;
 	    }
