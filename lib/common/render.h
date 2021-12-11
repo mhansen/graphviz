@@ -54,15 +54,16 @@ extern "C" {
 	point offset;
     } epsf_t;
 
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
+#ifdef GVDLL
+#ifdef GVC_EXPORTS
+#define RENDER_API __declspec(dllexport)
+#else
 #define RENDER_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef RENDER_API
-#define RENDER_API extern
+#define RENDER_API /* nothing */
 #endif
 
 	RENDER_API void add_box(path *, boxf);
