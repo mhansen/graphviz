@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-set -x
 set -e
-set -u
 set -o pipefail
+set -u
+set -x
 
 if [ -f /etc/os-release ]; then
     cat /etc/os-release

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 set -e
+set -o pipefail
+set -u
 set -x
 
 if [ "$( uname -s )" = "Darwin" ]; then

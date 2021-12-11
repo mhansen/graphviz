@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-set -eux
+set -e
+set -o pipefail
+set -u
+set -x
 
 pacman -S --noconfirm --needed \
     autoconf \

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-set -eux
+set -e
+set -o pipefail
+set -u
+set -x
 
 /cygwinsetup.exe --quiet-mode --wait --packages autoconf2.5
 /cygwinsetup.exe --quiet-mode --wait --packages automake
