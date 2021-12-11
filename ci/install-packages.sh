@@ -31,7 +31,7 @@ if [ "${ID}" = "centos" -o "${ID}" = "fedora" ]; then
     fi
 fi
 if [ "${build_system}" = "cmake" ]; then
-    if [ "${ID_LIKE}" = "debian" ]; then
+    if [ "${ID_LIKE:-}" = "debian" ]; then
         apt install ./${DIR}/graphviz-${GV_VERSION}-cmake.deb
     elif [ "${ID}" = "Darwin" ]; then
         unzip ${DIR}/Graphviz-${GV_VERSION}-Darwin.zip
@@ -40,7 +40,7 @@ if [ "${build_system}" = "cmake" ]; then
         rpm --install --force ${DIR}/graphviz-${GV_VERSION}-cmake.rpm
     fi
 else
-    if [ "${ID_LIKE}" = "debian" ]; then
+    if [ "${ID_LIKE:-}" = "debian" ]; then
         tar xf ${DIR}/graphviz-${GV_VERSION}-debs.tar.xz
         apt install ./libgraphviz4_${GV_VERSION}-1_amd64.deb
         apt install ./libgraphviz-dev_${GV_VERSION}-1_amd64.deb
