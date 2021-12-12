@@ -825,7 +825,7 @@ def test_1855():
   assert src.exists(), "unexpectedly missing test case"
 
   # run it through Graphviz
-  svg = subprocess.check_output(["dot", "-Tsvg", src], universal_newlines=True)
+  svg = dot("svg", src)
 
   # find the graph element
   root = ET.fromstring(svg)
