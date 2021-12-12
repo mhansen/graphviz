@@ -1,8 +1,6 @@
 EXPORTS
-directVis
 freePath
 make_polyline
-makePath
 Pobsclose
 Pobsopen
 Pobspath
@@ -10,5 +8,3 @@ Ppolybarriers
 Proutespline
 Pshortestpath
 Ptriangulate
-ptVis
-visibility
