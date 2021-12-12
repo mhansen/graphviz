@@ -121,6 +121,8 @@ portable-source:
     needs: []
     script:
         - $ErrorActionPreference = "Stop"
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress --params "/InstallDir:C:\Python3" python3
@@ -455,10 +457,11 @@ windows-mingw32-build-step1-configure:
         - job: portable-source
           artifacts: true
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "autotools"
-        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     cache:
         key: windows-mingw32-build-step1-configure
@@ -482,11 +485,12 @@ windows-mingw32-build-step2-make:
         - job: windows-mingw32-build-step1-configure
           artifacts: true
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     cache:
         key: windows-mingw32-build-step2-make
@@ -508,10 +512,11 @@ windows-mingw64-build-step1-configure:
         - job: portable-source
           artifacts: true
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "autotools"
-        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     cache:
         key: windows-mingw64-build-step1-configure
@@ -535,11 +540,12 @@ windows-mingw64-build-step2-make:
         - job: windows-mingw64-build-step1-configure
           artifacts: true
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     cache:
         key: windows-mingw64-build-step2-make
@@ -561,6 +567,8 @@ windows-cygwin-build:
         - job: portable-source
           artifacts: true
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress cygwin
         - $Env:build_system = "autotools"
@@ -587,6 +595,8 @@ windows-cygwin-build-using-autogen:
     stage: build
     needs: []
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress cygwin
         - choco install --yes --no-progress --params "/InstallDir:C:\Python3" python3
@@ -894,13 +904,14 @@ windows-mingw32-cmake-build:
     stage: build
     needs: []
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror"
         - $Env:CXXFLAGS = "-Werror"
-        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
@@ -921,13 +932,14 @@ windows-mingw64-cmake-build:
     stage: build
     needs: []
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress msys2
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror"
         - $Env:CXXFLAGS = "-Werror"
-        - Add-MpPreference -ExclusionPath 'C:\tools\msys64'
         - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
@@ -948,6 +960,8 @@ windows-cygwin-cmake-build:
     stage: build
     needs: []
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress cygwin
         - $Env:build_system = "cmake"
