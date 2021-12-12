@@ -68,8 +68,7 @@ def test_gvpr_example(src):
   wd = Path(__file__).parent.parent.resolve()
 
   # run GVPR with the given script
-  with open(os.devnull, "rt") as nul:
-    subprocess.check_call(["gvpr", "-f", path], stdin=nul, cwd=wd)
+  subprocess.check_call(["gvpr", "-f", path], stdin=subprocess.DEVNULL, cwd=wd)
 
 @pytest.mark.skipif(shutil.which("gvpr") is None, reason="GVPR not available")
 # FIXME: Remove skip when
@@ -92,11 +91,8 @@ def test_gvpr_clustg():
   input = "digraph { N1; N2; N1 -> N2; N3; }"
 
   # run GVPR on this input
-  p = subprocess.Popen(["gvpr", "-f", path], stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE, cwd=wd, universal_newlines=True)
-  output, _ = p.communicate(input)
-
-  assert p.returncode == 0, "GVPR exited with non-zero status"
+  output = subprocess.check_output(["gvpr", "-f", path], input=input, cwd=wd,
+    universal_newlines=True)
 
   assert output.strip() == 'strict digraph "clust%1" {\n' \
                            '\tnode [_cnt=0];\n' \
