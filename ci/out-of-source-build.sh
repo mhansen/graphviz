@@ -3,9 +3,10 @@
 # this script does something close to the work flow end users may follow when
 # building Graphviz
 
-set -x
 set -e
 set -o pipefail
+set -u
+set -x
 
 # output some info for debugging
 uname -rms
