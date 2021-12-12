@@ -33,7 +33,7 @@ typedef struct {
 } nodeinfo_t;
 
 #define ON_STACK(ninfo,n) (ninfo[AGSEQ(n)].on_stack)
-#define DIST(ninfo,n) (ninfo[AGSEQ(n)].dist)
+#define DISTANCE(ninfo,n) (ninfo[AGSEQ(n)].dist)
 #define agrootof(n) ((n)->root)
 
 #ifdef HAVE_UNISTD_H
@@ -191,12 +191,12 @@ static int dfs(Agnode_t * n, nodeinfo_t* ninfo, int warn, estack_t* sp)
 			agnameof(v), agnameof(hd));
 		}
 	    }
-	    else if (DIST(ninfo,hd) == 0) {
-		DIST(ninfo,hd) = MIN(1,DIST(ninfo,v))+1;
+	    else if (DISTANCE(ninfo,hd) == 0) {
+		DISTANCE(ninfo,hd) = MIN(1,DISTANCE(ninfo,v))+1;
 	        break;
 	    }
-	    else if (DIST(ninfo,hd) == 1) {
-		DIST(ninfo,hd) = MIN(1,DIST(ninfo,v))+1;
+	    else if (DISTANCE(ninfo,hd) == 1) {
+		DISTANCE(ninfo,hd) = MIN(1,DISTANCE(ninfo,v))+1;
 	    }
 	}
 	if (next) {
@@ -216,7 +216,7 @@ static int dfs(Agnode_t * n, nodeinfo_t* ninfo, int warn, estack_t* sp)
 	    do_delete = 1;
         else {
             oldhd = hd;
-            if (DIST(ninfo, hd)>1) do_delete = 1;
+            if (DISTANCE(ninfo, hd)>1) do_delete = 1;
         }
         if(do_delete) {
             if(PrintRemovedEdges) fprintf(stderr,"removed edge: %s: \"%s\" -> \"%s\"\n"
