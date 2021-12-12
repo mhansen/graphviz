@@ -749,10 +749,8 @@ def test_1877():
   input = "graph {subgraph cluster_a {}; cluster_a -- b}"
 
   # fdp should be able to process this
-  p = subprocess.Popen(["fdp", "-o", os.devnull], stdin=subprocess.PIPE,
+  subprocess.run(["fdp", "-o", os.devnull], input=input, check=True,
     universal_newlines=True)
-  p.communicate(input)
-  assert p.returncode == 0
 
 def test_1880():
   """
@@ -1244,11 +1242,11 @@ def test_2131():
   input = "digraph { a -> b; }"
 
   # ask gv2gml what it thinks of this
-  p = subprocess.Popen(["gv2gml"], stdin=subprocess.PIPE,
-                       universal_newlines=True)
-  p.communicate(input)
-
-  assert p.returncode == 0, "gv2gml rejected a basic graph"
+  try:
+    subprocess.run(["gv2gml"], input=input, check=True,
+                   universal_newlines=True)
+  except subprocess.CalledProcessError as e:
+    raise RuntimeError("gv2gml rejected a basic graph") from e
 
 @pytest.mark.skipif(shutil.which("gvpr") is None,
                     reason="gvpr not available")
@@ -1452,7 +1450,4 @@ def test_gvmap_fclose():
           '}'
 
   # pass this through gvmap
-  p = subprocess.Popen(["gvmap"], stdin=subprocess.PIPE)
-  p.communicate(input.encode("utf-8"))
-
-  assert p.returncode == 0
+  subprocess.run(["gvmap"], input=input.encode("utf-8"), check=True)

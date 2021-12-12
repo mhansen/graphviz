@@ -3,7 +3,7 @@ Tests of various shape generation against reference examples.
 """
 
 from pathlib import Path
-from subprocess import Popen, PIPE
+import subprocess
 import sys
 
 # Import helper function to compare graphs from tests/regressions_tests
@@ -90,12 +90,11 @@ def generate_shape_graph(shape, output_type):
     Path("output").mkdir(parents=True)
 
   output_file = Path("output") / f"{shape}.{output_type}"
-  process = Popen(["dot", "-T" + output_type, "-o", output_file], stdin=PIPE)
-
   input_graph = f'graph G {{ a [label="" shape={shape}] }}'
-  process.communicate(input = input_graph.encode("utf_8"))
-
-  if process.wait() != 0:
+  try:
+    subprocess.run(["dot", f"-T{output_type}", "-o", output_file],
+                   input=input_graph.encode("utf_8"), check=True)
+  except subprocess.CalledProcessError:
     print(f"An error occurred while generating: {output_file}")
     sys.exit(1)
 

@@ -152,7 +152,7 @@ def test_edgepaint_options(arg: str):
 
   # run edgepaint on this
   args = ["edgepaint"] + arg.split(" ")
-  p = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True)
-  p.communicate(input)
-
-  assert p.returncode == 0, f"edgepaint rejected command line option '{arg}'"
+  try:
+    subprocess.run(args, input=input, check=True, universal_newlines=True)
+  except subprocess.CalledProcessError as e:
+    raise RuntimeError(f"edgepaint rejected command line option '{arg}'") from e
