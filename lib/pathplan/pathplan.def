@@ -1,10 +1,6 @@
 EXPORTS
 freePath
-make_polyline
 Pobsclose
 Pobsopen
 Pobspath
-Ppolybarriers
-Proutespline
-Pshortestpath
 Ptriangulate
