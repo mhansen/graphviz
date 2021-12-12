@@ -1,9 +1,6 @@
 EXPORTS
-area2
 directVis
-dist2
 freePath
-in_poly
 make_polyline
 makePath
 Pobsclose
@@ -15,4 +12,3 @@ Pshortestpath
 Ptriangulate
 ptVis
 visibility
-wind
