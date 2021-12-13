@@ -23,4 +23,4 @@ libedgepaint_C_la_SOURCES = edge_distinct_coloring.c  furtherest_point.c  inters
 liblab_gamut_la_LDFLAGS = -version-info $(LAB_GAMUT_VERSION) -no-undefined
 liblab_gamut_la_SOURCES = lab_gamut.c
 
-EXTRA_DIST = edgepaintlib.vcxproj* lab_gamut.vcxproj* lab_gamut.def
+EXTRA_DIST = edgepaintlib.vcxproj* lab_gamut.vcxproj*
