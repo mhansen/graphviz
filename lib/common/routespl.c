@@ -1092,31 +1092,24 @@ static void bend(pointf spl[4], pointf centroid)
  *
  * FIX: handle ports on boundary?
  */
-#define MAX_EDGE 20
 void 
 makeStraightEdge(graph_t * g, edge_t * e, int et, splineInfo* sinfo)
 {
     edge_t *e0;
-    edge_t** edges;
-    edge_t* elist[MAX_EDGE];
     int i, e_cnt;
 
     e_cnt = 1;
     e0 = e;
     while (e0 != ED_to_virt(e0) && (e0 = ED_to_virt(e0))) e_cnt++;
 
-    if (e_cnt <= MAX_EDGE)
-	edges = elist;
-    else
-	edges = N_NEW(e_cnt,edge_t*);
+    edge_t **edges = N_NEW(e_cnt, edge_t*);
     e0 = e;
     for (i = 0; i < e_cnt; i++) {
 	edges[i] = e0;
 	e0 = ED_to_virt(e0);
     }
     makeStraightEdges (g, edges, e_cnt, et, sinfo);
-    if (e_cnt > MAX_EDGE) free (edges);
-
+    free(edges);
 }
 
 void 
