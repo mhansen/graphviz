@@ -1,4 +1,4 @@
-FROM fedora:33
+FROM fedora:35
 
 COPY requirements.txt ./requirements.txt
 

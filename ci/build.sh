@@ -17,6 +17,16 @@ else
     # remove trailing text after actual version
     VERSION_ID=$( uname -r | sed "s/\([0-9\.]*\).*/\1/")
 fi
+
+# FIXME: the build system sets redundant RPATHs which trigger rpmbuild errors on
+# Fedora ≥ 35, so suppress this rpmbuild check
+# https://gitlab.com/graphviz/graphviz/-/issues/2163
+if [ "${ID}" = "fedora" ]; then
+  if [ ${VERSION_ID} -ge 35 ]; then
+    export QA_RPATHS=$(( 0x0001 ))
+  fi
+fi
+
 META_DATA_DIR=Metadata/${ID}/${VERSION_ID}
 mkdir -p ${META_DATA_DIR}
 DIR=$(pwd)/Packages/${ID}/${VERSION_ID}
