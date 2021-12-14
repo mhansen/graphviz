@@ -1,6 +1,5 @@
 EXPORTS
 add_box
-addPS
 arrow_bb
 arrow_flags
 arrow_gen
@@ -13,7 +12,6 @@ bind_shape
 ccwrotatep
 ccwrotatepf
 charsetToStr
-clearPM
 clip_and_install
 coord
 cwrotatep
@@ -34,8 +32,6 @@ find_user_shape
 flip_rec_box
 flip_rec_boxf
 free_label
-freePM
-freePS
 getdouble
 getsplinepoints
 graph_cleanup
@@ -57,11 +53,6 @@ gvusershape_file_access
 gvusershape_file_release
 gvwrite
 initMapData
-inPS
-insertPM
-updatePM
-insertPS
-isInPS
 isPolygon
 line_intersect
 lineToBox
@@ -69,12 +60,9 @@ make_label
 make_simple_label
 makeSelfEdge
 new_spline
-newPM
-newPS
 parse_style
 place_graph_label
 place_portlabel
-pointsOf
 pop_obj_state
 ptToLine2
 push_obj_state
@@ -91,7 +79,6 @@ selfRightSpace
 shape_clip
 shapeOf
 simpleSplineRoute
-sizeOf
 textfont_dict_open
 textfont_dict_close
 textspan_size
