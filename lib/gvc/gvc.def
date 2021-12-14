@@ -49,8 +49,6 @@ gvputc
 gvputs
 gvputs_nonascii
 gvputs_xml
-gvusershape_file_access
-gvusershape_file_release
 gvwrite
 initMapData
 isPolygon
