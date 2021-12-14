@@ -13,6 +13,7 @@ import re
 import shutil
 import subprocess
 import sys
+from typing import TextIO
 import platform
 import argparse
 import atexit
@@ -38,7 +39,7 @@ TMPINFILE = f"tmp{os.getpid()}.gv"
 TMPFILE1 = f"tmpnew{os.getpid()}"
 TMPFILE2 = f"tmpref{os.getpid()}"
 
-def readLine():
+def readLine(f3: TextIO):
   """
   Read single line, storing it in LINE.
   Returns the line on success, else returns None
@@ -48,26 +49,26 @@ def readLine():
     return LINE.strip()
   return None
 
-def skipLines():
+def skipLines(f3: TextIO):
   """
   Skip blank lines and comments (lines starting with #)
   Use first real line as the test name
   """
   while True:
-    LINE = readLine()
+    LINE = readLine(f3)
     if LINE is None:
       return None
     if LINE and not LINE.startswith("#"):
       return LINE
 
-def readSubtests():
+def readSubtests(f3: TextIO):
   """
   Subtests have the form: layout format optional_flags
   Store the 3 parts in the arrays ALG, FMT, FLAGS.
   Stop at a blank line
   """
   while True:
-    LINE = readLine()
+    LINE = readLine(f3)
     if LINE == "":
       return
     if not LINE.startswith("#"):
@@ -78,25 +79,25 @@ def readSubtests():
               "FLAGS": FLAGS0,
             }
 
-def readTest():
+def readTest(f3: TextIO):
   """
   Read and parse a test.
   """
   # read test name
-  LINE = skipLines()
+  LINE = skipLines(f3)
   if LINE is not None:
     TESTNAME = LINE
   else:
     return None
 
   # read input graph
-  LINE = skipLines()
+  LINE = skipLines(f3)
   if LINE is not None:
     GRAPH = LINE
   else:
     return None
 
-  SUBTESTS = list(readSubtests())
+  SUBTESTS = list(readSubtests(f3))
   return {
       "TESTNAME": TESTNAME,
       "GRAPH": GRAPH,
@@ -117,16 +118,15 @@ def doDiff(OUTFILE, testname, subtest_index, fmt):
   if platform.system() == "Windows" and \
      F in ["ps", "gv"] and \
      testname in ["clusters", "compound", "rootlabel"]:
-    print("Warning: Skipping {0} output comparison for test {1}:{2} : format "
-          "{3} because the order of clusters in gv or ps output is not "
-          "stable on Windows (#1789)"
-          .format(F, testname, subtest_index, fmt),
+    print(f"Warning: Skipping {F} output comparison for test "
+          f"{testname}:{subtest_index} : format {fmt} because the order of "
+          "clusters in gv or ps output is not stable on Windows (#1789)",
           file=sys.stderr)
     return
   if F in ["ps", "ps2"]:
 
-    with open(FILE1, "rt") as src:
-      with open(TMPFILE1, "wt") as dst:
+    with open(FILE1, "rt", encoding="latin-1") as src:
+      with open(TMPFILE1, "wt", encoding="latin-1") as dst:
         done_setup = False
         for line in src:
           if done_setup:
@@ -134,8 +134,8 @@ def doDiff(OUTFILE, testname, subtest_index, fmt):
           else:
             done_setup = re.match(r"%%End.*Setup", line) is not None
 
-    with open(FILE2, "rt") as src:
-      with open(TMPFILE2, "wt") as dst:
+    with open(FILE2, "rt", encoding="latin-1") as src:
+      with open(TMPFILE2, "wt", encoding="latin-1") as dst:
         done_setup = False
         for line in src:
           if done_setup:
@@ -145,9 +145,9 @@ def doDiff(OUTFILE, testname, subtest_index, fmt):
 
     returncode = 0 if filecmp.cmp(TMPFILE1, TMPFILE2) else -1
   elif F == "svg":
-    with open(FILE1) as f:
+    with open(FILE1, "rt", encoding="utf-8") as f:
       a = re.sub(r"^<!--.*-->$", "", f.read(), flags=re.MULTILINE)
-    with open(FILE2) as f:
+    with open(FILE2, "rt", encoding="utf-8") as f:
       b = re.sub(r"^<!--.*-->$", "", f.read(), flags=re.MULTILINE)
     returncode = 0 if a.strip() == b.strip() else -1
   elif F == "png":
@@ -162,7 +162,7 @@ def doDiff(OUTFILE, testname, subtest_index, fmt):
       [DIFFIMG, FILE1, FILE2, os.path.join(OUTHTML, f"dif_{OUTFILE}")],
     )
     if returncode != 0:
-      with open(os.path.join(OUTHTML, "index.html"), mode="a") as fd:
+      with open(os.path.join(OUTHTML, "index.html"), "at", encoding="utf-8") as fd:
         fd.write("<p>\n")
         shutil.copyfile(FILE2, os.path.join(OUTHTML, f"old_{OUTFILE}"))
         fd.write(f'<img src="old_{OUTFILE}" width="192" height="192">\n')
@@ -172,8 +172,8 @@ def doDiff(OUTFILE, testname, subtest_index, fmt):
     else:
       os.unlink(os.path.join(OUTHTML, f"dif_{OUTFILE}"))
   else:
-    with open(FILE2) as a:
-      with open(FILE1) as b:
+    with open(FILE2, "rt", encoding="utf-8") as a:
+      with open(FILE1, "rt", encoding="utf-8") as b:
         returncode = 0 if a.read().strip() == b.read().strip() else -1
   if returncode != 0:
     print(f"Test {testname}:{subtest_index} : == Failed == {OUTFILE}", file=sys.stderr)
@@ -190,7 +190,6 @@ def genOutname(name, alg, fmt):
   and append to basename
   If the last two parameters have been used before, add numeric suffix.
   """
-  global TESTTYPES
   fmt_split = fmt.split(":")
   if len(fmt_split) >= 2:
     F = fmt_split[0]
@@ -225,7 +224,7 @@ def doTest(test):
   if GRAPH == "=":
     INFILE = os.path.join(GRAPHDIR, f"{TESTNAME}.gv")
   elif GRAPH.startswith("graph") or GRAPH.startswith("digraph"):
-    with open(TMPINFILE, mode="w") as fd:
+    with open(TMPINFILE, mode="wt", encoding="utf-8") as fd:
       fd.write(GRAPH)
     INFILE = TMPINFILE
   elif os.path.splitext(GRAPH)[1] == ".gv":
@@ -292,13 +291,10 @@ def doTest(test):
             file=sys.stderr)
       continue
 
-    result = subprocess.Popen(
-       testcmd,
-       universal_newlines=True,
-       stderr = subprocess.PIPE,
-    )
-    _, errout = result.communicate()
-    RVAL = result.returncode
+    with subprocess.Popen(testcmd, universal_newlines=True,
+                          stderr=subprocess.PIPE) as result:
+      _, errout = result.communicate()
+      RVAL = result.returncode
 
     if errout:
       print(errout)
@@ -337,7 +333,7 @@ if not REFDIR:
   elif platform.system() == "Windows":
     REFDIR = "nshare"
   else:
-    print('Unrecognized system "{0}"'.format(platform.system()), file=sys.stderr)
+    print(f'Unrecognized system "{platform.system()}"', file=sys.stderr)
     REFDIR = "nshare"
 
 parser = argparse.ArgumentParser(description="Run regression tests.")
@@ -413,12 +409,12 @@ if not GENERATE:
 #    sys.exit(1)
 
 
-f3 = open(TESTFILE)
-while True:
-  TEST = readTest()
-  if TEST is None:
-    break
-  doTest(TEST)
+with open(TESTFILE, "rt", encoding="utf-8") as testfile:
+  while True:
+    TEST = readTest(testfile)
+    if TEST is None:
+      break
+    doTest(TEST)
 if NOOP:
   print(f"No. tests: {TOT_CNT}", file=sys.stderr)
 elif GENERATE:

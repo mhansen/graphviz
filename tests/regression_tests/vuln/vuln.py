@@ -4,7 +4,7 @@ Some legacy tests against previous bugs.
 FIXME: this should probably be integrated into ../../../rtest/test_regression.py
 """
 
-from subprocess import Popen, PIPE
+import subprocess
 import sys
 from pathlib import Path
 
@@ -30,9 +30,10 @@ def generate_vuln_graph(vulnfile, output_type):
 
   output_file = Path("output") / f"{vulnfile}.{output_type[0]}"
   input_file = Path("input") / f"{vulnfile}.dot"
-  process = Popen(["dot", "-T" + output_type[1], "-o", output_file, input_file], stdin=PIPE)
-
-  if process.wait() < 0:
+  try:
+    subprocess.check_call(["dot", f"-T{output_type[1]}", "-o", output_file,
+                           input_file])
+  except subprocess.CalledProcessError:
     print(f"An error occurred while generating: {output_file}")
     sys.exit(1)
 

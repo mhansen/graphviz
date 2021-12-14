@@ -59,9 +59,9 @@ def test_regression_failure():
   """
 
   os.chdir(Path(__file__).resolve().parent)
-  result = subprocess.Popen([sys.executable, "rtest.py"],
-                            stderr=subprocess.PIPE, universal_newlines=True)
-  text = result.communicate()[1]
+  with subprocess.Popen([sys.executable, "rtest.py"], stderr=subprocess.PIPE,
+                        universal_newlines=True) as result:
+    text = result.communicate()[1]
   print(text)
   assert "Layout failures: 0" in text
 # FIXME: re-enable when all tests pass on all platforms
@@ -295,11 +295,11 @@ def test_793():
 
     # ask the VRML back end to handle a simple graph, using the above as the
     # current working directory
-    p = subprocess.Popen(["dot", "-Tvrml", "-o", os.devnull], cwd=t)
-    p.communicate("digraph { a -> b; }")
+    with subprocess.Popen(["dot", "-Tvrml", "-o", os.devnull], cwd=t) as p:
+      p.communicate("digraph { a -> b; }")
 
-  # Graphviz should not have caused a segfault
-  assert p.returncode != -signal.SIGSEGV, "Graphviz segfaulted"
+      # Graphviz should not have caused a segfault
+      assert p.returncode != -signal.SIGSEGV, "Graphviz segfaulted"
 
 def test_797():
   """
@@ -398,11 +398,11 @@ def test_1411():
   assert input.exists(), "unexpectedly missing test case"
 
   # process it with Graphviz (should fail)
-  p = subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull, input],
-    stderr=subprocess.PIPE, universal_newlines=True)
-  _, output = p.communicate()
+  with subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull, input],
+                        stderr=subprocess.PIPE, universal_newlines=True) as p:
+    _, output = p.communicate()
 
-  assert p.returncode != 0, "Graphviz accepted broken input"
+    assert p.returncode != 0, "Graphviz accepted broken input"
 
   assert "syntax error in line 17 near '\\'" in output, \
     'error message did not identify correct location'
@@ -433,11 +433,11 @@ def test_1444():
   assert input1.exists(), "unexpectedly missing test case"
 
   # ask Graphviz to process it
-  p = subprocess.Popen(["dot", "-Tsvg", input1], stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE, universal_newlines=True)
-  stdout1, stderr = p.communicate()
+  with subprocess.Popen(["dot", "-Tsvg", input1], stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE, universal_newlines=True) as p:
+    stdout1, stderr = p.communicate()
 
-  assert p.returncode == 0, "failed to process a headport edge"
+    assert p.returncode == 0, "failed to process a headport edge"
 
   assert stderr.strip() == "", "emitted an error for a legal graph"
 
@@ -446,11 +446,11 @@ def test_1444():
   assert input2.exists(), "unexpectedly missing test case"
 
   # process it identically
-  p = subprocess.Popen(["dot", "-Tsvg", input2], stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE, universal_newlines=True)
-  stdout2, stderr = p.communicate()
+  with subprocess.Popen(["dot", "-Tsvg", input2], stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE, universal_newlines=True) as p:
+    stdout2, stderr = p.communicate()
 
-  assert p.returncode == 0, "failed to process a headport edge"
+    assert p.returncode == 0, "failed to process a headport edge"
 
   assert stderr.strip() == "", "emitted an error for a legal graph"
 
@@ -464,14 +464,14 @@ def test_1449():
   """
 
   # start Graphviz
-  p = subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull],
-    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-    universal_newlines=True)
+  with subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull],
+                        stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE, universal_newlines=True) as p:
 
-  # pass it some input that uses the SVG color scheme
-  _, stderr = p.communicate('graph g { colorscheme="svg"; }')
+    # pass it some input that uses the SVG color scheme
+    _, stderr = p.communicate('graph g { colorscheme="svg"; }')
 
-  assert p.returncode == 0, "Graphviz exited with non-zero status"
+    assert p.returncode == 0, "Graphviz exited with non-zero status"
 
   assert stderr.strip() == "", "SVG color scheme use caused warnings"
 
@@ -489,12 +489,13 @@ def test_1594():
   input = "1594.gvpr"
 
   # run GVPR with our (malformed) input program
-  p = subprocess.Popen(["gvpr", "-f", input], stdin=subprocess.PIPE,
-    cwd=os.path.join(os.path.dirname(__file__)),
-    stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-  _, stderr = p.communicate()
+  with subprocess.Popen(["gvpr", "-f", input], stdin=subprocess.PIPE,
+                        cwd=os.path.join(os.path.dirname(__file__)),
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                        universal_newlines=True) as p:
+    _, stderr = p.communicate()
 
-  assert p.returncode != 0, "GVPR did not reject malformed program"
+    assert p.returncode != 0, "GVPR did not reject malformed program"
 
   assert "line 3:" in stderr, \
     "GVPR did not identify correct line of syntax error"
@@ -749,10 +750,8 @@ def test_1877():
   input = "graph {subgraph cluster_a {}; cluster_a -- b}"
 
   # fdp should be able to process this
-  p = subprocess.Popen(["fdp", "-o", os.devnull], stdin=subprocess.PIPE,
+  subprocess.run(["fdp", "-o", os.devnull], input=input, check=True,
     universal_newlines=True)
-  p.communicate(input)
-  assert p.returncode == 0
 
 def test_1880():
   """
@@ -806,12 +805,13 @@ def test_html(src: Path):
   """
 
   # validate the file
-  p = subprocess.Popen(["xmllint", "--nonet", "--noout", "--html", "--valid",
-    src], stderr=subprocess.PIPE, universal_newlines=True)
-  _, stderr = p.communicate()
+  with subprocess.Popen(["xmllint", "--nonet", "--noout", "--html", "--valid",
+                         src], stderr=subprocess.PIPE,
+                        universal_newlines=True) as p:
+    _, stderr = p.communicate()
 
-  # expect it to succeed
-  assert p.returncode == 0
+    # expect it to succeed
+    assert p.returncode == 0
   assert stderr == ""
 
 def test_1855():
@@ -825,7 +825,7 @@ def test_1855():
   assert src.exists(), "unexpectedly missing test case"
 
   # run it through Graphviz
-  svg = subprocess.check_output(["dot", "-Tsvg", src], universal_newlines=True)
+  svg = dot("svg", src)
 
   # find the graph element
   root = ET.fromstring(svg)
@@ -901,11 +901,11 @@ def test_1906():
   assert input.exists(), "unexpectedly missing test case"
 
   # use Circo to translate it to DOT
-  p = subprocess.Popen(["dot", "-Kcirco", "-Tgv", "-o", os.devnull, input],
-    stderr=subprocess.PIPE, universal_newlines=True)
-  _, stderr = p.communicate()
+  with subprocess.Popen(["dot", "-Kcirco", "-Tgv", "-o", os.devnull, input],
+                        stderr=subprocess.PIPE, universal_newlines=True) as p:
+    _, stderr = p.communicate()
 
-  assert p.returncode != 0, "graph that generates overflow was accepted"
+    assert p.returncode != 0, "graph that generates overflow was accepted"
 
   assert "area too large" in stderr, "missing/incorrect error message"
 
@@ -983,10 +983,11 @@ def test_1913():
     """
     run Dot with the given input and return its exit status and stderr
     """
-    p = subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull],
-      stdin=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    _, stderr = p.communicate(input)
-    return p.returncode, stderr
+    with subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull],
+                          stdin=subprocess.PIPE, stderr=subprocess.PIPE,
+                          universal_newlines=True) as p:
+      _, stderr = p.communicate(input)
+      return p.returncode, stderr
 
   # Graphviz should accept all legal values for this attribute
   for align in ("left", "right", "center"):
@@ -1077,10 +1078,11 @@ def test_1971():
   # run edgepaint with an invalid option, `-rabbit`, that happens to have the
   # same first character as valid options
   args = ["edgepaint", "-rabbit"]
-  p = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True)
-  p.communicate(input)
+  with subprocess.Popen(args, stdin=subprocess.PIPE,
+                        universal_newlines=True) as p:
+    p.communicate(input)
 
-  assert p.returncode != 0, "edgepaint incorrectly accepted '-rabbit'"
+    assert p.returncode != 0, "edgepaint incorrectly accepted '-rabbit'"
 
 @pytest.mark.xfail(strict=not is_ndebug_defined()) # FIXME
 def test_1990():
@@ -1130,11 +1132,12 @@ def test_2078():
           "}"
 
   # run it through Graphviz
-  p = subprocess.Popen(["dot", "-Tcanon", "-o", os.devnull],
-    stdin=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-  _, stderr = p.communicate(input)
+  with subprocess.Popen(["dot", "-Tcanon", "-o", os.devnull],
+                        stdin=subprocess.PIPE, stderr=subprocess.PIPE,
+                        universal_newlines=True) as p:
+    _, stderr = p.communicate(input)
 
-  assert p.returncode != 0, "layout on subgraph was incorrectly accepted"
+    assert p.returncode != 0, "layout on subgraph was incorrectly accepted"
 
   assert "layout attribute is invalid except on the root graph" in stderr, \
     "expected warning not found"
@@ -1147,12 +1150,12 @@ def test_2078():
           "}"
 
   # ensure this one does not trigger warnings
-  p = subprocess.Popen(["dot", "-Tcanon", "-o", os.devnull],
-    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-    universal_newlines=True)
-  stdout, stderr = p.communicate(input)
+  with subprocess.Popen(["dot", "-Tcanon", "-o", os.devnull],
+                        stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE, universal_newlines=True) as p:
+    stdout, stderr = p.communicate(input)
 
-  assert p.returncode == 0, "correct layout use was rejected"
+    assert p.returncode == 0, "correct layout use was rejected"
 
   assert stdout.strip() == "", "unexpected output"
   assert "layout attribute is invalid except on the root graph" not in stderr, \
@@ -1244,11 +1247,11 @@ def test_2131():
   input = "digraph { a -> b; }"
 
   # ask gv2gml what it thinks of this
-  p = subprocess.Popen(["gv2gml"], stdin=subprocess.PIPE,
-                       universal_newlines=True)
-  p.communicate(input)
-
-  assert p.returncode == 0, "gv2gml rejected a basic graph"
+  try:
+    subprocess.run(["gv2gml"], input=input, check=True,
+                   universal_newlines=True)
+  except subprocess.CalledProcessError as e:
+    raise RuntimeError("gv2gml rejected a basic graph") from e
 
 @pytest.mark.skipif(shutil.which("gvpr") is None,
                     reason="gvpr not available")
@@ -1452,7 +1455,4 @@ def test_gvmap_fclose():
           '}'
 
   # pass this through gvmap
-  p = subprocess.Popen(["gvmap"], stdin=subprocess.PIPE)
-  p.communicate(input.encode("utf-8"))
-
-  assert p.returncode == 0
+  subprocess.run(["gvmap"], input=input.encode("utf-8"), check=True)
