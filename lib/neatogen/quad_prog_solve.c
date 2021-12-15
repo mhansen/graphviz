@@ -482,9 +482,9 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
 							e->lev[u]), w = 2;
 		float avgPos = sum / w;
 		float pos;
-		boolean finished;
+		bool finished;
 		do {
-		    finished = TRUE;
+		    finished = true;
 		    if (ui < endOfLevel) {
 			u = ordering[ui];
 			pos = place[u] - levels_gap * e->lev[u];
@@ -493,7 +493,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
 			    w++;
 			    sum += pos;
 			    avgPos = sum / w;
-			    finished = FALSE;
+			    finished = false;
 			}
 		    }
 
@@ -505,7 +505,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
 			    w++;
 			    sum += pos;
 			    avgPos = sum / w;
-			    finished = FALSE;
+			    finished = false;
 			}
 		    }
 		} while (!finished);
