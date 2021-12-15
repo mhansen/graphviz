@@ -26,6 +26,7 @@
 #include <ingraphs/ingraphs.h>
 #include <pack/pack.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #if defined(_WIN32)
   __declspec(dllimport)
@@ -661,7 +662,7 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
     Dt_t *nnames;		/* dict of used node names */
     Agsym_t *G_bb;
     Agsym_t *rv;
-    boolean doWarn = TRUE;
+    bool doWarn = true;
 
     if (verbose)
 	fprintf(stderr, "Creating clone graph\n");
@@ -699,7 +700,7 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
 			"Warning: node %s in graph[%d] %s already defined\n",
 			agnameof(n), i, agnameof(g));
 		fprintf(stderr, "Some nodes will be renamed.\n");
-		doWarn = FALSE;
+		doWarn = false;
 	    }
 	    np = agnode(root, xName(nnames, agnameof(n)), 1);
 	    agbindrec (np, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
