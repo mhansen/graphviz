@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -48,7 +50,7 @@ extern "C" {
 				 double ***CC);
     extern void mult_sparse_dense_mat_transpose(vtx_data *, double **, int,
 						int, float ***);
-    extern int power_iteration(double **, int, int, double **, double *, int);
+    extern bool power_iteration(double **, int, int, double **, double *, int);
 
 
 /*****************************

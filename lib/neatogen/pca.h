@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,7 +19,7 @@ extern "C" {
 #include <neatogen/defs.h>
 
     extern void PCA_alloc(DistType **, int, int, double **, int);
-    extern boolean iterativePCA_1D(double **, int, int, double *);
+    extern bool iterativePCA_1D(double **, int, int, double *);
 
 #ifdef __cplusplus
 }

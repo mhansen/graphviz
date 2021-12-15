@@ -11,14 +11,14 @@
 
 #include <neatogen/matrix_ops.h>
 #include <common/memory.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
 static double p_iteration_threshold = 1e-3;
 
-int
-power_iteration(double **square_mat, int n, int neigs, double **eigs,
+bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 		double *evals, int initialize)
 {
     /* compute the 'neigs' top eigenvectors of 'square_mat' using power iteration */
