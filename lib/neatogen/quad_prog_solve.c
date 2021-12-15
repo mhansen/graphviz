@@ -11,6 +11,7 @@
 #include <neatogen/digcola.h>
 #ifdef DIGCOLA
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
@@ -118,7 +119,7 @@ constrained_majorization_new(CMajEnv * e, float *b, float **coords,
     int num_levels = e->num_levels;
     int i, j;
     float new_place_i;
-    boolean converged = FALSE;
+    bool converged = false;
     float upper_bound, lower_bound;
     int node;
     int left, right;
@@ -179,7 +180,7 @@ constrained_majorization_new(CMajEnv * e, float *b, float **coords,
     }
 
     for (counter = 0; counter < max_iterations && !converged; counter++) {
-	converged = TRUE;
+	converged = true;
 	lower_bound = -1e9;	/* no lower bound for first level */
 	for (left = 0; left < n; left = right) {
 	    int best_i;
