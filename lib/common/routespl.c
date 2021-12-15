@@ -312,18 +312,18 @@ limitBoxes (boxf* boxes, int boxn, const pointf *pps, int pn, int delta)
 	    sp[1] = pps[splinepi + 1];
 	    sp[2] = pps[splinepi + 2];
 	    sp[3] = pps[splinepi + 3];
-	    sp[0].x = sp[0].x + t * (sp[1].x - sp[0].x);
-	    sp[0].y = sp[0].y + t * (sp[1].y - sp[0].y);
-	    sp[1].x = sp[1].x + t * (sp[2].x - sp[1].x);
-	    sp[1].y = sp[1].y + t * (sp[2].y - sp[1].y);
-	    sp[2].x = sp[2].x + t * (sp[3].x - sp[2].x);
-	    sp[2].y = sp[2].y + t * (sp[3].y - sp[2].y);
- 	    sp[0].x = sp[0].x + t * (sp[1].x - sp[0].x);
-	    sp[0].y = sp[0].y + t * (sp[1].y - sp[0].y);
-	    sp[1].x = sp[1].x + t * (sp[2].x - sp[1].x);
-	    sp[1].y = sp[1].y + t * (sp[2].y - sp[1].y);
-	    sp[0].x = sp[0].x + t * (sp[1].x - sp[0].x);
-	    sp[0].y = sp[0].y + t * (sp[1].y - sp[0].y);
+	    sp[0].x += t * (sp[1].x - sp[0].x);
+	    sp[0].y += t * (sp[1].y - sp[0].y);
+	    sp[1].x += t * (sp[2].x - sp[1].x);
+	    sp[1].y += t * (sp[2].y - sp[1].y);
+	    sp[2].x += t * (sp[3].x - sp[2].x);
+	    sp[2].y += t * (sp[3].y - sp[2].y);
+	    sp[0].x += t * (sp[1].x - sp[0].x);
+	    sp[0].y += t * (sp[1].y - sp[0].y);
+	    sp[1].x += t * (sp[2].x - sp[1].x);
+	    sp[1].y += t * (sp[2].y - sp[1].y);
+	    sp[0].x += t * (sp[1].x - sp[0].x);
+	    sp[0].y += t * (sp[1].y - sp[0].y);
 	    for (bi = 0; bi < boxn; bi++) {
 /* this tested ok on 64bit machines, but on 32bit we need this FUDGE
  *     or graphs/directed/records.gv fails */
