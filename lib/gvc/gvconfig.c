@@ -286,7 +286,7 @@ char * gvconfig_libdir(GVC_t * gvc)
 {
     static char line[BSZ];
     static char *libdir;
-    static boolean dirShown = 0; 
+    static bool dirShown = false;
 
     if (!libdir) {
         libdir=getenv("GVBINDIR");
@@ -376,7 +376,7 @@ char * gvconfig_libdir(GVC_t * gvc)
     }
     if (gvc->common.verbose && !dirShown) {
 	fprintf (stderr, "libdir = \"%s\"\n", (libdir ? libdir : "<null>"));
-	dirShown = 1;
+	dirShown = true;
     }
     return libdir;
 }
