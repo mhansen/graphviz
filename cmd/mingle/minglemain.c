@@ -385,7 +385,8 @@ bundle (Agraph_t* g, opts_t* opts)
 	int rv = 0;
 
 	if (checkG(g)) {
-		agerr (AGERR, "Graph %s (%s) contains loops or multiedges\n");
+		agerr(AGERR, "Graph %s (%s) contains loops or multiedges\n", agnameof(g),
+		      fname);
 		return 1;
 	}
     initDotIO(g);
