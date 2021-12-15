@@ -411,7 +411,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
     int *ordering = e->ordering;
     int *levels = e->levels;
     int num_levels = e->num_levels;
-    boolean converged = FALSE;
+    bool converged = false;
     float *g = e->fArray1;
     float *old_place = e->fArray2;
     float *d = e->fArray4;
@@ -438,7 +438,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
     for (counter = 0; counter < max_iterations && !converged; counter++) {
 	float alpha;
 	float numerator = 0, denominator = 0, r;
-	converged = TRUE;
+	converged = true;
 	/* find steepest descent direction */
 	for (i = 0; i < e->n; i++) {
 	    old_place[i] = place[i];
@@ -554,7 +554,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
 	prev_stress = stress;
 #endif
 	if (test > quad_prog_tol) {
-	    converged = FALSE;
+	    converged = false;
 	}
     }
 #ifdef CONMAJ_LOGGING
