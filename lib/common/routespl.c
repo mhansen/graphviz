@@ -1071,8 +1071,8 @@ static void bend(pointf spl[4], pointf centroid)
 
     midpt.x = (spl[0].x + spl[3].x)/2.0;
     midpt.y = (spl[0].y + spl[3].y)/2.0;
-    dx = (spl[3].x - spl[0].x);
-    dy = (spl[3].y - spl[0].y);
+    dx = spl[3].x - spl[0].x;
+    dy = spl[3].y - spl[0].y;
     dist = hypot(dx, dy);
     r = dist/5.0;
     {
