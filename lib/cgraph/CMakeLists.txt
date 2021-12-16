@@ -10,6 +10,7 @@ endif()
 add_library(cgraph SHARED
     # Header files
     agxbuf.h
+    bitarray.h
     cghdr.h
     cgraph.h
     itos.h

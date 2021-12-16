@@ -98,6 +98,7 @@ win_flex -oscan.c scan.l</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="agxbuf.h" />
+    <ClInclude Include="bitarray.h" />
     <ClInclude Include="cghdr.h" />
     <ClInclude Include="cgraph.h" />
     <ClInclude Include="itos.h" />
