@@ -109,18 +109,15 @@ G_penwidth
 G_peripheries
 G_visitedfillcolor
 G_visitedpencolor
-gcalloc
 getdouble
 pack_graph
 getPack
 getPackMode
 getsplinepoints
 get_inputscale
-gmalloc
 graph_cleanup
 graph_init
 graphviz_errors
-grealloc
 gv_cleanup_edge
 gv_cleanup_node
 gv_free_splines
@@ -293,8 +290,6 @@ Version
 write_plain
 xml_escape
 Y_invert
-zmalloc
-zrealloc
 colorxlate
 gvContextPlugins
 gvferror
