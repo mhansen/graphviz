@@ -200,7 +200,7 @@ static void initPos(Agraph_t * g)
     }
 }
 
-static void ptest_nodesize(node_t * n, boolean flip)
+static void ptest_nodesize(node_t * n)
 {
     int w;
 
@@ -231,7 +231,7 @@ static void ptest_initNode(node_t * n)
 			     n->graph);
     ND_shape(n) = bind_shape(late_nnstring(n, N_shape, DEFAULT_NODESHAPE));
     ND_shape(n)->initfn(n);	/* ### need to quantize ? */
-    ptest_nodesize(n, n->GD_flip(graph));
+    ptest_nodesize(n);
 
 
 }
