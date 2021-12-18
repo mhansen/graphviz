@@ -44,12 +44,6 @@ static inline bool streq(const char *a, const char *b) {
 
 #define NOTUSED(var)	(void) var
 
-#define NILgraph			NIL(Agraph_t*)
-#define NILnode				NIL(Agnode_t*)
-#define NILedge				NIL(Agedge_t*)
-#define NILsym				NIL(Agsym_t*)
-#define NILstr				NIL(char*)
-
 #define	SUCCESS				0
 #define FAILURE				-1
 #define LOCALNAMEPREFIX		'%'
