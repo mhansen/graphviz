@@ -27,7 +27,6 @@ extern "C" {
     extern void add_edge(edgelist * list, Agedge_t * e);
     extern void remove_edge(edgelist * list, Agedge_t * e);
     extern void free_edgelist(edgelist * list);
-    extern int size_edgelist(edgelist * list);
 #ifdef DEBUG
     extern void print_edge(edgelist *);
 #endif

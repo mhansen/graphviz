@@ -90,8 +90,3 @@ void print_edge(edgelist * list)
     fputs("\n", stderr);
 }
 #endif
-
-int size_edgelist(edgelist * list)
-{
-    return dtsize(list);
-}
