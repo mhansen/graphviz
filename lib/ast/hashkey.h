@@ -42,9 +42,6 @@ extern "C" {
 #define HASHNKEY4(n,c4,c3,c2,c1)	HASHKEY5((n)+'a',c4,c3,c2,c1)
 #define HASHNKEY5(n,c5,c4,c3,c2,c1)	HASHKEY6((n)+'a',c5,c4,c3,c2,c1)
 
-
-    extern long strkey(const char *);
-
 #undef	extern
 
 #ifdef __cplusplus
