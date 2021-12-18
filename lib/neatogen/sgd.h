@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cgraph/bitarray.h>
 #include <stddef.h>
 
 #ifdef __cplusplus
@@ -14,7 +15,7 @@ typedef struct term_sgd {
 typedef struct graph_sgd {
     size_t n; // number of nodes
     int *sources; // index of first edge in *targets for each node (length n+1)
-    bool *pinneds; // whether a node is fixed or not
+    bitarray_t pinneds; // whether a node is fixed or not
 
     int *targets; // index of targets for each node (length sources[n])
     float *weights; // weights of edges (length sources[n])

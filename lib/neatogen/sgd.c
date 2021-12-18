@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <cgraph/bitarray.h>
 #include <limits.h>
 #include <neatogen/neato.h>
 #include <neatogen/sgd.h>
@@ -51,7 +52,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
     }
     graph_sgd *graph = N_NEW(1, graph_sgd);
     graph->sources = N_NEW(n_nodes+1, int);
-    graph->pinneds = N_NEW(n_nodes, bool);
+    bitarray_resize_or_exit(&graph->pinneds, n_nodes);
     graph->targets = N_NEW(n_edges, int);
     graph->weights = N_NEW(n_edges, float);
 
@@ -63,7 +64,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
     for (np = agfstnode(G); np; np = agnxtnode(G,np)) {
         assert(n_edges <= INT_MAX);
         graph->sources[n_nodes] = (int)n_edges;
-        graph->pinneds[n_nodes] = isFixed(np);
+        bitarray_set(graph->pinneds, n_nodes, isFixed(np));
         for (ep = agfstedge(G, np); ep; ep = agnxtedge(G, ep, np)) {
             if (agtail(ep) == aghead(ep)) { // ignore self-loops and double edges
                 continue;
@@ -138,7 +139,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
 }
 static void free_adjacency(graph_sgd *graph) {
     free(graph->sources);
-    free(graph->pinneds);
+    bitarray_reset(&graph->pinneds);
     free(graph->targets);
     free(graph->weights);
     free(graph);

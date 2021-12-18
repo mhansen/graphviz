@@ -18,6 +18,7 @@
 ******************************************/
 
 #include <assert.h>
+#include <cgraph/bitarray.h>
 #include <common/memory.h>
 #include <float.h>
 #include <neatogen/bfs.h>
@@ -389,7 +390,7 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
         }
         // if the target is fixed then always create a term as shortest paths are not calculated from there
         // if not fixed then only create a term if the target index is lower
-        if (graph->pinneds[closest] || closest<source) {
+        if (bitarray_get(graph->pinneds, closest) || closest<source) {
             terms[offset].i = source;
             terms[offset].j = closest;
             terms[offset].d = d;
