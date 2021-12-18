@@ -17,10 +17,6 @@ extern "C" {
 #include <fdpgen/fdp.h>
 #include <fdpgen/xlayout.h>
 
-typedef enum {
-  seed_unset, seed_val, seed_time, seed_regular
-} seedMode;
-
     extern void fdp_initParams(graph_t *);
     extern void fdp_tLayout(graph_t *, xparams *);
 
