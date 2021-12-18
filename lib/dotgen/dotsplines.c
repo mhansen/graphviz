@@ -1405,7 +1405,7 @@ makeFlatEnd (graph_t* g, spline_info_t* sp, path* P, node_t* n, edge_t* e, pathe
  */
 static void
 makeBottomFlatEnd (graph_t* g, spline_info_t* sp, path* P, node_t* n, edge_t* e, 
-	pathend_t* endp, boolean isBegin)
+	pathend_t* endp, bool isBegin)
 {
     boxf b;
 
@@ -1518,8 +1518,8 @@ make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges,
     stepx = ((double)sp->Multisep) / (cnt + 1); 
     stepy = vspace / (cnt+1);
 
-    makeBottomFlatEnd (g, sp, P, tn, e, &tend, TRUE);
-    makeBottomFlatEnd (g, sp, P, hn, e, &hend, FALSE);
+    makeBottomFlatEnd (g, sp, P, tn, e, &tend, true);
+    makeBottomFlatEnd (g, sp, P, hn, e, &hend, false);
 
     for (i = 0; i < cnt; i++) {
 	boxf b;
