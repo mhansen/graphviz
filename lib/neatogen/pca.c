@@ -12,6 +12,7 @@
 #include <neatogen/matrix_ops.h>
 #include <neatogen/pca.h>
 #include <neatogen/closest.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -72,9 +73,7 @@ PCA_alloc(DistType ** coords, int dim, int n, double **new_coords,
     free(DD);
 }
 
-boolean
-iterativePCA_1D(double **coords, int dim, int n, double *new_direction)
-{
+bool iterativePCA_1D(double **coords, int dim, int n, double *new_direction) {
     vtx_data *laplacian;
     float **mat1 = NULL;
     double **mat = NULL;

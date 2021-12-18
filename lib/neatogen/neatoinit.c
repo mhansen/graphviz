@@ -27,6 +27,7 @@
 #include <common/pointset.h>
 #include <neatogen/sgd.h>
 #include <cgraph/strcasecmp.h>
+#include <stdbool.h>
 
 #ifndef HAVE_SRAND48
 #define srand48 srand
@@ -262,7 +263,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
     bezier *newspl;
     int more = 1;
     int stype, etype;
-    static boolean warned;
+    static bool warned;
 
     pos = agxget(e, E_pos);
     if (*pos == '\0')
@@ -293,7 +294,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	if (n < 4 || n % 3 != 1) {
 	    gv_free_splines(e);
 	    if (!warned) {
-		warned = 1;
+		warned = true;
 		agerr(AGWARN, "pos attribute for edge (%s,%s) doesn't have 3n+1 points\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	    }
 	    return 0;
@@ -304,7 +305,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    i = sscanf(pos, "%lf,%lf%n", &x, &y, &nc);
 	    if (i < 2) {
 		if (!warned) {
-		    warned = 1;
+		    warned = true;
 		    agerr(AGWARN, "syntax error in pos attribute for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 		}
 		free(ps);

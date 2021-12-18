@@ -11,6 +11,7 @@
 #include <neatogen/digcola.h>
 #ifdef DIGCOLA
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
@@ -118,7 +119,7 @@ constrained_majorization_new(CMajEnv * e, float *b, float **coords,
     int num_levels = e->num_levels;
     int i, j;
     float new_place_i;
-    boolean converged = FALSE;
+    bool converged = false;
     float upper_bound, lower_bound;
     int node;
     int left, right;
@@ -179,7 +180,7 @@ constrained_majorization_new(CMajEnv * e, float *b, float **coords,
     }
 
     for (counter = 0; counter < max_iterations && !converged; counter++) {
-	converged = TRUE;
+	converged = true;
 	lower_bound = -1e9;	/* no lower bound for first level */
 	for (left = 0; left < n; left = right) {
 	    int best_i;
@@ -410,7 +411,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
     int *ordering = e->ordering;
     int *levels = e->levels;
     int num_levels = e->num_levels;
-    boolean converged = FALSE;
+    bool converged = false;
     float *g = e->fArray1;
     float *old_place = e->fArray2;
     float *d = e->fArray4;
@@ -437,7 +438,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
     for (counter = 0; counter < max_iterations && !converged; counter++) {
 	float alpha;
 	float numerator = 0, denominator = 0, r;
-	converged = TRUE;
+	converged = true;
 	/* find steepest descent direction */
 	for (i = 0; i < e->n; i++) {
 	    old_place[i] = place[i];
@@ -481,9 +482,9 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
 							e->lev[u]), w = 2;
 		float avgPos = sum / w;
 		float pos;
-		boolean finished;
+		bool finished;
 		do {
-		    finished = TRUE;
+		    finished = true;
 		    if (ui < endOfLevel) {
 			u = ordering[ui];
 			pos = place[u] - levels_gap * e->lev[u];
@@ -492,7 +493,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
 			    w++;
 			    sum += pos;
 			    avgPos = sum / w;
-			    finished = FALSE;
+			    finished = false;
 			}
 		    }
 
@@ -504,7 +505,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
 			    w++;
 			    sum += pos;
 			    avgPos = sum / w;
-			    finished = FALSE;
+			    finished = false;
 			}
 		    }
 		} while (!finished);
@@ -553,7 +554,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
 	prev_stress = stress;
 #endif
 	if (test > quad_prog_tol) {
-	    converged = FALSE;
+	    converged = false;
 	}
     }
 #ifdef CONMAJ_LOGGING
@@ -579,7 +580,7 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
     int *levels = e->levels;
     int num_levels = e->num_levels;
     float new_place_i;
-    boolean converged = FALSE;
+    bool converged = false;
     float upper_bound, lower_bound;
     int node;
     int left, right;
@@ -639,7 +640,7 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
     gap = e->fArray4;
 
     for (counter = 0; counter < max_iterations && !converged; counter++) {
-	converged = TRUE;
+	converged = true;
 	lower_bound = -1e9;	/* no lower bound for first level */
 	for (left = 0; left < n; left = right) {
 	    int best_i;

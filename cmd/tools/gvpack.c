@@ -26,6 +26,7 @@
 #include <ingraphs/ingraphs.h>
 #include <pack/pack.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #if defined(_WIN32)
   __declspec(dllimport)
@@ -71,7 +72,7 @@ static Agdesc_t kind;		/* type of graph */
 static int G_cnt;		/* No. of -G arguments */
 static int G_sz;		/* Storage size for -G arguments */
 static attr_t *G_args;		/* Storage for -G arguments */
-static int doPack;              /* Do packing if true */
+static bool doPack;              /* Do packing if true */
 static char* gname = "root";
 
 #define NEWNODE(n) ((node_t*)ND_alg(n))
@@ -283,8 +284,7 @@ static void init_node_edge(Agraph_t * g)
  * libcommon. If fill is true, we use init_nop (neato -n) to
  * read in attributes relevant to the layout.
  */
-static void init_graph(Agraph_t * g, boolean fill, GVC_t* gvc)
-{
+static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
     int d;
     node_t *n;
     edge_t *e;
@@ -661,7 +661,7 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
     Dt_t *nnames;		/* dict of used node names */
     Agsym_t *G_bb;
     Agsym_t *rv;
-    boolean doWarn = TRUE;
+    bool doWarn = true;
 
     if (verbose)
 	fprintf(stderr, "Creating clone graph\n");
@@ -680,7 +680,7 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
     }
 
     /* do common initialization. This will handle root's label. */
-    init_graph(root, FALSE, gvc);
+    init_graph(root, false, gvc);
     State = GVSPLINES;
 
     gnames = dtopen(&pairdisc, Dtoset);
@@ -699,7 +699,7 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
 			"Warning: node %s in graph[%d] %s already defined\n",
 			agnameof(n), i, agnameof(g));
 		fprintf(stderr, "Some nodes will be renamed.\n");
-		doWarn = FALSE;
+		doWarn = false;
 	    }
 	    np = agnode(root, xName(nnames, agnameof(n)), 1);
 	    agbindrec (np, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);

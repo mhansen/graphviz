@@ -11,6 +11,7 @@
 #include <neatogen/digcola.h>
 #ifdef DIGCOLA
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
@@ -47,7 +48,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	*************************************************/
 
     int i, j, k;
-    boolean directionalityExist = FALSE;
+    bool directionalityExist = false;
     float *lap1 = NULL;
     float *dist_accumulator = NULL;
     float *tmp_coords = NULL;
