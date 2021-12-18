@@ -382,7 +382,7 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
     int i, j, mol = 0;
     int n = e->nv + e->nldv;
     boxf* bb = N_GNEW (n, boxf);
-    boolean genclusters = opt->clusters->nclusters > 0;
+    bool genclusters = opt->clusters->nclusters > 0;
     if (genclusters) {
 	/* n is the number of real variables, not dummy cluster vars */
 	n -= 2 * opt->clusters->nclusters;
