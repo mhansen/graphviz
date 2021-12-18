@@ -11,7 +11,6 @@ add_library(circogen STATIC
     deglist.h
     edgelist.h
     nodelist.h
-    nodeset.h
 
     # Source files
     block.c
@@ -23,7 +22,6 @@ add_library(circogen STATIC
     deglist.c
     edgelist.c
     nodelist.c
-    nodeset.c
 )
 
 target_include_directories(circogen PRIVATE

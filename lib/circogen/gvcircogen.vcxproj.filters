@@ -42,9 +42,6 @@
     <ClInclude Include="nodelist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="nodeset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="block.c">
@@ -72,9 +69,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="nodelist.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="nodeset.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
