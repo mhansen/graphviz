@@ -10,10 +10,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*
  * Glenn Fowler
  * AT&T Research
@@ -43,7 +39,3 @@ extern "C" {
 #define HASHNKEY5(n,c5,c4,c3,c2,c1)	HASHKEY6((n)+'a',c5,c4,c3,c2,c1)
 
 #undef	extern
-
-#ifdef __cplusplus
-}
-#endif
