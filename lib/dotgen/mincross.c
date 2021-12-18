@@ -1209,7 +1209,7 @@ static void flat_rev(Agraph_t * g, Agedge_t * e)
 static void flat_search(graph_t * g, node_t * v)
 {
     int i;
-    boolean hascl;
+    bool hascl;
     edge_t *e;
     adjmatrix_t *M = GD_rank(g)[ND_rank(v)].flat;
 
