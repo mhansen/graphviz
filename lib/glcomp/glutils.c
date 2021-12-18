@@ -136,42 +136,6 @@ void to3D(int x, int y, GLfloat * X, GLfloat * Y, GLfloat * Z)
     return;
 }
 
-int GetFixedOGLPoslocal(int x, int y, GLfloat * X, GLfloat * Y,
-			GLfloat * Z)
-{
-    GLdouble wwinX;
-    GLdouble wwinY;
-    GLdouble wwinZ;
-
-    GLint viewport[4];
-    GLdouble modelview[16];
-    GLdouble projection[16];
-    GLfloat winX, winY;
-    GLdouble posX, posY, posZ;
-
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
-    glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    glGetIntegerv(GL_VIEWPORT, viewport);
-
-    glColor4f(0.0f, 0.0f, 0.0f, 0.001f);
-    glBegin(GL_POINTS);
-    glVertex3f(10.0f, 10.0f, 0.0f);
-    glEnd();
-
-    gluProject(10.0, 10.0, 1.00, modelview, projection, viewport, &wwinX,
-	       &wwinY, &wwinZ);
-
-    winX = (float) x;
-    winY = (float) viewport[3] - (float) y;
-    gluUnProject(winX, winY, wwinZ, modelview, projection, viewport, &posX,
-		 &posY, &posZ);
-    *X = (GLfloat) posX;
-    *Y = (GLfloat) posY;
-    *Z = (GLfloat) posZ;
-
-    return 1;
-}
-
 #include <math.h>
 
 static glCompPoint sub(glCompPoint p, glCompPoint q)
