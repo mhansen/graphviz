@@ -203,30 +203,6 @@ void replacestr(char *source, char **target)
     *target = strdup(source);
 }
 
-void glCompSelectionBox(glCompSet * s)
-{
-    static GLfloat x, y, w, h;
-
-    x = s->mouse.pos.x;
-    y = s->mouse.pos.y;
-    w = s->mouse.dragX;
-    h = s->mouse.dragY;
-    printf("%f %f  %f  %f \n", x, y, w, h);
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glBegin(GL_POLYGON);
-    glVertex2f(0, 0);
-    glVertex2f(250, 0);
-    glVertex2f(250, 250);
-    glVertex2f(0, 250);
-    glVertex2f(0, 0);
-
-    glEnd();
-
-
-    glDisable(GL_LINE_STIPPLE);
-}
-
 void glCompCalcWidget(glCompCommon * parent, glCompCommon * child,
 		      glCompCommon * ref)
 {

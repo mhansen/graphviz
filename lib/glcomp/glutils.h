@@ -45,7 +45,6 @@ extern "C" {
 				  glCompColor * target);
     extern void glCompSetColor(glCompColor * c);
 
-    void glCompSelectionBox(glCompSet * s);
     extern GLfloat distBetweenPts(glCompPoint A,glCompPoint B,float R);
     extern int is_point_in_rectangle(float X, float Y, float RX, float RY, float RW,float RH);
 
