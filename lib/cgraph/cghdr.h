@@ -71,7 +71,6 @@ extern Dtdisc_t Ag_subedge_id_disc;
 extern Dtdisc_t Ag_mainedge_seq_disc;
 extern Dtdisc_t Ag_subedge_seq_disc;
 extern Dtdisc_t Ag_subgraph_id_disc;
-extern Agcbdisc_t AgAttrdisc;
 
 	/* internal constructor of graphs and subgraphs */
 Agraph_t *agopen1(Agraph_t * g);
