@@ -30,7 +30,6 @@ extern "C" {
     } plane;
 
 
-    int GetFixedOGLPos(int, int, float, GLfloat *, GLfloat *, GLfloat * Z);
     int GetOGLPosRef(int x, int y, float *X, float *Y, float *Z);
     float GetOGLDistance(int l);
     int GetFixedOGLPoslocal(int x, int y, GLfloat * X, GLfloat * Y,
