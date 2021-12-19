@@ -81,7 +81,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     int step;
     float val;
     double old_stress, new_stress;
-    boolean converged;
+    bool converged;
     int len;
     int num_levels;
     float *hierarchy_boundaries;
@@ -357,7 +357,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     cMajEnv =
 	initConstrainedMajorization(lap2, n, ordering, levels, num_levels);
 
-    for (converged = FALSE, iterations = 0;
+    for (converged = false, iterations = 0;
 	 iterations < maxi && !converged; iterations++) {
 
 	/* First, construct Laplacian of 1/(d_ij*|p_i-p_j|)  */

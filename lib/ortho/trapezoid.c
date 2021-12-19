@@ -348,7 +348,7 @@ merge_trapezoids (int segnum, int tfirst, int tlast, int side, trap_t* tr,
   while (t > 0 && _greater_than_equal_to(&tr[t].lo, &tr[tlast].lo))
     {
       int tnext, ptnext;
-      boolean cond;
+      bool cond;
       if (side == S_LEFT)
 	cond = ((tnext = tr[t].d0) > 0 && tr[tnext].rseg == segnum) ||
 		((tnext = tr[t].d1) > 0 && tr[tnext].rseg == segnum);

@@ -23,6 +23,7 @@
  **********************************************************/
 
 #include <neatogen/digcola.h>
+#include <stdbool.h>
 #ifdef IPSEPCOLA
 #include <math.h>
 #include <stdlib.h>
@@ -52,7 +53,7 @@ constrained_majorization_vpsc(CMajEnvVPSC * e, float *b, float *place,
      * dummy vars included in lap
      */
     int n = e->nv + e->nldv;
-    boolean converged = FALSE;
+    bool converged = false;
 #ifdef CONMAJ_LOGGING
     static int call_no = 0;
 #endif				/* CONMAJ_LOGGING */
@@ -93,7 +94,7 @@ constrained_majorization_vpsc(CMajEnvVPSC * e, float *b, float *place,
 	float alpha, beta;
 	float numerator = 0, denominator = 0, r;
 	/* fprintf(stderr,"."); */
-	converged = TRUE;
+	converged = true;
 	/* find steepest descent direction */
 	for (i = 0; i < n; i++) {
 	    old_place[i] = place[i];
@@ -170,7 +171,7 @@ constrained_majorization_vpsc(CMajEnvVPSC * e, float *b, float *place,
 	prev_stress = stress;
 #endif
 	if (test > quad_prog_tol) {
-	    converged = FALSE;
+	    converged = false;
 	}
     }
 #ifdef CONMAJ_LOGGING
@@ -381,7 +382,7 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
     int i, j, mol = 0;
     int n = e->nv + e->nldv;
     boxf* bb = N_GNEW (n, boxf);
-    boolean genclusters = opt->clusters->nclusters > 0;
+    bool genclusters = opt->clusters->nclusters > 0;
     if (genclusters) {
 	/* n is the number of real variables, not dummy cluster vars */
 	n -= 2 * opt->clusters->nclusters;

@@ -2763,7 +2763,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     static pointf *AF;
     static int A_size;
     boolean filled;
-    boolean usershape_p;
+    bool usershape_p;
     boolean pfilled;		/* true if fill not handled by user shape */
     char *color, *name;
     int doMap = (obj->url || obj->explicit_tooltip);
@@ -2904,16 +2904,16 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	filled = FALSE;
     }
 
-    usershape_p = FALSE;
+    usershape_p = false;
     if (ND_shape(n)->usershape) {
 	name = ND_shape(n)->name;
 	if (streq(name, "custom")) {
 	    if ((name = agget(n, "shapefile")) && name[0])
-		usershape_p = TRUE;
+		usershape_p = true;
 	} else
-	    usershape_p = TRUE;
+	    usershape_p = true;
     } else if ((name = agget(n, "image")) && name[0]) {
-	usershape_p = TRUE;
+	usershape_p = true;
     }
     if (usershape_p) {
 	/* get coords of innermost periphery */

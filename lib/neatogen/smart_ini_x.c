@@ -263,7 +263,7 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 	double pos_i;
 	double* balance = N_GNEW(n, double);
 	double b;
-	boolean converged;
+	bool converged;
 
 	Dij = compute_apsp(graph, n);
 	
@@ -343,12 +343,12 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 		}
 	}
 
-	for (converged=FALSE,iterations2=0; iterations2<200 && !converged; iterations2++) {
+	for (converged=false,iterations2=0; iterations2<200 && !converged; iterations2++) {
 		if (conjugate_gradient_f(lap, y, balance, n, conj_tol, n, true) < 0) {
 		    rv = 1;
 		    goto cleanup;
 		}
-		converged=TRUE;
+		converged = true;
 		for (i=0; i<n; i++) {
 			pos_i=y[i];
 			b=0;
@@ -365,7 +365,7 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 				}
 			}
 			if ((b != balance[i]) && (fabs(1-b/balance[i])>1e-5)) {
-				converged=FALSE;
+				converged = false;
 				balance[i]=b;
 			}
 		}
