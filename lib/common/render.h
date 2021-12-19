@@ -99,7 +99,7 @@ extern "C" {
     RENDER_API void emit_label(GVJ_t * job, emit_state_t emit_state, textlabel_t *);
     RENDER_API int emit_once(char *message);
     RENDER_API void emit_map_rect(GVJ_t *job, boxf b);
-    RENDER_API void endpath(path *, Agedge_t *, int, pathend_t *, boolean);
+    RENDER_API void endpath(path *, Agedge_t *, int, pathend_t *, bool);
     RENDER_API void epsf_init(node_t * n);
     RENDER_API void epsf_free(node_t * n);
     RENDER_API shape_desc *find_user_shape(const char *);

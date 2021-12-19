@@ -1394,7 +1394,7 @@ makeFlatEnd (graph_t* g, spline_info_t* sp, path* P, node_t* n, edge_t* e, pathe
     b = endp->nb = maximal_bbox(g, sp, n, NULL, e);
     endp->sidemask = TOP;
     if (isBegin) beginpath(P, e, FLATEDGE, endp, false);
-    else endpath(P, e, FLATEDGE, endp, FALSE);
+    else endpath(P, e, FLATEDGE, endp, false);
     b.UR.y = endp->boxes[endp->boxn - 1].UR.y;
     b.LL.y = endp->boxes[endp->boxn - 1].LL.y;
     b = makeregularend(b, TOP, ND_coord(n).y + GD_rank(g)[ND_rank(n)].ht2);
@@ -1412,7 +1412,7 @@ makeBottomFlatEnd (graph_t* g, spline_info_t* sp, path* P, node_t* n, edge_t* e,
     b = endp->nb = maximal_bbox(g, sp, n, NULL, e);
     endp->sidemask = BOTTOM;
     if (isBegin) beginpath(P, e, FLATEDGE, endp, false);
-    else endpath(P, e, FLATEDGE, endp, FALSE);
+    else endpath(P, e, FLATEDGE, endp, false);
     b.UR.y = endp->boxes[endp->boxn - 1].UR.y;
     b.LL.y = endp->boxes[endp->boxn - 1].LL.y;
     b = makeregularend(b, BOTTOM, ND_coord(n).y - GD_rank(g)[ND_rank(n)].ht2);
@@ -1879,7 +1879,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	        continue;
 	    }
 	    hend.nb = maximal_bbox(g, sp, hn, e, ND_out(hn).list[0]);
-	    endpath(P, e, REGULAREDGE, &hend, spline_merge(aghead(e)));
+	    endpath(P, e, REGULAREDGE, &hend, spline_merge(aghead(e)) != FALSE);
 	    b = makeregularend(hend.boxes[hend.boxn - 1], TOP,
 	    	       ND_coord(hn).y + GD_rank(g)[ND_rank(hn)].ht2);
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
@@ -1929,7 +1929,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	}
 	boxes_append(&boxes, rank_box(sp, g, ND_rank(tn)));
 	b = hend.nb = maximal_bbox(g, sp, hn, e, NULL);
-	endpath(P, hackflag ? &fwdedgeb.out : e, REGULAREDGE, &hend, spline_merge(aghead(e)));
+	endpath(P, hackflag ? &fwdedgeb.out : e, REGULAREDGE, &hend,
+	        spline_merge(aghead(e)) != FALSE);
 	b.UR.y = hend.boxes[hend.boxn - 1].UR.y;
 	b.LL.y = hend.boxes[hend.boxn - 1].LL.y;
 	b = makeregularend(b, TOP,

@@ -582,7 +582,7 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
     }
 }
 
-void endpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
+void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 {
     int side, mask;
     node_t *n;
