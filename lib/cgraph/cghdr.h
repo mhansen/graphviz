@@ -44,12 +44,6 @@ static inline bool streq(const char *a, const char *b) {
 
 #define NOTUSED(var)	(void) var
 
-#define NILgraph			NIL(Agraph_t*)
-#define NILnode				NIL(Agnode_t*)
-#define NILedge				NIL(Agedge_t*)
-#define NILsym				NIL(Agsym_t*)
-#define NILstr				NIL(char*)
-
 #define	SUCCESS				0
 #define FAILURE				-1
 #define LOCALNAMEPREFIX		'%'
@@ -77,7 +71,6 @@ extern Dtdisc_t Ag_subedge_id_disc;
 extern Dtdisc_t Ag_mainedge_seq_disc;
 extern Dtdisc_t Ag_subedge_seq_disc;
 extern Dtdisc_t Ag_subgraph_id_disc;
-extern Agcbdisc_t AgAttrdisc;
 
 	/* internal constructor of graphs and subgraphs */
 Agraph_t *agopen1(Agraph_t * g);
@@ -88,10 +81,6 @@ void agmarkhtmlstr(char *s);
 
 	/* object set management */
 Agnode_t *agfindnode_by_id(Agraph_t * g, IDTYPE id);
-Dtcompar_f agdictorder(Agraph_t *, Dict_t *, Dtcompar_f);
-int agedgecmpf(Dict_t * d, void *arg_e0, void *arg_e1, Dtdisc_t * disc);
-int agnamecmpf(Dict_t * d, void *, void *, Dtdisc_t * disc);
-void agset_node_disc(Agraph_t * g, Dtdisc_t * disc);
 uint64_t agnextseq(Agraph_t * g, int objtype);
 
 /* dict helper functions */
@@ -149,8 +138,6 @@ void agmethod_upd(Agraph_t * g, void *obj, Agsym_t * sym);
 void agmethod_delete(Agraph_t * g, void *obj);
 
 typedef enum { CB_INITIALIZE, CB_UPDATE, CB_DELETION, } cb_t;
-void agsyspushdisc(Agraph_t * g, Agcbdisc_t * cb, void *state, int stack);
-int agsyspopdisc(Agraph_t * g, Agcbdisc_t * cb, int stack);
 void agrecord_callback(Agraph_t * g, Agobj_t * obj, cb_t kind,
 		       Agsym_t * optsym);
 void aginitcb(Agraph_t * g, void *obj, Agcbstack_t * disc);

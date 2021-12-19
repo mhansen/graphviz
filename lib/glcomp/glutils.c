@@ -13,45 +13,6 @@
 #include <string.h>
 #include <glcomp/glcompdefs.h>
 
-/* at given depth value, tranforms 2d Window location to 3d gl coords*/
-int GetFixedOGLPos(int x, int y, float kts, GLfloat * X, GLfloat * Y,
-		   GLfloat * Z)
-{
-    GLdouble wwinX;
-    GLdouble wwinY;
-    GLdouble wwinZ;
-
-    GLint viewport[4];
-    GLdouble modelview[16];
-    GLdouble projection[16];
-    GLfloat winX, winY;
-    GLdouble posX, posY, posZ;
-
-    /* unused */
-    (void)kts;
-
-    glColor4f(0.0f, 0.0f, 0.0f, 0.001f);
-    glBegin(GL_POINTS);
-    glVertex3f(-100.0f, -100.0f, 1.0f);
-    glEnd();
-
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
-    glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    gluProject(-100.0, -100.0, 1.00, modelview, projection, viewport,
-	       &wwinX, &wwinY, &wwinZ);
-
-    winX = (float) x;
-    winY = (float) viewport[3] - (float) y;
-    gluUnProject(winX, winY, wwinZ, modelview, projection, viewport, &posX,
-		 &posY, &posZ);
-    *X = (GLfloat) posX;
-    *Y = (GLfloat) posY;
-    *Z = (GLfloat) posZ;
-
-    return 1;
-}
-
 /*transforms 2d windows location to 3d gl coords but depth is calculated unlike the previous function*/
 int GetOGLPosRef(int x, int y, float *X, float *Y, float *Z)
 {
@@ -175,42 +136,6 @@ void to3D(int x, int y, GLfloat * X, GLfloat * Y, GLfloat * Z)
     return;
 }
 
-int GetFixedOGLPoslocal(int x, int y, GLfloat * X, GLfloat * Y,
-			GLfloat * Z)
-{
-    GLdouble wwinX;
-    GLdouble wwinY;
-    GLdouble wwinZ;
-
-    GLint viewport[4];
-    GLdouble modelview[16];
-    GLdouble projection[16];
-    GLfloat winX, winY;
-    GLdouble posX, posY, posZ;
-
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
-    glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    glGetIntegerv(GL_VIEWPORT, viewport);
-
-    glColor4f(0.0f, 0.0f, 0.0f, 0.001f);
-    glBegin(GL_POINTS);
-    glVertex3f(10.0f, 10.0f, 0.0f);
-    glEnd();
-
-    gluProject(10.0, 10.0, 1.00, modelview, projection, viewport, &wwinX,
-	       &wwinY, &wwinZ);
-
-    winX = (float) x;
-    winY = (float) viewport[3] - (float) y;
-    gluUnProject(winX, winY, wwinZ, modelview, projection, viewport, &posX,
-		 &posY, &posZ);
-    *X = (GLfloat) posX;
-    *Y = (GLfloat) posY;
-    *Z = (GLfloat) posZ;
-
-    return 1;
-}
-
 #include <math.h>
 
 static glCompPoint sub(glCompPoint p, glCompPoint q)
@@ -276,30 +201,6 @@ void replacestr(char *source, char **target)
 
     free(*target);
     *target = strdup(source);
-}
-
-void glCompSelectionBox(glCompSet * s)
-{
-    static GLfloat x, y, w, h;
-
-    x = s->mouse.pos.x;
-    y = s->mouse.pos.y;
-    w = s->mouse.dragX;
-    h = s->mouse.dragY;
-    printf("%f %f  %f  %f \n", x, y, w, h);
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glBegin(GL_POLYGON);
-    glVertex2f(0, 0);
-    glVertex2f(250, 0);
-    glVertex2f(250, 250);
-    glVertex2f(0, 250);
-    glVertex2f(0, 0);
-
-    glEnd();
-
-
-    glDisable(GL_LINE_STIPPLE);
 }
 
 void glCompCalcWidget(glCompCommon * parent, glCompCommon * child,

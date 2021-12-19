@@ -11,7 +11,6 @@
 
 #include	<circogen/blockpath.h>
 #include	<circogen/edgelist.h>
-#include	<circogen/nodeset.h>
 #include	<circogen/deglist.h>
 #include	<stddef.h>
 

@@ -85,7 +85,6 @@
     <ClInclude Include="deglist.h" />
     <ClInclude Include="edgelist.h" />
     <ClInclude Include="nodelist.h" />
-    <ClInclude Include="nodeset.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="block.c" />
@@ -97,7 +96,6 @@
     <ClCompile Include="deglist.c" />
     <ClCompile Include="edgelist.c" />
     <ClCompile Include="nodelist.c" />
-    <ClCompile Include="nodeset.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

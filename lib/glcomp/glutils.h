@@ -30,11 +30,8 @@ extern "C" {
     } plane;
 
 
-    int GetFixedOGLPos(int, int, float, GLfloat *, GLfloat *, GLfloat * Z);
     int GetOGLPosRef(int x, int y, float *X, float *Y, float *Z);
     float GetOGLDistance(int l);
-    int GetFixedOGLPoslocal(int x, int y, GLfloat * X, GLfloat * Y,
-			    GLfloat * Z);
     void to3D(int x, int y, GLfloat * X, GLfloat * Y, GLfloat * Z);
     double point_to_lineseg_dist(glCompPoint p, glCompPoint a, glCompPoint b);
     void replacestr(char *source, char **target);
@@ -48,7 +45,6 @@ extern "C" {
 				  glCompColor * target);
     extern void glCompSetColor(glCompColor * c);
 
-    void glCompSelectionBox(glCompSet * s);
     extern GLfloat distBetweenPts(glCompPoint A,glCompPoint B,float R);
     extern int is_point_in_rectangle(float X, float Y, float RX, float RY, float RW,float RH);
 
