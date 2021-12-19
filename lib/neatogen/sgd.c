@@ -1,3 +1,5 @@
+#include <assert.h>
+#include <limits.h>
 #include <neatogen/neato.h>
 #include <neatogen/sgd.h>
 #include <neatogen/dijkstra.h>
@@ -37,7 +39,7 @@ static void fisheryates_shuffle(term_sgd *terms, int n_terms) {
 static graph_sgd * extract_adjacency(graph_t *G, int model) {
     node_t *np;
     edge_t *ep;
-    int n_nodes = 0, n_edges = 0;
+    size_t n_nodes = 0, n_edges = 0;
     for (np = agfstnode(G); np; np = agnxtnode(G,np)) {
         assert(ND_id(np) == n_nodes);
         n_nodes++;
@@ -54,11 +56,13 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
     graph->weights = N_NEW(n_edges, float);
 
     graph->n = n_nodes;
-    graph->sources[graph->n] = n_edges; // to make looping nice
+    assert(n_edges <= INT_MAX);
+    graph->sources[graph->n] = (int)n_edges; // to make looping nice
 
     n_nodes = 0, n_edges = 0;
     for (np = agfstnode(G); np; np = agnxtnode(G,np)) {
-        graph->sources[n_nodes] = n_edges;
+        assert(n_edges <= INT_MAX);
+        graph->sources[n_nodes] = (int)n_edges;
         graph->pinneds[n_nodes] = isFixed(np);
         for (ep = agfstedge(G, np); ep; ep = agnxtedge(G, ep, np)) {
             if (agtail(ep) == aghead(ep)) { // ignore self-loops and double edges
@@ -73,22 +77,22 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
         n_nodes++;
     }
     assert(n_nodes == graph->n);
-    assert(n_edges == graph->sources[graph->n]);
-    graph->sources[n_nodes] = n_edges;
+    assert(n_edges <= INT_MAX);
+    assert((int)n_edges == graph->sources[graph->n]);
+    graph->sources[n_nodes] = (int)n_edges;
 
     if (model == MODEL_SHORTPATH) {
         // do nothing
     } else if (model == MODEL_SUBSET) {
         // i,j,k refer to actual node indices, while x,y refer to edge indices in graph->targets
-        int i;
         bool *neighbours_i = N_NEW(graph->n, bool);
         bool *neighbours_j = N_NEW(graph->n, bool);
-        for (i=0; i<graph->n; i++) {
+        for (size_t i = 0; i < graph->n; i++) {
             // initialise to no neighbours
             neighbours_i[i] = false;
             neighbours_j[i] = false;
         }
-        for (i=0; i<graph->n; i++) {
+        for (size_t i = 0; i < graph->n; i++) {
             int x;
             int deg_i = 0;
             for (x=graph->sources[i]; x<graph->sources[i+1]; x++) {

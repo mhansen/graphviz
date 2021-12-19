@@ -17,6 +17,7 @@
 
 ******************************************/
 
+#include <assert.h>
 #include <common/memory.h>
 #include <float.h>
 #include <neatogen/bfs.h>
@@ -369,16 +370,16 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
     heap h;
     int *indices = N_GNEW(graph->n, int);
     float *dists = N_GNEW(graph->n, float);
-    int i;
-    for (i=0; i<graph->n; i++) {
+    for (size_t i= 0; i < graph->n; i++) {
         dists[i] = FLT_MAX;
     }
     dists[source] = 0;
-    for (i=graph->sources[source]; i<graph->sources[source+1]; i++) {
+    for (int i = graph->sources[source]; i < graph->sources[source + 1]; i++) {
         int target = graph->targets[i];
         dists[target] = graph->weights[i];
     }
-    initHeap_f(&h, source, indices, dists, graph->n);
+    assert(graph->n <= INT_MAX);
+    initHeap_f(&h, source, indices, dists, (int)graph->n);
 
     int closest = 0, offset = 0;
     while (extractMax_f(&h, &closest, indices, dists)) {
@@ -395,7 +396,8 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
             terms[offset].w = 1 / (d*d);
             offset++;
         }
-        for (i=graph->sources[closest]; i<graph->sources[closest+1]; i++) {
+        for (int i = graph->sources[closest]; i < graph->sources[closest + 1];
+             i++) {
             int target = graph->targets[i];
             float weight = graph->weights[i];
             increaseKey_f(&h, target, d+weight, indices, dists);
