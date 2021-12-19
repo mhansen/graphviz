@@ -42,7 +42,7 @@ pack.3.ps: $(srcdir)/pack.3
 endif
 endif
 
-EXTRA_DIST = $(man_MANS) $(pdf) ptest.c
+EXTRA_DIST = $(man_MANS) $(pdf)
 
 DISTCLEANFILES = $(pdf) pack.3.ps
 
