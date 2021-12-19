@@ -17,7 +17,7 @@
 
 ******************************************/
 
-
+#include <common/memory.h>
 #include <neatogen/bfs.h>
 #include <neatogen/dijkstra.h>
 #include <limits.h>
@@ -140,9 +140,8 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
     heap H;
     int closestVertex, neighbor;
     DistType closestDist, prevClosestDist = MAX_DIST;
-    static int *index;
 
-    index = realloc(index, n * sizeof(int));
+    int *index = gcalloc(n, sizeof(int));
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)
@@ -172,6 +171,7 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
 	if (dist[i] == MAX_DIST)	/* 'i' is not connected to 'vertex' */
 	    dist[i] = prevClosestDist + 10;
     freeHeap(&H);
+    free(index);
 }
 
  /* Dijkstra bounded to nodes in *unweighted* radius */
