@@ -48,7 +48,7 @@ typedef struct {
     char *tooltip;
     char *target;
     char *id;
-    boolean explicit_tooltip;
+    bool explicit_tooltip;
     point LL;
     point UR;
 } htmlmap_data_t;
