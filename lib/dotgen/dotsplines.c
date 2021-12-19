@@ -1393,7 +1393,7 @@ makeFlatEnd (graph_t* g, spline_info_t* sp, path* P, node_t* n, edge_t* e, pathe
 
     b = endp->nb = maximal_bbox(g, sp, n, NULL, e);
     endp->sidemask = TOP;
-    if (isBegin) beginpath(P, e, FLATEDGE, endp, FALSE);
+    if (isBegin) beginpath(P, e, FLATEDGE, endp, false);
     else endpath(P, e, FLATEDGE, endp, FALSE);
     b.UR.y = endp->boxes[endp->boxn - 1].UR.y;
     b.LL.y = endp->boxes[endp->boxn - 1].LL.y;
@@ -1411,7 +1411,7 @@ makeBottomFlatEnd (graph_t* g, spline_info_t* sp, path* P, node_t* n, edge_t* e,
 
     b = endp->nb = maximal_bbox(g, sp, n, NULL, e);
     endp->sidemask = BOTTOM;
-    if (isBegin) beginpath(P, e, FLATEDGE, endp, FALSE);
+    if (isBegin) beginpath(P, e, FLATEDGE, endp, false);
     else endpath(P, e, FLATEDGE, endp, FALSE);
     b.UR.y = endp->boxes[endp->boxn - 1].UR.y;
     b.LL.y = endp->boxes[endp->boxn - 1].LL.y;
@@ -1852,7 +1852,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	tn = agtail(e);
 	hn = aghead(e);
 	b = tend.nb = maximal_bbox(g, sp, tn, NULL, e);
-	beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn));
+	beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn) != FALSE);
 	b.UR.y = tend.boxes[tend.boxn - 1].UR.y;
 	b.LL.y = tend.boxes[tend.boxn - 1].LL.y;
 	b = makeregularend(b, BOTTOM,
@@ -1919,7 +1919,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    hn = aghead(e);
 	    boxes_clear(&boxes);
 	    tend.nb = maximal_bbox(g, sp, tn, ND_in(tn).list[0], e);
-	    beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn));
+	    beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn) != FALSE);
 	    b = makeregularend(tend.boxes[tend.boxn - 1], BOTTOM,
 	    	       ND_coord(tn).y - GD_rank(g)[ND_rank(tn)].ht1);
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)

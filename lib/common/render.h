@@ -19,6 +19,7 @@ extern "C" {
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
+#include <stdbool.h>
 #if !defined(_WIN32) && !defined(DARWIN)
 #define __USE_GNU
 #include <stdlib.h>
@@ -73,7 +74,7 @@ extern "C" {
     RENDER_API int arrowEndClip(edge_t*, pointf*, int, int , bezier*, int eflag);
     RENDER_API int arrowStartClip(edge_t*, pointf* ps, int, int, bezier*, int sflag);
     RENDER_API void arrowOrthoClip(edge_t*, pointf* ps, int, int, bezier*, int sflag, int eflag);
-    RENDER_API void beginpath(path *, Agedge_t *, int, pathend_t *, boolean);
+    RENDER_API void beginpath(path *, Agedge_t *, int, pathend_t *, bool);
     RENDER_API void bezier_clip(inside_t * inside_context,
 			    boolean(*insidefn) (inside_t * inside_context,
 						pointf p), pointf * sp,

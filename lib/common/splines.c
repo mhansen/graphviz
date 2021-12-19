@@ -387,7 +387,7 @@ void add_box(path * P, boxf b)
 #define HT2(n) (ND_ht(n)/2)
 
 void
-beginpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
+beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 {
     int side, mask;
     node_t *n;
