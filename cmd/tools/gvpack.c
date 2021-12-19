@@ -293,7 +293,7 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
     aginit (g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
     aginit (g, AGEDGE, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
     GD_gvc(g) = gvc;
-    graph_init(g, FALSE);
+    graph_init(g, false);
     d = late_int(g, agfindgraphattr(g, "dim"), 2, 2);
     if (d != 2) {
 	fprintf(stderr, "Error: graph %s has dim = %d (!= 2)\n", agnameof(g),

@@ -86,7 +86,7 @@ extern "C" {
     RENDER_API char* charsetToStr (int c);
     RENDER_API pointf coord(node_t * n);
     RENDER_API void do_graph_label(graph_t * sg);
-    RENDER_API void graph_init(graph_t * g, boolean use_rankdir);
+    RENDER_API void graph_init(graph_t * g, bool use_rankdir);
     RENDER_API void graph_cleanup(graph_t * g);
     RENDER_API int dotneato_args_initialize(GVC_t * gvc, int, char **);
     RENDER_API int dotneato_usage(int);

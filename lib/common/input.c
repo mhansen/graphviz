@@ -16,6 +16,7 @@
 #include <xdot/xdot.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/strcasecmp.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -618,7 +619,7 @@ static void setRatio(graph_t * g)
 	cgraph requires 
 
 */
-void graph_init(graph_t * g, boolean use_rankdir)
+void graph_init(graph_t * g, bool use_rankdir)
 {
     char *p;
     double xf;
