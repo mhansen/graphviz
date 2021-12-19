@@ -159,10 +159,8 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
 	    break;
 	for (i = 1; i < graph[closestVertex].nedges; i++) {
 	    neighbor = graph[closestVertex].edges[i];
-	    increaseKey(&H, neighbor,
-			closestDist +
-			(DistType) graph[closestVertex].ewgts[i], index,
-			dist);
+	    increaseKey(&H, neighbor, closestDist +
+			(DistType)graph[closestVertex].ewgts[i], index, dist);
 	}
 	prevClosestDist = closestDist;
     }
@@ -234,10 +232,8 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 	    break;
 	for (i = 1; i < graph[closestVertex].nedges; i++) {
 	    neighbor = graph[closestVertex].edges[i];
-	    increaseKey(&H, neighbor,
-			closestDist +
-			(DistType) graph[closestVertex].ewgts[i], index,
-			dist);
+	    increaseKey(&H, neighbor, closestDist +
+			(DistType)graph[closestVertex].ewgts[i], index, dist);
 	}
     }
 
@@ -357,8 +353,7 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
 	    break;
 	for (i = 1; i < graph[closestVertex].nedges; i++) {
 	    neighbor = graph[closestVertex].edges[i];
-	    increaseKey_f(&H, neighbor,
-			  closestDist + graph[closestVertex].ewgts[i],
+	    increaseKey_f(&H, neighbor, closestDist + graph[closestVertex].ewgts[i],
 			  index, dist);
 	}
     }
@@ -411,4 +406,3 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
     free(dists);
     return offset;
 }
-
