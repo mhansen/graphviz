@@ -139,7 +139,7 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
     int i;
     heap H;
     int closestVertex, neighbor;
-    DistType closestDist, prevClosestDist = INT_MAX;
+    DistType closestDist, prevClosestDist = MAX_DIST;
     static int *index;
 
     index = realloc(index, n * sizeof(int));
