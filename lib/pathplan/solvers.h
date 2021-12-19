@@ -15,8 +15,6 @@ extern "C" {
 #endif
 
     extern int solve3(double *, double *);
-    extern int solve2(double *, double *);
-    extern int solve1(double *, double *);
 
 #ifdef __cplusplus
 }
