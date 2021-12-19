@@ -186,7 +186,6 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
     int i;
     static boolean *node_in_neighborhood = NULL;
     static int size = 0;
-    static int *index;
     Queue Q;
     heap H;
     int closestVertex, neighbor;
@@ -212,8 +211,7 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 	node_in_neighborhood[visited_nodes[i]] = TRUE;
     }
 
-
-    index = realloc(index, n * sizeof(int));
+    int *index = gcalloc(n, sizeof(int));
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)	/* far, TOO COSTLY (O(n))! */
@@ -247,6 +245,7 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 	node_in_neighborhood[visited_nodes[i]] = FALSE;
     }
     freeHeap(&H);
+    free(index);
     freeQueue(&Q);
     return num_visited_nodes;
 }
