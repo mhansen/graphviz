@@ -18,6 +18,7 @@
 ******************************************/
 
 #include <common/memory.h>
+#include <float.h>
 #include <neatogen/bfs.h>
 #include <neatogen/dijkstra.h>
 #include <limits.h>
@@ -343,7 +344,7 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)
-	dist[i] = MAXFLOAT;
+	dist[i] = FLT_MAX;
     dist[vertex] = 0;
     for (i = 1; i < graph[vertex].nedges; i++)
 	dist[graph[vertex].edges[i]] = graph[vertex].ewgts[i];
@@ -352,7 +353,7 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
 
     while (extractMax_f(&H, &closestVertex, index, dist)) {
 	closestDist = dist[closestVertex];
-	if (closestDist == MAXFLOAT)
+	if (closestDist == FLT_MAX)
 	    break;
 	for (i = 1; i < graph[closestVertex].nedges; i++) {
 	    neighbor = graph[closestVertex].edges[i];
@@ -375,7 +376,7 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
     float *dists = N_GNEW(graph->n, float);
     int i;
     for (i=0; i<graph->n; i++) {
-        dists[i] = MAXFLOAT;
+        dists[i] = FLT_MAX;
     }
     dists[source] = 0;
     for (i=graph->sources[source]; i<graph->sources[source+1]; i++) {
@@ -387,7 +388,7 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
     int closest = 0, offset = 0;
     while (extractMax_f(&h, &closest, indices, dists)) {
         float d = dists[closest];
-        if (d == MAXFLOAT) {
+        if (d == FLT_MAX) {
             break;
         }
         // if the target is fixed then always create a term as shortest paths are not calculated from there
