@@ -53,9 +53,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     float *dist_accumulator = NULL;
     float *tmp_coords = NULL;
     float **b = NULL;
-#ifdef NONCORE
-    FILE *fp = NULL;
-#endif
     double *degrees = NULL;
     float *lap2 = NULL;
     int lap_length;
@@ -316,17 +313,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	lap2[count] = (float) degrees[i];
     }
 
-#ifdef NONCORE
-    fpos_t pos;
-    if (n > max_nodes_in_mem) {
-#define FILENAME "tmp_Dij$$$.bin"
-	fp = fopen(FILENAME, "wb");
-	fwrite(lap2, sizeof(float), lap_length, fp);
-	fclose(fp);
-	fp = NULL;
-    }
-#endif
-
 	/*************************
 	** Layout optimization  **
 	*************************/
@@ -339,17 +325,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 
     tmp_coords = N_GNEW(n, float);
     dist_accumulator = N_GNEW(n, float);
-#ifdef NONCORE
-    if (n <= max_nodes_in_mem) {
-#endif
-	lap1 = N_GNEW(lap_length, float);
-#ifdef NONCORE
-    } else {
-	lap1 = lap2;
-	fp = fopen(FILENAME, "rb");
-	fgetpos(fp, &pos);
-    }
-#endif
+    lap1 = N_GNEW(lap_length, float);
 
     old_stress = DBL_MAX;	/* at least one iteration */
 
@@ -362,15 +338,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 
 	/* First, construct Laplacian of 1/(d_ij*|p_i-p_j|)  */
 	set_vector_val(n, 0, degrees);
-#ifdef NONCORE
-	if (n <= max_nodes_in_mem) {
-#endif
-	    sqrt_vecf(lap_length, lap2, lap1);
-#ifdef NONCORE
-	} else {
-	    sqrt_vec(lap_length, lap1);
-	}
-#endif
+	sqrt_vecf(lap_length, lap2, lap1);
 	for (count = 0, i = 0; i < n - 1; i++) {
 	    len = n - i - 1;
 	    /* init 'dist_accumulator' with zeros */
@@ -427,13 +395,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	}
 	new_stress *= 2;
 	new_stress += constant_term;	// only after mult by 2              
-#ifdef NONCORE
-	if (n > max_nodes_in_mem) {
-	    /* restore lap2 from disk */
-	    fsetpos(fp, &pos);
-	    fread(lap2, sizeof(float), lap_length, fp);
-	}
-#endif
 	for (k = 0; k < dim; k++) {
 	    right_mult_with_vector_ff(lap2, n, coords[k], tmp_coords);
 	    new_stress -= vectors_inner_productf(n, coords[k], tmp_coords);
@@ -517,16 +478,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     free(degrees);
     free(lap2);
 
-
-#ifdef NONCORE
-    if (n <= max_nodes_in_mem) {
-#endif
-	free(lap1);
-#ifdef NONCORE
-    }
-    if (fp)
-	fclose(fp);
-#endif
+    free(lap1);
 
 finish:
     free(ordering);
