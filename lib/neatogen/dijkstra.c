@@ -24,9 +24,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define MAX_DIST (double)INT_MAX
-
 typedef DistType Word;
+
+#define MAX_DIST ((DistType)INT_MAX)
 
 /* This heap class is suited to the Dijkstra alg.
    data[i]=vertexNum <==> index[vertexNum]=i
@@ -146,7 +146,7 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)
-	dist[i] = (DistType) MAX_DIST;
+	dist[i] = MAX_DIST;
     dist[vertex] = 0;
     for (i = 1; i < graph[vertex].nedges; i++)
 	dist[graph[vertex].edges[i]] = (DistType) graph[vertex].ewgts[i];
@@ -217,7 +217,7 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)	/* far, TOO COSTLY (O(n))! */
-	dist[i] = (DistType) MAX_DIST;
+	dist[i] = MAX_DIST;
     dist[vertex] = 0;
     for (i = 1; i < graph[vertex].nedges; i++)
 	dist[graph[vertex].edges[i]] = (DistType) graph[vertex].ewgts[i];
