@@ -27,8 +27,10 @@ extern "C" {
 #endif
 
 /*visual studio*/
-#ifdef _WIN32
-#ifndef PATHPLAN_EXPORTS
+#ifdef GVDLL
+#ifdef PATHPLAN_EXPORTS
+#define PATHUTIL_API __declspec(dllexport)
+#else
 #define PATHUTIL_API __declspec(dllimport)
 #endif
 #endif
@@ -41,7 +43,7 @@ extern "C" {
     PATHUTIL_API int wind(Ppoint_t a, Ppoint_t b, Ppoint_t c);
     PATHUTIL_API COORD dist2(Ppoint_t, Ppoint_t);
 
-    int in_poly(Ppoly_t argpoly, Ppoint_t q);
+    PATHUTIL_API int in_poly(Ppoly_t argpoly, Ppoint_t q);
 
 #undef PATHUTIL_API
 #ifdef __cplusplus

@@ -14,6 +14,18 @@
 extern "C" {
 #endif
 
+#ifdef GVDLL
+#ifdef PATHPLAN_EXPORTS
+#define PATHGEOM_API __declspec(dllexport)
+#else
+#define PATHGEOM_API __declspec(dllimport)
+#endif
+#endif
+
+#ifndef PATHGEOM_API
+#define PATHGEOM_API /* nothing */
+#endif
+
 #ifdef HAVE_POINTF_S
     typedef struct pointf_s Ppoint_t;
     typedef struct pointf_s Pvector_t;
@@ -40,7 +52,10 @@ extern "C" {
 /* opaque state handle for visibility graph operations */
     typedef struct vconfig_s vconfig_t;
 
-    void freePath(Ppolyline_t* p);
+    PATHGEOM_API void freePath(Ppolyline_t* p);
+
+#undef PATHGEOM_API
+
 #ifdef __cplusplus
 }
 #endif

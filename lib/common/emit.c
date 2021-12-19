@@ -24,6 +24,7 @@
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
 #include <cdt/cdt.h>
+#include <pathplan/pathgeom.h>
 #include <xdot/xdot.h>
 
 #ifdef _WIN32

@@ -35,9 +35,6 @@ libpathplan_C_la_SOURCES = cvt.c inpoly.c route.c shortest.c \
 	shortestpth.c solvers.c triang.c util.c visibility.c
 
 libpathplan_la_LDFLAGS = -version-info $(PATHPLAN_VERSION) -no-undefined
-if WITH_WIN32
-libpathplan_la_LDFLAGS += -export-symbols $(top_srcdir)/lib/pathplan/pathplan.def
-endif
 libpathplan_la_SOURCES = $(libpathplan_C_la_SOURCES)
 libpathplan_la_LIBADD = @MATH_LIBS@
 
@@ -51,6 +48,6 @@ pathplan.3.ps: $(srcdir)/pathplan.3
 endif
 endif
 
-EXTRA_DIST = $(man_MANS) $(pdf) path.lefty Pathplan.vcxproj* pathplan.def
+EXTRA_DIST = $(man_MANS) $(pdf) path.lefty Pathplan.vcxproj*
 
 DISTCLEANFILES = $(pdf) pathplan.3.ps
