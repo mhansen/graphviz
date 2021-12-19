@@ -2498,7 +2498,7 @@ static pointf compassPoint(inside_t * ictxt, double y, double x)
     curve[1] = curve[0];
     curve[3] = curve[2] = p;
 
-    bezier_clip(ictxt, ND_shape(n)->fns->insidefn, curve, 1);
+    bezier_clip(ictxt, ND_shape(n)->fns->insidefn, curve, true);
 
     if (rd)
 	curve[0] = ccwrotatepf(curve[0], 90 * rd);

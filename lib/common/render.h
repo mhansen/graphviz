@@ -77,8 +77,7 @@ extern "C" {
     RENDER_API void beginpath(path *, Agedge_t *, int, pathend_t *, bool);
     RENDER_API void bezier_clip(inside_t * inside_context,
 			    boolean(*insidefn) (inside_t * inside_context,
-						pointf p), pointf * sp,
-			    boolean left_inside);
+						pointf p), pointf * sp, bool left_inside);
     RENDER_API shape_desc *bind_shape(char *name, node_t *);
     RENDER_API void makeStraightEdge(graph_t * g, edge_t * e, int edgetype, splineInfo * info);
     RENDER_API void makeStraightEdges(graph_t* g, edge_t** edges, int e_cnt, int et, splineInfo* sinfo);
