@@ -27,7 +27,7 @@ double fpow32(double x)
     return x * x * x;
 }
 
-double distvec(double *p0, double *p1, double *vec)
+static double distvec(double *p0, double *p1, double *vec)
 {
     int k;
     double dist = 0.0;
