@@ -120,7 +120,7 @@ extern "C" {
     RENDER_API bezier *new_spline(edge_t * e, int sz);
     RENDER_API char **parse_style(char *s);
     RENDER_API void place_graph_label(Agraph_t *);
-    RENDER_API int place_portlabel(edge_t * e, boolean head_p);
+    RENDER_API int place_portlabel(edge_t * e, bool head_p);
     RENDER_API void makePortLabels(edge_t * e);
     RENDER_API pointf edgeMidpoint(graph_t* g, edge_t * e);
     RENDER_API void addEdgeLabels(edge_t * e, pointf rp, pointf rq);
