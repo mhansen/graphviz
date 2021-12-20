@@ -510,12 +510,6 @@ static void D2E(graph_t * G, int nG, int n, double *M)
 	    Msub(k, l) = Msub(l, k);
 }
 
-void final_energy(graph_t * G, int nG)
-{
-    fprintf(stderr, "iterations = %d final e = %f\n", GD_move(G),
-	    total_e(G, nG));
-}
-
 node_t *choose_node(graph_t * G, int nG)
 {
     int i, k;

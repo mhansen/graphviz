@@ -32,7 +32,6 @@ extern "C" {
     NEATOPROCS_API int checkStart(graph_t * G, int nG, int);
     NEATOPROCS_API int circuit_model(graph_t *, int);
     NEATOPROCS_API void diffeq_model(graph_t *, int);
-    NEATOPROCS_API void final_energy(graph_t *, int);
     NEATOPROCS_API double fpow32(double);
     NEATOPROCS_API Ppolyline_t getPath(edge_t *, vconfig_t *, int, Ppoly_t **,
 			       int);
