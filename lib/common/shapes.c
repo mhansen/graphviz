@@ -1830,7 +1830,7 @@ shape_kind shapeOf(node_t * n)
 	return SH_UNSET;
 }
 
-boolean isPolygon(node_t * n)
+bool isPolygon(node_t * n)
 {
     return (ND_shape(n) && (ND_shape(n)->fns->initfn == poly_init));
 }
