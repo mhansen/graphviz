@@ -20,6 +20,7 @@
 
 static double Epsilon2;
 static Agnode_t *choose_node(graph_t *, int);
+static void make_spring(graph_t *, Agnode_t *, Agnode_t *, double);
 
 static double fpow32(double x)
 {
