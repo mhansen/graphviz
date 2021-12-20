@@ -476,7 +476,7 @@ static void update_arrays(graph_t * G, int nG, int i)
 }
 
 #define Msub(i,j)  M[(i)*Ndim+(j)]
-void D2E(graph_t * G, int nG, int n, double *M)
+static void D2E(graph_t * G, int nG, int n, double *M)
 {
     int i, l, k;
     node_t *vi, *vn;
