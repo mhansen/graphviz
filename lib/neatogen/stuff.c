@@ -577,7 +577,7 @@ static node_t **Heap;
 static int Heapsize;
 static node_t *Src;
 
-void heapup(node_t * v)
+static void heapup(node_t * v)
 {
     int i, par;
     node_t *u;
