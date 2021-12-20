@@ -4128,7 +4128,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
  * Note that memory is allocated as a single block stored in clrs[0] and
  * must be freed by calling function.
  */
-boolean findStopColor (char* colorlist, char* clrs[2], float* frac)
+bool findStopColor (char* colorlist, char* clrs[2], float* frac)
 {
     colorsegs_t* segs = NULL;
     int rv;
@@ -4137,7 +4137,7 @@ boolean findStopColor (char* colorlist, char* clrs[2], float* frac)
     if (rv || segs->numc < 2 || segs->segs[0].color == NULL) {
 	clrs[0] = NULL;
 	if (segs) freeSegs (segs);
-	return FALSE;
+	return false;
     }
 
     if (segs->numc > 2)
@@ -4160,6 +4160,6 @@ boolean findStopColor (char* colorlist, char* clrs[2], float* frac)
 	*frac = 0;
 
     freeSegs (segs);
-    return TRUE;
+    return true;
 }
 

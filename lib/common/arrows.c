@@ -11,6 +11,7 @@
 
 #include <common/render.h>
 #include <math.h>
+#include <stdbool.h>
 
 #define EPSILON .0001
 
@@ -282,7 +283,7 @@ int arrowEndClip(edge_t* e, pointf * ps, int startp,
 
     inside_context.a.p = &sp[0];
     inside_context.a.r = &elen2;
-    bezier_clip(&inside_context, inside, sp, TRUE);
+    bezier_clip(&inside_context, inside, sp, true);
 
     ps[endp] = sp[3];
     ps[endp + 1] = sp[2];
@@ -311,7 +312,7 @@ int arrowStartClip(edge_t* e, pointf * ps, int startp,
 
     inside_context.a.p = &sp[3];
     inside_context.a.r = &slen2;
-    bezier_clip(&inside_context, inside, sp, FALSE);
+    bezier_clip(&inside_context, inside, sp, false);
 
     ps[startp] = sp[3];
     ps[startp + 1] = sp[2];

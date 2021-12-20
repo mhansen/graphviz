@@ -16,6 +16,7 @@
 #include <xdot/xdot.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/strcasecmp.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -144,12 +145,12 @@ static char* dotneato_basename (char* path)
     while (*s) s++;
     s--;
     /* skip over trailing slashes, nulling out as we go */
-    while ((s > path) && ((*s == '/') || (*s == '\\')))
+    while (s > path && (*s == '/' || *s == '\\'))
 	*s-- = '\0';
     if (s == path) ret = path;
     else {
-	while ((s > path) && ((*s != '/') && (*s != '\\'))) s--;
-	if ((*s == '/') || (*s == '\\')) ret = s+1;
+	while (s > path && (*s != '/' && *s != '\\')) s--;
+	if (*s == '/' || *s == '\\') ret = s+1;
 	else ret = path;
     }
 #ifdef _WIN32
@@ -263,7 +264,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     agxbinit(&xb, SMALLBUF, buf);
     for (i = 1; i < argc; i++) {
 	if (argv[i] && argv[i][0] == '-') {
-	    rest = &(argv[i][2]);
+	    rest = &argv[i][2];
 	    switch (c = argv[i][1]) {
 	    case 'G':
 		if (*rest)
@@ -476,7 +477,7 @@ static boolean getdoubles2ptf(graph_t * g, char *name, pointf * result)
 
     if ((p = agget(g, name))) {
 	i = sscanf(p, "%lf,%lf%c", &xf, &yf, &c);
-	if ((i > 1) && (xf > 0) && (yf > 0)) {
+	if (i > 1 && xf > 0 && yf > 0) {
 	    result->x = POINTS(xf);
 	    result->y = POINTS(yf);
 	    if (c == '!')
@@ -485,7 +486,7 @@ static boolean getdoubles2ptf(graph_t * g, char *name, pointf * result)
 	else {
 	    c = '\0';
 	    i = sscanf(p, "%lf%c", &xf, &c);
-	    if ((i > 0) && (xf > 0)) {
+	    if (i > 0 && xf > 0) {
 		result->y = result->x = POINTS(xf);
 		if (c == '!') rv = TRUE;
 	    }
@@ -585,7 +586,7 @@ static void setRatio(graph_t * g)
     char *p, c;
     double ratio;
 
-    if ((p = agget(g, "ratio")) && ((c = p[0]))) {
+    if ((p = agget(g, "ratio")) && (c = p[0])) {
 	switch (c) {
 	case 'a':
 	    if (streq(p, "auto"))
@@ -618,7 +619,7 @@ static void setRatio(graph_t * g)
 	cgraph requires 
 
 */
-void graph_init(graph_t * g, boolean use_rankdir)
+void graph_init(graph_t * g, bool use_rankdir)
 {
     char *p;
     double xf;
@@ -714,9 +715,9 @@ void graph_init(graph_t * g, boolean use_rankdir)
     GD_drawing(g)->centered = mapbool(agget(g, "center"));
 
     if ((p = agget(g, "rotate")))
-	GD_drawing(g)->landscape = (atoi(p) == 90);
+	GD_drawing(g)->landscape = atoi(p) == 90;
     else if ((p = agget(g, "orientation")))
-	GD_drawing(g)->landscape = ((p[0] == 'l') || (p[0] == 'L'));
+	GD_drawing(g)->landscape = p[0] == 'l' || p[0] == 'L';
     else if ((p = agget(g, "landscape")))
 	GD_drawing(g)->landscape = mapbool(p);
 
@@ -868,13 +869,13 @@ void do_graph_label(graph_t * sg)
     int pos_ix;
 
     /* it would be nice to allow multiple graph labels in the future */
-    if ((str = agget(sg, "label")) && (*str != '\0')) {
+    if ((str = agget(sg, "label")) && *str != '\0') {
 	char pos_flag;
 	pointf dimen;
 
 	GD_has_labels(sg->root) |= GRAPH_LABEL;
 
-	GD_label(sg) = make_label(sg, str, (aghtmlstr(str) ? LT_HTML : LT_NONE),
+	GD_label(sg) = make_label(sg, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
 	    late_double(sg, agfindgraphattr(sg, "fontsize"),
 			DEFAULT_FONTSIZE, MIN_FONTSIZE),
 	    late_nnstring(sg, agfindgraphattr(sg, "fontname"),
@@ -885,12 +886,12 @@ void do_graph_label(graph_t * sg)
 	/* set label position */
 	pos = agget(sg, "labelloc");
 	if (sg != agroot(sg)) {
-	    if (pos && (pos[0] == 'b'))
+	    if (pos && pos[0] == 'b')
 		pos_flag = LABEL_AT_BOTTOM;
 	    else
 		pos_flag = LABEL_AT_TOP;
 	} else {
-	    if (pos && (pos[0] == 't'))
+	    if (pos && pos[0] == 't')
 		pos_flag = LABEL_AT_TOP;
 	    else
 		pos_flag = LABEL_AT_BOTTOM;

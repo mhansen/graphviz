@@ -103,7 +103,7 @@ arrow_clip(edge_t * fe, node_t * hn,
  */
 void bezier_clip(inside_t * inside_context,
 		 boolean(*inside) (inside_t * inside_context, pointf p),
-		 pointf * sp, boolean left_inside)
+		 pointf * sp, bool left_inside)
 {
     pointf seg[4], best[4], pt, opt, *left, *right;
     double low, high, t, *idir, *odir;
@@ -156,7 +156,7 @@ void bezier_clip(inside_t * inside_context,
  */
 static void
 shape_clip0(inside_t * inside_context, node_t * n, pointf curve[4],
-	    boolean left_inside)
+	    bool left_inside)
 {
     int i;
     double save_real_size;
@@ -206,7 +206,7 @@ void shape_clip(node_t * n, pointf curve[4])
     c.y = curve[0].y - ND_coord(n).y;
     left_inside = ND_shape(n)->fns->insidefn(&inside_context, c);
     ND_rw(n) = save_real_size;
-    shape_clip0(&inside_context, n, curve, left_inside);
+    shape_clip0(&inside_context, n, curve, left_inside != FALSE);
 }
 
 /* new_spline:
@@ -283,7 +283,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
 	    if (!ND_shape(tn)->fns->insidefn(&inside_context, p2))
 		break;
 	}
-	shape_clip0(&inside_context, tn, &ps[start], TRUE);
+	shape_clip0(&inside_context, tn, &ps[start], true);
     } else
 	start = 0;
     if(clipHead && ND_shape(hn) && ND_shape(hn)->fns->insidefn) {
@@ -295,7 +295,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
 	    if (!ND_shape(hn)->fns->insidefn(&inside_context, p2))
 		break;
 	}
-	shape_clip0(&inside_context, hn, &ps[end], FALSE);
+	shape_clip0(&inside_context, hn, &ps[end], false);
     } else
 	end = pn - 4;
     for (; start < pn - 4; start += 3)
@@ -387,7 +387,7 @@ void add_box(path * P, boxf b)
 #define HT2(n) (ND_ht(n)/2)
 
 void
-beginpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
+beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 {
     int side, mask;
     node_t *n;
@@ -582,7 +582,7 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
     }
 }
 
-void endpath(path * P, edge_t * e, int et, pathend_t * endp, boolean merge)
+void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 {
     int side, mask;
     node_t *n;

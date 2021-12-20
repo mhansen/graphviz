@@ -11,9 +11,10 @@
 
 #include <common/render.h>
 #include <label/xlabels.h>
+#include <stdbool.h>
 
 static int Rankdir;
-static boolean Flip;
+static bool Flip;
 static pointf Offset;
 
 static void place_flip_graph_label(graph_t * g);

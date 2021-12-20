@@ -19,6 +19,7 @@ extern "C" {
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
+#include <stdbool.h>
 #if !defined(_WIN32) && !defined(DARWIN)
 #define __USE_GNU
 #include <stdlib.h>
@@ -73,11 +74,10 @@ extern "C" {
     RENDER_API int arrowEndClip(edge_t*, pointf*, int, int , bezier*, int eflag);
     RENDER_API int arrowStartClip(edge_t*, pointf* ps, int, int, bezier*, int sflag);
     RENDER_API void arrowOrthoClip(edge_t*, pointf* ps, int, int, bezier*, int sflag, int eflag);
-    RENDER_API void beginpath(path *, Agedge_t *, int, pathend_t *, boolean);
+    RENDER_API void beginpath(path *, Agedge_t *, int, pathend_t *, bool);
     RENDER_API void bezier_clip(inside_t * inside_context,
 			    boolean(*insidefn) (inside_t * inside_context,
-						pointf p), pointf * sp,
-			    boolean left_inside);
+						pointf p), pointf * sp, bool left_inside);
     RENDER_API shape_desc *bind_shape(char *name, node_t *);
     RENDER_API void makeStraightEdge(graph_t * g, edge_t * e, int edgetype, splineInfo * info);
     RENDER_API void makeStraightEdges(graph_t* g, edge_t** edges, int e_cnt, int et, splineInfo* sinfo);
@@ -86,7 +86,7 @@ extern "C" {
     RENDER_API char* charsetToStr (int c);
     RENDER_API pointf coord(node_t * n);
     RENDER_API void do_graph_label(graph_t * sg);
-    RENDER_API void graph_init(graph_t * g, boolean use_rankdir);
+    RENDER_API void graph_init(graph_t * g, bool use_rankdir);
     RENDER_API void graph_cleanup(graph_t * g);
     RENDER_API int dotneato_args_initialize(GVC_t * gvc, int, char **);
     RENDER_API int dotneato_usage(int);
@@ -99,7 +99,7 @@ extern "C" {
     RENDER_API void emit_label(GVJ_t * job, emit_state_t emit_state, textlabel_t *);
     RENDER_API int emit_once(char *message);
     RENDER_API void emit_map_rect(GVJ_t *job, boxf b);
-    RENDER_API void endpath(path *, Agedge_t *, int, pathend_t *, boolean);
+    RENDER_API void endpath(path *, Agedge_t *, int, pathend_t *, bool);
     RENDER_API void epsf_init(node_t * n);
     RENDER_API void epsf_free(node_t * n);
     RENDER_API shape_desc *find_user_shape(const char *);

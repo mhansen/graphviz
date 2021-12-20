@@ -91,7 +91,7 @@ UTILS_API boolean mapBool(char *, boolean);
 UTILS_API boolean mapbool(char *);
 UTILS_API int maptoken(char *, char **, int *);
 
-UTILS_API boolean findStopColor(char *colorlist, char *clrs[2], float *frac);
+UTILS_API bool findStopColor(char *colorlist, char *clrs[2], float *frac);
 UTILS_API int test_toggle(void);
 
 UTILS_API void common_init_node(node_t *n);
