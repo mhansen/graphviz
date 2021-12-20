@@ -1902,10 +1902,8 @@ static void poly_init(node_t * n)
 	    if ((p = agget(n, "margin"))) {
 		marginx = marginy = 0;
 		i = sscanf(p, "%lf,%lf", &marginx, &marginy);
-		if (marginx < 0)
-		    marginx = 0;
-		if (marginy < 0)
-		    marginy = 0;
+		marginx = fmax(marginx, 0);
+		marginy = fmax(marginy, 0);
 		if (i > 0) {
 		    dimen.x += 2 * POINTS(marginx);
 		    if (i > 1)
