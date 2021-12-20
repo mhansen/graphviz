@@ -351,12 +351,12 @@ static int same_side(pointf p0, pointf p1, pointf L0, pointf L1)
 
     /* a x + b y = c */
     a = -(L1.y - L0.y);
-    b = (L1.x - L0.x);
+    b = L1.x - L0.x;
     c = a * L0.x + b * L0.y;
 
-    s0 = (a * p0.x + b * p0.y - c >= 0);
-    s1 = (a * p1.x + b * p1.y - c >= 0);
-    return (s0 == s1);
+    s0 = a * p0.x + b * p0.y - c >= 0;
+    s1 = a * p1.x + b * p1.y - c >= 0;
+    return s0 == s1;
 }
 
 static
@@ -390,7 +390,7 @@ char *findFillDflt(node_t * n, char *dflt)
 static
 char *findFill(node_t * n)
 {
-    return (findFillDflt(n, DEFAULT_FILL));
+    return findFillDflt(n, DEFAULT_FILL);
 }
 
 static int
@@ -399,7 +399,7 @@ isBox (node_t* n)
     polygon_t *p;
 
     if ((p = ND_shape(n)->polygon)) {
-	return (p->sides == 4 && (ROUND(p->orientation) % 90) == 0 && p->distortion == 0. && p->skew == 0.);
+	return p->sides == 4 && ROUND(p->orientation) % 90 == 0 && p->distortion == 0. && p->skew == 0.;
     }
     else
 	return 0;
@@ -413,7 +413,7 @@ isEllipse(node_t* n)
     polygon_t *p;
 
     if ((p = ND_shape(n)->polygon)) {
-	return (p->sides <= 2);
+	return p->sides <= 2;
     }
     else
 	return 0;
@@ -494,7 +494,7 @@ static int stylenode(GVJ_t * job, node_t * n)
     if ((pstyle = checkStyle(n, &istyle)))
 	gvrender_set_style(job, pstyle);
 
-    if (N_penwidth && ((s = agxget(n, N_penwidth)) && s[0])) {
+    if (N_penwidth && (s = agxget(n, N_penwidth)) && s[0]) {
 	penwidth = late_double(n, N_penwidth, 1.0, 0.0);
 	gvrender_set_penwidth(job, penwidth);
     }
@@ -1832,7 +1832,7 @@ shape_kind shapeOf(node_t * n)
 
 bool isPolygon(node_t * n)
 {
-    return (ND_shape(n) && (ND_shape(n)->fns->initfn == poly_init));
+    return ND_shape(n) && ND_shape(n)->fns->initfn == poly_init;
 }
 
 static void poly_init(node_t * n)
@@ -1896,7 +1896,7 @@ static void poly_init(node_t * n)
     dimen = ND_label(n)->dimen;
 
     /* minimal whitespace around label */
-    if ((dimen.x > 0) || (dimen.y > 0)) {
+    if (dimen.x > 0 || dimen.y > 0) {
 	/* padding */
 	if (!isPlain) {
 	    if ((p = agget(n, "margin"))) {
@@ -1936,10 +1936,10 @@ static void poly_init(node_t * n)
 	if (streq(ND_shape(n)->name, "custom")) {
 	    sfile = agget(n, "shapefile");
 	    imagesize = gvusershape_size(agraphof(n), sfile);
-	    if ((imagesize.x == -1) && (imagesize.y == -1)) {
+	    if (imagesize.x == -1 && imagesize.y == -1) {
 		agerr(AGWARN,
 		      "No or improper shapefile=\"%s\" for node \"%s\"\n",
-		      (sfile ? sfile : "<nil>"), agnameof(n));
+		      sfile ? sfile : "<nil>", agnameof(n));
 		imagesize.x = imagesize.y = 0;
 	    } else {
 		GD_has_images(agraphof(n)) = TRUE;
@@ -1947,12 +1947,12 @@ static void poly_init(node_t * n)
 		imagesize.y += 2;
 	    }
 	}
-    } else if ((sfile = agget(n, "image")) && (*sfile != '\0')) {
+    } else if ((sfile = agget(n, "image")) && *sfile != '\0') {
 	imagesize = gvusershape_size(agraphof(n), sfile);
-	if ((imagesize.x == -1) && (imagesize.y == -1)) {
+	if (imagesize.x == -1 && imagesize.y == -1) {
 	    agerr(AGWARN,
 		  "No or improper image=\"%s\" for node \"%s\"\n",
-		  (sfile ? sfile : "<nil>"), agnameof(n));
+		  sfile ? sfile : "<nil>", agnameof(n));
 	    imagesize.x = imagesize.y = 0;
 	} else {
 	    GD_has_images(agraphof(n)) = TRUE;
@@ -1967,7 +1967,7 @@ static void poly_init(node_t * n)
 
     /* I don't know how to distort or skew ellipses in postscript */
     /* Convert request to a polygon with a large number of sides */
-    if ((sides <= 2) && ((distortion != 0.) || (skew != 0.))) {
+    if (sides <= 2 && (distortion != 0. || skew != 0.)) {
 	sides = 120;
     }
 
@@ -1978,8 +1978,8 @@ static void poly_init(node_t * n)
     else
 	ND_label(n)->valign = 'c';
 
-    isBox = (sides == 4 && (ROUND(orientation) % 90) == 0
-	     && distortion == 0. && skew == 0.);
+    isBox = sides == 4 && ROUND(orientation) % 90 == 0
+	     && distortion == 0. && skew == 0.;
     if (isBox) {
 	/* for regular boxes the fit should be exact */
     } else if (ND_shape(n)->polygon->vertices) {
@@ -2016,13 +2016,13 @@ static void poly_init(node_t * n)
 
     /* increase node size to width/height if needed */
     fxd = late_string(n, N_fixed, "false");
-    if ((*fxd == 's') && streq(fxd,"shape")) {
+    if (*fxd == 's' && streq(fxd,"shape")) {
 	bb.x = width;
 	bb.y = height;
 	poly->option |= FIXEDSHAPE;
     } else if (mapbool(fxd)) {
 	/* check only label, as images we can scale to fit */
-	if ((width < ND_label(n)->dimen.x) || (height < ND_label(n)->dimen.y))
+	if (width < ND_label(n)->dimen.x || height < ND_label(n)->dimen.y)
 	    agerr(AGWARN,
 		  "node '%s', graph '%s' size too small for label\n",
 		  agnameof(n), agnameof(agraphof(n)));
@@ -2333,22 +2333,22 @@ static boolean poly_inside(inside_t * inside_context, pointf p)
     P.y *= scaley;
 
     /* inside bounding box? */
-    if ((fabs(P.x) > box_URx) || (fabs(P.y) > box_URy))
+    if (fabs(P.x) > box_URx || fabs(P.y) > box_URy)
 	return FALSE;
 
     /* ellipses */
     if (sides <= 2)
-	return (hypot(P.x / box_URx, P.y / box_URy) < 1.);
+	return hypot(P.x / box_URx, P.y / box_URy) < 1.;
 
     /* use fast test in case we are converging on a segment */
     i = last % sides;		/* in case last left over from larger polygon */
     i1 = (i + 1) % sides;
     Q = vertex[i + outp];
     R = vertex[i1 + outp];
-    if (!(same_side(P, O, Q, R)))   /* false if outside the segment's face */
+    if (!same_side(P, O, Q, R))   /* false if outside the segment's face */
 	return FALSE;
     /* else inside the segment face... */
-    if ((s = same_side(P, Q, R, O)) && (same_side(P, R, O, Q))) /* true if between the segment's sides */
+    if ((s = same_side(P, Q, R, O)) && same_side(P, R, O, Q)) /* true if between the segment's sides */
 	return TRUE;
     /* else maybe in another segment */
     for (j = 1; j < sides; j++) { /* iterate over remaining segments */
@@ -2359,7 +2359,7 @@ static boolean poly_inside(inside_t * inside_context, pointf p)
 	    i1 = i;
 	    i = (i + sides - 1) % sides;
 	}
-	if (!(same_side(P, O, vertex[i + outp], vertex[i1 + outp]))) { /* false if outside any other segment's face */
+	if (!same_side(P, O, vertex[i + outp], vertex[i1 + outp])) { /* false if outside any other segment's face */
 	    last = i;
 	    return FALSE;
 	}
@@ -2697,14 +2697,14 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
     pp->bp = bp;
     PF2P(p, pp->p);
     pp->theta = invflip_angle(theta, GD_rankdir(agraphof(n)));
-    if ((p.x == 0) && (p.y == 0))
+    if (p.x == 0 && p.y == 0)
 	pp->order = MC_SCALE / 2;
     else {
 	/* compute angle with 0 at north pole, increasing CCW */
 	double angle = atan2(p.y, p.x) + 1.5 * M_PI;
 	if (angle >= 2 * M_PI)
 	    angle -= 2 * M_PI;
-	pp->order = (int) ((MC_SCALE * angle) / (2 * M_PI));
+	pp->order = (int) (MC_SCALE * angle / (2 * M_PI));
     }
     pp->constrained = constrain;
     pp->defined = defined;
@@ -2725,7 +2725,7 @@ static port poly_port(node_t * n, char *portname, char *compass)
     if (compass == NULL)
 	compass = "_";
     sides = BOTTOM | RIGHT | TOP | LEFT;
-    if ((ND_label(n)->html) && (bp = html_port(n, portname, &sides))) {
+    if (ND_label(n)->html && (bp = html_port(n, portname, &sides))) {
 	if (compassPort(n, bp, &rv, compass, sides, NULL)) {
 	    agerr(AGWARN,
 		  "node %s, port %s, unrecognized compass point '%s' - ignored\n",
@@ -2860,7 +2860,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     pfilled = !ND_shape(n)->usershape || streq(ND_shape(n)->name, "custom");
 
     /* if no boundary but filled, set boundary color to transparent */
-    if ((peripheries == 0) && filled && pfilled) {
+    if (peripheries == 0 && filled && pfilled) {
 	peripheries = 1;
 	gvrender_set_pencolor(job, "transparent");
     }
@@ -2873,7 +2873,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	    AF[i].y = P.y * ysize + ND_coord(n).y;
 	}
 	if (sides <= 2) {
-	    if ((style & WEDGED) && (j == 0) && multicolor(fillcolor)) {
+	    if ((style & WEDGED) && j == 0 && multicolor(fillcolor)) {
 		int rv = wedgedEllipse (job, AF, fillcolor);
 		if (rv > 1)
 		    agerr (AGPREV, "in node %s\n", agnameof(n));
@@ -2925,7 +2925,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	/* lay down fill first */
 	if (filled && pfilled) {
 	    if (sides <= 2) {
-		if ((style & WEDGED) && (j == 0) && multicolor(fillcolor)) {
+		if ((style & WEDGED) && j == 0 && multicolor(fillcolor)) {
 		    int rv = wedgedEllipse (job, AF, fillcolor);
 		    if (rv > 1)
 			agerr (AGPREV, "in node %s\n", agnameof(n));
@@ -2988,7 +2988,7 @@ static void point_init(node_t * n)
     w = late_double(n, N_width, MAXDOUBLE, 0.0);
     h = late_double(n, N_height, MAXDOUBLE, 0.0);
     w = MIN(w, h);
-    if ((w == MAXDOUBLE) && (h == MAXDOUBLE))	/* neither defined */
+    if (w == MAXDOUBLE && h == MAXDOUBLE)	/* neither defined */
 	ND_width(n) = ND_height(n) = DEF_POINT;
     else {
 	w = MIN(w, h);
@@ -3066,10 +3066,10 @@ static boolean point_inside(inside_t * inside_context, pointf p)
     }
 
     /* inside bounding box? */
-    if ((fabs(P.x) > radius) || (fabs(P.y) > radius))
+    if (fabs(P.x) > radius || fabs(P.y) > radius)
 	return FALSE;
 
-    return (hypot(P.x, P.y) <= radius);
+    return hypot(P.x, P.y) <= radius;
 }
 
 static void point_gencode(GVJ_t * job, node_t * n)
@@ -3082,7 +3082,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
     static int A_size;
     boolean filled;
     char *color;
-    int doMap = (obj->url || obj->explicit_tooltip);
+    int doMap = obj->url || obj->explicit_tooltip;
 
     if (doMap && !(job->flags & EMIT_CLUSTERS_LAST))
 	gvrender_begin_anchor(job,
@@ -3239,7 +3239,7 @@ static field_t *parse_reclbl(node_t * n, int LR, int flag, char *text)
     wflag = TRUE;
     ishardspace = FALSE;
     while (wflag) {
-	if ((uc = *(unsigned char*)reclblp) && (uc < ' ')) {    /* Ignore non-0 control characters */
+	if ((uc = *(unsigned char*)reclblp) && uc < ' ') {    /* Ignore non-0 control characters */
 	    reclblp++;
 	    continue;
 	}
@@ -3314,7 +3314,7 @@ static field_t *parse_reclbl(node_t * n, int LR, int flag, char *text)
 	    if (*(reclblp + 1)) {
 		if (ISCTRL(*(reclblp + 1)))
 		    reclblp++;
-		else if ((*(reclblp + 1) == ' ') && !lbl->html)
+		else if (*(reclblp + 1) == ' ' && !lbl->html)
 		    ishardspace = TRUE, reclblp++;
 		else {
 		    *tsp++ = '\\';
@@ -3365,7 +3365,7 @@ static pointf size_reclbl(node_t * n, field_t * f)
 	dimen = f->lp->dimen;
 
 	/* minimal whitespace around label */
-	if ((dimen.x > 0.0) || (dimen.y > 0.0)) {
+	if (dimen.x > 0.0 || dimen.y > 0.0) {
 	    /* padding */
 	    if ((p = agget(n, "margin"))) {
 		i = sscanf(p, "%lf,%lf", &marginx, &marginy);
@@ -3426,7 +3426,7 @@ static void resize_reclbl(field_t * f, pointf sz, int nojustify_p)
 	    inc = d.y / f->n_flds;
 	for (i = 0; i < f->n_flds; i++) {
 	    sf = f->fld[i];
-	    amt = ((int) ((i + 1) * inc)) - ((int) (i * inc));
+	    amt = (int)((i + 1) * inc) - (int)(i * inc);
 	    if (f->LR)
 		newsz = pointfof(sf->size.x + amt, sz.y);
 	    else
@@ -3544,7 +3544,7 @@ static void record_init(node_t * n)
     sz.x = POINTS(ND_width(n));
     sz.y = POINTS(ND_height(n));
     if (mapbool(late_string(n, N_fixed, "false"))) {
-	if ((sz.x < info->size.x) || (sz.y < info->size.y)) {
+	if (sz.x < info->size.x || sz.y < info->size.y) {
 /* should check that the record really won't fit, e.g., there may be no text.
 			agerr(AGWARN, "node '%s' size may be too small\n", agnameof(n));
 */
@@ -3574,7 +3574,7 @@ static field_t *map_rec_port(field_t * f, char *str)
     field_t *rv;
     int sub;
 
-    if (f->id && (streq(f->id, str)))
+    if (f->id && streq(f->id, str))
 	rv = f;
     else {
 	rv = NULL;
@@ -3714,7 +3714,7 @@ static void record_gencode(GVJ_t * job, node_t * n)
     pointf AF[4];
     int style;
     field_t *f;
-    int doMap = (obj->url || obj->explicit_tooltip);
+    int doMap = obj->url || obj->explicit_tooltip;
     int filled;
     char* clrs[2];
 
@@ -3848,15 +3848,14 @@ static boolean epsf_inside(inside_t * inside_context, pointf p)
 
     P = ccwrotatepf(p, 90 * GD_rankdir(agraphof(n)));
     x2 = ND_ht(n) / 2;
-    return ((P.y >= -x2) && (P.y <= x2) && (P.x >= -ND_lw(n))
-	    && (P.x <= ND_rw(n)));
+    return P.y >= -x2 && P.y <= x2 && P.x >= -ND_lw(n) && P.x <= ND_rw(n);
 }
 
 static void epsf_gencode(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj = job->obj;
     epsf_t *desc;
-    int doMap = (obj->url || obj->explicit_tooltip);
+    int doMap = obj->url || obj->explicit_tooltip;
 
     desc = (epsf_t *) (ND_shape_info(n));
     if (!desc)
@@ -3896,7 +3895,7 @@ static pointf star_size (pointf sz0)
     rx = sz0.x/(2*cos(alpha));
     ry = sz0.y/(sin(alpha) + sin(alpha3));
     r0 = MAX(rx,ry);
-    r = (r0*sin(alpha4)*cos(alpha2))/(cos(alpha)*cos(alpha4));
+    r = r0 * sin(alpha4) * cos(alpha2) / (cos(alpha) * cos(alpha4));
 
     sz.x = 2*r*cos(alpha);
     sz.y = r*(1 + sin(alpha3));
@@ -3921,7 +3920,7 @@ static void star_vertices (pointf* vertices, pointf* bb)
 
     /* for given sz, get radius */
     r = sz.x/(2*cos(alpha));
-    r0 = (r*cos(alpha)*cos(alpha4))/(sin(alpha4)*cos(alpha2));
+    r0 = r * cos(alpha) * cos(alpha4) / (sin(alpha4) * cos(alpha2));
     
     /* offset is the y shift of circle center from bb center */
     offset = (r*(1 - sin(alpha3)))/2;
@@ -4112,7 +4111,7 @@ static char *closestSide(node_t * n, node_t * other, port * oldport)
     char *rv = NULL;
     int i, d, mind = 0;
 
-    if ((sides == 0) || (sides == (TOP | BOTTOM | LEFT | RIGHT)))
+    if (sides == 0 || sides == (TOP | BOTTOM | LEFT | RIGHT))
 	return rv;		/* use center */
 
     if (oldport->bp) {
@@ -4155,7 +4154,7 @@ static char *closestSide(node_t * n, node_t * other, port * oldport)
 	p.x += pt.x;
 	p.y += pt.y;
 	d = DIST2(p, opt);
-	if (!rv || (d < mind)) {
+	if (!rv || d < mind) {
 	    mind = d;
 	    rv = side_port[i];
 	}
