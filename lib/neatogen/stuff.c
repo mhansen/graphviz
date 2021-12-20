@@ -21,7 +21,7 @@
 static double Epsilon2;
 static Agnode_t *choose_node(graph_t *, int);
 
-double fpow32(double x)
+static double fpow32(double x)
 {
     x = sqrt(x);
     return x * x * x;
