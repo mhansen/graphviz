@@ -56,7 +56,11 @@
 #define POINTS(inch) 72*(inch)
 
 typedef unsigned int boolean;
+#ifdef GVDLL
+__declspec(dllimport) extern unsigned char Verbose;
+#else
 extern unsigned char Verbose;
+#endif
 
 #else  /* STANDALONE */
 #define CALLOC gcalloc
