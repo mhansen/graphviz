@@ -25,6 +25,7 @@
 #include <neatogen/neatoprocs.h>
 #include <pathplan/vispath.h>
 #include <pack/pack.h>
+#include <stdbool.h>
 
 typedef struct {
     int cnt;
@@ -152,7 +153,7 @@ addGraphObjs(objlist * l, graph_t * g, void *tex, void *hex, expand_t* pm)
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (PARENT(n) == g && n != tex && n != hex && !IS_CLUST_NODE(n)) {
-	    addObj(l, makeObstacle(n, pm, FALSE));
+	    addObj(l, makeObstacle(n, pm, false));
 	}
     }
     for (i = 1; i <= GD_n_cluster(g); i++) {
