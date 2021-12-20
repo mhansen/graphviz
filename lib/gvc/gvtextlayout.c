@@ -18,6 +18,7 @@
 #include <gvc/gvplugin_textlayout.h>
 #include <gvc/gvcint.h>
 #include <gvc/gvcproc.h>
+#include <stdbool.h>
 
 int gvtextlayout_select(GVC_t * gvc)
 {
@@ -33,11 +34,11 @@ int gvtextlayout_select(GVC_t * gvc)
     return NO_SUPPORT;
 }
 
-boolean gvtextlayout(GVC_t *gvc, textspan_t *span, char **fontpath)
+bool gvtextlayout(GVC_t *gvc, textspan_t *span, char **fontpath)
 {
     gvtextlayout_engine_t *gvte = gvc->textlayout.engine;
 
     if (gvte && gvte->textlayout)
-	return gvte->textlayout(span, fontpath);
-    return FALSE;
+	return gvte->textlayout(span, fontpath) != FALSE;
+    return false;
 }

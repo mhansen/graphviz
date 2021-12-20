@@ -50,7 +50,7 @@
 /* textlayout */
 
     int gvtextlayout_select(GVC_t * gvc);
-    boolean gvtextlayout(GVC_t *gvc, textspan_t *span, char **fontpath);
+    bool gvtextlayout(GVC_t *gvc, textspan_t *span, char **fontpath);
 
 /* loadimage */
     void gvloadimage(GVJ_t *job, usershape_t *us, boxf b, boolean filled, const char *target);
