@@ -28,14 +28,6 @@
 				   by d_{ij}^{-2} otherwise, they are normalized by d_{ij}^{-1}
 				 */
 
-#ifdef NONCORE
-/* Set 'max_nodes_in_mem' so that 
- * 4*(max_nodes_in_mem^2) is smaller than the available memory (in bytes)
- * 4 = sizeof(float)
- */
-#define max_nodes_in_mem 18000
-#endif
-
  /* relevant when using sparse distance matrix not within subspace */
 #define smooth_pivots true
 
@@ -911,10 +903,6 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 #ifdef ALTERNATIVE_STRESS_CALC
     double mat_stress;
 #endif
-#ifdef NONCORE
-    FILE *fp = NULL;
-#endif
-
 
 	/*************************************************
 	** Computation of full, dense, unrestricted k-D ** 
@@ -1079,16 +1067,6 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	lap2[count] = degrees[i];
     }
 
-#ifdef NONCORE
-    if (n > max_nodes_in_mem) {
-#define FILENAME "tmp_Dij$$$.bin"
-	fp = fopen(FILENAME, "wb");
-	fwrite(lap2, sizeof(float), lap_length, fp);
-	fclose(fp);
-	fp = NULL;
-    }
-#endif
-
 	/*************************
 	** Layout optimization  **
 	*************************/
@@ -1101,18 +1079,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 
     tmp_coords = N_NEW(n, float);
     dist_accumulator = N_NEW(n, float);
-    lap1 = NULL;
-#ifdef NONCORE
-    if (n <= max_nodes_in_mem) {
-	lap1 = N_NEW(lap_length, float);
-    } else {
-	lap1 = lap2;
-	fp = fopen(FILENAME, "rb");
-	fgetpos(fp, &pos);
-    }
-#else
     lap1 = N_NEW(lap_length, float);
-#endif
 
 
 #ifdef USE_MAXFLOAT
@@ -1134,15 +1101,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	memset(degrees, 0, n * sizeof(DegType));
 	if (exp == 2) {
 #ifdef Dij2
-#ifdef NONCORE
-	    if (n <= max_nodes_in_mem) {
-		sqrt_vecf(lap_length, lap2, lap1);
-	    } else {
-		sqrt_vec(lap_length, lap1);
-	    }
-#else
 	    sqrt_vecf(lap_length, lap2, lap1);
-#endif
 #endif
 	}
 	for (count = 0, i = 0; i < n - 1; i++) {
@@ -1209,13 +1168,6 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	}
 	new_stress *= 2;
 	new_stress += constant_term;	/* only after mult by 2 */
-#ifdef NONCORE
-	if (n > max_nodes_in_mem) {
-	    /* restore lap2 from memory */
-	    fsetpos(fp, &pos);
-	    fread(lap2, sizeof(float), lap_length, fp);
-	}
-#endif
 	for (k = 0; k < dim; k++) {
 	    right_mult_with_vector_ff(lap2, n, coords[k], tmp_coords);
 	    new_stress -= vectors_inner_productf(n, coords[k], tmp_coords);
@@ -1278,10 +1230,6 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	    d_coords[i][j] = coords[i][j];
 	}
     }
-#ifdef NONCORE
-    if (fp)
-	fclose(fp);
-#endif
 finish1:
     free(f_storage);
     free(coords);

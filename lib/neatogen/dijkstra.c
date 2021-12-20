@@ -17,16 +17,17 @@
 
 ******************************************/
 
-
+#include <common/memory.h>
+#include <float.h>
 #include <neatogen/bfs.h>
 #include <neatogen/dijkstra.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define MAX_DIST (double)INT_MAX
-
 typedef DistType Word;
+
+#define MAX_DIST ((DistType)INT_MAX)
 
 /* This heap class is suited to the Dijkstra alg.
    data[i]=vertexNum <==> index[vertexNum]=i
@@ -139,14 +140,13 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
     int i;
     heap H;
     int closestVertex, neighbor;
-    DistType closestDist, prevClosestDist = INT_MAX;
-    static int *index;
+    DistType closestDist, prevClosestDist = MAX_DIST;
 
-    index = realloc(index, n * sizeof(int));
+    int *index = gcalloc(n, sizeof(int));
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)
-	dist[i] = (DistType) MAX_DIST;
+	dist[i] = MAX_DIST;
     dist[vertex] = 0;
     for (i = 1; i < graph[vertex].nedges; i++)
 	dist[graph[vertex].edges[i]] = (DistType) graph[vertex].ewgts[i];
@@ -159,10 +159,8 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
 	    break;
 	for (i = 1; i < graph[closestVertex].nedges; i++) {
 	    neighbor = graph[closestVertex].edges[i];
-	    increaseKey(&H, neighbor,
-			closestDist +
-			(DistType) graph[closestVertex].ewgts[i], index,
-			dist);
+	    increaseKey(&H, neighbor, closestDist +
+			(DistType)graph[closestVertex].ewgts[i], index, dist);
 	}
 	prevClosestDist = closestDist;
     }
@@ -172,6 +170,7 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
 	if (dist[i] == MAX_DIST)	/* 'i' is not connected to 'vertex' */
 	    dist[i] = prevClosestDist + 10;
     freeHeap(&H);
+    free(index);
 }
 
  /* Dijkstra bounded to nodes in *unweighted* radius */
@@ -186,7 +185,6 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
     int i;
     static boolean *node_in_neighborhood = NULL;
     static int size = 0;
-    static int *index;
     Queue Q;
     heap H;
     int closestVertex, neighbor;
@@ -212,12 +210,11 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 	node_in_neighborhood[visited_nodes[i]] = TRUE;
     }
 
-
-    index = realloc(index, n * sizeof(int));
+    int *index = gcalloc(n, sizeof(int));
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)	/* far, TOO COSTLY (O(n))! */
-	dist[i] = (DistType) MAX_DIST;
+	dist[i] = MAX_DIST;
     dist[vertex] = 0;
     for (i = 1; i < graph[vertex].nedges; i++)
 	dist[graph[vertex].edges[i]] = (DistType) graph[vertex].ewgts[i];
@@ -235,10 +232,8 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 	    break;
 	for (i = 1; i < graph[closestVertex].nedges; i++) {
 	    neighbor = graph[closestVertex].edges[i];
-	    increaseKey(&H, neighbor,
-			closestDist +
-			(DistType) graph[closestVertex].ewgts[i], index,
-			dist);
+	    increaseKey(&H, neighbor, closestDist +
+			(DistType)graph[closestVertex].ewgts[i], index, dist);
 	}
     }
 
@@ -247,6 +242,7 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 	node_in_neighborhood[visited_nodes[i]] = FALSE;
     }
     freeHeap(&H);
+    free(index);
     freeQueue(&Q);
     return num_visited_nodes;
 }
@@ -344,7 +340,7 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)
-	dist[i] = MAXFLOAT;
+	dist[i] = FLT_MAX;
     dist[vertex] = 0;
     for (i = 1; i < graph[vertex].nedges; i++)
 	dist[graph[vertex].edges[i]] = graph[vertex].ewgts[i];
@@ -353,12 +349,11 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
 
     while (extractMax_f(&H, &closestVertex, index, dist)) {
 	closestDist = dist[closestVertex];
-	if (closestDist == MAXFLOAT)
+	if (closestDist == FLT_MAX)
 	    break;
 	for (i = 1; i < graph[closestVertex].nedges; i++) {
 	    neighbor = graph[closestVertex].edges[i];
-	    increaseKey_f(&H, neighbor,
-			  closestDist + graph[closestVertex].ewgts[i],
+	    increaseKey_f(&H, neighbor, closestDist + graph[closestVertex].ewgts[i],
 			  index, dist);
 	}
     }
@@ -376,7 +371,7 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
     float *dists = N_GNEW(graph->n, float);
     int i;
     for (i=0; i<graph->n; i++) {
-        dists[i] = MAXFLOAT;
+        dists[i] = FLT_MAX;
     }
     dists[source] = 0;
     for (i=graph->sources[source]; i<graph->sources[source+1]; i++) {
@@ -388,7 +383,7 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
     int closest = 0, offset = 0;
     while (extractMax_f(&h, &closest, indices, dists)) {
         float d = dists[closest];
-        if (d == MAXFLOAT) {
+        if (d == FLT_MAX) {
             break;
         }
         // if the target is fixed then always create a term as shortest paths are not calculated from there
@@ -411,4 +406,3 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
     free(dists);
     return offset;
 }
-
