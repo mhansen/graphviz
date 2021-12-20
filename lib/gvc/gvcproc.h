@@ -19,7 +19,7 @@
 /* configuration */
 
     char *gvconfig_libdir(GVC_t * gvc);
-    void gvconfig(GVC_t * gvc, boolean rescan);
+    void gvconfig(GVC_t * gvc, bool rescan);
     char *gvhostname(void);
 
 /* plugins */

@@ -547,7 +547,7 @@ static void config_rescan(GVC_t *gvc, char *config_path)
 /*
   gvconfig - parse a config file and install the identified plugins
  */
-void gvconfig(GVC_t * gvc, boolean rescan)
+void gvconfig(GVC_t * gvc, bool rescan)
 {
 #ifdef ENABLE_LTDL
     int rc;
