@@ -53,7 +53,7 @@
     bool gvtextlayout(GVC_t *gvc, textspan_t *span, char **fontpath);
 
 /* loadimage */
-    void gvloadimage(GVJ_t *job, usershape_t *us, boxf b, boolean filled, const char *target);
+    void gvloadimage(GVJ_t *job, usershape_t *us, boxf b, bool filled, const char *target);
     
 /* usershapes */
     point gvusershape_size_dpi(usershape_t *us, pointf dpi);
