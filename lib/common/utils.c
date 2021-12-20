@@ -1838,7 +1838,7 @@ void gv_cleanup_node(node_t * n)
 	agdelrec(n, "Agnodeinfo_t");
 }
 
-void gv_nodesize(node_t * n, boolean flip)
+void gv_nodesize(node_t * n, bool flip)
 {
     double w;
 
