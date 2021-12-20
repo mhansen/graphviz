@@ -34,7 +34,6 @@ extern "C" {
     NEATOPROCS_API void diffeq_model(graph_t *, int);
     NEATOPROCS_API Ppolyline_t getPath(edge_t *, vconfig_t *, int, Ppoly_t **,
 			       int);
-    NEATOPROCS_API void heapdown(Agnode_t *);
     NEATOPROCS_API void heapup(Agnode_t *);
     NEATOPROCS_API void initial_positions(graph_t *, int);
     NEATOPROCS_API void jitter3d(Agnode_t *, int);

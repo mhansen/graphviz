@@ -594,7 +594,7 @@ void heapup(node_t * v)
     }
 }
 
-void heapdown(node_t * v)
+static void heapdown(node_t * v)
 {
     int i, left, right, c;
     node_t *u;
