@@ -109,7 +109,7 @@
 			int arrow_at_start, int arrow_at_end, int filled);
     void gvrender_polyline(GVJ_t * job, pointf * AF, int n);
     void gvrender_comment(GVJ_t * job, char *str);
-    void gvrender_usershape(GVJ_t * job, char *name, pointf * AF, int n, boolean filled, char *imagescale, char *imagepos);
+    void gvrender_usershape(GVJ_t * job, char *name, pointf * AF, int n, bool filled, char *imagescale, char *imagepos);
 
 /* layout */
 

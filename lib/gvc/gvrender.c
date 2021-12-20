@@ -695,7 +695,7 @@ static imagepos_t get_imagepos(char *s)
  * positioned at "imagepos"
  */
 void gvrender_usershape(GVJ_t * job, char *name, pointf * a, int n,
-			boolean filled, char *imagescale, char *imagepos)
+			bool filled, char *imagescale, char *imagepos)
 {
     gvrender_engine_t *gvre = job->render.engine;
     usershape_t *us;
