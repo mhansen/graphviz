@@ -40,7 +40,7 @@
 /*
  * Define an apis array of name strings using an enumerated api_t as index.
  * The enumerated type is defined gvplugin.h.  The apis array is
- * inititialized here by redefining ELEM and reinvoking APIS.
+ * initialized here by redefining ELEM and reinvoking APIS.
  */
 #define ELEM(x) #x,
 static char *api_names[] = { APIS };    /* "render", "layout", ... */
@@ -88,7 +88,7 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
         *p = '\0';
 
     /* point to the beginning of the linked list of plugins for this api */
-    pnext = &(gvc->apis[api]);
+    pnext = &gvc->apis[api];
 
     /* keep alpha-sorted and insert new duplicates ahead of old */
     while (*pnext) {
@@ -97,7 +97,7 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
             *p = '\0';
         if (strcmp(pins, pnxt) <= 0)
             break;
-        pnext = &((*pnext)->next);
+        pnext = &(*pnext)->next;
     }
 
     /* keep quality sorted within type and insert new duplicates ahead of old */
@@ -109,7 +109,7 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
             break;
         if (quality >= (*pnext)->quality)
             break;
-        pnext = &((*pnext)->next);
+        pnext = &(*pnext)->next;
     }
 
     plugin = GNEW(gvplugin_available_t);
@@ -140,10 +140,10 @@ static void gvplugin_activate(GVC_t * gvc, api_t api, const char *typestr,
     pnext = gvc->apis[api];
 
     while (pnext) {
-        if ((strcasecmp(typestr, pnext->typestr) == 0)
-            && (strcasecmp(name, pnext->package->name) == 0)
-            && (pnext->package->path != 0)
-            && (strcasecmp(plugin_path, pnext->package->path) == 0)) {
+        if (strcasecmp(typestr, pnext->typestr) == 0
+            && strcasecmp(name, pnext->package->name) == 0
+            && pnext->package->path != 0
+            && strcasecmp(plugin_path, pnext->package->path) == 0) {
             pnext->typeptr = typeptr;
             return;
         }
@@ -191,7 +191,7 @@ gvplugin_library_t *gvplugin_library_load(GVC_t * gvc, char *path)
     }
     hndl = lt_dlopen(p);
     if (!hndl) {
-        if ((stat(p, &sb)) == 0) {
+        if (stat(p, &sb) == 0) {
             agerr(AGWARN, "Could not load \"%s\" - %s\n", p, "It was found, so perhaps one of its dependents was not.  Try ldd.");
         }
         else {
@@ -232,7 +232,7 @@ gvplugin_library_t *gvplugin_library_load(GVC_t * gvc, char *path)
         return NULL;
     }
     free(sym);
-    return (gvplugin_library_t *) (ptr);
+    return (gvplugin_library_t *)ptr;
 #else
     agerr(AGERR, "dynamic loading not available\n");
     return NULL;
@@ -306,10 +306,10 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
             }
         }
         if (!reqpkg || strcmp(reqpkg, pnext->package->name) == 0) {
-            /* found with no packagename constraints, or with required matching packagname */
+            // found with no packagename constraints, or with required matching packagename
 
-            if (dep && (apidep != api)) /* load dependency if needed, continue if can't find */
-                if (!(gvplugin_load(gvc, apidep, dep)))
+            if (dep && apidep != api) /* load dependency if needed, continue if can't find */
+                if (!gvplugin_load(gvc, apidep, dep))
                     continue;
             break;
         }
