@@ -86,19 +86,17 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
         // do nothing
     } else if (model == MODEL_SUBSET) {
         // i,j,k refer to actual node indices, while x,y refer to edge indices in graph->targets
-        bool *neighbours_i = N_NEW(graph->n, bool);
-        bool *neighbours_j = N_NEW(graph->n, bool);
-        for (size_t i = 0; i < graph->n; i++) {
-            // initialise to no neighbours
-            neighbours_i[i] = false;
-            neighbours_j[i] = false;
-        }
+        bitarray_t neighbours_i = {0};
+        bitarray_t neighbours_j = {0};
+        // initialise to no neighbours
+        bitarray_resize_or_exit(&neighbours_i, graph->n);
+        bitarray_resize_or_exit(&neighbours_j, graph->n);
         for (size_t i = 0; i < graph->n; i++) {
             int deg_i = 0;
             for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
                 size_t j = graph->targets[x];
-                if (neighbours_i[j] == false) { // ignore multiedges
-                    neighbours_i[j] = true; // set up sort of hashset
+                if (!bitarray_get(neighbours_i, j)) { // ignore multiedges
+                    bitarray_set(neighbours_i, j, true); // set up sort of hashset
                     deg_i++;
                 }
             }
@@ -109,10 +107,10 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
                 for (size_t y = graph->sources[j]; y < graph->sources[j + 1];
                      y++) {
                     size_t k = graph->targets[y];
-                    if (neighbours_j[k] == false) { // ignore multiedges
-                        neighbours_j[k] = true; // set up sort of hashset
+                    if (!bitarray_get(neighbours_j, k)) { // ignore multiedges
+                        bitarray_set(neighbours_j, k, true); // set up sort of hashset
                         deg_j++;
-                        if (neighbours_i[k]) {
+                        if (bitarray_get(neighbours_i, k)) {
                             intersect++;
                         }
                     }
@@ -122,16 +120,16 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
                 for (size_t y = graph->sources[j]; y < graph->sources[j + 1];
                      y++) {
                     size_t k = graph->targets[y];
-                    neighbours_j[k] = false; // reset sort of hashset
+                    bitarray_set(neighbours_j, k, false); // reset sort of hashset
                 }
             }
             for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
                 size_t j = graph->targets[x];
-                neighbours_i[j] = false; // reset sort of hashset
+                bitarray_set(neighbours_i, j, false); // reset sort of hashset
             }
         }
-        free(neighbours_i);
-        free(neighbours_j);
+        bitarray_reset(&neighbours_i);
+        bitarray_reset(&neighbours_j);
     } else {
         // TODO: model == MODEL_MDS and MODEL_CIRCUIT
         assert(false); // mds and circuit model not supported
