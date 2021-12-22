@@ -10,9 +10,14 @@
 
 #pragma once
 
+#include <common/render.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+void osage_layout(Agraph_t *g);
+void osage_cleanup(Agraph_t *g);
 
 #ifdef __cplusplus
 }
