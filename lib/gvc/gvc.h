@@ -20,19 +20,13 @@ extern "C" {
 #endif
 
 #ifdef GVDLL
+#ifdef GVC_EXPORTS
 #define GVC_API __declspec(dllexport)
 #else
-#define GVC_API
-#endif
-
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#undef GVC_API
 #define GVC_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef GVC_API
 #define GVC_API extern
 #endif
@@ -68,7 +62,7 @@ GVC_API int gvLayout(GVC_t *gvc, graph_t *g, const char *engine);
 GVC_API int gvLayoutJobs(GVC_t *gvc, graph_t *g);
 
 /* Check if a layout has been done */
-extern bool gvLayoutDone(graph_t *g);
+GVC_API bool gvLayoutDone(graph_t *g);
 
 /* Render layout into string attributes of the graph */
 GVC_API void attach_attrs(graph_t *g);
