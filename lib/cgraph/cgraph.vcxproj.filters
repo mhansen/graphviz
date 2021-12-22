@@ -18,6 +18,9 @@
     <ClInclude Include="agxbuf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bitarray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="cghdr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
