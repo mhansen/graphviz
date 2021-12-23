@@ -12,6 +12,9 @@
 #include <math.h>
 #include <pathplan/solvers.h>
 
+static int solve1(double *coeff, double *roots);
+static int solve2(double *coeff, double *roots);
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
@@ -62,7 +65,7 @@ int solve3(double *coeff, double *roots)
     return rootn;
 }
 
-int solve2(double *coeff, double *roots)
+static int solve2(double *coeff, double *roots)
 {
     double a, b, c;
     double disc, b_over_2a, c_over_a;
@@ -85,7 +88,7 @@ int solve2(double *coeff, double *roots)
     return 1;
 }
 
-int solve1(double *coeff, double *roots)
+static int solve1(double *coeff, double *roots)
 {
     double a, b;
 
