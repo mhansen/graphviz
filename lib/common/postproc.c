@@ -146,7 +146,7 @@ static void translate_drawing(graph_t * g)
 {
     node_t *v;
     edge_t *e;
-    int shift = Offset.x || Offset.y;
+    bool shift = Offset.x || Offset.y;
 
     if (!shift && !Rankdir)
 	return;
