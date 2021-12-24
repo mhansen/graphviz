@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <label/xlabels.h>
 #include <stdbool.h>
@@ -669,6 +669,8 @@ void gv_postprocess(Agraph_t * g, int allowTranslation)
 	case RANKDIR_RL:
 	    Offset = pointfof(GD_bb(g).LL.y, GD_bb(g).LL.x);
 	    break;
+	default:
+	    UNREACHABLE();
 	}
 	translate_drawing(g);
     }
