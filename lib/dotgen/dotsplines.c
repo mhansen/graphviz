@@ -1033,7 +1033,6 @@ static int edgelblcmpfn(edge_t** ptr0, edge_t** ptr1)
 static void
 makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et, int n_lbls)
 {
-    pointf *ps;
     Ppoly_t poly;
     int pn;
     edge_t* e = edges[ind];
@@ -1120,12 +1119,16 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	}
 	poly.pn = 8;
 	poly.ps = (Ppoint_t*)points;
-	ps = simpleSplineRoute (tp, hp, poly, &pn, et == EDGETYPE_PLINE);
-	if (pn == 0) return;
+	pointf *ps = simpleSplineRoute(tp, hp, poly, &pn, et == EDGETYPE_PLINE);
+	if (pn == 0) {
+	    free(ps);
+	    return;
+	}
 	ED_label(e)->pos.x = ctrx;
 	ED_label(e)->pos.y = ctry;
 	ED_label(e)->set = TRUE;
 	clip_and_install(e, aghead(e), ps, pn, &sinfo);
+	free(ps);
     }
 
     /* edges with no labels */
@@ -1172,9 +1175,13 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	}
 	poly.pn = 8;
 	poly.ps = (Ppoint_t*)points;
-	ps = simpleSplineRoute (tp, hp, poly, &pn, et == EDGETYPE_PLINE);
-	if (pn == 0) return;
+	pointf *ps = simpleSplineRoute(tp, hp, poly, &pn, et == EDGETYPE_PLINE);
+	if (pn == 0) {
+	    free(ps);
+	    return;
+	}
 	clip_and_install(e, aghead(e), ps, pn, &sinfo);
+	free(ps);
     }
    
     free (earray);
@@ -1428,6 +1435,7 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
 {
     node_t *tn, *hn, *ln;
     pointf *ps;
+    bool ps_needs_free = false;
     pathend_t tend, hend;
     boxf lb;
     int i, pn, ydelta;
@@ -1483,11 +1491,17 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
 	for (size_t j = 0; j < boxn; j++) add_box(P, boxes[j]);
 	for (i = hend.boxn - 1; i >= 0; i--) add_box(P, hend.boxes[i]);
 
+	ps_needs_free = true;
 	if (et == EDGETYPE_SPLINE) ps = routesplines(P, &pn);
 	else ps = routepolylines(P, &pn);
-	if (pn == 0) return;
+	if (pn == 0) {
+	    free(ps);
+	    return;
+	}
     }
     clip_and_install(e, aghead(e), ps, pn, &sinfo);
+    if (ps_needs_free)
+	free(ps);
 }
 
 /* make_flat_bottom_edges:
@@ -1500,8 +1514,6 @@ make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges,
     int j, i, r;
     double stepx, stepy, vspace;
     rank_t* nextr;
-    int pn;
-    pointf *ps;
     pathend_t tend, hend;
 
     tn = agtail(e);
@@ -1551,11 +1563,16 @@ make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges,
 	for (size_t k = 0; k < boxn; k++) add_box(P, boxes[k]);
 	for (j = hend.boxn - 1; j >= 0; j--) add_box(P, hend.boxes[j]);
 
+	pointf *ps = NULL;
+	int pn = 0;
 	if (splines) ps = routesplines(P, &pn);
 	else ps = routepolylines(P, &pn);
-	if (pn == 0)
+	if (pn == 0) {
+	    free(ps);
 	    return;
+	}
 	clip_and_install(e, aghead(e), ps, pn, &sinfo);
+	free(ps);
 	P->nbox = 0;
     }
 }
@@ -1578,8 +1595,7 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
     edge_t *e;
     int j, i, r, isAdjacent;
     double stepx, stepy, vspace;
-    int tside, hside, pn;
-    pointf *ps;
+    int tside, hside;
     pathend_t tend, hend;
 
     fwdedge.out.base.data = (Agrec_t*)&fwdedgei;
@@ -1672,11 +1688,16 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
 	for (size_t k = 0; k < boxn; k++) add_box(P, boxes[k]);
 	for (j = hend.boxn - 1; j >= 0; j--) add_box(P, hend.boxes[j]);
 
+	pointf *ps = NULL;
+	int pn = 0;
 	if (et == EDGETYPE_SPLINE) ps = routesplines(P, &pn);
 	else ps = routepolylines(P, &pn);
-	if (pn == 0)
+	if (pn == 0) {
+	    free(ps);
 	    return;
+	}
 	clip_and_install(e, aghead(e), ps, pn, &sinfo);
+	free(ps);
 	P->nbox = 0;
     }
 }
@@ -1783,10 +1804,9 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     Agedgeinfo_t fwdedgeai, fwdedgebi, fwdedgei;
     Agedgepair_t fwdedgea, fwdedgeb, fwdedge;
     edge_t *e, *fe, *le, *segfirst;
-    pointf *ps;
     pathend_t tend, hend;
     boxf b;
-    int sl, si, smode, i, j, dx, pn, hackflag, longedge;
+    int sl, si, smode, i, j, dx, hackflag, longedge;
     static pointf* pointfs;
     static pointf* pointfs2;
     static int numpts;
@@ -1888,6 +1908,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
 	    completeregularpath(P, segfirst, e, &tend, &hend, boxes.data,
 	                        (int)boxes.size, 1);
+	    pointf *ps = NULL;
+	    int pn = 0;
 	    if (is_spline) ps = routesplines(P, &pn);
 	    else {
 		ps = routepolylines (P, &pn);
@@ -1898,6 +1920,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 		}
 	    }
 	    if (pn == 0) {
+	        free(ps);
 	        boxes_free(&boxes);
 	        return;
 	    }
@@ -1912,6 +1935,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    for (i = 0; i < pn; i++) {
 		pointfs[pointn++] = ps[i];
 	    }
+	    free(ps);
 	    e = straight_path(ND_out(hn).list[0], sl, pointfs, &pointn);
 	    recover_slack(segfirst, P);
 	    segfirst = e;
@@ -1941,6 +1965,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	completeregularpath(P, segfirst, e, &tend, &hend, boxes.data, (int)boxes.size,
 	                    longedge);
 	boxes_free(&boxes);
+	pointf *ps = NULL;
+	int pn = 0;
 	if (is_spline) ps = routesplines(P, &pn);
 	else ps = routepolylines (P, &pn);
 	if (et == EDGETYPE_LINE && pn > 4) {
@@ -1952,8 +1978,10 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    ps[3] = ps[2] = ps[pn-1];
 	    pn = 4;
         }
-	if (pn == 0)
+	if (pn == 0) {
+	    free(ps);
 	    return;
+	}
 	if (pointn + pn > numpts) {
 	    numpts = 2*(pointn+pn); 
 	    pointfs = RALLOC(numpts, pointfs, pointf);
@@ -1961,6 +1989,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	for (i = 0; i < pn; i++) {
 	    pointfs[pointn++] = ps[i];
 	}
+	free(ps);
 	recover_slack(segfirst, P);
 	hn = hackflag ? aghead(&fwdedgeb.out) : aghead(e);
     }

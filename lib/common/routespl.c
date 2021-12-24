@@ -23,15 +23,12 @@ static int nedges, nboxes; /* total no. of edges and boxes used in routing */
 
 static int routeinit;
 /* static data used across multiple edges */
-static pointf *ps;             /* final spline points */
-static int maxpn;             /* size of ps[] */
 static Ppoint_t *polypoints;  /* vertices of polygon defined by boxes */
 static int polypointn;        /* size of polypoints[] */
 static Pedge_t *edges;        /* polygon edges passed to Proutespline */
 static int edgen;             /* size of edges[] */
 
 static int checkpath(int, boxf*, path*);
-static int mkspacep(int size);
 static void printpath(path * pp);
 #ifdef DEBUG
 static void printboxes(int boxn, boxf* boxes)
@@ -249,8 +246,11 @@ simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
             return NULL;
     }
 
-    if (mkspacep(spl.pn))
+    pointf *ps = calloc(spl.pn, sizeof(ps[0]));
+    if (ps == NULL) {
+	agerr(AGERR, "cannot allocate ps\n");
 	return NULL;
+    }
     for (i = 0; i < spl.pn; i++) {
         ps[i] = spl.ps[i];
     }
@@ -266,11 +266,6 @@ int
 routesplinesinit()
 {
     if (++routeinit > 1) return 0;
-    if (!(ps = calloc(PINC, sizeof(pointf)))) {
-	agerr(AGERR, "routesplinesinit: cannot allocate ps\n");
-	return 1;
-    }
-    maxpn = PINC;
 #ifdef DEBUG
     if (Show_boxes) {
         for (int i = 0; Show_boxes[i]; i++)
@@ -290,7 +285,6 @@ routesplinesinit()
 void routesplinesterm()
 {
     if (--routeinit > 0) return;
-    free(ps);
     if (Verbose)
 	fprintf(stderr,
 		"routesplines: %d edges, %d boxes %.2f sec\n",
@@ -559,8 +553,11 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	}
 #endif
     }
-    if (mkspacep(spl.pn))
+    pointf *ps = calloc(spl.pn, sizeof(ps[0]));
+    if (ps == NULL) {
+	agerr(AGERR, "cannot allocate ps\n");
 	return NULL;  /* Bailout if no memory left */
+    }
 
     for (bi = 0; bi < boxn; bi++) {
 	boxes[bi].LL.x = INT_MAX;
@@ -780,20 +777,6 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 	thepath->end.p.x = fmin(thepath->end.p.x, boxes[boxn - 1].UR.x);
 	thepath->end.p.y = fmax(thepath->end.p.y, boxes[boxn - 1].LL.y);
 	thepath->end.p.y = fmin(thepath->end.p.y, boxes[boxn - 1].UR.y);
-    }
-    return 0;
-}
-
-static int mkspacep(int size)
-{
-    if (size > maxpn) {
-	int newmax = maxpn + (size / PINC + 1) * PINC;
-	ps = realloc(ps, newmax * sizeof(pointf));
-	if (!ps) {
-	    agerr(AGERR, "cannot re-allocate ps\n");
-	    return 1;
-	}
-	maxpn = newmax;
     }
     return 0;
 }
