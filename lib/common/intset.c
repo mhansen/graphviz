@@ -22,7 +22,7 @@ mkIntItem(Dt_t* d,intitem* obj,Dtdisc_t* disc)
 
     intitem* np = NEW(intitem);
     np->id = obj->id;
-    return (void*)np;
+    return np;
 }
 
 static void
