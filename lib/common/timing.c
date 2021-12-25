@@ -27,7 +27,7 @@ typedef struct tms mytime_t;
 #else
 
 #include	<time.h>
-#include <common/render.h>
+#include <common/types.h>
 #include    <common/utils.h>
 
 typedef clock_t mytime_t;
