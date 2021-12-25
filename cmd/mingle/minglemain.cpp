@@ -15,6 +15,7 @@
 #include <common/pointset.h>
 #include <getopt.h>
 #include <iomanip>
+#include <iostream>
 #include <memory>
 #include <sstream>
 #include <stddef.h>
@@ -56,7 +57,7 @@ static FILE *openFile(const char *name, const char* cmd)
 
 	fp = fopen(name, "w");
 	if (!fp) {
-		fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
+		std::cerr << cmd << ": could not open file " << name << " for writing\n";
 		exit(-1);
 	}
 	return (fp);
@@ -80,7 +81,7 @@ static const char use_msg[] =
 static void
 usage (int eval)
 {
-	fputs (use_msg, stderr);
+	std::cerr << use_msg;
 	exit(eval);
 }
 
@@ -131,37 +132,39 @@ static void init(int argc, char *argv[], opts_t* opts)
 			if ((sscanf(optarg,"%lf",&s) > 0) && (s >= 0))
 				opts->angle =  M_PI*s/180;
 			else 
-				fprintf (stderr, "-a arg %s must be positive real - ignored\n", optarg); 
+				std::cerr << "-a arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'c':
 			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= COMPATIBILITY_FULL))
 				opts->compatibility_method =  i;
 			else 
-				fprintf (stderr, "-c arg %s must be an integer in [0,%d] - ignored\n", optarg, COMPATIBILITY_FULL); 
+				std::cerr << "-c arg " << optarg << " must be an integer in [0,"
+					<< COMPATIBILITY_FULL << "] - ignored\n";
 			break;
 		case 'i':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
 				opts->outer_iter =  i;
 			else 
-				fprintf (stderr, "-i arg %s must be a non-negative integer - ignored\n", optarg); 
+				std::cerr << "-i arg " << optarg << " must be a non-negative integer - "
+					"ignored\n";
 			break;
 		case 'k':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 2))
 				opts->nneighbors =  i;
 			else 
-				fprintf (stderr, "-k arg %s must be an integer >= 2 - ignored\n", optarg); 
+				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'K':
 			if ((sscanf(optarg,"%lf",&s) > 0) && (s > 0))
 				opts->K =  s;
 			else 
-				fprintf (stderr, "-K arg %s must be positive real - ignored\n", optarg); 
+				std::cerr << "-K arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'm':
 			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= METHOD_INK))
 				opts->method =  i;
 			else 
-				fprintf (stderr, "-k arg %s must be an integer >= 2 - ignored\n", optarg); 
+				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'o':
 			outfile = openFile(optarg, cmd);
@@ -170,13 +173,14 @@ static void init(int argc, char *argv[], opts_t* opts)
 			if ((sscanf(optarg,"%lf",&s) > 0))
 				opts->angle_param =  s;
 			else 
-				fprintf (stderr, "-p arg %s must be real - ignored\n", optarg); 
+				std::cerr << "-p arg " << optarg << " must be real - ignored\n";
 			break;
 		case 'r':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
 				opts->max_recursion =  i;
 			else 
-				fprintf (stderr, "-r arg %s must be a non-negative integer - ignored\n", optarg); 
+				std::cerr << "-r arg " << optarg << " must be a non-negative integer - "
+					"ignored\n";
 			break;
 		case 'T':
 			if (!strcmp(optarg, "gv"))
@@ -184,7 +188,8 @@ static void init(int argc, char *argv[], opts_t* opts)
 			else if (!strcmp(optarg,"simple"))
 				opts->fmt = FMT_SIMPLE;
 			else
-				fprintf (stderr, "-T arg %s must be \"gv\" or \"simple\" - ignored\n", optarg); 
+				std::cerr << "-T arg " << optarg << " must be \"gv\" or \"simple\" - "
+					"ignored\n";
 			break;
 		case 'v':
 			Verbose = 1;
@@ -197,7 +202,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 			if (optopt == 'v')
 				Verbose = 1;
 			else {
-				fprintf(stderr, "%s: option -%c missing argument\n", cmd, optopt);
+				std::cerr << cmd << ": option -" << optopt << " missing argument\n";
 				usage(1);
 			}
 			break;
@@ -205,7 +210,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 			if (optopt == '\0')
 				usage(0);
 			else {
-				fprintf(stderr, "%s: option -%c unrecognized\n", cmd, optopt);
+				std::cerr << cmd << ": option -" << optopt << " unrecognized\n";
 				usage(1);
 			}
 			break;
@@ -220,16 +225,17 @@ static void init(int argc, char *argv[], opts_t* opts)
 		Files = argv;
     if (!outfile) outfile = stdout;
     if (Verbose) {
-       fprintf (stderr, "Mingle params:\n");
-       fprintf (stderr, "  outer_iter = %d\n", opts->outer_iter);
-       fprintf (stderr, "  method = %d\n", opts->method);
-       fprintf (stderr, "  compatibility_method = %d\n", opts->compatibility_method);
-       fprintf (stderr, "  K = %.02f\n", opts->K);
-       fprintf (stderr, "  fmt = %s\n", (opts->fmt?"simple":"gv"));
-       fprintf (stderr, "  nneighbors = %d\n", opts->nneighbors);
-       fprintf (stderr, "  max_recursion = %d\n", opts->max_recursion);
-       fprintf (stderr, "  angle_param = %.02f\n", opts->angle_param);
-       fprintf (stderr, "  angle = %.02f\n", 180*opts->angle/M_PI);
+       std::cerr
+         << "Mingle params:\n"
+         << "  outer_iter = " << opts->outer_iter << '\n'
+         << "  method = " << opts->method << '\n'
+         << "  compatibility_method = " << opts->compatibility_method << '\n'
+         << "  K = " << std::setprecision(2) << opts->K << '\n'
+         << "  fmt = " << (opts->fmt ? "simple" : "gv") << '\n'
+         << "  nneighbors = " << opts->nneighbors << '\n'
+         << "  max_recursion = " <<  opts->max_recursion << '\n'
+         << "  angle_param = " << std::setprecision(2) <<  opts->angle_param << '\n'
+         << "  angle = " << std::setprecision(2) << (180 * opts->angle / M_PI) << '\n';
     }
 }
 
@@ -450,7 +456,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		}
 	}
 	if (Verbose)
-		fprintf(stderr,"n = %d nz = %d\n",A->m, nz);
+		std::cerr << "n = " << A->m << " nz = " << nz << '\n';
 
 	B = nearest_neighbor_graph(nz, MIN(opts->nneighbors, nz), xx.get(), eps);
 
@@ -494,8 +500,7 @@ int main(int argc, char *argv[])
 		prev = g;
 		fname = fileName(&ig);
 		if (Verbose)
-		    fprintf(stderr, "Process graph %s in file %s\n", agnameof(g),
-			    fname);
+		    std::cerr << "Process graph " << agnameof(g) << " in file " << fname << '\n';
 		rv |= bundle (g, &opts);
 	}
 
