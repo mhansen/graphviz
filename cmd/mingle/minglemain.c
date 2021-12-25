@@ -60,7 +60,7 @@ static FILE *openFile(const char *name, const char* cmd)
 	return (fp);
 }
 
-static char* use_msg =
+static const char use_msg[] =
 "Usage: mingle <options> <file>\n\
     -a t - max. turning angle [0-180] (40)\n\
     -c i - compatability measure; 0 : distance, 1: full (default)\n\
