@@ -18,7 +18,6 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
-#include <stddef.h>
 
 #include <sparse/DotIO.h>
 #include <mingle/edge_bundling.h>
