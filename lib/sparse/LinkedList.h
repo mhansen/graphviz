@@ -10,6 +10,10 @@
 
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct SingleLinkedList_struct* SingleLinkedList;
 
 struct SingleLinkedList_struct {
@@ -47,3 +51,7 @@ void* DoubleLinkedList_get_data(DoubleLinkedList l);
 DoubleLinkedList DoubleLinkedList_get_next(DoubleLinkedList l);
 
 void DoubleLinkedList_delete_element(DoubleLinkedList l,  void (*linklist_deallocator)(void*), DoubleLinkedList *head);
+
+#ifdef __cplusplus
+}
+#endif

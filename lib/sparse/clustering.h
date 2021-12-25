@@ -10,6 +10,10 @@
 
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct Multilevel_Modularity_Clustering_struct *Multilevel_Modularity_Clustering;
 
 struct Multilevel_Modularity_Clustering_struct {
@@ -49,3 +53,7 @@ enum {CLUSTERING_MODULARITY = 0, CLUSTERING_MQ};
 */
 void modularity_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
 			   int *nclusters, int **assignment, double *modularity, int *flag);
+
+#ifdef __cplusplus
+}
+#endif

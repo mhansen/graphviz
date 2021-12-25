@@ -12,6 +12,10 @@
 
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* last in first out integer stack */
 struct IntStack_struct{
   size_t last; // position of the last element, If empty, last = SIZE_MAX
@@ -33,3 +37,7 @@ size_t IntStack_push(IntStack s, int i); // add an item and return the pos
 int IntStack_pop(IntStack s, int *flag);/* remove the last item. If none exist, flag = -1, and return -1. */
 
 void IntStack_print(IntStack s);
+
+#ifdef __cplusplus
+}
+#endif
