@@ -19,15 +19,16 @@
 extern "C" {
 #endif
 
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
+#ifdef GVDLL
+#ifdef GVC_EXPORTS
+#define UTILS_API __declspec(dllexport)
+#else
 #define UTILS_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef UTILS_API
-#define UTILS_API extern
+#define UTILS_API /* nothing */
 #endif
 
 // options to tweak the behavior of XML escaping

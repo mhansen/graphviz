@@ -27,8 +27,6 @@ typedef struct tms mytime_t;
 #else
 
 #include	<time.h>
-#include <common/render.h>
-#include    <common/utils.h>
 
 typedef clock_t mytime_t;
 #define GET_TIME(S) S = clock()
@@ -36,6 +34,8 @@ typedef clock_t mytime_t;
 
 #endif
 
+#include <common/types.h>
+#include <common/utils.h>
 
 static mytime_t T;
 
