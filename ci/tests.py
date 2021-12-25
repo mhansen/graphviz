@@ -13,7 +13,7 @@ from typing import Dict
 import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
-from gvtest import dot, is_cmake #pylint: disable=C0413
+from gvtest import dot, is_cmake, is_mingw #pylint: disable=C0413
 
 def _freedesktop_os_release() -> Dict[str, str]:
   """
@@ -38,6 +38,16 @@ def is_centos() -> bool:
   is the current CI environment CentOS-based?
   """
   return _freedesktop_os_release().get("ID") == "centos"
+
+def is_win64() -> bool:
+  """
+  is the Graphviz under test targeting the x64 Windows API?
+  """
+  if platform.system() != "Windows":
+    return False
+  if os.getenv("project_platform") != "x64":
+    return False
+  return True
 
 @pytest.mark.parametrize("binary", [
   "acyclic",
@@ -100,7 +110,6 @@ def test_existence(binary: str):
     "gvmap.sh",
     "gxl2dot",
     "lneato",
-    "mingle",
     "prune",
     "smyrna",
     "vimdot",
@@ -126,7 +135,7 @@ def test_existence(binary: str):
 
   # FIXME: Remove skip when
   # https://gitlab.com/graphviz/graphviz/-/issues/1835 is fixed
-  if os_id == "ubuntu" and binary == "mingle":
+  if os_id == "ubuntu" and binary == "mingle" and not is_cmake():
     check_that_tool_does_not_exist(binary, os_id)
     pytest.skip(f"mingle is not built for {os_id} (#1835)")
 
@@ -158,6 +167,10 @@ def test_existence(binary: str):
       if binary in tools_not_built_with_autotools_on_macos:
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip(f"{binary} is not built with autotools on macOS (#1854)")
+
+  if binary == "mingle" and is_cmake() and (is_win64() or is_mingw()):
+    check_that_tool_does_not_exist(binary, os_id)
+    pytest.skip(f"{binary} is not built on some Windows due to lacking libANN")
 
   assert shutil.which(binary) is not None
 

@@ -11,7 +11,11 @@ import platform
 import re
 import shutil
 import subprocess
+import sys
 import pytest
+
+sys.path.append(os.path.dirname(__file__))
+from gvtest import is_cmake #pylint: disable=C0413
 
 @pytest.mark.parametrize("tool", [
     "acyclic",
@@ -81,12 +85,24 @@ def test_tools(tool):
   environ_copy = os.environ.copy()
   environ_copy.pop("DISPLAY", None)
 
+  # FIXME: mingle triggers ODR violations
+  if tool == "mingle":
+    if "ASAN_OPTIONS" in environ_copy:
+      environ_copy["ASAN_OPTIONS"] += ":detect_odr_violation=0"
+    else:
+      environ_copy["ASAN_OPTIONS"] = "detect_odr_violation=0"
+
   # Test usage
   with subprocess.Popen([tool, "-?"], env=environ_copy,
                         stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT, universal_newlines=True) as p:
     output, _ = p.communicate()
     ret = p.returncode
+
+  # FIXME: mingle built with CMake on Windows crashes
+  if tool == "mingle" and is_cmake() and platform.system() == "Windows":
+    assert ret != 0, "mingle on Windows with CMake fixed?"
+    return
 
   assert ret == 0, f"`{tool} -?` failed. Output was: {output}"
 
