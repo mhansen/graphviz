@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <label/xlabels.h>
 #include <stdbool.h>
@@ -91,7 +91,7 @@ static void map_edge(edge_t * e)
     bezier bz;
 
     if (ED_spl(e) == NULL) {
-	if ((Concentrate == FALSE) && (ED_edge_type(e) != IGNORED))
+	if (!Concentrate && ED_edge_type(e) != IGNORED)
 	    agerr(AGERR, "lost %s %s edge\n", agnameof(agtail(e)),
 		  agnameof(aghead(e)));
 	return;
@@ -146,7 +146,7 @@ static void translate_drawing(graph_t * g)
 {
     node_t *v;
     edge_t *e;
-    int shift = (Offset.x || Offset.y);
+    bool shift = Offset.x || Offset.y;
 
     if (!shift && !Rankdir)
 	return;
@@ -200,8 +200,8 @@ centerPt (xlabel_t* xlp) {
   pointf p;
 
   p = xlp->pos;
-  p.x += (xlp->sz.x)/2.0;
-  p.y += (xlp->sz.y)/2.0;
+  p.x += xlp->sz.x / 2.0;
+  p.y += xlp->sz.y / 2.0;
 
   return p;
 }
@@ -218,15 +218,16 @@ printData (object_t* objs, int n_objs, xlabel_t* lbls, int n_lbls,
   fprintf(stderr, "objects\n");
   for (i = 0; i < n_objs; i++) {
     xp = objs->lbl;
-    fprintf (stderr, " [%d] (%.02f,%.02f) (%.02f,%.02f) %p \"%s\"\n",
-	    i, objs->pos.x,objs->pos.y,objs->sz.x,objs->sz.y, objs->lbl, 
-	    (xp?((textlabel_t*)(xp->lbl))->text:""));
+    fprintf(stderr, " [%d] (%.02f,%.02f) (%.02f,%.02f) %p \"%s\"\n",
+            i, objs->pos.x, objs->pos.y, objs->sz.x, objs->sz.y, objs->lbl,
+            xp ? ((textlabel_t*)xp->lbl)->text : "");
     objs++;
   }
   fprintf(stderr, "xlabels\n");
   for (i = 0; i < n_lbls; i++) {
-    fprintf (stderr, " [%d] %p set %d (%.02f,%.02f) (%.02f,%.02f) %s\n",
-	     i, lbls,  lbls->set, lbls->pos.x,lbls->pos.y, lbls->sz.x,lbls->sz.y, ((textlabel_t*)lbls->lbl)->text);  
+    fprintf(stderr, " [%d] %p set %d (%.02f,%.02f) (%.02f,%.02f) %s\n",
+            i, lbls, lbls->set, lbls->pos.x, lbls->pos.y, lbls->sz.x,
+            lbls->sz.y, ((textlabel_t*)lbls->lbl)->text);
     lbls++;
   }
   return 0;
@@ -331,8 +332,8 @@ addLabelObj (textlabel_t* lp, object_t* objp, boxf bb)
 	objp->sz.y = lp->dimen.y;
     }
     objp->pos = lp->pos;
-    objp->pos.x -= (objp->sz.x) / 2.0;
-    objp->pos.y -= (objp->sz.y) / 2.0;
+    objp->pos.x -= objp->sz.x / 2.0;
+    objp->pos.y -= objp->sz.y / 2.0;
 
     return adjustBB(objp, bb);
 }
@@ -354,8 +355,8 @@ addNodeObj (node_t* np, object_t* objp, boxf bb)
 	objp->sz.y = INCH2PS(ND_height(np));
     }
     objp->pos = ND_coord(np);
-    objp->pos.x -= (objp->sz.x) / 2.0;
-    objp->pos.y -= (objp->sz.y) / 2.0;
+    objp->pos.x -= objp->sz.x / 2.0;
+    objp->pos.y -= objp->sz.y / 2.0;
 
     return adjustBB(objp, bb);
 }
@@ -372,7 +373,7 @@ addClusterObj (Agraph_t* g, cinfo_t info)
 
     for (c = 1; c <= GD_n_cluster(g); c++)
 	info = addClusterObj (GD_clust(g)[c], info);
-    if ((g != agroot(g)) && (GD_label(g)) && GD_label(g)->set) {
+    if (g != agroot(g) && GD_label(g) && GD_label(g)->set) {
 	object_t* objp = info.objp;
 	info.bb = addLabelObj (GD_label(g), objp, info.bb);
 	info.objp++;
@@ -385,7 +386,7 @@ static int
 countClusterLabels (Agraph_t* g)
 {
     int c, i = 0;
-    if ((g != agroot(g)) && (GD_label(g)) && GD_label(g)->set)
+    if (g != agroot(g) && GD_label(g) && GD_label(g)->set)
 	i++;
     for (c = 1; c <= GD_n_cluster(g); c++)
 	i += countClusterLabels (GD_clust(g)[c]);
@@ -576,7 +577,7 @@ static void addXLabels(Agraph_t * gp)
     for (i = 0; i < n_lbls; i++) {
 	if (xlp->set) {
 	    cnt++;
-	    lp = (textlabel_t *) (xlp->lbl);
+	    lp = (textlabel_t *)xlp->lbl;
 	    lp->set = 1;
 	    lp->pos = centerPt(xlp);
 	    updateBB (gp, lp);
@@ -628,7 +629,7 @@ void gv_postprocess(Agraph_t * g, int allowTranslation)
 		GD_bb(g).LL.x -= dimen.y;
 	    }
 
-	    if (dimen.x > (GD_bb(g).UR.y - GD_bb(g).LL.y)) {
+	    if (dimen.x > GD_bb(g).UR.y - GD_bb(g).LL.y) {
 		diff = dimen.x - (GD_bb(g).UR.y - GD_bb(g).LL.y);
 		diff = diff / 2.;
 		GD_bb(g).LL.y -= diff;
@@ -647,7 +648,7 @@ void gv_postprocess(Agraph_t * g, int allowTranslation)
 		    GD_bb(g).UR.y += dimen.y;
 	    }
 
-	    if (dimen.x > (GD_bb(g).UR.x - GD_bb(g).LL.x)) {
+	    if (dimen.x > GD_bb(g).UR.x - GD_bb(g).LL.x) {
 		diff = dimen.x - (GD_bb(g).UR.x - GD_bb(g).LL.x);
 		diff = diff / 2.;
 		GD_bb(g).LL.x -= diff;
@@ -669,6 +670,8 @@ void gv_postprocess(Agraph_t * g, int allowTranslation)
 	case RANKDIR_RL:
 	    Offset = pointfof(GD_bb(g).LL.y, GD_bb(g).LL.x);
 	    break;
+	default:
+	    UNREACHABLE();
 	}
 	translate_drawing(g);
     }
@@ -701,7 +704,7 @@ static void place_flip_graph_label(graph_t * g)
     int c;
     pointf p, d;
 
-    if ((g != agroot(g)) && (GD_label(g)) && !GD_label(g)->set) {
+    if (g != agroot(g) && GD_label(g) && !GD_label(g)->set) {
 	if (GD_label_pos(g) & LABEL_AT_TOP) {
 	    d = GD_border(g)[RIGHT_IX];
 	    p.x = GD_bb(g).UR.x - d.x / 2;
@@ -736,7 +739,7 @@ void place_graph_label(graph_t * g)
     int c;
     pointf p, d;
 
-    if ((g != agroot(g)) && (GD_label(g)) && !GD_label(g)->set) {
+    if (g != agroot(g) && GD_label(g) && !GD_label(g)->set) {
 	if (GD_label_pos(g) & LABEL_AT_TOP) {
 	    d = GD_border(g)[TOP_IX];
 	    p.y = GD_bb(g).UR.y - d.y / 2;
