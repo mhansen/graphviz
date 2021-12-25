@@ -193,7 +193,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 		case 'v':
 			Verbose = 1;
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
-				Verbose =  (unsigned char)i;
+				Verbose = static_cast<unsigned char>(i);
 			else
 				optind--;
 			break;
@@ -328,8 +328,8 @@ static void genBundleColors(pedge edge, std::ostream &os, double maxwgt) {
 static void
 export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 {
-	Agsym_t* epos = agattr(g, AGEDGE, (char*)"pos", "");
-	Agsym_t* esects = agattr(g, AGEDGE, (char*)"bundle", "");
+	Agsym_t* epos = agattr(g, AGEDGE, const_cast<char*>("pos"), "");
+	Agsym_t* esects = agattr(g, AGEDGE, const_cast<char*>("bundle"), "");
 	Agsym_t* eclrs = nullptr;
 	Agnode_t* n;
 	Agedge_t* e;
@@ -361,7 +361,7 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 			buf.str("");
 
 			if (edge->wgts) {
-				if (!eclrs) eclrs = agattr(g, AGEDGE, (char*)"color", "");
+				if (!eclrs) eclrs = agattr(g, AGEDGE, const_cast<char*>("color"), "");
 				genBundleColors(edge, buf, maxwgt);
 				agxset(e, eclrs, buf.str().c_str());
 				buf.str("");
