@@ -15,6 +15,7 @@
 #include <common/pointset.h>
 #include <getopt.h>
 #include <iomanip>
+#include <memory>
 #include <sstream>
 #include <stddef.h>
 
@@ -295,7 +296,7 @@ static void genBundleColors(pedge edge, std::ostream &os, double maxwgt) {
 	double len, t, len_total0 = 0;
 	int dim = edge->dim;
 	double* x = edge->x;
-	double* lens = (double*)MALLOC(sizeof(double) * edge->npoints);
+	std::unique_ptr<double[]> lens(new double[edge->npoints]);
 
 	for (j = 0; j < edge->npoints - 1; j++){
 		len = 0;
@@ -317,7 +318,6 @@ static void genBundleColors(pedge edge, std::ostream &os, double maxwgt) {
 		}
 	}
 	os << std::dec << std::setw(0); // reset stream characteristics
-	free (lens);
 }
 
 static void
