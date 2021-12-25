@@ -274,7 +274,7 @@ void makeSelfArcs(edge_t * e, int stepx)
  * The polygon has its vertices in CW order.
  * 
  */
-Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, boolean isOrtho)
+Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 {
     Ppoly_t *obs;
     polygon_t *poly;

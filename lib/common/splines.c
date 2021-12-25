@@ -1240,11 +1240,11 @@ void makePortLabels(edge_t * e)
     if (!E_labelangle && !E_labeldistance) return;
 
     if (ED_head_label(e) && !ED_head_label(e)->set) {
-	if (place_portlabel(e, TRUE))
+	if (place_portlabel(e, true))
 	    updateBB(agraphof(agtail(e)), ED_head_label(e));
     }
     if (ED_tail_label(e) && !ED_tail_label(e)->set) {
-	if (place_portlabel(e, FALSE))
+	if (place_portlabel(e, false))
 	    updateBB(agraphof(agtail(e)), ED_tail_label(e));
     }
 }
@@ -1361,7 +1361,7 @@ void addEdgeLabels(edge_t * e, pointf rp, pointf rq)
  * and head is at spl->list[spl->size-l].list[bez->size-1]
  * Return 1 on success
  */
-int place_portlabel(edge_t * e, boolean head_p)
+int place_portlabel(edge_t * e, bool head_p)
 {
     textlabel_t *l;
     splines *spl;

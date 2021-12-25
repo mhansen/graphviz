@@ -542,7 +542,7 @@ finish :
 	    if (E_headlabel) {
 		for (e = agfstin(g, n); e; e = agnxtin(g, e))
 		    if (ED_head_label(AGMKOUT(e))) {
-			place_portlabel(AGMKOUT(e), TRUE);
+			place_portlabel(AGMKOUT(e), true);
 			updateBB(g, ED_head_label(AGMKOUT(e)));
 		    }
 
@@ -550,7 +550,7 @@ finish :
 	    if (E_taillabel) {
 		for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 		    if (ED_tail_label(e)) {
-			if (place_portlabel(e, FALSE))
+			if (place_portlabel(e, false))
 			    updateBB(g, ED_tail_label(e));
 		    }
 		}

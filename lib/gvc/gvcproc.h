@@ -19,7 +19,7 @@
 /* configuration */
 
     char *gvconfig_libdir(GVC_t * gvc);
-    void gvconfig(GVC_t * gvc, boolean rescan);
+    void gvconfig(GVC_t * gvc, bool rescan);
     char *gvhostname(void);
 
 /* plugins */
@@ -50,10 +50,10 @@
 /* textlayout */
 
     int gvtextlayout_select(GVC_t * gvc);
-    boolean gvtextlayout(GVC_t *gvc, textspan_t *span, char **fontpath);
+    bool gvtextlayout(GVC_t *gvc, textspan_t *span, char **fontpath);
 
 /* loadimage */
-    void gvloadimage(GVJ_t *job, usershape_t *us, boxf b, boolean filled, const char *target);
+    void gvloadimage(GVJ_t *job, usershape_t *us, boxf b, bool filled, const char *target);
     
 /* usershapes */
     point gvusershape_size_dpi(usershape_t *us, pointf dpi);
@@ -109,7 +109,7 @@
 			int arrow_at_start, int arrow_at_end, int filled);
     void gvrender_polyline(GVJ_t * job, pointf * AF, int n);
     void gvrender_comment(GVJ_t * job, char *str);
-    void gvrender_usershape(GVJ_t * job, char *name, pointf * AF, int n, boolean filled, char *imagescale, char *imagepos);
+    void gvrender_usershape(GVJ_t * job, char *name, pointf * AF, int n, bool filled, char *imagescale, char *imagepos);
 
 /* layout */
 

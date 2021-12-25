@@ -152,7 +152,7 @@ static void translate_drawing(graph_t * g)
 	return;
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	if (Rankdir)
-	    gv_nodesize(v, FALSE);
+	    gv_nodesize(v, false);
 	ND_coord(v) = map_point(ND_coord(v));
 	if (ND_xlabel(v))
 	    ND_xlabel(v)->pos = map_point(ND_xlabel(v)->pos);

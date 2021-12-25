@@ -113,14 +113,14 @@ extern "C" {
     RENDER_API void gv_cleanup_node(Agnode_t * n);
     RENDER_API void* init_xdot (Agraph_t* g);
     RENDER_API int initMapData (GVJ_t*, char*, char*, char*, char*, char*, void*);
-    RENDER_API boolean isPolygon(node_t *);
+    RENDER_API bool isPolygon(node_t *);
     RENDER_API void makeSelfEdge(edge_t * edges[], int ind, int cnt,
 	double sizex, double sizey, splineInfo * sinfo);
     RENDER_API textlabel_t *make_label(void *obj, char *str, int kind, double fontsize, char *fontname, char *fontcolor);
     RENDER_API bezier *new_spline(edge_t * e, int sz);
     RENDER_API char **parse_style(char *s);
     RENDER_API void place_graph_label(Agraph_t *);
-    RENDER_API int place_portlabel(edge_t * e, boolean head_p);
+    RENDER_API int place_portlabel(edge_t * e, bool head_p);
     RENDER_API void makePortLabels(edge_t * e);
     RENDER_API pointf edgeMidpoint(graph_t* g, edge_t * e);
     RENDER_API void addEdgeLabels(edge_t * e, pointf rp, pointf rq);

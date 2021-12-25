@@ -25,6 +25,7 @@
 
 /* for agerr() */
 #include <cgraph/cgraph.h>
+#include <stdbool.h>
 
 static int gvloadimage_select(GVJ_t * job, char *str)
 {
@@ -41,7 +42,7 @@ static int gvloadimage_select(GVJ_t * job, char *str)
     return NO_SUPPORT;
 }
 
-void gvloadimage(GVJ_t * job, usershape_t *us, boxf b, boolean filled, const char *target)
+void gvloadimage(GVJ_t * job, usershape_t *us, boxf b, bool filled, const char *target)
 {
     gvloadimage_engine_t *gvli;
     char type[SMALLBUF];
@@ -59,5 +60,5 @@ void gvloadimage(GVJ_t * job, usershape_t *us, boxf b, boolean filled, const cha
 	    agerr (AGWARN, "No loadimage plugin for \"%s\"\n", type);
 
     if ((gvli = job->loadimage.engine) && gvli->loadimage)
-	gvli->loadimage(job, us, b, filled);
+	gvli->loadimage(job, us, b, filled ? TRUE : FALSE);
 }

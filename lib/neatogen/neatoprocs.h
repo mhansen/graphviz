@@ -43,10 +43,9 @@ extern "C" {
     NEATOPROCS_API void heapdown(Agnode_t *);
     NEATOPROCS_API void heapup(Agnode_t *);
     NEATOPROCS_API void initial_positions(graph_t *, int);
-    NEATOPROCS_API int init_port(Agnode_t *, Agedge_t *, char *, boolean);
     NEATOPROCS_API void jitter3d(Agnode_t *, int);
     NEATOPROCS_API void jitter_d(Agnode_t *, int, int);
-    NEATOPROCS_API Ppoly_t *makeObstacle(node_t * n, expand_t*, boolean );
+    NEATOPROCS_API Ppoly_t *makeObstacle(node_t * n, expand_t*, bool);
     NEATOPROCS_API void makeSelfArcs(edge_t * e, int stepx);
     NEATOPROCS_API void makeSpline(edge_t *, Ppoly_t **, int, boolean);
     NEATOPROCS_API void make_spring(graph_t *, Agnode_t *, Agnode_t *, double);
