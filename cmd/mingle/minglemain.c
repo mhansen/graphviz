@@ -300,7 +300,7 @@ genBundleColors (pedge edge, agxbuf* xb, double maxwgt)
 	double len, t, len_total0 = 0;
 	int dim = edge->dim;
 	double* x = edge->x;
-	double* lens = MALLOC(sizeof(double)*edge->npoints);
+	double* lens = (double*)MALLOC(sizeof(double) * edge->npoints);
 
 	for (j = 0; j < edge->npoints - 1; j++){
 		len = 0;
@@ -438,7 +438,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		
 	ia = A->ia; ja = A->ja;
 	nz = A->nz;
-	xx = MALLOC(sizeof(double)*nz*4);
+	xx = (double*)MALLOC(sizeof(double) * nz * 4);
 	nz = 0;
 	dim = 4;
 	for (i = 0; i < A->m; i++){
