@@ -25,7 +25,7 @@ else
 pdf =
 endif
 
-mingle_SOURCES = minglemain.c
+mingle_SOURCES = minglemain.cpp
 mingle_CPPFLAGS = $(AM_CPPFLAGS)
 mingle_LDADD = \
     $(top_builddir)/lib/mingle/libmingle_C.la \
@@ -38,10 +38,6 @@ mingle_LDADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(ANN_LIBS) -lm
-
-# add a non-existent C++ source to force the C++ compiler to be used for
-# linking, so the C++ standard library is included for our C++ dependencies
-nodist_EXTRA_mingle_SOURCES = fake.cxx
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF

@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="minglemain.c">
+    <ClCompile Include="minglemain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
