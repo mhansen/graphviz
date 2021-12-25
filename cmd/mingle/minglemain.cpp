@@ -11,10 +11,11 @@
 #include "config.h"
 
 #include <cgraph/cgraph.h>
-#include <cgraph/agxbuf.h>
 #include <ingraphs/ingraphs.h>
 #include <common/pointset.h>
 #include <getopt.h>
+#include <iomanip>
+#include <sstream>
 #include <stddef.h>
 
 #include <sparse/DotIO.h>
@@ -235,9 +236,7 @@ static void init(int argc, char *argv[], opts_t* opts)
  * We have ninterval+1 points. We drop the ninterval-1 internal points, and add 4 points to the first
  * and last intervals, and 3 to the rest, giving the needed 3*ninterval+4 points.
  */
-static void
-genBundleSpline (pedge edge, agxbuf* xb)
-{
+static void genBundleSpline(pedge edge, std::ostream &os) {
 	int k, j, mm, kk;
 	int dim = edge->dim;
 	double* x = edge->x;
@@ -247,7 +246,7 @@ genBundleSpline (pedge edge, agxbuf* xb)
 
 	for (j = 0; j < edge->npoints; j++){
 		if (j != 0) {
-			agxbputc(xb, ' ');
+			os << ' ';
 			if ((j == 1) || (j == edge->npoints - 1)) {
 				tt = tt2;
 				mm = 4;
@@ -258,44 +257,40 @@ genBundleSpline (pedge edge, agxbuf* xb)
 			for (kk = 1; kk <= mm; kk++){
 				t = tt[kk-1];
 				for (k = 0; k < dim; k++) {
-					if (k != 0) agxbputc(xb,',');
-					agxbprint(xb, "%.03f", (x[(j-1)*dim+k]*(1-t)+x[j*dim+k]*(t)));
+					if (k != 0) os << ',';
+					os << std::setprecision(3) << (x[(j-1)*dim+k]*(1-t)+x[j*dim+k]*t);
 				}
-				agxbputc(xb,' ');
+				os << ' ';
 			}
 		}
 		if ((j == 0) || (j == edge->npoints - 1)) {
 			for (k = 0; k < dim; k++) {
-				if (k != 0) agxbputc(xb,',');
-				agxbprint(xb, "%.03f", x[j*dim+k]);
+				if (k != 0) os << ',';
+				os << std::setprecision(3) << x[j * dim + k];
 			}
 		}
     }
 }
 
-static void
-genBundleInfo (pedge edge, agxbuf* xb)
-{
+static void genBundleInfo(pedge edge, std::ostream &os) {
 	int k, j;
 	int dim = edge->dim;
 	double* x = edge->x;
 
 	for (j = 0; j < edge->npoints; j++){
-		if (j != 0)  agxbputc(xb, ':');
+		if (j != 0) os << ':';
 		for (k = 0; k < dim; k++) {
-			if (k != 0)  agxbputc(xb, ',');
-			agxbprint(xb, "%.03f", x[j*dim+k]);
+			if (k != 0) os << ',';
+			os << std::setprecision(3) << x[j * dim + k];
 		}
 
 		if ((j < edge->npoints-1) && (edge->wgts))  {
-			agxbprint(xb, ";%.03f", edge->wgts[j]);
+			os << ';' << std::setprecision(3) << edge->wgts[j];
 		}
 	}
 }
 
-static void
-genBundleColors (pedge edge, agxbuf* xb, double maxwgt)
-{
+static void genBundleColors(pedge edge, std::ostream &os, double maxwgt) {
 	int k, j, r, g, b;
 	double len, t, len_total0 = 0;
 	int dim = edge->dim;
@@ -314,12 +309,14 @@ genBundleColors (pedge edge, agxbuf* xb, double maxwgt)
 		t = edge->wgts[j]/maxwgt;
 		/* interpolate between red (t = 1) to blue (t = 0) */
 		r = 255*t; g = 0; b = 255*(1-t);
-		if (j != 0) agxbputc(xb,':');
-		agxbprint(xb, "#%02x%02x%02x%02x", r, g, b, 85);
+		if (j != 0) os << ':';
+		os << std::hex << std::setw(2) << std::setfill('0') << '#' << r << g << b
+			<< 85;
 		if (j < edge->npoints-2) {
-			agxbprint(xb,";%f",lens[j]/len_total0);
+			os << ';' << (lens[j] / len_total0);
 		}
 	}
+	os << std::dec << std::setw(0); // reset stream characteristics
 	free (lens);
 }
 
@@ -334,8 +331,6 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 	int i, j;
 	double maxwgt = 0;
 	pedge edge;
-	agxbuf xbuf;
-	unsigned char buf[BUFSIZ];
 
 	  /* figure out max number of bundled original edges in a pedge */
 	for (i = 0; i < ne; i++){
@@ -347,25 +342,27 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 		}
 	}
 
-	agxbinit(&xbuf, BUFSIZ, buf);
+	std::ostringstream buf;
 	for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
 		for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
 			edge = edges[ED_idx(e)];
 
-			genBundleSpline (edge, &xbuf);
-			agxset (e, epos, agxbuse(&xbuf));
+			genBundleSpline(edge, buf);
+			agxset(e, epos, buf.str().c_str());
+			buf.str("");
 
-			genBundleInfo (edge, &xbuf);
-			agxset (e, esects, agxbuse(&xbuf));
+			genBundleInfo(edge, buf);
+			agxset(e, esects, buf.str().c_str());
+			buf.str("");
 
 			if (edge->wgts) {
 				if (!eclrs) eclrs = agattr(g, AGEDGE, (char*)"color", "");
-				genBundleColors (edge, &xbuf, maxwgt);
-				agxset (e, eclrs, agxbuse(&xbuf));
+				genBundleColors(edge, buf, maxwgt);
+				agxset(e, eclrs, buf.str().c_str());
+				buf.str("");
 			}
 		}
 	}
-	agxbfree(&xbuf);
 	agwrite(g, fp);
 }
 
