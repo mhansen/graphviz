@@ -326,8 +326,8 @@ genBundleColors (pedge edge, agxbuf* xb, double maxwgt)
 static void
 export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 {
-	Agsym_t* epos = agattr (g, AGEDGE, "pos", "");
-	Agsym_t* esects = agattr (g, AGEDGE, "bundle", "");
+	Agsym_t* epos = agattr(g, AGEDGE, (char*)"pos", "");
+	Agsym_t* esects = agattr(g, AGEDGE, (char*)"bundle", "");
 	Agsym_t* eclrs = NULL;
 	Agnode_t* n;
 	Agedge_t* e;
@@ -359,7 +359,7 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 			agxset (e, esects, agxbuse(&xbuf));
 
 			if (edge->wgts) {
-				if (!eclrs) eclrs = agattr (g, AGEDGE, "color", "");
+				if (!eclrs) eclrs = agattr(g, AGEDGE, (char*)"color", "");
 				genBundleColors (edge, &xbuf, maxwgt);
 				agxset (e, eclrs, agxbuse(&xbuf));
 			}
