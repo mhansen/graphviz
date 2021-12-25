@@ -376,7 +376,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	SparseMatrix A;
 	SparseMatrix B;
 	pedge* edges;
-    double *xx, eps = 0.;
+    double eps = 0.;
     int nz = 0;
     int *ia, *ja, i, j, k;
 	int rv = 0;
@@ -435,7 +435,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		
 	ia = A->ia; ja = A->ja;
 	nz = A->nz;
-	xx = (double*)MALLOC(sizeof(double) * nz * 4);
+	std::unique_ptr<double[]> xx(new double[nz * 4]);
 	nz = 0;
 	dim = 4;
 	for (i = 0; i < A->m; i++){
@@ -452,12 +452,12 @@ bundle (Agraph_t* g, opts_t* opts)
 	if (Verbose)
 		fprintf(stderr,"n = %d nz = %d\n",A->m, nz);
 
-	B = nearest_neighbor_graph(nz, MIN(opts->nneighbors, nz), xx, eps);
+	B = nearest_neighbor_graph(nz, MIN(opts->nneighbors, nz), xx.get(), eps);
 
 	SparseMatrix_delete(A);
 	A = B;
 	free(x);
-	x = xx;
+	x = xx.get();
 
 	dim = 2;
 
