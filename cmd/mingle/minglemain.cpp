@@ -95,7 +95,7 @@ checkG (Agraph_t* g)
 	Agedge_t* e;
 	Agnode_t* n;
 	Agnode_t* h;
-	Agnode_t* prevh = NULL;
+	Agnode_t* prevh = nullptr;
 
 	for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
 		for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
@@ -103,7 +103,7 @@ checkG (Agraph_t* g)
 			if (h == prevh) return 1;            // multiedge
 			prevh = h;
 		}
-		prevh = NULL;  // reset
+		prevh = nullptr;  // reset
 	}
 	return 0;
 }
@@ -331,7 +331,7 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 {
 	Agsym_t* epos = agattr(g, AGEDGE, (char*)"pos", "");
 	Agsym_t* esects = agattr(g, AGEDGE, (char*)"bundle", "");
-	Agsym_t* eclrs = NULL;
+	Agsym_t* eclrs = nullptr;
 	Agnode_t* n;
 	Agedge_t* e;
 	int i, j;
@@ -375,8 +375,8 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 static int
 bundle (Agraph_t* g, opts_t* opts)
 {
-	double *x = NULL;
-	double *label_sizes = NULL;
+	double *x = nullptr;
+	double *label_sizes = nullptr;
 	int n_edge_label_nodes;
 	int dim = 2;
 	SparseMatrix A;
@@ -393,12 +393,12 @@ bundle (Agraph_t* g, opts_t* opts)
 		return 1;
 	}
     initDotIO(g);
-	A = SparseMatrix_import_dot(g, dim, &label_sizes, &x, &n_edge_label_nodes, NULL, FORMAT_CSR, NULL);
+	A = SparseMatrix_import_dot(g, dim, &label_sizes, &x, &n_edge_label_nodes, nullptr, FORMAT_CSR, nullptr);
 	if (!A){
 		agerr (AGERR, "Error: could not convert graph %s (%s) into matrix\n", agnameof(g), fname);
 		return 1;
     }
-    if (x == NULL) {
+    if (x == nullptr) {
 		agerr (AGPREV, " in file %s\n",  fname);
 		return 1;
     }
@@ -480,13 +480,13 @@ bundle (Agraph_t* g, opts_t* opts)
 
 static Agraph_t *gread(FILE * fp)
 {
-    return agread(fp, NULL);
+    return agread(fp, nullptr);
 }
 
 int main(int argc, char *argv[])
 {
 	Agraph_t *g;
-	Agraph_t *prev = NULL;
+	Agraph_t *prev = nullptr;
 	ingraph_state ig;
 	int rv = 0;
 	opts_t opts;
