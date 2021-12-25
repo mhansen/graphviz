@@ -1,6 +1,6 @@
 
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ typedef struct {
 
 typedef struct {
 	int outer_iter;
-	int method; 
+	int method;
 	int compatibility_method;
 	double K;
 	fmt_t fmt;
@@ -131,39 +131,39 @@ static void init(int argc, char *argv[], opts_t* opts)
 		case 'a':
 			if ((sscanf(optarg,"%lf",&s) > 0) && (s >= 0))
 				opts->angle =  M_PI*s/180;
-			else 
+			else
 				std::cerr << "-a arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'c':
 			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= COMPATIBILITY_FULL))
 				opts->compatibility_method =  i;
-			else 
+			else
 				std::cerr << "-c arg " << optarg << " must be an integer in [0,"
 					<< COMPATIBILITY_FULL << "] - ignored\n";
 			break;
 		case 'i':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
 				opts->outer_iter =  i;
-			else 
+			else
 				std::cerr << "-i arg " << optarg << " must be a non-negative integer - "
 					"ignored\n";
 			break;
 		case 'k':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 2))
 				opts->nneighbors =  i;
-			else 
+			else
 				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'K':
 			if ((sscanf(optarg,"%lf",&s) > 0) && (s > 0))
 				opts->K =  s;
-			else 
+			else
 				std::cerr << "-K arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'm':
 			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= METHOD_INK))
 				opts->method =  i;
-			else 
+			else
 				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'o':
@@ -172,13 +172,13 @@ static void init(int argc, char *argv[], opts_t* opts)
 		case 'p':
 			if ((sscanf(optarg,"%lf",&s) > 0))
 				opts->angle_param =  s;
-			else 
+			else
 				std::cerr << "-p arg " << optarg << " must be real - ignored\n";
 			break;
 		case 'r':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
 				opts->max_recursion =  i;
-			else 
+			else
 				std::cerr << "-r arg " << optarg << " must be a non-negative integer - "
 					"ignored\n";
 			break;
@@ -195,7 +195,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 			Verbose = 1;
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
 				Verbose =  (unsigned char)i;
-			else 
+			else
 				optind--;
 			break;
 		case ':':
