@@ -469,37 +469,3 @@ Dtdisc_t Ag_subedge_id_disc = {
     agdictobjmem,
     NIL(Dtevent_f)
 };
-
-/* expose macros as functions for ease of debugging
-and to expose them to foreign languages without C preprocessor. */
-#ifdef ageqedge
-#undef ageqedge
-#endif
-CGRAPH_API int ageqedge(Agedge_t * e, Agedge_t * f)
-{
-    return AGEQEDGE(e, f);
-}
-
-#ifdef agtail
-#undef agtail
-#endif
-CGRAPH_API Agnode_t *agtail(Agedge_t * e)
-{
-    return AGTAIL(e);
-}
-
-#ifdef aghead
-#undef aghead
-#endif
-CGRAPH_API Agnode_t *aghead(Agedge_t * e)
-{
-    return AGHEAD(e);
-}
-
-#ifdef agopp
-#undef agopp
-#endif
-CGRAPH_API Agedge_t *agopp(Agedge_t * e)
-{
-    return AGOPP(e);
-}
