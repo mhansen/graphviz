@@ -19,19 +19,15 @@ extern "C" {
 #endif
 
 #ifdef GVDLL
-#  define GVPLUGIN_LOADIMAGE_API __declspec(dllexport)
-#endif
-
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
-#undef GVPLUGIN_LOADIMAGE_API
+#ifdef GVC_EXPORTS
+#define GVPLUGIN_LOADIMAGE_API __declspec(dllexport)
+#else
 #define GVPLUGIN_LOADIMAGE_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef GVPLUGIN_LOADIMAGE_API
-#define GVPLUGIN_LOADIMAGE_API extern
+#define GVPLUGIN_LOADIMAGE_API /* nothing */
 #endif
 
 GVPLUGIN_LOADIMAGE_API boolean gvusershape_file_access(usershape_t *us);
