@@ -480,22 +480,6 @@ CGRAPH_API int ageqedge(Agedge_t * e, Agedge_t * f)
     return AGEQEDGE(e, f);
 }
 
-#ifdef agmkout
-#undef agmkout
-#endif
-CGRAPH_API Agedge_t *agmkout(Agedge_t * e)
-{
-    return AGMKOUT(e);
-}
-
-#ifdef agmkin
-#undef agmkin
-#endif
-CGRAPH_API Agedge_t *agmkin(Agedge_t * e)
-{
-    return AGMKIN(e);
-}
-
 #ifdef agtail
 #undef agtail
 #endif
