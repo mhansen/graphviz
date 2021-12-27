@@ -467,13 +467,12 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
  * If only one number is given, it is used for both x and y.
  * Returns true if the attribute ends in '!'.
  */
-static boolean getdoubles2ptf(graph_t * g, char *name, pointf * result)
-{
+static bool getdoubles2ptf(graph_t *g, char *name, pointf *result) {
     char *p;
     int i;
     double xf, yf;
     char c = '\0';
-    boolean rv = FALSE;
+    bool rv = false;
 
     if ((p = agget(g, name))) {
 	i = sscanf(p, "%lf,%lf%c", &xf, &yf, &c);
@@ -481,14 +480,14 @@ static boolean getdoubles2ptf(graph_t * g, char *name, pointf * result)
 	    result->x = POINTS(xf);
 	    result->y = POINTS(yf);
 	    if (c == '!')
-		rv = TRUE;
+		rv = true;
 	}
 	else {
 	    c = '\0';
 	    i = sscanf(p, "%lf%c", &xf, &c);
 	    if (i > 0 && xf > 0) {
 		result->y = result->x = POINTS(xf);
-		if (c == '!') rv = TRUE;
+		if (c == '!') rv = true;
 	    }
 	}
     }
@@ -709,7 +708,7 @@ void graph_init(graph_t * g, bool use_rankdir)
 
     setRatio(g);
     GD_drawing(g)->filled =
-	getdoubles2ptf(g, "size", &(GD_drawing(g)->size));
+      getdoubles2ptf(g, "size", &GD_drawing(g)->size) ? TRUE : FALSE;
     getdoubles2ptf(g, "page", &(GD_drawing(g)->page));
 
     GD_drawing(g)->centered = mapbool(agget(g, "center"));
