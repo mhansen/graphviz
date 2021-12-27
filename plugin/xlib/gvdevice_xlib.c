@@ -92,7 +92,7 @@ static void handle_client_message(GVJ_t * job, XClientMessageEvent * cmev)
         exit(0);
 }
 
-static boolean handle_keypress(GVJ_t *job, XKeyEvent *kev)
+static bool handle_keypress(GVJ_t *job, XKeyEvent *kev)
 {
     
     int i;
@@ -101,9 +101,9 @@ static boolean handle_keypress(GVJ_t *job, XKeyEvent *kev)
     keycodes = job->keycodes;
     for (i=0; i < job->numkeys; i++) {
 	if (kev->keycode == keycodes[i])
-	    return (job->keybindings[i].callback)(job);
+	    return (job->keybindings[i].callback)(job) != 0;
     }
-    return FALSE;
+    return false;
 }
 
 static Visual *find_argb_visual(Display * dpy, int scr)
