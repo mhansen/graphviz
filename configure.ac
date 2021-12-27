@@ -1610,6 +1610,8 @@ AS_IF([test "x$enable_lefty" = "xyes"], [
       AC_MSG_ERROR([Could not find Xmu, cannot build lefty])
     ])
   ])
+], [
+  use_lefty="No (disabled by default)"
 ])
 
 AM_CONDITIONAL(WITH_LEFTY, [test "x$use_lefty" = "xYes"])
