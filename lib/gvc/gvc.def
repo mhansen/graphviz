@@ -41,15 +41,6 @@ gv_cleanup_node
 gv_free_splines
 gvCloneGVC
 gvFreeCloneGVC
-gvprintdouble
-gvprintf
-gvprintpointf
-gvprintpointflist
-gvputc
-gvputs
-gvputs_nonascii
-gvputs_xml
-gvwrite
 initMapData
 isPolygon
 line_intersect
@@ -83,10 +74,8 @@ textspan_size
 translate_bb
 update_bb_bz
 colorxlate
-gvferror
 xdotBB
 gv_postprocess
-gvflush
 gvrender_ptf
 setColorScheme
 makePortLabels
