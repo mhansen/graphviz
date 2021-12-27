@@ -14,6 +14,7 @@
 #define DEBUG
 
 #include <math.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <ortho/maze.h>
 #include <ortho/partition.h>
@@ -282,7 +283,7 @@ createSEdges (cell* cp, sgraph* g)
 }
 
 static snode*
-findSVert (sgraph* g, Dt_t* cdt, pointf p, snodeitem* ditems, boolean isVert)
+findSVert (sgraph* g, Dt_t* cdt, pointf p, snodeitem* ditems, bool isVert)
 {
     snodeitem* n = dtmatch (cdt, &p);
 
@@ -343,24 +344,24 @@ mkMazeGraph (maze* mp, boxf bb)
 	if (cp->bb.UR.x < bb.UR.x) {
 	    pt.x = cp->bb.UR.x;
 	    pt.y = cp->bb.LL.y;
-	    np = findSVert (g, vdict, pt, ditems, TRUE);
+	    np = findSVert(g, vdict, pt, ditems, true);
 	    np->cells[0] = cp;
 	    cp->sides[M_RIGHT] = np;
 	}
 	if (cp->bb.UR.y < bb.UR.y) {
 	    pt.x = cp->bb.LL.x;
 	    pt.y = cp->bb.UR.y;
-	    np = findSVert (g, hdict, pt, ditems, FALSE);
+	    np = findSVert(g, hdict, pt, ditems, false);
 	    np->cells[0] = cp;
 	    cp->sides[M_TOP] = np;
 	}
 	if (cp->bb.LL.x > bb.LL.x) {
-	    np = findSVert (g, vdict, cp->bb.LL, ditems, TRUE);
+	    np = findSVert(g, vdict, cp->bb.LL, ditems, true);
 	    np->cells[1] = cp;
 	    cp->sides[M_LEFT] = np;
 	}
 	if (cp->bb.LL.y > bb.LL.y) {
-	    np = findSVert (g, hdict, cp->bb.LL, ditems, FALSE);
+	    np = findSVert(g, hdict, cp->bb.LL, ditems, false);
 	    np->cells[1] = cp;
 	    cp->sides[M_BOTTOM] = np;
 	}

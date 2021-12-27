@@ -13,6 +13,7 @@
 #include "types.h"
 #include "cgraph.h"
 #include <ortho/rawgraph.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 typedef struct {
@@ -33,7 +34,7 @@ typedef enum {B_NODE, B_UP, B_LEFT, B_DOWN, B_RIGHT} bend;
  * and (3,8) has isVert = 1, common coordinate = 3, p1 = 2, p2 = 8
  */
 typedef struct segment {
-  boolean isVert;
+  bool isVert;
   boolean flipped;
   double comm_coord;  /* the common coordinate */
   paird p;      /* end points */
