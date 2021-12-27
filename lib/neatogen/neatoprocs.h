@@ -29,27 +29,17 @@ extern "C" {
 #define NEATOPROCS_API /* nothing */
 #endif
 
-    NEATOPROCS_API void avoid_cycling(graph_t *, Agnode_t *, double *);
     NEATOPROCS_API int checkStart(graph_t * G, int nG, int);
-    NEATOPROCS_API Agnode_t *choose_node(graph_t *, int);
     NEATOPROCS_API int circuit_model(graph_t *, int);
-    NEATOPROCS_API void D2E(Agraph_t *, int, int, double *);
     NEATOPROCS_API void diffeq_model(graph_t *, int);
-    NEATOPROCS_API double distvec(double *, double *, double *);
-    NEATOPROCS_API void final_energy(graph_t *, int);
-    NEATOPROCS_API double fpow32(double);
     NEATOPROCS_API Ppolyline_t getPath(edge_t *, vconfig_t *, int, Ppoly_t **,
 			       int);
-    NEATOPROCS_API void heapdown(Agnode_t *);
-    NEATOPROCS_API void heapup(Agnode_t *);
     NEATOPROCS_API void initial_positions(graph_t *, int);
     NEATOPROCS_API void jitter3d(Agnode_t *, int);
     NEATOPROCS_API void jitter_d(Agnode_t *, int, int);
     NEATOPROCS_API Ppoly_t *makeObstacle(node_t * n, expand_t*, bool);
     NEATOPROCS_API void makeSelfArcs(edge_t * e, int stepx);
     NEATOPROCS_API void makeSpline(edge_t *, Ppoly_t **, int, boolean);
-    NEATOPROCS_API void make_spring(graph_t *, Agnode_t *, Agnode_t *, double);
-    NEATOPROCS_API void move_node(graph_t *, int, Agnode_t *);
     NEATOPROCS_API int init_nop(graph_t * g, int);
     NEATOPROCS_API void neato_cleanup(graph_t * g);
     NEATOPROCS_API node_t *neato_dequeue(void);

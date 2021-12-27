@@ -19,15 +19,17 @@
 #endif
 
 static double Epsilon2;
+static Agnode_t *choose_node(graph_t *, int);
+static void make_spring(graph_t *, Agnode_t *, Agnode_t *, double);
+static void move_node(graph_t *, int, Agnode_t *);
 
-
-double fpow32(double x)
+static double fpow32(double x)
 {
     x = sqrt(x);
     return x * x * x;
 }
 
-double distvec(double *p0, double *p1, double *vec)
+static double distvec(double *p0, double *p1, double *vec)
 {
     int k;
     double dist = 0.0;
@@ -476,7 +478,7 @@ static void update_arrays(graph_t * G, int nG, int i)
 }
 
 #define Msub(i,j)  M[(i)*Ndim+(j)]
-void D2E(graph_t * G, int nG, int n, double *M)
+static void D2E(graph_t * G, int nG, int n, double *M)
 {
     int i, l, k;
     node_t *vi, *vn;
@@ -508,12 +510,6 @@ void D2E(graph_t * G, int nG, int n, double *M)
     for (k = 1; k < Ndim; k++)
 	for (l = 0; l < k; l++)
 	    Msub(k, l) = Msub(l, k);
-}
-
-void final_energy(graph_t * G, int nG)
-{
-    fprintf(stderr, "iterations = %d final e = %f\n", GD_move(G),
-	    total_e(G, nG));
 }
 
 node_t *choose_node(graph_t * G, int nG)
@@ -583,7 +579,7 @@ static node_t **Heap;
 static int Heapsize;
 static node_t *Src;
 
-void heapup(node_t * v)
+static void heapup(node_t * v)
 {
     int i, par;
     node_t *u;
@@ -600,7 +596,7 @@ void heapup(node_t * v)
     }
 }
 
-void heapdown(node_t * v)
+static void heapdown(node_t * v)
 {
     int i, left, right, c;
     node_t *u;
