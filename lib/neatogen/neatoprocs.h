@@ -39,7 +39,7 @@ extern "C" {
     NEATOPROCS_API void jitter_d(Agnode_t *, int, int);
     NEATOPROCS_API Ppoly_t *makeObstacle(node_t * n, expand_t*, bool);
     NEATOPROCS_API void makeSelfArcs(edge_t * e, int stepx);
-    NEATOPROCS_API void makeSpline(edge_t *, Ppoly_t **, int, boolean);
+    NEATOPROCS_API void makeSpline(edge_t *, Ppoly_t **, int, bool);
     NEATOPROCS_API int init_nop(graph_t * g, int);
     NEATOPROCS_API void neato_cleanup(graph_t * g);
     NEATOPROCS_API node_t *neato_dequeue(void);
