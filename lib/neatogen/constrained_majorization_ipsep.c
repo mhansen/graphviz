@@ -32,6 +32,7 @@
  **********************************************************/
 
 #include <neatogen/digcola.h>
+#include <stdbool.h>
 #ifdef IPSEPCOLA
 #include <math.h>
 #include <stdlib.h>
@@ -411,7 +412,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	if (opt->noverlap == 1 && nsizeScale > 0.001) {
 	    generateNonoverlapConstraints(cMajEnvHor, nsizeScale, coords,
 					  0,
-					  nsizeScale < 0.5 ? FALSE : TRUE,
+					  nsizeScale >= 0.5,
 					  opt);
 	}
 	if (cMajEnvHor->m > 0) {
@@ -435,7 +436,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	}
 	if (opt->noverlap == 1 && nsizeScale > 0.001) {
 	    generateNonoverlapConstraints(cMajEnvVrt, nsizeScale, coords,
-					  1, FALSE, opt);
+					  1, false, opt);
 	}
 	if (cMajEnvVrt->m > 0) {
 #ifdef MOSEK

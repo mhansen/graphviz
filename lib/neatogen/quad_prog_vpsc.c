@@ -375,7 +375,7 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
 				   float nsizeScale,
 				   float **coords,
 				   int k,
-				   boolean transitiveClosure,
+				   bool transitiveClosure,
 				   ipsep_options * opt)
 {
     Constraint **csol, **csolptr;
@@ -587,12 +587,12 @@ void removeoverlaps(int n, float **coords, ipsep_options * opt)
 {
     int i;
     CMajEnvVPSC *e = initCMajVPSC(n, NULL, NULL, opt, 0);
-    generateNonoverlapConstraints(e, 1.0, coords, 0, TRUE, opt);
+    generateNonoverlapConstraints(e, 1.0, coords, 0, true, opt);
     solveVPSC(e->vpsc);
     for (i = 0; i < n; i++) {
 	coords[0][i] = getVariablePos(e->vs[i]);
     }
-    generateNonoverlapConstraints(e, 1.0, coords, 1, FALSE, opt);
+    generateNonoverlapConstraints(e, 1.0, coords, 1, false, opt);
     solveVPSC(e->vpsc);
     for (i = 0; i < n; i++) {
 	coords[1][i] = getVariablePos(e->vs[i]);

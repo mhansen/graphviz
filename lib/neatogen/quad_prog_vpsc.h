@@ -32,6 +32,7 @@ extern "C" {
 #ifdef MOSEK
 #include <neatogen/mosek_quad_solve.h>
 #endif /* MOSEK */
+#include <stdbool.h>
 
 typedef struct CMajEnvVPSC {
 	float **A;
@@ -64,7 +65,7 @@ extern void generateNonoverlapConstraints(
         float nsizeScale,
         float** coords,
         int k,
-	boolean transitiveClosure,
+	bool transitiveClosure,
 	ipsep_options* opt
 );
 
