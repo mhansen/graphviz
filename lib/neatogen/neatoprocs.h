@@ -58,7 +58,7 @@ extern "C" {
     NEATOPROCS_API void solve_model(graph_t *, int);
     NEATOPROCS_API int solveCircuit(int nG, double **Gm, double **Gm_inv);
     NEATOPROCS_API void spline_edges(Agraph_t *);
-    NEATOPROCS_API void spline_edges0(Agraph_t *, boolean);
+    NEATOPROCS_API void spline_edges0(Agraph_t *, bool);
     NEATOPROCS_API int spline_edges1(graph_t * g, int);
     NEATOPROCS_API int splineEdges(graph_t *,
 			   int (*edgefn) (graph_t *, expand_t*, int), int);

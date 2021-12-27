@@ -17,6 +17,7 @@
 #include    <osage/osage.h>
 #include    <neatogen/neatoprocs.h>
 #include    <pack/pack.h>
+#include    <stdbool.h>
 
 #define CL_CHUNK 10
 #define DFLT_SZ  18
@@ -360,7 +361,7 @@ void osage_layout(Agraph_t *g)
 	    ND_pos(n)[0] = PS2INCH(ND_coord(n).x);
 	    ND_pos(n)[1] = PS2INCH(ND_coord(n).y);
 	}
-	spline_edges0(g, TRUE);
+	spline_edges0(g, true);
     }
     else {
 	int et = EDGE_TYPE (g);

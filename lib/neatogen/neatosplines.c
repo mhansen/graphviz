@@ -763,8 +763,7 @@ int spline_edges1(graph_t * g, int edgetype)
  * when output in dot or plain format.
  *
  */
-void spline_edges0(graph_t * g, boolean set_aspect)
-{
+void spline_edges0(graph_t *g, bool set_aspect) {
     int et = EDGE_TYPE (g);
     if (set_aspect) neato_set_aspect(g);
     if (et == EDGETYPE_NONE) return;
@@ -814,7 +813,7 @@ void spline_edges(graph_t * g)
     }
 	
     shiftClusters (g, GD_bb(g).LL);
-    spline_edges0(g, TRUE);
+    spline_edges0(g, true);
 }
 
 /* scaleEdge:
