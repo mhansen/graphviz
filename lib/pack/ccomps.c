@@ -15,6 +15,7 @@
 #include <cgraph/prisize_t.h>
 #include <common/render.h>
 #include <pack/pack.h>
+#include <stdbool.h>
 
 #define MARKED(stk,n) ((stk)->markfn(n,-1))
 #define MARK(stk,n)   ((stk)->markfn(n,1))
@@ -205,7 +206,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, boolean * pinned)
     Agraph_t **ccs;
     size_t len;
     size_t bnd = 10;
-    boolean pin = FALSE;
+    bool pin = false;
     stk_t stk;
     blk_t blk;
     Agnode_t* base[INITBUF];
@@ -233,7 +234,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, boolean * pinned)
 	    agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
 	    ccs[c_cnt] = out;
 	    c_cnt++;
-	    pin = TRUE;
+	    pin = true;
 	}
 	if (dfs (g, n, out, &stk) == SIZE_MAX) {
 	    error = 1;
@@ -274,7 +275,7 @@ packerror:
     else {
 	ccs = RALLOC(c_cnt, ccs, Agraph_t *);
 	*ncc = (int) c_cnt;
-	*pinned = pin;
+	*pinned = pin ? TRUE : FALSE;
     }
     return ccs;
 }
