@@ -94,7 +94,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     int step;
     float val;
     double old_stress, new_stress = 0;
-    boolean converged;
+    bool converged;
     int len;
     double nsizeScale = 0;
     float maxEdgeLen = 0;
@@ -287,7 +287,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 
     lap1 = N_GNEW(lap_length, float);
 
-    for (converged = FALSE, iterations = 0;
+    for (converged = false, iterations = 0;
 	 iterations < maxi && !converged; iterations++) {
 
 	/* First, construct Laplacian of 1/(d_ij*|p_i-p_j|)  */
@@ -393,7 +393,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 		fprintf(stderr, "nsizescale=%f,iterations=%d\n",
 			nsizeScale, iterations);
 	    iterations = 0;
-	    converged = FALSE;
+	    converged = false;
 	}
 
 
