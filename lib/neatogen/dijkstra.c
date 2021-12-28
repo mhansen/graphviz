@@ -375,8 +375,9 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
         dists[i] = FLT_MAX;
     }
     dists[source] = 0;
-    for (int i = graph->sources[source]; i < graph->sources[source + 1]; i++) {
-        int target = graph->targets[i];
+    for (size_t i = graph->sources[source]; i < graph->sources[source + 1];
+         i++) {
+        size_t target = graph->targets[i];
         dists[target] = graph->weights[i];
     }
     assert(graph->n <= INT_MAX);
@@ -397,11 +398,12 @@ int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
             terms[offset].w = 1 / (d*d);
             offset++;
         }
-        for (int i = graph->sources[closest]; i < graph->sources[closest + 1];
+        for (size_t i = graph->sources[closest]; i < graph->sources[closest + 1];
              i++) {
-            int target = graph->targets[i];
+            size_t target = graph->targets[i];
             float weight = graph->weights[i];
-            increaseKey_f(&h, target, d+weight, indices, dists);
+            assert(target <= (size_t)INT_MAX);
+            increaseKey_f(&h, (int)target, d+weight, indices, dists);
         }
     }
     freeHeap(&h);

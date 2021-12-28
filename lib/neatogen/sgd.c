@@ -51,26 +51,26 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
         }
     }
     graph_sgd *graph = N_NEW(1, graph_sgd);
-    graph->sources = N_NEW(n_nodes+1, int);
+    graph->sources = N_NEW(n_nodes + 1, size_t);
     bitarray_resize_or_exit(&graph->pinneds, n_nodes);
-    graph->targets = N_NEW(n_edges, int);
+    graph->targets = N_NEW(n_edges, size_t);
     graph->weights = N_NEW(n_edges, float);
 
     graph->n = n_nodes;
     assert(n_edges <= INT_MAX);
-    graph->sources[graph->n] = (int)n_edges; // to make looping nice
+    graph->sources[graph->n] = n_edges; // to make looping nice
 
     n_nodes = 0, n_edges = 0;
     for (np = agfstnode(G); np; np = agnxtnode(G,np)) {
         assert(n_edges <= INT_MAX);
-        graph->sources[n_nodes] = (int)n_edges;
+        graph->sources[n_nodes] = n_edges;
         bitarray_set(graph->pinneds, n_nodes, isFixed(np));
         for (ep = agfstedge(G, np); ep; ep = agnxtedge(G, ep, np)) {
             if (agtail(ep) == aghead(ep)) { // ignore self-loops and double edges
                 continue;
             }
             node_t *target = (agtail(ep) == np) ? aghead(ep) : agtail(ep); // in case edge is reversed
-            graph->targets[n_edges] = ND_id(target);
+            graph->targets[n_edges] = (size_t)ND_id(target);
             graph->weights[n_edges] = ED_dist(ep);
             assert(graph->weights[n_edges] > 0);
             n_edges++;
@@ -79,58 +79,57 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
     }
     assert(n_nodes == graph->n);
     assert(n_edges <= INT_MAX);
-    assert((int)n_edges == graph->sources[graph->n]);
-    graph->sources[n_nodes] = (int)n_edges;
+    assert(n_edges == graph->sources[graph->n]);
+    graph->sources[n_nodes] = n_edges;
 
     if (model == MODEL_SHORTPATH) {
         // do nothing
     } else if (model == MODEL_SUBSET) {
         // i,j,k refer to actual node indices, while x,y refer to edge indices in graph->targets
-        bool *neighbours_i = N_NEW(graph->n, bool);
-        bool *neighbours_j = N_NEW(graph->n, bool);
+        bitarray_t neighbours_i = {0};
+        bitarray_t neighbours_j = {0};
+        // initialise to no neighbours
+        bitarray_resize_or_exit(&neighbours_i, graph->n);
+        bitarray_resize_or_exit(&neighbours_j, graph->n);
         for (size_t i = 0; i < graph->n; i++) {
-            // initialise to no neighbours
-            neighbours_i[i] = false;
-            neighbours_j[i] = false;
-        }
-        for (size_t i = 0; i < graph->n; i++) {
-            int x;
             int deg_i = 0;
-            for (x=graph->sources[i]; x<graph->sources[i+1]; x++) {
-                int j = graph->targets[x];
-                if (neighbours_i[j] == false) { // ignore multiedges
-                    neighbours_i[j] = true; // set up sort of hashset
+            for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
+                size_t j = graph->targets[x];
+                if (!bitarray_get(neighbours_i, j)) { // ignore multiedges
+                    bitarray_set(neighbours_i, j, true); // set up sort of hashset
                     deg_i++;
                 }
             }
-            for (x=graph->sources[i]; x<graph->sources[i+1]; x++) {
-                int j = graph->targets[x];
-                int y, intersect = 0;
+            for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
+                size_t j = graph->targets[x];
+                int intersect = 0;
                 int deg_j = 0;
-                for (y=graph->sources[j]; y<graph->sources[j+1]; y++) {
-                    int k = graph->targets[y];
-                    if (neighbours_j[k] == false) { // ignore multiedges
-                        neighbours_j[k] = true; // set up sort of hashset
+                for (size_t y = graph->sources[j]; y < graph->sources[j + 1];
+                     y++) {
+                    size_t k = graph->targets[y];
+                    if (!bitarray_get(neighbours_j, k)) { // ignore multiedges
+                        bitarray_set(neighbours_j, k, true); // set up sort of hashset
                         deg_j++;
-                        if (neighbours_i[k]) {
+                        if (bitarray_get(neighbours_i, k)) {
                             intersect++;
                         }
                     }
                 }
                 graph->weights[x] = deg_i + deg_j - (2*intersect);
                 assert(graph->weights[x] > 0);
-                for (y=graph->sources[j]; y<graph->sources[j+1]; y++) {
-                    int k = graph->targets[y];
-                    neighbours_j[k] = false; // reset sort of hashset
+                for (size_t y = graph->sources[j]; y < graph->sources[j + 1];
+                     y++) {
+                    size_t k = graph->targets[y];
+                    bitarray_set(neighbours_j, k, false); // reset sort of hashset
                 }
             }
-            for (x=graph->sources[i]; x<graph->sources[i+1]; x++) {
-                int j = graph->targets[x];
-                neighbours_i[j] = false; // reset sort of hashset
+            for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
+                size_t j = graph->targets[x];
+                bitarray_set(neighbours_i, j, false); // reset sort of hashset
             }
         }
-        free(neighbours_i);
-        free(neighbours_j);
+        bitarray_reset(&neighbours_i);
+        bitarray_reset(&neighbours_j);
     } else {
         // TODO: model == MODEL_MDS and MODEL_CIRCUIT
         assert(false); // mds and circuit model not supported
