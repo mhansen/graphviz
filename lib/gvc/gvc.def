@@ -39,8 +39,6 @@ graph_init
 gv_cleanup_edge
 gv_cleanup_node
 gv_free_splines
-gvCloneGVC
-gvFreeCloneGVC
 initMapData
 isPolygon
 line_intersect
