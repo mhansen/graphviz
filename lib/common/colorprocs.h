@@ -10,15 +10,31 @@
 
 #pragma once
 
+#include "config.h"
+
 #include "color.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern void setColorScheme (char* s);
-extern int colorxlate(char *str, gvcolor_t * color, color_type_t target_type);
-extern char *canontoken(char *str);
+#ifdef GVDLL
+#ifdef GVC_EXPORTS
+#define COLORPROCS_API __declspec(dllexport)
+#else
+#define COLORPROCS_API __declspec(dllimport)
+#endif
+#endif
+
+#ifndef COLORPROCS_API
+#define COLORPROCS_API /* nothing */
+#endif
+
+COLORPROCS_API void setColorScheme (char* s);
+COLORPROCS_API int colorxlate(char *str, gvcolor_t * color, color_type_t target_type);
+COLORPROCS_API char *canontoken(char *str);
+
+#undef COLORPROCS_API
 
 #ifdef __cplusplus
 }

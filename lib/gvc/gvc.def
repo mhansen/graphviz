@@ -71,11 +71,9 @@ textfont_dict_close
 textspan_size
 translate_bb
 update_bb_bz
-colorxlate
 xdotBB
 gv_postprocess
 gvrender_ptf
-setColorScheme
 makePortLabels
 addEdgeLabels
 rank2
