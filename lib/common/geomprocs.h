@@ -20,15 +20,14 @@ extern "C" {
 
 #include "geom.h"
 
-#ifdef _WIN32
 #ifdef GVDLL
+#ifdef GVC_EXPORTS
 #define GEOMPROCS_API __declspec(dllexport)
 #else
-#ifndef GVC_EXPORTS
 #define GEOMPROCS_API __declspec(dllimport)
 #endif
 #endif
-#endif
+
 #ifndef GEOMPROCS_API
 #define GEOMPROCS_API extern
 #endif

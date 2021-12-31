@@ -9,13 +9,9 @@ arrowStartClip
 beginpath
 bezier_clip
 bind_shape
-ccwrotatep
-ccwrotatepf
 charsetToStr
 clip_and_install
 coord
-cwrotatep
-cwrotatepf
 do_graph_label
 dotneato_args_initialize
 dotneato_postprocess
@@ -29,8 +25,6 @@ endpath
 epsf_free
 epsf_init
 find_user_shape
-flip_rec_box
-flip_rec_boxf
 free_label
 getdouble
 getsplinepoints
@@ -41,8 +35,6 @@ gv_cleanup_node
 gv_free_splines
 initMapData
 isPolygon
-line_intersect
-lineToBox
 make_label
 make_simple_label
 makeSelfEdge
@@ -51,10 +43,8 @@ parse_style
 place_graph_label
 place_portlabel
 pop_obj_state
-ptToLine2
 push_obj_state
 rank
-rect2poly
 resolvePort
 resolvePorts
 round_corners
