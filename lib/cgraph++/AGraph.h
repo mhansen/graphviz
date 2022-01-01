@@ -11,7 +11,9 @@
 #else
 #define AGRAPH_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef AGRAPH_API
 #define AGRAPH_API /* nothing */
 #endif
 
