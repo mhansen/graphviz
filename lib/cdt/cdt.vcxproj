@@ -59,7 +59,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <EnablePREfast>true</EnablePREfast>
       <DisableSpecificWarnings>4996;4706</DisableSpecificWarnings>
-      <PreprocessorDefinitions>EXPORT_CDT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GVDLL;EXPORT_CDT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -75,7 +75,7 @@
       <WarningLevel>Level4</WarningLevel>
       <EnablePREfast>true</EnablePREfast>
       <DisableSpecificWarnings>4996;4706</DisableSpecificWarnings>
-      <PreprocessorDefinitions>EXPORT_CDT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GVDLL;EXPORT_CDT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>
