@@ -19,7 +19,7 @@
 #define CGHDR_API __declspec(dllimport)
 #endif
 #else
-#define CGHDR_API extern
+#define CGHDR_API /* nothing */
 #endif
 
 #include <cgraph.h>
