@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
+#ifdef GVDLL
 #ifdef EXPORT_CGRAPH
 #define CGRAPH_API __declspec(dllexport)
 #else
