@@ -5,7 +5,7 @@
 
 #include <cgraph/cgraph.h>
 
-#ifdef _WIN32
+#ifdef GVDLL
 #if cgraph___EXPORTS // CMake's substitution of cgraph++_EXPORTS
 #define AGRAPH_API __declspec(dllexport)
 #else
