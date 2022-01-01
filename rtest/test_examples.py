@@ -35,7 +35,12 @@ def test_compile_example(src):
   # run the example
   args = ["-Kneato"] if src in ["demo.c", "dot.c"] else []
 
-  ret, out, err = run_c(filepath, args, "graph {a -- b}", link=libs)
+  if platform.system() == "Windows":
+    cflags = ["-DGVDLL"]
+  else:
+    cflags = None
+
+  ret, out, err = run_c(filepath, args, "graph {a -- b}", cflags=cflags, link=libs)
 
   print(f"returncode: {ret} = 0x{ret:08x}")
   if ret != 0:
