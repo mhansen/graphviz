@@ -12,7 +12,7 @@
 
 #include "config.h"
 
-#ifdef _WIN32
+#ifdef GVDLL
 #ifdef EXPORT_CGHDR
 #define CGHDR_API __declspec(dllexport)
 #else
