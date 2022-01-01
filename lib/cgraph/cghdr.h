@@ -13,13 +13,13 @@
 #include "config.h"
 
 #ifdef _WIN32
-#   ifdef EXPORT_CGHDR
-#       define CGHDR_API __declspec(dllexport)
-#   else
-#       define CGHDR_API __declspec(dllimport)
-#   endif
+#ifdef EXPORT_CGHDR
+#define CGHDR_API __declspec(dllexport)
 #else
-#   define CGHDR_API extern
+#define CGHDR_API __declspec(dllimport)
+#endif
+#else
+#define CGHDR_API extern
 #endif
 
 #include <cgraph.h>
