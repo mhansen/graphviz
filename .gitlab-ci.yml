@@ -459,10 +459,11 @@ windows-mingw32-build-step1-configure:
     script:
         # disable Windows Defender
         - Add-MpPreference -ExclusionPath 'C:\'
-        - choco config set cacheLocation choco-cache
-        - choco install --yes --no-progress msys2
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "autotools"
-        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     cache:
         key: windows-mingw32-build-step1-configure
         paths:
@@ -487,11 +488,12 @@ windows-mingw32-build-step2-make:
     script:
         # disable Windows Defender
         - Add-MpPreference -ExclusionPath 'C:\'
-        - choco config set cacheLocation choco-cache
-        - choco install --yes --no-progress msys2
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     cache:
         key: windows-mingw32-build-step2-make
         paths:
@@ -514,10 +516,11 @@ windows-mingw64-build-step1-configure:
     script:
         # disable Windows Defender
         - Add-MpPreference -ExclusionPath 'C:\'
-        - choco config set cacheLocation choco-cache
-        - choco install --yes --no-progress msys2
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "autotools"
-        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     cache:
         key: windows-mingw64-build-step1-configure
         paths:
@@ -542,11 +545,12 @@ windows-mingw64-build-step2-make:
     script:
         # disable Windows Defender
         - Add-MpPreference -ExclusionPath 'C:\'
-        - choco config set cacheLocation choco-cache
-        - choco install --yes --no-progress msys2
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     cache:
         key: windows-mingw64-build-step2-make
         paths:
@@ -906,13 +910,14 @@ windows-mingw32-cmake-build:
     script:
         # disable Windows Defender
         - Add-MpPreference -ExclusionPath 'C:\'
-        - choco config set cacheLocation choco-cache
-        - choco install --yes --no-progress msys2
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror"
         - $Env:CXXFLAGS = "-Werror"
-        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW32 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -934,13 +939,14 @@ windows-mingw64-cmake-build:
     script:
         # disable Windows Defender
         - Add-MpPreference -ExclusionPath 'C:\'
-        - choco config set cacheLocation choco-cache
-        - choco install --yes --no-progress msys2
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror"
         - $Env:CXXFLAGS = "-Werror"
-        - C:\tools\msys64\usr\bin\env MSYSTEM=MINGW64 C:\tools\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
