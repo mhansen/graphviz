@@ -18,7 +18,9 @@
 #else
 #define CGHDR_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef CGHDR_API
 #define CGHDR_API /* nothing */
 #endif
 
