@@ -20,7 +20,9 @@ extern "C" {
 #else
 #define CDT_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef CDT_API
 #define CDT_API /* nothing */
 #endif
 
