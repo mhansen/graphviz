@@ -23,7 +23,9 @@ extern "C" {
 #else
 #define CGRAPH_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef CGRAPH_API
 #define CGRAPH_API /* nothing */
 #endif
 
