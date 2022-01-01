@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef _WIN32
+#ifdef GVDLL
 #ifdef EXPORT_CGRAPH
 #define DECLSPEC __declspec(dllexport)
 #else
