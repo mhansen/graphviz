@@ -10,8 +10,6 @@
 
 #pragma once
 
-#define _BLD_pathplan 1
-
 #include "pathplan.h"
 
 #ifdef __cplusplus
