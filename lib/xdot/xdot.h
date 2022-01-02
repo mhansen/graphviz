@@ -23,7 +23,7 @@ extern "C" {
 #define XDOT_API __declspec(dllimport)
 #endif
 #else
-#define XDOT_API extern
+#define XDOT_API /* nothing */
 #endif
 
 #define INITIAL_XDOT_CAPACITY 512
