@@ -20,7 +20,9 @@ extern "C" {
 #else
 #define LAB_GAMUT_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef LAB_GAMUT_API
 #define LAB_GAMUT_API /* nothing */
 #endif
 
