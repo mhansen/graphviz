@@ -47,7 +47,7 @@ extern "C" {
 #endif
 
 #ifndef VIS_API
-#define VIS_API extern
+#define VIS_API /* nothing */
 #endif
 
 	VIS_API COORD *ptVis(vconfig_t *, int, Ppoint_t);
