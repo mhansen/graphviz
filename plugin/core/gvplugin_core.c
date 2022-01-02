@@ -69,7 +69,7 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-#ifdef _WIN32
+#ifdef GVDLL
 #define GVPLUGIN_CORE_API __declspec(dllexport)
 #else
 #define GVPLUGIN_CORE_API
