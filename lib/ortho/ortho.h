@@ -18,7 +18,9 @@
 #else
 #define ORTHO_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef ORTHO_API
 #define ORTHO_API /* nothing */
 #endif
 
