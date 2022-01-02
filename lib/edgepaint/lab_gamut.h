@@ -16,12 +16,12 @@ extern "C" {
 
 #ifdef GVDLL
 #ifdef LAB_GAMUT_EXPORTS
-#define EXTERN __declspec(dllexport)
+#define LAB_GAMUT_API __declspec(dllexport)
 #else
-#define EXTERN __declspec(dllimport)
+#define LAB_GAMUT_API __declspec(dllimport)
 #endif
 #else
-#define EXTERN /* nothing */
+#define LAB_GAMUT_API /* nothing */
 #endif
 
 /** lookup table for the visible spectrum of the CIELAB color space
@@ -34,10 +34,10 @@ extern "C" {
  * More information about CIELAB:
  *   https://en.wikipedia.org/wiki/CIELAB_color_space
  */
-EXTERN extern const signed char lab_gamut_data[];
-EXTERN extern int lab_gamut_data_size;
+LAB_GAMUT_API extern const signed char lab_gamut_data[];
+LAB_GAMUT_API extern int lab_gamut_data_size;
 
-#undef EXTERN
+#undef LAB_GAMUT_API
 
 #ifdef __cplusplus
 }
