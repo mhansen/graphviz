@@ -24,7 +24,6 @@ extern "C" {
 #define TRUE	(NOT(FALSE))
 #endif
 
-/*visual studio*/
 #ifdef GVDLL
 #ifdef PATHPLAN_EXPORTS
 #define PATHUTIL_API __declspec(dllexport)
@@ -32,7 +31,7 @@ extern "C" {
 #define PATHUTIL_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef PATHUTIL_API
 #define PATHUTIL_API extern
 #endif
