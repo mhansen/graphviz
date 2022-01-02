@@ -14,13 +14,11 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
 #ifdef GVDLL
 #ifdef EXPORT_GVPR
 #define GVPR_API __declspec(dllexport)
 #else
 #define GVPR_API __declspec(dllimport)
-#endif
 #endif
 #endif
 
