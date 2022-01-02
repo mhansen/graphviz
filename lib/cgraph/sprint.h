@@ -2,12 +2,12 @@
 
 #ifdef GVDLL
 #ifdef EXPORT_CGRAPH
-#define DECLSPEC __declspec(dllexport)
+#define SPRINT_API __declspec(dllexport)
 #else
-#define DECLSPEC __declspec(dllimport)
+#define SPRINT_API __declspec(dllimport)
 #endif
 #else
-#define DECLSPEC /* nothing */
+#define SPRINT_API /* nothing */
 #endif
 
 #ifdef __clang__
@@ -50,7 +50,7 @@
  * @param ... Format arguments, if any
  * @returns A pointer to the constructed string or NULL on failure
  */
-DECLSPEC PRINTF_LIKE(1, 2) WUR
+SPRINT_API PRINTF_LIKE(1, 2) WUR
 char *NULLABLE gv_sprint(const char *NONNULL format, ...);
 
 /** gv_sprint wrapper, calling exit if NULL is returned
@@ -63,7 +63,7 @@ char *NULLABLE gv_sprint(const char *NONNULL format, ...);
  * @param ... Format arguments, if any
  * @returns A pointer to the constructed string
  */
-DECLSPEC PRINTF_LIKE(1, 2) RETURNS_NONNULL WUR
+SPRINT_API PRINTF_LIKE(1, 2) RETURNS_NONNULL WUR
 char *NONNULL gv_sprint_or_exit(const char *NONNULL format, ...);
 
 #undef WUR
@@ -71,4 +71,4 @@ char *NONNULL gv_sprint_or_exit(const char *NONNULL format, ...);
 #undef PRINTF_LIKE
 #undef NONNULL
 #undef NULLABLE
-#undef DECLSPEC
+#undef SPRINT_API
