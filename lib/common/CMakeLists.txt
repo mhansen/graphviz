@@ -1,6 +1,6 @@
 BISON_TARGET(HTMLparse ${CMAKE_CURRENT_SOURCE_DIR}/htmlparse.y ${CMAKE_CURRENT_BINARY_DIR}/htmlparse.c)
 
-add_definitions(-DGVC_EXPORTS -D_BLD_gvc=1)
+add_definitions(-DGVC_EXPORTS)
 
 if(CYGWIN)
   set(AWK_OPTIONS, -v RS="\\r*\\n")
