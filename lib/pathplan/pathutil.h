@@ -33,7 +33,7 @@ extern "C" {
 #endif
 
 #ifndef PATHUTIL_API
-#define PATHUTIL_API extern
+#define PATHUTIL_API /* nothing */
 #endif
 	typedef double COORD;
     PATHUTIL_API COORD area2(Ppoint_t, Ppoint_t, Ppoint_t);
