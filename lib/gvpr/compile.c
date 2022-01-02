@@ -79,7 +79,7 @@ static int ioflush(void *chan)
 
 static Agiodisc_t gprIoDisc = { iofread, ioputstr, ioflush };
 
-#ifdef _WIN32
+#ifdef GVDLL
 static Agdisc_t gprDisc = { 0, 0, &gprIoDisc };
 #else
 static Agdisc_t gprDisc = { &AgMemDisc, &AgIdDisc, &gprIoDisc };
