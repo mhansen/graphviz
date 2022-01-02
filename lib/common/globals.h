@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#if defined(GVDLL) || defined(WIN32_DLL)
+#ifdef GVDLL
 #if defined(GVC_EXPORTS) || defined(_BLD_gvc)
 #define GLOBALS_API __declspec(dllexport)
 #else
