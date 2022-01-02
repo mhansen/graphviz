@@ -15,17 +15,17 @@ extern "C" {
 #endif
 
 #ifdef _WIN32
-#   ifdef GVDLL
-#       ifdef EXPORT_GVPR
-#           define GVPR_API __declspec(dllexport)
-#       else
-#           define GVPR_API __declspec(dllimport)
-#       endif
-#   endif
+#ifdef GVDLL
+#ifdef EXPORT_GVPR
+#define GVPR_API __declspec(dllexport)
+#else
+#define GVPR_API __declspec(dllimport)
+#endif
+#endif
 #endif
 
 #ifndef GVPR_API
-#   define GVPR_API /* nothing */
+#define GVPR_API /* nothing */
 #endif
 
 #include "cgraph.h"
