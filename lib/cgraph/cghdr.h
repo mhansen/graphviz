@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "config.h"
+
 #define _BLD_cgraph 1
 
 #ifdef _WIN32
@@ -21,8 +23,6 @@
 #else
 #   define CGHDR_API extern
 #endif
-
-#include "config.h"
 
 #include <cgraph.h>
 
