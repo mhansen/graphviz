@@ -22,7 +22,9 @@ extern "C" {
 #else
 #define XDOT_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef XDOT_API
 #define XDOT_API /* nothing */
 #endif
 
