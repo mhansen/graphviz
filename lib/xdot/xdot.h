@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
+#ifdef GVDLL
 #ifdef EXPORT_XDOT
 #define XDOT_API __declspec(dllexport)
 #else
