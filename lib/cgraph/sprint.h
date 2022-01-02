@@ -6,7 +6,9 @@
 #else
 #define SPRINT_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef SPRINT_API
 #define SPRINT_API /* nothing */
 #endif
 
