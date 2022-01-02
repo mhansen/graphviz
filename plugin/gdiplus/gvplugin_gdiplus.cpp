@@ -91,9 +91,9 @@ extern "C" {
 #endif
 
 #ifdef _WIN32
-#   define GVPLUGIN_GDIPLUS_API __declspec(dllexport)
+#define GVPLUGIN_GDIPLUS_API __declspec(dllexport)
 #else
-#   define GVPLUGIN_GDIPLUS_API
+#define GVPLUGIN_GDIPLUS_API
 #endif
 
 GVPLUGIN_GDIPLUS_API gvplugin_library_t gvplugin_gdiplus_LTX_library = {
