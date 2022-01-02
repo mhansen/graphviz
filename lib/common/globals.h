@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 #ifdef GVDLL
-#if defined(GVC_EXPORTS) || defined(_BLD_gvc)
+#ifdef GVC_EXPORTS
 #define GLOBALS_API __declspec(dllexport)
 #else
 #define GLOBALS_API __declspec(dllimport)
