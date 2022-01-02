@@ -25,16 +25,12 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-#ifdef WIN32_DLL   /*visual studio*/
+#ifdef GVDLL
 #ifndef GVPLUGIN_VISIO_EXPORTS
 __declspec(dllimport) gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
 #else
 __declspec(dllexport) gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
 #endif
-#else /*end visual studio*/
-#ifdef GVDLL
-__declspec(dllexport) gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
 #else
 gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
-#endif
 #endif
