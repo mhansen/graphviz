@@ -34,7 +34,7 @@ extern "C" {
 #endif
 
 #ifndef MEMORY_API
-#define MEMORY_API extern
+#define MEMORY_API /* nothing */
 #endif
 
     MEMORY_API void *zmalloc(size_t);
