@@ -28,13 +28,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#if defined(_WIN32)
+#ifdef GVDLL
   __declspec(dllimport)
 #endif
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
 
 lt_symlist_t lt_preloaded_symbols[] = {
-#if defined(_WIN32)
+#ifdef GVDLL
 	{ "gvplugin_neato_layout_LTX_library", 0 },
 #else
 	{ "gvplugin_neato_layout_LTX_library", &gvplugin_neato_layout_LTX_library },
