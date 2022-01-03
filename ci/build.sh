@@ -61,12 +61,20 @@ if [ "${build_system}" = "cmake" ]; then
     fi
 elif [[ "${CONFIGURE_OPTIONS:-}" =~ "--enable-static" ]]; then
     GV_VERSION=$( cat GRAPHVIZ_VERSION )
-    tar xfz graphviz-${GV_VERSION}.tar.gz
-    pushd graphviz-${GV_VERSION}
-    ./configure --enable-lefty $CONFIGURE_OPTIONS --prefix=$( pwd )/build | tee >(../ci/extract-configure-log.sh >../${META_DATA_DIR}/configure.log)
-    make
-    make install
-    popd
+    if [ "${use_autogen:-no}" = "yes" ]; then
+        ./autogen.sh
+        ./configure --enable-lefty ${CONFIGURE_OPTIONS:-} --prefix=$( pwd )/build | tee >(./ci/extract-configure-log.sh >${META_DATA_DIR}/configure.log)
+        make
+        make install
+        tar cf - -C build . | xz -9 -c - > ${DIR}/graphviz-${GV_VERSION}-${ARCH}.tar.xz
+    else
+        tar xfz graphviz-${GV_VERSION}.tar.gz
+        pushd graphviz-${GV_VERSION}
+        ./configure --enable-lefty $CONFIGURE_OPTIONS --prefix=$( pwd )/build | tee >(../ci/extract-configure-log.sh >../${META_DATA_DIR}/configure.log)
+        make
+        make install
+        popd
+    fi
 else
     GV_VERSION=$( cat GRAPHVIZ_VERSION )
     if [ "$OSTYPE" = "linux-gnu" ]; then
