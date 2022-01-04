@@ -21,6 +21,7 @@ pacman -S --noconfirm --needed \
     ${MINGW_PACKAGE_PREFIX}-pango \
     ${MINGW_PACKAGE_PREFIX}-pkgconf \
     ${MINGW_PACKAGE_PREFIX}-python \
+    ${MINGW_PACKAGE_PREFIX}-python-pip \
     ${MINGW_PACKAGE_PREFIX}-ninja \
     ${MINGW_PACKAGE_PREFIX}-nsis \
     ${MINGW_PACKAGE_PREFIX}-tcl \
