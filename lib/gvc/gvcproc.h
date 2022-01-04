@@ -67,7 +67,15 @@
 
 /* render */
 
+#ifdef GVDLL
+#ifdef GVC_EXPORTS
+    __declspec(dllexport) pointf gvrender_ptf(GVJ_t *job, pointf p);
+#else
+    __declspec(dllimport) pointf gvrender_ptf(GVJ_t *job, pointf p);
+#endif
+#else
     pointf gvrender_ptf(GVJ_t *job, pointf p);
+#endif
     pointf* gvrender_ptf_A(GVJ_t *job, pointf *af, pointf *AF, int n);
 
     int gvrender_begin_job(GVJ_t * job);

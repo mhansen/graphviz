@@ -54,15 +54,16 @@ extern "C" {
 	point offset;
     } epsf_t;
 
-/*visual studio*/
-#ifdef _WIN32
-#ifndef GVC_EXPORTS
+#ifdef GVDLL
+#ifdef GVC_EXPORTS
+#define RENDER_API __declspec(dllexport)
+#else
 #define RENDER_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef RENDER_API
-#define RENDER_API extern
+#define RENDER_API /* nothing */
 #endif
 
 	RENDER_API void add_box(path *, boxf);
@@ -127,6 +128,7 @@ extern "C" {
     RENDER_API void pop_obj_state(GVJ_t *job);
     RENDER_API obj_state_t* push_obj_state(GVJ_t *job);
     RENDER_API int rank(graph_t * g, int balance, int maxiter);
+    RENDER_API int rank2(graph_t * g, int balance, int maxiter, int search_size);
     RENDER_API port resolvePort(node_t*  n, node_t* other, port* oldport);
     RENDER_API void resolvePorts (edge_t* e);
     RENDER_API void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled);

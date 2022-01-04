@@ -594,8 +594,6 @@ collapse_leaves(graph_t * g)
  */
 #define ND_comp(n)  ND_hops(n)   
 
-extern int rank2(Agraph_t *, int, int, int);
-
 static void set_parent(graph_t* g, graph_t* p) 
 {
     GD_parent(g) = p;
