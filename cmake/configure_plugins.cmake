@@ -35,4 +35,5 @@ endif()
 
 execute_process(
   COMMAND ${ROOT}/bin/dot -c
+  COMMAND_ERROR_IS_FATAL ANY
 )
