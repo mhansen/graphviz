@@ -13,6 +13,10 @@
 #include <sparse/LinkedList.h>
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct QuadTree_struct *QuadTree;
 
 struct QuadTree_struct {
@@ -55,3 +59,7 @@ void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double 
 void QuadTree_get_nearest(QuadTree qt, double *x, double *ymin, int *imin, double *min, int *flag);
 
 QuadTree QuadTree_new_in_quadrant(int dim, double *center, double width, int max_level, int i);
+
+#ifdef __cplusplus
+}
+#endif

@@ -27,6 +27,10 @@
 #include <common/memory.h>
 #endif  /* STANDALONE */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define set_flag(a, flag) ((a)=((a)|(flag)))
 #define test_flag(a, flag) ((a)&(flag))
 #define clear_flag(a, flag) ((a) &=(~(flag)))
@@ -114,3 +118,7 @@ double point_distance(double *p1, double *p2, int dim);
 char *strip_dir(char *s);
 
 void scale_to_box(double xmin, double ymin, double xmax, double ymax, int n, int dim, double *x);
+
+#ifdef __cplusplus
+}
+#endif

@@ -12,6 +12,10 @@
 
 #include <mingle/edge_bundling.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
   double x, y;
 } point_t;
@@ -32,3 +36,7 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
 double ink1(pedge e);
 
 extern double ink_count;
+
+#ifdef __cplusplus
+}
+#endif

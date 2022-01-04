@@ -14,6 +14,10 @@
 #include <sparse/IntStack.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* binary heap code. 
    Caution: items inserted should be kept untouched, e.g., the value of the item should be kepted unchanged while the heap is still in use! 
    To change the valud of am item, use BinaryHeap_reset
@@ -70,3 +74,7 @@ size_t BinaryHeap_reset(BinaryHeap h, int id, void *item);/* reset value of an i
 void BinaryHeap_print(BinaryHeap h, void (*pnt)(void*));
 
 void BinaryHeap_sanity_check(BinaryHeap h);
+
+#ifdef __cplusplus
+}
+#endif

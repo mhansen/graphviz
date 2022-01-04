@@ -11,6 +11,11 @@
 #pragma once
 
 #include <stdlib.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct vector_struct {
   int maxlen;
   int len;
@@ -35,3 +40,7 @@ void* Vector_get(Vector v, int i);
 int Vector_get_length(Vector v);
 
 Vector Vector_reset(Vector v, void *stuff, int i);
+
+#ifdef __cplusplus
+}
+#endif

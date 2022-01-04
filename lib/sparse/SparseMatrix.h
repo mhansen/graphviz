@@ -13,6 +13,10 @@
 #include <sparse/general.h>
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define SYMMETRY_EPSILON 0.0000001
 enum {FORMAT_CSC, FORMAT_CSR, FORMAT_COORD};
 enum {UNMASKED = -10, MASKED = 1};
@@ -113,3 +117,7 @@ SparseMatrix SparseMatrix_from_dense(int m, int n, double *x);
 #define SparseMatrix_known_undirected(A) test_flag((A)->property, MATRIX_UNDIRECTED)
 #define SparseMatrix_known_symmetric(A) test_flag((A)->property, MATRIX_SYMMETRIC)
 #define SparseMatrix_known_strucural_symmetric(A) test_flag((A)->property, MATRIX_PATTERN_SYMMETRIC)
+
+#ifdef __cplusplus
+}
+#endif

@@ -1,6 +1,6 @@
 
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,11 +11,13 @@
 #include "config.h"
 
 #include <cgraph/cgraph.h>
-#include <cgraph/agxbuf.h>
 #include <ingraphs/ingraphs.h>
 #include <common/pointset.h>
 #include <getopt.h>
-#include <stddef.h>
+#include <iomanip>
+#include <iostream>
+#include <memory>
+#include <sstream>
 
 #include <sparse/DotIO.h>
 #include <mingle/edge_bundling.h>
@@ -35,7 +37,7 @@ typedef struct {
 
 typedef struct {
 	int outer_iter;
-	int method; 
+	int method;
 	int compatibility_method;
 	double K;
 	fmt_t fmt;
@@ -54,13 +56,13 @@ static FILE *openFile(const char *name, const char* cmd)
 
 	fp = fopen(name, "w");
 	if (!fp) {
-		fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
+		std::cerr << cmd << ": could not open file " << name << " for writing\n";
 		exit(-1);
 	}
 	return (fp);
 }
 
-static char* use_msg =
+static const char use_msg[] =
 "Usage: mingle <options> <file>\n\
     -a t - max. turning angle [0-180] (40)\n\
     -c i - compatability measure; 0 : distance, 1: full (default)\n\
@@ -78,7 +80,7 @@ static char* use_msg =
 static void
 usage (int eval)
 {
-	fputs (use_msg, stderr);
+	std::cerr << use_msg;
 	exit(eval);
 }
 
@@ -92,7 +94,7 @@ checkG (Agraph_t* g)
 	Agedge_t* e;
 	Agnode_t* n;
 	Agnode_t* h;
-	Agnode_t* prevh = NULL;
+	Agnode_t* prevh = nullptr;
 
 	for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
 		for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
@@ -100,7 +102,7 @@ checkG (Agraph_t* g)
 			if (h == prevh) return 1;            // multiedge
 			prevh = h;
 		}
-		prevh = NULL;  // reset
+		prevh = nullptr;  // reset
 	}
 	return 0;
 }
@@ -128,38 +130,40 @@ static void init(int argc, char *argv[], opts_t* opts)
 		case 'a':
 			if ((sscanf(optarg,"%lf",&s) > 0) && (s >= 0))
 				opts->angle =  M_PI*s/180;
-			else 
-				fprintf (stderr, "-a arg %s must be positive real - ignored\n", optarg); 
+			else
+				std::cerr << "-a arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'c':
 			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= COMPATIBILITY_FULL))
 				opts->compatibility_method =  i;
-			else 
-				fprintf (stderr, "-c arg %s must be an integer in [0,%d] - ignored\n", optarg, COMPATIBILITY_FULL); 
+			else
+				std::cerr << "-c arg " << optarg << " must be an integer in [0,"
+					<< COMPATIBILITY_FULL << "] - ignored\n";
 			break;
 		case 'i':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
 				opts->outer_iter =  i;
-			else 
-				fprintf (stderr, "-i arg %s must be a non-negative integer - ignored\n", optarg); 
+			else
+				std::cerr << "-i arg " << optarg << " must be a non-negative integer - "
+					"ignored\n";
 			break;
 		case 'k':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 2))
 				opts->nneighbors =  i;
-			else 
-				fprintf (stderr, "-k arg %s must be an integer >= 2 - ignored\n", optarg); 
+			else
+				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'K':
 			if ((sscanf(optarg,"%lf",&s) > 0) && (s > 0))
 				opts->K =  s;
-			else 
-				fprintf (stderr, "-K arg %s must be positive real - ignored\n", optarg); 
+			else
+				std::cerr << "-K arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'm':
 			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= METHOD_INK))
 				opts->method =  i;
-			else 
-				fprintf (stderr, "-k arg %s must be an integer >= 2 - ignored\n", optarg); 
+			else
+				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'o':
 			outfile = openFile(optarg, cmd);
@@ -167,14 +171,15 @@ static void init(int argc, char *argv[], opts_t* opts)
 		case 'p':
 			if ((sscanf(optarg,"%lf",&s) > 0))
 				opts->angle_param =  s;
-			else 
-				fprintf (stderr, "-p arg %s must be real - ignored\n", optarg); 
+			else
+				std::cerr << "-p arg " << optarg << " must be real - ignored\n";
 			break;
 		case 'r':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
 				opts->max_recursion =  i;
-			else 
-				fprintf (stderr, "-r arg %s must be a non-negative integer - ignored\n", optarg); 
+			else
+				std::cerr << "-r arg " << optarg << " must be a non-negative integer - "
+					"ignored\n";
 			break;
 		case 'T':
 			if (!strcmp(optarg, "gv"))
@@ -182,20 +187,21 @@ static void init(int argc, char *argv[], opts_t* opts)
 			else if (!strcmp(optarg,"simple"))
 				opts->fmt = FMT_SIMPLE;
 			else
-				fprintf (stderr, "-T arg %s must be \"gv\" or \"simple\" - ignored\n", optarg); 
+				std::cerr << "-T arg " << optarg << " must be \"gv\" or \"simple\" - "
+					"ignored\n";
 			break;
 		case 'v':
 			Verbose = 1;
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
-				Verbose =  (unsigned char)i;
-			else 
+				Verbose = static_cast<unsigned char>(i);
+			else
 				optind--;
 			break;
 		case ':':
 			if (optopt == 'v')
 				Verbose = 1;
 			else {
-				fprintf(stderr, "%s: option -%c missing argument\n", cmd, optopt);
+				std::cerr << cmd << ": option -" << optopt << " missing argument\n";
 				usage(1);
 			}
 			break;
@@ -203,7 +209,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 			if (optopt == '\0')
 				usage(0);
 			else {
-				fprintf(stderr, "%s: option -%c unrecognized\n", cmd, optopt);
+				std::cerr << cmd << ": option -" << optopt << " unrecognized\n";
 				usage(1);
 			}
 			break;
@@ -218,16 +224,17 @@ static void init(int argc, char *argv[], opts_t* opts)
 		Files = argv;
     if (!outfile) outfile = stdout;
     if (Verbose) {
-       fprintf (stderr, "Mingle params:\n");
-       fprintf (stderr, "  outer_iter = %d\n", opts->outer_iter);
-       fprintf (stderr, "  method = %d\n", opts->method);
-       fprintf (stderr, "  compatibility_method = %d\n", opts->compatibility_method);
-       fprintf (stderr, "  K = %.02f\n", opts->K);
-       fprintf (stderr, "  fmt = %s\n", (opts->fmt?"simple":"gv"));
-       fprintf (stderr, "  nneighbors = %d\n", opts->nneighbors);
-       fprintf (stderr, "  max_recursion = %d\n", opts->max_recursion);
-       fprintf (stderr, "  angle_param = %.02f\n", opts->angle_param);
-       fprintf (stderr, "  angle = %.02f\n", 180*opts->angle/M_PI);
+       std::cerr
+         << "Mingle params:\n"
+         << "  outer_iter = " << opts->outer_iter << '\n'
+         << "  method = " << opts->method << '\n'
+         << "  compatibility_method = " << opts->compatibility_method << '\n'
+         << "  K = " << std::setprecision(2) << opts->K << '\n'
+         << "  fmt = " << (opts->fmt ? "simple" : "gv") << '\n'
+         << "  nneighbors = " << opts->nneighbors << '\n'
+         << "  max_recursion = " <<  opts->max_recursion << '\n'
+         << "  angle_param = " << std::setprecision(2) <<  opts->angle_param << '\n'
+         << "  angle = " << std::setprecision(2) << (180 * opts->angle / M_PI) << '\n';
     }
 }
 
@@ -235,9 +242,7 @@ static void init(int argc, char *argv[], opts_t* opts)
  * We have ninterval+1 points. We drop the ninterval-1 internal points, and add 4 points to the first
  * and last intervals, and 3 to the rest, giving the needed 3*ninterval+4 points.
  */
-static void
-genBundleSpline (pedge edge, agxbuf* xb)
-{
+static void genBundleSpline(pedge edge, std::ostream &os) {
 	int k, j, mm, kk;
 	int dim = edge->dim;
 	double* x = edge->x;
@@ -247,7 +252,7 @@ genBundleSpline (pedge edge, agxbuf* xb)
 
 	for (j = 0; j < edge->npoints; j++){
 		if (j != 0) {
-			agxbputc(xb, ' ');
+			os << ' ';
 			if ((j == 1) || (j == edge->npoints - 1)) {
 				tt = tt2;
 				mm = 4;
@@ -258,49 +263,45 @@ genBundleSpline (pedge edge, agxbuf* xb)
 			for (kk = 1; kk <= mm; kk++){
 				t = tt[kk-1];
 				for (k = 0; k < dim; k++) {
-					if (k != 0) agxbputc(xb,',');
-					agxbprint(xb, "%.03f", (x[(j-1)*dim+k]*(1-t)+x[j*dim+k]*(t)));
+					if (k != 0) os << ',';
+					os << std::setprecision(3) << (x[(j-1)*dim+k]*(1-t)+x[j*dim+k]*t);
 				}
-				agxbputc(xb,' ');
+				os << ' ';
 			}
 		}
 		if ((j == 0) || (j == edge->npoints - 1)) {
 			for (k = 0; k < dim; k++) {
-				if (k != 0) agxbputc(xb,',');
-				agxbprint(xb, "%.03f", x[j*dim+k]);
+				if (k != 0) os << ',';
+				os << std::setprecision(3) << x[j * dim + k];
 			}
 		}
     }
 }
 
-static void
-genBundleInfo (pedge edge, agxbuf* xb)
-{
+static void genBundleInfo(pedge edge, std::ostream &os) {
 	int k, j;
 	int dim = edge->dim;
 	double* x = edge->x;
 
 	for (j = 0; j < edge->npoints; j++){
-		if (j != 0)  agxbputc(xb, ':');
+		if (j != 0) os << ':';
 		for (k = 0; k < dim; k++) {
-			if (k != 0)  agxbputc(xb, ',');
-			agxbprint(xb, "%.03f", x[j*dim+k]);
+			if (k != 0) os << ',';
+			os << std::setprecision(3) << x[j * dim + k];
 		}
 
 		if ((j < edge->npoints-1) && (edge->wgts))  {
-			agxbprint(xb, ";%.03f", edge->wgts[j]);
+			os << ';' << std::setprecision(3) << edge->wgts[j];
 		}
 	}
 }
 
-static void
-genBundleColors (pedge edge, agxbuf* xb, double maxwgt)
-{
+static void genBundleColors(pedge edge, std::ostream &os, double maxwgt) {
 	int k, j, r, g, b;
 	double len, t, len_total0 = 0;
 	int dim = edge->dim;
 	double* x = edge->x;
-	double* lens = MALLOC(sizeof(double)*edge->npoints);
+	std::unique_ptr<double[]> lens(new double[edge->npoints]);
 
 	for (j = 0; j < edge->npoints - 1; j++){
 		len = 0;
@@ -314,28 +315,27 @@ genBundleColors (pedge edge, agxbuf* xb, double maxwgt)
 		t = edge->wgts[j]/maxwgt;
 		/* interpolate between red (t = 1) to blue (t = 0) */
 		r = 255*t; g = 0; b = 255*(1-t);
-		if (j != 0) agxbputc(xb,':');
-		agxbprint(xb, "#%02x%02x%02x%02x", r, g, b, 85);
+		if (j != 0) os << ':';
+		os << std::hex << std::setw(2) << std::setfill('0') << '#' << r << g << b
+			<< 85;
 		if (j < edge->npoints-2) {
-			agxbprint(xb,";%f",lens[j]/len_total0);
+			os << ';' << (lens[j] / len_total0);
 		}
 	}
-	free (lens);
+	os << std::dec << std::setw(0); // reset stream characteristics
 }
 
 static void
 export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 {
-	Agsym_t* epos = agattr (g, AGEDGE, "pos", "");
-	Agsym_t* esects = agattr (g, AGEDGE, "bundle", "");
-	Agsym_t* eclrs = NULL;
+	Agsym_t* epos = agattr(g, AGEDGE, const_cast<char*>("pos"), "");
+	Agsym_t* esects = agattr(g, AGEDGE, const_cast<char*>("bundle"), "");
+	Agsym_t* eclrs = nullptr;
 	Agnode_t* n;
 	Agedge_t* e;
 	int i, j;
 	double maxwgt = 0;
 	pedge edge;
-	agxbuf xbuf;
-	unsigned char buf[BUFSIZ];
 
 	  /* figure out max number of bundled original edges in a pedge */
 	for (i = 0; i < ne; i++){
@@ -347,39 +347,41 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 		}
 	}
 
-	agxbinit(&xbuf, BUFSIZ, buf);
+	std::ostringstream buf;
 	for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
 		for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
 			edge = edges[ED_idx(e)];
 
-			genBundleSpline (edge, &xbuf);
-			agxset (e, epos, agxbuse(&xbuf));
+			genBundleSpline(edge, buf);
+			agxset(e, epos, buf.str().c_str());
+			buf.str("");
 
-			genBundleInfo (edge, &xbuf);
-			agxset (e, esects, agxbuse(&xbuf));
+			genBundleInfo(edge, buf);
+			agxset(e, esects, buf.str().c_str());
+			buf.str("");
 
 			if (edge->wgts) {
-				if (!eclrs) eclrs = agattr (g, AGEDGE, "color", "");
-				genBundleColors (edge, &xbuf, maxwgt);
-				agxset (e, eclrs, agxbuse(&xbuf));
+				if (!eclrs) eclrs = agattr(g, AGEDGE, const_cast<char*>("color"), "");
+				genBundleColors(edge, buf, maxwgt);
+				agxset(e, eclrs, buf.str().c_str());
+				buf.str("");
 			}
 		}
 	}
-	agxbfree(&xbuf);
 	agwrite(g, fp);
 }
 
 static int
 bundle (Agraph_t* g, opts_t* opts)
 {
-	double *x = NULL;
-	double *label_sizes = NULL;
+	double *x = nullptr;
+	double *label_sizes = nullptr;
 	int n_edge_label_nodes;
 	int dim = 2;
 	SparseMatrix A;
 	SparseMatrix B;
 	pedge* edges;
-    double *xx, eps = 0.;
+    double eps = 0.;
     int nz = 0;
     int *ia, *ja, i, j, k;
 	int rv = 0;
@@ -390,12 +392,12 @@ bundle (Agraph_t* g, opts_t* opts)
 		return 1;
 	}
     initDotIO(g);
-	A = SparseMatrix_import_dot(g, dim, &label_sizes, &x, &n_edge_label_nodes, NULL, FORMAT_CSR, NULL);
+	A = SparseMatrix_import_dot(g, dim, &label_sizes, &x, &n_edge_label_nodes, nullptr, FORMAT_CSR, nullptr);
 	if (!A){
 		agerr (AGERR, "Error: could not convert graph %s (%s) into matrix\n", agnameof(g), fname);
 		return 1;
     }
-    if (x == NULL) {
+    if (x == nullptr) {
 		agerr (AGPREV, " in file %s\n",  fname);
 		return 1;
     }
@@ -438,7 +440,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		
 	ia = A->ia; ja = A->ja;
 	nz = A->nz;
-	xx = MALLOC(sizeof(double)*nz*4);
+	std::unique_ptr<double[]> xx(new double[nz * 4]);
 	nz = 0;
 	dim = 4;
 	for (i = 0; i < A->m; i++){
@@ -453,14 +455,14 @@ bundle (Agraph_t* g, opts_t* opts)
 		}
 	}
 	if (Verbose)
-		fprintf(stderr,"n = %d nz = %d\n",A->m, nz);
+		std::cerr << "n = " << A->m << " nz = " << nz << '\n';
 
-	B = nearest_neighbor_graph(nz, MIN(opts->nneighbors, nz), xx, eps);
+	B = nearest_neighbor_graph(nz, MIN(opts->nneighbors, nz), xx.get(), eps);
 
 	SparseMatrix_delete(A);
 	A = B;
 	free(x);
-	x = xx;
+	x = xx.get();
 
 	dim = 2;
 
@@ -477,13 +479,13 @@ bundle (Agraph_t* g, opts_t* opts)
 
 static Agraph_t *gread(FILE * fp)
 {
-    return agread(fp, NULL);
+    return agread(fp, nullptr);
 }
 
 int main(int argc, char *argv[])
 {
 	Agraph_t *g;
-	Agraph_t *prev = NULL;
+	Agraph_t *prev = nullptr;
 	ingraph_state ig;
 	int rv = 0;
 	opts_t opts;
@@ -497,8 +499,7 @@ int main(int argc, char *argv[])
 		prev = g;
 		fname = fileName(&ig);
 		if (Verbose)
-		    fprintf(stderr, "Process graph %s in file %s\n", agnameof(g),
-			    fname);
+		    std::cerr << "Process graph " << agnameof(g) << " in file " << fname << '\n';
 		rv |= bundle (g, &opts);
 	}
 

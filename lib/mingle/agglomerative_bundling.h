@@ -10,6 +10,10 @@
 
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct Agglomerative_Ink_Bundling_struct *Agglomerative_Ink_Bundling;
 
 struct Agglomerative_Ink_Bundling_struct {
@@ -29,3 +33,7 @@ struct Agglomerative_Ink_Bundling_struct {
 };
 
 pedge* agglomerative_ink_bundling(int dim, SparseMatrix A, pedge* edges, int nneighbor, int max_recursion, double angle_param, double angle, int open_gl, int *flag);
+
+#ifdef __cplusplus
+}
+#endif

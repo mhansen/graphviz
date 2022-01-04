@@ -10,6 +10,10 @@
 
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct Multilevel_MQ_Clustering_struct *Multilevel_MQ_Clustering;
 
 struct Multilevel_MQ_Clustering_struct {
@@ -55,3 +59,7 @@ struct Multilevel_MQ_Clustering_struct {
 */
 void mq_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
 			   int *nclusters, int **assignment, double *mq, int *flag);
+
+#ifdef __cplusplus
+}
+#endif

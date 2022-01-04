@@ -10,4 +10,12 @@
 
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 SparseMatrix nearest_neighbor_graph(int nPts, int num_neigbors, double *x, double eps);
+
+#ifdef __cplusplus
+}
+#endif

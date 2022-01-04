@@ -12,6 +12,10 @@
 
 #include <sparse/SparseMatrix.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct pedge_struct {
   double wgt; /* weight, telling how many original edges this edge represent. If this edge consists of multiple sections of different weights then this is a lower bound. This only applied for agglomerative bundling */
   int npoints;/* number of poly points */
@@ -38,3 +42,7 @@ pedge pedge_double(pedge e);
 
 /* flip the polyline so that last point becomes the first, second last the second, etc*/
 pedge pedge_flip(pedge e);
+
+#ifdef __cplusplus
+}
+#endif

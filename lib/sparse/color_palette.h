@@ -10,7 +10,12 @@
 
 #pragma once
 
-#include "stdio.h"
+#include <stdio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum {MAX_COLOR = 1001};
 
 enum {npalettes = 265};
@@ -31,3 +36,7 @@ extern float palette_sequential_singlehue_red[1001][3];
 extern float palette_sequential_singlehue_red_lighter[1001][3];
 extern float palette_adam_blend[1001][3];
 extern float palette_adam[11][3];
+
+#ifdef __cplusplus
+}
+#endif
