@@ -39,7 +39,7 @@ extern "C" {
     NEATOPROCS_API void jitter_d(Agnode_t *, int, int);
     NEATOPROCS_API Ppoly_t *makeObstacle(node_t * n, expand_t*, bool);
     NEATOPROCS_API void makeSelfArcs(edge_t * e, int stepx);
-    NEATOPROCS_API void makeSpline(edge_t *, Ppoly_t **, int, boolean);
+    NEATOPROCS_API void makeSpline(edge_t *, Ppoly_t **, int, bool);
     NEATOPROCS_API int init_nop(graph_t * g, int);
     NEATOPROCS_API void neato_cleanup(graph_t * g);
     NEATOPROCS_API node_t *neato_dequeue(void);
@@ -58,7 +58,7 @@ extern "C" {
     NEATOPROCS_API void solve_model(graph_t *, int);
     NEATOPROCS_API int solveCircuit(int nG, double **Gm, double **Gm_inv);
     NEATOPROCS_API void spline_edges(Agraph_t *);
-    NEATOPROCS_API void spline_edges0(Agraph_t *, boolean);
+    NEATOPROCS_API void spline_edges0(Agraph_t *, bool);
     NEATOPROCS_API int spline_edges1(graph_t * g, int);
     NEATOPROCS_API int splineEdges(graph_t *,
 			   int (*edgefn) (graph_t *, expand_t*, int), int);

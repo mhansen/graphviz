@@ -595,7 +595,7 @@ int init_nop(Agraph_t * g, int adjust)
 	    posEdges = NoEdges;
 	}
 	if (posEdges != AllEdges)
-	    spline_edges0(g, FALSE);   /* add edges */
+	    spline_edges0(g, false);   /* add edges */
 	else
 	    State = GVSPLINES;
     }
@@ -1400,7 +1400,7 @@ addCluster (graph_t* g)
 static void doEdges(Agraph_t* g)
 {
     compute_bb(g);
-    spline_edges0(g, TRUE);
+    spline_edges0(g, true);
 }
 
 /* neato_layout:

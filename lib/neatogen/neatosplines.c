@@ -494,8 +494,7 @@ static void makePolyline(edge_t * e) {
  * is on or inside one of the obstacles and, if so, tells the shortest path
  * computation to ignore them. 
  */
-void makeSpline(edge_t * e, Ppoly_t ** obs, int npoly, boolean chkPts)
-{
+void makeSpline(edge_t *e, Ppoly_t **obs, int npoly, bool chkPts) {
     Ppolyline_t line, spline;
     Pvector_t slopes[2];
     int i, n_barriers;
@@ -651,7 +650,7 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 		e0 = e;
 		for (i = 0; i < cnt; i++) {
 		    if (edgetype == EDGETYPE_SPLINE)
-			makeSpline(e0, obs, npoly, TRUE);
+			makeSpline(e0, obs, npoly, true);
 		    else
 			makePolyline(e0);
 		    e0 = ED_to_virt(e0);
@@ -764,8 +763,7 @@ int spline_edges1(graph_t * g, int edgetype)
  * when output in dot or plain format.
  *
  */
-void spline_edges0(graph_t * g, boolean set_aspect)
-{
+void spline_edges0(graph_t *g, bool set_aspect) {
     int et = EDGE_TYPE (g);
     if (set_aspect) neato_set_aspect(g);
     if (et == EDGETYPE_NONE) return;
@@ -815,7 +813,7 @@ void spline_edges(graph_t * g)
     }
 	
     shiftClusters (g, GD_bb(g).LL);
-    spline_edges0(g, TRUE);
+    spline_edges0(g, true);
 }
 
 /* scaleEdge:

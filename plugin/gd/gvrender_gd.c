@@ -67,22 +67,22 @@ static int white, black, transparent, basecolor;
 static void gdgen_begin_page(GVJ_t * job)
 {
     char *bgcolor_str = NULL, *truecolor_str = NULL;
-    boolean truecolor_p = FALSE;	/* try to use cheaper paletted mode */
+    bool truecolor_p = false;	/* try to use cheaper paletted mode */
     gdImagePtr im = NULL;
 
     truecolor_str = agget(job->gvc->g, "truecolor");	/* allow user to force truecolor */
     bgcolor_str = agget(job->gvc->g, "bgcolor");
 
     if (truecolor_str && truecolor_str[0])
-	truecolor_p = mapbool(truecolor_str);
+	truecolor_p = mapbool(truecolor_str) != FALSE;
 
     if (bgcolor_str && strcmp(bgcolor_str, "transparent") == 0) {
 	if (job->render.features->flags & GVDEVICE_DOES_TRUECOLOR)
-	    truecolor_p = TRUE;	/* force truecolor */
+	    truecolor_p = true;	/* force truecolor */
     }
 
     if (GD_has_images(job->gvc->g))
-	truecolor_p = TRUE;	/* force truecolor */
+	truecolor_p = true;	/* force truecolor */
 
     if (job->external_context) {
 	if (job->common->verbose)

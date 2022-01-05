@@ -2760,7 +2760,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     pointf P, *vertices;
     static pointf *AF;
     static int A_size;
-    boolean filled;
+    int filled;
     bool usershape_p;
     boolean pfilled;		/* true if fill not handled by user shape */
     char *color, *name;
@@ -2847,10 +2847,10 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	else if (style & (STRIPED|WEDGED))  {
 	    fillcolor = findFill (n);
             /* gvrender_set_fillcolor(job, fillcolor); */
-	    filled = TRUE;
+	    filled = 1;
 	}
 	else {
-	    filled = FALSE;
+	    filled = 0;
 	}
 	pencolor = penColor(job, n);	/* emit pen color */
     }
@@ -2858,7 +2858,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     pfilled = !ND_shape(n)->usershape || streq(ND_shape(n)->name, "custom");
 
     /* if no boundary but filled, set boundary color to transparent */
-    if (peripheries == 0 && filled && pfilled) {
+    if (peripheries == 0 && filled != 0 && pfilled) {
 	peripheries = 1;
 	gvrender_set_pencolor(job, "transparent");
     }
@@ -2899,7 +2899,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	    gvrender_polygon(job, AF, sides, filled);
 	}
 	/* fill innermost periphery only */
-	filled = FALSE;
+	filled = 0;
     }
 
     usershape_p = false;
@@ -2921,7 +2921,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	    AF[i].y = P.y * ysize + ND_coord(n).y;
 	}
 	/* lay down fill first */
-	if (filled && pfilled) {
+	if (filled != 0 && pfilled) {
 	    if (sides <= 2) {
 		if ((style & WEDGED) && j == 0 && multicolor(fillcolor)) {
 		    int rv = wedgedEllipse (job, AF, fillcolor);
@@ -2944,10 +2944,10 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 		gvrender_polygon(job, AF, sides, filled);
 	    }
 	}
-	gvrender_usershape(job, name, AF, sides, filled != FALSE,
+	gvrender_usershape(job, name, AF, sides, filled != 0,
 			   late_string(n, N_imagescale, "false"),
 			   late_string(n, N_imagepos, "mc"));
-	filled = FALSE;		/* with user shapes, we have done the fill if needed */
+	filled = 0;		/* with user shapes, we have done the fill if needed */
     }
 
     free (clrs[0]);

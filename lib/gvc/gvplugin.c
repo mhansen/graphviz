@@ -353,7 +353,7 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     const gvplugin_available_t *pnext, *plugin;
     char *bp;
     char *s, *p, *q, *typestr_last;
-    boolean new = TRUE;
+    bool new = true;
     static agxbuf xb;
 
     /* check for valid str */
@@ -384,7 +384,7 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
             if (!s[0] || strcasecmp(s, q) == 0) {
                 /* list each member of the matching type as "type:path" */
                 agxbprint(&xb, " %s:%s", pnext->typestr, pnext->package->name);
-                new = FALSE;
+                new = false;
             }
             free(q);
         }
@@ -401,7 +401,7 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
             if (!typestr_last || strcasecmp(typestr_last, q) != 0) {
                 /* list it as "type"  i.e. w/o ":path" */
                 agxbprint(&xb, " %s", q);
-                new = FALSE;
+                new = false;
             }
             free(typestr_last);
             typestr_last = q;

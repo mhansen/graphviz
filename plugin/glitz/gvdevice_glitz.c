@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -481,7 +482,7 @@ static void glitz_finalize(GVJ_t *firstjob)
     struct timeval timeout;
 #ifdef HAVE_SYS_INOTIFY_H
     int wd=0;
-    boolean watching_p = FALSE;
+    bool watching_p = false;
     static char *dir;
     char *p, *cwd = NULL;
 
@@ -494,7 +495,7 @@ static void glitz_finalize(GVJ_t *firstjob)
     /* test that we have access to the input filename */
     if (firstjob->input_filename && firstjob->graph_index == 0) {
 
-	watching_p = TRUE;
+	watching_p = true;
 
 	if (firstjob->input_filename[0] != '/') {
     	    cwd = getcwd(NULL, 0);

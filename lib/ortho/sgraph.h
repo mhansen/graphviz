@@ -11,6 +11,7 @@
 #pragma once
 
 #include <ortho/structures.h>
+#include <stdbool.h>
 
 typedef struct snode snode;
 typedef struct sedge sedge;
@@ -28,7 +29,7 @@ struct snode {
      */
   int* adj_edge_list;  
   int index;
-  boolean isVert;  /* true if node corresponds to vertical segment */
+  bool isVert;  /* true if node corresponds to vertical segment */
 };
 
 struct sedge {
