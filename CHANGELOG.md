@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fix detection of unavailable output format
 - SVG layout doesn't always respect requested size #1855
 - mismatched format string in `mingle`
+- Building from scratch with Visual Studio fails #2175
 
 ## [2.50.0] – 2021-12-04
 

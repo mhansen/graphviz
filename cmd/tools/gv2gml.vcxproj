@@ -99,6 +99,11 @@
   <ItemGroup>
     <ClCompile Include="gv2gml.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\lib\gvc.vcxproj">
+      <Project>{15229511-9f6c-48a5-9194-660ca6492563}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
