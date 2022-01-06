@@ -58,13 +58,13 @@ static double sumLengths_avoid_bad_angle(point_t* points, int npoints, point_t e
 
   diff_x0 = end.x-meeting.x;
   diff_y0 = end.y-meeting.y;
-  len0 = sum = sqrt(diff_x0*diff_x0+diff_y0*diff_y0);
+  len0 = sum = hypot(diff_x0, diff_y0);
 
   // distance form each of 'points' till 'meeting'
   for (i=0; i<npoints; i++) {
     diff_x = points[i].x-meeting.x;
     diff_y = points[i].y-meeting.y;
-    len = sqrt(diff_x*diff_x+diff_y*diff_y);
+    len = hypot(diff_x, diff_y);
     sum += len;
     cos_theta = (diff_x0 * diff_x + diff_y0 * diff_y)
                 / std::max(len * len0, 0.00001);
@@ -84,12 +84,12 @@ static double sumLengths(point_t* points, int npoints, point_t end, point_t meet
   for (i=0; i<npoints; i++) {
         diff_x = points[i].x-meeting.x;
         diff_y = points[i].y-meeting.y;
-        sum += sqrt(diff_x*diff_x+diff_y*diff_y);
+        sum += hypot(diff_x, diff_y);
   }
     // distance of single line from 'meeting' to 'end'
   diff_x = end.x-meeting.x;
   diff_y = end.y-meeting.y;
-  sum += sqrt(diff_x*diff_x+diff_y*diff_y);
+  sum += hypot(diff_x, diff_y);
   return sum;
 }
 
@@ -255,7 +255,7 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
     sources[i].y = x[1];
     targets[i].x = x[e->dim*e->npoints - e->dim];
     targets[i].y = x[e->dim*e->npoints - e->dim + 1];
-    (*ink0) += sqrt((sources[i].x - targets[i].x)*(sources[i].x - targets[i].x) + (sources[i].y - targets[i].y)*(sources[i].y - targets[i].y));
+    (*ink0) += hypot(sources[i].x - targets[i].x, sources[i].y - targets[i].y);
     begin = addPoint (begin, scalePoint(sources[i], e->wgt));
     end = addPoint (end, scalePoint(targets[i], e->wgt));
     wgt += e->wgt;
@@ -330,6 +330,6 @@ double ink1(pedge e){
   x = e->x;
   xx = x[0] - x[e->dim*e->npoints - e->dim];
   yy = x[1] - x[e->dim*e->npoints - e->dim + 1];
-  ink0 += sqrt(xx*xx + yy*yy);
+  ink0 += hypot(xx, yy);
   return ink0;
 }
