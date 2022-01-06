@@ -230,7 +230,6 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
   point_t begin, end, mid, diff;
   pedge e;
   double *x;
-  point_t* targets = N_NEW(numEdges, point_t);
   double inkUsed;
   double eps = 1.0e-2;
   double cend = 0, cbegin = 0;
@@ -267,12 +266,12 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
   if (numEdges == 1){
     *meet1 = begin;
     *meet2 = end;
-      free (targets);
       return *ink0;
   }
 
   /* shift the begin and end point to avoid sharp turns */
   std::vector<point_t> sources;
+  std::vector<point_t> targets;
   for (i = 0; i < numEdges; i++) {
     if (pick) {
       e = edges[pick[i]];
@@ -281,8 +280,8 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
     }
     x = e->x;
     sources.push_back(point_t{x[0], x[1]});
-    targets[i].x = x[e->dim*e->npoints - e->dim];
-    targets[i].y = x[e->dim*e->npoints - e->dim + 1];
+    targets.push_back(point_t{x[e->dim*e->npoints - e->dim],
+                              x[e->dim*e->npoints - e->dim + 1]});
     /* begin(1) ----------- mid(0) */
     if (i == 0){
       cbegin = project_to_line(sources[i], begin, end, angle);
@@ -298,7 +297,6 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
       /* no point can be found that satisfies the angular constraints, so we give up and set ink to a large value */
       if (Verbose && 0) fprintf(stderr,"no point satisfying any angle constraints can be found. cbeg=%f cend=%f\n",cbegin,cend);
       inkUsed = 1000*(*ink0);
-      free (targets);
       return inkUsed;
     }
     /* make sure the turning angle is no more than alpha degree */
@@ -312,9 +310,8 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
   mid = scalePoint (addPoint(begin,end),0.5);
 
   inkUsed = (bestInk (sources.data(), numEdges, begin, mid, eps, meet1, angle_param)
-	     + bestInk (targets, numEdges, end, mid, eps, meet2, angle_param));
+	     + bestInk (targets.data(), numEdges, end, mid, eps, meet2, angle_param));
 
-  free (targets);
   return inkUsed;
 }
 
