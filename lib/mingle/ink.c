@@ -43,7 +43,7 @@ static double dotPoint(point_t a, point_t b){
   return a.x*b.x + a.y*b.y;
 }
 
-static const point_t Origin;
+static const point_t Origin = {0, 0};
 
 /* sumLengths:
  */
