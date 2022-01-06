@@ -16,6 +16,7 @@
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
 #include <mingle/ink.h>
+#include <vector>
 
 double ink_count;
 
@@ -229,7 +230,6 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
   point_t begin, end, mid, diff;
   pedge e;
   double *x;
-  point_t* sources = N_NEW(numEdges, point_t);
   point_t* targets = N_NEW(numEdges, point_t);
   double inkUsed;
   double eps = 1.0e-2;
@@ -267,12 +267,12 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
   if (numEdges == 1){
     *meet1 = begin;
     *meet2 = end;
-      free (sources);
       free (targets);
       return *ink0;
   }
 
   /* shift the begin and end point to avoid sharp turns */
+  std::vector<point_t> sources;
   for (i = 0; i < numEdges; i++) {
     if (pick) {
       e = edges[pick[i]];
@@ -280,8 +280,7 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
       e = edges[i];
     }
     x = e->x;
-    sources[i].x = x[0];
-    sources[i].y = x[1];
+    sources.push_back(point_t{x[0], x[1]});
     targets[i].x = x[e->dim*e->npoints - e->dim];
     targets[i].y = x[e->dim*e->npoints - e->dim + 1];
     /* begin(1) ----------- mid(0) */
@@ -299,7 +298,6 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
       /* no point can be found that satisfies the angular constraints, so we give up and set ink to a large value */
       if (Verbose && 0) fprintf(stderr,"no point satisfying any angle constraints can be found. cbeg=%f cend=%f\n",cbegin,cend);
       inkUsed = 1000*(*ink0);
-      free (sources);
       free (targets);
       return inkUsed;
     }
@@ -313,10 +311,9 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
   }
   mid = scalePoint (addPoint(begin,end),0.5);
 
-  inkUsed = (bestInk (sources, numEdges, begin, mid, eps, meet1, angle_param)
+  inkUsed = (bestInk (sources.data(), numEdges, begin, mid, eps, meet1, angle_param)
 	     + bestInk (targets, numEdges, end, mid, eps, meet2, angle_param));
 
-  free (sources);
   free (targets);
   return inkUsed;
 }
