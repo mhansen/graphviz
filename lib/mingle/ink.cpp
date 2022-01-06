@@ -8,8 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <math.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 #include <common/types.h>
 #include <common/globals.h>
 #include <sparse/general.h>
