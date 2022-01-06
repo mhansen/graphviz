@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <common/types.h>
@@ -65,8 +66,9 @@ static double sumLengths_avoid_bad_angle(point_t* points, int npoints, point_t e
     diff_y = points[i].y-meeting.y;
     len = sqrt(diff_x*diff_x+diff_y*diff_y);
     sum += len;
-    cos_theta = (diff_x0*diff_x + diff_y0*diff_y)/MAX((len*len0),0.00001);
-    cos_max = MAX(cos_max, cos_theta);
+    cos_theta = (diff_x0 * diff_x + diff_y0 * diff_y)
+                / std::max(len * len0, 0.00001);
+    cos_max = std::max(cos_max, cos_theta);
   }
 
   // distance of single line from 'meeting' to 'end'
@@ -207,13 +209,13 @@ static double project_to_line(point_t pt, point_t left, point_t right, double an
   assert(alpha > 0 && alpha < M_PI);
   b = subPoint(right, left);
   a = subPoint(pt, left);
-  bnorm = MAX(1.e-10, dotPoint(b, b));
+  bnorm = std::max(1.e-10, dotPoint(b, b));
   ccord = dotPoint(b, a)/bnorm;
   dnorm = dotPoint(a,a)/bnorm - ccord*ccord;
   if (alpha == M_PI/2){
     return ccord;
   } else {
-    return ccord + sqrt(MAX(0, dnorm))/tan(alpha);
+    return ccord + sqrt(std::max(0.0, dnorm)) / tan(alpha);
   }
 }
 
@@ -288,8 +290,8 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
       cbegin = project_to_line(sources[i], begin, end, angle);
       cend =   project_to_line(targets[i], end, begin, angle);
     } else {
-      cbegin = MAX(cbegin, project_to_line(sources[i], begin, end, angle));
-      cend = MAX(cend, project_to_line(targets[i], end, begin, angle));
+      cbegin = std::max(cbegin, project_to_line(sources[i], begin, end, angle));
+      cend = std::max(cend, project_to_line(targets[i], end, begin, angle));
     }
   }
 
@@ -303,11 +305,11 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
       return inkUsed;
     }
     /* make sure the turning angle is no more than alpha degree */
-    cbegin = MAX(0, cbegin);/* make sure the new adjusted point is with in [begin,end] internal */
+    cbegin = std::max(0.0, cbegin);/* make sure the new adjusted point is with in [begin,end] internal */
     diff = subPoint(end, begin);
     begin = addPoint(begin, scalePoint(diff, cbegin));
     
-    cend = MAX(0, cend);/* make sure the new adjusted point is with in [end,begin] internal */
+    cend = std::max(0.0, cend);/* make sure the new adjusted point is with in [end,begin] internal */
     end = subPoint(end, scalePoint(diff, cend));
   }
   mid = scalePoint (addPoint(begin,end),0.5);
