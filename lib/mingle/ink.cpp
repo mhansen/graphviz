@@ -251,12 +251,11 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
       e = edges[i];
     }
     x = e->x;
-    sources[i].x = x[0];
-    sources[i].y = x[1];
+    point_t source = {x[0], x[1]};
     targets[i].x = x[e->dim*e->npoints - e->dim];
     targets[i].y = x[e->dim*e->npoints - e->dim + 1];
-    (*ink0) += hypot(sources[i].x - targets[i].x, sources[i].y - targets[i].y);
-    begin = addPoint (begin, scalePoint(sources[i], e->wgt));
+    (*ink0) += hypot(source.x - targets[i].x, source.y - targets[i].y);
+    begin = addPoint (begin, scalePoint(source, e->wgt));
     end = addPoint (end, scalePoint(targets[i], e->wgt));
     wgt += e->wgt;
   }
