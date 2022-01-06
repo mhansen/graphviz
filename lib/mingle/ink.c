@@ -14,7 +14,6 @@
 #include <common/globals.h>
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
-#include <mingle/edge_bundling.h>
 #include <mingle/ink.h>
 
 double ink_count;
