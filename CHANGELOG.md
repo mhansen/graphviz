@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking**: Using Graphviz as a library on Windows now requires the `GVDLL`
+  symbol to be set to ensure correct linking.
 - The Ming plugin that produced Shockwave files has been removed. This format
   was EOLed by Adobe in April 2019. #2160
 - CentOS 7 packages now include libmingle and the `mingle` program.
