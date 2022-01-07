@@ -15,6 +15,7 @@ import signal
 import stat
 import subprocess
 import sys
+import sysconfig
 import tempfile
 from typing import List
 import xml.etree.ElementTree as ET
@@ -22,6 +23,13 @@ import pytest
 
 sys.path.append(os.path.dirname(__file__))
 from gvtest import dot, ROOT, run_c #pylint: disable=C0413
+
+def is_mingw() -> bool:
+  """
+  are we running on MinGW?
+  """
+
+  return "mingw" in sysconfig.get_platform()
 
 def is_ndebug_defined() -> bool:
   """
@@ -373,7 +381,7 @@ def test_1314():
   # the execution did not fail as expected
   pytest.fail("dot incorrectly exited with success")
 
-@pytest.mark.xfail(strict=not is_ndebug_defined()) # FIXME
+@pytest.mark.xfail(strict=not is_ndebug_defined() and not is_mingw()) # FIXME
 def test_1408():
   """
   parsing particular ortho layouts should not cause an assertion failure
