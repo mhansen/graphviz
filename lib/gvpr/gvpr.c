@@ -177,7 +177,7 @@ static int parseArgs(char *s, int argc, char ***argv)
 }
 
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__)
 #define PATHSEP '\\'
 #define LISTSEP ';'
 #else

@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - mismatched format string in `mingle`
 - Building from scratch with Visual Studio fails #2175
 - Plugins are not configured on MinGW #2176
+- gvpr on MinGW does not support absolute paths #1780
 
 ## [2.50.0] – 2021-12-04
 
