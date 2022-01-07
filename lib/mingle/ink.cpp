@@ -165,7 +165,8 @@ static double bestInk(const std::vector<point_t> &points, point_t begin,
         }
       }
     }
-  } while (fabs(value1-value4)/(MIN(value1,value4)+1e-10)>prec && dotPoint(diff, diff) > 1.e-20);
+  } while (fabs(value1 - value4) / (std::min(value1, value4) + 1e-10) > prec
+           && dotPoint(diff, diff) > 1.e-20);
 
   meeting = scalePoint(addPoint(first,fourth),0.5);
   *meet = meeting;
