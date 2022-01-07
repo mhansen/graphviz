@@ -14,7 +14,6 @@
 #include <common/types.h>
 #include <common/globals.h>
 #include <sparse/general.h>
-#include <sparse/SparseMatrix.h>
 #include <mingle/ink.h>
 #include <vector>
 
