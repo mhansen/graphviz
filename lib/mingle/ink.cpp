@@ -49,10 +49,10 @@ static const point_t Origin = {0, 0};
 
 /* sumLengths:
  */
-static double sumLengths_avoid_bad_angle(point_t* points, int npoints, point_t end, point_t meeting, double angle_param) 
-{
+static double sumLengths_avoid_bad_angle(const std::vector<point_t> &points,
+                                         point_t end, point_t meeting,
+                                         double angle_param) {
   /* avoid sharp turns, we want cos_theta to be as close to -1 as possible */
-  int i;
   double len0, len, sum = 0;
   double diff_x, diff_y, diff_x0, diff_y0;
   double cos_theta, cos_max = -10;
@@ -62,9 +62,9 @@ static double sumLengths_avoid_bad_angle(point_t* points, int npoints, point_t e
   len0 = sum = hypot(diff_x0, diff_y0);
 
   // distance form each of 'points' till 'meeting'
-  for (i=0; i<npoints; i++) {
-    diff_x = points[i].x-meeting.x;
-    diff_y = points[i].y-meeting.y;
+  for (const point_t &p : points) {
+    diff_x = p.x - meeting.x;
+    diff_y = p.y - meeting.y;
     len = hypot(diff_x, diff_y);
     sum += len;
     cos_theta = (diff_x0 * diff_x + diff_y0 * diff_y)
@@ -75,16 +75,15 @@ static double sumLengths_avoid_bad_angle(point_t* points, int npoints, point_t e
   // distance of single line from 'meeting' to 'end'
   return sum*(cos_max + angle_param);/* straight line gives angle_param - 1, turning angle of 180 degree gives angle_param + 1 */
 }
-static double sumLengths(point_t* points, int npoints, point_t end, point_t meeting) 
-{
-  int i;
+static double sumLengths(const std::vector<point_t> &points, point_t end,
+                         point_t meeting) {
   double sum = 0;
   double diff_x, diff_y;
 
     // distance form each of 'points' till 'meeting'
-  for (i=0; i<npoints; i++) {
-        diff_x = points[i].x-meeting.x;
-        diff_y = points[i].y-meeting.y;
+  for (const point_t &p : points) {
+        diff_x = p.x - meeting.x;
+        diff_y = p.y - meeting.y;
         sum += hypot(diff_x, diff_y);
   }
     // distance of single line from 'meeting' to 'end'
@@ -96,8 +95,9 @@ static double sumLengths(point_t* points, int npoints, point_t end, point_t meet
 
 /* bestInk:
  */
-static double bestInk(point_t* points, int npoints, point_t begin, point_t end, double prec, point_t *meet, double angle_param)
-{
+static double bestInk(const std::vector<point_t> &points, point_t begin,
+                      point_t end, double prec, point_t *meet,
+                      double angle_param) {
   point_t first, second, third, fourth, diff, meeting;
   double value1, value2, value3, value4;
 
@@ -110,15 +110,15 @@ static double bestInk(point_t* points, int npoints, point_t begin, point_t end, 
     third = addPoint(first,scalePoint(diff,2.0/3.0));
 
     if (angle_param < 1){
-      value1 = sumLengths(points, npoints, end, first);
-      value2 = sumLengths(points, npoints, end, second);
-      value3 = sumLengths(points, npoints, end, third);
-      value4 = sumLengths(points, npoints, end, fourth);
+      value1 = sumLengths(points, end, first);
+      value2 = sumLengths(points, end, second);
+      value3 = sumLengths(points, end, third);
+      value4 = sumLengths(points, end, fourth);
     } else {
-      value1 = sumLengths_avoid_bad_angle(points, npoints, end, first, angle_param);
-      value2 = sumLengths_avoid_bad_angle(points, npoints, end, second, angle_param);
-      value3 = sumLengths_avoid_bad_angle(points, npoints, end, third, angle_param);
-      value4 = sumLengths_avoid_bad_angle(points, npoints, end, fourth, angle_param);
+      value1 = sumLengths_avoid_bad_angle(points, end, first, angle_param);
+      value2 = sumLengths_avoid_bad_angle(points, end, second, angle_param);
+      value3 = sumLengths_avoid_bad_angle(points, end, third, angle_param);
+      value4 = sumLengths_avoid_bad_angle(points, end, fourth, angle_param);
     }
 
     if (value1<value2) {
@@ -170,7 +170,7 @@ static double bestInk(point_t* points, int npoints, point_t begin, point_t end, 
   meeting = scalePoint(addPoint(first,fourth),0.5);
   *meet = meeting;
 
-  return sumLengths(points, npoints, end, meeting);
+  return sumLengths(points, end, meeting);
 
 }
 
@@ -309,8 +309,8 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
   }
   mid = scalePoint (addPoint(begin,end),0.5);
 
-  inkUsed = (bestInk (sources.data(), numEdges, begin, mid, eps, meet1, angle_param)
-	     + bestInk (targets.data(), numEdges, end, mid, eps, meet2, angle_param));
+  inkUsed = bestInk(sources, begin, mid, eps, meet1, angle_param)
+	     + bestInk(targets, end, mid, eps, meet2, angle_param);
 
   return inkUsed;
 }
