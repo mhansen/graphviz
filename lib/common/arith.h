@@ -39,10 +39,6 @@ extern "C" {
 #define SGN(a)		(((a)<0)? -1 : 1)
 #define CMP(a,b)	(((a)<(b)) ? -1 : (((a)>(b)) ? 1 : 0))
 
-#ifndef MAXSHORT
-#define	MAXSHORT	(0x7fff)
-#endif
-
 #ifndef MAXDOUBLE
 #define MAXDOUBLE	1.7976931348623157e+308
 #endif
