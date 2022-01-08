@@ -101,7 +101,7 @@
   <ItemGroup>
     <ClCompile Include="agglomerative_bundling.c" />
     <ClCompile Include="edge_bundling.c" />
-    <ClCompile Include="ink.c" />
+    <ClCompile Include="ink.cpp" />
     <ClCompile Include="nearest_neighbor_graph.c" />
     <ClCompile Include="nearest_neighbor_graph_ann.cpp" />
   </ItemGroup>
