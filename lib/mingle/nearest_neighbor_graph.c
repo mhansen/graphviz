@@ -32,9 +32,9 @@ SparseMatrix nearest_neighbor_graph(int nPts, int num_neigbors, double *x, doubl
   int k = num_neigbors;
 
   /* need to *2 as we do two sweeps of neighbors, so could have repeats */
-  irn =  MALLOC(sizeof(int)*nPts*k*2);
-  jcn =  MALLOC(sizeof(int)*nPts*k*2);
-  val =  MALLOC(sizeof(double)*nPts*k*2);
+  irn =  (int*)MALLOC(sizeof(int)*nPts*k*2);
+  jcn =  (int*)MALLOC(sizeof(int)*nPts*k*2);
+  val =  (double*)MALLOC(sizeof(double)*nPts*k*2);
 
 #ifdef HAVE_ANN
   nearest_neighbor_graph_ann(nPts, num_neigbors, eps, x, &nz, &irn, &jcn, &val);
