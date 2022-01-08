@@ -52,8 +52,7 @@ char* strcasestr (const char *str, const char *pat)
 #include <gvc/gvplugin_textlayout.h>
 #include <pango/pangocairo.h>
 #include "gvgetfontlist.h"
-
-extern unsigned char Verbose;
+#include <common/globals.h>
 
 #define FNT_BOLD	1<<0
 #define FNT_BOOK	1<<1
