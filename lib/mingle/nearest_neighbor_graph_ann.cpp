@@ -50,7 +50,10 @@ static void sortPtsY(int n, ANNpointArray pts){
   }
 }
 
-void nearest_neighbor_graph_ann(int nPts, int k, double eps, double *x, int *nz0, int *irn0, int *jcn0, double *val0){
+void nearest_neighbor_graph_ann(int nPts, int k, double eps, double *x,
+                                int *nz0, std::vector<int> &irn,
+                                std::vector<int> &jcn,
+                                std::vector<double> &val) {
 
   /* Gives a nearest neighbor graph is a list of dim-dimendional points. The connectivity is in irn/jcn, and the distance in val.
      
@@ -65,11 +68,6 @@ void nearest_neighbor_graph_ann(int nPts, int k, double eps, double *x, int *nz0
 
     note that there could be repeates
   */
-
-  int *irn = irn0;
-  int *jcn = jcn0;
-  double *val = val0;
-
 
   ANNpointArray dataPts = annAllocPts(nPts, dim);			// allocate data points
   std::vector<ANNidx> nnIdx(k);						// allocate near neighbor indices
