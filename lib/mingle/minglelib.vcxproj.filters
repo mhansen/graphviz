@@ -24,7 +24,7 @@
     <ClCompile Include="ink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="nearest_neighbor_graph.c">
+    <ClCompile Include="nearest_neighbor_graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="nearest_neighbor_graph_ann.cpp">
