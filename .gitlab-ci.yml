@@ -824,10 +824,6 @@ windows-cmake-Win32-release-build:
         - $Env:project_platform = "Win32"
         - $Env:configuration = "Release"
         - $Env:build_system = "cmake"
-    cache:
-        key: windows-cmake-Win32-release-build
-        paths:
-            - choco-cache
 
 windows-cmake-Win32-debug-build:
     <<: *windows_build_definition
