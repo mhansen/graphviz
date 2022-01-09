@@ -43,4 +43,11 @@ set_target_properties(gvplugin_gdiplus PROPERTIES
     SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
 )
 
+if(MINGW)
+    # work around https://gitlab.kitware.com/cmake/cmake/-/issues/21716
+    set_target_properties(gvplugin_gdiplus PROPERTIES
+        RUNTIME_OUTPUT_NAME gvplugin_gdiplus-${GRAPHVIZ_PLUGIN_VERSION}
+    )
+endif()
+
 endif()
