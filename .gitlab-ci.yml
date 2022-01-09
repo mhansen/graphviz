@@ -848,10 +848,6 @@ windows-cmake-x64-debug-build:
         - $Env:project_platform = "x64"
         - $Env:configuration = "Debug"
         - $Env:build_system = "cmake"
-    cache:
-        key: windows-cmake-x64-debug-build
-        paths:
-            - choco-cache
 
 windows-msbuild-Win32-release-build:
     <<: *windows_build_definition
