@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Building from scratch with Visual Studio fails #2175
 - Plugins are not configured on MinGW #2176
 - gvpr on MinGW does not support absolute paths #1780
+- PNG format not available in CMake builds with MinGW
 
 ## [2.50.0] – 2021-12-04
 
