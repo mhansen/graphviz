@@ -840,10 +840,6 @@ windows-cmake-x64-release-build:
         - $Env:project_platform = "x64"
         - $Env:configuration = "Release"
         - $Env:build_system = "cmake"
-    cache:
-        key: windows-cmake-x64-release-build
-        paths:
-            - choco-cache
 
 windows-cmake-x64-debug-build:
     <<: *windows_build_definition
