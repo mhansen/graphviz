@@ -124,9 +124,8 @@ portable-source:
         # disable Windows Defender
         - Add-MpPreference -ExclusionPath 'C:\'
         - $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
-        - choco config set cacheLocation choco-cache
-        - choco install --yes --no-progress --params "/InstallDir:C:\Python3" python3
-        - $env:Path = "C:\Python3;" + $env:Path
+        - nuget install python -ExcludeVersion -OutputDirectory C:\
+        - $env:Path = "C:\python\tools;" + $env:Path
         - python --version
         - python -m pip install --requirement requirements.txt
         # Toolchain definitions
