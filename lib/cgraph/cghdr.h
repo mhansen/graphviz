@@ -10,19 +10,19 @@
 
 #pragma once
 
-#define _BLD_cgraph 1
+#include "config.h"
 
-#ifdef _WIN32
-#   ifdef EXPORT_CGHDR
-#       define CGHDR_API __declspec(dllexport)
-#   else
-#       define CGHDR_API __declspec(dllimport)
-#   endif
+#ifdef GVDLL
+#ifdef EXPORT_CGHDR
+#define CGHDR_API __declspec(dllexport)
 #else
-#   define CGHDR_API extern
+#define CGHDR_API __declspec(dllimport)
+#endif
 #endif
 
-#include "config.h"
+#ifndef CGHDR_API
+#define CGHDR_API /* nothing */
+#endif
 
 #include <cgraph.h>
 

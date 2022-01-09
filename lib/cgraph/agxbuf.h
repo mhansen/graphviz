@@ -16,14 +16,18 @@ extern "C" {
 
 #include <stddef.h>
 
-#ifdef _WIN32
-#   ifdef EXPORT_AGXBUF
-#       define AGXBUF_API __declspec(dllexport)
-#   else
-#       define AGXBUF_API __declspec(dllimport)
-#   endif
+#include "config.h"
+
+#ifdef GVDLL
+#ifdef EXPORT_AGXBUF
+#define AGXBUF_API __declspec(dllexport)
 #else
-#   define AGXBUF_API extern
+#define AGXBUF_API __declspec(dllimport)
+#endif
+#endif
+
+#ifndef AGXBUF_API
+#define AGXBUF_API /* nothing */
 #endif
 
 /* Extensible buffer:
