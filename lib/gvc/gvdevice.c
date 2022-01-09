@@ -16,6 +16,7 @@
 
 #include <ctype.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
@@ -589,7 +590,7 @@ void gvprintpointflist(GVJ_t * job, pointf *p, int n)
 {
     int i = 0;
 
-    while (TRUE) {
+    while (true) {
 	gvprintpointf(job, p[i]);
         if (++i >= n) break;
         gvwrite(job, " ", 1);
