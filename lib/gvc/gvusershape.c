@@ -30,7 +30,6 @@
 #include <common/memory.h>
 #include <cgraph/agxbuf.h>
 
-#define _BLD_gvc 1
 #include <common/utils.h>
 #include <gvc/gvplugin_loadimage.h>
 #include <gvc/gvplugin.h>

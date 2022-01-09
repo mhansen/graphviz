@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 #ifndef GEOMPROCS_API
-#define GEOMPROCS_API extern
+#define GEOMPROCS_API /* nothing */
 #endif
 
 GEOMPROCS_API box flip_rec_box(box b, point p);
