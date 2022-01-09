@@ -586,8 +586,8 @@ windows-cygwin-build-using-autogen:
         - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress cygwin
-        - choco install --yes --no-progress --params "/InstallDir:C:\Python3" python3
-        - $env:Path = "C:\Python3;" + $env:Path
+        - nuget install python -ExcludeVersion -OutputDirectory C:\
+        - $env:Path = "C:\python\tools;" + $env:Path
         - python gen_version.py --output GRAPHVIZ_VERSION
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
