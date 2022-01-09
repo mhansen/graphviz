@@ -50,7 +50,7 @@ void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMat
   int n = A0->m, i, cdim;
 
   SparseMatrix A;
-  int weightedQ = TRUE;
+  bool weightedQ = true;
   int iter_max = 100;
 
   {double *dist = NULL;
