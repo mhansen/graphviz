@@ -933,10 +933,6 @@ windows-mingw64-cmake-build:
         paths:
             - Packages/*/*/*.exe
             - Packages/*/*/*.zip
-    cache:
-        key: windows-mingw64-cmake-build
-        paths:
-            - choco-cache
     tags:
         - windows
     except:
