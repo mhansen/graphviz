@@ -13,6 +13,7 @@
 #include <sparse/general.h>
 #include <math.h>
 #include <sparse/QuadTree.h>
+#include <stdbool.h>
 #include <string.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
@@ -314,12 +315,12 @@ void plot_dot_map(Agraph_t* gr, int n, int dim, double *x, SparseMatrix polys,
                   char **labels, float *fsz, float *r, float *g, float *b,
                   const char* opacity, SparseMatrix A, FILE* f) {
   /* if graph object exist, we just modify some attributes, otherwise we dump the whole graph */
-  int plot_polyQ = TRUE;
+  bool plot_polyQ = true;
   agxbuf sbuff;
 
   agxbinit(&sbuff, 0, NULL);
 
-  if (!r || !g || !b) plot_polyQ = FALSE;
+  if (!r || !g || !b) plot_polyQ = false;
 
   if (!gr) {
     fprintf(f, "graph map {\n node [margin = 0 width=0.0001 height=0.00001 shape=plaintext];\n graph [outputorder=edgesfirst, bgcolor=\"#dae2ff\"]\n edge [color=\"#55555515\",fontname=\"Helvetica-Bold\"]\n");
