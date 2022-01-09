@@ -5,24 +5,24 @@ set -o pipefail
 set -u
 set -x
 
-/cygwinsetup.exe --quiet-mode --wait --packages autoconf2.5
-/cygwinsetup.exe --quiet-mode --wait --packages automake
-/cygwinsetup.exe --quiet-mode --wait --packages bison
-/cygwinsetup.exe --quiet-mode --wait --packages cmake
-/cygwinsetup.exe --quiet-mode --wait --packages flex
-/cygwinsetup.exe --quiet-mode --wait --packages gcc-core
-/cygwinsetup.exe --quiet-mode --wait --packages gcc-g++
-/cygwinsetup.exe --quiet-mode --wait --packages libcairo-devel
-/cygwinsetup.exe --quiet-mode --wait --packages libexpat-devel
-/cygwinsetup.exe --quiet-mode --wait --packages libpango1.0-devel
-/cygwinsetup.exe --quiet-mode --wait --packages libgd-devel
-/cygwinsetup.exe --quiet-mode --wait --packages libtool
-/cygwinsetup.exe --quiet-mode --wait --packages make
-/cygwinsetup.exe --quiet-mode --wait --packages python3
-/cygwinsetup.exe --quiet-mode --wait --packages zlib-devel
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages autoconf2.5
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages automake
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages bison
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages cmake
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages flex
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages gcc-core
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages gcc-g++
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages libcairo-devel
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages libexpat-devel
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages libpango1.0-devel
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages libgd-devel
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages libtool
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages make
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages python3
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages zlib-devel
 
 # setup Ccache to accelerate compilation
-/cygwinsetup.exe --quiet-mode --wait --packages ccache
+/cygdrive/c/setup-x86_64.exe --quiet-mode --wait --packages ccache
 export CC="ccache ${CC:-cc}"
 export CXX="ccache ${CXX:-c++}"
 export CCACHE_DIR=ccache-cache
