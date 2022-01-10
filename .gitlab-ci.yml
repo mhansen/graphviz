@@ -124,9 +124,8 @@ portable-source:
         # disable Windows Defender
         - Add-MpPreference -ExclusionPath 'C:\'
         - $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
-        - choco config set cacheLocation choco-cache
-        - choco install --yes --no-progress --params "/InstallDir:C:\Python3" python3
-        - $env:Path = "C:\Python3;" + $env:Path
+        - nuget install python -ExcludeVersion -OutputDirectory C:\
+        - $env:Path = "C:\python\tools;" + $env:Path
         - python --version
         - python -m pip install --requirement requirements.txt
         # Toolchain definitions
@@ -464,10 +463,6 @@ windows-mingw32-build-step1-configure:
         - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "autotools"
         - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
-    cache:
-        key: windows-mingw32-build-step1-configure
-        paths:
-            - choco-cache
     artifacts:
         when: always
         expire_in: 1 week
@@ -494,10 +489,6 @@ windows-mingw32-build-step2-make:
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
         - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
-    cache:
-        key: windows-mingw32-build-step2-make
-        paths:
-            - choco-cache
     artifacts:
         when: always
         expire_in: 1 week
@@ -521,10 +512,6 @@ windows-mingw64-build-step1-configure:
         - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "autotools"
         - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
-    cache:
-        key: windows-mingw64-build-step1-configure
-        paths:
-            - choco-cache
     artifacts:
         when: always
         expire_in: 1 week
@@ -551,10 +538,6 @@ windows-mingw64-build-step2-make:
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
         - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
-    cache:
-        key: windows-mingw64-build-step2-make
-        paths:
-            - choco-cache
     artifacts:
         when: always
         expire_in: 1 week
@@ -603,8 +586,8 @@ windows-cygwin-build-using-autogen:
         - Add-MpPreference -ExclusionPath 'C:\'
         - choco config set cacheLocation choco-cache
         - choco install --yes --no-progress cygwin
-        - choco install --yes --no-progress --params "/InstallDir:C:\Python3" python3
-        - $env:Path = "C:\Python3;" + $env:Path
+        - nuget install python -ExcludeVersion -OutputDirectory C:\
+        - $env:Path = "C:\python\tools;" + $env:Path
         - python gen_version.py --output GRAPHVIZ_VERSION
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
@@ -841,10 +824,6 @@ windows-cmake-Win32-release-build:
         - $Env:project_platform = "Win32"
         - $Env:configuration = "Release"
         - $Env:build_system = "cmake"
-    cache:
-        key: windows-cmake-Win32-release-build
-        paths:
-            - choco-cache
 
 windows-cmake-Win32-debug-build:
     <<: *windows_build_definition
@@ -853,10 +832,6 @@ windows-cmake-Win32-debug-build:
         - $Env:project_platform = "Win32"
         - $Env:configuration = "Debug"
         - $Env:build_system = "cmake"
-    cache:
-        key: windows-cmake-Win32-debug-build
-        paths:
-            - choco-cache
 
 windows-cmake-x64-release-build:
     <<: *windows_build_definition
@@ -865,10 +840,6 @@ windows-cmake-x64-release-build:
         - $Env:project_platform = "x64"
         - $Env:configuration = "Release"
         - $Env:build_system = "cmake"
-    cache:
-        key: windows-cmake-x64-release-build
-        paths:
-            - choco-cache
 
 windows-cmake-x64-debug-build:
     <<: *windows_build_definition
@@ -877,10 +848,6 @@ windows-cmake-x64-debug-build:
         - $Env:project_platform = "x64"
         - $Env:configuration = "Debug"
         - $Env:build_system = "cmake"
-    cache:
-        key: windows-cmake-x64-debug-build
-        paths:
-            - choco-cache
 
 windows-msbuild-Win32-release-build:
     <<: *windows_build_definition
@@ -888,10 +855,6 @@ windows-msbuild-Win32-release-build:
         - $Env:project_platform = "Win32"
         - $Env:configuration = "Release"
         - $Env:build_system = "msbuild"
-    cache:
-        key: windows-msbuild-Win32-release-build
-        paths:
-            - choco-cache
 
 windows-msbuild-Win32-debug-build:
     <<: *windows_build_definition
@@ -899,10 +862,6 @@ windows-msbuild-Win32-debug-build:
         - $Env:project_platform = "Win32"
         - $Env:configuration = "Debug"
         - $Env:build_system = "msbuild"
-    cache:
-        key: windows-msbuild-Win32-debug-build
-        paths:
-            - choco-cache
 
 windows-mingw32-cmake-build:
     stage: build
@@ -924,10 +883,6 @@ windows-mingw32-cmake-build:
         paths:
             - Packages/*/*/*.exe
             - Packages/*/*/*.zip
-    cache:
-        key: windows-mingw32-cmake-build
-        paths:
-            - choco-cache
     tags:
         - windows
     except:
@@ -953,10 +908,6 @@ windows-mingw64-cmake-build:
         paths:
             - Packages/*/*/*.exe
             - Packages/*/*/*.zip
-    cache:
-        key: windows-mingw64-cmake-build
-        paths:
-            - choco-cache
     tags:
         - windows
     except:
