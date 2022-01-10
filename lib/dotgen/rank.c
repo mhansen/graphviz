@@ -758,19 +758,17 @@ static graph_t *dot_lca(graph_t * c0, graph_t * c1)
     return c0;
 }
 
-static int is_internal_to_cluster(edge_t * e)
+static bool is_internal_to_cluster(edge_t * e)
 {
     graph_t *par, *ct, *ch;
     ct = ND_clust(agtail(e));
     ch = ND_clust(aghead(e));
     if (ct == ch)
-	return TRUE;
+	return true;
     par = dot_lca(ct, ch);
-    /* if (par == agroot(par)) */
-	/* return FALSE; */
-    if ((par == ct) || (par == ch))
-	return TRUE;
-    return FALSE;
+    if (par == ct || par == ch)
+	return true;
+    return false;
 }
 
 static node_t* Last_node;
