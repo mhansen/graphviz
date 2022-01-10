@@ -9,7 +9,9 @@
 #else
 #define GVRENDER_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef GVRENDER_API
 #define GVRENDER_API /* nothing */
 #endif
 
