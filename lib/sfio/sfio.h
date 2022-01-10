@@ -177,18 +177,18 @@ extern "C" {
      extern ssize_t _Sfi;
 
 #if defined(_BLD_sfio) && defined(GVDLL)
-#define EXTERN	__declspec(dllexport)
+#define SFIO_API	__declspec(dllexport)
 #else
-#define EXTERN /* nothing */
+#define SFIO_API /* nothing */
 #endif
 /* standard in/out/err streams */
-    EXTERN extern Sfio_t *sfstdin;
-    EXTERN extern Sfio_t *sfstdout;
-    EXTERN extern Sfio_t *sfstderr;
-    EXTERN extern Sfio_t _Sfstdin;
-    EXTERN extern Sfio_t _Sfstdout;
-    EXTERN extern Sfio_t _Sfstderr;
-#undef EXTERN
+    SFIO_API extern Sfio_t *sfstdin;
+    SFIO_API extern Sfio_t *sfstdout;
+    SFIO_API extern Sfio_t *sfstderr;
+    SFIO_API extern Sfio_t _Sfstdin;
+    SFIO_API extern Sfio_t _Sfstdout;
+    SFIO_API extern Sfio_t _Sfstderr;
+#undef SFIO_API
 
 
     extern Sfio_t *sfnew(Sfio_t *, void *, size_t, int, int);

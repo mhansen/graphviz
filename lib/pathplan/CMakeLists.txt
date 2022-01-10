@@ -1,4 +1,4 @@
-add_definitions(-D_BLD_pathplan -DPATHPLAN_EXPORTS)
+add_definitions(-DPATHPLAN_EXPORTS)
 
 add_library(pathplan SHARED
     # Header files

@@ -10,8 +10,6 @@
 
 #pragma once
 
-#define _BLD_pathplan 1
-
 #include "pathplan.h"
 
 #ifdef __cplusplus
@@ -26,7 +24,6 @@ extern "C" {
 #define TRUE	(NOT(FALSE))
 #endif
 
-/*visual studio*/
 #ifdef GVDLL
 #ifdef PATHPLAN_EXPORTS
 #define PATHUTIL_API __declspec(dllexport)
@@ -34,9 +31,9 @@ extern "C" {
 #define PATHUTIL_API __declspec(dllimport)
 #endif
 #endif
-/*end visual studio*/
+
 #ifndef PATHUTIL_API
-#define PATHUTIL_API extern
+#define PATHUTIL_API /* nothing */
 #endif
 	typedef double COORD;
     PATHUTIL_API COORD area2(Ppoint_t, Ppoint_t, Ppoint_t);

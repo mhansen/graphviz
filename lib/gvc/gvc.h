@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
 #ifndef GVC_API
-#define GVC_API extern
+#define GVC_API /* nothing */
 #endif
 	
 #define LAYOUT_DONE(g) (agbindrec(g, "Agraphinfo_t", 0, TRUE) && GD_drawing(g))
