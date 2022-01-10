@@ -35,7 +35,6 @@ typedef enum {B_NODE, B_UP, B_LEFT, B_DOWN, B_RIGHT} bend;
  */
 typedef struct segment {
   bool isVert;
-  boolean flipped;
   double comm_coord;  /* the common coordinate */
   paird p;      /* end points */
   bend l1, l2; 
