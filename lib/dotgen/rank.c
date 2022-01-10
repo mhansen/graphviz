@@ -510,9 +510,8 @@ void dot_rank(graph_t * g, aspect_t* asp)
 	fprintf (stderr, "Maxrank = %d, minrank = %d\n", GD_maxrank(g), GD_minrank(g));
 }
 
-int is_cluster(graph_t * g)
+bool is_cluster(graph_t * g)
 {
-    //return (strncmp(agnameof(g), "cluster", 7) == 0);
     return is_a_cluster(g);   // from utils.c
 }
 
