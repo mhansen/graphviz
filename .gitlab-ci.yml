@@ -1224,6 +1224,56 @@ macos-cmake-test:
         variables:
           - $ENABLE_GRAPHVIZ_MACOS_CI
 
+windows-mingw32-cmake-test:
+    script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - $Env:build_system = "cmake"
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
+        - $Env:graphviz_install_dir = "C:\Graphviz"
+        - $msys2_release = $(C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'uname -r')
+        - Invoke-Expression "./Packages/msys2/$msys2_release/Graphviz-*.exe /S /D=$env:graphviz_install_dir" | Out-Null
+        - $env:Path = $env:graphviz_install_dir + "\bin" + ";" + $env:Path
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-test.sh'
+    needs:
+        - job: "windows-mingw32-cmake-build"
+          artifacts: true
+    tags:
+        - windows
+    except:
+        - tags
+    artifacts:
+        reports:
+            junit: report.xml
+
+windows-mingw64-cmake-test:
+    script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - $Env:build_system = "cmake"
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
+        - $Env:graphviz_install_dir = "C:\Graphviz"
+        - $msys2_release = $(C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'uname -r')
+        - Invoke-Expression "./Packages/msys2/$msys2_release/Graphviz-*.exe /S /D=$env:graphviz_install_dir" | Out-Null
+        - $env:Path = $env:graphviz_install_dir + "\bin" + ";" + $env:Path
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-test.sh'
+    needs:
+        - job: "windows-mingw64-cmake-build"
+          artifacts: true
+    tags:
+        - windows
+    except:
+        - tags
+    artifacts:
+        reports:
+            junit: report.xml
+
 deployment:
     stage: deploy
     image: registry.gitlab.com/gitlab-org/release-cli:latest

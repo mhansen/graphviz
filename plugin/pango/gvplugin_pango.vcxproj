@@ -52,6 +52,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir)windows\dependencies\libraries\x86\include\cairo;$(SolutionDir)/libltdl;$(SolutionDir)/lib;$(SolutionDir)/windows/lib/cdt;$(SolutionDir)/;$(SolutionDir)/lib/sfpdpgen;$(SolutionDir)/lib/pathplan;$(SolutionDir)/lib/pack;$(SolutionDir)/lib/filter;$(SolutionDir)/lib/dotgen;$(SolutionDir)/lib/common;$(SolutionDir)/lib/gvc;$(SolutionDir)/lib/cdt;$(SolutionDir)/lib/cgraph;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GVDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader />
@@ -85,6 +86,7 @@ copy $(SolutionDir)windows\dependencies\libraries\x86\bin\pixman-1.dll $(OutDir)
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir)windows\dependencies\libraries\x86\include\cairo;$(SolutionDir)/libltdl;$(SolutionDir)/lib;$(SolutionDir)/windows/lib/cdt;$(SolutionDir)/;$(SolutionDir)/lib/sfpdpgen;$(SolutionDir)/lib/pathplan;$(SolutionDir)/lib/pack;$(SolutionDir)/lib/filter;$(SolutionDir)/lib/dotgen;$(SolutionDir)/lib/common;$(SolutionDir)/lib/gvc;$(SolutionDir)/lib/cdt;$(SolutionDir)/lib/cgraph;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GVDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <EnablePREfast>true</EnablePREfast>
