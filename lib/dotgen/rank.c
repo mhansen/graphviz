@@ -601,9 +601,8 @@ static void set_parent(graph_t* g, graph_t* p)
     node_induce(p, g);
 }
 
-static int is_empty(graph_t * g)
-{
-    return (!agfstnode(g));
+static bool is_empty(graph_t *g) {
+    return !agfstnode(g);
 }
 
 static bool is_a_strong_cluster(graph_t * g)
