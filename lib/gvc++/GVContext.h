@@ -10,7 +10,9 @@
 #else
 #define GVCONTEXT_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef GVCONTEXT_API
 #define GVCONTEXT_API /* nothing */
 #endif
 
