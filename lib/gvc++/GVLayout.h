@@ -12,7 +12,9 @@
 #else
 #define GVLAYOUT_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef GVLAYOUT_API
 #define GVLAYOUT_API /* nothing */
 #endif
 
