@@ -4,7 +4,7 @@
 
 #include <gvc/gvc.h>
 
-#ifdef _WIN32
+#ifdef GVDLL
 #if gvc___EXPORTS // CMake's substitution of gvc++_EXPORTS
 #define GVCONTEXT_API __declspec(dllexport)
 #else
