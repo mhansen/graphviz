@@ -442,9 +442,9 @@ int maptoken(char *p, char **name, int *val)
     return val[i];
 }
 
-bool mapBool(char *p, bool dflt)
+bool mapBool(const char *p, bool dflt)
 {
-    if (!p || (*p == '\0'))
+    if (!p || *p == '\0')
 	return dflt;
     if (!strcasecmp(p, "false"))
 	return false;

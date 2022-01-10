@@ -88,7 +88,7 @@ UTILS_API void UF_setname(Agnode_t *, Agnode_t *);
 UTILS_API char *Fgets(FILE *fp);
 UTILS_API const char *safefile(const char *filename);
 
-UTILS_API bool mapBool(char *, bool);
+UTILS_API bool mapBool(const char*, bool);
 UTILS_API boolean mapbool(char *);
 UTILS_API int maptoken(char *, char **, int *);
 
