@@ -460,7 +460,7 @@ bool mapBool(const char *p, bool dflt)
 	return dflt;
 }
 
-bool mapbool(char *p)
+bool mapbool(const char *p)
 {
     return mapBool(p, false);
 }

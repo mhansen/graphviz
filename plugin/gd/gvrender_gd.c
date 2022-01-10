@@ -33,7 +33,7 @@ typedef enum {
 	FORMAT_XBM,
 } format_type;
 
-extern bool mapbool(char *);
+extern bool mapbool(const char *);
 extern pointf Bezier(pointf * V, int degree, double t, pointf * Left, pointf * Right);
 
 #define BEZIERSUBDIVISION 10

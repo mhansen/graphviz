@@ -89,7 +89,7 @@ UTILS_API char *Fgets(FILE *fp);
 UTILS_API const char *safefile(const char *filename);
 
 UTILS_API bool mapBool(const char*, bool);
-UTILS_API bool mapbool(char *);
+UTILS_API bool mapbool(const char*);
 UTILS_API int maptoken(char *, char **, int *);
 
 UTILS_API bool findStopColor(char *colorlist, char *clrs[2], float *frac);
