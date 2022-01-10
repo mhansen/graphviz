@@ -25,6 +25,7 @@
 
 #include	<dotgen/dot.h>
 #include	<limits.h>
+#include	<stdbool.h>
 
 static void dot1_rank(graph_t * g, aspect_t* asp);
 static void dot2_rank(graph_t * g, aspect_t* asp);
@@ -606,13 +607,10 @@ static int is_empty(graph_t * g)
     return (!agfstnode(g));
 }
 
-static int is_a_strong_cluster(graph_t * g)
+static bool is_a_strong_cluster(graph_t * g)
 {
-    int rv;
     char *str = agget(g, "compact");
-    /* rv = mapBool((str), TRUE); */
-    rv = mapBool((str), FALSE);
-    return rv;
+    return mapBool(str, false);
 }
 
 static int rankset_kind(graph_t * g)

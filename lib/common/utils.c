@@ -442,27 +442,27 @@ int maptoken(char *p, char **name, int *val)
     return val[i];
 }
 
-boolean mapBool(char *p, boolean dflt)
+bool mapBool(char *p, bool dflt)
 {
     if (!p || (*p == '\0'))
 	return dflt;
     if (!strcasecmp(p, "false"))
-	return FALSE;
+	return false;
     if (!strcasecmp(p, "no"))
-	return FALSE;
+	return false;
     if (!strcasecmp(p, "true"))
-	return TRUE;
+	return true;
     if (!strcasecmp(p, "yes"))
-	return TRUE;
+	return true;
     if (isdigit((int)*p))
-	return atoi(p);
+	return atoi(p) != 0;
     else
 	return dflt;
 }
 
 boolean mapbool(char *p)
 {
-    return mapBool (p, FALSE);
+    return mapBool(p, false) ? TRUE : FALSE;
 }
 
 pointf dotneato_closest(splines * spl, pointf pt)
@@ -889,7 +889,8 @@ void compute_bb(graph_t * g)
 
 int is_a_cluster (Agraph_t* g)
 {
-    return ((g == g->root) || (!strncasecmp(agnameof(g), "cluster", 7)) || mapBool(agget(g,"cluster"),FALSE));
+  return g == g->root || !strncasecmp(agnameof(g), "cluster", 7) ||
+         mapBool(agget(g, "cluster"), false);
 }
 
 /* setAttr:
