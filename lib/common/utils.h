@@ -121,7 +121,7 @@ UTILS_API pointf spline_at_y(splines *spl, double y);
 UTILS_API Agsym_t *setAttr(graph_t *, void *, char *name, char *value,
                            Agsym_t *);
 UTILS_API void setEdgeType(graph_t *g, int dflt);
-UTILS_API int is_a_cluster(Agraph_t *g);
+UTILS_API bool is_a_cluster(Agraph_t *g);
 
 /* from postproc.c */
 UTILS_API void gv_nodesize(Agnode_t *n, bool flip);
