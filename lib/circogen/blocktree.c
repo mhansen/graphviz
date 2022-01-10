@@ -153,7 +153,7 @@ static void find_blocks(Agraph_t * g, circ_state * state)
     }
     if (!root && state->N_root) {
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	    if (late_bool(ORIGN(n), state->N_root, 0)) {
+	    if (late_bool(ORIGN(n), state->N_root, false)) {
 		root = n;
 		break;
 	    }

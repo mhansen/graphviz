@@ -135,12 +135,12 @@ char *late_nnstring(void *obj, attrsym_t * attr, char *def)
     return rv;
 }
 
-boolean late_bool(void *obj, attrsym_t * attr, int def)
+bool late_bool(void *obj, attrsym_t * attr, bool def)
 {
     if (attr == NULL)
 	return def;
 
-    return mapbool(agxget(obj, attr));
+    return mapbool(agxget(obj, attr)) != FALSE;
 }
 
 /* union-find */

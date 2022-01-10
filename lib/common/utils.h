@@ -77,7 +77,7 @@ UTILS_API int late_int(void *, Agsym_t *, int, int);
 UTILS_API double late_double(void *, Agsym_t *, double, double);
 UTILS_API char *late_nnstring(void *, Agsym_t *, char *);
 UTILS_API char *late_string(void *, Agsym_t *, char *);
-UTILS_API boolean late_bool(void *, Agsym_t *, int);
+UTILS_API bool late_bool(void *, Agsym_t *, bool);
 UTILS_API double get_inputscale(graph_t *g);
 
 UTILS_API Agnode_t *UF_find(Agnode_t *);
