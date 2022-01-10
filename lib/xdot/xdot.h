@@ -16,14 +16,16 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
-#   ifdef EXPORT_XDOT
-#       define XDOT_API __declspec(dllexport)
-#   else
-#       define XDOT_API __declspec(dllimport)
-#   endif
+#ifdef GVDLL
+#ifdef EXPORT_XDOT
+#define XDOT_API __declspec(dllexport)
 #else
-#   define XDOT_API extern
+#define XDOT_API __declspec(dllimport)
+#endif
+#endif
+
+#ifndef XDOT_API
+#define XDOT_API /* nothing */
 #endif
 
 #define INITIAL_XDOT_CAPACITY 512
