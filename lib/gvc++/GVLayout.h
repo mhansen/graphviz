@@ -6,7 +6,7 @@
 #include "GVRenderData.h"
 #include <cgraph++/AGraph.h>
 
-#ifdef _WIN32
+#ifdef GVDLL
 #if gvc___EXPORTS // CMake's substitution of gvc++_EXPORTS
 #define GVLAYOUT_API __declspec(dllexport)
 #else
