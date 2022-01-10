@@ -29,10 +29,10 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-#ifdef _WIN32
-#   define GVPLUGIN_GD_API __declspec(dllexport)
+#ifdef GVDLL
+#define GVPLUGIN_GD_API __declspec(dllexport)
 #else
-#   define GVPLUGIN_GD_API
+#define GVPLUGIN_GD_API
 #endif
 
 GVPLUGIN_GD_API gvplugin_library_t gvplugin_gd_LTX_library = { "gd", apis };

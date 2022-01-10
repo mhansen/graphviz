@@ -20,9 +20,9 @@ static gvplugin_api_t apis[] = {
 };
 
 #ifdef GVDLL
-#   define GVPLUGIN_NEATO_LAYOUT_API __declspec(dllexport)
+#define GVPLUGIN_NEATO_LAYOUT_API __declspec(dllexport)
 #else
-#   define GVPLUGIN_NEATO_LAYOUT_API
+#define GVPLUGIN_NEATO_LAYOUT_API
 #endif
 
 GVPLUGIN_NEATO_LAYOUT_API gvplugin_library_t gvplugin_neato_layout_LTX_library = { "neato_layout", apis };

@@ -18,10 +18,10 @@ static gvplugin_api_t apis[] = {
 };
 
 
-#ifdef _WIN32
-#   define GVPLUGIN_DOT_LAYOUT_API __declspec(dllexport)
+#ifdef GVDLL
+#define GVPLUGIN_DOT_LAYOUT_API __declspec(dllexport)
 #else
-#   define GVPLUGIN_DOT_LAYOUT_API
+#define GVPLUGIN_DOT_LAYOUT_API
 #endif
 
 GVPLUGIN_DOT_LAYOUT_API gvplugin_library_t gvplugin_dot_layout_LTX_library = { "dot_layout", apis };

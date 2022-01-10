@@ -23,10 +23,10 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-#ifdef _WIN32
-#   define GVPLUGIN_PANGO_API __declspec(dllexport)
+#ifdef GVDLL
+#define GVPLUGIN_PANGO_API __declspec(dllexport)
 #else
-#   define GVPLUGIN_PANGO_API
+#define GVPLUGIN_PANGO_API
 #endif
 
 GVPLUGIN_PANGO_API gvplugin_library_t gvplugin_pango_LTX_library = { "cairo", apis };
