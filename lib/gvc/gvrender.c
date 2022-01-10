@@ -33,7 +33,7 @@
 
 extern int emit_once(char *str);
 extern shape_desc *find_user_shape(char *name);
-extern boolean mapbool(char *s);
+extern bool mapbool(char *s);
 
 int gvrender_select(GVJ_t * job, const char *str)
 {

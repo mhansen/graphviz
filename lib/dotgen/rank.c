@@ -637,7 +637,7 @@ static int is_nonconstraint(edge_t * e)
     char *constr;
 
     if (E_constr && (constr = agxget(e, E_constr))) {
-	if (constr[0] && mapbool(constr) == FALSE)
+	if (constr[0] && !mapbool(constr))
 	    return TRUE;
     }
     return FALSE;

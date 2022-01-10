@@ -33,7 +33,7 @@ typedef enum {
 	FORMAT_XBM,
 } format_type;
 
-extern boolean mapbool(char *);
+extern bool mapbool(char *);
 extern pointf Bezier(pointf * V, int degree, double t, pointf * Left, pointf * Right);
 
 #define BEZIERSUBDIVISION 10
@@ -74,7 +74,7 @@ static void gdgen_begin_page(GVJ_t * job)
     bgcolor_str = agget(job->gvc->g, "bgcolor");
 
     if (truecolor_str && truecolor_str[0])
-	truecolor_p = mapbool(truecolor_str) != FALSE;
+	truecolor_p = mapbool(truecolor_str);
 
     if (bgcolor_str && strcmp(bgcolor_str, "transparent") == 0) {
 	if (job->render.features->flags & GVDEVICE_DOES_TRUECOLOR)

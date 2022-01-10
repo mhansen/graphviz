@@ -140,7 +140,7 @@ bool late_bool(void *obj, attrsym_t * attr, bool def)
     if (attr == NULL)
 	return def;
 
-    return mapbool(agxget(obj, attr)) != FALSE;
+    return mapbool(agxget(obj, attr));
 }
 
 /* union-find */
@@ -460,9 +460,9 @@ bool mapBool(const char *p, bool dflt)
 	return dflt;
 }
 
-boolean mapbool(char *p)
+bool mapbool(char *p)
 {
-    return mapBool(p, false) ? TRUE : FALSE;
+    return mapBool(p, false);
 }
 
 pointf dotneato_closest(splines * spl, pointf pt)
@@ -703,7 +703,7 @@ int common_init_edge(edge_t * e)
 				fi.fontsize, fi.fontname, fi.fontcolor);
 	GD_has_labels(sg) |= EDGE_LABEL;
 	ED_label_ontop(e) =
-	    mapbool(late_string(e, E_label_float, "false"));
+	    mapbool(late_string(e, E_label_float, "false")) ? TRUE : FALSE;
     }
 
     if (E_xlabel && (str = agxget(e, E_xlabel)) && (str[0])) {
