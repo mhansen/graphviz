@@ -27,25 +27,7 @@ extern "C" {
  * Define api_t using names based on the plugin names with API_ prefixed.
  */
 #define ELEM(x) API_##x,
-    typedef enum { APIS _DUMMY_ELEM_=0 } api_t; /* API_render, API_layout, ... */
-    			/* Stupid but true: The sole purpose of "_DUMMY_ELEM_=0"
-			 * is to avoid a "," after the last element of the enum
-			 * because some compilers when using "-pedantic"
-			 * generate an error for about the dangling ","
-			 * but only if this header is used from a .cpp file!
-			 * Setting it to 0 makes sure that the enumeration
-			 * does not define an extra value.  (It does however
-			 * define _DUMMY_ELEM_ as an enumeration symbol,
-			 * but its value duplicates that of the first
-			 * symbol in the enumeration - in this case "render".)
-			 */
-
-    			/* One could wonder why trailing "," in:
-			 * 	int nums[]={1,2,3,};
-			 * is OK, but in:
-			 * 	typedef enum {a,b,c,} abc_t; 
-			 * is not!!!
-			 */
+    typedef enum { APIS } api_t; /* API_render, API_layout, ... */
 #undef ELEM
 
     typedef struct GVJ_s GVJ_t;
