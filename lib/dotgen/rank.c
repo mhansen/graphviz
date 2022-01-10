@@ -630,15 +630,15 @@ static int rankset_kind(graph_t * g)
     return NORANK;
 }
 
-static int is_nonconstraint(edge_t * e)
+static bool is_nonconstraint(edge_t * e)
 {
     char *constr;
 
     if (E_constr && (constr = agxget(e, E_constr))) {
 	if (constr[0] && !mapbool(constr))
-	    return TRUE;
+	    return true;
     }
-    return FALSE;
+    return false;
 }
 
 static node_t *find(node_t * n)
