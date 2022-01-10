@@ -14,6 +14,7 @@
 #include <edgepaint/lab.h>
 #include <edgepaint/furtherest_point.h>
 #include <sparse/color_palette.h>
+#include <stdbool.h>
 #include <string.h>
 
 static double mydist(int dim, double *x, double *y){
@@ -24,8 +25,12 @@ static double mydist(int dim, double *x, double *y){
 }
 
 
-static void node_distinct_coloring_internal2(int scheme, QuadTree qt, int weightedQ, SparseMatrix A, int cdim, double accuracy, int iter_max, int seed, double *colors, 
-					     double *color_diff0, double *color_diff_sum0){
+static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
+                                             bool weightedQ, SparseMatrix A,
+                                             int cdim, double accuracy,
+                                             int iter_max, int seed,
+                                             double *colors, double *color_diff0,
+                                             double *color_diff_sum0) {
   /* here we assume the graph is connected. And that the matrix is symmetric */
   int i, j, *ia, *ja, n, k = 0;
   int max_level;
@@ -154,7 +159,11 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt, int weight
   free(x);
 }
  
-static void node_distinct_coloring_internal(int scheme, QuadTree qt, int weightedQ,  SparseMatrix A, int cdim, double accuracy, int iter_max, int seed, double *colors){
+static void node_distinct_coloring_internal(int scheme, QuadTree qt,
+                                            bool weightedQ, SparseMatrix A,
+                                            int cdim, double accuracy,
+                                            int iter_max, int seed,
+                                            double *colors) {
   int i;
   double color_diff;
   double color_diff_sum;
@@ -177,7 +186,9 @@ static void node_distinct_coloring_internal(int scheme, QuadTree qt, int weighte
  
 }
 
-int node_distinct_coloring(char *color_scheme, char *lightness, int weightedQ, SparseMatrix A0, double accuracy, int iter_max, int seed, int *cdim0, double **colors){
+int node_distinct_coloring(char *color_scheme, char *lightness, bool weightedQ,
+                           SparseMatrix A0, double accuracy, int iter_max,
+                           int seed, int *cdim0, double **colors) {
   /* 
      for a graph A, get a distinctive color of its nodes so that the color distance among all neighboring nodes are maximized. Here
      color distance on a node is defined as the minimum of color differences between a node and its neighbors (or the minimum of weighted color differences if weightedQ = true,

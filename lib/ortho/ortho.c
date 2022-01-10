@@ -114,14 +114,12 @@ setSeg (segment* sp, bool dir, double fix, double b1, double b2, int l1, int l2)
 	sp->p.p2 = b2;
 	sp->l1 = l1;
 	sp->l2 = l2;
-	sp->flipped = 0;
     }
     else {
 	sp->p.p2 = b1;
 	sp->p.p1 = b2;
 	sp->l2 = l1;
 	sp->l1 = l2;
-	sp->flipped = 1;
     }
 }
 

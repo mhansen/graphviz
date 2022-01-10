@@ -25,6 +25,7 @@
 
 #include	<dotgen/dot.h>
 #include	<limits.h>
+#include	<stdbool.h>
 
 static void dot1_rank(graph_t * g, aspect_t* asp);
 static void dot2_rank(graph_t * g, aspect_t* asp);
@@ -509,9 +510,8 @@ void dot_rank(graph_t * g, aspect_t* asp)
 	fprintf (stderr, "Maxrank = %d, minrank = %d\n", GD_maxrank(g), GD_minrank(g));
 }
 
-int is_cluster(graph_t * g)
+bool is_cluster(graph_t * g)
 {
-    //return (strncmp(agnameof(g), "cluster", 7) == 0);
     return is_a_cluster(g);   // from utils.c
 }
 
@@ -601,18 +601,14 @@ static void set_parent(graph_t* g, graph_t* p)
     node_induce(p, g);
 }
 
-static int is_empty(graph_t * g)
-{
-    return (!agfstnode(g));
+static bool is_empty(graph_t *g) {
+    return !agfstnode(g);
 }
 
-static int is_a_strong_cluster(graph_t * g)
+static bool is_a_strong_cluster(graph_t * g)
 {
-    int rv;
     char *str = agget(g, "compact");
-    /* rv = mapBool((str), TRUE); */
-    rv = mapBool((str), FALSE);
-    return rv;
+    return mapBool(str, false);
 }
 
 static int rankset_kind(graph_t * g)
@@ -634,15 +630,15 @@ static int rankset_kind(graph_t * g)
     return NORANK;
 }
 
-static int is_nonconstraint(edge_t * e)
+static bool is_nonconstraint(edge_t * e)
 {
     char *constr;
 
     if (E_constr && (constr = agxget(e, E_constr))) {
-	if (constr[0] && mapbool(constr) == FALSE)
-	    return TRUE;
+	if (constr[0] && !mapbool(constr))
+	    return true;
     }
-    return FALSE;
+    return false;
 }
 
 static node_t *find(node_t * n)
@@ -762,19 +758,17 @@ static graph_t *dot_lca(graph_t * c0, graph_t * c1)
     return c0;
 }
 
-static int is_internal_to_cluster(edge_t * e)
+static bool is_internal_to_cluster(edge_t * e)
 {
     graph_t *par, *ct, *ch;
     ct = ND_clust(agtail(e));
     ch = ND_clust(aghead(e));
     if (ct == ch)
-	return TRUE;
+	return true;
     par = dot_lca(ct, ch);
-    /* if (par == agroot(par)) */
-	/* return FALSE; */
-    if ((par == ct) || (par == ch))
-	return TRUE;
-    return FALSE;
+    if (par == ct || par == ch)
+	return true;
+    return false;
 }
 
 static node_t* Last_node;

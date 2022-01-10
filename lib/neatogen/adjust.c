@@ -762,7 +762,8 @@ fdpAdjust (graph_t* g, adjust_data* am)
     }
 
     remove_overlap(Ndim, A, pos, sizes, am->value, am->scaling, 
-		   ELSCHEME_NONE, 0, NULL, NULL, mapBool (agget(g, "overlap_shrink"), TRUE));
+                   ELSCHEME_NONE, 0, NULL, NULL,
+                   mapBool(agget(g, "overlap_shrink"), true) ? TRUE : FALSE);
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double *npos = pos + Ndim * ND_id(n);
@@ -1007,10 +1008,11 @@ static adjust_data *getAdjustMode(Agraph_t* g, char *s, adjust_data* dp)
 	    ap++;
 	}
 	if (ap->attrib == NULL ) {
-	    int v = mapBool(s,'?');
-	    if (v == '?') {
+	    bool v = mapBool(s, false);
+	    bool unmappable = v != mapBool(s, true);
+	    if (unmappable) {
 		agerr (AGWARN, "Unrecognized overlap value \"%s\" - using false\n", s);
-		v = FALSE;
+		v = false;
 	    }
 	    if (v) {
 		dp->mode = adjustMode[0].mode;

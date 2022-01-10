@@ -1858,7 +1858,7 @@ static void poly_init(node_t * n)
     orientation = ND_shape(n)->polygon->orientation;
     skew = ND_shape(n)->polygon->skew;
     distortion = ND_shape(n)->polygon->distortion;
-    regular |= mapbool(agget(n, "regular"));
+    regular |= mapbool(agget(n, "regular")) ? TRUE : FALSE;
 
     /* all calculations in floating point POINTS */
 
@@ -3551,7 +3551,8 @@ static void record_init(node_t * n)
 	sz.x = MAX(info->size.x, sz.x);
 	sz.y = MAX(info->size.y, sz.y);
     }
-    resize_reclbl(info, sz, mapbool(late_string(n, N_nojustify, "false")));
+    resize_reclbl(info, sz,
+                  mapbool(late_string(n, N_nojustify, "false")) ? TRUE : FALSE);
     ul = pointfof(-sz.x / 2., sz.y / 2.);	/* FIXME - is this still true:    suspected to introduce ronding error - see Kluge below */
     pos_reclbl(info, ul, sides);
     ND_width(n) = PS2INCH(info->size.x);

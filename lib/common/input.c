@@ -711,19 +711,19 @@ void graph_init(graph_t * g, bool use_rankdir)
       getdoubles2ptf(g, "size", &GD_drawing(g)->size) ? TRUE : FALSE;
     getdoubles2ptf(g, "page", &(GD_drawing(g)->page));
 
-    GD_drawing(g)->centered = mapbool(agget(g, "center"));
+    GD_drawing(g)->centered = mapbool(agget(g, "center")) ? TRUE : FALSE;
 
     if ((p = agget(g, "rotate")))
 	GD_drawing(g)->landscape = atoi(p) == 90;
     else if ((p = agget(g, "orientation")))
 	GD_drawing(g)->landscape = p[0] == 'l' || p[0] == 'L';
     else if ((p = agget(g, "landscape")))
-	GD_drawing(g)->landscape = mapbool(p);
+	GD_drawing(g)->landscape = mapbool(p) ? TRUE : FALSE;
 
     p = agget(g, "clusterrank");
     CL_type = maptoken(p, rankname, rankcode);
     p = agget(g, "concentrate");
-    Concentrate = mapbool(p);
+    Concentrate = mapbool(p) ? TRUE : FALSE;
     State = GVBEGIN;
     EdgeLabelsDone = 0;
 

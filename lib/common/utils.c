@@ -135,7 +135,7 @@ char *late_nnstring(void *obj, attrsym_t * attr, char *def)
     return rv;
 }
 
-boolean late_bool(void *obj, attrsym_t * attr, int def)
+bool late_bool(void *obj, attrsym_t * attr, bool def)
 {
     if (attr == NULL)
 	return def;
@@ -442,27 +442,27 @@ int maptoken(char *p, char **name, int *val)
     return val[i];
 }
 
-boolean mapBool(char *p, boolean dflt)
+bool mapBool(const char *p, bool dflt)
 {
-    if (!p || (*p == '\0'))
+    if (!p || *p == '\0')
 	return dflt;
     if (!strcasecmp(p, "false"))
-	return FALSE;
+	return false;
     if (!strcasecmp(p, "no"))
-	return FALSE;
+	return false;
     if (!strcasecmp(p, "true"))
-	return TRUE;
+	return true;
     if (!strcasecmp(p, "yes"))
-	return TRUE;
+	return true;
     if (isdigit((int)*p))
-	return atoi(p);
+	return atoi(p) != 0;
     else
 	return dflt;
 }
 
-boolean mapbool(char *p)
+bool mapbool(const char *p)
 {
-    return mapBool (p, FALSE);
+    return mapBool(p, false);
 }
 
 pointf dotneato_closest(splines * spl, pointf pt)
@@ -703,7 +703,7 @@ int common_init_edge(edge_t * e)
 				fi.fontsize, fi.fontname, fi.fontcolor);
 	GD_has_labels(sg) |= EDGE_LABEL;
 	ED_label_ontop(e) =
-	    mapbool(late_string(e, E_label_float, "false"));
+	    mapbool(late_string(e, E_label_float, "false")) ? TRUE : FALSE;
     }
 
     if (E_xlabel && (str = agxget(e, E_xlabel)) && (str[0])) {
@@ -887,9 +887,10 @@ void compute_bb(graph_t * g)
     GD_bb(g) = bb;
 }
 
-int is_a_cluster (Agraph_t* g)
+bool is_a_cluster (Agraph_t* g)
 {
-    return ((g == g->root) || (!strncasecmp(agnameof(g), "cluster", 7)) || mapBool(agget(g,"cluster"),FALSE));
+  return g == g->root || !strncasecmp(agnameof(g), "cluster", 7) ||
+         mapBool(agget(g, "cluster"), false);
 }
 
 /* setAttr:

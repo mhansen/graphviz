@@ -77,7 +77,7 @@ UTILS_API int late_int(void *, Agsym_t *, int, int);
 UTILS_API double late_double(void *, Agsym_t *, double, double);
 UTILS_API char *late_nnstring(void *, Agsym_t *, char *);
 UTILS_API char *late_string(void *, Agsym_t *, char *);
-UTILS_API boolean late_bool(void *, Agsym_t *, int);
+UTILS_API bool late_bool(void *, Agsym_t *, bool);
 UTILS_API double get_inputscale(graph_t *g);
 
 UTILS_API Agnode_t *UF_find(Agnode_t *);
@@ -88,8 +88,8 @@ UTILS_API void UF_setname(Agnode_t *, Agnode_t *);
 UTILS_API char *Fgets(FILE *fp);
 UTILS_API const char *safefile(const char *filename);
 
-UTILS_API boolean mapBool(char *, boolean);
-UTILS_API boolean mapbool(char *);
+UTILS_API bool mapBool(const char*, bool);
+UTILS_API bool mapbool(const char*);
 UTILS_API int maptoken(char *, char **, int *);
 
 UTILS_API bool findStopColor(char *colorlist, char *clrs[2], float *frac);
@@ -121,7 +121,7 @@ UTILS_API pointf spline_at_y(splines *spl, double y);
 UTILS_API Agsym_t *setAttr(graph_t *, void *, char *name, char *value,
                            Agsym_t *);
 UTILS_API void setEdgeType(graph_t *g, int dflt);
-UTILS_API int is_a_cluster(Agraph_t *g);
+UTILS_API bool is_a_cluster(Agraph_t *g);
 
 /* from postproc.c */
 UTILS_API void gv_nodesize(Agnode_t *n, bool flip);
