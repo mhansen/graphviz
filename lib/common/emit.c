@@ -2734,7 +2734,7 @@ emit_edge_label(GVJ_t* job, textlabel_t* lbl, emit_state_t lkind, int explicit,
  * a hot spot around point p.
  */
 static void nodeIntersect(GVJ_t *job, pointf p, bool explicit_iurl, char *iurl,
-                          boolean explicit_itooltip) {
+                          bool explicit_itooltip) {
     obj_state_t *obj = job->obj;
     char* url;
     bool explicit;
