@@ -757,7 +757,7 @@ int common_init_edge(edge_t * e)
 
 /* addLabelBB:
  */
-static boxf addLabelBB(boxf bb, textlabel_t * lp, boolean flipxy)
+static boxf addLabelBB(boxf bb, textlabel_t * lp, bool flipxy)
 {
     double width, height;
     pointf p = lp->pos;
