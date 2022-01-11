@@ -2539,13 +2539,13 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
     bool dyna = false;
     int side = 0;
     bool clip = true;
-    boolean defined;
+    bool defined;
     double maxv;  /* sufficiently large value outside of range of node */
 
     if (bp) {
 	b = *bp;
 	p = pointfof((b.LL.x + b.UR.x) / 2, (b.LL.y + b.UR.y) / 2);
-	defined = TRUE;
+	defined = true;
     } else {
 	p.x = p.y = 0.;
 	if (GD_flip(agraphof(n))) {
@@ -2559,7 +2559,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    b.UR.x = ND_lw(n);
 	    b.LL.x = -b.UR.x;
 	}
-	defined = FALSE;
+	defined = false;
     }
     maxv = MAX(b.UR.x,b.UR.y);
     maxv *= 4.0;
@@ -2576,7 +2576,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		    p.x = b.UR.x;
 		theta = 0.0;
 		constrain = true;
-		defined = TRUE;
+		defined = true;
 		clip = false;
 		side = sides & RIGHT;
 	    }
@@ -2588,7 +2588,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    switch (*compass) {
 	    case '\0':
 		theta = -M_PI * 0.5;
-		defined = TRUE;
+		defined = true;
                 if (ictxt)
                     p = compassPoint(ictxt, -maxv, ctr.x);
                 else
@@ -2597,7 +2597,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		break;
 	    case 'e':
 		theta = -M_PI * 0.25;
-		defined = TRUE;
+		defined = true;
 		if (ictxt)
 		    p = compassPoint(ictxt, -maxv, maxv);
 		else
@@ -2606,7 +2606,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		break;
 	    case 'w':
 		theta = -M_PI * 0.75;
-		defined = TRUE;
+		defined = true;
 		if (ictxt)
 		    p = compassPoint(ictxt, -maxv, -maxv);
 		else
@@ -2631,7 +2631,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		    p.x = b.LL.x;
 		theta = M_PI;
 		constrain = true;
-		defined = TRUE;
+		defined = true;
 		clip = false;
 		side = sides & LEFT;
 	    }
@@ -2642,7 +2642,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    clip = false;
 	    switch (*compass) {
 	    case '\0':
-		defined = TRUE;
+		defined = true;
 		theta = M_PI * 0.5;
                 if (ictxt)
                     p = compassPoint(ictxt, maxv, ctr.x);
@@ -2651,7 +2651,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		side = sides & TOP;
 		break;
 	    case 'e':
-		defined = TRUE;
+		defined = true;
 		theta = M_PI * 0.25;
 		if (ictxt)
 		    p = compassPoint(ictxt, maxv, maxv);
@@ -2660,7 +2660,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		side = sides & (TOP | RIGHT);
 		break;
 	    case 'w':
-		defined = TRUE;
+		defined = true;
 		theta = M_PI * 0.75;
 		if (ictxt)
 		    p = compassPoint(ictxt, maxv, -maxv);
@@ -2705,7 +2705,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	pp->order = (int) (MC_SCALE * angle / (2 * M_PI));
     }
     pp->constrained = constrain ? TRUE : FALSE;
-    pp->defined = defined;
+    pp->defined = defined ? TRUE : FALSE;
     pp->clip = clip ? TRUE : FALSE;
     pp->dyna = dyna ? TRUE : FALSE;
     return rv;
