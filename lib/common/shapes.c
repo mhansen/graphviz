@@ -3078,7 +3078,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
     pointf P, *vertices;
     static pointf *AF;
     static int A_size;
-    boolean filled;
+    bool filled;
     char *color;
     int doMap = obj->url || obj->explicit_tooltip;
 
@@ -3137,7 +3137,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
 	gvrender_set_fillcolor(job, color);	/* emit fill color */
 	penColor(job, n);	/* emit pen color */
     }
-    filled = TRUE;
+    filled = true;
 
     /* if no boundary but filled, set boundary color to fill color */
     if (peripheries == 0) {
@@ -3154,7 +3154,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
 	}
 	gvrender_ellipse(job, AF, sides, filled);
 	/* fill innermost periphery only */
-	filled = FALSE;
+	filled = false;
     }
 
     if (doMap) {
