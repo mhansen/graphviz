@@ -3,13 +3,15 @@
 #include <cstddef>
 #include <string_view>
 
-#ifdef _WIN32
+#ifdef GVDLL
 #if gvc___EXPORTS // CMake's substitution of gvc++_EXPORTS
 #define GVRENDER_API __declspec(dllexport)
 #else
 #define GVRENDER_API __declspec(dllimport)
 #endif
-#else
+#endif
+
+#ifndef GVRENDER_API
 #define GVRENDER_API /* nothing */
 #endif
 
