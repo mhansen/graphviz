@@ -571,8 +571,7 @@ def test_1767():
   src = (Path(__file__).parent / "1767.dot").resolve()
   assert src.exists(), "missing test case"
 
-  ret, _, _ = run_c(c_src, [src], link=["cgraph", "gvc"])
-  assert ret == 0
+  _, _ = run_c(c_src, [src], link=["cgraph", "gvc"])
 
   # FIXME: uncomment this when #1767 is fixed
   # assert stdout == "Loaded graph:clusters\n" \
@@ -972,8 +971,7 @@ def test_1910():
   assert c_src.exists(), "missing test case"
 
   # run the test
-  ret, _, _ = run_c(c_src, link=["cgraph", "gvc"])
-  assert ret == 0
+  _, _ = run_c(c_src, link=["cgraph", "gvc"])
 
 def test_1913():
   """
@@ -1122,8 +1120,7 @@ def test_2057():
   assert c_src.exists(), "missing test case"
 
   # run the test
-  ret, _, _ = run_c(c_src, link=["gvc"])
-  assert ret == 0
+  _, _ = run_c(c_src, link=["gvc"])
 
 def test_2078():
   """
@@ -1221,10 +1218,7 @@ def test_2089_2():
   assert c_src.exists(), "missing test case"
 
   # run it
-  ret, stdout, stderr = run_c(c_src, link=["cgraph"])
-  sys.stdout.write(stdout)
-  sys.stderr.write(stderr)
-  assert ret == 0
+  _, _ = run_c(c_src, link=["cgraph"])
 
 @pytest.mark.skipif(os.environ.get("build_system") == "msbuild" and
                     os.environ.get("configuration") == "Debug",
@@ -1314,8 +1308,7 @@ def test_package_version():
   assert c_src.exists(), "missing test case"
 
   # run the test
-  ret, _, _ = run_c(c_src)
-  assert ret == 0
+  _, _ = run_c(c_src)
 
 def test_user_shapes():
   """
@@ -1347,7 +1340,7 @@ def test_xdot_json():
 
   # ask our C helper to process this
   try:
-    ret, output, err = run_c(c_src, input=input, link=["xdot"])
+    output, err = run_c(c_src, input=input, link=["xdot"])
   except subprocess.CalledProcessError:
     # FIXME: Remove this try-catch when
     # https://gitlab.com/graphviz/graphviz/-/issues/1777 is fixed
@@ -1355,7 +1348,6 @@ def test_xdot_json():
       pytest.skip("Windows MSBuild release does not contain any header "
                   "files (#1777)")
     raise
-  assert ret == 0
   assert err == ""
 
   if os.getenv("build_system") == "msbuild":

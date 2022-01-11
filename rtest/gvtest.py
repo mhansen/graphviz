@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import platform
 import subprocess
+import sys
 import sysconfig
 import tempfile
 from typing import List, Optional, Tuple, Union
@@ -94,7 +95,7 @@ def dot(T: str, source_file: Optional[Path] = None, source: Optional[str] = None
 
 def run_c(src: Path, args: List[str] = None, input: str = "",
           cflags: List[str] = None, link: List[str] = None
-          ) -> Tuple[int, str, str]:
+          ) -> Tuple[str, str]:
   """compile and run a C program"""
 
   if args is None:
@@ -120,4 +121,10 @@ def run_c(src: Path, args: List[str] = None, input: str = "",
     p = subprocess.run([exe] + args, input=input, stdout=subprocess.PIPE,
       stderr=subprocess.PIPE, universal_newlines=True)
 
-    return p.returncode, p.stdout, p.stderr
+    # check it succeeded
+    if p.returncode != 0:
+      sys.stdout.write(p.stdout)
+      sys.stderr.write(p.stderr)
+    p.check_returncode()
+
+    return p.stdout, p.stderr

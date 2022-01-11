@@ -20,6 +20,4 @@ def test_sprint():
   # extra C flags this compilation needs
   cflags = ['-I', lib]
 
-  ret, _, _ = run_c(src, cflags=cflags)
-
-  assert ret == 0
+  _, _ = run_c(src, cflags=cflags)

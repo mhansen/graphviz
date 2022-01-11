@@ -40,13 +40,7 @@ def test_compile_example(src):
   else:
     cflags = None
 
-  ret, out, err = run_c(filepath, args, "graph {a -- b}", cflags=cflags, link=libs)
-
-  print(f"returncode: {ret} = 0x{ret:08x}")
-  if ret != 0:
-    print(out)
-    print(err)
-  assert ret == 0
+  _, _ = run_c(filepath, args, "graph {a -- b}", cflags=cflags, link=libs)
 
 @pytest.mark.parametrize("src", ["addrings", "attr", "bbox", "bipart",
   "chkedges", "clustg", "collapse", "cycle", "deghist", "delmulti", "depath",
