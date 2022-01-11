@@ -448,7 +448,7 @@ static char * gvprintnum (size_t *len, double number)
     static char tmpbuf[sizeof(maxnegnumstr)];   /* buffer big enough for worst case */
     char *result = tmpbuf+sizeof(maxnegnumstr); /* init result to end of tmpbuf */
     long int N;
-    boolean showzeros, negative;
+    bool showzeros, negative;
     int digit, i;
 
     /*
@@ -476,12 +476,12 @@ static char * gvprintnum (size_t *len, double number)
 	*len = 1;
 	return "0";
     }
-    if ((negative = (N < 0)))		/* avoid "-0" by testing rounded int */
+    if ((negative = N < 0))		/* avoid "-0" by testing rounded int */
         N = -N;				/* make number +ve */
 #ifdef TERMINATED_NUMBER_STRING
     *--result = '\0';			/* terminate the result string */
 #endif
-    showzeros = FALSE;			/* don't print trailing zeros */
+    showzeros = false;			/* don't print trailing zeros */
     for (i = DECPLACES; N || i > 0; i--) {  /* non zero remainder,
 						or still in fractional part */
         digit = (int)(N % 10L);			/* next least-significant digit */
@@ -489,12 +489,12 @@ static char * gvprintnum (size_t *len, double number)
         if (digit || showzeros) {	/* if digit is non-zero,
 						or if we are printing zeros */
             *--result = (char)digit | '0';	/* convert digit to ascii */
-            showzeros = TRUE;		/* from now on we must print zeros */
+            showzeros = true;		/* from now on we must print zeros */
         }
         if (i == 1) {			/* if completed fractional part */
             if (showzeros)		/* if there was a non-zero fraction */
                 *--result = '.';	/* print decimal point */
-            showzeros = TRUE;		/* print all digits in int part */
+            showzeros = true;		/* print all digits in int part */
         }
     }
     if (negative)			/* print "-" if needed */
