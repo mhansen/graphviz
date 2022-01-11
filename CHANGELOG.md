@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Ming plugin that produced Shockwave files has been removed. This format
   was EOLed by Adobe in April 2019. #2160
 - CentOS 7 packages now include libmingle and the `mingle` program.
+- The tclpkg Makefile no longer suppresses `-fstack-clash-protection` nor
+  other compiler options containing `-x`
 
 ### Fixed
 
@@ -28,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Plugins are not configured on MinGW #2176
 - gvpr on MinGW does not support absolute paths #1780
 - PNG format not available in CMake builds with MinGW
+- tclpkg Makefile corrupts CFLAGS #2177
 
 ## [2.50.0] – 2021-12-04
 
