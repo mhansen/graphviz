@@ -2733,8 +2733,8 @@ emit_edge_label(GVJ_t* job, textlabel_t* lbl, emit_state_t lkind, int explicit,
  * If the url is non-NULL or the tooltip was explicit, we set
  * a hot spot around point p.
  */
-static void nodeIntersect (GVJ_t * job, pointf p, 
-    boolean explicit_iurl, char* iurl, boolean explicit_itooltip) {
+static void nodeIntersect(GVJ_t *job, pointf p, bool explicit_iurl, char *iurl,
+                          boolean explicit_itooltip) {
     obj_state_t *obj = job->obj;
     char* url;
     bool explicit;
