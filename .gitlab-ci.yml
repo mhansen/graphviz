@@ -598,6 +598,56 @@ windows-mingw64-static-build-step2-make:
     except:
         - tags
 
+windows-mingw32-static-build-step1-configure:
+    stage: build
+    needs:
+        - job: portable-source
+          artifacts: true
+    script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - $Env:build_system = "autotools"
+        - $Env:CONFIGURE_OPTIONS = "--disable-shared --enable-static"
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
+    artifacts:
+        when: always
+        expire_in: 1 week
+        paths:
+            - GRAPHVIZ_VERSION
+            - graphviz-*
+            - build
+    tags:
+        - windows
+    except:
+        - tags
+
+windows-mingw32-static-build-step2-make:
+    stage: build
+    needs:
+        - job: windows-mingw32-static-build-step1-configure
+          artifacts: true
+    script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
+        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
+        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
+        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - $Env:build_system = "autotools"
+        - $Env:use_autogen = "yes"
+        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+    artifacts:
+        when: always
+        expire_in: 1 week
+        paths:
+            - GRAPHVIZ_VERSION
+    tags:
+        - windows
+    except:
+        - tags
+
 windows-cygwin-build:
     stage: build
     needs:
