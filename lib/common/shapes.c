@@ -2538,7 +2538,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
     bool constrain = false;
     bool dyna = false;
     int side = 0;
-    boolean clip = TRUE;
+    bool clip = true;
     boolean defined;
     double maxv;  /* sufficiently large value outside of range of node */
 
@@ -2577,14 +2577,14 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		theta = 0.0;
 		constrain = true;
 		defined = TRUE;
-		clip = FALSE;
+		clip = false;
 		side = sides & RIGHT;
 	    }
 	    break;
 	case 's':
 	    p.y = b.LL.y;
 	    constrain = true;
-	    clip = FALSE;
+	    clip = false;
 	    switch (*compass) {
 	    case '\0':
 		theta = -M_PI * 0.5;
@@ -2616,7 +2616,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    default:
 		p.y = ctr.y;
 		constrain = false;
-		clip = TRUE;
+		clip = true;
 		rv = 1;
 		break;
 	    }
@@ -2632,14 +2632,14 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		theta = M_PI;
 		constrain = true;
 		defined = TRUE;
-		clip = FALSE;
+		clip = false;
 		side = sides & LEFT;
 	    }
 	    break;
 	case 'n':
 	    p.y = b.UR.y;
 	    constrain = true;
-	    clip = FALSE;
+	    clip = false;
 	    switch (*compass) {
 	    case '\0':
 		defined = TRUE;
@@ -2671,7 +2671,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    default:
 		p.y = ctr.y;
 		constrain = false;
-		clip = TRUE;
+		clip = true;
 		rv = 1;
 		break;
 	    }
@@ -2706,7 +2706,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
     }
     pp->constrained = constrain ? TRUE : FALSE;
     pp->defined = defined;
-    pp->clip = clip;
+    pp->clip = clip ? TRUE : FALSE;
     pp->dyna = dyna ? TRUE : FALSE;
     return rv;
 }
