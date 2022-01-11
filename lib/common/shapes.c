@@ -2535,7 +2535,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
     pointf p, ctr;
     int rv = 0;
     double theta = 0.0;
-    boolean constrain = FALSE;
+    bool constrain = false;
     boolean dyna = FALSE;
     int side = 0;
     boolean clip = TRUE;
@@ -2575,7 +2575,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
                 else
 		    p.x = b.UR.x;
 		theta = 0.0;
-		constrain = TRUE;
+		constrain = true;
 		defined = TRUE;
 		clip = FALSE;
 		side = sides & RIGHT;
@@ -2583,7 +2583,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    break;
 	case 's':
 	    p.y = b.LL.y;
-	    constrain = TRUE;
+	    constrain = true;
 	    clip = FALSE;
 	    switch (*compass) {
 	    case '\0':
@@ -2615,7 +2615,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		break;
 	    default:
 		p.y = ctr.y;
-		constrain = FALSE;
+		constrain = false;
 		clip = TRUE;
 		rv = 1;
 		break;
@@ -2630,7 +2630,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
                 else
 		    p.x = b.LL.x;
 		theta = M_PI;
-		constrain = TRUE;
+		constrain = true;
 		defined = TRUE;
 		clip = FALSE;
 		side = sides & LEFT;
@@ -2638,7 +2638,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    break;
 	case 'n':
 	    p.y = b.UR.y;
-	    constrain = TRUE;
+	    constrain = true;
 	    clip = FALSE;
 	    switch (*compass) {
 	    case '\0':
@@ -2670,7 +2670,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		break;
 	    default:
 		p.y = ctr.y;
-		constrain = FALSE;
+		constrain = false;
 		clip = TRUE;
 		rv = 1;
 		break;
@@ -2704,7 +2704,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    angle -= 2 * M_PI;
 	pp->order = (int) (MC_SCALE * angle / (2 * M_PI));
     }
-    pp->constrained = constrain;
+    pp->constrained = constrain ? TRUE : FALSE;
     pp->defined = defined;
     pp->clip = clip;
     pp->dyna = dyna;
