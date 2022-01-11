@@ -2536,7 +2536,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
     int rv = 0;
     double theta = 0.0;
     bool constrain = false;
-    boolean dyna = FALSE;
+    bool dyna = false;
     int side = 0;
     boolean clip = TRUE;
     boolean defined;
@@ -2677,7 +2677,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    }
 	    break;
 	case '_':
-	    dyna = TRUE;
+	    dyna = true;
 	    side = sides;
 	    break;
 	case 'c':
@@ -2707,7 +2707,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
     pp->constrained = constrain ? TRUE : FALSE;
     pp->defined = defined;
     pp->clip = clip;
-    pp->dyna = dyna;
+    pp->dyna = dyna ? TRUE : FALSE;
     return rv;
 }
 
