@@ -3,6 +3,7 @@
 import os
 from pathlib import Path
 import platform
+import shlex
 import subprocess
 import sys
 import sysconfig
@@ -46,7 +47,7 @@ def compile_c(src: Path, cflags: List[str] = None, link: List[str] = None,
       args += [f"-l{l}" for l in link] + ldflags
 
   # dump the command being run for the user to observe if the test fails
-  print(f'+ {" ".join(str(x) for x in args)}')
+  print(f'+ {" ".join(shlex.quote(str(x)) for x in args)}')
 
   # compile the program
   try:
@@ -116,7 +117,7 @@ def run_c(src: Path, args: List[str] = None, input: str = "",
 
     # dump the command being run for the user to observe if the test fails
     argv = [exe] + args
-    print(f'+ {" ".join(str(x) for x in argv)}')
+    print(f'+ {" ".join(shlex.quote(str(x)) for x in argv)}')
 
     # run it
     p = subprocess.run(argv, input=input, stdout=subprocess.PIPE,
