@@ -336,7 +336,7 @@ void gvdevice_format(GVJ_t * job)
 void gvdevice_finalize(GVJ_t * job)
 {
     gvdevice_engine_t *gvde = job->device.engine;
-    boolean finalized_p = FALSE;
+    bool finalized_p = false;
 
     if (job->flags & GVDEVICE_COMPRESSED_FORMAT) {
 #ifdef HAVE_LIBZ
@@ -383,7 +383,7 @@ void gvdevice_finalize(GVJ_t * job)
     if (gvde) {
 	if (gvde->finalize) {
 	    gvde->finalize(job);
-	    finalized_p = TRUE;
+	    finalized_p = true;
 	}
     }
 
