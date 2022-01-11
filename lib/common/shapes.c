@@ -2762,7 +2762,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     static int A_size;
     int filled;
     bool usershape_p;
-    boolean pfilled;		/* true if fill not handled by user shape */
+    bool pfilled;		/* true if fill not handled by user shape */
     char *color, *name;
     int doMap = (obj->url || obj->explicit_tooltip);
     char* fillcolor=NULL;
