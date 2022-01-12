@@ -161,7 +161,7 @@ initMapData (GVJ_t* job, char* lbl, char* url, char* tooltip, char* target, char
     if (flags & GVRENDER_DOES_TOOLTIPS) {
         if (tooltip && tooltip[0]) {
             obj->tooltip = strdup_and_subst_obj(tooltip, gobj);
-            obj->explicit_tooltip = TRUE;
+            obj->explicit_tooltip = true;
 	    assigned = 1;
         }
         else if (obj->label) {
@@ -2505,7 +2505,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
     obj->u.e = e;
     obj->emit_state = EMIT_EDRAW;
     if (ED_label(e) && !ED_label(e)->html && mapBool(agget(e,"labelaligned"), false))
-	obj->labeledgealigned = TRUE;
+	obj->labeledgealigned = true;
 
     /* We handle the edge style and penwidth here because the width
      * is needed below for calculating polygonal image maps
@@ -2561,13 +2561,13 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    obj->labelurl = strdup(dflt_url);
 	if (((s = agget(e, "tailhref")) && s[0]) || ((s = agget(e, "tailURL")) && s[0])) {
             obj->tailurl = strdup_and_subst_obj(s, e);
-            obj->explicit_tailurl = TRUE;
+            obj->explicit_tailurl = true;
 	}
 	else if (dflt_url)
 	    obj->tailurl = strdup(dflt_url);
 	if (((s = agget(e, "headhref")) && s[0]) || ((s = agget(e, "headURL")) && s[0])) {
             obj->headurl = strdup_and_subst_obj(s, e);
-            obj->explicit_headurl = TRUE;
+            obj->explicit_headurl = true;
 	}
 	else if (dflt_url)
 	    obj->headurl = strdup(dflt_url);
@@ -2577,7 +2577,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
         if ((s = agget(e, "target")) && s[0])
             dflt_target = strdup_and_subst_obj(s, e);
         if ((s = agget(e, "edgetarget")) && s[0]) {
-	    obj->explicit_edgetarget = TRUE;
+	    obj->explicit_edgetarget = true;
             obj->target = strdup_and_subst_obj(s, e);
 	}
 	else if (dflt_target)
@@ -2588,12 +2588,12 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    obj->labeltarget = strdup(dflt_target);
         if ((s = agget(e, "tailtarget")) && s[0]) {
             obj->tailtarget = strdup_and_subst_obj(s, e);
-	    obj->explicit_tailtarget = TRUE;
+	    obj->explicit_tailtarget = true;
 	}
 	else if (dflt_target)
 	    obj->tailtarget = strdup(dflt_target);
         if ((s = agget(e, "headtarget")) && s[0]) {
-	    obj->explicit_headtarget = TRUE;
+	    obj->explicit_headtarget = true;
             obj->headtarget = strdup_and_subst_obj(s, e);
 	}
 	else if (dflt_target)
@@ -2606,7 +2606,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    char* tooltip = preprocessTooltip (s, e);
             obj->tooltip = strdup_and_subst_obj(tooltip, e);
 	    free (tooltip);
-	    obj->explicit_tooltip = TRUE;
+	    obj->explicit_tooltip = true;
 	}
 	else if (obj->label)
 	    obj->tooltip = strdup(obj->label);
@@ -2615,7 +2615,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    char* tooltip = preprocessTooltip (s, e);
             obj->labeltooltip = strdup_and_subst_obj(tooltip, e);
 	    free (tooltip);
-	    obj->explicit_labeltooltip = TRUE;
+	    obj->explicit_labeltooltip = true;
 	}
 	else if (obj->label)
 	    obj->labeltooltip = strdup(obj->label);
@@ -2624,7 +2624,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    char* tooltip = preprocessTooltip (s, e);
             obj->tailtooltip = strdup_and_subst_obj(tooltip, e);
 	    free (tooltip);
-	    obj->explicit_tailtooltip = TRUE;
+	    obj->explicit_tailtooltip = true;
 	}
 	else if (obj->taillabel)
 	    obj->tailtooltip = strdup(obj->taillabel);
@@ -2633,7 +2633,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    char* tooltip = preprocessTooltip (s, e);
             obj->headtooltip = strdup_and_subst_obj(tooltip, e);
 	    free (tooltip);
-	    obj->explicit_headtooltip = TRUE;
+	    obj->explicit_headtooltip = true;
 	}
 	else if (obj->headlabel)
 	    obj->headtooltip = strdup(obj->headlabel);
@@ -2733,8 +2733,8 @@ emit_edge_label(GVJ_t* job, textlabel_t* lbl, emit_state_t lkind, int explicit,
  * If the url is non-NULL or the tooltip was explicit, we set
  * a hot spot around point p.
  */
-static void nodeIntersect (GVJ_t * job, pointf p, 
-    boolean explicit_iurl, char* iurl, boolean explicit_itooltip) {
+static void nodeIntersect(GVJ_t *job, pointf p, bool explicit_iurl, char *iurl,
+                          bool explicit_itooltip) {
     obj_state_t *obj = job->obj;
     char* url;
     bool explicit;

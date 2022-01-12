@@ -192,7 +192,7 @@ shape_clip0(inside_t * inside_context, node_t * n, pointf curve[4],
 void shape_clip(node_t * n, pointf curve[4])
 {
     double save_real_size;
-    boolean left_inside;
+    bool left_inside;
     pointf c;
     inside_t inside_context;
 
@@ -204,9 +204,9 @@ void shape_clip(node_t * n, pointf curve[4])
     save_real_size = ND_rw(n);
     c.x = curve[0].x - ND_coord(n).x;
     c.y = curve[0].y - ND_coord(n).y;
-    left_inside = ND_shape(n)->fns->insidefn(&inside_context, c);
+    left_inside = ND_shape(n)->fns->insidefn(&inside_context, c) != FALSE;
     ND_rw(n) = save_real_size;
-    shape_clip0(&inside_context, n, curve, left_inside != FALSE);
+    shape_clip0(&inside_context, n, curve, left_inside);
 }
 
 /* new_spline:

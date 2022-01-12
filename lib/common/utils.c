@@ -366,7 +366,7 @@ static char* findPath (char** dirs, size_t maxdirlen, const char* str)
 
 const char *safefile(const char *filename)
 {
-    static boolean onetime = TRUE;
+    static bool onetime = true;
     static char *pathlist = NULL;
     static size_t maxdirlen;
     static char** dirs;
@@ -387,7 +387,7 @@ const char *safefile(const char *filename)
 		      "file loading is disabled because the environment contains SERVER_NAME=\"%s\"\n"
 		      "and the GV_FILE_PATH variable is unset or empty.\n",
 		      HTTPServerEnVar);
-		onetime = FALSE;
+		onetime = false;
 	    }
 	    return NULL;
 	}
@@ -408,7 +408,7 @@ const char *safefile(const char *filename)
 	    agerr(AGWARN, "Path provided to file: \"%s\" has been ignored"
 		  " because files are only permitted to be loaded from the directories in \"%s\""
 		  " when running in an http server.\n", filename, Gvfilepath);
-	    onetime = FALSE;
+	    onetime = false;
 	}
 
 	return findPath (dirs, maxdirlen, str);
@@ -757,7 +757,7 @@ int common_init_edge(edge_t * e)
 
 /* addLabelBB:
  */
-static boxf addLabelBB(boxf bb, textlabel_t * lp, boolean flipxy)
+static boxf addLabelBB(boxf bb, textlabel_t * lp, bool flipxy)
 {
     double width, height;
     pointf p = lp->pos;

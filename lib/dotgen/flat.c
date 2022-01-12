@@ -10,7 +10,7 @@
 
 
 #include	<dotgen/dot.h>
-
+#include	<stdbool.h>
 
 static node_t *make_vn_slot(graph_t * g, int r, int pos)
 {
@@ -75,21 +75,21 @@ static void setbounds(node_t * v, int *bounds, int lpos, int rpos)
 		    bounds[SRB] = ord;
 	    }
 	} else {		/* forward */
-	    boolean onleft, onright;
-	    onleft = onright = FALSE;
+	    bool onleft, onright;
+	    onleft = onright = false;
 	    for (i = 0; (f = ND_out(v).list[i]); i++) {
 		if (ND_order(aghead(f)) <= lpos) {
-		    onleft = TRUE;
+		    onleft = true;
 		    continue;
 		}
 		if (ND_order(aghead(f)) >= rpos) {
-		    onright = TRUE;
+		    onright = true;
 		    continue;
 		}
 	    }
-	    if (onleft && (onright == FALSE))
+	    if (onleft && !onright)
 		bounds[HLB] = ord + 1;
-	    if (onright && (onleft == FALSE))
+	    if (onright && !onleft)
 		bounds[HRB] = ord - 1;
 	}
     }

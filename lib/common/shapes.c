@@ -2535,17 +2535,17 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
     pointf p, ctr;
     int rv = 0;
     double theta = 0.0;
-    boolean constrain = FALSE;
-    boolean dyna = FALSE;
+    bool constrain = false;
+    bool dyna = false;
     int side = 0;
-    boolean clip = TRUE;
-    boolean defined;
+    bool clip = true;
+    bool defined;
     double maxv;  /* sufficiently large value outside of range of node */
 
     if (bp) {
 	b = *bp;
 	p = pointfof((b.LL.x + b.UR.x) / 2, (b.LL.y + b.UR.y) / 2);
-	defined = TRUE;
+	defined = true;
     } else {
 	p.x = p.y = 0.;
 	if (GD_flip(agraphof(n))) {
@@ -2559,7 +2559,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    b.UR.x = ND_lw(n);
 	    b.LL.x = -b.UR.x;
 	}
-	defined = FALSE;
+	defined = false;
     }
     maxv = MAX(b.UR.x,b.UR.y);
     maxv *= 4.0;
@@ -2575,20 +2575,20 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
                 else
 		    p.x = b.UR.x;
 		theta = 0.0;
-		constrain = TRUE;
-		defined = TRUE;
-		clip = FALSE;
+		constrain = true;
+		defined = true;
+		clip = false;
 		side = sides & RIGHT;
 	    }
 	    break;
 	case 's':
 	    p.y = b.LL.y;
-	    constrain = TRUE;
-	    clip = FALSE;
+	    constrain = true;
+	    clip = false;
 	    switch (*compass) {
 	    case '\0':
 		theta = -M_PI * 0.5;
-		defined = TRUE;
+		defined = true;
                 if (ictxt)
                     p = compassPoint(ictxt, -maxv, ctr.x);
                 else
@@ -2597,7 +2597,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		break;
 	    case 'e':
 		theta = -M_PI * 0.25;
-		defined = TRUE;
+		defined = true;
 		if (ictxt)
 		    p = compassPoint(ictxt, -maxv, maxv);
 		else
@@ -2606,7 +2606,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		break;
 	    case 'w':
 		theta = -M_PI * 0.75;
-		defined = TRUE;
+		defined = true;
 		if (ictxt)
 		    p = compassPoint(ictxt, -maxv, -maxv);
 		else
@@ -2615,8 +2615,8 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		break;
 	    default:
 		p.y = ctr.y;
-		constrain = FALSE;
-		clip = TRUE;
+		constrain = false;
+		clip = true;
 		rv = 1;
 		break;
 	    }
@@ -2630,19 +2630,19 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
                 else
 		    p.x = b.LL.x;
 		theta = M_PI;
-		constrain = TRUE;
-		defined = TRUE;
-		clip = FALSE;
+		constrain = true;
+		defined = true;
+		clip = false;
 		side = sides & LEFT;
 	    }
 	    break;
 	case 'n':
 	    p.y = b.UR.y;
-	    constrain = TRUE;
-	    clip = FALSE;
+	    constrain = true;
+	    clip = false;
 	    switch (*compass) {
 	    case '\0':
-		defined = TRUE;
+		defined = true;
 		theta = M_PI * 0.5;
                 if (ictxt)
                     p = compassPoint(ictxt, maxv, ctr.x);
@@ -2651,7 +2651,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		side = sides & TOP;
 		break;
 	    case 'e':
-		defined = TRUE;
+		defined = true;
 		theta = M_PI * 0.25;
 		if (ictxt)
 		    p = compassPoint(ictxt, maxv, maxv);
@@ -2660,7 +2660,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		side = sides & (TOP | RIGHT);
 		break;
 	    case 'w':
-		defined = TRUE;
+		defined = true;
 		theta = M_PI * 0.75;
 		if (ictxt)
 		    p = compassPoint(ictxt, maxv, -maxv);
@@ -2670,14 +2670,14 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 		break;
 	    default:
 		p.y = ctr.y;
-		constrain = FALSE;
-		clip = TRUE;
+		constrain = false;
+		clip = true;
 		rv = 1;
 		break;
 	    }
 	    break;
 	case '_':
-	    dyna = TRUE;
+	    dyna = true;
 	    side = sides;
 	    break;
 	case 'c':
@@ -2704,10 +2704,10 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    angle -= 2 * M_PI;
 	pp->order = (int) (MC_SCALE * angle / (2 * M_PI));
     }
-    pp->constrained = constrain;
-    pp->defined = defined;
-    pp->clip = clip;
-    pp->dyna = dyna;
+    pp->constrained = constrain ? TRUE : FALSE;
+    pp->defined = defined ? TRUE : FALSE;
+    pp->clip = clip ? TRUE : FALSE;
+    pp->dyna = dyna ? TRUE : FALSE;
     return rv;
 }
 
@@ -2762,7 +2762,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     static int A_size;
     int filled;
     bool usershape_p;
-    boolean pfilled;		/* true if fill not handled by user shape */
+    bool pfilled;		/* true if fill not handled by user shape */
     char *color, *name;
     int doMap = (obj->url || obj->explicit_tooltip);
     char* fillcolor=NULL;
@@ -3078,7 +3078,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
     pointf P, *vertices;
     static pointf *AF;
     static int A_size;
-    boolean filled;
+    bool filled;
     char *color;
     int doMap = obj->url || obj->explicit_tooltip;
 
@@ -3137,7 +3137,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
 	gvrender_set_fillcolor(job, color);	/* emit fill color */
 	penColor(job, n);	/* emit pen color */
     }
-    filled = TRUE;
+    filled = true;
 
     /* if no boundary but filled, set boundary color to fill color */
     if (peripheries == 0) {
@@ -3154,7 +3154,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
 	}
 	gvrender_ellipse(job, AF, sides, filled);
 	/* fill innermost periphery only */
-	filled = FALSE;
+	filled = false;
     }
 
     if (doMap) {
