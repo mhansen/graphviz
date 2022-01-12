@@ -64,7 +64,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
     for (np = agfstnode(G); np; np = agnxtnode(G,np)) {
         assert(n_edges <= INT_MAX);
         graph->sources[n_nodes] = n_edges;
-        bitarray_set(graph->pinneds, n_nodes, isFixed(np));
+        bitarray_set(&graph->pinneds, n_nodes, isFixed(np));
         for (ep = agfstedge(G, np); ep; ep = agnxtedge(G, ep, np)) {
             if (agtail(ep) == aghead(ep)) { // ignore self-loops and double edges
                 continue;
@@ -94,7 +94,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
             for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
                 size_t j = graph->targets[x];
                 if (!bitarray_get(neighbours_i, j)) { // ignore multiedges
-                    bitarray_set(neighbours_i, j, true); // set up sort of hashset
+                    bitarray_set(&neighbours_i, j, true); // set up sort of hashset
                     deg_i++;
                 }
             }
@@ -106,7 +106,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
                      y++) {
                     size_t k = graph->targets[y];
                     if (!bitarray_get(neighbours_j, k)) { // ignore multiedges
-                        bitarray_set(neighbours_j, k, true); // set up sort of hashset
+                        bitarray_set(&neighbours_j, k, true); // set up sort of hashset
                         deg_j++;
                         if (bitarray_get(neighbours_i, k)) {
                             intersect++;
@@ -118,12 +118,12 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
                 for (size_t y = graph->sources[j]; y < graph->sources[j + 1];
                      y++) {
                     size_t k = graph->targets[y];
-                    bitarray_set(neighbours_j, k, false); // reset sort of hashset
+                    bitarray_set(&neighbours_j, k, false); // reset sort of hashset
                 }
             }
             for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
                 size_t j = graph->targets[x];
-                bitarray_set(neighbours_i, j, false); // reset sort of hashset
+                bitarray_set(&neighbours_i, j, false); // reset sort of hashset
             }
         }
         bitarray_reset(&neighbours_i);

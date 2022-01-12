@@ -218,7 +218,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
                     ind++;
                 }
                 *c++=ind;
-                bitarray_set(assigned, ind, true);
+                bitarray_set(&assigned, ind, true);
                 cdata->ntoplevel--;
             }
         }

@@ -201,7 +201,7 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 	bfs_bounded(vertex, graph, n, dist, &Q, bound, visited_nodes);
     bitarray_t node_in_neighborhood = bitarray_new_or_exit(n);
     for (i = 0; i < num_visited_nodes; i++) {
-	bitarray_set(node_in_neighborhood, visited_nodes[i], true);
+	bitarray_set(&node_in_neighborhood, visited_nodes[i], true);
     }
 
     int *index = gcalloc(n, sizeof(int));
