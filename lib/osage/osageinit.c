@@ -72,7 +72,7 @@ static void cluster_init_graph(graph_t * g)
     }
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-	    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//edge custom data
+	    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//edge custom data
 	    common_init_edge(e);
 	}
     }
@@ -332,7 +332,7 @@ mkClusters (Agraph_t* g, clist_t* pclist, Agraph_t* parent)
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
         if (!strncmp(agnameof(subg), "cluster", 7)) {
-	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    do_graph_label (subg);
             addCluster(clist, subg);
             mkClusters(subg, NULL, subg);

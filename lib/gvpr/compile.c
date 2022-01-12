@@ -2596,7 +2596,7 @@ Agraph_t *openG(char *name, Agdesc_t desc)
 #endif
     g = agopen(name, desc, &gprDisc);
     if (g)
-	agbindrec(g, UDATA, sizeof(gdata), 0);
+	agbindrec(g, UDATA, sizeof(gdata), false);
     return g;
 }
 
@@ -2609,7 +2609,7 @@ Agraph_t *openSubg(Agraph_t * g, char *name)
 
     sg = agsubg(g, name, 1);
     if (sg && !aggetrec(sg, UDATA, 0))
-	agbindrec(sg, UDATA, sizeof(gdata), 0);
+	agbindrec(sg, UDATA, sizeof(gdata), false);
     return sg;
 }
 
@@ -2622,7 +2622,7 @@ Agnode_t *openNode(Agraph_t * g, char *name)
 
     np = agnode(g, name, 1);
     if (np && !aggetrec(np, UDATA, 0))
-	agbindrec(np, UDATA, sizeof(ndata), 0);
+	agbindrec(np, UDATA, sizeof(ndata), false);
     return np;
 }
 
@@ -2645,7 +2645,7 @@ Agedge_t *openEdge(Agraph_t* g, Agnode_t * t, Agnode_t * h, char *key)
 
     ep = agedge(g, t, h, key, 1);
     if (ep && !aggetrec(ep, UDATA, 0))
-	agbindrec(ep, UDATA, sizeof(edata), 0);
+	agbindrec(ep, UDATA, sizeof(edata), false);
     return ep;
 }
 

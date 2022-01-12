@@ -10,6 +10,7 @@
 
 
 #include <circogen/blocktree.h>
+#include <stdbool.h>
 
 static void addNode(block_t * bp, Agnode_t * n)
 {
@@ -24,7 +25,7 @@ static Agraph_t *makeBlockGraph(Agraph_t * g, circ_state * state)
 
     snprintf(name, sizeof(name), "_block_%d", state->blockCount++);
     subg = agsubg(g, name,1);
-    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
+    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
     return subg;
 }
 

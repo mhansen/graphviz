@@ -18,10 +18,11 @@
 #include    <neatogen/adjust.h>
 #include    <pack/pack.h>
 #include    <neatogen/neatoprocs.h>
+#include    <stdbool.h>
 
 static void twopi_init_edge(edge_t * e)
 {
-    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//edge custom data
+    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//edge custom data
     common_init_edge(e);
     ED_factor(e) = late_double(e, E_weight, 1.0, 0.0);
 }

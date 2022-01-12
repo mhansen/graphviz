@@ -41,6 +41,7 @@
 #include <fdpgen/clusteredges.h>
 #include <fdpgen/dbg.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef struct {
     graph_t*  rootg;  /* logical root; graph passed in to fdp_layout */
@@ -182,7 +183,7 @@ static node_t *mkDeriveNode(graph_t * dg, char *name)
     node_t *dn;
 
     dn = agnode(dg, name,1);
-    agbindrec(dn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);	//node custom data
+    agbindrec(dn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
     ND_alg(dn) = NEW(dndata);	/* free in freeDeriveNode */
     ND_pos(dn) = N_GNEW(GD_ndim(dg), double);
     /* fprintf (stderr, "Creating %s\n", dn->name); */
@@ -427,7 +428,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
     infop->gid++;
 
     dg = agopen("derived", Agstrictdirected,NULL);
-    agbindrec(dg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+    agbindrec(dg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     GD_alg(dg) = NEW(gdata);	/* freed in freeDeriveGraph */
 #ifdef DEBUG
     GORIG(dg) = g;
@@ -502,7 +503,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
 		de = agedge(dg, tl, hd, NULL,1);
 	    else
 		de = agedge(dg, hd, tl, NULL,1);
-	    agbindrec(de, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
+	    agbindrec(de, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
 	    ED_dist(de) = ED_dist(e);
 	    ED_factor(de) = ED_factor(e);
 	    /* fprintf (stderr, "edge %s -- %s\n", tl->name, hd->name); */
@@ -536,7 +537,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
 		    de = agedge(dg, m, dn, NULL,1);
 		else
 		    de = agedge(dg, dn, m, NULL,1);
-		agbindrec(de, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
+		agbindrec(de, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
 		ED_dist(de) = ED_dist(pp->e);
 		ED_factor(de) = ED_factor(pp->e);
 		addEdge(de, pp->e);
@@ -1009,7 +1010,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg))
 	{
 	if (!strncmp(agnameof(subg), "cluster", 7)) {
-	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    GD_alg(subg) = NEW(gdata);	/* freed in cleanup_subgs */
 	    GD_ndim(subg) = GD_ndim(parent);
 	    LEVEL(subg) = LEVEL(parent) + 1;

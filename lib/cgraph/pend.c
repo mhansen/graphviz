@@ -11,6 +11,7 @@
 #include <cgraph/cghdr.h>
 #include <cgraph/unreachable.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 static char DRName[] = "_AG_pending";
 
@@ -190,7 +191,7 @@ void agrecord_callback(Agraph_t * g, Agobj_t * obj, cb_t kind, Agsym_t * optsym)
     Dict_t *dict;
     pending_cb_t *handle;
 
-    pending = agbindrec(g, DRName, sizeof(pendingset_t), FALSE);
+    pending = agbindrec(g, DRName, sizeof(pendingset_t), false);
 
     switch (kind) {
     case CB_INITIALIZE:
@@ -259,7 +260,7 @@ static void agrelease_callbacks(Agraph_t * g)
     pendingset_t *pending;
     if (NOT(g->clos->callbacks_enabled)) {
 	g->clos->callbacks_enabled = TRUE;
-	pending = agbindrec(g, DRName, sizeof(pendingset_t), FALSE);
+	pending = agbindrec(g, DRName, sizeof(pendingset_t), false);
 	/* this destroys objects in the opposite of their order of creation */
 	cb(pending->ins.g, CB_INITIALIZE);
 	cb(pending->ins.n, CB_INITIALIZE);

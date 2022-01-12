@@ -42,7 +42,7 @@ static char *cc_pfx = "_neato_cc";
 
 void neato_init_node(node_t * n)
 {
-    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);	//node custom data
+    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
     common_init_node(n);
     ND_pos(n) = N_NEW(GD_ndim(agraphof(n)), double);
     gv_nodesize(n, GD_flip(agraphof(n)));
@@ -50,7 +50,7 @@ void neato_init_node(node_t * n)
 
 static void neato_init_edge(edge_t * e)
 {
-    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//node custom data
+    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//node custom data
     common_init_edge(e);
     ED_factor(e) = late_double(e, E_weight, 1.0, 1.0);
 }
@@ -469,7 +469,7 @@ dfs(Agraph_t * subg, Agraph_t * parentg, attrsym_t * G_lp, attrsym_t * G_bb)
     boxf bb;
 
     if (!strncmp(agnameof(subg), "cluster", 7) && chkBB(subg, G_bb, &bb)) {
-	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	GD_bb(subg) = bb;
 	add_cluster(parentg, subg);
 	nop_init_graphs(subg, G_lp, G_bb);
@@ -1386,7 +1386,7 @@ addCluster (graph_t* g)
     graph_t *subg;
     for (subg = agfstsubg(agroot(g)); subg; subg = agnxtsubg(subg)) {
 	if (!strncmp(agnameof(subg), "cluster", 7)) {
-	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    add_cluster(g, subg);
 	    compute_bb(subg);
 	}

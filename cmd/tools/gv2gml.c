@@ -13,6 +13,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -434,7 +435,7 @@ emitNodeAttrs (Agraph_t* G, Agnode_t* np, FILE* outFile, int ix)
 static void 
 emitNode (Agraph_t* G, Agnode_t* n, FILE* outFile)
 {
-    agbindrec(n, "nodeinfo", sizeof(Local_Agnodeinfo_t), TRUE);
+    agbindrec(n, "nodeinfo", sizeof(Local_Agnodeinfo_t), true);
     fprintf(outFile, "  node [\n    id %" PRIu64 "\n    name \"%s\"\n", id,
             agnameof(n));
     ID(n) = id++;

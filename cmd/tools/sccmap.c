@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
@@ -170,7 +171,7 @@ static unsigned visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
 	    Agraph_t *G = agraphof(n);;
 	    snprintf(name, sizeof(name), "cluster_%u", st->Comp++);
 	    subg = agsubg(G, name, TRUE);
-	    agbindrec(subg, "scc_graph", sizeof(Agraphinfo_t), TRUE);
+	    agbindrec(subg, "scc_graph", sizeof(Agraphinfo_t), true);
 	    setrep(subg, agnode(map, name, TRUE));
 	    do {
 		t = pop(sp);

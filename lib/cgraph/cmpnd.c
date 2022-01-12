@@ -10,6 +10,7 @@
 
 #include <cgraph/cghdr.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 /*
  * provides "compound nodes" on top of base Libgraph.
@@ -60,7 +61,7 @@ typedef struct Agcmpedge_s {
 static save_stack_t *save_stack_of(Agedge_t * e, Agnode_t * node_being_saved)
 {
     int i;
-    Agcmpedge_t *edgerec = agbindrec(e, Descriptor_id, sizeof(*edgerec), FALSE);
+    Agcmpedge_t *edgerec = agbindrec(e, Descriptor_id, sizeof(*edgerec), false);
     if (node_being_saved == AGHEAD(e))
 	i = IN_STACK;
     else
@@ -183,8 +184,8 @@ int agassociate(Agnode_t * n, Agraph_t * sub)
 
     if (agsubnode(sub, n, FALSE))
 	return FAILURE;		/* avoid cycles */
-    noderec = agbindrec(n, Descriptor_id, sizeof(*noderec), FALSE);
-    graphrec = agbindrec(sub, Descriptor_id, sizeof(*graphrec), FALSE);
+    noderec = agbindrec(n, Descriptor_id, sizeof(*noderec), false);
+    graphrec = agbindrec(sub, Descriptor_id, sizeof(*graphrec), false);
     if (noderec->subg || graphrec->node)
 	return FAILURE;
     noderec->subg = sub;
@@ -203,7 +204,7 @@ static void delete_outside_subg(Agraph_t * g, Agnode_t * node, Agraph_t * subg)
     if ((g != subg) && (n = agsubnode(g, (Agnode_t *) node, FALSE))) {
 	dtdelete(g->n_dict, n);
 
-	graphrec = agbindrec(g, Descriptor_id, sizeof(*graphrec), FALSE);
+	graphrec = agbindrec(g, Descriptor_id, sizeof(*graphrec), false);
 	if ((d = graphrec->hidden_node_set) == NULL) {
 	    /* use name disc. to permit search for hidden node by name */
 	    d = graphrec->hidden_node_set = agdtopen(g, &Ag_node_name_disc, Dttree);

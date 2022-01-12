@@ -14,6 +14,7 @@
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 /* For precision, scale up before algorithms, then scale down */
 #define SCALE 10   
@@ -137,7 +138,7 @@ static void mapGraphs(graph_t * g, graph_t * cg, distfn dist)
 	    delta = dist(&tp->bb, &hp->bb);
 	    h = hp->cnode;
 	    ce = agedge(cg, t, h, NULL, 1);
-	    agbindrec(ce, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
+	    agbindrec(ce, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
 	    ED_weight(ce) = 1;
 	    if (ED_minlen(ce) < delta) {
 		if (ED_minlen(ce) == 0.0) {
@@ -213,12 +214,12 @@ static graph_t *mkNConstraintG(graph_t * g, Dt_t * list,
     edge_t *e;
     node_t *lastn = NULL;
     graph_t *cg = agopen("cg", Agstrictdirected, NULL);
-    agbindrec(cg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);  // graph custom data
+    agbindrec(cg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);  // graph custom data
 
     for (p = (nitem *) dtflatten(list); p;
 	 p = (nitem *) dtlink(list, (Dtlink_t *) p)) {
 	n = agnode(cg, agnameof(p->np), 1);      /* FIX */
-	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE); //node custom data
+	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true); //node custom data
 	ND_alg(n) = p;
 	p->cnode = n;
 	alloc_elist(0, ND_in(n));
@@ -238,7 +239,7 @@ static graph_t *mkNConstraintG(graph_t * g, Dt_t * list,
 	    if (intersect(p, nxp)) {
 	        double delta = dist(&p->bb, &nxp->bb);
 	        e = agedge(cg, p->cnode, nxp->cnode, NULL, 1);
-		agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);   // edge custom data
+		agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);   // edge custom data
 		assert (delta <= 0xFFFF);
 		ED_minlen(e) = delta;
 		ED_weight(e) = 1;
@@ -282,7 +283,7 @@ static graph_t *mkConstraintG(graph_t * g, Dt_t * list,
     int oldval = -INT_MAX;
     node_t *lastn = NULL;
     graph_t *cg = agopen("cg", Agstrictdirected, NULL);
-    agbindrec(cg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);  // graph custom data
+    agbindrec(cg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);  // graph custom data
 
     /* count distinct nodes */
     cnt = 0;
@@ -303,7 +304,7 @@ static graph_t *mkConstraintG(graph_t * g, Dt_t * list,
 	    oldval = p->val;
 	    /* n = newNode (cg); */
 	    n = agnode(cg, agnameof(p->np), 1);	/* FIX */
-	    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE); //node custom data
+	    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true); //node custom data
 	    ND_alg(n) = p;
 	    if (root) {
 		ND_next(lastn) = n;
@@ -319,7 +320,7 @@ static graph_t *mkConstraintG(graph_t * g, Dt_t * list,
 		else
 		    alloc_elist(cnt - lcnt - 1, ND_out(prev));
 		e = agedge(cg, prev, n, NULL, 1);
-		agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);   // edge custom data
+		agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);   // edge custom data
 		ED_minlen(e) = SCALE;
 		ED_weight(e) = 1;
 		elist_append(e, ND_out(prev));
@@ -341,7 +342,7 @@ static graph_t *mkConstraintG(graph_t * g, Dt_t * list,
     for (p = (nitem *) dtflatten(list); p;
 	 p = (nitem *) dtlink(list, (Dtlink_t *) p)) {
 	n = agnode(vg, agnameof(p->np), 1);  /* FIX */
-	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);  //node custom data
+	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);  //node custom data
 	p->vnode = n;
 	ND_alg(n) = p;
     }

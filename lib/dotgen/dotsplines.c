@@ -856,7 +856,7 @@ cloneGraph (graph_t* g, attr_state_t* attr_state)
 	auxg = agopen ("auxg",Agdirected, NULL);
     else
 	auxg = agopen ("auxg",Agundirected, NULL);
-    agbindrec(auxg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+    agbindrec(auxg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     agattr(auxg, AGRAPH, "rank", "");
     GD_drawing(auxg) = NEW(layout_t);
     GD_drawing(auxg)->quantum = GD_drawing(g)->quantum; 
@@ -950,7 +950,7 @@ static node_t*
 cloneNode (graph_t* g, node_t* orign, int flipped)
 {
     node_t* n = agnode(g, agnameof(orign),1);
-    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
+    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
     agcopyattr (orign, n);
     if (shapeOf(orign) == SH_RECORD) {
 	int lbllen = strlen(ND_label(orign)->text);
@@ -968,7 +968,7 @@ static edge_t*
 cloneEdge (graph_t* g, node_t* tn, node_t* hn, edge_t* orig)
 {
     edge_t* e = agedge(g, tn, hn,NULL,1);
-    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
+    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
     agcopyattr (orig, e);
 
     return e;
@@ -1288,7 +1288,7 @@ make_flat_adj_edges(graph_t* g, path* P, edge_t** edges, int ind, int cnt, edge_
     attrs = NEW(attr_state_t);
     auxg = cloneGraph (g, attrs);
     subg = agsubg (auxg, "xxx",1);
-    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     agset (subg, "rank", "source");
     rightx = ND_coord(hn).x;
     leftx = ND_coord(tn).x;

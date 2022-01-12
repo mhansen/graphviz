@@ -16,6 +16,7 @@
  */
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -165,7 +166,7 @@ static Agraph_t *mkBlock(Agraph_t * g, bcstate * stp)
 
     stp->nComp++;
     sg = agsubg(g, blockName(agnameof(g), stp->nComp), 1);
-    agbindrec(sg, "info", sizeof(Agraphinfo_t), TRUE);
+    agbindrec(sg, "info", sizeof(Agraphinfo_t), true);
     NEXTBLK(sg) = stp->blks;
     stp->blks = sg;
     return sg;

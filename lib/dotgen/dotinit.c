@@ -13,6 +13,7 @@
 #include <dotgen/dot.h>
 #include <pack/pack.h>
 #include <dotgen/aspect.h>
+#include <stdbool.h>
 
 static void
 dot_init_subg(graph_t * g, graph_t* droot)
@@ -20,7 +21,7 @@ dot_init_subg(graph_t * g, graph_t* droot)
     graph_t* subg;
 
     if ((g != agroot(g)))
-	agbindrec(g, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	agbindrec(g, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     if (g == droot)
 	GD_dotroot(agroot(g)) = droot;
 	
@@ -33,7 +34,7 @@ dot_init_subg(graph_t * g, graph_t* droot)
 static void 
 dot_init_node(node_t * n)
 {
-    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);	//graph custom data
+    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//graph custom data
     common_init_node(n);
     gv_nodesize(n, GD_flip(agraphof(n)));
     alloc_elist(4, ND_in(n));
@@ -48,7 +49,7 @@ static void
 dot_init_edge(edge_t * e)
 {
     char *tailgroup, *headgroup;
-    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//graph custom data
+    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//graph custom data
     common_init_edge(e);
 
     ED_weight(e) = late_int(e, E_weight, 1, 0);
@@ -141,7 +142,7 @@ dot_cleanup_graph(graph_t * g)
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	dot_cleanup_graph(subg);
     }
-    if (! agbindrec(g, "Agraphinfo_t", 0, TRUE)) return;
+    if (! agbindrec(g, "Agraphinfo_t", 0, true)) return;
     free (GD_clust(g));
     free (GD_rankleader(g));
 
@@ -324,7 +325,7 @@ static void dotLayout(Agraph_t * g)
 static void
 initSubg (Agraph_t* sg, Agraph_t* g)
 {
-    agbindrec(sg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+    agbindrec(sg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     GD_drawing(sg) = NEW(layout_t);
     GD_drawing(sg)->quantum = GD_drawing(g)->quantum; 
     GD_drawing(sg)->dpi = GD_drawing(g)->dpi;
@@ -382,7 +383,7 @@ copyCluster (Agraph_t* scl, Agraph_t* cl)
     int nclust, j;
     Agraph_t* cg;
 
-    agbindrec(cl, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+    agbindrec(cl, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     GD_bb(cl) = GD_bb(scl);
     GD_label_pos(cl) = GD_label_pos(scl);
     memcpy(GD_border(cl), GD_border(scl), 4*sizeof(pointf));

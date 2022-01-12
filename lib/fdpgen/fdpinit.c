@@ -21,6 +21,7 @@
 #include    <fdpgen/tlayout.h>
 #include    <neatogen/neatoprocs.h>
 #include    <cgraph/agxbuf.h>
+#include    <stdbool.h>
 
 static void initialPositions(graph_t * g)
 {
@@ -63,7 +64,7 @@ static void initialPositions(graph_t * g)
  */
 static void init_edge(edge_t * e, attrsym_t * E_len)
 {
-    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//node custom data
+    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//node custom data
     ED_factor(e) = late_double(e, E_weight, 1.0, 0.0);
     ED_dist(e) = late_double(e, E_len, fdp_parms->K, 0.0);
 

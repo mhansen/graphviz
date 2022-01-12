@@ -231,7 +231,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, boolean * pinned)
 	if (!out) {
 	    sprintf(name + len, "%" PRISIZE_T, c_cnt);
 	    out = agsubg(g, name,1);
-	    agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
+	    agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 	    ccs[c_cnt] = out;
 	    c_cnt++;
 	    pin = true;
@@ -248,7 +248,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, boolean * pinned)
 	    continue;
 	sprintf(name + len, "%" PRISIZE_T, c_cnt);
 	out = agsubg(g, name,1);
-	agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
+	agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 	if (dfs(g, n, out, &stk) == SIZE_MAX) {
 	    error = 1;
 	    goto packerror;
@@ -319,7 +319,7 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
 	    continue;
 	sprintf(name + len, "%" PRISIZE_T, c_cnt);
 	out = agsubg(g, name,1);
-	agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
+	agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 	if (dfs(g, n, out, &stk) == SIZE_MAX) {
 	    freeStk (&stk);
 	    free (ccs);
@@ -405,7 +405,7 @@ static void deriveClusters(Agraph_t* dg, Agraph_t * g)
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	if (isCluster(subg)) {
 	    dn = agnode(dg, agnameof(subg), 1);
-	    agbindrec (dn, NRECNAME, sizeof(ccgnodeinfo_t), TRUE);
+	    agbindrec (dn, NRECNAME, sizeof(ccgnodeinfo_t), true);
 	    clustOf(dn) = subg;
 	    for (n = agfstnode(subg); n; n = agnxtnode(subg, n)) {
 		if (dnodeOf(n)) {
@@ -440,7 +440,7 @@ static Agraph_t *deriveGraph(Agraph_t * g)
 	if (dnodeOf(n))
 	    continue;
 	dn = agnode(dg, agnameof(n), 1);
-	agbindrec (dn, NRECNAME, sizeof(ccgnodeinfo_t), TRUE);
+	agbindrec (dn, NRECNAME, sizeof(ccgnodeinfo_t), true);
 	nodeOf(dn) = n;
 	dnodeSet(n,dn);
     }
@@ -563,7 +563,7 @@ static Agraph_t *projectG(Agraph_t * subg, Agraph_t * g, int inCluster)
 	node_induce(proj, subg);
 	agcopyattr(subg, proj);
 	if (isCluster(proj)) {
-	    op = agbindrec(proj,ORIG_REC, sizeof(orig_t), 0);
+	    op = agbindrec(proj,ORIG_REC, sizeof(orig_t), false);
 	    op->orig = subg;
 	}
     }
@@ -649,7 +649,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
 	sprintf(name + len, "%" PRISIZE_T, c_cnt);
 	dout = agsubg(dg, name, 1);
 	out = agsubg(g, name, 1);
-	agbindrec(out, GRECNAME, sizeof(ccgraphinfo_t), FALSE);
+	agbindrec(out, GRECNAME, sizeof(ccgraphinfo_t), false);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(dg, dn, dout, &stk);
 	if (n_cnt == SIZE_MAX) {

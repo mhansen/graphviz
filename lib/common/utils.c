@@ -932,7 +932,7 @@ static node_t *clustNode(node_t * n, graph_t * cg, agxbuf * xb,
     agxbprint(xb, "__%d:%s", idx++, agnameof(cg));
 
     cn = agnode(agroot(cg), agxbuse(xb), 1);
-    agbindrec(cn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
+    agbindrec(cn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 
     SET_CLUST_NODE(cn);
 	agsubnode(cg,cn,1);
@@ -1011,7 +1011,7 @@ static edge_t *cloneEdge(edge_t * e, node_t * ct, node_t * ch)
 {
     graph_t *g = agraphof(ct);
     edge_t *ce = agedge(g, ct, ch,NULL,1);
-    agbindrec(ce, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
+    agbindrec(ce, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
     agcopyattr(e, ce);
     ED_compound(ce) = TRUE;
 
@@ -1171,7 +1171,7 @@ void processClusterEdges(graph_t * g)
 
     map = dtopen(&mapDisc, Dtoset);
     clg = agsubg(g, "__clusternodes",1);
-    agbindrec(clg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+    agbindrec(clg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     agxbinit(&xb, SMALLBUF, buf);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (IS_CLUST_NODE(n)) continue;
@@ -1188,7 +1188,7 @@ void processClusterEdges(graph_t * g)
     agclose(clg);
     if (num_cl_edges) {
 	cl_edge_t* cl_info;
-	cl_info = agbindrec(g, CL_EDGE_TAG, sizeof(cl_edge_t), FALSE);
+	cl_info = agbindrec(g, CL_EDGE_TAG, sizeof(cl_edge_t), false);
 	cl_info->n_cluster_edges = num_cl_edges;
     }
     dtclose(cmap);
@@ -1218,7 +1218,7 @@ static node_t *mapN(node_t * n, graph_t * clg)
     if ((nn = agfindnode(g, name)))
 	return nn;
     nn = agnode(g, name, 1);
-    agbindrec(nn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
+    agbindrec(nn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
     SET_CLUST_NODE(nn);
 
     /* Set all attributes to default */
@@ -1272,7 +1272,7 @@ void undoClusterEdges(graph_t * g)
 
     if (!ecnt) return;
     clg = agsubg(g, "__clusternodes",1);
-    agbindrec(clg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+    agbindrec(clg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     elist = N_NEW(ecnt, edge_t*);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
