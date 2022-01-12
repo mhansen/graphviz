@@ -21,4 +21,4 @@ tar xfz graphviz-${GV_VERSION}.tar.gz
 mkdir build
 cd build
 # ensure that MinGW tcl shell is used in order to find tcl functions
-../graphviz-${GV_VERSION}/configure --with-tclsh=${MSYSTEM_PREFIX}/bin/tclsh86
+../graphviz-${GV_VERSION}/configure ${CONFIGURE_OPTIONS:-} --with-tclsh=${MSYSTEM_PREFIX}/bin/tclsh86

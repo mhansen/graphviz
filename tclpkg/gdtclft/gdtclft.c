@@ -1252,15 +1252,12 @@ tclGdTextCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 /* 
  * Initialize the package.
  */
-#ifdef __CYGWIN__
-int Gdtclft_Init(Tcl_Interp * interp)
-#else
-#ifdef __WIN32__
+#ifdef GVDLL
 __declspec(dllexport) int Gdtclft_Init(Tcl_Interp *interp)
 #else
 int Gdtclft_Init(Tcl_Interp * interp)
 #endif
-#endif
+
 {
 #ifdef USE_TCL_STUBS
     if (Tcl_InitStubs(interp, TCL_VERSION, 0) == NULL) {
@@ -1278,14 +1275,10 @@ int Gdtclft_Init(Tcl_Interp * interp)
     return TCL_OK;
 }
 
-#ifdef __CYGWIN__
-int Gdtclft_SafeInit(Tcl_Interp * interp)
-#else
-#ifdef __WIN32__
+#ifdef GVDLL
 __declspec(dllexport) int Gdtclft_SafeInit(Tcl_Interp *interp)
 #else
 int Gdtclft_SafeInit(Tcl_Interp * interp)
-#endif
 #endif
 {
     Tcl_CmdInfo info;
