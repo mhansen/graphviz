@@ -34,52 +34,37 @@
 /// these to zero gives you a valid zero-length bit array.
 typedef struct {
   uint8_t *base; ///< start of the underlying allocated buffer
-  size_t size_bits; ///< used extent in bits
-  size_t capacity; ///< allocated extent in bytes
+  size_t size_bits; ///< extent in bits
 } bitarray_t;
 
-/// increase or decrease the element length of this array
-static inline int bitarray_resize(bitarray_t *self, size_t size_bits) {
+/// create an array of the given element length
+static inline int bitarray_new(bitarray_t *self, size_t size_bits) {
   assert(self != NULL);
+  assert(self->size_bits == 0);
 
-  // if this is less than the current size, just forget the excess elements
-  if (size_bits <= self->size_bits) {
-    self->size_bits = size_bits;
-    return 0;
-  }
+  size_t capacity = size_bits / 8 + (size_bits % 8 == 0 ? 0 : 1);
+  uint8_t *base = calloc(capacity, sizeof(self->base[0]));
+  if (UNLIKELY(base == NULL))
+    return ENOMEM;
 
-  // do we need to expand the backing buffer?
-  if (self->capacity * 8 < self->size_bits) {
-
-    size_t capacity = self->capacity == 0 ? 128 : self->capacity * 2;
-    if (capacity * 8 < self->size_bits)
-      capacity = self->size_bits / 8 + (self->size_bits % 8 == 0 ? 0 : 1);
-
-    uint8_t *base = realloc(self->base, capacity);
-    if (UNLIKELY(base == NULL))
-      return ENOMEM;
-
-    // clear the newly allocated bytes
-    memset(&base[self->capacity], 0, capacity - self->capacity);
-
-    self->base = base;
-    self->capacity = capacity;
-  }
-
+  self->base = base;
   self->size_bits = size_bits;
 
   return 0;
 }
 
-/// `bitarray_resize` for callers who cannot handle failure
-static inline void bitarray_resize_or_exit(bitarray_t *self, size_t size_bits) {
-  assert(self != NULL);
+/// `bitarray_new` for callers who cannot handle failure
+static inline bitarray_t bitarray_new_or_exit(size_t size_bits) {
 
-  int error = bitarray_resize(self, size_bits);
+  bitarray_t ba = {0};
+
+  int error = bitarray_new(&ba, size_bits);
   if (UNLIKELY(error != 0)) {
     fprintf(stderr, "out of memory\n");
     exit(EXIT_FAILURE);
   }
+
+  return ba;
 }
 
 /// get the value of the given element
