@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -29,7 +30,7 @@
 
 typedef enum { FORMAT_PIC, } format_type;
 
-static int onetime = TRUE;
+static bool onetime = true;
 static double Fontscale;
 
 /* There are a couple of ways to generate output: 
@@ -195,7 +196,7 @@ static void pic_begin_page(GVJ_t * job)
 
     if (onetime && job->rotation && (job->rotation != 90)) {
         unsupported("rotation");
-        onetime = FALSE;
+        onetime = false;
     }
     height = PS2INCH((double) (pbr.UR.y) - (double) (pbr.LL.y));
     width = PS2INCH((double) (pbr.UR.x) - (double) (pbr.LL.x));
