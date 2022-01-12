@@ -586,7 +586,7 @@ int init_nop(Agraph_t * g, int adjust)
 	}
     }
     else {
-	boolean didShift;
+	bool didShift;
 	if (translate && !haveBackground && (GD_bb(g).LL.x != 0||GD_bb(g).LL.y != 0))
 	    neato_translate (g);
 	didShift = neato_set_aspect(g);
