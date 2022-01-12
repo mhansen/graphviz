@@ -26,6 +26,7 @@
 #include <neatogen/kkutils.h>
 #include <common/pointset.h>
 #include <neatogen/sgd.h>
+#include <cgraph/bitarray.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 
@@ -188,7 +189,8 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
      /* array of arrays of node indices in each cluster */
     int **cs,*cn;
     int i,j,nclusters=0;
-    boolean* assigned = N_NEW(agnnodes(g), boolean);
+    bitarray_t assigned = {0};
+    bitarray_resize_or_exit(&assigned, agnnodes(g));
     cluster_data *cdata = GNEW(cluster_data);
 
     cdata->ntoplevel = agnnodes(g);
@@ -217,7 +219,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
                     ind++;
                 }
                 *c++=ind;
-                assigned[ind]=TRUE;
+                bitarray_set(assigned, ind, true);
                 cdata->ntoplevel--;
             }
         }
@@ -225,12 +227,12 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
     cdata->bb=N_GNEW(cdata->nclusters,boxf);
     cdata->toplevel=N_GNEW(cdata->ntoplevel,int);
     for(i=j=0;i<agnnodes(g);i++) {
-        if(!assigned[i]) {
+        if(!bitarray_get(assigned, i)) {
             cdata->toplevel[j++]=i;
         }
     }
     assert(cdata->ntoplevel==agnnodes(g)-cdata->nvars);
-    free (assigned);
+    bitarray_reset(&assigned);
     return cdata;
 }
 
