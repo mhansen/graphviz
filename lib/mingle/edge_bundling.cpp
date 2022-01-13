@@ -167,7 +167,7 @@ static double edge_compatibility_full(pedge e1, pedge e2){
   assert(ca > -0.001);
 
   /* scale compatibility */
-  cs = 2 / (std::max(len1, len2) / len + len / MIN(len1, len2));
+  cs = 2 / (std::max(len1, len2) / len + len / std::min(len1, len2));
   assert(cs > -0.001 && cs < 1.001);
  
   /* position compatibility */
