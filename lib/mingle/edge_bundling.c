@@ -409,8 +409,8 @@ static void pedge_print(char *comments, pedge e){
 
 pedge pedge_realloc(pedge e, int n){
   if (n <= e->npoints) return e;
-  e->x = REALLOC(e->x, e->dim*n*sizeof(double));
-  if (e->wgts) e->wgts = REALLOC(e->wgts, (n-1)*sizeof(double));
+  e->x = (double*)REALLOC(e->x, e->dim*n*sizeof(double));
+  if (e->wgts) e->wgts = (double*)REALLOC(e->wgts, (n-1)*sizeof(double));
   e->len = n;
   return e;
 }
@@ -418,12 +418,12 @@ pedge pedge_wgts_realloc(pedge e, int n){
   /* diff from pedge_alloc: allocate wgts if do not exist and initialize to wgt */
   int i;
   if (n <= e->npoints) return e;
-  e->x = REALLOC(e->x, e->dim*n*sizeof(double));
+  e->x = (double*)REALLOC(e->x, e->dim*n*sizeof(double));
   if (!(e->wgts)){
-    e->wgts = REALLOC(e->wgts, (n-1)*sizeof(double));
+    e->wgts = (double*)REALLOC(e->wgts, (n-1)*sizeof(double));
     for (i = 0; i < e->npoints; i++) e->wgts[i] = e->wgt;
   } else {
-    e->wgts = REALLOC(e->wgts, (n-1)*sizeof(double));
+    e->wgts = (double*)REALLOC(e->wgts, (n-1)*sizeof(double));
   }
   e->len = n;
   return e;
@@ -439,7 +439,7 @@ pedge pedge_double(pedge e){
   assert(npoints >= 2);
   if (npoints*2-1 > len){
     len = 3*npoints;
-    e->x = REALLOC(e->x, dim*len*sizeof(double));
+    e->x = (double*)REALLOC(e->x, dim*len*sizeof(double));
   }
   x = e->x;
 
