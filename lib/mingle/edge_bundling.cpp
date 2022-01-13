@@ -467,7 +467,8 @@ static void edge_tension_force(std::vector<double> &force, pedge e) {
   }
 }
 
-static void  edge_attraction_force(double similarity, pedge e1, pedge e2, double *force){
+static void edge_attraction_force(double similarity, pedge e1, pedge e2,
+                                  std::vector<double> &force) {
   /* attrractive force from x2 applied to x1 */
   double *x1 = e1->x, *x2 = e2->x;
   int dim = e1->dim;
@@ -509,7 +510,6 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
   int *ia = A->ia, *ja = A->ja, iter = 0;
   double *a = (double*) A->a;
   pedge e1, e2;
-  double *force_a;
   int np = edges[0]->npoints, dim = edges[0]->dim;
   double *x;
   double step = step0;
@@ -519,7 +519,7 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
     fprintf(stderr, "total interaction pairs = %d out of %d, avg neighbors per edge = %f\n",A->nz, A->m*A->m, A->nz/(double) A->m);
 
   std::vector<double> force_t(dim * np);
-  force_a = (double*)MALLOC(sizeof(double)*dim*np);
+  std::vector<double> force_a(dim * np);
   while (step > 0.001 && iter < maxit){
     start = clock();
     iter++;
@@ -536,7 +536,7 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
 	edge_attraction_force(a[j], e1, e2, force_a);
       }
       fnorm_t = std::max(SMALL, norm(dim * (np - 2), &force_t.data()[1 * dim]));
-      fnorm_a = std::max(SMALL, norm(dim * (np - 2), &force_a[1 * dim]));
+      fnorm_a = std::max(SMALL, norm(dim * (np - 2), &force_a.data()[1 * dim]));
       edge_length = e1->edge_length;
 
       for (j = 1; j <= np - 2; j++){
@@ -561,7 +561,6 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
 
   }
 
-  free(force_a);
   return edges;
 }
 
