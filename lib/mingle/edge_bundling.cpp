@@ -125,7 +125,8 @@ static double edge_compatibility_full(pedge e1, pedge e2){
    */
   double *u1, *v1, *u2, *v2, *u, dist1, dist2, len1, len2, len;
   double tmp, ca, cp, cs;
-  int dim = e1->dim, flipped = FALSE, i;
+  int dim = e1->dim, i;
+  bool flipped = false;
 
   u1 = e1->x;
   v1 = e1->x+e1->npoints*dim-dim;
@@ -138,7 +139,7 @@ static double edge_compatibility_full(pedge e1, pedge e2){
     u2 = v2;
     v2 = u;
     dist1 = dist2;
-    flipped = TRUE;
+    flipped = true;
   }
   len1 = std::max(dist(dim, u1, v1), SMALL);
   len2 = std::max(dist(dim, u2, v2), SMALL);
