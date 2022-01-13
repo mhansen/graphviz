@@ -14,7 +14,7 @@ if WITH_ANN
 noinst_LTLIBRARIES = libmingle_C.la
 endif
 
-libmingle_C_la_SOURCES = edge_bundling.c ink.cpp agglomerative_bundling.c \
+libmingle_C_la_SOURCES = edge_bundling.cpp ink.cpp agglomerative_bundling.c \
   nearest_neighbor_graph.cpp nearest_neighbor_graph_ann.cpp
 
 EXTRA_DIST = minglelib.vcxproj*
