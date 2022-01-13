@@ -535,8 +535,8 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
 	e2 = edges[ja[j]];
 	edge_attraction_force(a[j], e1, e2, force_a);
       }
-      fnorm_t = std::max(SMALL, norm(dim * (np - 2), &force_t.data()[1 * dim]));
-      fnorm_a = std::max(SMALL, norm(dim * (np - 2), &force_a.data()[1 * dim]));
+      fnorm_t = std::max(SMALL, norm(dim * (np - 2), &force_t.data()[dim]));
+      fnorm_a = std::max(SMALL, norm(dim * (np - 2), &force_a.data()[dim]));
       edge_length = e1->edge_length;
 
       for (j = 1; j <= np - 2; j++){
