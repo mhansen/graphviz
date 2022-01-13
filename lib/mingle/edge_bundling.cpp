@@ -22,6 +22,7 @@
 #include <mingle/ink.h>
 #include <mingle/agglomerative_bundling.h>
 #include <string.h>
+#include <vector>
 
 #define SMALL 1.e-10
 
@@ -448,7 +449,7 @@ pedge pedge_double(pedge e){
   return e;
 }
 
-static void edge_tension_force(double *force, pedge e){
+static void edge_tension_force(std::vector<double> &force, pedge e) {
   double *x = e->x;
   int dim = e->dim;
   int np = e->npoints;
@@ -508,7 +509,7 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
   int *ia = A->ia, *ja = A->ja, iter = 0;
   double *a = (double*) A->a;
   pedge e1, e2;
-  double *force_t, *force_a;
+  double *force_a;
   int np = edges[0]->npoints, dim = edges[0]->dim;
   double *x;
   double step = step0;
@@ -517,7 +518,7 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
   if (Verbose > 1)
     fprintf(stderr, "total interaction pairs = %d out of %d, avg neighbors per edge = %f\n",A->nz, A->m*A->m, A->nz/(double) A->m);
 
-  force_t = (double*)MALLOC(sizeof(double)*dim*np);
+  std::vector<double> force_t(dim * np);
   force_a = (double*)MALLOC(sizeof(double)*dim*np);
   while (step > 0.001 && iter < maxit){
     start = clock();
@@ -534,7 +535,7 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
 	e2 = edges[ja[j]];
 	edge_attraction_force(a[j], e1, e2, force_a);
       }
-      fnorm_t = std::max(SMALL, norm(dim * (np - 2), &force_t[1 * dim]));
+      fnorm_t = std::max(SMALL, norm(dim * (np - 2), &force_t.data()[1 * dim]));
       fnorm_a = std::max(SMALL, norm(dim * (np - 2), &force_a[1 * dim]));
       edge_length = e1->edge_length;
 
@@ -560,7 +561,6 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
 
   }
 
-  free(force_t);
   free(force_a);
   return edges;
 }
