@@ -320,60 +320,6 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
   fprintf(fp,"}\n");
 }
 
-void pedge_export_mma(FILE *fp, int ne, pedge *edges){
-  pedge edge;
-  double *x;
-  int i, j, k, dim;
-  
-  fprintf(fp,"Graphics[{");
-  /* points */
-  fprintf(fp,"{Red, ");
-  for (i = 0; i < ne; i++){
-    if (i != 0) fprintf(fp,",");
-    fprintf(fp,"Point[");
-    edge = edges[i];
-    x = edge->x;
-    dim = edge->dim;
-    fprintf(fp, "{");
-    for (j = 0; j < edge->npoints; j+= edge->npoints - 1){
-      if (j != 0) fprintf(fp,",");
-      fprintf(fp, "{");
-      for (k = 0; k < dim; k++) {
-	if (k != 0) fprintf(fp,",");
-	fprintf(fp, "%f", x[j*dim+k]);
-      }
-      fprintf(fp, "}");
-    }
-    fprintf(fp, "}");
-    fprintf(fp, "]");
-  }
-  fprintf(fp,"},\n{GrayLevel[0.5,0.2], ");
-
-  /* spline */
-  for (i = 0; i < ne; i++){
-    if (i != 0) fprintf(fp,",");
-    fprintf(fp,"Spline[");
-    edge = edges[i];
-    x = edge->x;
-    dim = edge->dim;
-    fprintf(fp, "{");
-    for (j = 0; j < edge->npoints; j++){
-      if (j != 0) fprintf(fp,",");
-      fprintf(fp, "{");
-      for (k = 0; k < dim; k++) {
-	if (k != 0) fprintf(fp,",");
-	fprintf(fp, "%f", x[j*dim+k]);
-      }
-      fprintf(fp, "}");
-    }
-    fprintf(fp, "}");
-    fprintf(fp, ", Bezier]");
-  }
-  fprintf(fp,"}");
-
-  fprintf(fp,"}]\n");
-}
-
 #ifdef DEBUG
 static void pedge_print(char *comments, pedge e){
   int i, j, dim;

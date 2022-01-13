@@ -31,7 +31,6 @@ typedef struct pedge_struct* pedge;
 pedge* edge_bundling(SparseMatrix A, int dim, double *x, int maxit_outer, double K, int method, int nneighbor, int compatibility_method, int max_recursion, double angle_param, double angle, int open_gl);
 void pedge_delete(pedge e);
 pedge pedge_wgts_realloc(pedge e, int n);
-void pedge_export_mma(FILE *fp, int ne, pedge *edges);
 void pedge_export_gv(FILE *fp, int ne, pedge *edges);
 enum {METHOD_NONE = -1, METHOD_FD, METHOD_INK_AGGLOMERATE, METHOD_INK};
 enum {COMPATIBILITY_DIST = 0, COMPATIBILITY_FULL};
