@@ -392,13 +392,6 @@ static void pedge_print(char *comments, pedge e){
 }
 #endif
 
-pedge pedge_realloc(pedge e, int n){
-  if (n <= e->npoints) return e;
-  e->x = (double*)REALLOC(e->x, e->dim*n*sizeof(double));
-  if (e->wgts) e->wgts = (double*)REALLOC(e->wgts, (n-1)*sizeof(double));
-  e->len = n;
-  return e;
-}
 pedge pedge_wgts_realloc(pedge e, int n){
   /* diff from pedge_alloc: allocate wgts if do not exist and initialize to wgt */
   int i;
