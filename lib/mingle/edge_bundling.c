@@ -570,6 +570,8 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
       edges_global = edges;
       drawScene();
     }
+#else
+    (void)open_gl;
 #endif
 
   }
