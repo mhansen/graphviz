@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <algorithm>
 #include <common/types.h>
 #include <common/globals.h>
 #include <sparse/general.h>
@@ -124,7 +125,7 @@ static double edge_compatibility(pedge e1, pedge e2){
   }
   len1 = dist(dim, u1, v1);
   len2 = dist(dim, u2, v2);
-  dist1 = MAX(0.1, dist1/(len1+len2+0.0001*dist1));
+  dist1 = std::max(0.1, dist1 / (len1 + len2 + 0.0001 * dist1));
   if (flipped){
     return -1/dist1; 
   } else {
@@ -154,8 +155,8 @@ static double edge_compatibility_full(pedge e1, pedge e2){
     dist1 = dist2;
     flipped = TRUE;
   }
-  len1 = MAX(dist(dim, u1, v1), SMALL);
-  len2 = MAX(dist(dim, u2, v2), SMALL);
+  len1 = std::max(dist(dim, u1, v1), SMALL);
+  len2 = std::max(dist(dim, u2, v2), SMALL);
   len = 0.5*(len1+len2);
 
   /* angle compatibility */
@@ -166,7 +167,7 @@ static double edge_compatibility_full(pedge e1, pedge e2){
   assert(ca > -0.001);
 
   /* scale compatibility */
-  cs = 2/(MAX(len1,len2)/len + len/MIN(len1, len2));
+  cs = 2 / (std::max(len1, len2) / len + len / MIN(len1, len2));
   assert(cs > -0.001 && cs < 1.001);
  
   /* position compatibility */
@@ -253,7 +254,7 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
     edge = edges[i];
     if (edge->wgts){
       for (j = 0; j < edge->npoints - 1; j++){
-	maxwgt = MAX(maxwgt, edge->wgts[j]);
+	maxwgt = std::max(maxwgt, edge->wgts[j]);
       }
     }
   }
@@ -473,7 +474,7 @@ static void edge_tension_force(double *force, pedge e){
 
   /* tention force = ((np-1)*||2x-xleft-xright||)/||e||, so the force is norminal and unitless
   */
-  s =  (np-1)/MAX(SMALL, e->edge_length);
+  s =  (np - 1) / std::max(SMALL, e->edge_length);
   for (i = 1; i <= np - 2; i++){
     left = i - 1;
     right = i + 1;
@@ -550,8 +551,8 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
 	e2 = edges[ja[j]];
 	edge_attraction_force(a[j], e1, e2, force_a);
       }
-      fnorm_t = MAX(SMALL, norm(dim*(np - 2), &force_t[1*dim]));
-      fnorm_a = MAX(SMALL, norm(dim*(np - 2), &force_a[1*dim]));
+      fnorm_t = std::max(SMALL, norm(dim * (np - 2), &force_t[1 * dim]));
+      fnorm_a = std::max(SMALL, norm(dim * (np - 2), &force_a[1 * dim]));
       edge_length = e1->edge_length;
 
       for (j = 1; j <= np - 2; j++){
