@@ -51,11 +51,11 @@ static double dist(int dim, double *x, double *y){
 pedge pedge_new(int np, int dim, double *x){
   pedge e;
 
-  e = MALLOC(sizeof(struct pedge_struct));
+  e = (pedge)MALLOC(sizeof(struct pedge_struct));
   e->npoints = np;
   e->dim = dim;
   e->len = np;
-  e->x = MALLOC(dim*e->len*sizeof(double));
+  e->x = (double*)MALLOC(dim*e->len*sizeof(double));
   memcpy(e->x, x, dim*e->len*sizeof(double));
   e->edge_length = dist(dim, &x[0*dim], &x[(np-1)*dim]);
   e->wgt = 1.;
@@ -67,15 +67,15 @@ pedge pedge_wgt_new(int np, int dim, double *x, double wgt){
   pedge e;
   int i;
 
-  e = MALLOC(sizeof(struct pedge_struct));
+  e = (pedge)MALLOC(sizeof(struct pedge_struct));
   e->npoints = np;
   e->dim = dim;
   e->len = np;
-  e->x = MALLOC(dim*e->len*sizeof(double));
+  e->x = (double*)MALLOC(dim*e->len*sizeof(double));
   memcpy(e->x, x, dim*e->len*sizeof(double));
   e->edge_length = dist(dim, &x[0*dim], &x[(np-1)*dim]);
   e->wgt = wgt;
-  e->wgts = MALLOC(sizeof(double)*(np - 1));
+  e->wgts = (double*)MALLOC(sizeof(double)*(np - 1));
   for (i = 0; i < np - 1; i++) e->wgts[i] = wgt;
   return e;
 
@@ -92,7 +92,7 @@ pedge pedge_flip(pedge e){
   int i, dim = e->dim;
   int n = e->npoints;
 
-  y = MALLOC(sizeof(double)*e->dim);
+  y = (double*)MALLOC(sizeof(double)*e->dim);
   for (i = 0; i < e->npoints/2; i++){
     memcpy(y, &x[i*dim], sizeof(double)*dim);
     memcpy(&x[(n-1-i)*dim], &x[i*dim], sizeof(double)*dim);
@@ -533,8 +533,8 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
   if (Verbose > 1)
     fprintf(stderr, "total interaction pairs = %d out of %d, avg neighbors per edge = %f\n",A->nz, A->m*A->m, A->nz/(double) A->m);
 
-  force_t = MALLOC(sizeof(double)*dim*np);
-  force_a = MALLOC(sizeof(double)*dim*np);
+  force_t = (double*)MALLOC(sizeof(double)*dim*np);
+  force_a = (double*)MALLOC(sizeof(double)*dim*np);
   while (step > 0.001 && iter < maxit){
     start = clock();
     iter++;
@@ -704,7 +704,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
   int flag; 
 
   assert(A->n == ne);
-  edges = MALLOC(sizeof(pedge)*ne);
+  edges = (pedge*)MALLOC(sizeof(pedge)*ne);
 
   for (i = 0; i < ne; i++){
     edges[i] = pedge_new(2, dim, &x[dim*2*i]);
