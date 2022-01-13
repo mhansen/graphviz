@@ -86,23 +86,6 @@ void pedge_delete(pedge e){
   free(e);
 }
 
-pedge pedge_flip(pedge e){
-  /* flip the polyline so that last point becomes the first, second last the second, etc*/
-  double *y;
-  double *x = e->x;
-  int i, dim = e->dim;
-  int n = e->npoints;
-
-  y = (double*)MALLOC(sizeof(double)*e->dim);
-  for (i = 0; i < e->npoints/2; i++){
-    memcpy(y, &x[i*dim], sizeof(double)*dim);
-    memcpy(&x[(n-1-i)*dim], &x[i*dim], sizeof(double)*dim);
-    memcpy(&x[i*dim], y, sizeof(double)*dim);
-  }
-  free(y);
-  return e;
-}
-
 static double edge_compatibility(pedge e1, pedge e2){
   /* two edges are u1->v1, u2->v2.
      return 1 if two edges are exactly the same, 0 if they are very different.

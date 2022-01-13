@@ -40,9 +40,6 @@ pedge pedge_new(int np, int dim, double *x);
 pedge pedge_wgt_new(int np, int dim, double *x, double wgt);
 pedge pedge_double(pedge e);
 
-/* flip the polyline so that last point becomes the first, second last the second, etc*/
-pedge pedge_flip(pedge e);
-
 #ifdef __cplusplus
 }
 #endif
