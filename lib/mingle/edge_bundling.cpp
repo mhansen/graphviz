@@ -92,7 +92,8 @@ static double edge_compatibility(pedge e1, pedge e2){
      return 1 if two edges are exactly the same, 0 if they are very different.
    */
   double *u1, *v1, *u2, *v2, *u, dist1, dist2, len1, len2;
-  int dim = e1->dim, flipped = FALSE;
+  int dim = e1->dim;
+  bool flipped = false;
 
   u1 = e1->x;
   v1 = e1->x+e1->npoints*dim-dim;
@@ -105,7 +106,7 @@ static double edge_compatibility(pedge e1, pedge e2){
     u2 = v2;
     v2 = u;
     dist1 = dist2;
-    flipped = TRUE;
+    flipped = true;
   }
   len1 = dist(dim, u1, v1);
   len2 = dist(dim, u2, v2);
