@@ -26,7 +26,7 @@ void find_ints(struct vertex vertex_list[],
     struct vertex *pt1, *pt2, *templ, **pvertex;
 
     input->ninters = 0;
-    all.first = all.final = NIL;
+    all.first = all.final = NULL;
     all.number = 0;
 
     pvertex = malloc((input->nvertices) * sizeof(struct vertex *));
@@ -53,7 +53,7 @@ void find_ints(struct vertex vertex_list[],
 		new = malloc(sizeof(struct active_edge));
 		if (all.number == 0) {
 		    all.first = new;
-		    new->last = NIL;
+		    new->last = NULL;
 		} /* insert */
 		else {
 		    all.final->next = new;
@@ -61,7 +61,7 @@ void find_ints(struct vertex vertex_list[],
 		}
 
 		new->name = templ;
-		new->next = NIL;
+		new->next = NULL;
 		templ->active = new;
 		all.final = new;
 		all.number++;
@@ -70,26 +70,26 @@ void find_ints(struct vertex vertex_list[],
 
 	    case 1:		/* backward edge, delete        */
 
-		if ((tempa = templ->active) == NIL) {
+		if ((tempa = templ->active) == NULL) {
 		    fprintf(stderr,
 			    "\n***ERROR***\n trying to delete a non line\n");
 		    exit(1);
 		}
 		if (all.number == 1)
-		    all.final = all.first = NIL;	/* delete the line */
+		    all.final = all.first = NULL;	/* delete the line */
 		else if (tempa == all.first) {
 		    all.first = all.first->next;
-		    all.first->last = NIL;
+		    all.first->last = NULL;
 		} else if (tempa == all.final) {
 		    all.final = all.final->last;
-		    all.final->next = NIL;
+		    all.final->next = NULL;
 		} else {
 		    tempa->last->next = tempa->next;
 		    tempa->next->last = tempa->last;
 		}
 		free(tempa);
 		all.number--;
-		templ->active = NIL;
+		templ->active = NULL;
 		break;		/* end of case 1        */
 
 	    default:
