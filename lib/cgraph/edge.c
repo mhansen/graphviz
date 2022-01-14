@@ -270,7 +270,7 @@ Agedge_t *agedge(Agraph_t * g, Agnode_t * t, Agnode_t * h, char *name,
     int have_id;
 
     have_id = agmapnametoid(g, AGEDGE, name, &my_id, FALSE);
-    if (have_id || (name == NULL && (NOT(cflag) || agisstrict(g)))) {
+    if (have_id || (name == NULL && (!cflag || agisstrict(g)))) {
 	/* probe for pre-existing edge */
 	Agtag_t key;
 	key = Tag;

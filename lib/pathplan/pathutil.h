@@ -16,12 +16,9 @@
 extern "C" {
 #endif
 
-#ifndef NOT
-#define NOT(x)	(!(x))
-#endif
 #ifndef FALSE
 #define FALSE	0
-#define TRUE	(NOT(FALSE))
+#define TRUE	(!FALSE)
 #endif
 
 #ifdef GVDLL

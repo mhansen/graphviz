@@ -77,7 +77,7 @@ static void objputrec(Agobj_t * obj, void *arg)
 	    firstrec->next = newrec;
 	}
     }
-    if (NOT(obj->tag.mtflock))
+    if (!obj->tag.mtflock)
 	set_data(obj, newrec, false);
 }
 

@@ -16,10 +16,6 @@ extern "C" {
 
 #include <stdbool.h>
 
-#ifndef NOT
-#define NOT(v) (!(v))
-#endif
-
 #ifndef FALSE
 #define	FALSE (0)
 #endif

@@ -182,7 +182,7 @@ int agisdirected(Agraph_t * g)
 
 int agisundirected(Agraph_t * g)
 {
-    return NOT(agisdirected(g));
+    return !agisdirected(g);
 }
 
 int agisstrict(Agraph_t * g)

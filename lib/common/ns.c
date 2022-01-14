@@ -554,7 +554,7 @@ static Agnode_t *treeupdate(Agnode_t * v, Agnode_t * w, int cutvalue, int dir)
 	if (v == agtail(e))
 	    d = dir;
 	else
-	    d = NOT(dir);
+	    d = !dir;
 	if (d)
 	    ED_cutvalue(e) += cutvalue;
 	else

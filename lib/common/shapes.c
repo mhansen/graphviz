@@ -3268,7 +3268,7 @@ static field_t *parse_reclbl(node_t * n, int LR, int flag, char *text)
 	    if (mode != 0 || !*reclblp)
 		return parse_error(rv, tmpport);
 	    mode = HASTABLE;
-	    if (!(rv->fld[fi++] = parse_reclbl(n, NOT(LR), FALSE, text)))
+	    if (!(rv->fld[fi++] = parse_reclbl(n, !LR, FALSE, text)))
 		return parse_error(rv, tmpport);
 	    break;
 	case '}':
@@ -3523,7 +3523,7 @@ static void record_init(node_t * n)
     int sides = BOTTOM | RIGHT | TOP | LEFT;
 
     /* Always use rankdir to determine how records are laid out */
-    flip = NOT(GD_realflip(agraphof(n)));
+    flip = !GD_realflip(agraphof(n));
     reclblp = ND_label(n)->text;
     len = strlen(reclblp);
     /* For some forgotten reason, an empty label is parsed into a space, so

@@ -35,9 +35,6 @@ extern "C" {
 #ifndef TRUE
 #define TRUE (!FALSE)
 #endif
-#ifndef NOT
-#define	NOT(x)			(!(x))
-#endif
 #ifndef NIL
 #define NIL(type)		((type)0)
 #endif
