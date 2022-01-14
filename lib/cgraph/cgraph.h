@@ -35,13 +35,6 @@ extern "C" {
 #ifndef TRUE
 #define TRUE (!FALSE)
 #endif
-#ifndef NIL
-#define NIL(type)		((type)0)
-#endif
-#define NILgraph		NIL(Agraph_t*)
-#define NILnode			NIL(Agnode_t*)
-#define NILedge			NIL(Agedge_t*)
-#define NILsym			NIL(Agsym_t*)
 
 typedef uint64_t IDTYPE;
 

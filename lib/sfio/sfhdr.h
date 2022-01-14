@@ -116,7 +116,6 @@ extern "C" {
 #define SF_LOCAL	00100000u	/* sentinel for a local call            */
 
 /* short-hands */
-#define NIL(t)		((t)0)
 #ifndef uchar
 #define uchar		unsigned char
 #endif

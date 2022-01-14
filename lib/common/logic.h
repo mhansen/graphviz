@@ -27,10 +27,6 @@ extern "C" {
 #define NOTUSED(var) (void) var
 #endif
 
-#ifndef NIL
-#define NIL(type) ((type)0)
-#endif
-
 #ifdef __cplusplus
 }
 #endif

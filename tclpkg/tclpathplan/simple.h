@@ -13,8 +13,6 @@
 #define MAXINTS  10000		/* modify this line to reflect the max no. of 
 				   intersections you want reported -- 50000 seems to break the program */
 
-#define NIL 0
-
 #define SLOPE(p,q) ( ( ( p.y ) - ( q.y ) ) / ( ( p.x ) - ( q.x ) ) )
 #define MAX(a,b) ( ( a ) > ( b ) ? ( a ) : ( b ) )
 
