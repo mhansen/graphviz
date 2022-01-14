@@ -567,7 +567,6 @@ static int writeEdgeName(Agedge_t * e, FILE * gxlFile)
 static void
 writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 {
-    Agattr_t *data;
     Agsym_t *sym;
     int cnt = 0;
 
@@ -575,7 +574,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 	if (writeEdgeName(obj, gxlFile))
 	    cnt++;
     }
-    data = (Agattr_t *) agattrrec(obj);
+    Agattr_t *data = agattrrec(obj);
     if (data) {
 	for (sym = dtfirst(defdict); sym; sym = dtnext(defdict, sym)) {
 	    if (!isGxlGrammar(sym->name)) {

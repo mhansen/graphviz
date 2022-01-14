@@ -234,9 +234,7 @@ Agattr_t *agattrrec(void *obj)
 
 static void addattr(Agraph_t * g, Agobj_t * obj, Agsym_t * sym)
 {
-    Agattr_t *attr;
-
-    attr = (Agattr_t *) agattrrec(obj);
+    Agattr_t *attr = agattrrec(obj);
     assert(attr != NULL);
     if (sym->id >= MINATTR)
 	attr->str = (char **) AGDISC(g, mem)->resize(AGCLOS(g, mem),
