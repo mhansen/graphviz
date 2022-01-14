@@ -281,15 +281,10 @@ static int cmppair(Dt_t * d, Agedge_t** key1, Agedge_t** key2, Dtdisc_t * disc)
 }
 
 static Dtdisc_t edgepair = {
-    offsetof(edgepair_t, key),
-    sizeof(Agedge_t*),
-    offsetof(edgepair_t, link),
-    NIL(Dtmake_f),
-    NIL(Dtfree_f),
-    (Dtcompar_f) cmppair,
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(edgepair_t, key),
+    .size = sizeof(Agedge_t *),
+    .link = offsetof(edgepair_t, link),
+    .comparf = (Dtcompar_f)cmppair,
 };
 
 /* cloneGraph:

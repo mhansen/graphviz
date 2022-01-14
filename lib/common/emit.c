@@ -3530,15 +3530,8 @@ static void free_string_entry(Dict_t * dict, char *key, Dtdisc_t * disc)
 
 static Dict_t *strings;
 static Dtdisc_t stringdict = {
-    0,				/* key  - the object itself */
-    0,				/* size - null-terminated string */
-    -1,				/* link - allocate separate holder objects  */
-    NIL(Dtmake_f),
-    (Dtfree_f) free_string_entry,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .link = -1, // link - allocate separate holder objects
+    .freef = (Dtfree_f)free_string_entry,
 };
 
 int emit_once(char *str)

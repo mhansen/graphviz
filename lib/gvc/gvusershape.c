@@ -566,15 +566,9 @@ static void usershape_close (Dict_t * dict, void * p, Dtdisc_t * disc)
 }
 
 static Dtdisc_t ImageDictDisc = {
-    offsetof(usershape_t, name), /* key */
-    -1,                         /* size */
-    0,                          /* link offset */
-    NIL(Dtmake_f),
-    usershape_close,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(usershape_t, name),
+    .size = -1,
+    .freef = usershape_close,
 };
 
 usershape_t *gvusershape_find(const char *name)

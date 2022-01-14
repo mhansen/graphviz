@@ -423,50 +423,26 @@ static int agedgeseqcmpf(Dict_t * d, void *arg_e0, void *arg_e1, Dtdisc_t * disc
 
 /* indexing for ordered traversal */
 Dtdisc_t Ag_mainedge_seq_disc = {
-    0,				/* pass object ptr      */
-    0,				/* size (ignored)       */
-    offsetof(Agedge_t,seq_link),/* use internal links	*/
-    NIL(Dtmake_f),
-    NIL(Dtfree_f),
-    agedgeseqcmpf,
-    NIL(Dthash_f),
-    agdictobjmem,
-    NIL(Dtevent_f)
+    .link = offsetof(Agedge_t, seq_link), // use internal links
+    .comparf = agedgeseqcmpf,
+    .memoryf = agdictobjmem,
 };
 
 Dtdisc_t Ag_subedge_seq_disc = {
-    0,				/* pass object ptr      */
-    0,				/* size (ignored)       */
-    -1,				/* use external holder objects */
-    NIL(Dtmake_f),
-    NIL(Dtfree_f),
-    agedgeseqcmpf,
-    NIL(Dthash_f),
-    agdictobjmem,
-    NIL(Dtevent_f)
+    .link = -1, // use external holder objects
+    .comparf = agedgeseqcmpf,
+    .memoryf = agdictobjmem,
 };
 
 /* indexing for random search */
 Dtdisc_t Ag_mainedge_id_disc = {
-    0,				/* pass object ptr      */
-    0,				/* size (ignored)       */
-    offsetof(Agedge_t,id_link),	/* use internal links	*/
-    NIL(Dtmake_f),
-    NIL(Dtfree_f),
-    agedgeidcmpf,
-    NIL(Dthash_f),
-    agdictobjmem,
-    NIL(Dtevent_f)
+    .link = offsetof(Agedge_t, id_link), // use internal links
+    .comparf = agedgeidcmpf,
+    .memoryf = agdictobjmem,
 };
 
 Dtdisc_t Ag_subedge_id_disc = {
-    0,				/* pass object ptr      */
-    0,				/* size (ignored)       */
-    -1,				/* use external holder objects */
-    NIL(Dtmake_f),
-    NIL(Dtfree_f),
-    agedgeidcmpf,
-    NIL(Dthash_f),
-    agdictobjmem,
-    NIL(Dtevent_f)
+    .link = -1, // use external holder objects
+    .comparf = agedgeidcmpf,
+    .memoryf = agdictobjmem,
 };

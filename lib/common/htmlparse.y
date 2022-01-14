@@ -103,26 +103,16 @@ free_citem(Dt_t* d, pitem* p,Dtdisc_t* ds)
 }
 
 static Dtdisc_t rowDisc = {
-    offsetof(pitem,u),
-    sizeof(void*),
-    offsetof(pitem,link),
-    NIL(Dtmake_f),
-    (Dtfree_f)free_ritem,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(pitem, u),
+    .size = sizeof(void *),
+    .link = offsetof(pitem, link),
+    .freef = (Dtfree_f)free_ritem,
 };
 static Dtdisc_t cellDisc = {
-    offsetof(pitem,u),
-    sizeof(void*),
-    offsetof(pitem,link),
-    NIL(Dtmake_f),
-    (Dtfree_f)free_item,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(pitem, u),
+    .size = sizeof(void *),
+    .link = offsetof(pitem, link),
+    .freef = (Dtfree_f)free_item,
 };
 
 typedef struct {
@@ -166,28 +156,13 @@ free_fspan(Dt_t* d, fspan* p, Dtdisc_t* ds)
 }
 
 static Dtdisc_t fstrDisc = {
-    0,
-    0,
-    offsetof(fitem,link),
-    NIL(Dtmake_f),
-    (Dtfree_f)free_item,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .link = offsetof(fitem, link),
+    .freef = (Dtfree_f)free_item,
 };
 
-
 static Dtdisc_t fspanDisc = {
-    0,
-    0,
-    offsetof(fspan,link),
-    NIL(Dtmake_f),
-    (Dtfree_f)free_item,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .link = offsetof(fspan, link),
+    .freef = (Dtfree_f)free_item,
 };
 
 /* appendFItemList:

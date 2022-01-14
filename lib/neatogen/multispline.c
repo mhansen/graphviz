@@ -94,15 +94,12 @@ static void freeItem(Dt_t * d, item * obj, Dtdisc_t * disc)
 }
 
 static Dtdisc_t itemdisc = {
-    offsetof(item, a),
-    2 * sizeof(int),
-    offsetof(item, link),
-    (Dtmake_f) newItem,
-    (Dtfree_f) freeItem,
-    (Dtcompar_f) cmpItem,
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(item, a),
+    .size = 2 * sizeof(int),
+    .link = offsetof(item, link),
+    .makef = (Dtmake_f)newItem,
+    .freef = (Dtfree_f)freeItem,
+    .comparf = (Dtcompar_f)cmpItem,
 };
 
 static void addMap(Dt_t * map, int a, int b, int t)
@@ -195,15 +192,12 @@ static void freeIpair(Dt_t * d, Ipair * obj, Dtdisc_t * disc)
 }
 
 static Dtdisc_t ipairdisc = {
-    offsetof(Ipair, i),
-    sizeof(int),
-    offsetof(Ipair, link),
-    (Dtmake_f) newIpair,
-    (Dtfree_f) freeIpair,
-    (Dtcompar_f) cmpIpair,
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(Ipair, i),
+    .size = sizeof(int),
+    .link = offsetof(Ipair, link),
+    .makef = (Dtmake_f)newIpair,
+    .freef = (Dtfree_f)freeIpair,
+    .comparf = (Dtcompar_f)cmpIpair,
 };
 
 static void vmapAdd(Dt_t * map, int i, int j)

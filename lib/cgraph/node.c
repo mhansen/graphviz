@@ -317,27 +317,16 @@ free_subnode (Dt_t* d, Agsubnode_t* sn, Dtdisc_t * disc)
 }
 
 Dtdisc_t Ag_subnode_id_disc = {
-    0,				/* pass object ptr  */
-    0,				/* size (ignored)   */
-    offsetof(Agsubnode_t, id_link),	/* link offset */
-    NIL(Dtmake_f),
-    NIL(Dtfree_f),
-    agsubnodeidcmpf,
-    NIL(Dthash_f),
-    agdictobjmem,
-    NIL(Dtevent_f)
+    .link = offsetof(Agsubnode_t, id_link), // link offset
+    .comparf = agsubnodeidcmpf,
+    .memoryf = agdictobjmem,
 };
 
 Dtdisc_t Ag_subnode_seq_disc = {
-    0,				/* pass object ptr  */
-    0,				/* size (ignored)   */
-    offsetof(Agsubnode_t, seq_link),	/* link offset */
-    NIL(Dtmake_f),
-    (Dtfree_f)free_subnode,
-    agsubnodeseqcmpf,
-    NIL(Dthash_f),
-    agdictobjmem,
-    NIL(Dtevent_f)
+    .link = offsetof(Agsubnode_t, seq_link), // link offset
+    .freef = (Dtfree_f)free_subnode,
+    .comparf = agsubnodeseqcmpf,
+    .memoryf = agdictobjmem,
 };
 
 static void agnodesetfinger(Agraph_t * g, Agnode_t * n, void *ignored)

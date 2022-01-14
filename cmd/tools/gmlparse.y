@@ -81,51 +81,31 @@ free_graph (Dt_t*d, gmlgraph* p, Dtdisc_t* ds)
 }
 
 static Dtdisc_t nodeDisc = {
-    offsetof(gmlnode,attrlist),
-    sizeof(Dt_t*),
-    offsetof(gmlnode,link),
-    NIL(Dtmake_f),
-    (Dtfree_f)free_node,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(gmlnode, attrlist),
+    .size = sizeof(Dt_t *),
+    .link = offsetof(gmlnode, link),
+    .freef = (Dtfree_f)free_node,
 };
 
 static Dtdisc_t edgeDisc = {
-    offsetof(gmledge,attrlist),
-    sizeof(Dt_t*),
-    offsetof(gmledge,link),
-    NIL(Dtmake_f),
-    (Dtfree_f)free_edge,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(gmledge, attrlist),
+    .size = sizeof(Dt_t *),
+    .link = offsetof(gmledge, link),
+    .freef = (Dtfree_f)free_edge,
 };
 
 static Dtdisc_t attrDisc = {
-    offsetof(gmlattr,name),
-    sizeof(char*),
-    offsetof(gmlattr,link),
-    NIL(Dtmake_f),
-    (Dtfree_f)free_attr,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(gmlattr, name),
+    .size = sizeof(char *),
+    .link = offsetof(gmlattr, link),
+    .freef = (Dtfree_f)free_attr,
 };
 
 static Dtdisc_t graphDisc = {
-    offsetof(gmlgraph,nodelist),
-    sizeof(Dt_t*),
-    offsetof(gmlgraph,link),
-    NIL(Dtmake_f),
-    (Dtfree_f)free_graph,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(gmlgraph, nodelist),
+    .size = sizeof(Dt_t *),
+    .link = offsetof(gmlgraph, link),
+    .freef = (Dtfree_f)free_graph,
 };
 
 static void

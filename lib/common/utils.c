@@ -993,15 +993,12 @@ static void freeItem(Dt_t * d, item * obj, Dtdisc_t * disc)
 }
 
 static Dtdisc_t mapDisc = {
-    offsetof(item, p),
-    sizeof(2 * sizeof(void *)),
-    offsetof(item, link),
-    (Dtmake_f) newItem,
-    (Dtfree_f) freeItem,
-    (Dtcompar_f) cmpItem,
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(item, p),
+    .size = sizeof(2 * sizeof(void *)),
+    .link = offsetof(item, link),
+    .makef = (Dtmake_f)newItem,
+    .freef = (Dtfree_f)freeItem,
+    .comparf = (Dtcompar_f)cmpItem,
 };
 
 /* cloneEdge:
@@ -1876,15 +1873,10 @@ static void free_clust (Dt_t* dt, clust_t* clp, Dtdisc_t* disc)
 }
 
 static Dtdisc_t strDisc = {
-    offsetof(clust_t,name),
-    -1,
-    offsetof(clust_t,link),
-    NIL(Dtmake_f),
-    (Dtfree_f)free_clust,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(clust_t, name),
+    .size = -1,
+    .link = offsetof(clust_t, link),
+    .freef = (Dtfree_f)free_clust,
 };
 
 static void fillMap (Agraph_t* g, Dt_t* map)

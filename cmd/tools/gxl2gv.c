@@ -155,15 +155,11 @@ static void free_nitem(Dt_t * d, namev_t * np, Dtdisc_t * disc)
 }
 
 static Dtdisc_t nameDisc = {
-    offsetof(namev_t, name),
-    -1,
-    offsetof(namev_t, link),
-    (Dtmake_f) make_nitem,
-    (Dtfree_f) free_nitem,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(namev_t, name),
+    .size = -1,
+    .link = offsetof(namev_t, link),
+    .makef = (Dtmake_f)make_nitem,
+    .freef = (Dtfree_f)free_nitem,
 };
 
 static userdata_t *genUserdata(void)

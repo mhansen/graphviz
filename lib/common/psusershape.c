@@ -28,15 +28,9 @@ static void ps_image_free(Dict_t * dict, usershape_t * p, Dtdisc_t * disc)
 }
 
 static Dtdisc_t ImageDictDisc = {
-    offsetof(usershape_t, name),/* key */
-    -1,				/* size */
-    0,				/* link offset */
-    NIL(Dtmake_f),
-    (Dtfree_f) ps_image_free,
-    NIL(Dtcompar_f),
-    NIL(Dthash_f),
-    NIL(Dtmemory_f),
-    NIL(Dtevent_f)
+    .key = offsetof(usershape_t, name),
+    .size = -1,
+    .freef = (Dtfree_f)ps_image_free,
 };
 
 static usershape_t *user_init(const char *str)
