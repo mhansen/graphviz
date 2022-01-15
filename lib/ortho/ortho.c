@@ -1222,10 +1222,10 @@ static int edgecmp(epair_t* e0, epair_t* e1)
     return e0->d - e1->d;
 }
 
-static boolean spline_merge(node_t * n)
+static bool spline_merge(node_t * n)
 {
     (void)n;
-    return FALSE;
+    return false;
 }
 
 static boolean swap_ends_p(edge_t * e)

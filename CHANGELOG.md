@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `insidefn` member of the `shape_functions` struct must now
   be a pointer to a function returning a C99 `bool` instead of a
   Graphviz-specific `boolean`.
+- **Breaking**: The `splineMerge` member of the `splineInfo` struct must now be
+  a pointer to a function returning a C99 `bool` instead of a Graphviz-specific
+  `boolean`.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A
   drop-in replacement is `SHRT_MAX` in the C standard library’s limits.h.
 - **Breaking**: Graphviz headers no lnger define `NIL` macros. A drop-in

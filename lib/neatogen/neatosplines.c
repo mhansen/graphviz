@@ -24,10 +24,10 @@
 #endif
 
 
-static boolean spline_merge(node_t * n)
+static bool spline_merge(node_t * n)
 {
     (void)n;
-    return FALSE;
+    return false;
 }
 
 static boolean swap_ends_p(edge_t * e)

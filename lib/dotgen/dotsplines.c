@@ -147,7 +147,7 @@ getmainedge(edge_t * e)
     return le;
 }
 
-static boolean spline_merge(node_t * n)
+static bool spline_merge(node_t * n)
 {
     return ND_node_type(n) == VIRTUAL
 	    && (ND_in(n).size > 1 || ND_out(n).size > 1);
@@ -377,7 +377,7 @@ static void _dot_splines(graph_t * g, int normalize)
 		ED_label(fe)->pos = ND_coord(n);
 		ED_label(fe)->set = TRUE;
 	    }
-	    if (ND_node_type(n) != NORMAL && sinfo.splineMerge(n) == FALSE)
+	    if (ND_node_type(n) != NORMAL && !sinfo.splineMerge(n))
 		continue;
 	    for (k = 0; (e = ND_out(n).list[k]); k++) {
 		if (ED_edge_type(e) == FLATORDER || ED_edge_type(e) == IGNORED)
@@ -1872,7 +1872,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	tn = agtail(e);
 	hn = aghead(e);
 	b = tend.nb = maximal_bbox(g, sp, tn, NULL, e);
-	beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn) != FALSE);
+	beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn));
 	b.UR.y = tend.boxes[tend.boxn - 1].UR.y;
 	b.LL.y = tend.boxes[tend.boxn - 1].LL.y;
 	b = makeregularend(b, BOTTOM,
@@ -1899,7 +1899,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	        continue;
 	    }
 	    hend.nb = maximal_bbox(g, sp, hn, e, ND_out(hn).list[0]);
-	    endpath(P, e, REGULAREDGE, &hend, spline_merge(aghead(e)) != FALSE);
+	    endpath(P, e, REGULAREDGE, &hend, spline_merge(aghead(e)));
 	    b = makeregularend(hend.boxes[hend.boxn - 1], TOP,
 	    	       ND_coord(hn).y + GD_rank(g)[ND_rank(hn)].ht2);
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
@@ -1943,7 +1943,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    hn = aghead(e);
 	    boxes_clear(&boxes);
 	    tend.nb = maximal_bbox(g, sp, tn, ND_in(tn).list[0], e);
-	    beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn) != FALSE);
+	    beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn));
 	    b = makeregularend(tend.boxes[tend.boxn - 1], BOTTOM,
 	    	       ND_coord(tn).y - GD_rank(g)[ND_rank(tn)].ht1);
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
@@ -1954,7 +1954,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	boxes_append(&boxes, rank_box(sp, g, ND_rank(tn)));
 	b = hend.nb = maximal_bbox(g, sp, hn, e, NULL);
 	endpath(P, hackflag ? &fwdedgeb.out : e, REGULAREDGE, &hend,
-	        spline_merge(aghead(e)) != FALSE);
+	        spline_merge(aghead(e)));
 	b.UR.y = hend.boxes[hend.boxn - 1].UR.y;
 	b.LL.y = hend.boxes[hend.boxn - 1].LL.y;
 	b = makeregularend(b, TOP,
