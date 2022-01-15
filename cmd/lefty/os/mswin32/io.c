@@ -14,6 +14,7 @@
 #include "g.h"
 #include "leftyio.h"
 #include "mem.h"
+#include <stdbool.h>
 
 io_t *iop;
 int ion;
@@ -79,7 +80,7 @@ int IOopen (char *kind, char *name, char *mode, char *fmt) {
     switch (type) {
     case IO_FILE:
         if (!(p->ifp = p->ofp = fopen (name, mode))) {
-            path = buildpath (name, FALSE);
+            path = buildpath (name, false);
             if (!path || !(p->ifp = p->ofp = fopen (path, mode)))
                 return -1;
         }
@@ -88,7 +89,7 @@ int IOopen (char *kind, char *name, char *mode, char *fmt) {
         if (!fmt)
             fmt = "%e";
         if (
-            !(path = buildpath (name, TRUE)) ||
+            !(path = buildpath (name, true)) ||
             !(command = buildcommand (path, NULL, -1, -1, fmt))
         )
             return -1;

@@ -28,6 +28,7 @@
 #include "gmap2l.h"
 #endif
 #include "internal.h"
+#include <stdbool.h>
 #include <string.h>
 #ifndef FEATURE_MS
 #include <sys/time.h>
@@ -621,7 +622,7 @@ int Iload (int argc, lvar_t *argv) {
             fp = stdin;
         else {
             fp = NULL;
-            if ((fn = buildpath (fn, FALSE)))
+            if ((fn = buildpath (fn, false)))
                 fp = fopen (fn, "r");
         }
         if (fp) {

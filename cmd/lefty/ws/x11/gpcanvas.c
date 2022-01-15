@@ -15,6 +15,7 @@
 #include "gcommon.h"
 #include "mem.h"
 #include <math.h>
+#include <stdbool.h>
 #include <string.h>
 
 #define PSDPI 300.0
@@ -67,7 +68,7 @@ int GPcreatewidget (
     int color, lflag, ai, i, x, y, w, h, r, g, b;
 
     if (
-        !(path = buildpath ("lefty.psp", 0)) ||
+        !(path = buildpath ("lefty.psp", false)) ||
         !(pfp = fopen (path, "r"))
     ) {
         Gerr (POS, G_ERRCANNOTOPENFILE, "lefty.psp");

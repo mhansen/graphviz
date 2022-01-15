@@ -99,7 +99,7 @@ int init (char *aout) {
 #else
     if (!strchr (aout, PATHDEL)) {
         leftypath = "";
-        if ((s1 = buildpath (aout, TRUE)))
+        if ((s1 = buildpath (aout, true)))
             aout = strdup (s1);
     } else
         aout = strdup (aout);
@@ -156,13 +156,13 @@ void term (void) {
 
     returns the first occurance of that file or NULL
 */
-char *buildpath (char *file, int flag) {
+char *buildpath (char *file, bool flag) {
     struct stat statbuf;
     char *s1, *s2;
     int mode, pathi, i;
 
 #ifdef FEATURE_NETSCAPE
-    if (flag == FALSE && innetscape) {
+    if (!flag && innetscape) {
 #ifdef FEATURE_WIN32
         HWND hwnd;
         char *s;
