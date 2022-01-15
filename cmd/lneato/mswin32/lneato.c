@@ -24,7 +24,7 @@ static char *shellpath;
 static char *buildpath (char *);
 static void panic (char *, int, char *, char *, ...);
 
-int WINAPI WinMain (HANDLE hInstance, HANDLE hPrevInstance,
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
         LPSTR lpCmdLine, int nCmdShow) {
     HANDLE handle;
     char cmd[256];
