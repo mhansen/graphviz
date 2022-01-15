@@ -37,7 +37,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_init(SparseMatrix A
 
   if (!A) return NULL;
   assert(A->m == n);
-  grid = MALLOC(sizeof(struct Agglomerative_Ink_Bundling_struct));
+  grid = (Agglomerative_Ink_Bundling)MALLOC(sizeof(struct Agglomerative_Ink_Bundling_struct));
   grid->level = level;
   grid->n = n;
   grid->A = A;
@@ -46,7 +46,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_init(SparseMatrix A
   grid->R = NULL;
   grid->next = NULL;
   grid->prev = NULL;
-  grid->inks = MALLOC(sizeof(double)*(A->m));
+  grid->inks = (double*)MALLOC(sizeof(double)*(A->m));
   grid->edges = edges;
   grid->delete_top_level_A = 0;
   grid->total_ink = -1;
@@ -98,8 +98,8 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
   point_t meet1, meet2;
 
   if (Verbose > 1) fprintf(stderr,"level ===================== %d, n = %d\n",grid->level, n);
-  cedges = MALLOC(sizeof(Vector)*n);
-  cinks = MALLOC(sizeof(double)*n);
+  cedges = (Vector*)MALLOC(sizeof(Vector)*n);
+  cinks = (double*)MALLOC(sizeof(double)*n);
   for (i = 0; i < n; i++) cedges[i] = Vector_new(1, sizeof(int), NULL);
 
   if (grid->level > 0){
@@ -107,8 +107,8 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
     jp = grid->R0->ja;
   }
 
-  matching = MALLOC(sizeof(int)*n);
-  mask = MALLOC(sizeof(double)*n);
+  matching = (int*)MALLOC(sizeof(int)*n);
+  mask = (int*)MALLOC(sizeof(double)*n);
   for (i = 0; i < n; i++) mask[i] = -1;
 
   assert(n == A->n);
@@ -306,7 +306,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_new(SparseMatrix A0
   }
   grid = Agglomerative_Ink_Bundling_init(A, edges, 0);
 
-  pick = MALLOC(sizeof(int)*A0->m);
+  pick = (int*)MALLOC(sizeof(int)*A0->m);
   
   grid = Agglomerative_Ink_Bundling_establish(grid, pick, angle_param, angle);
   free(pick);
@@ -423,8 +423,8 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
     ia = R->ia;
     ja = R->ja;
     ne = R->m;
-    mid_edges = MALLOC(sizeof(pedge)*ne);
-    xx = MALLOC(sizeof(double)*4*ne);
+    mid_edges = (pedge*)MALLOC(sizeof(pedge)*ne);
+    xx = (double*)MALLOC(sizeof(double)*4*ne);
     for (i = 0; i < R->m; i++){
       pick = &(ja[ia[i]]);
       wgt = 0.;
