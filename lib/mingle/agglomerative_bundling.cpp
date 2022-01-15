@@ -86,7 +86,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
   int n = grid->n, level = grid->level, nc = 0;
   int *ia = A->ia, *ja = A->ja;
   int i, j, k, jj, jc, jmax, ni, nj, npicks;
-  int *mask;
   pedge *edges = grid->edges;
   double *inks = grid->inks, *cinks, inki, inkj;
   double gain, maxgain, minink, total_gain = 0;
@@ -104,9 +103,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
     ip = grid->R0->ia;
     jp = grid->R0->ja;
   }
-
-  mask = (int*)MALLOC(sizeof(double)*n);
-  for (i = 0; i < n; i++) mask[i] = -1;
 
   assert(n == A->n);
   std::vector<int> matching(n, UNMATCHED);
@@ -285,7 +281,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
   }
 
  RETURN:
-  free(mask);
   return grid;
 }
 
