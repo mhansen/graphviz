@@ -1474,7 +1474,7 @@ static void flat_reorder(graph_t * g)
     node_t **temprank = NULL;
     edge_t *flat_e, *e;
 
-    if (GD_has_flat_edges(g) == FALSE)
+    if (!GD_has_flat_edges(g))
 	return;
     for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
 	if (GD_rank(g)[r].n == 0) continue;

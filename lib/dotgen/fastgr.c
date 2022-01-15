@@ -10,7 +10,7 @@
 
 
 #include <dotgen/dot.h>
-
+#include <stdbool.h>
 
 /*
  * operations on the fast internal graph.
@@ -263,7 +263,7 @@ void flat_edge(graph_t * g, edge_t * e)
 {
     elist_append(e, ND_flat_out(agtail(e)));
     elist_append(e, ND_flat_in(aghead(e)));
-    GD_has_flat_edges(dot_root(g)) = GD_has_flat_edges(g) = TRUE;
+    GD_has_flat_edges(dot_root(g)) = GD_has_flat_edges(g) = true;
 }
 
 void delete_flat_edge(edge_t * e)
