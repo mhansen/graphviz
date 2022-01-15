@@ -17,6 +17,7 @@
 #include "config.h"
 
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
@@ -498,7 +499,7 @@ static void deriveClusters(Agraph_t* dg, Agraph_t * g)
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	if (!strncmp(agnameof(subg), "cluster", 7)) {
 	    dn = agnode(dg, agnameof(subg), 1);
-	    agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), TRUE);
+	    agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), true);
 	    ND_ptr(dn) = (Agobj_t*)subg;
 	    for (n = agfstnode(subg); n; n = agnxtnode(subg, n)) {
 		if (ND_ptr(n)) {
@@ -533,7 +534,7 @@ static Agraph_t *deriveGraph(Agraph_t * g)
 	if (ND_dn(n))
 	    continue;
 	dn = agnode(dg, agnameof(n), 1);
-	agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), TRUE);
+	agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), true);
 	ND_ptr(dn) = (Agobj_t*)n;
 	ND_ptr(n) = (Agobj_t*)dn;
     }

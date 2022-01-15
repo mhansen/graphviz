@@ -27,11 +27,12 @@
 #include    <pack/pack.h>
 #include    <neatogen/neatoprocs.h>
 #include    <stddef.h>
+#include    <stdbool.h>
 #include    <string.h>
 
 static void circular_init_edge(edge_t * e)
 {
-    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//node custom data
+    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//node custom data
     common_init_edge(e);
 
     ED_factor(e) = late_double(e, E_weight, 1.0, 0.0);
@@ -77,7 +78,7 @@ static node_t *makeDerivedNode(graph_t * dg, char *name, int isNode,
 			       void *orig)
 {
     node_t *n = agnode(dg, name,1);
-    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);	//node custom data
+    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
     ND_alg(n) = NEW(cdata);
     if (isNode) {
 	ND_pos(n) = N_NEW(Ndim, double);
@@ -111,7 +112,7 @@ static Agraph_t **circomps(Agraph_t * g, int *cnt)
     Agnode_t *p;
 
     dg = agopen("derived", Agstrictundirected,NULL);
-    agbindrec (dg, "info", sizeof(Agraphinfo_t), TRUE);
+    agbindrec (dg, "info", sizeof(Agraphinfo_t), true);
     GD_alg(g) = dg;  /* store derived graph for closing later */
 
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
@@ -126,7 +127,7 @@ static Agraph_t **circomps(Agraph_t * g, int *cnt)
 	    dt = DNODE(agtail(e));
 	    dh = DNODE(aghead(e));
 	    if (dt != dh) {
-		agbindrec(agedge(dg, dt, dh, NULL, 1), "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//node custom data
+		agbindrec(agedge(dg, dt, dh, NULL, 1), "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//node custom data
 	    }
 	}
     }
@@ -147,7 +148,7 @@ static Agraph_t **circomps(Agraph_t * g, int *cnt)
 		dh = DNODE(aghead(e));
 		if (n != dh) {
 		    ep = agedge(dg, n, dh, NULL, 1);
-		    agbindrec(ep, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//node custom data
+		    agbindrec(ep, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//node custom data
 		    agsubedge(sg,ep,1);
 		}
 	    }

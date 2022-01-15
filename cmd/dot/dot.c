@@ -20,6 +20,7 @@
 
 #include <common/globals.h>
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
 #ifdef HAVE_UNISTD_H
@@ -70,14 +71,14 @@ static graph_t *create_test_graph(void)
     for (j = 0; j < NUMNODES; j++) {
 	snprintf(name, sizeof(name), "%d", j);
 	node[j] = agnode(g, name, 1);
-	agbindrec(node[j], "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);	//node custom data
+	agbindrec(node[j], "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
     }
 
     /* Connect nodes */
     for (j = 0; j < NUMNODES; j++) {
 	for (k = j + 1; k < NUMNODES; k++) {
 	    e = agedge(g, node[j], node[k], NULL, 1);
-	    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//edge custom data
+	    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//edge custom data
 	}
     }
     sg = agsubg (g, "cluster1", 1);

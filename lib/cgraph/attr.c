@@ -11,6 +11,7 @@
 #include	<cgraph/cghdr.h>
 #include	<cgraph/unreachable.h>
 #include	<stddef.h>
+#include	<stdbool.h>
 
 /*
  * dynamic attributes
@@ -106,7 +107,7 @@ static Agdatadict_t *agmakedatadict(Agraph_t * g)
     Agraph_t *par;
     Agdatadict_t *parent_dd, *dd;
 
-    dd = agbindrec(g, DataDictName, sizeof(Agdatadict_t), FALSE);
+    dd = agbindrec(g, DataDictName, sizeof(Agdatadict_t), false);
     dd->dict.n = agdtopen(g, &AgDataDictDisc, Dttree);
     dd->dict.e = agdtopen(g, &AgDataDictDisc, Dttree);
     dd->dict.g = agdtopen(g, &AgDataDictDisc, Dttree);
@@ -182,7 +183,7 @@ static Agrec_t *agmakeattrs(Agraph_t * context, void *obj)
     Agsym_t *sym;
     Dict_t *datadict;
 
-    rec = agbindrec(obj, AgDataRecName, sizeof(Agattr_t), FALSE);
+    rec = agbindrec(obj, AgDataRecName, sizeof(Agattr_t), false);
     datadict = agdictof(context, AGTYPE(obj));
     assert(datadict);
     if (rec->dict == NULL) {

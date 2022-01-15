@@ -56,7 +56,7 @@ int gvLayoutJobs(GVC_t * gvc, Agraph_t * g)
     char *p;
     int rc;
 
-    agbindrec(g, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+    agbindrec(g, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     GD_gvc(g) = gvc;
     if (g != agroot(g))
 	GD_gvc(agroot(g)) = gvc;
@@ -107,7 +107,7 @@ int gvFreeLayout(GVC_t * gvc, Agraph_t * g)
     (void)gvc;
 
     /* skip if no Agraphinfo_t yet */
-    if (! agbindrec(g, "Agraphinfo_t", 0, TRUE))
+    if (! agbindrec(g, "Agraphinfo_t", 0, true))
 	    return 0;
 
     if (GD_cleanup(g)) {

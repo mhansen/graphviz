@@ -10,6 +10,7 @@
 
 #include <cgraph/cghdr.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 Agnode_t *agfindnode_by_id(Agraph_t * g, IDTYPE id)
 {
@@ -75,7 +76,7 @@ static Agnode_t *newnode(Agraph_t * g, IDTYPE id, uint64_t seq)
     AGSEQ(n) = seq;
     n->root = agroot(g);
     if (agroot(g)->desc.has_attrs)
-	(void) agbindrec(n, AgDataRecName, sizeof(Agattr_t), FALSE);
+	(void)agbindrec(n, AgDataRecName, sizeof(Agattr_t), false);
     /* nodeattr_init and method_init will be called later, from the
      * subgraph where the node was actually created, but first it has
      * to be installed in all the (sub)graphs up to root. */

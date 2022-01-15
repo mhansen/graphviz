@@ -12,6 +12,7 @@
 #include    <neatogen/adjust.h>
 #include    <pack/pack.h>
 #include    <neatogen/neatoprocs.h>
+#include    <stdbool.h>
 
 /* the following code shamelessly copied from lib/fdpgen/layout.c
 and should be extracted and made into a common function */
@@ -70,7 +71,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
         if (!strncmp(agnameof(subg), "cluster", 7)) {
-	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 #ifdef FDP_GEN
             GD_alg(subg) = (void *) NEW(gdata); /* freed in cleanup_subgs */
             GD_ndim(subg) = GD_ndim(parent);
@@ -99,7 +100,7 @@ static void patchwork_init_node(node_t * n)
 
 static void patchwork_init_edge(edge_t * e)
 {
-    agbindrec(e, "Agedgeinfo_t", sizeof(Agnodeinfo_t), TRUE);  // edge custom data
+    agbindrec(e, "Agedgeinfo_t", sizeof(Agnodeinfo_t), true);  // edge custom data
     /* common_init_edge(e); */
 }
 
@@ -112,7 +113,7 @@ static void patchwork_init_node_edge(graph_t * g)
 
     GD_neato_nlist(g) = N_NEW(agnnodes(g) + 1, node_t *);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);  // node custom data
+	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);  // node custom data
 	ND_alg(n) = alg + i;
 	GD_neato_nlist(g)[i++] = n;
 	patchwork_init_node(n);

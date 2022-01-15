@@ -10,6 +10,7 @@
 
 #include <cgraph/cghdr.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 static Agtag_t Tag;		/* to silence warnings about initialization */
 
@@ -215,7 +216,7 @@ static Agedge_t *newedge(Agraph_t * g, Agnode_t * t, Agnode_t * h,
 
     installedge(g, out);
     if (g->desc.has_attrs) {
-	(void) agbindrec(out, AgDataRecName, sizeof(Agattr_t), FALSE);
+	(void)agbindrec(out, AgDataRecName, sizeof(Agattr_t), false);
 	agedgeattr_init(g, out);
     }
     agmethod_init(g, out);

@@ -306,7 +306,7 @@ checkLabelOrder (graph_t* g)
 		if (!lg) lg = agopen ("lg", Agstrictdirected, 0);
 		snprintf(buf, sizeof(buf), "%d", j);
 		n = agnode(lg, buf, 1);
-		agbindrec(n, "info", sizeof(info_t), 1);
+		agbindrec(n, "info", sizeof(info_t), true);
 		lo = ND_order(aghead(ND_out(u).list[0]));
 		hi = ND_order(aghead(ND_out(u).list[1]));
 		if (lo > hi) {
@@ -1133,7 +1133,7 @@ realFillRanks (Agraph_t* g, int rnks[], int rnks_sz, Agraph_t* sg)
 		sg = agsubg (dot_root(g), "_new_rank", 1);
 	    }
 	    n = agnode (sg, NULL, 1);
-	    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
+	    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	    ND_rank(n) = i;
 	    ND_lw(n) = ND_rw(n) = 0.5;
 	    ND_ht(n) = 1;

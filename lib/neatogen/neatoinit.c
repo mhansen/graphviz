@@ -26,6 +26,7 @@
 #include <neatogen/kkutils.h>
 #include <common/pointset.h>
 #include <neatogen/sgd.h>
+#include <cgraph/bitarray.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 
@@ -41,7 +42,7 @@ static char *cc_pfx = "_neato_cc";
 
 void neato_init_node(node_t * n)
 {
-    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);	//node custom data
+    agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
     common_init_node(n);
     ND_pos(n) = N_NEW(GD_ndim(agraphof(n)), double);
     gv_nodesize(n, GD_flip(agraphof(n)));
@@ -49,7 +50,7 @@ void neato_init_node(node_t * n)
 
 static void neato_init_edge(edge_t * e)
 {
-    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//node custom data
+    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//node custom data
     common_init_edge(e);
     ED_factor(e) = late_double(e, E_weight, 1.0, 1.0);
 }
@@ -188,7 +189,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
      /* array of arrays of node indices in each cluster */
     int **cs,*cn;
     int i,j,nclusters=0;
-    boolean* assigned = N_NEW(agnnodes(g), boolean);
+    bitarray_t assigned = bitarray_new_or_exit(agnnodes(g));
     cluster_data *cdata = GNEW(cluster_data);
 
     cdata->ntoplevel = agnnodes(g);
@@ -217,7 +218,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
                     ind++;
                 }
                 *c++=ind;
-                assigned[ind]=TRUE;
+                bitarray_set(&assigned, ind, true);
                 cdata->ntoplevel--;
             }
         }
@@ -225,12 +226,12 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
     cdata->bb=N_GNEW(cdata->nclusters,boxf);
     cdata->toplevel=N_GNEW(cdata->ntoplevel,int);
     for(i=j=0;i<agnnodes(g);i++) {
-        if(!assigned[i]) {
+        if(!bitarray_get(assigned, i)) {
             cdata->toplevel[j++]=i;
         }
     }
     assert(cdata->ntoplevel==agnnodes(g)-cdata->nvars);
-    free (assigned);
+    bitarray_reset(&assigned);
     return cdata;
 }
 
@@ -468,7 +469,7 @@ dfs(Agraph_t * subg, Agraph_t * parentg, attrsym_t * G_lp, attrsym_t * G_bb)
     boxf bb;
 
     if (!strncmp(agnameof(subg), "cluster", 7) && chkBB(subg, G_bb, &bb)) {
-	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	GD_bb(subg) = bb;
 	add_cluster(parentg, subg);
 	nop_init_graphs(subg, G_lp, G_bb);
@@ -585,7 +586,7 @@ int init_nop(Agraph_t * g, int adjust)
 	}
     }
     else {
-	boolean didShift;
+	bool didShift;
 	if (translate && !haveBackground && (GD_bb(g).LL.x != 0||GD_bb(g).LL.y != 0))
 	    neato_translate (g);
 	didShift = neato_set_aspect(g);
@@ -1385,7 +1386,7 @@ addCluster (graph_t* g)
     graph_t *subg;
     for (subg = agfstsubg(agroot(g)); subg; subg = agnxtsubg(subg)) {
 	if (!strncmp(agnameof(subg), "cluster", 7)) {
-	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    add_cluster(g, subg);
 	    compute_bb(subg);
 	}

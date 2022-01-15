@@ -20,6 +20,7 @@
 #include "gui.h"
 #include "menucallbacks.h"
 #include <stddef.h>
+#include <stdbool.h>
 #include <string.h>
 #include "glcompui.h"
 #include "gltemplate.h"
@@ -484,7 +485,7 @@ void updateRecord (Agraph_t* g)
 static void
 graphRecord (Agraph_t* g)
 {
-    agbindrec(g, "graphRec", sizeof(graphRec), 1);
+    agbindrec(g, "graphRec", sizeof(graphRec), true);
 
     GG_nodelabelcolor(g) = agattr (g, AGRAPH, "nodelabelcolor", 0);
     GG_edgelabelcolor(g) = agattr (g, AGRAPH, "edgelabelcolor", 0);

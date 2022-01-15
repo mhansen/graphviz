@@ -579,7 +579,7 @@ cloneSubg(Agraph_t * g, Agraph_t * ng, Agsym_t * G_bb, Dt_t * gnames)
     /* clone subgraphs */
     for (subg = agfstsubg (g); subg; subg = agnxtsubg (subg)) {
 	nsubg = agsubg(ng, xName(gnames, agnameof(subg)), 1);
-	agbindrec (nsubg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	agbindrec (nsubg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(subg, nsubg, G_bb, gnames);
 	/* if subgraphs are clusters, point to the new 
 	 * one so we can find it later.
@@ -604,7 +604,7 @@ cloneSubg(Agraph_t * g, Agraph_t * ng, Agsym_t * G_bb, Dt_t * gnames)
 	    nt = NEWNODE(agtail(e));
 	    nh = NEWNODE(aghead(e));
 	    ne = agedge(ng, nt, nh, NULL, 1);
-	    agbindrec (ne, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
+	    agbindrec (ne, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
 	    cloneEdge(e, ne);
 	    MARK(e);
 	}
@@ -702,14 +702,14 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
 		doWarn = false;
 	    }
 	    np = agnode(root, xName(nnames, agnameof(n)), 1);
-	    agbindrec (np, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
+	    agbindrec (np, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	    ND_alg(n) = np;
 	    cloneNode(n, np);
 	}
 
 	/* wrap the clone of g in a subgraph of root */
 	subg = agsubg(root, xName(gnames, agnameof(g)), 1);
-	agbindrec (subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	agbindrec (subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(g, subg, G_bb, gnames);
     }
     dtclose(gnames);

@@ -85,11 +85,11 @@ static polygon_t p_polygon = {.peripheries = 1};
 
 /* builtin polygon descriptions */
 static polygon_t p_ellipse = {.peripheries = 1, .sides = 1};
-static polygon_t p_circle = {.regular = TRUE, .peripheries = 1, .sides = 1};
+static polygon_t p_circle = {.regular = true, .peripheries = 1, .sides = 1};
 static polygon_t p_egg = {.peripheries = 1, .sides = 1, .distortion = -0.3};
 static polygon_t p_triangle = {.peripheries = 1, .sides = 3};
 static polygon_t p_box = {.peripheries = 1, .sides = 4};
-static polygon_t p_square = {.regular = TRUE, .peripheries = 1, .sides = 4};
+static polygon_t p_square = {.regular = true, .peripheries = 1, .sides = 4};
 static polygon_t p_plaintext = {.sides = 4};
 static polygon_t p_plain = {.sides = 4};
 static polygon_t p_diamond = {.peripheries = 1, .sides = 4, .orientation = 45.0};
@@ -115,7 +115,7 @@ static polygon_t p_cylinder = {.peripheries = 1,
 
 /* redundant and undocumented builtin polygons */
 static polygon_t p_doublecircle = {
-    .regular = TRUE, .peripheries = 2, .sides = 1};
+    .regular = true, .peripheries = 2, .sides = 1};
 static polygon_t p_invtriangle = {
     .peripheries = 1, .sides = 3, .orientation = 180.0};
 static polygon_t p_invtrapezium = {
@@ -129,8 +129,8 @@ static polygon_t p_Mdiamond = {.peripheries = 1,
                                .orientation = 45.0,
                                .option = DIAGONALS | AUXLABELS};
 static polygon_t p_Msquare = {
-    .regular = TRUE, .peripheries = 1, .sides = 4, .option = DIAGONALS};
-static polygon_t p_Mcircle = {.regular = TRUE,
+    .regular = true, .peripheries = 1, .sides = 4, .option = DIAGONALS};
+static polygon_t p_Mcircle = {.regular = true,
                               .peripheries = 1,
                               .sides = 1,
                               .option = DIAGONALS | AUXLABELS};

@@ -12,6 +12,7 @@
 
 #define STANDALONE
 #include <cgraph/cgraph.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -120,7 +121,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     for (i = 0; i < A->m; i++) {
 	sprintf(buf, "%d", i);
 	n = agnode(g, buf, 1);
-	agbindrec(n, "nodeinfo", sizeof(Agnodeinfo_t), TRUE);
+	agbindrec(n, "nodeinfo", sizeof(Agnodeinfo_t), true);
 	ND_id(n) = i;
 	arr[i] = n;
     }

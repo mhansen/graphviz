@@ -185,8 +185,6 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 {
     int num_visited_nodes;
     int i;
-    static boolean *node_in_neighborhood = NULL;
-    static int size = 0;
     Queue Q;
     heap H;
     int closestVertex, neighbor;
@@ -201,15 +199,9 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
     }
     num_visited_nodes =
 	bfs_bounded(vertex, graph, n, dist, &Q, bound, visited_nodes);
-    if (size < n) {
-	node_in_neighborhood = realloc(node_in_neighborhood, n * sizeof(boolean));
-	for (i = size; i < n; i++) {
-	    node_in_neighborhood[i] = FALSE;
-	}
-	size = n;
-    }
+    bitarray_t node_in_neighborhood = bitarray_new_or_exit(n);
     for (i = 0; i < num_visited_nodes; i++) {
-	node_in_neighborhood[visited_nodes[i]] = TRUE;
+	bitarray_set(&node_in_neighborhood, visited_nodes[i], true);
     }
 
     int *index = gcalloc(n, sizeof(int));
@@ -226,7 +218,7 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 
     while (num_found < num_visited_nodes
 	   && extractMax(&H, &closestVertex, index, dist)) {
-	if (node_in_neighborhood[closestVertex]) {
+	if (bitarray_get(node_in_neighborhood, closestVertex)) {
 	    num_found++;
 	}
 	closestDist = dist[closestVertex];
@@ -239,10 +231,7 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 	}
     }
 
-    /* restore initial false-status of 'node_in_neighborhood' */
-    for (i = 0; i < num_visited_nodes; i++) {
-	node_in_neighborhood[visited_nodes[i]] = FALSE;
-    }
+    bitarray_reset(&node_in_neighborhood);
     freeHeap(&H);
     free(index);
     freeQueue(&Q);

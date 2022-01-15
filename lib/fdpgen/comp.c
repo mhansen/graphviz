@@ -24,6 +24,7 @@
 #include <fdpgen/comp.h>
 #include <pack/pack.h>
 #include <assert.h>
+#include <stdbool.h>
 
 #define MARK(n) (marks[ND_id(n)])
 
@@ -74,7 +75,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
     if ((pp = PORTS(g))) {
 	snprintf(name, sizeof(name), "cc%s_%d", agnameof(g), c_cnt++ + C_cnt);
 	subg = agsubg(g, name,1);
-	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	GD_alg(subg) = NEW(gdata);
 	PORTS(subg) = pp;
 	NPORTS(subg) = NPORTS(g);
@@ -95,7 +96,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
 	if (!subg) {
 	    snprintf(name, sizeof(name), "cc%s_%d", agnameof(g), c_cnt++ + C_cnt);
 	    subg = agsubg(g, name,1);
-		agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+		agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    GD_alg(subg) = NEW(gdata);
 	}
 	pinflag = 1;
@@ -110,7 +111,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
 	    continue;
 	snprintf(name, sizeof(name), "cc%s+%d", agnameof(g), c_cnt++ + C_cnt);
 	subg = agsubg(g, name,1);
-	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
+	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 	GD_alg(subg) = NEW(gdata);
 	dfs(g, n, subg, marks);
 	nodeInduce(subg);

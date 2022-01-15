@@ -13,6 +13,7 @@
 #include	<circogen/edgelist.h>
 #include	<circogen/deglist.h>
 #include	<stddef.h>
+#include	<stdbool.h>
 
 /* The code below lays out a single block on a circle.
  */
@@ -39,13 +40,13 @@ static Agraph_t *clone_graph(Agraph_t * ing, Agraph_t ** xg)
 
     snprintf(gname, sizeof(gname), "_clone_%d", id++);
     clone = agsubg(ing, gname,1);
-    agbindrec(clone, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
+    agbindrec(clone, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
     snprintf(gname, sizeof(gname), "_clone_%d", id++);
     xclone = agopen(gname, ing->desc,NULL);
     for (n = agfstnode(ing); n; n = agnxtnode(ing, n)) {
 	agsubnode(clone,n,1);
 	xn = agnode(xclone, agnameof(n),1);
-        agbindrec(xn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);	//node custom data
+        agbindrec(xn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
 	CLONE(n) = xn;
     }
 
@@ -55,7 +56,7 @@ static Agraph_t *clone_graph(Agraph_t * ing, Agraph_t ** xg)
 	    agsubedge(clone,e,1);
 	    xh = CLONE(aghead(e));
 	    xe = agedge(xclone, xn, xh, NULL, 1);
-	    agbindrec(xe, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//node custom data
+	    agbindrec(xe, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//node custom data
 	    ORIGE(xe) = e;
 	    DEGREE(xn) += 1;
 	    DEGREE(xh) += 1;
@@ -146,7 +147,7 @@ static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
 		    break;
 		tp = neighbors_without[mark];
 		hp = neighbors_without[mark + 1];
-		agbindrec(agedge(g, tp, hp, NULL, 1), "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);   // edge custom data
+		agbindrec(agedge(g, tp, hp, NULL, 1), "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);   // edge custom data
 		DEGREE(tp)++;
 		DEGREE(hp)++;
 		diff--;
@@ -156,7 +157,7 @@ static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
 	    while (diff > 0) {
 		tp = neighbors_without[0];
 		hp = neighbors_without[mark];
-		agbindrec(agedge(g, tp, hp, NULL, 1), "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);   // edge custom data
+		agbindrec(agedge(g, tp, hp, NULL, 1), "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);   // edge custom data
 		DEGREE(tp)++;
 		DEGREE(hp)++;
 		mark++;
@@ -168,7 +169,7 @@ static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
 	    tp = neighbors_with[0];
 	    for (mark = 0; mark < no_pair_count; mark++) {
 		hp = neighbors_without[mark];
-		agbindrec(agedge(g, tp, hp, NULL, 1), "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);	//node custom data
+		agbindrec(agedge(g, tp, hp, NULL, 1), "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//node custom data
 		DEGREE(tp)++;
 		DEGREE(hp)++;
 	    }
@@ -361,7 +362,7 @@ static Agraph_t *spanning_tree(Agraph_t * g)
 
     snprintf(gname, sizeof(gname), "_span_%d", id++);
     tree = agsubg(g, gname,1);
-    agbindrec(tree, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);	//node custom data
+    agbindrec(tree, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	agsubnode(tree,n,1);

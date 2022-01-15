@@ -1105,11 +1105,11 @@ static void add_fast_edges (graph_t * g)
 }
 
 static void my_init_graph(Agraph_t *g, Agobj_t *graph, void *arg)
-{ int *sz = arg; (void)g; agbindrec(graph,"level graph rec",sz[0],TRUE); }
+{ int *sz = arg; (void)g; agbindrec(graph,"level graph rec",sz[0],true); }
 static void my_init_node(Agraph_t *g, Agobj_t *node, void *arg)
-{ int *sz = arg; (void)g; agbindrec(node,"level node rec",sz[1],TRUE); }
+{ int *sz = arg; (void)g; agbindrec(node,"level node rec",sz[1],true); }
 static void my_init_edge(Agraph_t *g, Agobj_t *edge, void *arg)
-{ int *sz = arg; (void)g; agbindrec(edge,"level edge rec",sz[2],TRUE); }
+{ int *sz = arg; (void)g; agbindrec(edge,"level edge rec",sz[2],true); }
 static Agcbdisc_t mydisc = { {my_init_graph,0,0}, {my_init_node,0,0}, {my_init_edge,0,0} };
 
 int infosizes[] = {
@@ -1127,7 +1127,7 @@ void dot2_rank(graph_t * g, aspect_t* asp)
 
     Last_node = NULL;
     Xg = agopen("level assignment constraints", Agstrictdirected, 0);
-    agbindrec(Xg,"level graph rec",sizeof(Agraphinfo_t),TRUE);
+    agbindrec(Xg,"level graph rec",sizeof(Agraphinfo_t),true);
     agpushdisc(Xg,&mydisc,infosizes);
 
     edgelabel_ranks(g);

@@ -52,7 +52,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
     }
     graph_sgd *graph = N_NEW(1, graph_sgd);
     graph->sources = N_NEW(n_nodes + 1, size_t);
-    bitarray_resize_or_exit(&graph->pinneds, n_nodes);
+    graph->pinneds = bitarray_new_or_exit(n_nodes);
     graph->targets = N_NEW(n_edges, size_t);
     graph->weights = N_NEW(n_edges, float);
 
@@ -64,7 +64,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
     for (np = agfstnode(G); np; np = agnxtnode(G,np)) {
         assert(n_edges <= INT_MAX);
         graph->sources[n_nodes] = n_edges;
-        bitarray_set(graph->pinneds, n_nodes, isFixed(np));
+        bitarray_set(&graph->pinneds, n_nodes, isFixed(np));
         for (ep = agfstedge(G, np); ep; ep = agnxtedge(G, ep, np)) {
             if (agtail(ep) == aghead(ep)) { // ignore self-loops and double edges
                 continue;
@@ -86,17 +86,15 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
         // do nothing
     } else if (model == MODEL_SUBSET) {
         // i,j,k refer to actual node indices, while x,y refer to edge indices in graph->targets
-        bitarray_t neighbours_i = {0};
-        bitarray_t neighbours_j = {0};
         // initialise to no neighbours
-        bitarray_resize_or_exit(&neighbours_i, graph->n);
-        bitarray_resize_or_exit(&neighbours_j, graph->n);
+        bitarray_t neighbours_i = bitarray_new_or_exit(graph->n);
+        bitarray_t neighbours_j = bitarray_new_or_exit(graph->n);
         for (size_t i = 0; i < graph->n; i++) {
             int deg_i = 0;
             for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
                 size_t j = graph->targets[x];
                 if (!bitarray_get(neighbours_i, j)) { // ignore multiedges
-                    bitarray_set(neighbours_i, j, true); // set up sort of hashset
+                    bitarray_set(&neighbours_i, j, true); // set up sort of hashset
                     deg_i++;
                 }
             }
@@ -108,7 +106,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
                      y++) {
                     size_t k = graph->targets[y];
                     if (!bitarray_get(neighbours_j, k)) { // ignore multiedges
-                        bitarray_set(neighbours_j, k, true); // set up sort of hashset
+                        bitarray_set(&neighbours_j, k, true); // set up sort of hashset
                         deg_j++;
                         if (bitarray_get(neighbours_i, k)) {
                             intersect++;
@@ -120,12 +118,12 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
                 for (size_t y = graph->sources[j]; y < graph->sources[j + 1];
                      y++) {
                     size_t k = graph->targets[y];
-                    bitarray_set(neighbours_j, k, false); // reset sort of hashset
+                    bitarray_set(&neighbours_j, k, false); // reset sort of hashset
                 }
             }
             for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
                 size_t j = graph->targets[x];
-                bitarray_set(neighbours_i, j, false); // reset sort of hashset
+                bitarray_set(&neighbours_i, j, false); // reset sort of hashset
             }
         }
         bitarray_reset(&neighbours_i);

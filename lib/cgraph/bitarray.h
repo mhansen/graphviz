@@ -10,7 +10,11 @@
 /// heap pressure and increases locality of reference, at the cost of a few
 /// (inexpensive) shifts and masks.
 ///
-/// This is the same optimization C++’s `std::vector<bool>` does.
+/// As a bonus, short arrays are stored directly inline, avoiding heap
+/// allocation altogether. This is essentially Small String Optimization applied
+/// to a boolean array.
+///
+/// The above design is essentially what C++’s `std::vector<bool>` does.
 ///
 /// This is deliberately implemented header-only so even Graphviz components
 /// that do not link against cgraph can use it.
@@ -33,37 +37,30 @@
 /// zero initializing one of these (`bitarray_t b = {0}`) or `memset`ing one of
 /// these to zero gives you a valid zero-length bit array.
 typedef struct {
-  uint8_t *base; ///< start of the underlying allocated buffer
-  size_t size_bits; ///< used extent in bits
-  size_t capacity; ///< allocated extent in bytes
+  union {
+    uint8_t block[sizeof(uint8_t*)]; ///< inline storage for small arrays
+    uint8_t *base; ///< start of the underlying allocated buffer
+  };
+  size_t size_bits; ///< extent in bits
 } bitarray_t;
 
-/// increase or decrease the element length of this array
-static inline int bitarray_resize(bitarray_t *self, size_t size_bits) {
+/// create an array of the given element length
+static inline int bitarray_new(bitarray_t *self, size_t size_bits) {
   assert(self != NULL);
+  assert(self->size_bits == 0);
 
-  // if this is less than the current size, just forget the excess elements
-  if (size_bits <= self->size_bits) {
-    self->size_bits = size_bits;
-    return 0;
-  }
+  // if the array is small enough, we can use inline storage
+  if (size_bits <= sizeof(self->block) * 8) {
+    memset(self->block, 0, sizeof(self->block));
 
-  // do we need to expand the backing buffer?
-  if (self->capacity * 8 < self->size_bits) {
-
-    size_t capacity = self->capacity == 0 ? 128 : self->capacity * 2;
-    if (capacity * 8 < self->size_bits)
-      capacity = self->size_bits / 8 + (self->size_bits % 8 == 0 ? 0 : 1);
-
-    uint8_t *base = realloc(self->base, capacity);
+  // otherwise we need to heap-allocate
+  } else {
+    size_t capacity = size_bits / 8 + (size_bits % 8 == 0 ? 0 : 1);
+    uint8_t *base = calloc(capacity, sizeof(self->base[0]));
     if (UNLIKELY(base == NULL))
       return ENOMEM;
 
-    // clear the newly allocated bytes
-    memset(&base[self->capacity], 0, capacity - self->capacity);
-
     self->base = base;
-    self->capacity = capacity;
   }
 
   self->size_bits = size_bits;
@@ -71,32 +68,52 @@ static inline int bitarray_resize(bitarray_t *self, size_t size_bits) {
   return 0;
 }
 
-/// `bitarray_resize` for callers who cannot handle failure
-static inline void bitarray_resize_or_exit(bitarray_t *self, size_t size_bits) {
-  assert(self != NULL);
+/// `bitarray_new` for callers who cannot handle failure
+static inline bitarray_t bitarray_new_or_exit(size_t size_bits) {
 
-  int error = bitarray_resize(self, size_bits);
+  bitarray_t ba;
+  memset(&ba, 0, sizeof(ba));
+
+  int error = bitarray_new(&ba, size_bits);
   if (UNLIKELY(error != 0)) {
     fprintf(stderr, "out of memory\n");
     exit(EXIT_FAILURE);
   }
+
+  return ba;
 }
 
 /// get the value of the given element
 static inline bool bitarray_get(bitarray_t self, size_t index) {
   assert(index < self.size_bits && "out of bounds access");
 
-  return (self.base[index / 8] >> (index % 8)) & 1;
+  // determine if this array is stored inline or not
+  const uint8_t *base;
+  if (self.size_bits <= sizeof(self.block) * 8) {
+    base = self.block;
+  } else {
+    base = self.base;
+  }
+
+  return (base[index / 8] >> (index % 8)) & 1;
 }
 
 /// set or clear the value of the given element
-static inline void bitarray_set(bitarray_t self, size_t index, bool value) {
-  assert(index < self.size_bits && "out of bounds access");
+static inline void bitarray_set(bitarray_t *self, size_t index, bool value) {
+  assert(index < self->size_bits && "out of bounds access");
+
+  // determine if this array is stored inline or not
+  uint8_t *base;
+  if (self->size_bits <= sizeof(self->block) * 8) {
+    base = self->block;
+  } else {
+    base = self->base;
+  }
 
   if (value) {
-    self.base[index / 8] |= (uint8_t)(UINT8_C(1) << (index % 8));
+    base[index / 8] |= (uint8_t)(UINT8_C(1) << (index % 8));
   } else {
-    self.base[index / 8] ^= (uint8_t)(UINT8_C(1) << (index % 8));
+    base[index / 8] ^= (uint8_t)(UINT8_C(1) << (index % 8));
   }
 }
 
@@ -104,6 +121,9 @@ static inline void bitarray_set(bitarray_t self, size_t index, bool value) {
 static inline void bitarray_reset(bitarray_t *self) {
   assert(self != NULL);
 
-  free(self->base);
+  // is this array stored out of line?
+  if (self->size_bits > sizeof(self->block) * 8)
+    free(self->base);
+
   memset(self, 0, sizeof(*self));
 }

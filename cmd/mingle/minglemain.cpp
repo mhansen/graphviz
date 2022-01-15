@@ -431,7 +431,7 @@ bundle (Agraph_t* g, opts_t* opts)
 				}
 				k = insertPM (pm, i, j, -1);
 				assert (k >= 0);
-				agbindrec (e, "info", sizeof(etoi_t), TRUE);
+				agbindrec (e, "info", sizeof(etoi_t), true);
 				ED_idx(e) = k;
 			}
 		}
