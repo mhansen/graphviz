@@ -115,10 +115,11 @@ def run_c(src: Path, args: List[str] = None, input: str = "",
     compile_c(src, cflags, link, exe)
 
     # dump the command being run for the user to observe if the test fails
-    print(f'+ {exe} {" ".join(str(x) for x in args)}')
+    argv = [exe] + args
+    print(f'+ {" ".join(str(x) for x in argv)}')
 
     # run it
-    p = subprocess.run([exe] + args, input=input, stdout=subprocess.PIPE,
+    p = subprocess.run(argv, input=input, stdout=subprocess.PIPE,
       stderr=subprocess.PIPE, universal_newlines=True)
 
     # check it succeeded
