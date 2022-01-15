@@ -697,7 +697,7 @@ void graph_init(graph_t * g, bool use_rankdir)
 		xf = MIN_RANKSEP;
 	}
 	if (strstr(p, "equally"))
-	    GD_exact_ranksep(g) = TRUE;
+	    GD_exact_ranksep(g) = true;
     } else
 	xf = DEFAULT_RANKSEP;
     GD_ranksep(g) = POINTS(xf);

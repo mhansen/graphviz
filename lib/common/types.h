@@ -340,7 +340,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	char installed;
 	char set_type;
 	char label_pos;
-	boolean exact_ranksep;
+	bool exact_ranksep;
 #endif
 
     } Agraphinfo_t;
