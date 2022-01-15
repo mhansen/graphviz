@@ -11,6 +11,7 @@
 #pragma once
 
 #include "cdt.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,7 +49,7 @@ extern "C" {
 	Dtlink_t link;
 	const char *name;
 	int macro_id;
-	boolean must_inline;
+	bool must_inline;
 	boolean nocache;
 	FILE *f;
 	imagetype_t type;
