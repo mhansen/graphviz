@@ -45,15 +45,14 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_init(SparseMatrix A
   grid->R0 = NULL;
   grid->R = NULL;
   grid->next = NULL;
-  grid->inks = (double*)MALLOC(sizeof(double)*(A->m));
   grid->edges = edges;
   grid->delete_top_level_A = 0;
   grid->total_ink = -1;
   if (level == 0){
     double total_ink = 0;
     for (i = 0; i < n; i++) {
-      (grid->inks)[i] = ink1(edges[i]);
-      total_ink += (grid->inks)[i];
+      grid->inks.push_back(ink1(edges[i]));
+      total_ink += grid->inks[i];
     }
     grid->total_ink = total_ink;
   }
@@ -73,7 +72,6 @@ static void Agglomerative_Ink_Bundling_delete(Agglomerative_Ink_Bundling grid){
   /* on level 0, R0 = NULL, on level 1, R0 = R */
   if (grid->level > 1) SparseMatrix_delete(grid->R0);
   SparseMatrix_delete(grid->R);
-  free(grid->inks);
 
   Agglomerative_Ink_Bundling_delete(grid->next);
   free(grid);
@@ -86,7 +84,8 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
   int *ia = A->ia, *ja = A->ja;
   int i, j, k, jj, jc, jmax, ni, nj, npicks;
   pedge *edges = grid->edges;
-  double *inks = grid->inks, *cinks, inki, inkj;
+  const std::vector<double> &inks = grid->inks;
+  double inki, inkj;
   double gain, maxgain, minink, total_gain = 0;
   int *ip = NULL, *jp = NULL, ie;
   std::vector<std::vector<int>> cedges;/* a table listing the content of bundled edges in the coarsen grid.
@@ -96,7 +95,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
 
   if (Verbose > 1) fprintf(stderr,"level ===================== %d, n = %d\n",grid->level, n);
   cedges.resize(n);
-  cinks = (double*)MALLOC(sizeof(double)*n);
+  std::vector<double> cinks(n, 0.0);
 
   if (grid->level > 0){
     ip = grid->R0->ia;
