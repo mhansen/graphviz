@@ -77,7 +77,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="SparseMatrix.h" />
-    <ClInclude Include="vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BinaryHeap.c" />
@@ -91,7 +90,6 @@
     <ClCompile Include="mq.c" />
     <ClCompile Include="QuadTree.c" />
     <ClCompile Include="SparseMatrix.c" />
-    <ClCompile Include="vector.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
