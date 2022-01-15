@@ -18,6 +18,7 @@ extern "C" {
 
 #include "gvcommon.h"
 #include "color.h"
+#include <stdbool.h>
 
 #define ARRAY_SIZE(A) (sizeof(A)/sizeof(A[0]))
 
@@ -292,7 +293,7 @@ extern "C" {
 	gvplugin_active_loadimage_t loadimage;
 	gvdevice_callbacks_t *callbacks;
 	pointf device_dpi;
-	boolean device_sets_dpi;
+	bool device_sets_dpi;
 
 	void *display;
 	int screen;

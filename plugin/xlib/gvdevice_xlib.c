@@ -484,7 +484,7 @@ static void xlib_initialize(GVJ_t *firstjob)
 
     firstjob->device_dpi.x = DisplayWidth(dpy, scr) * 25.4 / DisplayWidthMM(dpy, scr);
     firstjob->device_dpi.y = DisplayHeight(dpy, scr) * 25.4 / DisplayHeightMM(dpy, scr);
-    firstjob->device_sets_dpi = TRUE;
+    firstjob->device_sets_dpi = true;
 
     initialized = true;
 }
