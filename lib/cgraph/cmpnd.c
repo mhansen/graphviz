@@ -304,7 +304,7 @@ int agexpose(Agnode_t * cmpnode)
 
     /* skip if this is not a collapsed subgraph */
     noderec = (Agcmpnode_t *) aggetrec(cmpnode, Descriptor_id, FALSE);
-    if (noderec == NULL || NOT(noderec->collapsed))
+    if (noderec == NULL || !noderec->collapsed)
 	return FAILURE;
 
     /* undo aghide (above) in reverse order.  first, expose subgraph */
@@ -342,7 +342,7 @@ int agexpose(Agnode_t * cmpnode)
 Agraph_t *agcmpgraph_of(Agnode_t * n)
 {
     Agcmpnode_t *noderec = (Agcmpnode_t *) aggetrec(n, Descriptor_id, FALSE);
-    if (noderec && NOT(noderec->collapsed))
+    if (noderec && !noderec->collapsed)
 	return noderec->subg;
     else
 	return NULL;

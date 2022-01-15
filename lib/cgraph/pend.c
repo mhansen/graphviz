@@ -258,7 +258,7 @@ static void cb(Dict_t * dict, cb_t callback_kind)
 static void agrelease_callbacks(Agraph_t * g)
 {
     pendingset_t *pending;
-    if (NOT(g->clos->callbacks_enabled)) {
+    if (!g->clos->callbacks_enabled) {
 	g->clos->callbacks_enabled = TRUE;
 	pending = agbindrec(g, DRName, sizeof(pendingset_t), false);
 	/* this destroys objects in the opposite of their order of creation */
@@ -278,7 +278,7 @@ static void agrelease_callbacks(Agraph_t * g)
 
 int agcallbacks(Agraph_t * g, int flag)
 {
-    if (flag && NOT(g->clos->callbacks_enabled))
+    if (flag && !g->clos->callbacks_enabled)
 	agrelease_callbacks(g);
     if (g->clos->callbacks_enabled) {
 	g->clos->callbacks_enabled = flag != 0;

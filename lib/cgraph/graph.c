@@ -182,7 +182,7 @@ int agisdirected(Agraph_t * g)
 
 int agisundirected(Agraph_t * g)
 {
-    return NOT(agisdirected(g));
+    return !agisdirected(g);
 }
 
 int agisstrict(Agraph_t * g)
@@ -248,17 +248,10 @@ static int agraphidcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
 }
 
 Dtdisc_t Ag_subgraph_id_disc = {
-    0,				/* pass object ptr  */
-    0,				/* size (ignored)   */
-    offsetof(Agraph_t, link),	/* link offset */
-    NIL(Dtmake_f),
-    NIL(Dtfree_f),
-    agraphidcmpf,
-    NIL(Dthash_f),
-    agdictobjmem,
-    NIL(Dtevent_f)
+    .link = offsetof(Agraph_t, link), // link offset
+    .comparf = agraphidcmpf,
+    .memoryf = agdictobjmem,
 };
-
 
 Agdesc_t Agdirected = { .directed = 1, .maingraph = 1 };
 Agdesc_t Agstrictdirected = { .directed = 1, .strict = 1, .maingraph = 1 };

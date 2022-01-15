@@ -110,7 +110,7 @@ static int vc_refresh(vgpane_t * vgp)
 	obs = malloc(vgp->Npoly * sizeof(Ppoly_t));
 	for (i = 0; i < vgp->Npoly; i++)
 	    obs[i] = &(vgp->poly[i].boundary);
-	if (NOT(Plegal_arrangement(obs, vgp->Npoly)))
+	if (!Plegal_arrangement(obs, vgp->Npoly))
 	    fprintf(stderr, "bad arrangement\n");
 	else
 	    vgp->vc = Pobsopen(obs, vgp->Npoly);

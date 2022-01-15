@@ -1218,8 +1218,7 @@ static void flat_search(graph_t * g, node_t * v)
     hascl = GD_n_cluster(dot_root(g)) > 0;
     if (ND_flat_out(v).list)
 	for (i = 0; (e = ND_flat_out(v).list[i]); i++) {
-	    if (hascl
-		&& NOT(agcontains(g, agtail(e)) && agcontains(g, aghead(e))))
+	    if (hascl && !(agcontains(g, agtail(e)) && agcontains(g, aghead(e))))
 		continue;
 	    if (ED_weight(e) == 0)
 		continue;

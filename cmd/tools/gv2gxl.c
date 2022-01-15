@@ -433,7 +433,7 @@ writeDict(Agraph_t * g, FILE * gxlFile, char *name, Dict_t * dict,
 static void writeDicts(Agraph_t * g, FILE * gxlFile)
 {
     Agdatadict_t *def;
-    if ((def = (Agdatadict_t *) agdatadict(g, FALSE))) {
+    if ((def = agdatadict(g, FALSE))) {
 	writeDict(g, gxlFile, "graph", def->dict.g, 1);
 	writeDict(g, gxlFile, "node", def->dict.n, 0);
 	writeDict(g, gxlFile, "edge", def->dict.e, 0);
@@ -567,7 +567,6 @@ static int writeEdgeName(Agedge_t * e, FILE * gxlFile)
 static void
 writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 {
-    Agattr_t *data;
     Agsym_t *sym;
     int cnt = 0;
 
@@ -575,7 +574,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 	if (writeEdgeName(obj, gxlFile))
 	    cnt++;
     }
-    data = (Agattr_t *) agattrrec(obj);
+    Agattr_t *data = agattrrec(obj);
     if (data) {
 	for (sym = dtfirst(defdict); sym; sym = dtnext(defdict, sym)) {
 	    if (!isGxlGrammar(sym->name)) {
@@ -768,10 +767,9 @@ static void writeBody(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile)
     Agnode_t *n;
     Agnode_t *realn;
     Agedge_t *e;
-    Agdatadict_t *dd;
 
     writeSubgs(stp, g, gxlFile);
-    dd = (Agdatadict_t *) agdatadict(g, FALSE);
+    Agdatadict_t *dd = agdatadict(g, FALSE);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	realn = agidnode(stp->root, AGID(n), 0);
 	if (!writeval(realn)) {

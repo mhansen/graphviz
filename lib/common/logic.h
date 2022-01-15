@@ -16,10 +16,6 @@ extern "C" {
 
 #include <stdbool.h>
 
-#ifndef NOT
-#define NOT(v) (!(v))
-#endif
-
 #ifndef FALSE
 #define	FALSE (0)
 #endif
@@ -29,10 +25,6 @@ extern "C" {
 
 #ifndef NOTUSED
 #define NOTUSED(var) (void) var
-#endif
-
-#ifndef NIL
-#define NIL(type) ((type)0)
 #endif
 
 #ifdef __cplusplus

@@ -287,7 +287,7 @@ static int write_hdr(Agraph_t * g, iochan_t * ofile, int top)
     bool hasName = true;
 
     strict = "";
-    if (NOT(top) && agparent(g))
+    if (!top && agparent(g))
 	kind = "sub";
     else {
 	root = true;
@@ -431,7 +431,7 @@ static int write_edge_name(Agedge_t * e, iochan_t * ofile, int terminate)
 
     p = agnameof(e);
     g = agraphof(e);
-    if (NOT(EMPTY(p))) {
+    if (!EMPTY(p)) {
 	if (!terminate) {
 	    Level++;
 	}
@@ -520,7 +520,7 @@ static int write_node(Agnode_t * n, iochan_t * ofile, Dict_t * d)
     g = agraphof(n);
     CHKRV(indent(g, ofile));
     CHKRV(write_nodename(n, ofile));
-    if (NOT(attrs_written(n)))
+    if (!attrs_written(n))
 	CHKRV(write_nondefault_attrs(n, ofile, d));
     return ioput(g, ofile, ";\n");
 }
@@ -597,7 +597,7 @@ static int write_edge(Agedge_t * e, iochan_t * ofile, Dict_t * d)
     CHKRV(ioput(g, ofile, (agisdirected(agraphof(t)) ? " -> " : " -- ")));
     CHKRV(write_nodename(h, ofile));
     CHKRV(write_port(e, ofile, Headport));
-    if (NOT(attrs_written(e))) {
+    if (!attrs_written(e)) {
 	CHKRV(write_nondefault_attrs(e, ofile, d));
     } else {
 	CHKRV(write_edge_name(e, ofile, TRUE));

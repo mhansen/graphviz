@@ -25,7 +25,6 @@ extern "C" {
     typedef COORD **array2;
 
 #define EQ(p,q)		((p.x == q.x) && (p.y == q.y))
-#define NIL(p)		((p)0)
 
     struct vconfig_s {
 	int Npoly;
