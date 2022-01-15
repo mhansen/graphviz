@@ -102,7 +102,7 @@ arrow_clip(edge_t * fe, node_t * hn,
  * The points p are in node coordinates.
  */
 void bezier_clip(inside_t * inside_context,
-		 boolean(*inside) (inside_t * inside_context, pointf p),
+		 bool(*inside) (inside_t * inside_context, pointf p),
 		 pointf * sp, bool left_inside)
 {
     pointf seg[4], best[4], pt, opt, *left, *right;
@@ -204,7 +204,7 @@ void shape_clip(node_t * n, pointf curve[4])
     save_real_size = ND_rw(n);
     c.x = curve[0].x - ND_coord(n).x;
     c.y = curve[0].y - ND_coord(n).y;
-    left_inside = ND_shape(n)->fns->insidefn(&inside_context, c) != FALSE;
+    left_inside = ND_shape(n)->fns->insidefn(&inside_context, c);
     ND_rw(n) = save_real_size;
     shape_clip0(&inside_context, n, curve, left_inside);
 }
