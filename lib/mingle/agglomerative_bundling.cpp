@@ -45,7 +45,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_init(SparseMatrix A
   grid->R0 = NULL;
   grid->R = NULL;
   grid->next = NULL;
-  grid->prev = NULL;
   grid->inks = (double*)MALLOC(sizeof(double)*(A->m));
   grid->edges = edges;
   grid->delete_top_level_A = 0;
@@ -272,7 +271,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
 
     cgrid = Agglomerative_Ink_Bundling_establish(cgrid, pick, angle_param, angle);
     grid->next = cgrid;
-    cgrid->prev = grid;
 
   } else {
     if (Verbose > 1) fprintf(stderr,"no more improvement, orig ink = %f, gain = %f, stop and final bundling found\n", grand_total_ink, grand_total_gain);

@@ -21,7 +21,6 @@ struct Agglomerative_Ink_Bundling_struct {
 		     the nodes on the finest grid corresponding to the coarsest node 1, etc */
   SparseMatrix R;/* striction mtrix from level to level + 1*/
   Agglomerative_Ink_Bundling next;
-  Agglomerative_Ink_Bundling prev;
   double *inks; /* amount of ink needed to draw this edge/bundle. Dimension n. */
   double total_ink; /* amount of ink needed to draw this edge/bundle. Dimension n. */
   pedge* edges; /* the original edge info. This does not vary level to level and is of dimenion n0, where n0 is the number of original edges */
