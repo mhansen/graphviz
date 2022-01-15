@@ -171,9 +171,9 @@ static splineInfo sinfo = {.swapEnds = swap_ends_p,
 
 int portcmp(port p0, port p1)
 {
-    if (p1.defined == FALSE)
+    if (!p1.defined)
 	return p0.defined ? 1 : 0;
-    if (p0.defined == FALSE)
+    if (!p0.defined)
 	return -1;
     if (p0.p.x < p1.p.x)
 	return -1;
@@ -1846,7 +1846,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	while (ED_to_virt(le))
 	    le = ED_to_virt(le);
 	aghead(&fwdedgea.out) = aghead(le);
-	ED_head_port(&fwdedgea.out).defined = FALSE;
+	ED_head_port(&fwdedgea.out).defined = false;
 	ED_edge_type(&fwdedgea.out) = VIRTUAL;
 	ED_head_port(&fwdedgea.out).p.x = ED_head_port(&fwdedgea.out).p.y = 0;
 	ED_to_orig(&fwdedgea.out) = e;
@@ -1904,7 +1904,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    	       ND_coord(hn).y + GD_rank(g)[ND_rank(hn)].ht2);
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	        hend.boxes[hend.boxn++] = b;
-	    P->end.theta = M_PI / 2, P->end.constrained = TRUE;
+	    P->end.theta = M_PI / 2, P->end.constrained = true;
 	    assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
 	    completeregularpath(P, segfirst, e, &tend, &hend, boxes.data,
 	                        (int)boxes.size, 1);
@@ -1948,7 +1948,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    	       ND_coord(tn).y - GD_rank(g)[ND_rank(tn)].ht1);
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	        tend.boxes[tend.boxn++] = b;
-	    P->start.theta = -M_PI / 2, P->start.constrained = TRUE;
+	    P->start.theta = -M_PI / 2, P->start.constrained = true;
 	    smode = FALSE;
 	}
 	boxes_append(&boxes, rank_box(sp, g, ND_rank(tn)));

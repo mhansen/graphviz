@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include	<dotgen/dot.h>
+#include	<stdbool.h>
 #include	<stddef.h>
 
 #define MAXSAME 5		/* max no of same{head,tail} groups on a node */
@@ -165,10 +166,10 @@ static void sameport(node_t * u, elist * l)
     prt.bp = 0;
     prt.order =
 	(MC_SCALE * (ND_lw(u) + prt.p.x)) / (ND_lw(u) + ND_rw(u));
-    prt.constrained = FALSE;
-    prt.defined = TRUE;
-    prt.clip = FALSE;
-    prt.dyna = FALSE;
+    prt.constrained = false;
+    prt.defined = true;
+    prt.clip = false;
+    prt.dyna = false;
     prt.theta = 0;
     prt.side = 0;
     prt.name = NULL;

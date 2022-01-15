@@ -406,13 +406,13 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
     if (merge) {
 	/*P->start.theta = - M_PI / 2; */
 	P->start.theta = conc_slope(agtail(e));
-	P->start.constrained = TRUE;
+	P->start.constrained = true;
     } else {
 	if (ED_tail_port(e).constrained) {
 	    P->start.theta = ED_tail_port(e).theta;
-	    P->start.constrained = TRUE;
+	    P->start.constrained = true;
 	} else
-	    P->start.constrained = FALSE;
+	    P->start.constrained = false;
     }
     P->nbox = 0;
     P->data = (void *) e;
@@ -478,9 +478,9 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	}
 	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
 	if (n == agtail(orig))
-	    ED_tail_port(orig).clip = FALSE;
+	    ED_tail_port(orig).clip = false;
 	else
-	    ED_head_port(orig).clip = FALSE;
+	    ED_head_port(orig).clip = false;
 	return;
     }
     if (et == FLATEDGE && (side = ED_tail_port(e).side)) {
@@ -543,9 +543,9 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	}
 	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
 	if (n == agtail(orig))
-	    ED_tail_port(orig).clip = FALSE;
+	    ED_tail_port(orig).clip = false;
 	else
-	    ED_head_port(orig).clip = FALSE;
+	    ED_head_port(orig).clip = false;
 	endp->sidemask = side;
 	return;
     }
@@ -602,13 +602,13 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	/*P->end.theta = M_PI / 2; */
 	P->end.theta = conc_slope(aghead(e)) + M_PI;
 	assert(P->end.theta < 2 * M_PI);
-	P->end.constrained = TRUE;
+	P->end.constrained = true;
     } else {
 	if (ED_head_port(e).constrained) {
 	    P->end.theta = ED_head_port(e).theta;
-	    P->end.constrained = TRUE;
+	    P->end.constrained = true;
 	} else
-	    P->end.constrained = FALSE;
+	    P->end.constrained = false;
     }
     endp->np = P->end.p;
     if (et == REGULAREDGE && ND_node_type(n) == NORMAL && (side = ED_head_port(e).side)) {
@@ -672,9 +672,9 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	}
 	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
 	if (n == aghead(orig))
-	    ED_head_port(orig).clip = FALSE;
+	    ED_head_port(orig).clip = false;
 	else
-	    ED_tail_port(orig).clip = FALSE;
+	    ED_tail_port(orig).clip = false;
 	endp->sidemask = side;
 	return;
     }
@@ -739,9 +739,9 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	}
 	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
 	if (n == aghead(orig))
-	    ED_head_port(orig).clip = FALSE;
+	    ED_head_port(orig).clip = false;
 	else
-	    ED_tail_port(orig).clip = FALSE;
+	    ED_tail_port(orig).clip = false;
 	endp->sidemask = side;
 	return;
     }

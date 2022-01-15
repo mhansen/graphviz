@@ -22,7 +22,7 @@ typedef struct {
     void (*vertex_gen) (pointf*, pointf*);
 } poly_desc_t;
  
-static port Center = {.theta = -1, .clip = 1};
+static port Center = {.theta = -1, .clip = true};
 
 #define ATTR_SET(a,n) ((a) && (*(agxget(n,a->index)) != '\0'))
   /* Default point size = 0.05 inches or 3.6 points */
@@ -2704,10 +2704,10 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    angle -= 2 * M_PI;
 	pp->order = (int) (MC_SCALE * angle / (2 * M_PI));
     }
-    pp->constrained = constrain ? TRUE : FALSE;
-    pp->defined = defined ? TRUE : FALSE;
-    pp->clip = clip ? TRUE : FALSE;
-    pp->dyna = dyna ? TRUE : FALSE;
+    pp->constrained = constrain;
+    pp->defined = defined;
+    pp->clip = clip;
+    pp->dyna = dyna;
     return rv;
 }
 
