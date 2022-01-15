@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `bool` instead of a Graphviz-specific `boolean`.
 - **Breaking**: The `candidate` and `valid` fields of the `rank_t` struct are
   now C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `filled`, `landscape`, and `centered` fields of the
+  `layout_t` struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A
   drop-in replacement is `SHRT_MAX` in the C standard library’s limits.h.
 - **Breaking**: Graphviz headers no lnger define `NIL` macros. A drop-in

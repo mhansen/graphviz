@@ -227,9 +227,9 @@ extern "C" {
 	pointf margin;
 	pointf page;
 	pointf size;
-	boolean filled;
-	boolean landscape;
-	boolean centered;
+	bool filled;
+	bool landscape;
+	bool centered;
 	ratio_t ratio_kind;
 	void* xdots;
 	char* id;

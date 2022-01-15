@@ -707,18 +707,17 @@ void graph_init(graph_t * g, bool use_rankdir)
     GD_fontnames(g) = maptoken(p, fontnamenames, fontnamecodes);
 
     setRatio(g);
-    GD_drawing(g)->filled =
-      getdoubles2ptf(g, "size", &GD_drawing(g)->size) ? TRUE : FALSE;
+    GD_drawing(g)->filled = getdoubles2ptf(g, "size", &GD_drawing(g)->size);
     getdoubles2ptf(g, "page", &(GD_drawing(g)->page));
 
-    GD_drawing(g)->centered = mapbool(agget(g, "center")) ? TRUE : FALSE;
+    GD_drawing(g)->centered = mapbool(agget(g, "center"));
 
     if ((p = agget(g, "rotate")))
 	GD_drawing(g)->landscape = atoi(p) == 90;
     else if ((p = agget(g, "orientation")))
 	GD_drawing(g)->landscape = p[0] == 'l' || p[0] == 'L';
     else if ((p = agget(g, "landscape")))
-	GD_drawing(g)->landscape = mapbool(p) ? TRUE : FALSE;
+	GD_drawing(g)->landscape = mapbool(p);
 
     p = agget(g, "clusterrank");
     CL_type = maptoken(p, rankname, rankcode);
