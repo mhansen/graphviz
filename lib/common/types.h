@@ -336,7 +336,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	/* for clusters */
 	node_t *leader;
 	node_t **rankleader;
-	boolean expanded;
+	bool expanded;
 	char installed;
 	char set_type;
 	char label_pos;

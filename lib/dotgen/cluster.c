@@ -254,7 +254,7 @@ merge_ranks(graph_t * subg)
     }
     if (r < GD_maxrank(root))
 	GD_rank(root)[r].valid = false;
-    GD_expanded(subg) = TRUE;
+    GD_expanded(subg) = true;
 }
 
 static void 
