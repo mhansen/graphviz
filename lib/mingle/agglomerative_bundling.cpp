@@ -391,7 +391,6 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
     }
   } else {
     pedge *mid_edges, midedge;/* middle section of edges that will be bundled again */
-    double *xx;
     int ne, npp, l;
     SparseMatrix A_mid;
     double eps = 0., wgt, total_wgt = 0;
@@ -409,7 +408,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
     ja = R->ja;
     ne = R->m;
     mid_edges = (pedge*)MALLOC(sizeof(pedge)*ne);
-    xx = (double*)MALLOC(sizeof(double)*4*ne);
+    std::vector<double> xx(4 * ne);
     for (i = 0; i < R->m; i++){
       pick = &(ja[ia[i]]);
       wgt = 0.;
@@ -424,14 +423,13 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
       xx[i*4 + 1] = meet1.y;
       xx[i*4 + 2] = meet2.x;
       xx[i*4 + 3] = meet2.y;
-      mid_edges[i] = pedge_wgt_new(2, dim, &(xx[i*4]), wgt);
+      mid_edges[i] = pedge_wgt_new(2, dim, &xx.data()[i*4], wgt);
     }
 
-    A_mid = nearest_neighbor_graph(ne, MIN(nneighbors, ne), xx, eps);
+    A_mid = nearest_neighbor_graph(ne, MIN(nneighbors, ne), xx.data(), eps);
 
     agglomerative_ink_bundling_internal(dim, A_mid, mid_edges, nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, open_gl, current_ink, ink00, flag);
     SparseMatrix_delete(A_mid);
-    free(xx);
     
     /* patching edges with the new mid-section */
     for (i = 0; i < R->m; i++){
