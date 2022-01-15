@@ -120,15 +120,15 @@ textlabel_t *make_label(void *obj, char *str, int kind, double fontsize, char *f
 
     switch (agobjkind(obj)) {
     case AGRAPH:
-        sg = (graph_t*)obj;
+        sg = obj;
 	g = sg->root;
 	break;
     case AGNODE:
-        n = (node_t*)obj;
+        n = obj;
 	g = agroot(agraphof(n));
 	break;
     case AGEDGE:
-        e = (edge_t*)obj;
+        e = obj;
 	g = agroot(agraphof(aghead(e)));
 	break;
     }
