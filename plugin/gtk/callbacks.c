@@ -329,10 +329,10 @@ on_drawingarea1_configure_event        (GtkWidget       *widget,
 	job->zoom *= zoom_to_fit;
     }
     if (event->width > job->width || event->height > job->height)
-	job->has_grown = TRUE;
+	job->has_grown = true;
     job->width = event->width;
     job->height = event->height;
-    job->needs_refresh = TRUE;
+    job->needs_refresh = true;
 
     return FALSE;
 }

@@ -37,7 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   C99 `bool` instead of a Graphviz-specific `boolean`.
 - **Breaking**: The `must_inline` and `nocache` fields of the `usershape_t`
   struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
-- **Breaking**: The `device_sets_dpi` and `external_context` fields of the
+- **Breaking**: The `device_sets_dpi`, `external_context`, `fit_mode`,
+  `needs_refresh`, `click`, `has_grown`, and `has_been_rendered` fields of the
   `GVJ_t` struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
 - **Breaking**: 1-bit fields of the `obj_state_s` struct are now unsigned
   instead of signed.

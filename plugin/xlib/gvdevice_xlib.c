@@ -67,10 +67,10 @@ static void handle_configure_notify(GVJ_t * job, XConfigureEvent * cev)
 	((double) cev->width - (double) job->width) / (double) job->width,
 	((double) cev->height - (double) job->height) / (double) job->height);
     if (cev->width > job->width || cev->height > job->height)
-        job->has_grown = 1;
+        job->has_grown = true;
     job->width = cev->width;
     job->height = cev->height;
-    job->needs_refresh = 1;
+    job->needs_refresh = true;
 }
 
 static void handle_expose(GVJ_t * job, XExposeEvent * eev)
@@ -232,8 +232,8 @@ static void update_display(GVJ_t *job, Display *dpy)
 	XFreePixmap(dpy, window->pix);
 	window->pix = XCreatePixmap(dpy, window->win,
 			job->width, job->height, window->depth);
-	job->has_grown = 0;
-	job->needs_refresh = 1;
+	job->has_grown = false;
+	job->needs_refresh = true;
     }
     if (job->needs_refresh) {
 	XFillRectangle(dpy, window->pix, window->gc, 0, 0,
@@ -247,7 +247,7 @@ static void update_display(GVJ_t *job, Display *dpy)
 	cairo_surface_destroy(surface);
 	XCopyArea(dpy, window->pix, window->win, window->gc,
 			0, 0, job->width, job->height, 0, 0);
-        job->needs_refresh = 0;
+        job->needs_refresh = false;
     }
 }
 
@@ -284,8 +284,8 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     job->height = h;
 
     job->window = window;
-    job->fit_mode = 0;
-    job->needs_refresh = 1;
+    job->fit_mode = false;
+    job->needs_refresh = true;
 
     if (argb && (window->visual = find_argb_visual(dpy, scr))) {
         window->cmap = XCreateColormap(dpy, RootWindow(dpy, scr),

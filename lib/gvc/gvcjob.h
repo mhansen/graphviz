@@ -339,7 +339,7 @@ extern "C" {
 	pointf  translation;    /* composite translation */
 	pointf  devscale;	/* composite device to points: dpi, y_goes_down */
 
-	boolean	fit_mode,
+	bool	fit_mode,
 		needs_refresh,
 		click,
 		has_grown,
