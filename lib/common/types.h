@@ -80,7 +80,7 @@ extern "C" {
 	bool(*swapEnds) (edge_t * e);	/* Should head and tail be swapped? */
 	bool(*splineMerge) (node_t * n);	/* Is n a node in the middle of an edge? */
 	bool ignoreSwap;                     /* Test for swapped edges if false */
-	boolean isOrtho;                        /* Orthogonal routing used */
+	bool isOrtho;                        /* Orthogonal routing used */
     } splineInfo;
 
     typedef struct pathend_t {

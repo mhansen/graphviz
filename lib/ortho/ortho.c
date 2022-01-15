@@ -1234,7 +1234,7 @@ static bool swap_ends_p(edge_t * e)
     return false;
 }
 
-static splineInfo sinfo = { swap_ends_p, spline_merge, true, 1 };
+static splineInfo sinfo = { swap_ends_p, spline_merge, true, true };
 
 /* orthoEdges:
  * For edges without position information, construct an orthogonal routing.
