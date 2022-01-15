@@ -287,7 +287,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
 static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_new(SparseMatrix A0, pedge *edges, double angle_param, double angle){
   /* give a link of edges and their nearest neighbor graph, return a multilevel of edge bundling based on ink saving */
   Agglomerative_Ink_Bundling grid;
-  int *pick;
   SparseMatrix A = A0;
 
   if (!SparseMatrix_is_symmetric(A, FALSE) || A->type != MATRIX_TYPE_REAL){
@@ -295,10 +294,10 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_new(SparseMatrix A0
   }
   grid = Agglomerative_Ink_Bundling_init(A, edges, 0);
 
-  pick = (int*)MALLOC(sizeof(int)*A0->m);
+  std::vector<int> pick(A0->m);
   
-  grid = Agglomerative_Ink_Bundling_establish(grid, pick, angle_param, angle);
-  free(pick);
+  grid = Agglomerative_Ink_Bundling_establish(grid, pick.data(), angle_param,
+                                              angle);
 
   if (A != A0) grid->delete_top_level_A = TRUE;/* be sure to clean up later */
 
