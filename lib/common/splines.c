@@ -62,12 +62,13 @@ arrow_clip(edge_t * fe, node_t * hn,
 	   bezier * spl, splineInfo * info)
 {
     edge_t *e;
-    int i, j, sflag, eflag;
+    int i, sflag, eflag;
+    bool j;
 
     for (e = fe; ED_to_orig(e); e = ED_to_orig(e));
 
     if (info->ignoreSwap)
-	j = 0;
+	j = false;
     else
 	j = info->swapEnds(e);
     arrow_flags(e, &sflag, &eflag);

@@ -77,7 +77,7 @@ extern "C" {
     } port;
 
     typedef struct {
-	boolean(*swapEnds) (edge_t * e);	/* Should head and tail be swapped? */
+	bool(*swapEnds) (edge_t * e);	/* Should head and tail be swapped? */
 	bool(*splineMerge) (node_t * n);	/* Is n a node in the middle of an edge? */
 	boolean ignoreSwap;                     /* Test for swapped edges if false */
 	boolean isOrtho;                        /* Orthogonal routing used */

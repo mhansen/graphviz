@@ -153,17 +153,17 @@ static bool spline_merge(node_t * n)
 	    && (ND_in(n).size > 1 || ND_out(n).size > 1);
 }
 
-static boolean swap_ends_p(edge_t * e)
+static bool swap_ends_p(edge_t * e)
 {
     while (ED_to_orig(e))
 	e = ED_to_orig(e);
     if (ND_rank(aghead(e)) > ND_rank(agtail(e)))
-	return FALSE;
+	return false;
     if (ND_rank(aghead(e)) < ND_rank(agtail(e)))
-	return TRUE;
+	return true;
     if (ND_order(aghead(e)) >= ND_order(agtail(e)))
-	return FALSE;
-    return TRUE;
+	return false;
+    return true;
 }
 
 static splineInfo sinfo = {.swapEnds = swap_ends_p,

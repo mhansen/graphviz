@@ -30,10 +30,10 @@ static bool spline_merge(node_t * n)
     return false;
 }
 
-static boolean swap_ends_p(edge_t * e)
+static bool swap_ends_p(edge_t * e)
 {
     (void)e;
-    return FALSE;
+    return false;
 }
 
 static splineInfo sinfo = {.swapEnds = swap_ends_p,
