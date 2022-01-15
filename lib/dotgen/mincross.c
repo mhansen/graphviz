@@ -727,7 +727,7 @@ static int balance(graph_t * g)
 
     for (r = GD_maxrank(g); r >= GD_minrank(g); r--) {
 
-	GD_rank(g)[r].candidate = FALSE;
+	GD_rank(g)[r].candidate = false;
 	for (i = 0; i < GD_rank(g)[r].n - 1; i++) {
 	    v = GD_rank(g)[r].v[i];
 	    w = GD_rank(g)[r].v[i + 1];
@@ -759,7 +759,7 @@ static int transpose_step(graph_t * g, int r, bool reverse)
     node_t *v, *w;
 
     rv = 0;
-    GD_rank(g)[r].candidate = FALSE;
+    GD_rank(g)[r].candidate = false;
     for (i = 0; i < GD_rank(g)[r].n - 1; i++) {
 	v = GD_rank(g)[r].v[i];
 	w = GD_rank(g)[r].v[i + 1];
@@ -778,16 +778,16 @@ static int transpose_step(graph_t * g, int r, bool reverse)
 	if (c1 < c0 || (c0 > 0 && reverse && c1 == c0)) {
 	    exchange(v, w);
 	    rv += c0 - c1;
-	    GD_rank(Root)[r].valid = FALSE;
-	    GD_rank(g)[r].candidate = TRUE;
+	    GD_rank(Root)[r].valid = false;
+	    GD_rank(g)[r].candidate = true;
 
 	    if (r > GD_minrank(g)) {
-		GD_rank(Root)[r - 1].valid = FALSE;
-		GD_rank(g)[r - 1].candidate = TRUE;
+		GD_rank(Root)[r - 1].valid = false;
+		GD_rank(g)[r - 1].candidate = true;
 	    }
 	    if (r < GD_maxrank(g)) {
-		GD_rank(Root)[r + 1].valid = FALSE;
-		GD_rank(g)[r + 1].candidate = TRUE;
+		GD_rank(Root)[r + 1].valid = false;
+		GD_rank(g)[r + 1].candidate = true;
 	    }
 	}
     }
@@ -799,7 +799,7 @@ static void transpose(graph_t * g, bool reverse)
     int r, delta;
 
     for (r = GD_minrank(g); r <= GD_maxrank(g); r++)
-	GD_rank(g)[r].candidate = TRUE;
+	GD_rank(g)[r].candidate = true;
     do {
 	delta = 0;
 	for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
@@ -886,7 +886,7 @@ static void restore_best(graph_t * g)
 	}
     }
     for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
-	GD_rank(Root)[r].valid = FALSE;
+	GD_rank(Root)[r].valid = false;
 	qsort(GD_rank(g)[r].v, GD_rank(g)[r].n, sizeof(GD_rank(g)[0].v[0]),
 	      (qsort_cmpf) nodeposcmpf);
     }
@@ -1397,7 +1397,7 @@ void build_ranks(graph_t * g, int pass)
     if (dequeue(q))
 	agerr(AGERR, "surprise\n");
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++) {
-	GD_rank(Root)[i].valid = FALSE;
+	GD_rank(Root)[i].valid = false;
 	if (GD_flip(g) && GD_rank(g)[i].n > 0) {
 	    int n, ndiv2;
 	    node_t **vlist = GD_rank(g)[i].v;
@@ -1544,7 +1544,7 @@ static void flat_reorder(graph_t * g)
 	    /* postprocess to restore intended order */
 	}
 	/* else do no harm! */
-	GD_rank(Root)[r].valid = FALSE;
+	GD_rank(Root)[r].valid = false;
     }
     if (temprank)
 	free(temprank);
@@ -1596,9 +1596,9 @@ static void reorder(graph_t * g, int r, bool reverse, bool hasfixed)
     }
 
     if (changed) {
-	GD_rank(Root)[r].valid = FALSE;
+	GD_rank(Root)[r].valid = false;
 	if (r > 0)
-	    GD_rank(Root)[r - 1].valid = FALSE;
+	    GD_rank(Root)[r - 1].valid = false;
     }
 }
 
@@ -1713,7 +1713,7 @@ int ncross(graph_t * g)
 	else {
 	    nc = GD_rank(g)[r].cache_nc = rcross(g, r);
 	    count += nc;
-	    GD_rank(g)[r].valid = TRUE;
+	    GD_rank(g)[r].valid = true;
 	}
     }
     return count;

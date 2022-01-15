@@ -210,8 +210,8 @@ extern "C" {
 	double ht2;	/* height below/above centerline    */
 	double pht1;	/* as above, but only primitive nodes   */
 	double pht2;	/* as above, but only primitive nodes   */
-	boolean candidate;	/* for transpose () */
-	boolean valid;
+	bool candidate;	/* for transpose () */
+	bool valid;
 	int cache_nc;		/* caches number of crossings */
 	adjmatrix_t *flat;
     } rank_t;

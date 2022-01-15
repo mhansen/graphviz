@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include <dotgen/dot.h>
+#include <stdbool.h>
 
 static node_t*
 map_interclust_node(node_t * n)
@@ -233,7 +234,7 @@ merge_ranks(graph_t * subg)
 
     root = dot_root(subg);
     if (GD_minrank(subg) > 0)
-	GD_rank(root)[GD_minrank(subg) - 1].valid = FALSE;
+	GD_rank(root)[GD_minrank(subg) - 1].valid = false;
     for (r = GD_minrank(subg); r <= GD_maxrank(subg); r++) {
 	d = GD_rank(subg)[r].n;
 	ipos = pos = ND_order(GD_rankleader(subg)[r]);
@@ -249,10 +250,10 @@ merge_ranks(graph_t * subg)
 	    GD_n_nodes(root)++;
 	}
 	GD_rank(subg)[r].v = GD_rank(root)[r].v + ipos;
-	GD_rank(root)[r].valid = FALSE;
+	GD_rank(root)[r].valid = false;
     }
     if (r < GD_maxrank(root))
-	GD_rank(root)[r].valid = FALSE;
+	GD_rank(root)[r].valid = false;
     GD_expanded(subg) = TRUE;
 }
 
