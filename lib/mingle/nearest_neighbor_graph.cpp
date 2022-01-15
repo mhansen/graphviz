@@ -37,7 +37,7 @@ SparseMatrix nearest_neighbor_graph(int nPts, int num_neigbors, double *x, doubl
   std::vector<int> jcn(nPts * k * 2);
   std::vector<double> val(nPts * k * 2);
 
-  nearest_neighbor_graph_ann(nPts, num_neigbors, eps, x, &nz, irn, jcn, val);
+  nearest_neighbor_graph_ann(nPts, num_neigbors, eps, x, nz, irn, jcn, val);
 
   A = SparseMatrix_from_coordinate_arrays(nz, nPts, nPts, irn.data(),
                                           jcn.data(), val.data(),

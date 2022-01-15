@@ -51,7 +51,7 @@ static void sortPtsY(int n, ANNpointArray pts){
 }
 
 void nearest_neighbor_graph_ann(int nPts, int k, double eps, double *x,
-                                int *nz0, std::vector<int> &irn,
+                                int &nz0, std::vector<int> &irn,
                                 std::vector<int> &jcn,
                                 std::vector<double> &val) {
 
@@ -130,7 +130,7 @@ void nearest_neighbor_graph_ann(int nPts, int k, double eps, double *x,
     }
   }
     
-  *nz0 = nz;
+  nz0 = nz;
 
   annDeallocPts(dataPts);
   annClose();									// done with ANN
