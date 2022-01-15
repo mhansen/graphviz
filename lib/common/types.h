@@ -323,7 +323,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 
 	/* various flags */
 	bool has_flat_edges;
-	boolean has_sourcerank;
+	bool has_sourcerank;
 	boolean has_sinkrank;
 	unsigned char	showboxes;
 	fontname_kind fontnames;		/* to override mangling in SVG */

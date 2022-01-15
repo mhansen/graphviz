@@ -28,8 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   now C99 `bool`s instead of Graphviz-specific `boolean`s.
 - **Breaking**: The `filled`, `landscape`, and `centered` fields of the
   `layout_t` struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
-- **Breaking**: The `has_images` and `has_flat_edges` fields of the
-  `Agraphinfo_t` struct are now C99 `bool`s instead of Graphviz-specific
+- **Breaking**: The `has_images`, `has_flat_edges`, and `has_sourcerank` fields
+  of the `Agraphinfo_t` struct are now C99 `bool`s instead of Graphviz-specific
   `boolean`s.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A
   drop-in replacement is `SHRT_MAX` in the C standard library’s limits.h.
