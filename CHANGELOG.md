@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
 - **Breaking**: The `conc_opp_flag` field of the `Agedgeinfo_t` struct is now a
   C99 `bool` instead of a Graphviz-specific `boolean`.
+- **Breaking**: 1-bit fields of the `obj_state_s` struct are now unsigned
+  instead of signed.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A
   drop-in replacement is `SHRT_MAX` in the C standard library’s limits.h.
 - **Breaking**: Graphviz headers no lnger define `NIL` macros. A drop-in
