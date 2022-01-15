@@ -435,7 +435,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #endif
 #ifndef NEATO_ONLY
 	unsigned char showboxes;
-	boolean  has_port;
+	bool  has_port;
 	node_t* rep;
 	node_t *set;
 
