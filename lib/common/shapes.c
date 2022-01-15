@@ -3810,9 +3810,9 @@ static shape_desc *user_shape(char *name)
     if (Lib == NULL && !streq(name, "custom")) {
 	agerr(AGWARN, "using %s for unknown shape %s\n", Shapes[0].name,
 	      p->name);
-	p->usershape = FALSE;
+	p->usershape = false;
     } else {
-	p->usershape = TRUE;
+	p->usershape = true;
     }
     return p;
 }

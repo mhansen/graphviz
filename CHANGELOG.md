@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `port` struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
 - **Breaking**: The `set` and `html` fields of the `textlabel_t` struct are now
   C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `usershape` field of the `shape_desc` struct is now a C99
+  `bool` instead of a Graphviz-specific `boolean`.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A
   drop-in replacement is `SHRT_MAX` in the C standard library’s limits.h.
 - **Breaking**: Graphviz headers no lnger define `NIL` macros. A drop-in

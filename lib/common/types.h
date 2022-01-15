@@ -183,7 +183,7 @@ extern "C" {
 	char *name;		/* as read from graph file */
 	shape_functions *fns;
 	polygon_t *polygon;	/* base polygon info */
-	boolean usershape;
+	bool usershape;
     } shape_desc;
 
 #include "usershape.h"		/* usershapes needed by gvc */
