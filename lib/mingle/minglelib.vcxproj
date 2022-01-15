@@ -99,7 +99,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="agglomerative_bundling.c" />
+    <ClCompile Include="agglomerative_bundling.cpp" />
     <ClCompile Include="edge_bundling.cpp" />
     <ClCompile Include="ink.cpp" />
     <ClCompile Include="nearest_neighbor_graph.cpp" />

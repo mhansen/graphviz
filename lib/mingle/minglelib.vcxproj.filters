@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="agglomerative_bundling.c">
+    <ClCompile Include="agglomerative_bundling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="edge_bundling.cpp">

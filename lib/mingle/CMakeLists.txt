@@ -9,7 +9,7 @@ add_library(libmingle STATIC
     nearest_neighbor_graph_ann.h
 
     # Source files
-    agglomerative_bundling.c
+    agglomerative_bundling.cpp
     edge_bundling.cpp
     ink.cpp
     nearest_neighbor_graph.cpp
