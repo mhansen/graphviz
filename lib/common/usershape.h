@@ -50,7 +50,7 @@ extern "C" {
 	const char *name;
 	int macro_id;
 	bool must_inline;
-	boolean nocache;
+	bool nocache;
 	FILE *f;
 	imagetype_t type;
 	char *stringtype;

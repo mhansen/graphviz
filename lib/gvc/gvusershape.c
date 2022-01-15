@@ -608,7 +608,7 @@ boolean gvusershape_file_access(usershape_t *us)
 	    return FALSE;
 	}
 	if (usershape_files_open_cnt >= MAX_USERSHAPE_FILES_OPEN)
-	    us->nocache = TRUE;
+	    us->nocache = true;
 	else
 	    usershape_files_open_cnt++;
     }
