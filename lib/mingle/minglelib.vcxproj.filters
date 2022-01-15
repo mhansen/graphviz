@@ -18,7 +18,7 @@
     <ClCompile Include="agglomerative_bundling.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="edge_bundling.c">
+    <ClCompile Include="edge_bundling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ink.cpp">

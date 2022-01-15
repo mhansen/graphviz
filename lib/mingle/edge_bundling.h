@@ -30,18 +30,13 @@ typedef struct pedge_struct* pedge;
 
 pedge* edge_bundling(SparseMatrix A, int dim, double *x, int maxit_outer, double K, int method, int nneighbor, int compatibility_method, int max_recursion, double angle_param, double angle, int open_gl);
 void pedge_delete(pedge e);
-pedge pedge_realloc(pedge e, int np);
 pedge pedge_wgts_realloc(pedge e, int n);
-void pedge_export_mma(FILE *fp, int ne, pedge *edges);
 void pedge_export_gv(FILE *fp, int ne, pedge *edges);
 enum {METHOD_NONE = -1, METHOD_FD, METHOD_INK_AGGLOMERATE, METHOD_INK};
 enum {COMPATIBILITY_DIST = 0, COMPATIBILITY_FULL};
 pedge pedge_new(int np, int dim, double *x);
 pedge pedge_wgt_new(int np, int dim, double *x, double wgt);
 pedge pedge_double(pedge e);
-
-/* flip the polyline so that last point becomes the first, second last the second, etc*/
-pedge pedge_flip(pedge e);
 
 #ifdef __cplusplus
 }

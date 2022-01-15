@@ -100,7 +100,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="agglomerative_bundling.c" />
-    <ClCompile Include="edge_bundling.c" />
+    <ClCompile Include="edge_bundling.cpp" />
     <ClCompile Include="ink.cpp" />
     <ClCompile Include="nearest_neighbor_graph.cpp" />
     <ClCompile Include="nearest_neighbor_graph_ann.cpp" />
