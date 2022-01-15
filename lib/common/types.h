@@ -278,7 +278,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	pointf border[4];	/* sizes of margins for graph labels */
 	unsigned char gui_state; /* Graph state for GUI ops */
 	unsigned char has_labels;
-	boolean has_images;
+	bool has_images;
 	unsigned char charset; /* input character set */
 	int rankdir;
 	double ht1; /* below and above extremal ranks */

@@ -1940,7 +1940,7 @@ static void poly_init(node_t * n)
 		      sfile ? sfile : "<nil>", agnameof(n));
 		imagesize.x = imagesize.y = 0;
 	    } else {
-		GD_has_images(agraphof(n)) = TRUE;
+		GD_has_images(agraphof(n)) = true;
 		imagesize.x += 2;	/* some fixed padding */
 		imagesize.y += 2;
 	    }
@@ -1953,7 +1953,7 @@ static void poly_init(node_t * n)
 		  sfile ? sfile : "<nil>", agnameof(n));
 	    imagesize.x = imagesize.y = 0;
 	} else {
-	    GD_has_images(agraphof(n)) = TRUE;
+	    GD_has_images(agraphof(n)) = true;
 	    imagesize.x += 2;	/* some fixed padding */
 	    imagesize.y += 2;
 	}

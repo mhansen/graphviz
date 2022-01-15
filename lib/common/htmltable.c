@@ -1094,7 +1094,7 @@ static int size_html_img(htmlimg_t * img, htmlenv_t * env)
 	agerr(AGERR, "No or improper image file=\"%s\"\n", img->src);
     } else {
 	rv = 0;
-	GD_has_images(env->g) = TRUE;
+	GD_has_images(env->g) = true;
     }
 
     B2BF(b, img->box);
