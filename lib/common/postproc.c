@@ -756,7 +756,7 @@ void place_graph_label(graph_t * g)
 	    p.x = (GD_bb(g).LL.x + GD_bb(g).UR.x) / 2;
 	}
 	GD_label(g)->pos = p;
-	GD_label(g)->set = TRUE;
+	GD_label(g)->set = true;
     }
 
     for (c = 1; c <= GD_n_cluster(g); c++)

@@ -294,7 +294,7 @@ setEdgeLabelPos (graph_t * g)
 		l = ED_label(fe);
 		assert (l);
 		l->pos = ND_coord(n);
-		l->set = TRUE;
+		l->set = true;
 	    }
 	    else if ((l = ND_label(n))) {// label of regular edge
 		place_vnlabel(n);
@@ -375,7 +375,7 @@ static void _dot_splines(graph_t * g, int normalize)
 		edge_t* fe = (edge_t*)ND_alg(n);
 		assert (ED_label(fe));
 		ED_label(fe)->pos = ND_coord(n);
-		ED_label(fe)->set = TRUE;
+		ED_label(fe)->set = true;
 	    }
 	    if (ND_node_type(n) != NORMAL && !sinfo.splineMerge(n))
 		continue;
@@ -600,7 +600,7 @@ place_vnlabel(node_t * n)
     width = GD_flip(agraphof(n)) ? dimen.y : dimen.x;
     ED_label(e)->pos.x = ND_coord(n).x + width / 2.0;
     ED_label(e)->pos.y = ND_coord(n).y;
-    ED_label(e)->set = TRUE;
+    ED_label(e)->set = true;
 }
 
 static void 
@@ -1067,7 +1067,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
     clip_and_install(e, aghead(e), points, pointn, &sinfo);
     ED_label(e)->pos.x = ctrx;
     ED_label(e)->pos.y = tp.y + (ED_label(e)->dimen.y+LBL_SPACE)/2.0;
-    ED_label(e)->set = TRUE;
+    ED_label(e)->set = true;
 
     miny = tp.y + LBL_SPACE/2.0;
     maxy = miny + ED_label(e)->dimen.y;
@@ -1126,7 +1126,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	}
 	ED_label(e)->pos.x = ctrx;
 	ED_label(e)->pos.y = ctry;
-	ED_label(e)->set = TRUE;
+	ED_label(e)->set = true;
 	clip_and_install(e, aghead(e), ps, pn, &sinfo);
 	free(ps);
     }
@@ -1382,7 +1382,7 @@ make_flat_adj_edges(graph_t* g, path* P, edge_t** edges, int ind, int cnt, edge_
         }
 	if (ED_label(e)) {
 	    ED_label(e)->pos = transformf(ED_label(auxe)->pos, del, GD_flip(g));
-	    ED_label(e)->set = TRUE;
+	    ED_label(e)->set = true;
 	    updateBB(g, ED_label(e));
 	}
     }
@@ -1448,7 +1448,7 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
     for (f = ED_to_virt(e); ED_to_virt(f); f = ED_to_virt(f));
     ln = agtail(f);
     ED_label(e)->pos = ND_coord(ln);
-    ED_label(e)->set = TRUE;
+    ED_label(e)->set = true;
 
     if (et == EDGETYPE_LINE) {
 	pointf startp, endp, lp;

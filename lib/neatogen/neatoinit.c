@@ -177,7 +177,7 @@ static void set_label(void* obj, textlabel_t * l, char *name)
     lp = agget(obj, name);
     if (lp && sscanf(lp, "%lf,%lf", &x, &y) == 2) {
 	l->pos = pointfof(x, y);
-	l->set = TRUE;
+	l->set = true;
     }
 }
 
@@ -497,7 +497,7 @@ nop_init_graphs(Agraph_t * g, attrsym_t * G_lp, attrsym_t * G_bb)
 	s = agxget(g, G_lp);
 	if (sscanf(s, "%lf,%lf", &x, &y) == 2) {
 	    GD_label(g)->pos = pointfof(x, y);
-	    GD_label(g)->set = TRUE;
+	    GD_label(g)->set = true;
 	}
     }
 
@@ -562,7 +562,7 @@ int init_nop(Agraph_t * g, int adjust)
 	didAdjust = adjustNodes(g);
 
     if (didAdjust) {
-	if (GD_label(g)) GD_label(g)->set = FALSE;
+	if (GD_label(g)) GD_label(g)->set = false;
 /* FIX:
  *   - if nodes are moved, clusters are no longer valid.
  */

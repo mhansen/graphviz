@@ -2025,7 +2025,7 @@ int make_html_label(void *obj, textlabel_t * lp)
 	agxbuf xb;
 	unsigned char buf[SMALLBUF];
 	agxbinit(&xb, SMALLBUF, buf);
-	lp->html = FALSE;
+	lp->html = false;
 	lp->text = strdup(nameOf(obj, &xb));
 	switch (lp->charset) {
 	case CHAR_LATIN1:

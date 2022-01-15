@@ -139,12 +139,12 @@ textlabel_t *make_label(void *obj, char *str, int kind, double fontsize, char *f
     if (kind & LT_RECD) {
 	rv->text = strdup(str);
         if (kind & LT_HTML) {
-	    rv->html = TRUE;
+	    rv->html = true;
 	}
     }
     else if (kind == LT_HTML) {
 	rv->text = strdup(str);
-	rv->html = TRUE;
+	rv->html = true;
 	if (make_html_label(obj, rv)) {
 	    switch (agobjkind(obj)) {
 	    case AGRAPH:

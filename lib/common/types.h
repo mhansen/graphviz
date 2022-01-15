@@ -133,8 +133,8 @@ extern "C" {
 	    htmllabel_t *html;
 	} u;
 	char valign;  /* 't' 'c' 'b' */
-	boolean set;  /* true if position is set */
-	boolean html; /* true if html label */
+	bool set;  /* true if position is set */
+	bool html; /* true if html label */
     } textlabel_t;
 
     typedef struct polygon_t {	/* mutable shape information for a node */

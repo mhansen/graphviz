@@ -1411,7 +1411,7 @@ int place_portlabel(edge_t * e, bool head_p)
     dist = PORT_LABEL_DISTANCE * late_double(e, E_labeldistance, 1.0, 0.0);
     l->pos.x = pe.x + dist * cos(angle);
     l->pos.y = pe.y + dist * sin(angle);
-    l->set = TRUE;
+    l->set = true;
     return 1;
 }
 
