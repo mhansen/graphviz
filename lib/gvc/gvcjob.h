@@ -299,7 +299,7 @@ extern "C" {
 	int screen;
 
 	void *context;		/* gd or cairo surface */
-	boolean external_context;	/* context belongs to caller */
+	bool external_context;	/* context belongs to caller */
 	char *imagedata;	/* location of imagedata */
 
         int flags;		/* emit_graph flags */
