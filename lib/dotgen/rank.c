@@ -719,7 +719,7 @@ static void compile_samerank(graph_t * ug, graph_t * parent_clust)
 	}
 	break;
     case SINKRANK:
-	GD_has_sinkrank(clust) = TRUE;	/* fall through */
+	GD_has_sinkrank(clust) = true;	/* fall through */
     case MAXRANK:
 	leader = union_all(ug);
 	if (clust != NULL) {
