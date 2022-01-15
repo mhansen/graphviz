@@ -3,7 +3,9 @@
 import os
 from pathlib import Path
 import platform
+import shlex
 import subprocess
+import sys
 import sysconfig
 import tempfile
 from typing import List, Optional, Tuple, Union
@@ -45,7 +47,7 @@ def compile_c(src: Path, cflags: List[str] = None, link: List[str] = None,
       args += [f"-l{l}" for l in link] + ldflags
 
   # dump the command being run for the user to observe if the test fails
-  print(f'+ {" ".join(str(x) for x in args)}')
+  print(f'+ {" ".join(shlex.quote(str(x)) for x in args)}')
 
   # compile the program
   try:
@@ -94,7 +96,7 @@ def dot(T: str, source_file: Optional[Path] = None, source: Optional[str] = None
 
 def run_c(src: Path, args: List[str] = None, input: str = "",
           cflags: List[str] = None, link: List[str] = None
-          ) -> Tuple[int, str, str]:
+          ) -> Tuple[str, str]:
   """compile and run a C program"""
 
   if args is None:
@@ -114,10 +116,17 @@ def run_c(src: Path, args: List[str] = None, input: str = "",
     compile_c(src, cflags, link, exe)
 
     # dump the command being run for the user to observe if the test fails
-    print(f'+ {exe} {" ".join(str(x) for x in args)}')
+    argv = [exe] + args
+    print(f'+ {" ".join(shlex.quote(str(x)) for x in argv)}')
 
     # run it
-    p = subprocess.run([exe] + args, input=input, stdout=subprocess.PIPE,
+    p = subprocess.run(argv, input=input, stdout=subprocess.PIPE,
       stderr=subprocess.PIPE, universal_newlines=True)
 
-    return p.returncode, p.stdout, p.stderr
+    # check it succeeded
+    if p.returncode != 0:
+      sys.stdout.write(p.stdout)
+      sys.stderr.write(p.stderr)
+    p.check_returncode()
+
+    return p.stdout, p.stderr
