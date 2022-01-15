@@ -21,7 +21,7 @@ static size_t leftypathlen;
 jmp_buf exitljbuf;
 int idlerunmode;
 fd_set inputfds;
-static int innetscape;
+static bool innetscape;
 static char *nswin;
 
 #ifndef FEATURE_MS
@@ -87,7 +87,7 @@ int init (char *aout) {
 
     c = 0;
     if (getenv ("INNETSCAPE"))
-        innetscape = TRUE, nswin = getenv ("NSWIN");
+        innetscape = true, nswin = getenv ("NSWIN");
     if (!(pathp = malloc (PATHINCR * PATHSIZE)))
         panic1 (POS, "init", "pathp malloc failed");
     if (!(cmdp = malloc (CMDINCR * CMDSIZE)))
