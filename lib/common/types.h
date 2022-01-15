@@ -423,7 +423,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	void *alg;
 	char state;
 	unsigned char gui_state; /* Node state for GUI ops */
-	boolean clustnode;
+	bool clustnode;
 
 #ifndef DOT_ONLY
 	unsigned char pinned;
