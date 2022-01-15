@@ -82,7 +82,6 @@ static void Agglomerative_Ink_Bundling_delete(Agglomerative_Ink_Bundling grid){
 
 static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomerative_Ink_Bundling grid, int *pick, double angle_param, double angle){
   /* pick is a work array of dimension n, with n the total number of original edges */
-  int *matching;
   SparseMatrix A = grid->A;
   int n = grid->n, level = grid->level, nc = 0;
   int *ia = A->ia, *ja = A->ja;
@@ -106,12 +105,11 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
     jp = grid->R0->ja;
   }
 
-  matching = (int*)MALLOC(sizeof(int)*n);
   mask = (int*)MALLOC(sizeof(double)*n);
   for (i = 0; i < n; i++) mask[i] = -1;
 
   assert(n == A->n);
-  for (i = 0; i < n; i++) matching[i] = UNMATCHED;
+  std::vector<int> matching(n, UNMATCHED);
 
   for (i = 0; i < n; i++){
     if (matching[i] != UNMATCHED) continue;
@@ -287,7 +285,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
   }
 
  RETURN:
-  free(matching);
   free(mask);
   return grid;
 }
