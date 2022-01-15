@@ -561,7 +561,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #endif
 #ifndef NEATO_ONLY
 	unsigned char showboxes;
-	boolean conc_opp_flag;
+	bool conc_opp_flag;
 	short xpenalty;
 	int weight;
 	int cutvalue;
