@@ -18,7 +18,7 @@ extern "C" {
 	char **info;
 	char *cmdname;
 	int verbose;
-	boolean config, auto_outfile_names;
+	bool config, auto_outfile_names;
         void (*errorfn) (const char *fmt, ...);
 	const char **show_boxes; /* emit code for correct box coordinates */
 	const char **lib; 

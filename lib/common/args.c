@@ -23,6 +23,7 @@
 #include <fdpgen/tlayout.h>
 #include <gvc/gvc.h>
 #include <fdpgen/fdp.h>
+#include <stdbool.h>
 
 /* neato_extra_args:
  * Handle special neato arguments.
@@ -131,10 +132,10 @@ config_extra_args(GVC_t *gvc, int argc, char** argv)
 	  gvc->common.verbose = atoi(&arg[2]);
         break;
       case 'O' :
-          gvc->common.auto_outfile_names = TRUE;
+          gvc->common.auto_outfile_names = true;
 	  break;
       case 'c' :
-          gvc->common.config = TRUE;
+          gvc->common.config = true;
 	  break;
       default :
         cnt++;

@@ -45,6 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `boolean` parameter.
 - **Breaking**: The `textlayout` member of the `gvtextlayout_engine_t` struct
   must now return a C99 `bool` instead of a Graphviz-specific `boolean`.
+- **Breaking**: The `config` and `auto_outfile_names` members of the
+  `GVC_common_s` struct are now C99 `bool`s instead of Graphviz-specific
+  `boolean`s.
 - **Breaking**: The `fixed` member of the `pack_info` struct is now an array of
   C99 `bool`s instead of an array of Graphviz-specific `boolean`s. Similarly,
   `pack_graph` now takes a `bool` array instead of a `boolean` array.
