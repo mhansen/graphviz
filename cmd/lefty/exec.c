@@ -129,7 +129,7 @@ static Tobj getval (Tobj, int);
 static int getvar (Tobj, int, tnk_t *);
 static void setvar (tnk_t, Tobj);
 static bool boolop (Tobj);
-static int orderop (Tobj, int, Tobj);
+static bool orderop (Tobj, int, Tobj);
 static Tobj arithop (Num_t *, int, Num_t *);
 static void err (int, int, Tobj, int);
 static void printbody (char *, int);
@@ -838,7 +838,7 @@ static bool boolop (Tobj vo) {
     }
 }
 
-static int orderop (Tobj v1o, int op, Tobj v2o) {
+static bool orderop (Tobj v1o, int op, Tobj v2o) {
     int t1, t2;
     long i1, i2;
     int r;
@@ -846,8 +846,8 @@ static int orderop (Tobj v1o, int op, Tobj v2o) {
 
     if (!v1o || !v2o) {
         if ((v1o || v2o) && op == C_NE)
-            return TRUE;
-        return FALSE;
+            return true;
+        return false;
     }
     t1 = Tgettype (v1o), t2 = Tgettype (v2o);
     if (t1 == T_STRING && t2 == T_STRING) {
@@ -866,21 +866,21 @@ static int orderop (Tobj v1o, int op, Tobj v2o) {
         r = (d1 == d2) ? 0 : ((d1 < d2) ? -1 : 1);
     } else if (t1 == t2) {
         if (op != C_EQ && op != C_NE)
-            return FALSE;
+            return false;
         r = (v1o == v2o) ? 0 : 1;
     } else {
-        return FALSE;
+        return false;
     }
     switch (op) {
-    case C_EQ: return (r == 0) ? TRUE : FALSE;
-    case C_NE: return (r != 0) ? TRUE : FALSE;
-    case C_LT: return (r <  0) ? TRUE : FALSE;
-    case C_LE: return (r <= 0) ? TRUE : FALSE;
-    case C_GT: return (r >  0) ? TRUE : FALSE;
-    case C_GE: return (r >= 0) ? TRUE : FALSE;
+    case C_EQ: return r == 0;
+    case C_NE: return r != 0;
+    case C_LT: return r <  0;
+    case C_LE: return r <= 0;
+    case C_GT: return r >  0;
+    case C_GE: return r >= 0;
     }
     panic1 (POS, "orderop", "bad op code");
-    return FALSE; /* NOT REACHED */
+    return false; /* NOT REACHED */
 }
 
 static Tobj arithop (Num_t *lnum, int op, Num_t *rnum) {
