@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
@@ -87,7 +88,7 @@ static gdImagePtr gd_rotateimage(gdImagePtr im, int rotation)
     return im2;
 }
 	
-static void gd_loadimage_gd(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void gd_loadimage_gd(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     gdImagePtr im2, im = (gdImagePtr) job->context;
 
@@ -100,7 +101,7 @@ static void gd_loadimage_gd(GVJ_t * job, usershape_t *us, boxf b, boolean filled
 }
 
 #ifdef HAVE_PANGOCAIRO
-static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     cairo_t *cr = (cairo_t *) job->context; /* target context */
     unsigned int x, y, stride, width, height, px;
@@ -166,7 +167,7 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, boolean fil
 }
 #endif
 
-static void gd_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void gd_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     gdImagePtr im = NULL;
     int X, Y, x, y, px;

@@ -737,7 +737,7 @@ static void xdot_polyline(GVJ_t * job, pointf * A, int n)
     xdot_points(job, 'L', A, n);
 }
 
-void core_loadimage_xdot(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+void core_loadimage_xdot(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     (void)filled;
 

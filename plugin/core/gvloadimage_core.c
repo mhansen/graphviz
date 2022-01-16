@@ -26,7 +26,7 @@
 #include <common/utils.h>
 #include <gvc/gvio.h>
 
-extern void core_loadimage_xdot(GVJ_t*, usershape_t*, boxf, boolean);
+extern void core_loadimage_xdot(GVJ_t*, usershape_t*, boxf, bool);
 extern shape_desc *find_user_shape(char *name);
 
 typedef enum {
@@ -41,7 +41,7 @@ typedef enum {
     FORMAT_GIF_TK,
 } format_type;
 
-static void core_loadimage_svg(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void core_loadimage_svg(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     (void)filled;
 
@@ -71,7 +71,7 @@ static void core_loadimage_svg(GVJ_t * job, usershape_t *us, boxf b, boolean fil
     gvputs(job, "/>\n");
 }
 
-static void core_loadimage_fig(GVJ_t * job, usershape_t *us, boxf bf, boolean filled)
+static void core_loadimage_fig(GVJ_t * job, usershape_t *us, boxf bf, bool filled)
 {
     (void)filled;
 
@@ -114,7 +114,7 @@ static void core_loadimage_fig(GVJ_t * job, usershape_t *us, boxf bf, boolean fi
 	    b.LL.x, b.LL.y);
 }
 
-static void core_loadimage_vrml(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void core_loadimage_vrml(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     (void)b;
     (void)filled;
@@ -152,7 +152,7 @@ static void ps_freeimage(usershape_t *us)
 }
 
 /* usershape described by a postscript file */
-static void core_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void core_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     (void)filled;
 
@@ -211,7 +211,7 @@ static void core_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, boolean fill
 }
 
 /* usershape described by a member of a postscript library */
-static void core_loadimage_pslib(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void core_loadimage_pslib(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     int i;
     pointf AF[4];
@@ -243,7 +243,7 @@ static void core_loadimage_pslib(GVJ_t * job, usershape_t *us, boxf b, boolean f
     }
 }
 
-static void core_loadimage_vml(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void core_loadimage_vml(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     (void)filled;
 
@@ -254,7 +254,7 @@ static void core_loadimage_vml(GVJ_t * job, usershape_t *us, boxf b, boolean fil
     gvputs(job, " />\n");
 }
 
-static void core_loadimage_tk(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void core_loadimage_tk(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     (void)filled;
 
@@ -264,7 +264,7 @@ static void core_loadimage_tk(GVJ_t * job, usershape_t *us, boxf b, boolean fill
 	us->name, (b.UR.x + b.LL.x) / 2, (b.UR.y + b.LL.y) / 2);
 }
 
-static void core_loadimage_null(GVJ_t *gvc, usershape_t *us, boxf b, boolean filled)
+static void core_loadimage_null(GVJ_t *gvc, usershape_t *us, boxf b, bool filled)
 {
     /* null function - basically suppress the missing loader message */
     (void)gvc;

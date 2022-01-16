@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -219,7 +220,7 @@ static cairo_pattern_t* gvloadimage_gs_load(GVJ_t * job, usershape_t *us)
     return gs->pattern;
 }
 
-static void gvloadimage_gs_cairo(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void gvloadimage_gs_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     cairo_t *cr = (cairo_t *) job->context; /* target context */
     cairo_pattern_t *pattern = gvloadimage_gs_load(job, us);

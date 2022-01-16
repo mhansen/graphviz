@@ -40,6 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `device_sets_dpi`, `external_context`, `fit_mode`,
   `needs_refresh`, `click`, `has_grown`, and `has_been_rendered` fields of the
   `GVJ_t` struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `loadimage` member of the `gvloadimage_engine_t` struct must
+  now accept a C99 `bool` parameter instead of a former Graphviz-specific
+  `boolean` parameter.
 - **Breaking**: 1-bit fields of the `obj_state_s` struct are now unsigned
   instead of signed.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A
