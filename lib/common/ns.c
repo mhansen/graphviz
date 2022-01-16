@@ -14,6 +14,7 @@
  */
 
 #include <common/render.h>
+#include <stdbool.h>
 
 static void dfs_cutval(node_t * v, edge_t * par);
 static int dfs_range(node_t * v, edge_t * par, int low);
@@ -1146,7 +1147,7 @@ static node_t *checkdfs(graph_t* g, node_t * n)
     if (ND_mark(n))
 	return 0;
     ND_mark(n) = TRUE;
-    ND_onstack(n) = TRUE;
+    ND_onstack(n) = true;
     for (i = 0; (e = ND_out(n).list[i]); i++) {
 	w = aghead(e);
 	if (ND_onstack(w)) {
@@ -1173,15 +1174,17 @@ static node_t *checkdfs(graph_t* g, node_t * n)
 	    }
 	}
     }
-    ND_onstack(n) = FALSE;
+    ND_onstack(n) = false;
     return 0;
 }
 
 void check_cycles(graph_t * g)
 {
     node_t *n;
-    for (n = GD_nlist(g); n; n = ND_next(n))
-	ND_mark(n) = ND_onstack(n) = FALSE;
+    for (n = GD_nlist(g); n; n = ND_next(n)) {
+	ND_mark(n) = FALSE;
+	ND_onstack(n) = false;
+    }
     for (n = GD_nlist(g); n; n = ND_next(n))
 	checkdfs(g, n);
 }

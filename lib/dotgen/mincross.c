@@ -1214,7 +1214,7 @@ static void flat_search(graph_t * g, node_t * v)
     adjmatrix_t *M = GD_rank(g)[ND_rank(v)].flat;
 
     ND_mark(v) = TRUE;
-    ND_onstack(v) = TRUE;
+    ND_onstack(v) = true;
     hascl = GD_n_cluster(dot_root(g)) > 0;
     if (ND_flat_out(v).list)
 	for (i = 0; (e = ND_flat_out(v).list[i]); i++) {
@@ -1239,7 +1239,7 @@ static void flat_search(graph_t * g, node_t * v)
 		    flat_search(g, aghead(e));
 	    }
 	}
-    ND_onstack(v) = FALSE;
+    ND_onstack(v) = false;
 }
 
 static void flat_breakcycles(graph_t * g)
@@ -1251,7 +1251,8 @@ static void flat_breakcycles(graph_t * g)
 	flat = 0;
 	for (i = 0; i < GD_rank(g)[r].n; i++) {
 	    v = GD_rank(g)[r].v[i];
-	    ND_mark(v) = ND_onstack(v) = FALSE;
+	    ND_mark(v) = FALSE;
+	    ND_onstack(v) = false;
 	    flatindex(v) = i;
 	    if (ND_flat_out(v).size > 0 && flat == 0) {
 		GD_rank(g)[r].flat =
