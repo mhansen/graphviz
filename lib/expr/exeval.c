@@ -1754,31 +1754,10 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			v.integer = v.floating > r.floating;
 			return v;
 		case LSH:
-/* IBM compilers can't deal with these shift operators on long long.
- *                                      v.floating = ((Sflong_t)v.floating) << ((Sflong_t)r.floating);
- */
-			{
-				Sflong_t op1, op2;
-				op1 = (Sflong_t)v.floating;
-				op2 = (Sflong_t)r.floating;
-				v.floating = (double) (op1 << op2);
-			}
+			v.floating = (Sflong_t) ((Sfulong_t)v.floating << (Sflong_t)r.floating);
 			return v;
 		case RSH:
-#ifdef _WIN32
 			v.floating = (Sflong_t) ((Sfulong_t)v.floating >> (Sflong_t)r.floating);
-#else
-/* IBM compilers can't deal with these shift operators on long long.
- *                                      v.floating = ((Sfulong_t)v.floating) >> ((Sflong_t)r.floating);
- */
-			{
-				Sflong_t op1, op2;
-				op1 = (Sfulong_t)v.floating;
-				op2 = (Sflong_t)r.floating;
-				v.floating = (double) (op1 >> op2);
-			}
-#endif
-
 			return v;
 		}
 		break;
@@ -1919,27 +1898,10 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			v.integer = v.integer != r.integer;
 			return v;
 		case LSH:
-/* IBM compilers can't deal with these shift operators on long long.
- *                      v.floating = (Sflong_t)v.floating << (Sflong_t)r.floating;
- */
-			{
-				Sflong_t op1, op2;
-				op1 = (Sflong_t)v.floating;
-				op2 = (Sflong_t)r.floating;
-				v.floating = (double) (op1 << op2);
-			}
+			v.floating = (double)((Sflong_t)v.floating << (Sflong_t)r.floating);
 			return v;
 		case RSH:
-/* IBM compilers can't deal with these shift operators on long long.
- *                      v.integer = ((Sfulong_t)v.floating) >> (Sflong_t)r.floating;
- */
-			{
-				Sfulong_t op1;
-				Sflong_t op2;
-				op1 = (Sfulong_t)v.floating;
-				op2 = (Sflong_t)r.floating;
-				v.integer = op1 >> op2;
-			}
+			v.integer = (Sfulong_t)v.floating >> (Sflong_t)r.floating;
 			return v;
 		case '<':
 			v.integer = v.integer < r.integer;
