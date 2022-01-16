@@ -27,7 +27,7 @@ static int lvarn, llvari, flvari;
 
 Tobj root, null;
 Tobj rtno;
-int Erun;
+bool Erun;
 int Eerrlevel, Estackdepth, Eshowbody;
 
 #define PUSHJMP(op, np, b) op = (volatile jmp_buf *) np, np = (jmp_buf *) &b
@@ -148,7 +148,7 @@ void Einit (void) {
     sinfop = Marrayalloc ((long) SINFOINCR * SINFOSIZE);
     sinfon = SINFOINCR;
     sinfoi = 0;
-    Erun = FALSE;
+    Erun = false;
     running = 0;
 }
 
@@ -198,7 +198,7 @@ Tobj Eunit (Tobj co) {
     sinfoi = ownsinfoi;
     POPJMP (oeljbufp, eljbufp);
     Mpopmark (m);
-    Erun = TRUE;
+    Erun = true;
     return lrtno;
 }
 

@@ -174,7 +174,7 @@ int main (int argc, char **argv) {
             GMAPupdate ();
 #endif
         if (Erun)
-            TXTupdate (), Erun = FALSE;
+            TXTupdate (), Erun = false;
     }
 eop:
 #ifdef PARANOID
@@ -284,7 +284,7 @@ int APIENTRY WinMain (
                 processinput (TRUE);
         }
         if (Erun)
-            TXTupdate (), Erun = FALSE;
+            TXTupdate (), Erun = false;
     }
 
 eop:

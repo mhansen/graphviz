@@ -10,13 +10,15 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 typedef struct Tonm_t lvar_t;
 
 extern Tobj root, null;
 extern Tobj rtno;
-extern int Erun;
+extern bool Erun;
 extern int Eerrlevel, Estackdepth, Eshowbody;
 
 void Einit (void);
