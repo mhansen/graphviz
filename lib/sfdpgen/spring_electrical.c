@@ -517,7 +517,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
     goto RETURN;
   }
   assert(A->format == FORMAT_CSR);
-  A = SparseMatrix_symmetrize(A, TRUE);
+  A = SparseMatrix_symmetrize(A, true);
   ia = A->ia;
   ja = A->ja;
 
@@ -711,7 +711,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
     goto RETURN;
   }
   assert(A->format == FORMAT_CSR);
-  A = SparseMatrix_symmetrize(A, TRUE);
+  A = SparseMatrix_symmetrize(A, true);
   ia = A->ia;
   ja = A->ja;
 
@@ -955,7 +955,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
     goto RETURN;
   }
   assert(A->format == FORMAT_CSR);
-  A = SparseMatrix_symmetrize(A, TRUE);
+  A = SparseMatrix_symmetrize(A, true);
   ia = A->ia;
   ja = A->ja;
 
@@ -1256,7 +1256,7 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
 
 
   assert(A->format == FORMAT_CSR);
-  A = SparseMatrix_symmetrize(A, TRUE);
+  A = SparseMatrix_symmetrize(A, true);
   ia = A->ia;
   ja = A->ja;
   if (D){
@@ -1478,7 +1478,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
     goto RETURN;
   }
   assert(A->format == FORMAT_CSR);
-  A = SparseMatrix_symmetrize(A, TRUE);
+  A = SparseMatrix_symmetrize(A, true);
   ia = A->ia;
   ja = A->ja;
   id = D->ia;

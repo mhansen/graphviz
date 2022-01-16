@@ -244,7 +244,7 @@ check_overlap_RETURN:
 
   B = SparseMatrix_from_coordinate_format(A);
   SparseMatrix_delete(A);
-  A = SparseMatrix_symmetrize(B, FALSE);
+  A = SparseMatrix_symmetrize(B, false);
   SparseMatrix_delete(B);
   if (Verbose) fprintf(stderr, "found %d clashes\n", A->nz);
   return A;

@@ -636,7 +636,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
     edges[i] = pedge_new(2, dim, &x[dim*2*i]);
   }
 
-  A = SparseMatrix_symmetrize(A0, TRUE);
+  A = SparseMatrix_symmetrize(A0, true);
 
 
 

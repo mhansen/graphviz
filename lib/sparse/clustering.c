@@ -370,7 +370,7 @@ void modularity_clustering(SparseMatrix A, int inplace, int ncluster_target, int
   
   assert(A->m == A->n);
 
-  B = SparseMatrix_symmetrize(A, FALSE);
+  B = SparseMatrix_symmetrize(A, false);
 
   if (!inplace && B == A) {
     B = SparseMatrix_copy(A);

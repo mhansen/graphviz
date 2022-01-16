@@ -14,7 +14,7 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int edge_len_
 
   if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
     if (A->type == MATRIX_TYPE_REAL){
-      A = SparseMatrix_symmetrize(A, FALSE);
+      A = SparseMatrix_symmetrize(A, false);
       A = SparseMatrix_remove_diagonal(A);
     } else {
       A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);

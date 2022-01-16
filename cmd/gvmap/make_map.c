@@ -54,7 +54,7 @@ void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMat
   int iter_max = 100;
 
   {double *dist = NULL;
-    A = SparseMatrix_symmetrize(A0, FALSE);
+    A = SparseMatrix_symmetrize(A0, false);
     SparseMatrix_distance_matrix(A, 0, &dist);
     SparseMatrix_delete(A);
     A = SparseMatrix_from_dense(n, n, dist);
@@ -1523,7 +1523,7 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
       int *ia = graph->ia, *ja = graph->ja, nz = 0, jj;
       int KB;
 
-      graph = SparseMatrix_symmetrize(graph, TRUE);
+      graph = SparseMatrix_symmetrize(graph, true);
       ia = graph->ia; ja = graph->ja;
       dist=avgdist = 0.;
       for (i = 0; i < n; i++){

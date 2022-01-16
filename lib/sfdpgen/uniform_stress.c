@@ -113,7 +113,7 @@ static SparseMatrix get_distance_matrix(SparseMatrix A, double scaling){
   int i;
 
   if (A->type == MATRIX_TYPE_REAL){
-    B = SparseMatrix_symmetrize(A, FALSE);
+    B = SparseMatrix_symmetrize(A, false);
   } else {
     B = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   }
