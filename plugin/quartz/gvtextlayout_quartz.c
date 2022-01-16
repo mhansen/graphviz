@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -86,7 +87,7 @@ void quartz_free_layout(void *layout)
 
 #endif
 
-boolean quartz_textlayout(textspan_t *para, char **fontpath)
+bool quartz_textlayout(textspan_t *para, char **fontpath)
 {
 	void *line = quartz_new_layout(para->font->name, para->font->size, para->str);
 	if (line)
@@ -96,10 +97,10 @@ boolean quartz_textlayout(textspan_t *para, char **fontpath)
 		para->free_layout = &quartz_free_layout;
 		quartz_size_layout((void*)line, &para->size.x, &para->size.y, &para->yoffset_layout);
 		para->yoffset_centerline = 0.2 * para->font->size;
-		return TRUE;
+		return true;
 	}
 	else
-		return FALSE;
+		return false;
 };
 
 static gvtextlayout_engine_t quartz_textlayout_engine = {

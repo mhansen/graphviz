@@ -14,13 +14,14 @@
 #include "gvplugin.h"
 #include "gvcjob.h"
 #include "gvcommon.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
     struct gvtextlayout_engine_s {
-	boolean (*textlayout) (textspan_t *span, char** fontpath);
+	bool (*textlayout) (textspan_t *span, char** fontpath);
     };
 
 #ifdef __cplusplus

@@ -63,7 +63,7 @@ void gdiplus_free_layout(void *layout)
 		delete reinterpret_cast<Layout*>(layout);
 };
 
-boolean gdiplus_textlayout(textspan_t *span, char **)
+bool gdiplus_textlayout(textspan_t *span, char **)
 {
 	/* ensure GDI+ is started up: since we get called outside of a job, we can't rely on GDI+ startup then */
 	UseGdiplus();
@@ -94,7 +94,7 @@ boolean gdiplus_textlayout(textspan_t *span, char **)
 	span->size.y = layout->font->GetHeight(&measureGraphics);
 	span->yoffset_layout = fontFamily.GetCellAscent(style) * span->font->size / fontFamily.GetEmHeight(style); /* convert design units to pixels */
 	span->yoffset_centerline = 0;
-	return TRUE;
+	return true;
 };
 
 static gvtextlayout_engine_t gdiplus_textlayout_engine = {

@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `loadimage` member of the `gvloadimage_engine_t` struct must
   now accept a C99 `bool` parameter instead of a former Graphviz-specific
   `boolean` parameter.
+- **Breaking**: The `textlayout` member of the `gvtextlayout_engine_t` struct
+  must now return a C99 `bool` instead of a Graphviz-specific `boolean`.
 - **Breaking**: 1-bit fields of the `obj_state_s` struct are now unsigned
   instead of signed.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A
