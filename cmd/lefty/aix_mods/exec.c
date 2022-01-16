@@ -63,7 +63,7 @@ static char *errnam[] = {
     "table changed during a forin loop",
 };
 
-static int errdo;
+static bool errdo;
 
 /* stack information */
 typedef struct sinfo_t {
@@ -219,7 +219,7 @@ static Tobj eeval(Tobj co, int ci)
     int i1, i2, res;
 
   tailrec:
-    errdo = TRUE;
+    errdo = true;
     v1o = NULL;
     ctype = TCgettype(co, ci);
     switch (ctype) {
@@ -522,7 +522,7 @@ static Tobj efcall(Tobj co, int ci)
     sinfoi = ownsinfoi;
     Mpopmark(m);
     lrtno = rtno, rtno = NULL;
-    errdo = TRUE;
+    errdo = true;
     return lrtno;
 }
 
@@ -950,7 +950,7 @@ static void err(int errnum, int level, Tobj co, int ci)
 	}
 	if (Estackdepth == 1) {
 	    fprintf(stderr, "\n");
-	    errdo = FALSE;
+	    errdo = false;
 	}
 	for (i = si; i >= 0; i--) {
 	    if (sinfop[i].fco) {
@@ -962,7 +962,7 @@ static void err(int errnum, int level, Tobj co, int ci)
 	printbody(s, Eshowbody), free(s);
     }
     fprintf(stderr, "\n");
-    errdo = FALSE;
+    errdo = false;
 }
 
 static void printbody(char *s, int mode)
