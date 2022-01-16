@@ -50,6 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `pack_graph` now takes a `bool` array instead of a `boolean` array.
 - **Breaking**: `pccomps` now takes a C99 `bool` instead of a `boolean` output
   parameter.
+- **Breaking**: `gvusershape_file_access` now returns a C99 `bool` instead of a
+  Graphviz-specific `boolean`.
 - **Breaking**: 1-bit fields of the `obj_state_s` struct are now unsigned
   instead of signed.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A

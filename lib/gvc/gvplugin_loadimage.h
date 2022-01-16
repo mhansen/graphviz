@@ -31,7 +31,7 @@ extern "C" {
 #define GVPLUGIN_LOADIMAGE_API /* nothing */
 #endif
 
-GVPLUGIN_LOADIMAGE_API boolean gvusershape_file_access(usershape_t *us);
+GVPLUGIN_LOADIMAGE_API bool gvusershape_file_access(usershape_t *us);
 GVPLUGIN_LOADIMAGE_API void gvusershape_file_release(usershape_t *us);
 
     struct gvloadimage_engine_s {
