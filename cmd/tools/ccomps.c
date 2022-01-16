@@ -23,12 +23,13 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/likely.h>
 #include <cgraph/unreachable.h>
+#include <cgraph/exit.h>
 
 static void *xmalloc(size_t size) {
   void *p = malloc(size);
   if (UNLIKELY(size > 0 && p == NULL)) {
     fprintf(stderr, "ccomps: out of memory\n");
-    exit(EXIT_FAILURE);
+    graphviz_exit(EXIT_FAILURE);
   }
   return p;
 }
@@ -37,7 +38,7 @@ static void *xcalloc(size_t count, size_t size) {
   void *p = calloc(count, size);
   if (UNLIKELY(count > 0 && size > 0 && p == NULL)) {
     fprintf(stderr, "ccomps: out of memory\n");
-    exit(EXIT_FAILURE);
+    graphviz_exit(EXIT_FAILURE);
   }
   return p;
 }
@@ -46,7 +47,7 @@ static void *xrealloc(void *ptr, size_t size) {
   void *p = realloc(ptr, size);
   if (UNLIKELY(size > 0 && p == NULL)) {
     fprintf(stderr, "ccomps: out of memory\n");
-    exit(EXIT_FAILURE);
+    graphviz_exit(EXIT_FAILURE);
   }
   return p;
 }
@@ -129,7 +130,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf("%s",useString);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static void split(char *name)

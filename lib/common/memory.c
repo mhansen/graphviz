@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <cgraph/exit.h>
 #include <cgraph/likely.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,7 +29,7 @@ void *zrealloc(void *ptr, size_t size, size_t elt, size_t osize)
     void *p = realloc(ptr, size * elt);
     if (UNLIKELY(p == NULL && size)) {
 	fprintf(stderr, "out of memory\n");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
     if (osize < size)
 	memset((char *) p + (osize * elt), '\0', (size - osize) * elt);
@@ -40,7 +41,7 @@ void *gcalloc(size_t nmemb, size_t size)
     char *rv = calloc(nmemb, size);
     if (UNLIKELY(nmemb > 0 && size > 0 && rv == NULL)) {
 	fprintf(stderr, "out of memory\n");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
     return rv;
 }
@@ -53,7 +54,7 @@ void *gmalloc(size_t nbytes)
     rv = malloc(nbytes);
     if (UNLIKELY(rv == NULL)) {
 	fprintf(stderr, "out of memory\n");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
     return rv;
 }
@@ -63,7 +64,7 @@ void *grealloc(void *ptr, size_t size)
     void *p = realloc(ptr, size);
     if (UNLIKELY(p == NULL && size)) {
 	fprintf(stderr, "out of memory\n");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
     return p;
 }

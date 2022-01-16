@@ -25,6 +25,8 @@
 #include <getopt.h>
 #include "graph_generator.h"
 
+#include <cgraph/exit.h>
+
 typedef enum { unknown, grid, circle, complete, completeb, 
     path, tree, torus, cylinder, mobius, randomg, randomt, ball,
     sierpinski, hypercube, star, wheel, trimesh
@@ -54,7 +56,7 @@ static FILE *openFile(const char *name)
     fp = fopen(name, "w");
     if (!fp) {
 	fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
-	exit(1);
+	graphviz_exit(1);
     }
     return fp;
 }
@@ -92,7 +94,7 @@ static char *Usage = "Usage: %s [-dv?] [options]\n\
 static void usage(int v)
 {
     fprintf(v ? stderr : stdout, Usage, cmd);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static void errexit(int opt) {
@@ -543,5 +545,5 @@ int main(int argc, char *argv[])
     }
     fprintf(opts.outfile, "}\n");
 
-    exit(0);
+    graphviz_exit(0);
 }

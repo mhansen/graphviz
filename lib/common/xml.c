@@ -1,3 +1,4 @@
+#include <cgraph/exit.h>
 #include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
@@ -119,7 +120,7 @@ static int xml_core(char previous, const char **current, xml_flags_t flags,
     // TODO: a better strategy than aborting on malformed data
     if (is_invalid) {
       fprintf(stderr, "Error during conversion to \"UTF-8\". Quiting.\n");
-      exit(EXIT_FAILURE);
+      graphviz_exit(EXIT_FAILURE);
     }
 
     // Decode the character. Refer again to the above table to understand this

@@ -8,6 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/exit.h>
+
 #include "glutrender.h"
 #include "viewport.h"
 #include "arcball.h"
@@ -153,7 +155,7 @@ static void cb_drag(int X, int Y)
 static void cb_keyboard(unsigned char key, int x, int y)
 {
     if (key==27)    /*ESC*/
-	exit (1);
+	graphviz_exit(1);
     if(key=='3')
 	switch2D3D(NULL, 0, 0,glMouseLeftButton);
     if(key=='c')
@@ -210,7 +212,7 @@ static int cb_game_mode(char* optArg)
     else 
     {
 	printf("smyrna cannot initialize requested screen resolution and rate!\n");
-	exit(-1);
+	graphviz_exit(-1);
 
     }
 

@@ -25,6 +25,7 @@
 #include "support.h"
 #include "menucallbacks.h"
 #include "gltemplate.h"
+#include <cgraph/exit.h>
 #include <common/memory.h>
 #include "gvprpipe.h"
 #include "frmobjectui.h"
@@ -79,7 +80,7 @@ static char *useString = "Usage: smyrna [-v?] <file>\n\
 static void usage(int v)
 {
     fputs(useString, stdout);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static char *Info[] = {
@@ -108,7 +109,7 @@ static char *parseArgs(int argc, char *argv[], ViewInfo * view)
 	case 'V':
 	    fprintf(stderr, "%s version %s (%s)\n",
 		    Info[0], Info[1], Info[2]);
-	    exit (0);
+	    graphviz_exit(0);
 	    break;
 	case '?':
 	    if (optopt == '\0')

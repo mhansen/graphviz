@@ -30,6 +30,7 @@
 #include "arcball.h"
 #include "hotkeymap.h"
 #include "topviewfuncs.h"
+#include <cgraph/exit.h>
 #include <cgraph/strcasecmp.h>
 
 
@@ -267,7 +268,7 @@ void init_viewport(ViewInfo * view)
 	fprintf(stderr,
 		"default attributes template graph file \"%s\" not found\n",
 		view->template_file);
-	exit(-1);
+	graphviz_exit(-1);
     } 
     view->systemGraphs.def_attrs = agread(input_file, NULL);
     fclose (input_file);
@@ -276,21 +277,21 @@ void init_viewport(ViewInfo * view)
 	fprintf(stderr,
 		"could not load default attributes template graph file \"%s\"\n",
 		view->template_file);
-	exit(-1);
+	graphviz_exit(-1);
     }
     if (!path)
 	path = smyrnaPath("attr_widgets.dot");
     input_file2 = fopen(path, "rb");
     if (!input_file2) {
 	fprintf(stderr,	"default attributes template graph file \"%s\" not found\n",smyrnaPath("attr_widgets.dot"));
-	exit(-1);
+	graphviz_exit(-1);
 
     }
     view->systemGraphs.attrs_widgets = agread(input_file2, NULL);
     fclose (input_file2);
     if (!(view->systemGraphs.attrs_widgets )) {
 	fprintf(stderr,"could not load default attribute widgets graph file \"%s\"\n",smyrnaPath("attr_widgets.dot"));
-	exit(-1);
+	graphviz_exit(-1);
     }
     //init graphs
     view->g = NULL;		//no graph, gl screen should check it

@@ -39,6 +39,8 @@
 #include <gd.h>
 #include <stdbool.h>
 
+#include <cgraph/exit.h>
+
 static char *pstopng="gs -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=- -q -";
 
 static gdImagePtr imageLoad (char *filename)
@@ -52,12 +54,12 @@ static gdImagePtr imageLoad (char *filename)
     ext = strrchr(filename, '.');
     if (!ext) {
         fprintf(stderr, "Filename \"%s\" has no file extension.\n", filename);
-        exit(EX_USAGE);
+        graphviz_exit(EX_USAGE);
     }
     rc = stat(filename, &statbuf);
     if (rc) {
 	 fprintf(stderr, "Failed to stat \"%s\"\n", filename);
-         exit(EX_NOINPUT);
+         graphviz_exit(EX_NOINPUT);
     }
     if (strcasecmp(ext, ".ps") == 0) {
 	ext = ".png";
@@ -78,14 +80,14 @@ static gdImagePtr imageLoad (char *filename)
 	free(tmp);
         if (!f) {
             fprintf(stderr, "Failed to open converted \"%s%s\"\n", filename, ext);
-            exit(EX_NOINPUT);
+            graphviz_exit(EX_NOINPUT);
         }
     }
     else {
         f = fopen(filename, "rb");
         if (!f) {
             fprintf(stderr, "Failed to open \"%s\"\n", filename);
-            exit(EX_NOINPUT);
+            graphviz_exit(EX_NOINPUT);
         }
     }
     im = 0;
@@ -94,7 +96,7 @@ static gdImagePtr imageLoad (char *filename)
         im = gdImageCreateFromPng(f);
 #else
         fprintf(stderr, "PNG support is not available\n");
-        exit(EX_UNAVAILABLE);
+        graphviz_exit(EX_UNAVAILABLE);
 #endif
     }
     else if (strcasecmp(ext, ".gif") == 0) {
@@ -102,7 +104,7 @@ static gdImagePtr imageLoad (char *filename)
         im = gdImageCreateFromGif(f);
 #else
         fprintf(stderr, "GIF support is not available\n");
-        exit(EX_UNAVAILABLE);
+        graphviz_exit(EX_UNAVAILABLE);
 #endif
     }
     else if (strcasecmp(ext, ".jpg") == 0) {
@@ -110,13 +112,13 @@ static gdImagePtr imageLoad (char *filename)
         im = gdImageCreateFromJpeg(f);
 #else
         fprintf(stderr, "JPEG support is not available\n");
-        exit(EX_UNAVAILABLE);
+        graphviz_exit(EX_UNAVAILABLE);
 #endif
     }
     fclose(f);
     if (!im) {
         fprintf(stderr, "Loading image from file  \"%s\" failed!\n", filename);
-        exit(EX_DATAERR);
+        graphviz_exit(EX_DATAERR);
     }
     return im;
 }
@@ -152,11 +154,11 @@ int main(int argc, char **argv)
 
     if (argc == 2 && strcmp(argv[1], "-?") == 0) {
         fprintf(stderr, "Usage: diffimg image1 image2 [outimage]\n");
-        exit(0);
+        graphviz_exit(0);
     }
     if (argc < 3) {
         fprintf(stderr, "Usage: diffimg image1 image2 [outimage]\n");
-        exit(EX_USAGE);
+        graphviz_exit(EX_USAGE);
     }
     A = imageLoad(argv[1]);
     B = imageLoad(argv[2]);

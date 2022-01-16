@@ -29,6 +29,7 @@
 #include <unistd.h>
 #endif
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
 
 #include <getopt.h>
@@ -289,7 +290,7 @@ static FILE *openFile(const char *name)
     fp = fopen(name, "w");
     if (!fp) {
 	fprintf(stderr, "gvpack: could not open file %s for writing\n", name);
-	exit(1);
+	graphviz_exit(1);
     }
     return (fp);
 }
@@ -306,7 +307,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf(useString, CmdName);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static void scanArgs(int argc, char **argv)

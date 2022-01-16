@@ -21,6 +21,7 @@
  */
 #ifndef STANDALONE
 #include "cgraph.h"
+#include "exit.h"
 #include "globals.h"
 #include "logic.h"
 #include "arith.h"

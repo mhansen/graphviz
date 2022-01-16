@@ -11,6 +11,7 @@
 
 #include    "convert.h"
 #include    <cgraph/agxbuf.h>
+#include    <cgraph/exit.h>
 #include    <getopt.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
@@ -71,7 +72,7 @@ static void popString(slist ** stk)
     slist *sp = *stk;
     if (!sp) {
 	fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
-	exit(1);
+	graphviz_exit(1);
     }
     *stk = sp->next;
     free(sp);
@@ -81,7 +82,7 @@ static char *topString(slist * stk)
 {
     if (!stk) {
 	fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
-	exit(1);
+	graphviz_exit(1);
     }
     return stk->buf;
 }
@@ -209,7 +210,7 @@ static void push_subg(Agraph_t * g)
     if (GSP == STACK_DEPTH) {
 	fprintf(stderr, "graphml2gv: Too many (> %d) nestings of subgraphs\n",
 		STACK_DEPTH);
-	exit(1);
+	graphviz_exit(1);
     } else if (GSP == 0)
 	root = g;
     G = Gstack[GSP++] = g;
@@ -220,7 +221,7 @@ static Agraph_t *pop_subg(void)
     Agraph_t *g;
     if (GSP == 0) {
 	fprintf(stderr, "graphml2gv: Gstack underflow in graph parser\n");
-	exit(1);
+	graphviz_exit(1);
     }
     g = Gstack[--GSP];
     if (GSP > 0)
@@ -665,7 +666,7 @@ static FILE *openFile(const char *name)
     if (!fp) {
 	fprintf(stderr, "%s: could not open file %s for writing\n", CmdName, name);
 	perror(name);
-	exit(1);
+	graphviz_exit(1);
     }
     return fp;
 }
@@ -679,7 +680,7 @@ static const char *use = "Usage: %s [-gd?] [-o<file>] [<graphs>]\n\
 static void usage(int v)
 {
     fprintf(stderr, use, CmdName);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static char *cmdName(char *path)
@@ -778,9 +779,9 @@ int main(int argc, char **argv)
 	    fflush(outFile);
 	}
     }
-    exit(rv);
+    graphviz_exit(rv);
 #else
     fputs("cvtgxl: not configured for conversion from GXL to GV\n", stderr);
-    exit(1);
+    graphviz_exit(1);
 #endif
 }

@@ -33,6 +33,7 @@
 #endif
 #include <errno.h>
 
+#include <cgraph/exit.h>
 #include <gvc/gvplugin_device.h>
 
 #include <cairo.h>
@@ -102,7 +103,7 @@ static void handle_client_message(GVJ_t * job, XClientMessageEvent * cmev)
     window = (window_t *)job->window;
     if (cmev->format == 32
         && (Atom) cmev->data.l[0] == window->wm_delete_window_atom)
-        exit(0);
+        graphviz_exit(0);
 }
 
 static bool handle_keypress(GVJ_t *job, XKeyEvent *kev)

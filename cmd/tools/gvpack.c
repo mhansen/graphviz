@@ -21,6 +21,7 @@
 
 #include <assert.h>
 #include <gvc/gvc.h>
+#include <cgraph/exit.h>
 #include <common/render.h>
 #include <neatogen/neatoprocs.h>
 #include <ingraphs/ingraphs.h>
@@ -94,7 +95,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf("%s",useString);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static FILE *openFile(const char *name)
@@ -104,7 +105,7 @@ static FILE *openFile(const char *name)
     fp = fopen(name, "w");
     if (!fp) {
 	fprintf(stderr, "gvpack: could not open file %s for writing\n", name);
-	exit(1);
+	graphviz_exit(1);
     }
     return (fp);
 }
@@ -298,7 +299,7 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
     if (d != 2) {
 	fprintf(stderr, "Error: graph %s has dim = %d (!= 2)\n", agnameof(g),
 		d);
-	exit(1);
+	graphviz_exit(1);
     }
     Ndim = GD_ndim(g) = 2;
     init_node_edge(g);
@@ -311,7 +312,7 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
 	    else if (ret > 0)
 		fprintf(stderr, "gvpack does not support backgrounds as found in graph %s\n",
 		    agnameof(g));
-	    exit(1);
+	    graphviz_exit(1);
 	}
 	if (Concentrate) { /* check for edges without pos info */
 	    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -781,7 +782,7 @@ static Agraph_t **readGraphs(int *cp, GVC_t* gvc)
 	else if (kind.directed != g->desc.directed) {
 	    fprintf(stderr,
 		    "Error: all graphs must be directed or undirected\n");
-	    exit(1);
+	    graphviz_exit(1);
 	} else if (!agisstrict(g))
 	    kind = g->desc;
 	init_graph(g, doPack, gvc);
@@ -859,13 +860,13 @@ int main(int argc, char *argv[])
     gvc = gvContextPlugins(lt_preloaded_symbols, DEMAND_LOADING);
     gs = readGraphs(&cnt, gvc);
     if (cnt == 0)
-	exit(0);
+	graphviz_exit(0);
 
     /* pack graphs */
     if (doPack) {
 	if (packGraphs(cnt, gs, 0, &pinfo)) {
 	    fprintf(stderr, "gvpack: packing of graphs failed.\n");
-	    exit(1);
+	    graphviz_exit(1);
 	}
     }
 
@@ -879,5 +880,5 @@ int main(int argc, char *argv[])
 	attach_attrs(g);
     }
     agwrite(g, outfp);
-    exit(0);
+    graphviz_exit(0);
 }

@@ -102,7 +102,7 @@ SparseMatrix_import_dot (Agraph_t* g, int dim, double **label_sizes, double **x,
   nedges = agnedges (g);
   if (format != FORMAT_CSR && format != FORMAT_COORD) {
     fprintf (stderr, "Format %d not supported\n", format);
-    exit (1);
+    graphviz_exit(1);
   }
 
   /* Assign node ids */

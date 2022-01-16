@@ -20,6 +20,7 @@
 #include "config.h"
 
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <common/arith.h>
 #include <common/types.h>
 #include <common/utils.h>
@@ -87,14 +88,14 @@ static void push(estack_t* sp, Agedge_t * ep, nodeinfo_t* ninfo)
 	    blk_t *bp = NEW(blk_t);
 	    if (bp == 0) {
 		fprintf(stderr, "%s: Out of memory\n", CmdName);
-		exit(1);
+		graphviz_exit(1);
 	    }
 	    bp->prev = sp->Stk.curblk;
 	    bp->next = NULL;
 	    bp->data = N_NEW(BIGBUF, Agedge_t *);
 	    if (bp->data == 0) {
 		fprintf(stderr, "%s: Out of memory\n", CmdName);
-		exit(1);
+		graphviz_exit(1);
 	    }
 	    bp->endp = bp->data + BIGBUF;
 	    sp->Stk.curblk->next = bp;
@@ -237,7 +238,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf(useString, CmdName);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static void init(int argc, char *argv[])

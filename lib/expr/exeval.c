@@ -21,6 +21,7 @@
 #define _BLD_sfio 1
 #endif
 
+#include <cgraph/exit.h>
 #include <expr/exlib.h>
 #include <expr/exop.h>
 #include <inttypes.h>
@@ -1240,7 +1241,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		if (ex->disc->exitf)
 			(*ex->disc->exitf) (ex, env, (int)v.integer);
 		else
-			exit((int)v.integer);
+			graphviz_exit((int)v.integer);
 		/*NOTREACHED*/
 		v.integer = -1;
 		return v;
@@ -1483,7 +1484,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		Sfio_t *buffer = sfstropen();
 		if (buffer == NULL) {
 			fprintf(stderr, "out of memory\n");
-			exit(EXIT_FAILURE);
+			graphviz_exit(EXIT_FAILURE);
 		}
 		print(ex, expr, env, buffer);
 		v.string = exstash(buffer, ex->ve);

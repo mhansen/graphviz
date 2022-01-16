@@ -13,6 +13,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <cgraph/exit.h>
 #include <common/memory.h>
 #include <gvc/gvc.h>
 #include <labels/xlabels.h>
@@ -105,14 +106,14 @@ int doxlabel(opts_t * opts)
     if (!(gp = agread(opts->inf))) {
 	fprintf(stderr, "%s: %s not a dot file\n", progname,
 		opts->infname);
-	exit(1);
+	graphviz_exit(1);
     }
     fclose(opts->inf);
 
     fprintf(stderr, "laying out %s\n", opts->lay);
     if (gvLayout(opts->gvc, gp, opts->lay)) {
 	fprintf(stderr, "%s: layout %s failed\n", progname, opts->lay);
-	exit(1);
+	graphviz_exit(1);
     }
 
     fprintf(stderr, "attach labels\n");
@@ -236,7 +237,7 @@ static FILE *openFile(const char *name, const char *mode)
 	    modestr = "writing";
 	fprintf(stderr, "%s: could not open file %s for %s -- %s\n",
 		progname, name, modestr, strerror(errno));
-	exit(1);
+	graphviz_exit(1);
     }
     return (fp);
 }
@@ -266,7 +267,7 @@ static void init(int argc, char *argv[], opts_t * opts)
 	    else {
 		fprintf(stderr, "%s: unknown layout %s\n", progname,
 			optarg);
-		exit(1);
+		graphviz_exit(1);
 	    }
 	    break;
 	case 'T':
@@ -276,7 +277,7 @@ static void init(int argc, char *argv[], opts_t * opts)
 	    else {
 		fprintf(stderr, "%s: unknown format %s\n", progname,
 			optarg);
-		exit(1);
+		graphviz_exit(1);
 	    }
 	    break;
 	case 'v':
@@ -291,7 +292,7 @@ static void init(int argc, char *argv[], opts_t * opts)
 	    break;
 	default:
 	    usage(progname);
-	    exit(1);
+	    graphviz_exit(1);
 	}
     }
 

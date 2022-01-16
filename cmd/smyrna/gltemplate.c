@@ -13,6 +13,7 @@
 #include "gui.h"
 #include "viewport.h"
 #include "gltemplate.h"
+#include <cgraph/exit.h>
 #include <glcomp/glutils.h>
 #include "glexpose.h"
 #include "glmotion.h"
@@ -427,7 +428,7 @@ GdkGLConfig *configure_gl(void)
 					     GDK_GL_MODE_DEPTH);
 	if (glconfig == NULL) {
 	    g_print("*** No appropriate OpenGL-capable visual found.\n");
-	    exit(1);
+	    graphviz_exit(1);
 	}
     }
 

@@ -17,6 +17,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <cgraph/exit.h>
+
 static int openF(char *fname)
 {
     int fd = open(fname, O_RDONLY);
@@ -24,7 +26,7 @@ static int openF(char *fname)
     if (fd < 0) {
 	fprintf(stderr, "Could not open %s for reading: %s\n\n", fname,
 	        strerror(errno));
-	exit(1);
+	graphviz_exit(1);
     }
     return fd;
 }
@@ -51,7 +53,7 @@ main(int argc, char *argv[])
 
     if (argc != 3) {
 	fprintf(stderr, "Usage: %s <file1> <file2>\n", argv[0]);
-	exit(1);
+	graphviz_exit(1);
     }
 
     f1 = openF(argv[1]);
@@ -92,6 +94,6 @@ main(int argc, char *argv[])
     } else
 	xval = 0;
 
-    exit(xval);
+    graphviz_exit(xval);
 
 }

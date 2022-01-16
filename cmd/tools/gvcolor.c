@@ -21,6 +21,7 @@
 
 #include <assert.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <stdlib.h>
 typedef struct Agnodeinfo_t {
     Agrec_t h;
@@ -78,7 +79,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf("%s",useString);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static void init(int argc, char *argv[])
@@ -99,7 +100,7 @@ static void init(int argc, char *argv[])
 	    break;
 	default:
 	    fprintf(stderr, "gvcolor: unexpected error\n");
-	    exit(EXIT_FAILURE);
+	    graphviz_exit(EXIT_FAILURE);
 	}
     }
     argv += optind;
@@ -121,7 +122,7 @@ static void color(Agraph_t * g)
     if (agattr(g, AGNODE, "pos", 0) == NULL) {
 	fprintf(stderr,
 		"graph must be run through 'dot' before 'gvcolor'\n");
-	exit(1);
+	graphviz_exit(1);
     }
     aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), TRUE);
     if (agattr(g, AGNODE, "style", 0) == NULL)
@@ -253,5 +254,5 @@ int main(int argc, char **argv)
 	agclose(g);
     }
 
-    exit(0);
+    graphviz_exit(0);
 }

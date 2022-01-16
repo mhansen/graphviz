@@ -19,6 +19,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <cgraph/exit.h>
+
 static char *shellpath;
 
 static char *buildpath (char *);
@@ -37,16 +39,16 @@ int WINAPI wWinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
     if (!shellpath || !(path = buildpath ("lefty"))) {
         if (!GetModuleFileName (hInstance, cmd, 256) ||
                 !(s = strrchr (cmd, '\\')))
-            exit (1);
+            graphviz_exit(1);
         *s = 0;
         shellpath = &cmd[0];
         if (!(path = buildpath ("lefty")))
-            exit (1);
+            graphviz_exit(1);
     }
     argv = CommandLineToArgvW(pCmdLine, &argc);
     if (argc == 1 && wcscmp(argv[0], L"-?") == 0) {
         fprintf(stderr, "usage: lneato [-V] [-lm (sync|async)] [-el (0|1)] <filename>\n");
-        exit(0);
+        graphviz_exit(0);
     }
     if (pCmdLine[0] == 0)
         snprintf(cmd, sizeof(cmd), "%s -e \"load('dotty.lefty');"
@@ -57,7 +59,7 @@ int WINAPI wWinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
                  pCmdLine);
 
     handle = WinExec (cmd, SW_SHOW);
-    exit (0);
+    graphviz_exit(0);
 }
 
 #define PATHDEL '\\'

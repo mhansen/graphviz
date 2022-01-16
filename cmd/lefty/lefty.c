@@ -15,6 +15,7 @@
 #define LEFTYVERSION "10 Mar 2005"
 
 #include "builddate.h"
+#include <cgraph/exit.h>
 #include "common.h"
 #include "g.h"
 #include "code.h"
@@ -304,7 +305,7 @@ eop:
     term ();
 #endif
     printusage ();
-    exit (0);
+    graphviz_exit(0);
 }
 
 #endif
@@ -409,7 +410,7 @@ static void usage(int eval)
 {
     fprintf (stderr, "Usage: lefty [options] [file]\n");
     fputs (usestr, stderr);
-    exit (eval);
+    graphviz_exit(eval);
 }
 
 static void processstr (char *buf) {
@@ -475,7 +476,7 @@ static void processargs (int argc, char *argv[]) {
                 fclose(fp);
             if ((fp = fopen (argv[0], "r")) == NULL) {
                 fprintf (stderr, "cannot open input file: %s\n", argv[0]);
-                exit(2);
+                graphviz_exit(2);
             }
         }
         argv++, argc--;

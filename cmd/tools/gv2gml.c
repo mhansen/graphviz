@@ -25,6 +25,7 @@
 #include <getopt.h>
 
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
@@ -190,7 +191,7 @@ arrowEnd (char* s0, char* pfx, int* fp, double* xp, double* yp)
     s = readPoint (s, xp, yp);
     if (s == NULL) {
 	fprintf (stderr, "Illegal spline end: %s\n", s0);
-	exit (1);
+	graphviz_exit(1);
     }
     *fp = 1;
     return s;
@@ -673,7 +674,7 @@ static FILE *openFile(const char *name)
         fprintf(stderr, "%s: could not open file %s for writing\n",
                 CmdName, name);
         perror(name);
-        exit(1);
+        graphviz_exit(1);
     }
     return fp;
 }
@@ -687,7 +688,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf(useString, CmdName);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static char *cmdName(char *cmd)
@@ -765,5 +766,5 @@ int main(int argc, char **argv)
 	gv_to_gml(G, outFile);
 	fflush(outFile);
     }
-    exit(rv);
+    graphviz_exit(rv);
 }

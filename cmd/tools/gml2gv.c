@@ -19,6 +19,8 @@
 
 #include <getopt.h>
 
+#include <cgraph/exit.h>
+
 #define N_NEW(n,t)       calloc((n),sizeof(t))
 
 static int Verbose;
@@ -60,7 +62,7 @@ static FILE *openFile(const char *name)
         fprintf(stderr, "%s: could not open file %s for writing\n",
                 CmdName, name);
         perror(name);
-        exit(1);
+        graphviz_exit(1);
     }
     return fp;
 }
@@ -76,7 +78,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf(useString, CmdName);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static char *cmdName(char *path)
@@ -176,6 +178,6 @@ int main(int argc, char **argv)
 	    fflush(outFile);
 	}
     }
-    exit(rv);
+    graphviz_exit(rv);
 }
 
