@@ -22,7 +22,7 @@ typedef struct {
     void (*vertex_gen) (pointf*, pointf*);
 } poly_desc_t;
  
-static port Center = {.theta = -1, .clip = 1};
+static port Center = {.theta = -1, .clip = true};
 
 #define ATTR_SET(a,n) ((a) && (*(agxget(n,a->index)) != '\0'))
   /* Default point size = 0.05 inches or 3.6 points */
@@ -42,28 +42,28 @@ static char *point_style[3] = { "invis\0", "filled\0", 0 };
 static void poly_init(node_t * n);
 static void poly_free(node_t * n);
 static port poly_port(node_t * n, char *portname, char *);
-static boolean poly_inside(inside_t * inside_context, pointf p);
+static bool poly_inside(inside_t * inside_context, pointf p);
 static int poly_path(node_t * n, port * p, int side, boxf rv[], int *kptr);
 static void poly_gencode(GVJ_t * job, node_t * n);
 
 static void record_init(node_t * n);
 static void record_free(node_t * n);
 static port record_port(node_t * n, char *portname, char *);
-static boolean record_inside(inside_t * inside_context, pointf p);
+static bool record_inside(inside_t * inside_context, pointf p);
 static int record_path(node_t * n, port * p, int side, boxf rv[],
 		       int *kptr);
 static void record_gencode(GVJ_t * job, node_t * n);
 
 static void point_init(node_t * n);
 static void point_gencode(GVJ_t * job, node_t * n);
-static boolean point_inside(inside_t * inside_context, pointf p);
+static bool point_inside(inside_t * inside_context, pointf p);
 
-static boolean epsf_inside(inside_t * inside_context, pointf p);
+static bool epsf_inside(inside_t * inside_context, pointf p);
 static void epsf_gencode(GVJ_t * job, node_t * n);
 
 static pointf star_size (pointf);
 static void star_vertices (pointf*, pointf*);
-static boolean star_inside(inside_t * inside_context, pointf p);
+static bool star_inside(inside_t * inside_context, pointf p);
 static poly_desc_t star_gen = {
     star_size,
     star_vertices,
@@ -1940,7 +1940,7 @@ static void poly_init(node_t * n)
 		      sfile ? sfile : "<nil>", agnameof(n));
 		imagesize.x = imagesize.y = 0;
 	    } else {
-		GD_has_images(agraphof(n)) = TRUE;
+		GD_has_images(agraphof(n)) = true;
 		imagesize.x += 2;	/* some fixed padding */
 		imagesize.y += 2;
 	    }
@@ -1953,7 +1953,7 @@ static void poly_init(node_t * n)
 		  sfile ? sfile : "<nil>", agnameof(n));
 	    imagesize.x = imagesize.y = 0;
 	} else {
-	    GD_has_images(agraphof(n)) = TRUE;
+	    GD_has_images(agraphof(n)) = true;
 	    imagesize.x += 2;	/* some fixed padding */
 	    imagesize.y += 2;
 	}
@@ -2249,7 +2249,7 @@ static void poly_free(node_t * n)
  * coordinate system, it is reset as P in the unrotated coordinate system. Similarly,
  * the ND_rw, ND_lw and ND_ht values are rotated if the graph is flipped.
  */
-static boolean poly_inside(inside_t * inside_context, pointf p)
+static bool poly_inside(inside_t * inside_context, pointf p)
 {
     static node_t *lastn;	/* last node argument */
     static polygon_t *poly;
@@ -2265,7 +2265,7 @@ static boolean poly_inside(inside_t * inside_context, pointf p)
 
     if (!inside_context) {
 	lastn = NULL;
-	return FALSE;
+	return false;
     }
 
     bp = inside_context->s.bp;
@@ -2332,7 +2332,7 @@ static boolean poly_inside(inside_t * inside_context, pointf p)
 
     /* inside bounding box? */
     if (fabs(P.x) > box_URx || fabs(P.y) > box_URy)
-	return FALSE;
+	return false;
 
     /* ellipses */
     if (sides <= 2)
@@ -2344,10 +2344,10 @@ static boolean poly_inside(inside_t * inside_context, pointf p)
     Q = vertex[i + outp];
     R = vertex[i1 + outp];
     if (!same_side(P, O, Q, R))   /* false if outside the segment's face */
-	return FALSE;
+	return false;
     /* else inside the segment face... */
     if ((s = same_side(P, Q, R, O)) && same_side(P, R, O, Q)) /* true if between the segment's sides */
-	return TRUE;
+	return true;
     /* else maybe in another segment */
     for (j = 1; j < sides; j++) { /* iterate over remaining segments */
 	if (s) { /* clockwise */
@@ -2359,12 +2359,12 @@ static boolean poly_inside(inside_t * inside_context, pointf p)
 	}
 	if (!same_side(P, O, vertex[i + outp], vertex[i1 + outp])) { /* false if outside any other segment's face */
 	    last = i;
-	    return FALSE;
+	    return false;
 	}
     }
     /* inside all segments' faces */
     last = i;			/* in case next edge is to same side */
-    return TRUE;
+    return true;
 }
 
 /* poly_path:
@@ -2704,10 +2704,10 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 	    angle -= 2 * M_PI;
 	pp->order = (int) (MC_SCALE * angle / (2 * M_PI));
     }
-    pp->constrained = constrain ? TRUE : FALSE;
-    pp->defined = defined ? TRUE : FALSE;
-    pp->clip = clip ? TRUE : FALSE;
-    pp->dyna = dyna ? TRUE : FALSE;
+    pp->constrained = constrain;
+    pp->defined = defined;
+    pp->clip = clip;
+    pp->dyna = dyna;
     return rv;
 }
 
@@ -3035,7 +3035,7 @@ static void point_init(node_t * n)
     ND_shape_info(n) = (void *) poly;
 }
 
-static boolean point_inside(inside_t * inside_context, pointf p)
+static bool point_inside(inside_t * inside_context, pointf p)
 {
     static node_t *lastn;	/* last node argument */
     static double radius;
@@ -3044,7 +3044,7 @@ static boolean point_inside(inside_t * inside_context, pointf p)
 
     if (!inside_context) {
 	lastn = NULL;
-	return FALSE;
+	return false;
     }
 
     n = inside_context->s.n;
@@ -3065,7 +3065,7 @@ static boolean point_inside(inside_t * inside_context, pointf p)
 
     /* inside bounding box? */
     if (fabs(P.x) > radius || fabs(P.y) > radius)
-	return FALSE;
+	return false;
 
     return hypot(P.x, P.y) <= radius;
 }
@@ -3614,7 +3614,7 @@ static port record_port(node_t * n, char *portname, char *compass)
  * Note that this does not handle Mrecords correctly. It assumes 
  * everything is a rectangle.
  */
-static boolean record_inside(inside_t * inside_context, pointf p)
+static bool record_inside(inside_t * inside_context, pointf p)
 {
 
     field_t *fld0;
@@ -3810,9 +3810,9 @@ static shape_desc *user_shape(char *name)
     if (Lib == NULL && !streq(name, "custom")) {
 	agerr(AGWARN, "using %s for unknown shape %s\n", Shapes[0].name,
 	      p->name);
-	p->usershape = FALSE;
+	p->usershape = false;
     } else {
-	p->usershape = TRUE;
+	p->usershape = true;
     }
     return p;
 }
@@ -3839,7 +3839,7 @@ shape_desc *bind_shape(char *name, node_t * np)
     return rv;
 }
 
-static boolean epsf_inside(inside_t * inside_context, pointf p)
+static bool epsf_inside(inside_t * inside_context, pointf p)
 {
     pointf P;
     double x2;
@@ -3936,7 +3936,7 @@ static void star_vertices (pointf* vertices, pointf* bb)
     *bb = sz;
 }
 
-static boolean star_inside(inside_t * inside_context, pointf p)
+static bool star_inside(inside_t * inside_context, pointf p)
 {
     static node_t *lastn;	/* last node argument */
     static polygon_t *poly;
@@ -3946,7 +3946,7 @@ static boolean star_inside(inside_t * inside_context, pointf p)
 
     if (!inside_context) {
 	lastn = NULL;
-	return FALSE;
+	return false;
     }
     boxf *bp = inside_context->s.bp;
     node_t *n = inside_context->s.n;
@@ -3981,10 +3981,10 @@ static boolean star_inside(inside_t * inside_context, pointf p)
 	    outcnt++;
 	}
 	if (outcnt == 2) {
-	    return FALSE;
+	    return false;
 	}
     }
-    return TRUE;
+    return true;
 }
 
 /* cylinder:

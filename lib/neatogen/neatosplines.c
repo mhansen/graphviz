@@ -24,16 +24,16 @@
 #endif
 
 
-static boolean spline_merge(node_t * n)
+static bool spline_merge(node_t * n)
 {
     (void)n;
-    return FALSE;
+    return false;
 }
 
-static boolean swap_ends_p(edge_t * e)
+static bool swap_ends_p(edge_t * e)
 {
     (void)e;
-    return FALSE;
+    return false;
 }
 
 static splineInfo sinfo = {.swapEnds = swap_ends_p,

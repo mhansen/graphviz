@@ -14,6 +14,7 @@
 #include "code.h"
 #include "tbl.h"
 #include "dot2l.h"
+#include <stdbool.h>
 
 extern void lex_begin (int);
 
@@ -455,7 +456,7 @@ static void writesgraph (int ioi, Tobj graph, int gn, int nn, char *buf) {
 static void writeattr (int ioi, Tobj to, char *buf) {
     Tkvindex_t tkvi;
     char *s1, *s2, *s3;
-    int htmlflag;
+    bool htmlflag;
 
     s1 = buf + strlen (buf);
     for (Tgetfirst (to, &tkvi); tkvi.kvp; Tgetnext (&tkvi)) {
@@ -479,12 +480,12 @@ static void writeattr (int ioi, Tobj to, char *buf) {
             sprintf (s2, "\"%lf\"", Tgetreal (tkvi.kvp->vo));
             break;
         case T_STRING:
-            *s2++ = '"', htmlflag = FALSE;
+            *s2++ = '"', htmlflag = false;
             if (
                 *(s3 = Tgetstring (tkvi.kvp->vo)) == '>' &&
                 s3[strlen (s3) - 1] == '<'
             )
-                *(s2 - 1) = '<', s3++, htmlflag = TRUE;
+                *(s2 - 1) = '<', s3++, htmlflag = true;
             for ( ; *s3; s3++)
                 if (!htmlflag && *s3 == '"')
                     *s2++ = '\\', *s2++ = *s3;

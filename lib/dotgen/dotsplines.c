@@ -147,23 +147,23 @@ getmainedge(edge_t * e)
     return le;
 }
 
-static boolean spline_merge(node_t * n)
+static bool spline_merge(node_t * n)
 {
     return ND_node_type(n) == VIRTUAL
 	    && (ND_in(n).size > 1 || ND_out(n).size > 1);
 }
 
-static boolean swap_ends_p(edge_t * e)
+static bool swap_ends_p(edge_t * e)
 {
     while (ED_to_orig(e))
 	e = ED_to_orig(e);
     if (ND_rank(aghead(e)) > ND_rank(agtail(e)))
-	return FALSE;
+	return false;
     if (ND_rank(aghead(e)) < ND_rank(agtail(e)))
-	return TRUE;
+	return true;
     if (ND_order(aghead(e)) >= ND_order(agtail(e)))
-	return FALSE;
-    return TRUE;
+	return false;
+    return true;
 }
 
 static splineInfo sinfo = {.swapEnds = swap_ends_p,
@@ -171,9 +171,9 @@ static splineInfo sinfo = {.swapEnds = swap_ends_p,
 
 int portcmp(port p0, port p1)
 {
-    if (p1.defined == FALSE)
+    if (!p1.defined)
 	return p0.defined ? 1 : 0;
-    if (p0.defined == FALSE)
+    if (!p0.defined)
 	return -1;
     if (p0.p.x < p1.p.x)
 	return -1;
@@ -294,7 +294,7 @@ setEdgeLabelPos (graph_t * g)
 		l = ED_label(fe);
 		assert (l);
 		l->pos = ND_coord(n);
-		l->set = TRUE;
+		l->set = true;
 	    }
 	    else if ((l = ND_label(n))) {// label of regular edge
 		place_vnlabel(n);
@@ -375,9 +375,9 @@ static void _dot_splines(graph_t * g, int normalize)
 		edge_t* fe = (edge_t*)ND_alg(n);
 		assert (ED_label(fe));
 		ED_label(fe)->pos = ND_coord(n);
-		ED_label(fe)->set = TRUE;
+		ED_label(fe)->set = true;
 	    }
-	    if (ND_node_type(n) != NORMAL && sinfo.splineMerge(n) == FALSE)
+	    if (ND_node_type(n) != NORMAL && !sinfo.splineMerge(n))
 		continue;
 	    for (k = 0; (e = ND_out(n).list[k]); k++) {
 		if (ED_edge_type(e) == FLATORDER || ED_edge_type(e) == IGNORED)
@@ -600,7 +600,7 @@ place_vnlabel(node_t * n)
     width = GD_flip(agraphof(n)) ? dimen.y : dimen.x;
     ED_label(e)->pos.x = ND_coord(n).x + width / 2.0;
     ED_label(e)->pos.y = ND_coord(n).y;
-    ED_label(e)->set = TRUE;
+    ED_label(e)->set = true;
 }
 
 static void 
@@ -1067,7 +1067,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
     clip_and_install(e, aghead(e), points, pointn, &sinfo);
     ED_label(e)->pos.x = ctrx;
     ED_label(e)->pos.y = tp.y + (ED_label(e)->dimen.y+LBL_SPACE)/2.0;
-    ED_label(e)->set = TRUE;
+    ED_label(e)->set = true;
 
     miny = tp.y + LBL_SPACE/2.0;
     maxy = miny + ED_label(e)->dimen.y;
@@ -1126,7 +1126,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	}
 	ED_label(e)->pos.x = ctrx;
 	ED_label(e)->pos.y = ctry;
-	ED_label(e)->set = TRUE;
+	ED_label(e)->set = true;
 	clip_and_install(e, aghead(e), ps, pn, &sinfo);
 	free(ps);
     }
@@ -1382,7 +1382,7 @@ make_flat_adj_edges(graph_t* g, path* P, edge_t** edges, int ind, int cnt, edge_
         }
 	if (ED_label(e)) {
 	    ED_label(e)->pos = transformf(ED_label(auxe)->pos, del, GD_flip(g));
-	    ED_label(e)->set = TRUE;
+	    ED_label(e)->set = true;
 	    updateBB(g, ED_label(e));
 	}
     }
@@ -1448,7 +1448,7 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
     for (f = ED_to_virt(e); ED_to_virt(f); f = ED_to_virt(f));
     ln = agtail(f);
     ED_label(e)->pos = ND_coord(ln);
-    ED_label(e)->set = TRUE;
+    ED_label(e)->set = true;
 
     if (et == EDGETYPE_LINE) {
 	pointf startp, endp, lp;
@@ -1846,7 +1846,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	while (ED_to_virt(le))
 	    le = ED_to_virt(le);
 	aghead(&fwdedgea.out) = aghead(le);
-	ED_head_port(&fwdedgea.out).defined = FALSE;
+	ED_head_port(&fwdedgea.out).defined = false;
 	ED_edge_type(&fwdedgea.out) = VIRTUAL;
 	ED_head_port(&fwdedgea.out).p.x = ED_head_port(&fwdedgea.out).p.y = 0;
 	ED_to_orig(&fwdedgea.out) = e;
@@ -1872,7 +1872,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	tn = agtail(e);
 	hn = aghead(e);
 	b = tend.nb = maximal_bbox(g, sp, tn, NULL, e);
-	beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn) != FALSE);
+	beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn));
 	b.UR.y = tend.boxes[tend.boxn - 1].UR.y;
 	b.LL.y = tend.boxes[tend.boxn - 1].LL.y;
 	b = makeregularend(b, BOTTOM,
@@ -1899,12 +1899,12 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	        continue;
 	    }
 	    hend.nb = maximal_bbox(g, sp, hn, e, ND_out(hn).list[0]);
-	    endpath(P, e, REGULAREDGE, &hend, spline_merge(aghead(e)) != FALSE);
+	    endpath(P, e, REGULAREDGE, &hend, spline_merge(aghead(e)));
 	    b = makeregularend(hend.boxes[hend.boxn - 1], TOP,
 	    	       ND_coord(hn).y + GD_rank(g)[ND_rank(hn)].ht2);
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	        hend.boxes[hend.boxn++] = b;
-	    P->end.theta = M_PI / 2, P->end.constrained = TRUE;
+	    P->end.theta = M_PI / 2, P->end.constrained = true;
 	    assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
 	    completeregularpath(P, segfirst, e, &tend, &hend, boxes.data,
 	                        (int)boxes.size, 1);
@@ -1943,18 +1943,18 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    hn = aghead(e);
 	    boxes_clear(&boxes);
 	    tend.nb = maximal_bbox(g, sp, tn, ND_in(tn).list[0], e);
-	    beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn) != FALSE);
+	    beginpath(P, e, REGULAREDGE, &tend, spline_merge(tn));
 	    b = makeregularend(tend.boxes[tend.boxn - 1], BOTTOM,
 	    	       ND_coord(tn).y - GD_rank(g)[ND_rank(tn)].ht1);
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	        tend.boxes[tend.boxn++] = b;
-	    P->start.theta = -M_PI / 2, P->start.constrained = TRUE;
+	    P->start.theta = -M_PI / 2, P->start.constrained = true;
 	    smode = FALSE;
 	}
 	boxes_append(&boxes, rank_box(sp, g, ND_rank(tn)));
 	b = hend.nb = maximal_bbox(g, sp, hn, e, NULL);
 	endpath(P, hackflag ? &fwdedgeb.out : e, REGULAREDGE, &hend,
-	        spline_merge(aghead(e)) != FALSE);
+	        spline_merge(aghead(e)));
 	b.UR.y = hend.boxes[hend.boxn - 1].UR.y;
 	b.LL.y = hend.boxes[hend.boxn - 1].LL.y;
 	b = makeregularend(b, TOP,

@@ -18,6 +18,7 @@
 #include "mem.h"
 #include <fcntl.h>
 #include <signal.h>
+#include <stdbool.h>
 #include <string.h>
 #include <sys/wait.h>
 #ifndef HAVE_TERMIOS_H
@@ -80,7 +81,7 @@ void IOinit (void) {
     if (!(shell = getenv ("SHELL")))
         shell = "/bin/sh";
     if (shell[0] != '/' && shell[0] != '.') {
-        if (!(shell = buildpath (shell, TRUE)))
+        if (!(shell = buildpath (shell, true)))
             shell = "/bin/sh";
         else
             shell = strdup (shell);
@@ -170,7 +171,7 @@ int IOopen (char *kind, char *name, char *mode, char *fmt) {
                     return -1;
                 break;
             }
-            path = buildpath (name, FALSE);
+            path = buildpath (name, false);
             if (!path || !(p->ifp = p->ofp = fopen (path, mode)))
                 return -1;
         }
@@ -179,7 +180,7 @@ int IOopen (char *kind, char *name, char *mode, char *fmt) {
         if (!fmt)
             fmt = "%e";
         if (
-            !(path = buildpath (name, TRUE)) ||
+            !(path = buildpath (name, true)) ||
             !(command = buildcommand (path, NULL, -1, -1, fmt))
         )
             return -1;
@@ -191,7 +192,7 @@ int IOopen (char *kind, char *name, char *mode, char *fmt) {
         if (!fmt)
             fmt = "%e";
         if (
-            !(path = buildpath (name, TRUE)) ||
+            !(path = buildpath (name, true)) ||
             !(command = buildcommand (path, NULL, -1, -1, fmt))
         )
             return -1;
@@ -216,7 +217,7 @@ int IOopen (char *kind, char *name, char *mode, char *fmt) {
         if (listen (sfd, 5) < 0)
             return -1;
         gethostname (hname, sizeof (hname));
-        if (!(path = buildpath (name, TRUE)) || !(command = buildcommand (
+        if (!(path = buildpath (name, true)) || !(command = buildcommand (
             path, hname, (int) ntohs (sname.sin_port),
             (int) ntohs (sname.sin_port), fmt
         )))

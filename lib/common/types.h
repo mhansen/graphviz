@@ -13,6 +13,7 @@
 /* Define if you want CGRAPH */
 #define WITH_CGRAPH 1
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <assert.h>
 #include <signal.h>
@@ -63,10 +64,10 @@ extern "C" {
 	boxf *bp;		/* if not null, points to bbox of
 				 * rectangular area that is port target
 				 */
-	boolean	defined;        /* if true, edge has port info at this end */
-	boolean	constrained;    /* if true, constraints such as theta are set */
-	boolean clip;           /* if true, clip end to node/port shape */
-	boolean dyna;           /* if true, assign compass point dynamically */
+	bool defined;        /* if true, edge has port info at this end */
+	bool constrained;    /* if true, constraints such as theta are set */
+	bool clip;           /* if true, clip end to node/port shape */
+	bool dyna;           /* if true, assign compass point dynamically */
 	unsigned char order;	/* for mincross */
 	unsigned char side;	/* if port is on perimeter of node, this
                                  * contains the bitwise OR of the sides (TOP,
@@ -76,10 +77,10 @@ extern "C" {
     } port;
 
     typedef struct {
-	boolean(*swapEnds) (edge_t * e);	/* Should head and tail be swapped? */
-	boolean(*splineMerge) (node_t * n);	/* Is n a node in the middle of an edge? */
-	boolean ignoreSwap;                     /* Test for swapped edges if false */
-	boolean isOrtho;                        /* Orthogonal routing used */
+	bool(*swapEnds) (edge_t * e);	/* Should head and tail be swapped? */
+	bool(*splineMerge) (node_t * n);	/* Is n a node in the middle of an edge? */
+	bool ignoreSwap;                     /* Test for swapped edges if false */
+	bool isOrtho;                        /* Orthogonal routing used */
     } splineInfo;
 
     typedef struct pathend_t {
@@ -132,8 +133,8 @@ extern "C" {
 	    htmllabel_t *html;
 	} u;
 	char valign;  /* 't' 'c' 'b' */
-	boolean set;  /* true if position is set */
-	boolean html; /* true if html label */
+	bool set;  /* true if position is set */
+	bool html; /* true if html label */
     } textlabel_t;
 
     typedef struct polygon_t {	/* mutable shape information for a node */
@@ -171,7 +172,7 @@ extern "C" {
 	void (*initfn) (node_t *);	/* initializes shape from node u.shape_info structure */
 	void (*freefn) (node_t *);	/* frees  shape from node u.shape_info structure */
 	 port(*portfn) (node_t *, char *, char *);	/* finds aiming point and slope of port */
-	 boolean(*insidefn) (inside_t * inside_context, pointf);	/* clips incident gvc->e spline on shape of gvc->n */
+	 bool(*insidefn) (inside_t * inside_context, pointf);	/* clips incident gvc->e spline on shape of gvc->n */
 	int (*pboxfn)(node_t* n, port* p, int side, boxf rv[], int *kptr); /* finds box path to reach port */
 	void (*codefn) (GVJ_t * job, node_t * n);	/* emits graphics code for node */
     } shape_functions;
@@ -182,7 +183,7 @@ extern "C" {
 	char *name;		/* as read from graph file */
 	shape_functions *fns;
 	polygon_t *polygon;	/* base polygon info */
-	boolean usershape;
+	bool usershape;
     } shape_desc;
 
 #include "usershape.h"		/* usershapes needed by gvc */
@@ -209,8 +210,8 @@ extern "C" {
 	double ht2;	/* height below/above centerline    */
 	double pht1;	/* as above, but only primitive nodes   */
 	double pht2;	/* as above, but only primitive nodes   */
-	boolean candidate;	/* for transpose () */
-	boolean valid;
+	bool candidate;	/* for transpose () */
+	bool valid;
 	int cache_nc;		/* caches number of crossings */
 	adjmatrix_t *flat;
     } rank_t;
@@ -226,9 +227,9 @@ extern "C" {
 	pointf margin;
 	pointf page;
 	pointf size;
-	boolean filled;
-	boolean landscape;
-	boolean centered;
+	bool filled;
+	bool landscape;
+	bool centered;
 	ratio_t ratio_kind;
 	void* xdots;
 	char* id;
@@ -277,7 +278,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	pointf border[4];	/* sizes of margins for graph labels */
 	unsigned char gui_state; /* Graph state for GUI ops */
 	unsigned char has_labels;
-	boolean has_images;
+	bool has_images;
 	unsigned char charset; /* input character set */
 	int rankdir;
 	double ht1; /* below and above extremal ranks */
@@ -321,9 +322,9 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	int maxrank;
 
 	/* various flags */
-	boolean has_flat_edges;
-	boolean has_sourcerank;
-	boolean has_sinkrank;
+	bool has_flat_edges;
+	bool has_sourcerank;
+	bool has_sinkrank;
 	unsigned char	showboxes;
 	fontname_kind fontnames;		/* to override mangling in SVG */
 
@@ -335,11 +336,11 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	/* for clusters */
 	node_t *leader;
 	node_t **rankleader;
-	boolean expanded;
+	bool expanded;
 	char installed;
 	char set_type;
 	char label_pos;
-	boolean exact_ranksep;
+	bool exact_ranksep;
 #endif
 
     } Agraphinfo_t;

@@ -62,12 +62,13 @@ arrow_clip(edge_t * fe, node_t * hn,
 	   bezier * spl, splineInfo * info)
 {
     edge_t *e;
-    int i, j, sflag, eflag;
+    int i, sflag, eflag;
+    bool j;
 
     for (e = fe; ED_to_orig(e); e = ED_to_orig(e));
 
     if (info->ignoreSwap)
-	j = 0;
+	j = false;
     else
 	j = info->swapEnds(e);
     arrow_flags(e, &sflag, &eflag);
@@ -102,7 +103,7 @@ arrow_clip(edge_t * fe, node_t * hn,
  * The points p are in node coordinates.
  */
 void bezier_clip(inside_t * inside_context,
-		 boolean(*inside) (inside_t * inside_context, pointf p),
+		 bool(*inside) (inside_t * inside_context, pointf p),
 		 pointf * sp, bool left_inside)
 {
     pointf seg[4], best[4], pt, opt, *left, *right;
@@ -204,7 +205,7 @@ void shape_clip(node_t * n, pointf curve[4])
     save_real_size = ND_rw(n);
     c.x = curve[0].x - ND_coord(n).x;
     c.y = curve[0].y - ND_coord(n).y;
-    left_inside = ND_shape(n)->fns->insidefn(&inside_context, c) != FALSE;
+    left_inside = ND_shape(n)->fns->insidefn(&inside_context, c);
     ND_rw(n) = save_real_size;
     shape_clip0(&inside_context, n, curve, left_inside);
 }
@@ -405,13 +406,13 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
     if (merge) {
 	/*P->start.theta = - M_PI / 2; */
 	P->start.theta = conc_slope(agtail(e));
-	P->start.constrained = TRUE;
+	P->start.constrained = true;
     } else {
 	if (ED_tail_port(e).constrained) {
 	    P->start.theta = ED_tail_port(e).theta;
-	    P->start.constrained = TRUE;
+	    P->start.constrained = true;
 	} else
-	    P->start.constrained = FALSE;
+	    P->start.constrained = false;
     }
     P->nbox = 0;
     P->data = (void *) e;
@@ -477,9 +478,9 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	}
 	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
 	if (n == agtail(orig))
-	    ED_tail_port(orig).clip = FALSE;
+	    ED_tail_port(orig).clip = false;
 	else
-	    ED_head_port(orig).clip = FALSE;
+	    ED_head_port(orig).clip = false;
 	return;
     }
     if (et == FLATEDGE && (side = ED_tail_port(e).side)) {
@@ -542,9 +543,9 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	}
 	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
 	if (n == agtail(orig))
-	    ED_tail_port(orig).clip = FALSE;
+	    ED_tail_port(orig).clip = false;
 	else
-	    ED_head_port(orig).clip = FALSE;
+	    ED_head_port(orig).clip = false;
 	endp->sidemask = side;
 	return;
     }
@@ -601,13 +602,13 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	/*P->end.theta = M_PI / 2; */
 	P->end.theta = conc_slope(aghead(e)) + M_PI;
 	assert(P->end.theta < 2 * M_PI);
-	P->end.constrained = TRUE;
+	P->end.constrained = true;
     } else {
 	if (ED_head_port(e).constrained) {
 	    P->end.theta = ED_head_port(e).theta;
-	    P->end.constrained = TRUE;
+	    P->end.constrained = true;
 	} else
-	    P->end.constrained = FALSE;
+	    P->end.constrained = false;
     }
     endp->np = P->end.p;
     if (et == REGULAREDGE && ND_node_type(n) == NORMAL && (side = ED_head_port(e).side)) {
@@ -671,9 +672,9 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	}
 	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
 	if (n == aghead(orig))
-	    ED_head_port(orig).clip = FALSE;
+	    ED_head_port(orig).clip = false;
 	else
-	    ED_tail_port(orig).clip = FALSE;
+	    ED_tail_port(orig).clip = false;
 	endp->sidemask = side;
 	return;
     }
@@ -738,9 +739,9 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	}
 	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
 	if (n == aghead(orig))
-	    ED_head_port(orig).clip = FALSE;
+	    ED_head_port(orig).clip = false;
 	else
-	    ED_tail_port(orig).clip = FALSE;
+	    ED_tail_port(orig).clip = false;
 	endp->sidemask = side;
 	return;
     }
@@ -1410,7 +1411,7 @@ int place_portlabel(edge_t * e, bool head_p)
     dist = PORT_LABEL_DISTANCE * late_double(e, E_labeldistance, 1.0, 0.0);
     l->pos.x = pe.x + dist * cos(angle);
     l->pos.y = pe.y + dist * sin(angle);
-    l->set = TRUE;
+    l->set = true;
     return 1;
 }
 

@@ -32,6 +32,7 @@
 #define FEATURE_X11 1
 #endif
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -87,7 +88,7 @@ extern fd_set inputfds;
 
 int init (char *);
 void term (void);
-char *buildpath (char *, int);
+char *buildpath (char *, bool);
 char *buildcommand (char *, char *, int, int, char *);
 void warning (char *, int, char *, char *, ...);
 

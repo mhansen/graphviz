@@ -10,6 +10,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking**: Using Graphviz as a library on Windows now requires the `GVDLL`
   symbol to be set to ensure correct linking.
+- **Breaking**: The `insidefn` member of the `shape_functions` struct must now
+  be a pointer to a function returning a C99 `bool` instead of a
+  Graphviz-specific `boolean`.
+- **Breaking**: The `swapEnds` and `splineMerge` members of the `splineInfo`
+  struct must now be pointers to functions returning a C99 `bool`s instead of
+  Graphviz-specific `boolean`s. Similarly the `ignoreSwap` and `isOrtho` members
+  of this struct must now be C99 `bool`s instead of a Graphviz-specific
+  `boolean`s.
+- **Breaking**: The `defined`, `constrained`, `clip`, and `dyna` fields of the
+  `port` struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `set` and `html` fields of the `textlabel_t` struct are now
+  C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `usershape` field of the `shape_desc` struct is now a C99
+  `bool` instead of a Graphviz-specific `boolean`.
+- **Breaking**: The `candidate` and `valid` fields of the `rank_t` struct are
+  now C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `filled`, `landscape`, and `centered` fields of the
+  `layout_t` struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `has_images`, `has_flat_edges`, `has_sourcerank`,
+  `has_sinkrank`, `expanded`, and `exact_ranksep` fields of the `Agraphinfo_t`
+  struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A
   drop-in replacement is `SHRT_MAX` in the C standard library’s limits.h.
 - **Breaking**: Graphviz headers no lnger define `NIL` macros. A drop-in

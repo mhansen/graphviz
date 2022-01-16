@@ -23,6 +23,7 @@
 #include <sys/stat.h>
 #endif
 
+#include <stdbool.h>
 #include <sys/select.h>
 #include <math.h>
 #include <stdio.h>
@@ -57,7 +58,7 @@
 
     int init(char *);
     void term(void);
-    char *buildpath(char *, int);
+    char *buildpath(char *, bool);
     char *buildcommand(char *, char *, int, int, char *);
     void warning(char *, int, char *, char *, ...);
 

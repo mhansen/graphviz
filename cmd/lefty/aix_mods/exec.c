@@ -18,6 +18,7 @@
 #include "exec.h"
 #include "internal.h"
 #include <string.h>
+#include <stdbool.h>
 
 static lvar_t *lvarp;
 static int lvarn, llvari, flvari;
@@ -114,7 +115,7 @@ static void eforinst(Tobj, int);
 static Tobj getval(Tobj, int);
 static int getvar(Tobj, int, tnk_t *);
 static void setvar(tnk_t, Tobj);
-static int boolop(Tobj);
+static bool boolop(Tobj);
 static int orderop(Tobj, Ctype_t, Tobj);
 static Tobj arithop(num_tt *, Ctype_t, num_tt *);
 static void err(int, int, Tobj, int);
@@ -245,19 +246,19 @@ static Tobj eeval(Tobj co, int ci)
 	    err(ERRNORHS, ERR4, co, i1);
 	switch (ctype) {
 	case C_OR:
-	    if (boolop(v1o) == TRUE)
+	    if (boolop(v1o))
 		return Ttrue;
 	    if ((v1o = eeval(co, TCgetnext(co, i1))) == NULL)
 		err(ERRNORHS, ERR4, co, TCgetnext(co, i1));
-	    return (boolop(v1o) == TRUE) ? Ttrue : Tfalse;
+	    return boolop(v1o) ? Ttrue : Tfalse;
 	case C_AND:
-	    if (boolop(v1o) == FALSE)
+	    if (!boolop(v1o))
 		return Tfalse;
 	    if ((v1o = eeval(co, TCgetnext(co, i1))) == NULL)
 		err(ERRNORHS, ERR4, co, TCgetnext(co, i1));
-	    return (boolop(v1o) == FALSE) ? Tfalse : Ttrue;
+	    return !boolop(v1o) ? Tfalse : Ttrue;
 	case C_NOT:
-	    return (boolop(v1o) == TRUE) ? Tfalse : Ttrue;
+	    return boolop(v1o) ? Tfalse : Ttrue;
 	}
 	/* NOT REACHED */
 	return Tfalse;
@@ -367,7 +368,7 @@ static Tobj eeval(Tobj co, int ci)
 	i1 = TCgetfp(co, ci);
 	if (!(v1o = eeval(co, i1)))
 	    err(ERRNORHS, ERR5, co, i1);
-	if (boolop(v1o) == TRUE) {
+	if (boolop(v1o)) {
 	    ci = TCgetnext(co, i1);
 	    goto tailrec;
 	} else if ((ci = TCgetnext(co, TCgetnext(co, i1))) != C_NULL)
@@ -541,7 +542,7 @@ static void ewhilest(Tobj co, int ci)
     for (;;) {
 	if (!(v1o = eeval((Tobj) c1o, ei)))
 	    err(ERRNORHS, ERR5, c1o, ei);
-	if (boolop(v1o) == FALSE)
+	if (!boolop(v1o))
 	    break;
 	if (setjmp(*pljbufp1)) {
 	    if (pljtype == PLJ_CONTINUE)
@@ -578,7 +579,7 @@ static void eforst(Tobj co, int ci)
 	if (!eisnop2) {
 	    if (!(v1o = eeval((Tobj) c1o, ei2)))
 		err(ERRNORHS, ERR5, c1o, ei2);
-	    if (boolop(v1o) == FALSE)
+	    if (!boolop(v1o))
 		break;
 	}
 	if (setjmp(*pljbufp1) != 0) {
@@ -790,7 +791,7 @@ static void setvar(tnk_t tnk, Tobj vo)
     }
 }
 
-static int boolop(Tobj vo)
+static bool boolop(Tobj vo)
 {
     long i;
     double d;
@@ -801,16 +802,16 @@ static int boolop(Tobj vo)
     switch (Tgettype(vo)) {
     case T_INTEGER:
 	i = Tgetinteger(vo);
-	return (i == 0) ? FALSE : TRUE;
+	return i != 0;
     case T_REAL:
 	d = Tgetreal(vo);
-	return (d == 0.0) ? FALSE : TRUE;
+	return !(d == 0.0);
     case T_TABLE:
 	if (vo == null)
-	    return FALSE;
-	return TRUE;
+	    return false;
+	return true;
     default:
-	return TRUE;
+	return true;
     }
 }
 

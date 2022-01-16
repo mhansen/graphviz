@@ -1222,19 +1222,19 @@ static int edgecmp(epair_t* e0, epair_t* e1)
     return e0->d - e1->d;
 }
 
-static boolean spline_merge(node_t * n)
+static bool spline_merge(node_t * n)
 {
     (void)n;
-    return FALSE;
+    return false;
 }
 
-static boolean swap_ends_p(edge_t * e)
+static bool swap_ends_p(edge_t * e)
 {
     (void)e;
-    return FALSE;
+    return false;
 }
 
-static splineInfo sinfo = { swap_ends_p, spline_merge, 1, 1 };
+static splineInfo sinfo = { swap_ends_p, spline_merge, true, true };
 
 /* orthoEdges:
  * For edges without position information, construct an orthogonal routing.

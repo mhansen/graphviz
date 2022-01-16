@@ -742,7 +742,7 @@ int common_init_edge(edge_t * e)
 	ND_has_port(agtail(e)) = TRUE;
     ED_tail_port(e) = chkPort (ND_shape(agtail(e))->fns->portfn, agtail(e), str);
     if (noClip(e, E_tailclip))
-	ED_tail_port(e).clip = FALSE;
+	ED_tail_port(e).clip = false;
     str = agget(e, HEAD_ID);
     /* libgraph always defines tailport/headport; libcgraph doesn't */
     if (!str) str = "";
@@ -750,7 +750,7 @@ int common_init_edge(edge_t * e)
 	ND_has_port(aghead(e)) = TRUE;
     ED_head_port(e) = chkPort(ND_shape(aghead(e))->fns->portfn, aghead(e), str);
     if (noClip(e, E_headclip))
-	ED_head_port(e).clip = FALSE;
+	ED_head_port(e).clip = false;
 
     return r;
 }
