@@ -110,7 +110,6 @@ def test_tools(tool):
         else:
           has_fail = True
     assert has_pass, "could not find passing execution"
-    assert has_fail, "could not find failing execution (#1934 fixed?)"
 
   assert ret == 0, f"`{tool} -?` failed. Output was: {output}"
 
