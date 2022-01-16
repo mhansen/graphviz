@@ -101,6 +101,7 @@ win_flex -oscan.c scan.l</Command>
     <ClInclude Include="bitarray.h" />
     <ClInclude Include="cghdr.h" />
     <ClInclude Include="cgraph.h" />
+    <ClInclude Include="exit.h" />
     <ClInclude Include="itos.h" />
     <ClInclude Include="likely.h" />
     <ClInclude Include="prisize_t.h" />

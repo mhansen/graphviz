@@ -27,6 +27,9 @@
     <ClInclude Include="cgraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="exit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="itos.h">
       <Filter>Header Files</Filter>
     </ClInclude>

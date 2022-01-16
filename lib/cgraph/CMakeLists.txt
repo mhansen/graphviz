@@ -13,6 +13,7 @@ add_library(cgraph SHARED
     bitarray.h
     cghdr.h
     cgraph.h
+    exit.h
     itos.h
     likely.h
     prisize_t.h
