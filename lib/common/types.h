@@ -18,7 +18,6 @@
 #include <assert.h>
 #include <signal.h>
 
-typedef unsigned char boolean;
 #ifndef FALSE
 #define FALSE 0
 #endif
