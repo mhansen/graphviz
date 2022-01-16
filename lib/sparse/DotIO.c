@@ -10,7 +10,6 @@
 
 #define STANDALONE
 #include <cgraph/itos.h>
-#include <cgraph/sprint.h>
 #include <sparse/general.h>
 #include <sparse/DotIO.h>
 #include <sparse/clustering.h>
