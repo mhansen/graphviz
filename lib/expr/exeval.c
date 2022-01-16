@@ -1754,10 +1754,10 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			v.integer = v.floating > r.floating;
 			return v;
 		case LSH:
-			v.floating = (Sflong_t) ((Sfulong_t)v.floating << (Sflong_t)r.floating);
+			v.integer = (Sflong_t) ((Sfulong_t)v.floating << (Sflong_t)r.floating);
 			return v;
 		case RSH:
-			v.floating = (Sflong_t) ((Sfulong_t)v.floating >> (Sflong_t)r.floating);
+			v.integer = (Sflong_t) ((Sfulong_t)v.floating >> (Sflong_t)r.floating);
 			return v;
 		}
 		break;
@@ -1898,10 +1898,10 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			v.integer = v.integer != r.integer;
 			return v;
 		case LSH:
-			v.floating = (double)((Sflong_t)v.floating << (Sflong_t)r.floating);
+			v.integer = (Sflong_t)v.integer << (Sflong_t)r.integer;
 			return v;
 		case RSH:
-			v.integer = (Sfulong_t)v.floating >> (Sflong_t)r.floating;
+			v.integer = (Sfulong_t)v.integer >> (Sflong_t)r.integer;
 			return v;
 		case '<':
 			v.integer = v.integer < r.integer;
