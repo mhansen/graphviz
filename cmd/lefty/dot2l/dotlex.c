@@ -16,6 +16,7 @@ typedef void *Tobj;
 #include "dot2l.h"
 #include "leftyio.h"
 #include "triefa.c"
+#include <stdbool.h>
 #include <string.h>
 
 static int syntax_errors;
@@ -255,7 +256,7 @@ static char *scan_token (char *p) {
 static char *scan_num (char *p) {
     char *q, *z;
     int saw_rp = FALSE;
-    int saw_digit = FALSE;
+    bool saw_digit = false;
 
     z = p;
     q = lexbuf;
@@ -266,13 +267,13 @@ static char *scan_num (char *p) {
         *q++ = *z++;
     }
     while (isdigit (*z)) {
-        saw_digit = TRUE;
+        saw_digit = true;
         *q++ = *z++;
     }
     if (*z == '.' && !saw_rp) {
         *q++ = *z++;
         while (isdigit (*z)) {
-            saw_digit = TRUE;
+            saw_digit = true;
             *q++ = *z++;
         }
     }
