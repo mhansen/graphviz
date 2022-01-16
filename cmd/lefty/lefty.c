@@ -34,6 +34,7 @@
 #include "gmap2l.h"
 #endif
 
+#include <stdbool.h>
 #ifndef FEATURE_MS
 #include <sys/time.h>
 #  ifdef STATS
@@ -60,7 +61,7 @@
 #endif
 
 #ifdef FEATURE_GMAP
-static int gmapon;
+static bool gmapon;
 #endif
 
 static Grect_t txtcoords = {
@@ -126,7 +127,7 @@ int main (int argc, char **argv) {
     TXTinit (txtcoords);
     GFXinit ();
 #ifdef FEATURE_GMAP
-    gmapon = TRUE, G2Linit ();
+    gmapon = true, G2Linit ();
 #endif
 
     if (exprstr) {
