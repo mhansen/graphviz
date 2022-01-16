@@ -803,7 +803,7 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
     point *places;
     Dict_t *ps;
     int i;
-    boolean *fixed = pinfo->fixed;
+    bool *fixed = pinfo->fixed;
     int fixed_cnt = 0;
     box bb, fixed_bb = { {0, 0}, {0, 0} };
     point center;
@@ -1177,7 +1177,7 @@ packSubgraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * info)
  * Pack subgraphs followed by postprocessing.
  */
 int 
-pack_graph(int ng, Agraph_t** gs, Agraph_t* root, boolean* fixed)
+pack_graph(int ng, Agraph_t** gs, Agraph_t* root, bool *fixed)
 {
     int ret;
     pack_info info;
@@ -1376,7 +1376,7 @@ getPackInfo(Agraph_t * g, pack_mode dflt, int dfltMargin, pack_info* pinfo)
 	fprintf (stderr, "  margin %u\n", pinfo->margin);
     }
     pinfo->doSplines = 0;
-    pinfo->fixed = 0;
+    pinfo->fixed = NULL;
     getPackModeInfo(g, dflt, pinfo);
 
     return pinfo->mode;

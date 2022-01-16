@@ -181,7 +181,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
     pinfo->mode = l_clust;
     pinfo->margin = CL_OFFSET;
     pinfo->doSplines = TRUE; /* Use edges in packing */
-    pinfo->fixed = 0;
+    pinfo->fixed = NULL;
     pinfo->sz = 0;
 
     opterr = 0;

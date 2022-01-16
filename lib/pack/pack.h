@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -46,7 +48,7 @@ typedef unsigned int packval_t;
 	unsigned int margin;	/* margin left around objects, in points */
 	int doSplines;		/* use splines in constructing graph shape */
 	pack_mode mode;		/* granularity and method */
-	boolean *fixed;		/* fixed[i] == true implies g[i] should not be moved */
+	bool *fixed;		/* fixed[i] == true implies g[i] should not be moved */
 	packval_t* vals;	/* for arrays, sort numbers */
 	int flags;       
     } pack_info;
@@ -69,7 +71,7 @@ typedef unsigned int packval_t;
     PACK_API point *putGraphs(int, Agraph_t **, Agraph_t *, pack_info *);
     PACK_API int packGraphs(int, Agraph_t **, Agraph_t *, pack_info *);
     PACK_API int packSubgraphs(int, Agraph_t **, Agraph_t *, pack_info *);
-    PACK_API int pack_graph(int ng, Agraph_t** gs, Agraph_t* root, boolean* fixed);
+    PACK_API int pack_graph(int ng, Agraph_t** gs, Agraph_t* root, bool *fixed);
 
     PACK_API int shiftGraphs(int, Agraph_t**, point*, Agraph_t*, int);
 

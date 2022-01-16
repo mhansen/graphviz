@@ -899,12 +899,12 @@ static int layout(graph_t * g, layout_info * infop)
      * How to combine parts, especially with disparate components?
      */
     if (c_cnt > 1) {
-	boolean *bp;
+	bool *bp;
 	if (pinned) {
-	    bp = N_NEW(c_cnt, boolean);
-	    bp[0] = TRUE;
+	    bp = N_NEW(c_cnt, bool);
+	    bp[0] = true;
 	} else
-	    bp = 0;
+	    bp = NULL;
 	infop->pack.fixed = bp;
 	pts = putGraphs(c_cnt, cc, NULL, &infop->pack);
 	free(bp);
