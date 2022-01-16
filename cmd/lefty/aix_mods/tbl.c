@@ -10,6 +10,7 @@
 
 /* Lefteris Koutsofios - AT&T Bell Laboratories */
 
+#include <stdbool.h>
 #include "common.h"
 #include "mem.h"
 #include "code.h"
@@ -64,11 +65,11 @@ void Tinit(void)
     Tcode_t c;
     Tkvlist_t kvl;
 
-    Mhaspointers[T_INTEGER] = FALSE;
-    Mhaspointers[T_REAL] = FALSE;
-    Mhaspointers[T_STRING] = FALSE;
-    Mhaspointers[T_CODE] = FALSE;
-    Mhaspointers[T_TABLE] = TRUE;
+    Mhaspointers[T_INTEGER] = false;
+    Mhaspointers[T_REAL] = false;
+    Mhaspointers[T_STRING] = false;
+    Mhaspointers[T_CODE] = false;
+    Mhaspointers[T_TABLE] = true;
     Ttrue = Tinteger(1);
     truem = Mpushmark(Ttrue);
     Tfalse = Tinteger(0);
