@@ -10,6 +10,7 @@
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
+#include <stdbool.h>
 #include "common.h"
 #include "g.h"
 #include "gcommon.h"
@@ -148,7 +149,7 @@ int Ginitgraphics (void) {
     else
         Gfontp[0].font = NULL;
     ReleaseDC ((HWND) NULL, hdc);
-    Gnocallbacks = FALSE;
+    Gnocallbacks = false;
     return 0;
 }
 
@@ -614,18 +615,18 @@ static void handleresize (Gwidget_t *widget) {
     case G_VIEWWIDGET:
         Gadjustwrect (parent, &ps1);
         if (ps1.x != ps2.x || ps1.y != ps2.y) {
-            Gnocallbacks = TRUE;
+            Gnocallbacks = true;
             SetWindowPos (widget->w, (HWND) NULL, 0, 0, ps1.x, ps1.y, wflags1);
-            Gnocallbacks = FALSE;
+            Gnocallbacks = false;
         }
         break;
     case G_ARRAYWIDGET:
-        Gnocallbacks = TRUE;
+        Gnocallbacks = true;
         Gawresize (parent);
-        Gnocallbacks = FALSE;
+        Gnocallbacks = false;
         break;
     case G_SCROLLWIDGET:
-        Gnocallbacks = TRUE;
+        Gnocallbacks = true;
         for (i = 0; i  < 2; i++) {
             Gadjustwrect (parent, &ps1);
             if (ps1.x > ps2.x || ps1.y > ps2.y)
@@ -649,7 +650,7 @@ static void handleresize (Gwidget_t *widget) {
             SetWindowPos (widget->w, (HWND) NULL, -po.x, -po.y, 0, 0, wflags2);
             ps2 = ps1;
         }
-        Gnocallbacks = FALSE;
+        Gnocallbacks = false;
         break;
     }
 

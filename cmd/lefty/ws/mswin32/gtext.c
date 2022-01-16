@@ -10,6 +10,7 @@
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
+#include <stdbool.h>
 #include "common.h"
 #include "g.h"
 #include "gcommon.h"
@@ -108,21 +109,21 @@ int GTsetwidgetattr (Gwidget_t *widget, int attrn, Gwattr_t *attrp) {
             Gerr (POS, G_ERRCANNOTSETATTR2, "borderwidth");
             return -1;
         case G_ATTRTEXT:
-            Gnocallbacks = TRUE;
+            Gnocallbacks = true;
             SendMessage (widget->w, WM_SETTEXT, 0, "");
             SendMessage (widget->w, EM_SETSEL, -1, 32760);
             SendMessage (widget->w, EM_REPLACESEL, 0, (LPARAM) attrp[ai].u.t);
             SendMessage (widget->w, EM_SETSEL, -1, 32760);
-            Gnocallbacks = FALSE;
+            Gnocallbacks = false;
             break;
         case G_ATTRAPPENDTEXT:
-            Gnocallbacks = TRUE;
+            Gnocallbacks = true;
             SendMessage (widget->w, EM_SETSEL, -1, 32760);
             SendMessage (widget->w, EM_REPLACESEL, 0, (LPARAM) attrp[ai].u.t);
             SendMessage (widget->w, EM_SETSEL, -1, 32760);
             SendMessage (widget->w, EM_REPLACESEL, 0, (LPARAM) "\r\n");
             SendMessage (widget->w, EM_SETSEL, -1, 32760);
-            Gnocallbacks = FALSE;
+            Gnocallbacks = false;
             break;
         case G_ATTRMODE:
             if (

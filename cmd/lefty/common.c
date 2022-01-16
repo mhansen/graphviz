@@ -354,11 +354,11 @@ void warning (char *file, int line, char *func, char *fmt, ...) {
         return;
 
     va_start(args, fmt);
-    Gnocallbacks = TRUE;
+    Gnocallbacks = true;
     fprintf (stderr, "warning: (file %s, line %d, func %s) ", file, line, func);
     vfprintf (stderr, fmt, args);
     fprintf (stderr, "\n");
-    Gnocallbacks = FALSE;
+    Gnocallbacks = false;
     va_end(args);
 #else
     char buf[256];
@@ -368,9 +368,9 @@ void warning (char *file, int line, char *func, char *fmt, ...) {
 
     va_start(args, fmt);
     vsprintf (buf, fmt, args);
-    Gnocallbacks = TRUE;
+    Gnocallbacks = true;
     MessageBox ((HWND) NULL, buf, "Lefty Warning", MB_APPLMODAL);
-    Gnocallbacks = FALSE;
+    Gnocallbacks = false;
     va_end(args);
 #endif
 }
@@ -381,21 +381,21 @@ void panic1 (char *file, int line, char *func, char *fmt, ...) {
 
 #ifndef FEATURE_MS
     va_start(args, fmt);
-    Gnocallbacks = TRUE;
+    Gnocallbacks = true;
     fprintf (stderr, "panic: (file %s, line %d, func %s) ", file, line, func);
     vfprintf (stderr, fmt, args);
     fprintf (stderr, "\n");
     fflush (stdout);
-    Gnocallbacks = FALSE;
+    Gnocallbacks = false;
     va_end(args);
 #else
     char buf[256];
 
     va_start(args, fmt);
     vsprintf (buf, fmt, args);
-    Gnocallbacks = TRUE;
+    Gnocallbacks = true;
     MessageBox ((HWND) NULL, buf, "Lefty PANIC", MB_APPLMODAL);
-    Gnocallbacks = FALSE;
+    Gnocallbacks = false;
     va_end(args);
 #endif
     abort ();
@@ -409,22 +409,22 @@ void panic2 (char *file, int line, char *func, char *fmt, ...) {
 
 #ifndef FEATURE_MS
     va_start(args, fmt);
-    Gnocallbacks = TRUE;
+    Gnocallbacks = true;
     fprintf (stderr, "panic: (file %s, line %d, func %s) ", file, line, func);
     vfprintf (stderr, fmt, args);
     fprintf (stderr, "\n");
     perror ("");
     fflush (stdout);
-    Gnocallbacks = FALSE;
+    Gnocallbacks = false;
     va_end(args);
 #else
     char buf[256];
 
     va_start(args, fmt);
     vsprintf (buf, fmt, args);
-    Gnocallbacks = TRUE;
+    Gnocallbacks = true;
     MessageBox ((HWND) NULL, buf, "Lefty PANIC", MB_APPLMODAL);
-    Gnocallbacks = FALSE;
+    Gnocallbacks = false;
     va_end(args);
 #endif
     abort ();
@@ -442,9 +442,9 @@ int gprintf (const char *fmt, ...) {
     if (buf[l - 1] == '\n')
         buf[l - 1] = 0;
     if (buf[0]) {
-        Gnocallbacks = TRUE;
+        Gnocallbacks = true;
         MessageBox ((HWND) NULL, buf, "Lefty printf", MB_APPLMODAL);
-        Gnocallbacks = FALSE;
+        Gnocallbacks = false;
     }
     va_end(args);
 }
