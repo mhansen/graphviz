@@ -11,7 +11,6 @@ add_library(sparse STATIC
     mq.h
     QuadTree.h
     SparseMatrix.h
-    vector.h
 
     # Source files
     BinaryHeap.c
@@ -25,7 +24,6 @@ add_library(sparse STATIC
     mq.c
     QuadTree.c
     SparseMatrix.c
-    vector.c
 )
 
 target_include_directories(sparse PRIVATE

@@ -10,9 +10,7 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <vector>
 
 typedef struct Agglomerative_Ink_Bundling_struct *Agglomerative_Ink_Bundling;
 
@@ -25,15 +23,10 @@ struct Agglomerative_Ink_Bundling_struct {
 		     the nodes on the finest grid corresponding to the coarsest node 1, etc */
   SparseMatrix R;/* striction mtrix from level to level + 1*/
   Agglomerative_Ink_Bundling next;
-  Agglomerative_Ink_Bundling prev;
-  double *inks; /* amount of ink needed to draw this edge/bundle. Dimension n. */
+  std::vector<double> inks; /* amount of ink needed to draw this edge/bundle. Dimension n. */
   double total_ink; /* amount of ink needed to draw this edge/bundle. Dimension n. */
   pedge* edges; /* the original edge info. This does not vary level to level and is of dimenion n0, where n0 is the number of original edges */
   int delete_top_level_A;/*whether the top level matrix should be deleted on garbage collecting the grid */
 };
 
 pedge* agglomerative_ink_bundling(int dim, SparseMatrix A, pedge* edges, int nneighbor, int max_recursion, double angle_param, double angle, int open_gl, int *flag);
-
-#ifdef __cplusplus
-}
-#endif
