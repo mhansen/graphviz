@@ -720,7 +720,7 @@ dfsCycle (vtx_data* graph, int i,int mode, node_t* nodes[])
             assert (f < graph[j].nedges);
             graph[j].edists[f] = -1.0;
         }
-	else if (ND_mark(hp) == FALSE) dfsCycle(graph, j, mode, nodes);
+	else if (!ND_mark(hp)) dfsCycle(graph, j, mode, nodes);
 
     }
     ND_onstack(np) = FALSE;

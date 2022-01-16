@@ -273,11 +273,11 @@ make_LR_constraints(graph_t * g)
 		m1 = m0 + ND_rw(aghead(e0)) + ND_lw(agtail(e0));
 		/* these guards are needed because the flat edges
 		 * work very poorly with cluster layout */
-		if (canreach(agtail(e0), aghead(e0)) == FALSE)
+		if (!canreach(agtail(e0), aghead(e0)))
 		    make_aux_edge(aghead(e0), agtail(e0), m1,
 			ED_weight(e));
 		m1 = m0 + ND_rw(agtail(e1)) + ND_lw(aghead(e1));
-		if (canreach(aghead(e1), agtail(e1)) == FALSE)
+		if (!canreach(aghead(e1), agtail(e1)))
 		    make_aux_edge(agtail(e1), aghead(e1), m1,
 			ED_weight(e));
 	    }
@@ -513,7 +513,7 @@ static void compress_graph(graph_t * g)
     if (p.x * p.y <= 1)
 	return;
     contain_nodes(g);
-    if (GD_flip(g) == FALSE)
+    if (!GD_flip(g))
 	x = p.x;
     else
 	x = p.y;
@@ -1140,7 +1140,7 @@ static void expand_leaves(graph_t * g)
 		if ((d = ND_rank(aghead(e)) - ND_rank(aghead(e))) == 0)
 		    continue;
 		f = ED_to_orig(e);
-		if (ports_eq(e, f) == FALSE) {
+		if (!ports_eq(e, f)) {
 		    zapinlist(&(ND_other(n)), e);
 		    if (d == 1)
 			fast_edge(e);

@@ -945,7 +945,7 @@ static void dfs(graph_t * g, node_t * v)
 	if (ND_onstack(w))
 	    reverse_edge2(g, e);
 	else {
-	    if (ND_mark(w) == FALSE)
+	    if (!ND_mark(w))
 		dfs(g, w);
 	}
     }

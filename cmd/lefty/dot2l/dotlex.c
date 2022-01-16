@@ -269,7 +269,7 @@ static char *scan_num (char *p) {
         saw_digit = TRUE;
         *q++ = *z++;
     }
-    if ((*z == '.') && (saw_rp == FALSE)) {
+    if (*z == '.' && !saw_rp) {
         *q++ = *z++;
         while (isdigit (*z)) {
             saw_digit = TRUE;
@@ -280,7 +280,7 @@ static char *scan_num (char *p) {
     if (saw_digit && *z && (isalpha (*z)))
         yyerror_text("badly formed number %s", lexbuf);
 
-    if (saw_digit == FALSE)
+    if (!saw_digit)
         z = NULL;
     return z;
 }

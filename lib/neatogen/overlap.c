@@ -607,7 +607,7 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
     if (check_convergence(max_overlap, res, has_penalty_terms, epsilon)){
     
       OverlapSmoother_delete(sm);
-      if (neighborhood_only == FALSE){
+      if (!neighborhood_only){
 	break;
       } else {
 	res = LARGE;

@@ -820,7 +820,7 @@ void gvrender_usershape(GVJ_t * job, char *name, pointf * a, int n,
 	b.UR.y = d;
     }
     if (gvre) {
-	gvloadimage(job, us, b, filled != FALSE, job->render.type);
+	gvloadimage(job, us, b, filled, job->render.type);
     }
 }
 

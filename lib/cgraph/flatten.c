@@ -34,7 +34,7 @@ void agflatten(Agraph_t * g, int flag)
     Agnode_t *n;
 
     if (flag) {
-	if (g->desc.flatlock == FALSE) {
+	if (!g->desc.flatlock) {
 	    dtmethod(g->n_seq,Dtlist);
 	    for (n = agfstnode(g); n; n = agnxtnode(g,n))
 		agflatten_edges(g, n, flag);

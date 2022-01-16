@@ -43,7 +43,7 @@ dfs(node_t * n)
 	    reverse_edge(e);
 	    i--;
 	} else {
-	    if (ND_mark(w) == FALSE)
+	    if (!ND_mark(w))
 		dfs(w);
 	}
     }

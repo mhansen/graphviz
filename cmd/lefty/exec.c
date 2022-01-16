@@ -261,7 +261,7 @@ tailrec:
                 err (ERRNORHS, ERR4, co, TCgetnext (co, i1));
             return boolop(v1o) ? Ttrue: Tfalse;
         case C_AND:
-            if (boolop (v1o) == FALSE)
+            if (!boolop(v1o))
                 return Tfalse;
             if ((v1o = eeval (co, TCgetnext (co, i1))) == NULL)
                 err (ERRNORHS, ERR4, co, TCgetnext (co, i1));

@@ -1235,7 +1235,7 @@ static void flat_search(graph_t * g, node_t * v)
 		assert(flatindex(aghead(e)) < M->nrows);
 		assert(flatindex(agtail(e)) < M->ncols);
 		ELT(M, flatindex(agtail(e)), flatindex(aghead(e))) = 1;
-		if (ND_mark(aghead(e)) == FALSE)
+		if (!ND_mark(aghead(e)))
 		    flat_search(g, aghead(e));
 	    }
 	}
@@ -1262,7 +1262,7 @@ static void flat_breakcycles(graph_t * g)
 	if (flat) {
 	    for (i = 0; i < GD_rank(g)[r].n; i++) {
 		v = GD_rank(g)[r].v[i];
-		if (ND_mark(v) == FALSE)
+		if (!ND_mark(v))
 		    flat_search(g, v);
 	    }
 	}
@@ -1367,9 +1367,9 @@ void build_ranks(graph_t * g, int pass)
 	edge_t *e;
 	for (n = GD_nlist(g); n; n = ND_next(n)) {
 	    for (i = 0; (e = ND_out(n).list[i]); i++)
-		assert(MARK(aghead(e)) == FALSE);
+		assert(!MARK(aghead(e)));
 	    for (i = 0; (e = ND_in(n).list[i]); i++)
-		assert(MARK(agtail(e)) == FALSE);
+		assert(!MARK(agtail(e)));
 	}
     }
 #endif
@@ -1381,7 +1381,7 @@ void build_ranks(graph_t * g, int pass)
 	otheredges = pass == 0 ? ND_in(n).list : ND_out(n).list;
 	if (otheredges[0] != NULL)
 	    continue;
-	if (MARK(n) == FALSE) {
+	if (!MARK(n)) {
 	    MARK(n) = TRUE;
 	    enqueue(q, n);
 	    while ((n0 = dequeue(q))) {
@@ -1421,7 +1421,7 @@ void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
     if (pass == 0) {
 	for (i = 0; i < ND_out(n0).size; i++) {
 	    e = ND_out(n0).list[i];
-	    if ((MARK(aghead(e))) == FALSE) {
+	    if (!MARK(aghead(e))) {
 		MARK(aghead(e)) = TRUE;
 		enqueue(q, aghead(e));
 	    }
@@ -1429,7 +1429,7 @@ void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
     } else {
 	for (i = 0; i < ND_in(n0).size; i++) {
 	    e = ND_in(n0).list[i];
-	    if ((MARK(agtail(e))) == FALSE) {
+	    if (!MARK(agtail(e))) {
 		MARK(agtail(e)) = TRUE;
 		enqueue(q, agtail(e));
 	    }
@@ -1458,7 +1458,7 @@ static int postorder(graph_t * g, node_t * v, node_t ** list, int r)
     if (ND_flat_out(v).size > 0) {
 	for (i = 0; (e = ND_flat_out(v).list[i]); i++) {
 	    if (!constraining_flat_edge(g,v,e)) continue;
-	    if (MARK(aghead(e)) == FALSE)
+	    if (!MARK(aghead(e)))
 		cnt += postorder(g, aghead(e), list + cnt, r);
 	}
     }
@@ -1501,7 +1501,7 @@ static void flat_reorder(graph_t * g)
 	    if ((local_in_cnt == 0) && (local_out_cnt == 0))
 		temprank[pos++] = v;
 	    else {
-		if ((MARK(v) == FALSE) && (local_in_cnt == 0)) {
+		if (!MARK(v) && local_in_cnt == 0) {
 		    left = temprank + pos;
 		    n_search = postorder(g, v, left, r);
 		    pos += n_search;
@@ -1510,7 +1510,7 @@ static void flat_reorder(graph_t * g)
 	}
 
 	if (pos) {
-	    if (GD_flip(g) == FALSE) {
+	    if (!GD_flip(g)) {
 		left = temprank;
 		right = temprank + pos - 1;
 		while (left < right) {
@@ -1531,9 +1531,9 @@ static void flat_reorder(graph_t * g)
 		v = GD_rank(g)[r].v[i];
 		if (ND_flat_out(v).list) {
 		    for (j = 0; (e = ND_flat_out(v).list[j]); j++) {
-			if ( ((GD_flip(g) == FALSE) && (ND_order(aghead(e)) < ND_order(agtail(e)))) ||
+			if ( (!GD_flip(g) && ND_order(aghead(e)) < ND_order(agtail(e))) ||
 				 ( (GD_flip(g)) && (ND_order(aghead(e)) > ND_order(agtail(e)) ))) {
-			    assert(constraining_flat_edge(g,v,e) == FALSE);
+			    assert(!constraining_flat_edge(g,v,e));
 			    delete_flat_edge(e);
 			    j--;
 			    flat_rev(g, e);
@@ -1889,7 +1889,7 @@ void check_rs(graph_t * g, int null_ok)
 	    v = GD_rank(g)[r].v[i];
 	    if (v == NULL) {
 		fprintf(stderr, "NULL\t");
-		if (null_ok == FALSE)
+		if (!null_ok)
 		    abort();
 	    } else {
 		fprintf(stderr, "%s(%f)\t", agnameof(v), ND_mval(v));
