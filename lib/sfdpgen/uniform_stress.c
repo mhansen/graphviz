@@ -16,6 +16,7 @@
 #include <sfdpgen/sparse_solve.h>
 #include <time.h>
 #include <sfdpgen/uniform_stress.h>
+#include <stdbool.h>
 
 /* uniform stress solves the model:
 
@@ -32,7 +33,7 @@ UniformStressSmoother UniformStressSmoother_new(int dim, SparseMatrix A, double 
   double *d, *w, *a = (double*) A->a;
   double diag_d, diag_w, dist, epsilon = 0.01;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
 
   sm = MALLOC(sizeof(struct StressMajorizationSmoother_struct));
   sm->data = NULL;
@@ -156,7 +157,7 @@ void uniform_stress(int dim, SparseMatrix A, double *x, int *flag){
   }
 
   B = get_distance_matrix(A, scaling);
-  assert(SparseMatrix_is_symmetric(B, FALSE));
+  assert(SparseMatrix_is_symmetric(B, false));
 
   sm = UniformStressSmoother_new(dim, B, x, 1000000*lambda0, M, flag);
   UniformStressSmoother_smooth(sm, dim, x, maxit);

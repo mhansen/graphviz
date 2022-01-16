@@ -64,7 +64,7 @@ void improve_antibandwidth_by_swapping(SparseMatrix A, int *p){
     fprintf(stderr,"saving timing vs antiband data to timing_greedy\n");
     fp = fopen("timing_greedy","w");
   }
-  assert(SparseMatrix_is_symmetric(A, TRUE));
+  assert(SparseMatrix_is_symmetric(A, true));
   while (improved){
     improved = false;
     for (i = 0; i < n; i++){

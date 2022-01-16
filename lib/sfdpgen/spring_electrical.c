@@ -161,7 +161,7 @@ int oned_optimizer_get(oned_optimizer opt){
 double average_edge_length(SparseMatrix A, int dim, double *coord){
   double dist = 0, d;
   int *ia = A->ia, *ja = A->ja, i, j, k;
-  assert(SparseMatrix_is_symmetric(A, TRUE));
+  assert(SparseMatrix_is_symmetric(A, true));
 
   if (ia[A->m] == 0) return 1;
   for (i = 0; i < A->m; i++){
@@ -1945,7 +1945,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
   n = A->n;
   if (n <= 0 || dim <= 0) return;
 
-  if (!SparseMatrix_is_symmetric(A, FALSE) || A->type != MATRIX_TYPE_REAL){
+  if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
     if (ctrl->method == METHOD_SPRING_MAXENT){
       A = SparseMatrix_symmetrize_nodiag(A);
       assert(D0);

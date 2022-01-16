@@ -60,6 +60,7 @@
 #include <sparse/SparseMatrix.h>
 #include <sparse/mq.h>
 #include <sparse/LinkedList.h>
+#include <stdbool.h>
 #include <string.h>
 
 static double get_mq(SparseMatrix A, int *assignment, int *ncluster0, double *mq_in0, double *mq_out0, double **dout0){
@@ -72,7 +73,7 @@ static double get_mq(SparseMatrix A, int *assignment, int *ncluster0, double *mq
   */
   int ncluster = 0;
   int n = A->m;
-  int test_pattern_symmetry_only = FALSE;
+  bool test_pattern_symmetry_only = false;
   int *counts, *ia = A->ia, *ja = A->ja, k, i, j, jj;
   double mq_in = 0, mq_out = 0, *a = NULL, Vi, Vj;
   int c;
@@ -154,7 +155,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_init(SparseMatrix A, in
   int *matching;
 
   assert(A->type == MATRIX_TYPE_REAL);
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
 
   if (!A) return NULL;
   assert(A->m == n);
@@ -521,7 +522,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_new(SparseMatrix A0, in
   SparseMatrix A = A0;
 
   if (maxcluster <= 0) maxcluster = A->m;
-  if (!SparseMatrix_is_symmetric(A, FALSE) || A->type != MATRIX_TYPE_REAL){
+  if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
     A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   }
   grid = Multilevel_MQ_Clustering_init(A, 0);
