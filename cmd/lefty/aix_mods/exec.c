@@ -797,7 +797,7 @@ static bool boolop(Tobj vo)
     double d;
 
     if (!vo)
-	return FALSE;
+	return false;
 
     switch (Tgettype(vo)) {
     case T_INTEGER:
