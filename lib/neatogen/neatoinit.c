@@ -1450,7 +1450,7 @@ void neato_layout(Agraph_t * g)
 	    graph_t **cc;
 	    int n_cc;
 	    int i;
-	    boolean pin;
+	    bool pin;
 
 	    cc = pccomps(g, &n_cc, cc_pfx, &pin);
 
