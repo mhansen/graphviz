@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include <gvc/gvplugin_loadimage.h>
@@ -186,7 +187,7 @@ static cairo_surface_t* gdk_loadimage(GVJ_t * job, usershape_t *us)
 #endif /* HAVE_CAIRO_SURFACE_SET_MIME_DATA */
 }
 
-static void gdk_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void gdk_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     cairo_t *cr = (cairo_t *) job->context; /* target context */
 #ifndef HAVE_CAIRO_SURFACE_SET_MIME_DATA

@@ -39,6 +39,6 @@ bool gvtextlayout(GVC_t *gvc, textspan_t *span, char **fontpath)
     gvtextlayout_engine_t *gvte = gvc->textlayout.engine;
 
     if (gvte && gvte->textlayout)
-	return gvte->textlayout(span, fontpath) != FALSE;
+	return gvte->textlayout(span, fontpath);
     return false;
 }

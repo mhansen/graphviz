@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -110,7 +111,7 @@ char* gd_psfontResolve (PostscriptAlias* pa)
     return buf;
 }
 
-static boolean gd_textlayout(textspan_t * span, char **fontpath)
+static bool gd_textlayout(textspan_t * span, char **fontpath)
 {
     char *err, *fontlist, *fontname;
     double fontsize;
@@ -143,7 +144,7 @@ static boolean gd_textlayout(textspan_t * span, char **fontpath)
 
     if (fontname) {
 	if (fontsize <= FONTSIZE_MUCH_TOO_SMALL) {
-	    return TRUE; /* OK, but ignore text entirely */
+	    return true; /* OK, but ignore text entirely */
 	} else if (fontsize <= FONTSIZE_TOO_SMALL) {
 	    /* draw line in place of text */
 	    /* fake a finite fontsize so that line length is calculated */
@@ -166,7 +167,7 @@ static boolean gd_textlayout(textspan_t * span, char **fontpath)
 
 	if (err) {
 	    agerr(AGERR,"%s\n", err);
-	    return FALSE; /* indicate error */
+	    return false; /* indicate error */
 	}
 
 	if (fontpath)
@@ -183,7 +184,7 @@ static boolean gd_textlayout(textspan_t * span, char **fontpath)
 	    span->size.y = (int)(fontsize * 1.2);
 	}
     }
-    return TRUE;
+    return true;
 }
 
 static gvtextlayout_engine_t gd_textlayout_engine = {

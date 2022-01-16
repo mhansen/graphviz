@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gvc/gvplugin_render.h>
@@ -75,7 +76,7 @@ static int agxbput_int(void *buffer, const char *s) {
   return (int)len;
 }
 
-static boolean pango_textlayout(textspan_t * span, char **fontpath)
+static bool pango_textlayout(textspan_t * span, char **fontpath)
 {
     static char buf[1024];  /* returned in fontpath, only good until next call */
     static PangoFontMap *fontmap;
@@ -117,7 +118,7 @@ static boolean pango_textlayout(textspan_t * span, char **fontpath)
 
 	/* check if the conversion to Pango units below will overflow */
 	if ((double)(G_MAXINT / PANGO_SCALE) < span->font->size) {
-	    return FALSE;
+	    return false;
 	}
 
 	free(fontname);
@@ -288,9 +289,7 @@ static boolean pango_textlayout(textspan_t * span, char **fontpath)
     /* The distance below midline for y centering of text strings */
     span->yoffset_centerline = 0.2 * span->font->size;
 
-    if (logical_rect.width == 0)
-	return FALSE;
-    return TRUE;
+    return logical_rect.width != 0;
 }
 
 static gvtextlayout_engine_t pango_textlayout_engine = {

@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #ifndef NOTUSED
 #define NOTUSED(var) (void) var
 #endif
@@ -19,7 +21,7 @@
 #define isFixed(n)      (ND_pinned(n) > P_SET)
 
 #define CL_EDGE_TAG "cl_edge_info"
-#define SET_CLUST_NODE(n) (ND_clustnode(n) = TRUE)
+#define SET_CLUST_NODE(n) (ND_clustnode(n) = true)
 #define IS_CLUST_NODE(n)  (ND_clustnode(n))
 #define HAS_CLUST_EDGE(g) (aggetrec(g, CL_EDGE_TAG, FALSE))
 #define EDGE_TYPE(g) (GD_flags(g) & (7 << 1))

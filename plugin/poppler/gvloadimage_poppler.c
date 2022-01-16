@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 
@@ -104,7 +105,7 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
     return document;
 }
 
-static void gvloadimage_poppler_cairo(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void gvloadimage_poppler_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     PopplerDocument* document = gvloadimage_poppler_load(job, us);
     PopplerPage* page;

@@ -12,6 +12,7 @@
 /* classify edges for mincross/nodepos/splines, using given ranks */
 
 #include <dotgen/dot.h>
+#include <stdbool.h>
 
 static node_t*
 label_vnode(graph_t * g, edge_t * orig)
@@ -282,7 +283,7 @@ void class2(graph_t * g)
 			&& ports_eq(e, opp)) {
 			if (Concentrate) {
 			    ED_edge_type(e) = IGNORED;
-			    ED_conc_opp_flag(opp) = TRUE;
+			    ED_conc_opp_flag(opp) = true;
 			} else {	/* see above.  this is getting out of hand */
 			    other_edge(e);
 			    merge_chain(g, e, ED_to_virt(opp), TRUE);

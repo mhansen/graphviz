@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include <gvc/gvplugin_loadimage.h>
@@ -77,7 +78,7 @@ static cairo_surface_t* cairo_loadimage(GVJ_t * job, usershape_t *us)
     return surface;
 }
 
-static void pango_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void pango_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     cairo_t *cr = (cairo_t *) job->context; /* target context */
     cairo_surface_t *surface;	 /* source surface */
@@ -101,7 +102,7 @@ static void pango_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, boolean 
     }
 }
 
-static void pango_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void pango_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     cairo_surface_t *surface; 	/* source surface */
     cairo_format_t format;

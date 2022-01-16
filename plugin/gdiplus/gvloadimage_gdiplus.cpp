@@ -59,7 +59,7 @@ static Image* gdiplus_loadimage(GVJ_t * job, usershape_t *us)
     return reinterpret_cast<Image*>(us->data);
 }
 
-static void gdiplus_loadimage_gdiplus(GVJ_t * job, usershape_t *us, boxf b, boolean)
+static void gdiplus_loadimage_gdiplus(GVJ_t * job, usershape_t *us, boxf b, bool)
 {
 	/* get the image from usershape details, then blit it to the context */
 	Image *image = gdiplus_loadimage(job, us);

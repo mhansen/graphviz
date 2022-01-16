@@ -202,5 +202,5 @@ static void sameport(node_t * u, elist * l)
 	}
     }
 
-    ND_has_port(u) = TRUE;	/* kinda pointless, because mincross is already done */
+    ND_has_port(u) = true;	/* kinda pointless, because mincross is already done */
 }

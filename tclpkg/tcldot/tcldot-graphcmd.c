@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <stdbool.h>
 #include "tcldot.h"
 
 int graphcmd(ClientData clientData, Tcl_Interp * interp,
@@ -337,7 +338,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	job = gvc->job;
 	job->imagedata = canvas;
 	job->context = interp;
-	job->external_context = TRUE;
+	job->external_context = true;
 	job->output_file = stdout;
 
 	/* make sure that layout is done */

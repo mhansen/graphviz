@@ -586,7 +586,7 @@ usershape_t *gvusershape_find(const char *name)
 }
 
 #define MAX_USERSHAPE_FILES_OPEN 50
-boolean gvusershape_file_access(usershape_t *us)
+bool gvusershape_file_access(usershape_t *us)
 {
     static int usershape_files_open_cnt;
     const char *fn;
@@ -600,20 +600,20 @@ boolean gvusershape_file_access(usershape_t *us)
     else {
         if (! (fn = safefile(us->name))) {
 	    agerr(AGWARN, "Filename \"%s\" is unsafe\n", us->name);
-	    return FALSE;
+	    return false;
 	}
 	us->f = fopen(fn, "rb");
 	if (us->f == NULL) {
 	    agerr(AGWARN, "%s while opening %s\n", strerror(errno), fn);
-	    return FALSE;
+	    return false;
 	}
 	if (usershape_files_open_cnt >= MAX_USERSHAPE_FILES_OPEN)
-	    us->nocache = TRUE;
+	    us->nocache = true;
 	else
 	    usershape_files_open_cnt++;
     }
     assert(us->f);
-    return TRUE;
+    return true;
 }
 
 void gvusershape_file_release(usershape_t *us)

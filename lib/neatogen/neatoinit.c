@@ -1450,12 +1450,12 @@ void neato_layout(Agraph_t * g)
 	    graph_t **cc;
 	    int n_cc;
 	    int i;
-	    boolean pin;
+	    bool pin;
 
 	    cc = pccomps(g, &n_cc, cc_pfx, &pin);
 
 	    if (n_cc > 1) {
-		boolean *bp;
+		bool *bp;
 		for (i = 0; i < n_cc; i++) {
 		    gc = cc[i];
 		    nodeInduce(gc);
@@ -1466,10 +1466,10 @@ void neato_layout(Agraph_t * g)
 		    else spline_edges(gc);
 		}
 		if (pin) {
-		    bp = N_NEW(n_cc, boolean);
-		    bp[0] = TRUE;
+		    bp = N_NEW(n_cc, bool);
+		    bp[0] = true;
 		} else
-		    bp = 0;
+		    bp = NULL;
 		pinfo.margin = (unsigned)Pack;
 		pinfo.fixed = bp;
 		pinfo.doSplines = 1;

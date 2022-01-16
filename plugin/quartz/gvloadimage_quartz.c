@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
@@ -154,7 +155,7 @@ static CGImageRef quartz_loadimage(GVJ_t * job, usershape_t *us)
     return (CGImageRef)(us->data);
 }
 
-static void quartz_loadimage_quartz(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void quartz_loadimage_quartz(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
 	/* get the image from usershape details, then blit it to the context */
 	CGImageRef image = quartz_loadimage(job, us);

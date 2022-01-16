@@ -60,5 +60,5 @@ void gvloadimage(GVJ_t * job, usershape_t *us, boxf b, bool filled, const char *
 	    agerr (AGWARN, "No loadimage plugin for \"%s\"\n", type);
 
     if ((gvli = job->loadimage.engine) && gvli->loadimage)
-	gvli->loadimage(job, us, b, filled ? TRUE : FALSE);
+	gvli->loadimage(job, us, b, filled);
 }

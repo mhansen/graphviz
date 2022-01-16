@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -41,7 +42,7 @@ static void ps_freeimage(usershape_t *us)
 }
 
 /* usershape described by a postscript file */
-static void lasi_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void lasi_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     assert(job);
     assert(us);
@@ -76,7 +77,7 @@ static void lasi_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, boolean fill
 		us->data = malloc(statbuf.st_size);
 		read(fd, us->data, statbuf.st_size);
 #endif
-		us->must_inline = TRUE;
+		us->must_inline = true;
                 break;
             default:
                 break;

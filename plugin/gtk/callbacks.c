@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <gtk/gtk.h>
+#include <stdbool.h>
 
 #include <gvc/gvplugin_device.h>
 
@@ -211,7 +212,7 @@ on_drawingarea1_expose_event           (GtkWidget       *widget,
     (job->callbacks->motion)(job, job->pointer);
 
     job->context = cr;
-    job->external_context = TRUE;
+    job->external_context = true;
     job->width = widget->allocation.width;
     job->height = widget->allocation.height;
     if (job->has_been_rendered) {
@@ -276,7 +277,7 @@ on_drawingarea2_expose_event           (GtkWidget       *widget,
     (job->callbacks->motion)(job, job->pointer);
 
     job->context = cr;
-    job->external_context = TRUE;
+    job->external_context = true;
     job->width = widget->allocation.width;
     job->height = widget->allocation.height;
 
@@ -328,10 +329,10 @@ on_drawingarea1_configure_event        (GtkWidget       *widget,
 	job->zoom *= zoom_to_fit;
     }
     if (event->width > job->width || event->height > job->height)
-	job->has_grown = TRUE;
+	job->has_grown = true;
     job->width = event->width;
     job->height = event->height;
-    job->needs_refresh = TRUE;
+    job->needs_refresh = true;
 
     return FALSE;
 }

@@ -196,7 +196,7 @@ setPrefix (char* pfx, size_t* lenp, char* buf, size_t buflen)
  * be obtained from the root graph.
  * Return NULL on error or if graph is empty.
  */
-Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, boolean * pinned)
+Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 {
     size_t c_cnt = 0;
     char buffer[SMALLBUF];
@@ -275,7 +275,7 @@ packerror:
     else {
 	ccs = RALLOC(c_cnt, ccs, Agraph_t *);
 	*ncc = (int) c_cnt;
-	*pinned = pin ? TRUE : FALSE;
+	*pinned = pin;
     }
     return ccs;
 }

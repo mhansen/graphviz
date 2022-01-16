@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 
@@ -168,7 +169,7 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
     return rsvgh;
 }
 
-static void gvloadimage_rsvg_cairo(GVJ_t * job, usershape_t *us, boxf b, boolean filled)
+static void gvloadimage_rsvg_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     RsvgHandle* rsvgh = gvloadimage_rsvg_load(job, us);
 

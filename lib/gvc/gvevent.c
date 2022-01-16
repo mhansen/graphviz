@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <string.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -170,7 +171,7 @@ static void gvevent_refresh(GVJ_t * job)
 	gv_graph_state(job, g);
     }
     emit_graph(job, g);
-    job->has_been_rendered = TRUE;
+    job->has_been_rendered = true;
 }
 
 /* recursively find innermost cluster containing the point */
@@ -314,7 +315,7 @@ static void gvevent_find_current_obj(GVJ_t * job, pointf pointer)
 	gvevent_leave_obj(job);
 	job->current_obj = obj;
 	gvevent_enter_obj(job);
-	job->needs_refresh = 1;
+	job->needs_refresh = true;
     }
 }
 
@@ -368,25 +369,25 @@ static void gvevent_button_press(GVJ_t * job, int button, pointf pointer)
     case 1: /* select / create in edit mode */
 	gvevent_find_current_obj(job, pointer);
 	gvevent_select_current_obj(job);
-        job->click = 1;
+        job->click = true;
 	job->button = button;
-	job->needs_refresh = 1;
+	job->needs_refresh = true;
 	break;
     case 2: /* pan */
-        job->click = 1;
+        job->click = true;
 	job->button = button;
-	job->needs_refresh = 1;
+	job->needs_refresh = true;
 	break;
     case 3: /* insert node or edge */
 	gvevent_find_current_obj(job, pointer);
-        job->click = 1;
+        job->click = true;
 	job->button = button;
-	job->needs_refresh = 1;
+	job->needs_refresh = true;
 	break;
     case 4:
         /* scrollwheel zoom in at current mouse x,y */
 /* FIXME - should code window 0,0 point as feature with Y_GOES_DOWN */
-        job->fit_mode = 0;
+        job->fit_mode = false;
         if (job->rotation) {
             job->focus.x -= (pointer.y - job->height / 2.)
                     * (ZOOMFACTOR - 1.) / (job->zoom * job->devscale.y);
@@ -400,10 +401,10 @@ static void gvevent_button_press(GVJ_t * job, int button, pointf pointer)
                     * (ZOOMFACTOR - 1.) / (job->zoom * job->devscale.y);
         }
         job->zoom *= ZOOMFACTOR;
-        job->needs_refresh = 1;
+        job->needs_refresh = true;
         break;
     case 5: /* scrollwheel zoom out at current mouse x,y */
-        job->fit_mode = 0;
+        job->fit_mode = false;
         job->zoom /= ZOOMFACTOR;
         if (job->rotation) {
             job->focus.x += (pointer.y - job->height / 2.)
@@ -417,7 +418,7 @@ static void gvevent_button_press(GVJ_t * job, int button, pointf pointer)
             job->focus.y -= (pointer.y - job->height / 2.)
                     * (ZOOMFACTOR - 1.) / (job->zoom * job->devscale.y);
         }
-        job->needs_refresh = 1;
+        job->needs_refresh = true;
         break;
     }
     job->oldpointer = pointer;
@@ -425,8 +426,8 @@ static void gvevent_button_press(GVJ_t * job, int button, pointf pointer)
 
 static void gvevent_button_release(GVJ_t *job, int button, pointf pointer)
 {
-    job->click = 0;
-    job->button = 0;
+    job->click = false;
+    job->button = false;
 }
 
 static void gvevent_motion(GVJ_t * job, pointf pointer)
@@ -454,7 +455,7 @@ static void gvevent_motion(GVJ_t * job, pointf pointer)
 	    job->focus.x -= dx / job->zoom;
 	    job->focus.y -= dy / job->zoom;
 	}
-	job->needs_refresh = 1;
+	job->needs_refresh = true;
 	break;
     case 3: /* drag with button 3 - drag inserted node or uncompleted edge */
 	break;
@@ -469,49 +470,49 @@ static int quit_cb(GVJ_t * job)
 
 static int left_cb(GVJ_t * job)
 {
-    job->fit_mode = 0;
+    job->fit_mode = false;
     job->focus.x += PANFACTOR / job->zoom;
-    job->needs_refresh = 1;
+    job->needs_refresh = true;
     return 0;
 }
 
 static int right_cb(GVJ_t * job)
 {
-    job->fit_mode = 0;
+    job->fit_mode = false;
     job->focus.x -= PANFACTOR / job->zoom;
-    job->needs_refresh = 1;
+    job->needs_refresh = true;
     return 0;
 }
 
 static int up_cb(GVJ_t * job)
 {
-    job->fit_mode = 0;
+    job->fit_mode = false;
     job->focus.y += -(PANFACTOR / job->zoom);
-    job->needs_refresh = 1;
+    job->needs_refresh = true;
     return 0;
 }
 
 static int down_cb(GVJ_t * job)
 {
-    job->fit_mode = 0;
+    job->fit_mode = false;
     job->focus.y -= -(PANFACTOR / job->zoom);
-    job->needs_refresh = 1;
+    job->needs_refresh = true;
     return 0;
 }
 
 static int zoom_in_cb(GVJ_t * job)
 {
-    job->fit_mode = 0;
+    job->fit_mode = false;
     job->zoom *= ZOOMFACTOR;
-    job->needs_refresh = 1;
+    job->needs_refresh = true;
     return 0;
 }
 
 static int zoom_out_cb(GVJ_t * job)
 {
-    job->fit_mode = 0;
+    job->fit_mode = false;
     job->zoom /= ZOOMFACTOR;
-    job->needs_refresh = 1;
+    job->needs_refresh = true;
     return 0;
 }
 
@@ -534,7 +535,7 @@ static int toggle_fit_cb(GVJ_t * job)
 		(double) job->height / (double) dflt_height);
 	job->focus.x = 0.0;
 	job->focus.y = 0.0;
-	job->needs_refresh = 1;
+	job->needs_refresh = true;
     }
     return 0;
 }
@@ -588,7 +589,7 @@ static void gvevent_read (GVJ_t * job, const char *filename, const char *layout)
 	return;   /* FIXME - need some error handling */
     job->selected_obj = NULL;
     job->current_obj = NULL;
-    job->needs_refresh = 1;
+    job->needs_refresh = true;
 }
 
 static void gvevent_layout (GVJ_t * job, const char *layout)

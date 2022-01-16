@@ -166,7 +166,7 @@ int gvRenderContext(GVC_t *gvc, graph_t *g, const char *format, void *context)
     }
 	
     job->context = context;
-    job->external_context = TRUE;
+    job->external_context = true;
 	
     rc = gvRenderJobs(gvc, g);
     gvrender_end_job(job);

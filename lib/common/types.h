@@ -18,7 +18,6 @@
 #include <assert.h>
 #include <signal.h>
 
-typedef unsigned char boolean;
 #ifndef FALSE
 #define FALSE 0
 #endif
@@ -423,7 +422,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	void *alg;
 	char state;
 	unsigned char gui_state; /* Node state for GUI ops */
-	boolean clustnode;
+	bool clustnode;
 
 #ifndef DOT_ONLY
 	unsigned char pinned;
@@ -435,7 +434,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #endif
 #ifndef NEATO_ONLY
 	unsigned char showboxes;
-	boolean  has_port;
+	bool  has_port;
 	node_t* rep;
 	node_t *set;
 
@@ -561,7 +560,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #endif
 #ifndef NEATO_ONLY
 	unsigned char showboxes;
-	boolean conc_opp_flag;
+	bool conc_opp_flag;
 	short xpenalty;
 	int weight;
 	int cutvalue;

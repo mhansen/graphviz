@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking**: Using Graphviz as a library on Windows now requires the `GVDLL`
   symbol to be set to ensure correct linking.
+- **Breaking**: Graphviz headers no longer define the `boolean` type. A
+  replacement is C99 `bool` in the C standard library’s stdbool.h.
 - **Breaking**: The `insidefn` member of the `shape_functions` struct must now
   be a pointer to a function returning a C99 `bool` instead of a
   Graphviz-specific `boolean`.
@@ -31,6 +33,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `has_images`, `has_flat_edges`, `has_sourcerank`,
   `has_sinkrank`, `expanded`, and `exact_ranksep` fields of the `Agraphinfo_t`
   struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `clustnode` and `has_port` fields of the `Agnodeinfo_t`
+  struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `conc_opp_flag` field of the `Agedgeinfo_t` struct is now a
+  C99 `bool` instead of a Graphviz-specific `boolean`.
+- **Breaking**: The `must_inline` and `nocache` fields of the `usershape_t`
+  struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `device_sets_dpi`, `external_context`, `fit_mode`,
+  `needs_refresh`, `click`, `has_grown`, and `has_been_rendered` fields of the
+  `GVJ_t` struct are now C99 `bool`s instead of Graphviz-specific `boolean`s.
+- **Breaking**: The `loadimage` member of the `gvloadimage_engine_t` struct must
+  now accept a C99 `bool` parameter instead of a former Graphviz-specific
+  `boolean` parameter.
+- **Breaking**: The `textlayout` member of the `gvtextlayout_engine_t` struct
+  must now return a C99 `bool` instead of a Graphviz-specific `boolean`.
+- **Breaking**: The `config` and `auto_outfile_names` members of the
+  `GVC_common_s` struct are now C99 `bool`s instead of Graphviz-specific
+  `boolean`s.
+- **Breaking**: The `fixed` member of the `pack_info` struct is now an array of
+  C99 `bool`s instead of an array of Graphviz-specific `boolean`s. Similarly,
+  `pack_graph` now takes a `bool` array instead of a `boolean` array.
+- **Breaking**: `pccomps` now takes a C99 `bool` instead of a `boolean` output
+  parameter.
+- **Breaking**: `gvusershape_file_access` now returns a C99 `bool` instead of a
+  Graphviz-specific `boolean`.
+- **Breaking**: 1-bit fields of the `obj_state_s` struct are now unsigned
+  instead of signed.
 - **Breaking**: Graphviz headers no longer define the constant `MAXSHORT`. A
   drop-in replacement is `SHRT_MAX` in the C standard library’s limits.h.
 - **Breaking**: Graphviz headers no lnger define `NIL` macros. A drop-in

@@ -18,6 +18,7 @@ extern "C" {
 
 #include "gvcommon.h"
 #include "color.h"
+#include <stdbool.h>
 
 #define ARRAY_SIZE(A) (sizeof(A)/sizeof(A[0]))
 
@@ -228,16 +229,16 @@ extern "C" {
 	char *tailtarget;
 	char *headtarget; 
 
-	int explicit_tooltip:1;
-	int explicit_tailtooltip:1;
-	int explicit_headtooltip:1;
-	int explicit_labeltooltip:1;
-	int explicit_tailtarget:1;
-	int explicit_headtarget:1;
-	int explicit_edgetarget:1;
-	int explicit_tailurl:1;
-	int explicit_headurl:1;
-	int labeledgealigned:1;
+	unsigned explicit_tooltip:1;
+	unsigned explicit_tailtooltip:1;
+	unsigned explicit_headtooltip:1;
+	unsigned explicit_labeltooltip:1;
+	unsigned explicit_tailtarget:1;
+	unsigned explicit_headtarget:1;
+	unsigned explicit_edgetarget:1;
+	unsigned explicit_tailurl:1;
+	unsigned explicit_headurl:1;
+	unsigned labeledgealigned:1;
 
 	/* primary mapped region - node shape, edge labels */
 	map_shape_t url_map_shape; 
@@ -292,13 +293,13 @@ extern "C" {
 	gvplugin_active_loadimage_t loadimage;
 	gvdevice_callbacks_t *callbacks;
 	pointf device_dpi;
-	boolean device_sets_dpi;
+	bool device_sets_dpi;
 
 	void *display;
 	int screen;
 
 	void *context;		/* gd or cairo surface */
-	boolean external_context;	/* context belongs to caller */
+	bool external_context;	/* context belongs to caller */
 	char *imagedata;	/* location of imagedata */
 
         int flags;		/* emit_graph flags */
@@ -338,7 +339,7 @@ extern "C" {
 	pointf  translation;    /* composite translation */
 	pointf  devscale;	/* composite device to points: dpi, y_goes_down */
 
-	boolean	fit_mode,
+	bool	fit_mode,
 		needs_refresh,
 		click,
 		has_grown,

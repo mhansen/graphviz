@@ -452,7 +452,7 @@ static void doDot (Agraph_t* g)
 	else if (Pack < 0)
 	    Pack = CL_OFFSET;
 	pinfo.margin = Pack;
-	pinfo.fixed = 0;
+	pinfo.fixed = NULL;
 
           /* components using clusters */
 	ccs = cccomps(g, &ncc, 0);
