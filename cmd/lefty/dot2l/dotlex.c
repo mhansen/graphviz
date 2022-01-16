@@ -255,7 +255,7 @@ static char *scan_token (char *p) {
 
 static char *scan_num (char *p) {
     char *q, *z;
-    int saw_rp = FALSE;
+    bool saw_rp = false;
     bool saw_digit = false;
 
     z = p;
@@ -263,7 +263,7 @@ static char *scan_num (char *p) {
     if (*z == '-')
         *q++ = *z++;
     if (*z == '.') {
-        saw_rp = TRUE;
+        saw_rp = true;
         *q++ = *z++;
     }
     while (isdigit (*z)) {
