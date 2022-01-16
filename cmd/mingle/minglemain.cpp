@@ -18,6 +18,7 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <vector>
 
 #include <sparse/DotIO.h>
 #include <mingle/edge_bundling.h>
@@ -301,7 +302,7 @@ static void genBundleColors(pedge edge, std::ostream &os, double maxwgt) {
 	double len, t, len_total0 = 0;
 	int dim = edge->dim;
 	double* x = edge->x;
-	std::unique_ptr<double[]> lens(new double[edge->npoints]);
+	std::vector<double> lens(edge->npoints);
 
 	for (j = 0; j < edge->npoints - 1; j++){
 		len = 0;
