@@ -286,7 +286,7 @@ tailrec:
             err (ERRNORHS, ERR4, co, TCgetnext (co, i1));
         if (v1o)
             Mpopmark (m1);
-        return (orderop (v1o, ctype, v2o) == TRUE) ? Ttrue: Tfalse;
+        return orderop (v1o, ctype, v2o) ? Ttrue: Tfalse;
     case C_PLUS:
     case C_MINUS:
     case C_MUL:

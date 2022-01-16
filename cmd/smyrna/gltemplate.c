@@ -58,7 +58,7 @@ static void print_gl_config_attrib(GdkGLConfig * glconfig,
     g_print("%s = ", attrib_str);
     if (gdk_gl_config_get_attrib(glconfig, attrib, &value)) {
 	if (is_boolean)
-	    g_print("%s\n", value == TRUE ? "TRUE" : "FALSE");
+	    g_print("%s\n", value ? "TRUE" : "FALSE");
 	else
 	    g_print("%d\n", value);
     } else

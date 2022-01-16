@@ -1222,7 +1222,7 @@ static void flat_search(graph_t * g, node_t * v)
 		continue;
 	    if (ED_weight(e) == 0)
 		continue;
-	    if (ND_onstack(aghead(e)) == TRUE) {
+	    if (ND_onstack(aghead(e))) {
 		assert(flatindex(aghead(e)) < M->nrows);
 		assert(flatindex(agtail(e)) < M->ncols);
 		ELT(M, flatindex(aghead(e)), flatindex(agtail(e))) = 1;
