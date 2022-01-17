@@ -73,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CentOS 7 packages now include libmingle and the `mingle` program.
 - The tclpkg Makefile no longer suppresses `-fstack-clash-protection` nor
   other compiler options containing `-x`
+- Lefty is no longer enabled in the portable source tarball.
 
 ### Fixed
 
