@@ -26,12 +26,14 @@ pdfdir = $(pkgdatadir)/doc/pdf
 
 if WITH_WIN32
 AM_CPPFLAGS = \
+	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/cmd/lefty/ws/mswin32 \
 	-I$(top_srcdir)/cmd/lefty/os/mswin32 \
 	-I$(top_srcdir)/cmd/lefty/dot2l \
 	$(XMU_CFLAGS) $(XAW_CFLAGS)
 else
 AM_CPPFLAGS = \
+	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/cmd/lefty/ws/x11 \
 	-I$(top_srcdir)/cmd/lefty/os/unix \
 	-I$(top_srcdir)/cmd/lefty/dot2l \

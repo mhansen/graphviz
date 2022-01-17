@@ -12,6 +12,7 @@ endif
 libws_la_SOURCES = garray.c gbutton.c gcanvas.c gcommon.c glabel.c \
 	gmenu.c gpcanvas.c gquery.c gscroll.c gtext.c gview.c
 libws_la_CPPFLAGS = \
+	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/cmd/lefty \
 	-I$(top_srcdir)/cmd/lefty/ws/x11/libfilereq \
 	-DFEATURE_X11 \
