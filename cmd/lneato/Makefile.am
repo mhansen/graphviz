@@ -23,6 +23,9 @@ else
 pdf =
 endif
 
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/lib
+
 AM_CFLAGS = -DLNEATO
 if WITH_WIN32
 lneato_SOURCES = ${top_srcdir}/cmd/dotty/mswin32/dotty.c
