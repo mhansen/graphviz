@@ -89,29 +89,6 @@ def test_tools(tool):
     output, _ = p.communicate()
     ret = p.returncode
 
-  # FIXME: https://gitlab.com/graphviz/graphviz/-/issues/1934
-  # cope with flaky failures, while also failing if this flakiness has been
-  # fixed
-  if tool == "lneato" and os.getenv("build_system") == "msbuild":
-    has_pass = ret == 0
-    has_fail = ret != 0
-    for _ in range(100):
-      if has_pass and has_fail:
-        break
-      with subprocess.Popen([tool, "-?"], env=environ_copy,
-                            stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT,
-                            universal_newlines=True) as p:
-        out, _ = p.communicate()
-        if p.returncode == 0:
-          has_pass = True
-          ret = p.returncode
-          output = out
-        else:
-          has_fail = True
-    assert has_pass, "could not find passing execution"
-    assert has_fail, "could not find failing execution (#1934 fixed?)"
-
   assert ret == 0, f"`{tool} -?` failed. Output was: {output}"
 
   assert re.match("usage", output, flags=re.IGNORECASE) is not None, \

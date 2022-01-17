@@ -24,8 +24,8 @@ static char *shellpath;
 static char *buildpath (char *);
 static void panic (char *, int, char *, char *, ...);
 
-int PASCAL WinMain (HANDLE hInstance, HANDLE hPrevInstance,
-        LPSTR lpCmdLine, int nCmdShow) {
+int WINAPI wWinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
+        PWSTR pCmdLine, int nCmdShow) {
     HANDLE handle;
     char cmd[256];
     char *path;
@@ -43,18 +43,18 @@ int PASCAL WinMain (HANDLE hInstance, HANDLE hPrevInstance,
         if (!(path = buildpath ("lefty")))
             exit (1);
     }
-    argv = CommandLineToArgvW(lpCmdLine, &argc);
-    if (argc == 1 && strcmp(argv[0], "-?") == 0) {
+    argv = CommandLineToArgvW(pCmdLine, &argc);
+    if (argc == 1 && wcscmp(argv[0], L"-?") == 0) {
         fprintf(stderr, "usage: lneato [-V] [-lm (sync|async)] [-el (0|1)] <filename>\n");
         exit(0);
     }
-    if (lpCmdLine[0] == 0)
+    if (pCmdLine[0] == 0)
         snprintf(cmd, sizeof(cmd), "%s -e \"load('dotty.lefty');"
                  "dotty.protogt.lserver='neato';dotty.simple(null);\"", path);
     else
         snprintf(cmd, sizeof(cmd), "%s -e \"load('dotty.lefty');"
                  "dotty.protogt.lserver='neato';dotty.simple('%Ns');\"", path,
-                 lpCmdLine);
+                 pCmdLine);
 
     handle = WinExec (cmd, SW_SHOW);
     exit (0);
