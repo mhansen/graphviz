@@ -29,8 +29,6 @@ freeglut3-dev \
 libgts-dev \
 # Option swig
 swig \
-# Command lefty
-libxaw7-dev \
 # Command smyra
 libgtkglext1-dev \
 libglade2-dev \
