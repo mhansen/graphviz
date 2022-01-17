@@ -3,6 +3,9 @@
 leftydir = $(pkgdatadir)/lefty
 pdfdir = $(pkgdatadir)/doc/pdf
 
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/lib
+
 if WITH_X
 if WITH_WIN32
 bin_PROGRAMS = dotty
