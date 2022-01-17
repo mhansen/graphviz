@@ -632,19 +632,6 @@ def test_1813():
 
   assert "Usage" in output, "gvedit -? did not show usage"
 
-@pytest.mark.skipif(shutil.which("lefty") is None, reason="Lefty not available")
-def test_1818():
-  """
-  lefty -? should show usage
-  https://gitlab.com/graphviz/graphviz/-/issues/1813
-  """
-
-  output = subprocess.check_output(["lefty", "-?"],
-    stderr=subprocess.STDOUT,
-    universal_newlines=True)
-
-  assert "Usage" in output, "lefty -? did not show usage"
-
 def test_1845():
   """
   rendering sequential graphs to PS should not segfault

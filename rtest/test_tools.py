@@ -41,7 +41,6 @@ import pytest
     "gvpr",
     "gxl2dot",
     "gxl2gv",
-    "lefty",
     "lneato",
     "mingle",
     "mm2gv",
