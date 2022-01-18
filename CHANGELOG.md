@@ -85,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - gvpr on MinGW does not support absolute paths #1780
 - PNG format not available in CMake builds with MinGW
 - tclpkg Makefile corrupts CFLAGS #2177
+- lneato -? sometimes fails with STATUS_STACK_BUFFER_OVERRUN on Windows #1934
 
 ## [2.50.0] – 2021-12-04
 
