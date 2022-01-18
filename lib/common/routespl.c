@@ -1008,17 +1008,7 @@ static vec* find_shortest_cycle_with_edge(vec* cycles, edge_t* edge, size_t min_
 
 static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 {
-	static vec* cycles = 0;
-	static graph_t* ref_g = 0;
-
-	if (cycles == 0 || ref_g != g) {
-		//free the memory we're using to hold the previous cycles
-		if (cycles != 0) {
-			vec_delete(cycles);
-		}
-		cycles = find_all_cycles(g);
-		ref_g = g;
-	}
+	vec* cycles = find_all_cycles(g);
 
 	//find the center of the shortest cycle containing this edge
 	//cycles of length 2 do their own thing, we want 3 or
@@ -1029,8 +1019,11 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 	size_t idx; //edge index
 	node_t *n;
 
-	if (!cycle)
+	if (cycle == NULL) {
+		if (cycles != NULL)
+			vec_delete(cycles);
 		return get_centroid(g);
+	}
 
 	cycle_len = vec_length(cycle);
 
@@ -1040,6 +1033,9 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
         sum.y += ND_coord(n).y;
         cnt++;
 	}
+
+	if (cycles != NULL)
+		vec_delete(cycles);
 
 	sum.x /= cnt;
     sum.y /= cnt;
