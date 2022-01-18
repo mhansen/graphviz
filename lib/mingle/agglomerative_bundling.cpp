@@ -462,13 +462,6 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 
 	e->npoints = npp;
       }
-#ifdef OPENGL
-      if (open_gl & FALSE){
-	nedges_global = grid->n;
-	edges_global = edges;
-	drawScene();
-      }
-#endif
     }
 
     for (i = 0; i < ne; i++) pedge_delete(mid_edges[i]);
