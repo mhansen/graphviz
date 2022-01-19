@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,28 +10,26 @@
 
 #include <graphviz/gvc.h>
 #include <stddef.h>
+#include <stdio.h>
 
-int main(int argc, char **argv)
-{
-    GVC_t *gvc;
-    graph_t *g;
-    FILE *fp;
+int main(int argc, char **argv) {
 
-    gvc = gvContext();
+  GVC_t *gvc = gvContext();
 
-    if (argc > 1)
-	fp = fopen(argv[1], "r");
-    else
-	fp = stdin;
-    g = agread(fp, NULL);
+  FILE *fp;
+  if (argc > 1)
+    fp = fopen(argv[1], "r");
+  else
+    fp = stdin;
+  graph_t *g = agread(fp, NULL);
 
-    gvLayout(gvc, g, "dot");
+  gvLayout(gvc, g, "dot");
 
-    gvRender(gvc, g, "plain", stdout);
+  gvRender(gvc, g, "plain", stdout);
 
-    gvFreeLayout(gvc, g);
+  gvFreeLayout(gvc, g);
 
-    agclose(g);
+  agclose(g);
 
-    return (gvFreeContext(gvc));
+  return gvFreeContext(gvc);
 }

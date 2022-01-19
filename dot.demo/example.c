@@ -1,44 +1,38 @@
 #include <graphviz/gvc.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define NO_LAYOUT_OR_RENDERING
 
-int main(int argc, char **argv)
-{
-    Agraph_t *g;
-    Agnode_t *n, *m;
-    Agedge_t *e;
-
+int main(void) {
 #ifndef NO_LAYOUT_OR_RENDERING
-    /* set up a graphviz context - but only once even for multiple graphs */
-    static GVC_t *gvc;
-
-    if (!gvc)
-    	gvc = gvContext();
+  // set up a graphviz context - but only once even for multiple graphs
+  GVC_t *gvc = gvContext();
 #endif
 
-    /* Create a simple digraph */
-    g = agopen("g", Agdirected, 0);
-    n = agnode(g, "n", 1);
-    m = agnode(g, "m", 1);
-    e = agedge(g, n, m, 0, 1);
+  // Create a simple digraph
+  Agraph_t *g = agopen("g", Agdirected, 0);
+  Agnode_t *n = agnode(g, "n", 1);
+  Agnode_t *m = agnode(g, "m", 1);
+  Agedge_t *e = agedge(g, n, m, 0, 1);
 
-    /* Set an attribute - in this case one that affects the visible rendering */
-    agsafeset(n, "color", "red", "");
-    
+  // Set an attribute - in this case one that affects the visible rendering
+  agsafeset(n, "color", "red", "");
+
 #ifdef NO_LAYOUT_OR_RENDERING
-    /* Just write the graph without layout */
-    agwrite(g, stdout);
+  // Just write the graph without layout
+  agwrite(g, stdout);
 #else
-    /* Use the directed graph layout engine */
-    gvLayout(gvc, g, "dot");
+  // Use the directed graph layout engine
+  gvLayout(gvc, g, "dot");
 
-    /* Output in .dot format */
-    gvRender(gvc, g, "dot", stdout);
+  // Output in .dot format
+  gvRender(gvc, g, "dot", stdout);
 
-    gvFreeLayout(gvc, g);
+  gvFreeLayout(gvc, g);
 #endif
 
-    agclose(g);
+  agclose(g);
 
-    return 0;
+  return EXIT_SUCCESS;
 }
