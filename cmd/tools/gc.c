@@ -377,5 +377,5 @@ int main(int argc, char *argv[])
     if (n_graphs > 1)
 	wcp(tot_nodes, tot_edges, tot_cc, tot_cl, "total", 0);
 
-    return rv;
+    graphviz_exit(rv);
 }

@@ -531,7 +531,7 @@ int main (int argc, char *argv[])
         fprintf (stdout, "%g = %s %d\n", test[i], buf, len);
     }
 
-    return 0;
+    graphviz_exit(0);
 }
 #endif
 

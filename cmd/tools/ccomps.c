@@ -925,5 +925,5 @@ int main(int argc, char *argv[])
 	agclose(g);
     }
 
-    return r;
+    graphviz_exit(r);
 }

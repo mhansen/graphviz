@@ -190,12 +190,12 @@ int main(int argc, char *argv[])
 
 	if (VirtualQuery (&main, &mbi, sizeof(mbi)) == 0) {
 	    fprintf (stderr,"failed to get handle for executable.\n");
-	    return 1;
+	    graphviz_exit(1);
 	}
 	r = GetModuleFileName ((HMODULE)mbi.AllocationBase, line, BSZ);
 	if (!r || (r == BSZ)) {
 	    fprintf (stderr,"failed to get path for executable.\n");
-	    return 1;
+	    graphviz_exit(1);
 	}
 
 	/* line contains path to smyrna: "$GVROOT\bin\smyrna.exe" 
@@ -205,12 +205,12 @@ int main(int argc, char *argv[])
 	s = strrchr(line,'\\');
 	if (!s) {
 	    fprintf (stderr,"no backslash in path %s.\n", line);
-	    return 1;
+	    graphviz_exit(1);
 	}
 	while ((s != line) && (*(--s) != '\\')) ;
 	if (s == line) {
 	    fprintf (stderr,"no backslash in path %s.\n", line);
-	    return 1;
+	    graphviz_exit(1);
 	}
 	*s = '\0';
 
@@ -253,5 +253,5 @@ int main(int argc, char *argv[])
     g_free(package_data_dir);
 #endif
     g_free(package_locale_dir);
-    return 0;
+    graphviz_exit(0);
 }

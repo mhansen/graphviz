@@ -392,5 +392,5 @@ int main(int argc, char *argv[])
 	gcnt++;
     }
 
-    return r;
+    graphviz_exit(r);
 }

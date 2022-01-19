@@ -230,5 +230,5 @@ int main(int argc, char **argv)
 	transform(g);
 	agwrite(g, outFile);
     }
-    return 0;
+    graphviz_exit(0);
 }

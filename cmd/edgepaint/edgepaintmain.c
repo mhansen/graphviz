@@ -308,5 +308,5 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	return rv;
+	graphviz_exit(rv);
 }

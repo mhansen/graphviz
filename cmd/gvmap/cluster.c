@@ -153,5 +153,5 @@ int main(int argc, char *argv[])
     prevg = g;
   }
 
-  return 0; 
+  graphviz_exit(0);
 }

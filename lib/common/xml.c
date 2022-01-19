@@ -233,7 +233,7 @@ int main(int argc, char **argv) {
 
     default:
       fprintf(stderr, "unexpected error\n");
-      return EXIT_FAILURE;
+      graphviz_exit(EXIT_FAILURE);
     }
   }
 
@@ -241,9 +241,9 @@ int main(int argc, char **argv) {
   for (int i = optind; i < argc; ++i) {
     int r = xml_escape(argv[i], flags, put, stdout);
     if (r < 0)
-      return EXIT_FAILURE;
+      graphviz_exit(EXIT_FAILURE);
   }
 
-  return EXIT_SUCCESS;
+  graphviz_exit(EXIT_SUCCESS);
 }
 #endif

@@ -338,6 +338,6 @@ int main(int argc, char *argv[])
 
     agwrite(g, pv.outf);
 
-    return 0;
+    graphviz_exit(0);
 }
 

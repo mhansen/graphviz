@@ -134,5 +134,5 @@ int main(int argc, char **argv)
     }
     gvFinalize(Gvc);
     r = gvFreeContext(Gvc);
-    return (MAX(rc,r));
+    graphviz_exit(MAX(rc,r));
 }

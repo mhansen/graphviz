@@ -24,6 +24,7 @@
 #include <gml2gv.h>
 #include <agxbuf.h>
 #include <assert.h>
+#include <cgraph/exit.h>
 
 #define NEW(t)       malloc(sizeof(t))
 #define N_NEW(n,t)   calloc((n),sizeof(t))
@@ -733,7 +734,7 @@ static Agraph_t *mkGraph(gmlgraph *graph, Agraph_t *parent, char *name,
     for (np = dtfirst(graph->nodelist); np; np = dtnext(graph->nodelist, np)) {
 	if (!np->id) {
 	   fprintf (stderr, "node without an id attribute"); 
-	   exit (1);
+	   graphviz_exit (1);
         }
 	n = agnode (g, np->id, 1);
 	addAttrs ((Agobj_t*)n, np->attrlist, xb, unk);
@@ -742,11 +743,11 @@ static Agraph_t *mkGraph(gmlgraph *graph, Agraph_t *parent, char *name,
     for (ep = dtfirst(graph->edgelist); ep; ep = dtnext(graph->edgelist, ep)) {
 	if (!ep->source) {
 	   fprintf (stderr, "edge without an source attribute"); 
-	   exit (1);
+	   graphviz_exit (1);
         }
 	if (!ep->target) {
 	   fprintf (stderr, "node without an target attribute"); 
-	   exit (1);
+	   graphviz_exit (1);
         }
 	n = agnode (g, ep->source, 1);
 	h = agnode (g, ep->target, 1);

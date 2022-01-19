@@ -194,6 +194,6 @@ int main(int argc, char **argv)
     gdImageDestroy(B);
     gdImageDestroy(C);
 
-    return (rc ? EXIT_FAILURE : EXIT_SUCCESS);
+    graphviz_exit(rc ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 

@@ -85,5 +85,5 @@ int main(int argc, char **argv)
 	agclose(g);
     }
 
-    return (ig.errors != 0 || agerrors() != 0) ? EXIT_FAILURE : EXIT_SUCCESS;
+    graphviz_exit(ig.errors != 0 || agerrors() != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
 }

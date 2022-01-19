@@ -199,7 +199,7 @@ eop:
     term ();
 #endif
     printusage ();
-    return 0;
+    graphviz_exit(0);
 }
 
 #else
@@ -232,7 +232,7 @@ int APIENTRY WinMain (
     processstr (leftyoptions);
     argv = CommandLineToArgvW(lpCmdLine, &argc);
     if (argv == NULL)
-      return EXIT_FAILURE;
+      graphviz_exit(EXIT_FAILURE);
     processargs(argc, argv);
     LocalFree(argv);
 

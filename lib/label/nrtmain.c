@@ -316,5 +316,5 @@ int main(int argc, char *argv[])
 
     init(argc, argv, &opts);
     doxlabel(&opts);
-    return 0;
+    graphviz_exit(0);
 }

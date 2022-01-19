@@ -381,5 +381,5 @@ int main(int argc, char **argv)
 	agclose(g);
     }
 
-    return 0;
+    graphviz_exit(0);
 }
