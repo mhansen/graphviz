@@ -85,7 +85,6 @@ configure-stamp:
 	--disable-r \
 	--enable-ruby \
 	--enable-tcl \
-	--enable-lefty \
 	LDFLAGS="-Wl,--as-needed"
 	touch configure-stamp
 

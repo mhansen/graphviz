@@ -23,7 +23,6 @@ ann-devel \
 gts-devel \
 # Option swig
 swig \
-# Command lefty
 # Command smyra
 # Command gvedit
 qt5-qtbase-devel \
