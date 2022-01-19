@@ -86,6 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PNG format not available in CMake builds with MinGW
 - tclpkg Makefile corrupts CFLAGS #2177
 - lneato -? sometimes fails with STATUS_STACK_BUFFER_OVERRUN on Windows #1934
+- expr misinterprets `<<` and `>>` #2103
 
 ## [2.50.0] – 2021-12-04
 
