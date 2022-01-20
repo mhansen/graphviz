@@ -16,8 +16,8 @@
 #include <getopt.h>
 #include <iomanip>
 #include <iostream>
-#include <memory>
 #include <sstream>
+#include <vector>
 
 #include <sparse/DotIO.h>
 #include <mingle/edge_bundling.h>
@@ -301,7 +301,7 @@ static void genBundleColors(pedge edge, std::ostream &os, double maxwgt) {
 	double len, t, len_total0 = 0;
 	int dim = edge->dim;
 	double* x = edge->x;
-	std::unique_ptr<double[]> lens(new double[edge->npoints]);
+	std::vector<double> lens(edge->npoints);
 
 	for (j = 0; j < edge->npoints - 1; j++){
 		len = 0;
@@ -440,7 +440,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		
 	ia = A->ia; ja = A->ja;
 	nz = A->nz;
-	std::unique_ptr<double[]> xx(new double[nz * 4]);
+	std::vector<double> xx(nz * 4);
 	nz = 0;
 	dim = 4;
 	for (i = 0; i < A->m; i++){
@@ -457,12 +457,12 @@ bundle (Agraph_t* g, opts_t* opts)
 	if (Verbose)
 		std::cerr << "n = " << A->m << " nz = " << nz << '\n';
 
-	B = nearest_neighbor_graph(nz, MIN(opts->nneighbors, nz), xx.get(), eps);
+	B = nearest_neighbor_graph(nz, MIN(opts->nneighbors, nz), xx.data(), eps);
 
 	SparseMatrix_delete(A);
 	A = B;
 	free(x);
-	x = xx.get();
+	x = xx.data();
 
 	dim = 2;
 
