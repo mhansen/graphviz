@@ -12,7 +12,7 @@
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
 #include <sparse/clustering.h>
-
+#include <stdbool.h>
 
 
 static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(SparseMatrix A, int level){
@@ -20,7 +20,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
   int n = A->n, i, j;
 
   assert(A->type == MATRIX_TYPE_REAL);
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
 
   if (!A) return NULL;
   assert(A->m == n);
@@ -273,7 +273,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_new(Spa
   Multilevel_Modularity_Clustering grid;
   SparseMatrix A = A0;
 
-  if (!SparseMatrix_is_symmetric(A, FALSE) || A->type != MATRIX_TYPE_REAL){
+  if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
     A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   }
   grid = Multilevel_Modularity_Clustering_init(A, 0);
@@ -370,7 +370,7 @@ void modularity_clustering(SparseMatrix A, int inplace, int ncluster_target, int
   
   assert(A->m == A->n);
 
-  B = SparseMatrix_symmetrize(A, FALSE);
+  B = SparseMatrix_symmetrize(A, false);
 
   if (!inplace && B == A) {
     B = SparseMatrix_copy(A);

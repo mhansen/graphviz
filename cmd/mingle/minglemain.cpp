@@ -402,7 +402,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		return 1;
     }
 
-	A = SparseMatrix_symmetrize(A, TRUE);
+	A = SparseMatrix_symmetrize(A, true);
 	if (opts->fmt == FMT_GV) {
 		PointMap* pm = newPM();    /* map from node id pairs to edge index */
 		Agnode_t* n;

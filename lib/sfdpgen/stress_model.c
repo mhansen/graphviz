@@ -3,6 +3,7 @@
 #include <sfdpgen/spring_electrical.h>
 #include <sfdpgen/post_process.h>
 #include <sfdpgen/stress_model.h>
+#include <stdbool.h>
 
 static void stress_model_core(int dim, SparseMatrix B, double **x, int edge_len_weighted, int maxit_sm, double tol, int *flag){
   int m;
@@ -11,9 +12,9 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int edge_len_
   int i;
   SparseMatrix A = B;
 
-  if (!SparseMatrix_is_symmetric(A, FALSE) || A->type != MATRIX_TYPE_REAL){
+  if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
     if (A->type == MATRIX_TYPE_REAL){
-      A = SparseMatrix_symmetrize(A, FALSE);
+      A = SparseMatrix_symmetrize(A, false);
       A = SparseMatrix_remove_diagonal(A);
     } else {
       A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);

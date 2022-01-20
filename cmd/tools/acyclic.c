@@ -19,6 +19,7 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#include <stdbool.h>
 #include <stdio.h>
 
 #include <stdlib.h>
@@ -72,7 +73,7 @@ static int dfs(Agraph_t * g, Agnode_t * t, int hasCycle)
     Agnode_t *h;
 
     ND_mark(t) = 1;
-    ND_onstack(t) = 1;
+    ND_onstack(t) = true;
     for (e = agfstout(g, t); e; e = f) {
 	f = agnxtout(g, e);
 	if (agtail(e) == aghead(e))
@@ -92,7 +93,7 @@ static int dfs(Agraph_t * g, Agnode_t * t, int hasCycle)
 	} else if (ND_mark(h) == 0)
 	    hasCycle |= dfs(g, h, hasCycle);
     }
-    ND_onstack(t) = 0;
+    ND_onstack(t) = false;
     return hasCycle;
 }
 

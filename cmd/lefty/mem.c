@@ -12,13 +12,14 @@
 
 #include "common.h"
 #include "mem.h"
+#include <stdbool.h>
 
 /* SHORTCUT: the following are imported from tbl.c */
 extern void Tgchelper (void *), Tfreehelper (void *);
 
 #define M_MAXTYPES 6
 
-int Mhaspointers[M_MAXTYPES];
+bool Mhaspointers[M_MAXTYPES];
 int Mgcstate;
 int Mcouldgc;
 

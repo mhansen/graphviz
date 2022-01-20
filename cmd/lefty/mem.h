@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #ifdef FEATURE_MINTSIZE
@@ -37,7 +39,7 @@ typedef struct Mheader_t {
 #define M_AREAOF(p) ((int) (((Mheader_t *) p)->area))
 #define M_TYPEOF(p) ((int) (((Mheader_t *) p)->type))
 
-extern int Mhaspointers[];
+extern bool Mhaspointers[];
 extern int Mgcstate;
 extern int Mcouldgc;
 

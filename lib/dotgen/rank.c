@@ -938,26 +938,28 @@ static void dfs(graph_t * g, node_t * v)
     if (ND_mark(v))
 	return;
     ND_mark(v) = TRUE;
-    ND_onstack(v) = TRUE;
+    ND_onstack(v) = true;
     for (e = agfstout(g, v); e; e = f) {
 	f = agnxtout(g, e);
 	w = aghead(e);
 	if (ND_onstack(w))
 	    reverse_edge2(g, e);
 	else {
-	    if (ND_mark(w) == FALSE)
+	    if (!ND_mark(w))
 		dfs(g, w);
 	}
     }
-    ND_onstack(v) = FALSE;
+    ND_onstack(v) = false;
 }
 
 static void break_cycles(graph_t * g)
 {
     node_t *n;
 
-    for (n = agfstnode(g); n; n = agnxtnode(g, n))
-	ND_mark(n) = ND_onstack(n) = FALSE;
+    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+	ND_mark(n) = FALSE;
+	ND_onstack(n) = false;
+    }
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
 	dfs(g, n);
 }

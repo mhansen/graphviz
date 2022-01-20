@@ -260,7 +260,7 @@ int node_distinct_coloring(char *color_scheme, char *lightness, bool weightedQ,
   }
   ctmp = MALLOC(sizeof(double)*cdim*n);
 
-  B = SparseMatrix_symmetrize(A, FALSE);
+  B = SparseMatrix_symmetrize(A, false);
   A = B;
 
   SparseMatrix_weakly_connected_components(A, &ncomps, &comps, &comps_ptr); 

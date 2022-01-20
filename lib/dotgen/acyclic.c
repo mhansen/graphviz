@@ -14,6 +14,7 @@
  */
 
 #include <dotgen/dot.h>
+#include <stdbool.h>
 
 void reverse_edge(edge_t * e)
 {
@@ -36,18 +37,18 @@ dfs(node_t * n)
     if (ND_mark(n))
 	return;
     ND_mark(n) = TRUE;
-    ND_onstack(n) = TRUE;
+    ND_onstack(n) = true;
     for (i = 0; (e = ND_out(n).list[i]); i++) {
 	w = aghead(e);
 	if (ND_onstack(w)) {
 	    reverse_edge(e);
 	    i--;
 	} else {
-	    if (ND_mark(w) == FALSE)
+	    if (!ND_mark(w))
 		dfs(w);
 	}
     }
-    ND_onstack(n) = FALSE;
+    ND_onstack(n) = false;
 }
 
 

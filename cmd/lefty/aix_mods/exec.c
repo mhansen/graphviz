@@ -27,7 +27,7 @@ static int lvarn, llvari, flvari;
 
 Tobj root, null;
 Tobj rtno;
-int Erun;
+bool Erun;
 int Eerrlevel, Estackdepth, Eshowbody;
 
 #define PUSHJMP(op, np, b) op = (volatile jmp_buf *) np, np = (jmp_buf *) &b
@@ -63,7 +63,7 @@ static char *errnam[] = {
     "table changed during a forin loop",
 };
 
-static int errdo;
+static bool errdo;
 
 /* stack information */
 typedef struct sinfo_t {
@@ -136,7 +136,7 @@ void Einit(void)
     sinfop = Marrayalloc((long) SINFOINCR * SINFOSIZE);
     sinfon = SINFOINCR;
     sinfoi = 0;
-    Erun = FALSE;
+    Erun = false;
     running = 0;
 }
 
@@ -189,7 +189,7 @@ Tobj Eunit(Tobj co)
     sinfoi = ownsinfoi;
     POPJMP(oeljbufp, eljbufp);
     Mpopmark(m);
-    Erun = TRUE;
+    Erun = true;
     return lrtno;
 }
 
@@ -219,7 +219,7 @@ static Tobj eeval(Tobj co, int ci)
     int i1, i2, res;
 
   tailrec:
-    errdo = TRUE;
+    errdo = true;
     v1o = NULL;
     ctype = TCgettype(co, ci);
     switch (ctype) {
@@ -277,7 +277,7 @@ static Tobj eeval(Tobj co, int ci)
 	    err(ERRNORHS, ERR4, co, TCgetnext(co, i1));
 	if (v1o)
 	    Mpopmark(m1);
-	return (orderop(v1o, ctype, v2o) == TRUE) ? Ttrue : Tfalse;
+	return orderop(v1o, ctype, v2o) ? Ttrue : Tfalse;
     case C_PLUS:
     case C_MINUS:
     case C_MUL:
@@ -522,7 +522,7 @@ static Tobj efcall(Tobj co, int ci)
     sinfoi = ownsinfoi;
     Mpopmark(m);
     lrtno = rtno, rtno = NULL;
-    errdo = TRUE;
+    errdo = true;
     return lrtno;
 }
 
@@ -797,7 +797,7 @@ static bool boolop(Tobj vo)
     double d;
 
     if (!vo)
-	return FALSE;
+	return false;
 
     switch (Tgettype(vo)) {
     case T_INTEGER:
@@ -950,7 +950,7 @@ static void err(int errnum, int level, Tobj co, int ci)
 	}
 	if (Estackdepth == 1) {
 	    fprintf(stderr, "\n");
-	    errdo = FALSE;
+	    errdo = false;
 	}
 	for (i = si; i >= 0; i--) {
 	    if (sinfop[i].fco) {
@@ -962,7 +962,7 @@ static void err(int errnum, int level, Tobj co, int ci)
 	printbody(s, Eshowbody), free(s);
     }
     fprintf(stderr, "\n");
-    errdo = FALSE;
+    errdo = false;
 }
 
 static void printbody(char *s, int mode)

@@ -14,6 +14,7 @@
 #include "g.h"
 #include "gcommon.h"
 #include "mem.h"
+#include <stdbool.h>
 #include <string.h>
 
 Gwidget_t *Gwidgets;
@@ -847,9 +848,9 @@ void Gerr (char *file, int line, int errnum, ...) {
 
     va_start(args, errnum);
     vsprintf (buf, errmsg[errnum], args);
-    Gnocallbacks = TRUE;
+    Gnocallbacks = true;
     MessageBox ((HWND) NULL, buf, "Lefty Warning", MB_APPLMODAL);
-    Gnocallbacks = FALSE;
+    Gnocallbacks = false;
     va_end(args);
 #endif
 #endif

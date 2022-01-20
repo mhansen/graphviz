@@ -19,6 +19,7 @@
 #include <sparse/SparseMatrix.h>
 #include <sparse/BinaryHeap.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 static size_t size_of_matrix_type(int type){
   size_t size = 0;
@@ -57,7 +58,7 @@ SparseMatrix SparseMatrix_sort(SparseMatrix A){
 SparseMatrix SparseMatrix_make_undirected(SparseMatrix A){
   /* make it strictly low diag only, and set flag to undirected */
   SparseMatrix B;
-  B = SparseMatrix_symmetrize(A, FALSE);
+  B = SparseMatrix_symmetrize(A, false);
   SparseMatrix_set_undirected(B);
   return SparseMatrix_remove_upper(B);
 }
@@ -143,7 +144,8 @@ SparseMatrix SparseMatrix_transpose(SparseMatrix A){
   return B;
 }
 
-SparseMatrix SparseMatrix_symmetrize(SparseMatrix A, int pattern_symmetric_only){
+SparseMatrix SparseMatrix_symmetrize(SparseMatrix A,
+                                     bool pattern_symmetric_only) {
   SparseMatrix B;
   if (SparseMatrix_is_symmetric(A, pattern_symmetric_only)) return SparseMatrix_copy(A);
   B = SparseMatrix_transpose(A);
@@ -157,7 +159,7 @@ SparseMatrix SparseMatrix_symmetrize(SparseMatrix A, int pattern_symmetric_only)
 
 SparseMatrix SparseMatrix_symmetrize_nodiag(SparseMatrix A){
   SparseMatrix B;
-  if (SparseMatrix_is_symmetric(A, FALSE)) {
+  if (SparseMatrix_is_symmetric(A, false)) {
     B = SparseMatrix_copy(A);
     return SparseMatrix_remove_diagonal(B);
   }
@@ -170,7 +172,7 @@ SparseMatrix SparseMatrix_symmetrize_nodiag(SparseMatrix A){
   return SparseMatrix_remove_diagonal(A);
 }
 
-int SparseMatrix_is_symmetric(SparseMatrix A, int test_pattern_symmetry_only){
+int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only){
   if (!A) return FALSE;
 
   /* assume no repeated entries! */
@@ -1854,7 +1856,7 @@ SparseMatrix SparseMatrix_get_real_adjacency_matrix_symmetrized(SparseMatrix A){
   memcpy(B->ja, ja, sizeof(int)*((size_t)nz));
   B->nz = A->nz;
 
-  A = SparseMatrix_symmetrize(B, TRUE);
+  A = SparseMatrix_symmetrize(B, true);
   SparseMatrix_delete(B);
   A = SparseMatrix_remove_diagonal(A);
   A->a = MALLOC(sizeof(double)*((size_t)(A->nz)));
@@ -1982,8 +1984,8 @@ void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int *
   int *levelset_ptr = NULL, *levelset = NULL, *mask = NULL, nlevel;
   int m = A->m, i, nn;
 
-  if (!SparseMatrix_is_symmetric(A, TRUE)){
-    A = SparseMatrix_symmetrize(A, TRUE);
+  if (!SparseMatrix_is_symmetric(A, true)){
+    A = SparseMatrix_symmetrize(A, true);
   }
   if (!(*comps_ptr)) *comps_ptr = MALLOC(sizeof(int)*((size_t)(m+1)));
 
@@ -2053,7 +2055,7 @@ static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist,
 		   Set to FINISHED after extracted as min from heap */
   int found = 0;
 
-  assert(SparseMatrix_is_symmetric(A, TRUE));
+  assert(SparseMatrix_is_symmetric(A, true));
 
   assert(m == A->n);
 
@@ -2299,10 +2301,10 @@ SparseMatrix SparseMatrix_to_square_matrix(SparseMatrix A, int bipartite_options
     if (A->m == A->n) return A;
     break;
   case BIPARTITE_PATTERN_UNSYM:
-    if (A->m == A->n && SparseMatrix_is_symmetric(A, TRUE)) return A;
+    if (A->m == A->n && SparseMatrix_is_symmetric(A, true)) return A;
     break;
   case BIPARTITE_UNSYM:
-    if (A->m == A->n && SparseMatrix_is_symmetric(A, FALSE)) return A;
+    if (A->m == A->n && SparseMatrix_is_symmetric(A, false)) return A;
     break;
   case BIPARTITE_ALWAYS:
     break;
@@ -2524,8 +2526,8 @@ int SparseMatrix_distance_matrix(SparseMatrix D0, int weighted, double **dist0){
   int flag = 0, i, j, k, nlevel;
   double dmax;
 
-  if (!SparseMatrix_is_symmetric(D, FALSE)){
-    D = SparseMatrix_symmetrize(D, FALSE);
+  if (!SparseMatrix_is_symmetric(D, false)){
+    D = SparseMatrix_symmetrize(D, false);
   }
 
   assert(m == n);
@@ -2578,8 +2580,8 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
   int flag = 0, i, j, k, itmp, nlevel;
   double dmax, dtmp;
 
-  if (!SparseMatrix_is_symmetric(D, FALSE)){
-    D = SparseMatrix_symmetrize(D, FALSE);
+  if (!SparseMatrix_is_symmetric(D, false)){
+    D = SparseMatrix_symmetrize(D, false);
   }
 
   assert(m == n);
@@ -2654,7 +2656,7 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
      .
      may be there is a better way to ensure symmetric, but for now we just symmetrize it
   */
-  D = SparseMatrix_symmetrize(C, FALSE);
+  D = SparseMatrix_symmetrize(C, false);
   SparseMatrix_delete(C);
   return D;
 

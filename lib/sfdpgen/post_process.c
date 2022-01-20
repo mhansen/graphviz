@@ -13,6 +13,7 @@
 #include <time.h>
 #include <string.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include <common/types.h>
@@ -37,7 +38,7 @@ static SparseMatrix ideal_distance_matrix(SparseMatrix A, int dim, double *x){
   int *mask = NULL;
   double len, di, sum, sumd;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
 
   D = SparseMatrix_copy(A);
   ia = D->ia;
@@ -110,7 +111,7 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
   double *avg_dist, diag_d, diag_w, dist, s = 0, stop = 0, sbot = 0;
   SparseMatrix ID;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
 
   ID = ideal_distance_matrix(A, dim, x);
 
@@ -302,7 +303,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
   double diag_d, diag_w, *a, dist, s = 0, stop = 0, sbot = 0;
   double xdot = 0;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE) && A->type == MATRIX_TYPE_REAL);
+  assert(SparseMatrix_is_symmetric(A, false) && A->type == MATRIX_TYPE_REAL);
 
   /* if x is all zero, make it random */
   for (i = 0; i < m*dim; i++) xdot += x[i]*x[i];
@@ -761,7 +762,7 @@ TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double lambda0, d
   double *avg_dist, *lambda, *d, *w, diag_d, diag_w, dist;
   double s = 0, stop = 0, sbot = 0;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
 
   avg_dist = N_GNEW(m,double);
 
@@ -876,7 +877,7 @@ SpringSmoother SpringSmoother_new(SparseMatrix A, int dim, spring_electrical_con
   double *avg_dist;
   SparseMatrix ID = NULL;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
 
   ID = ideal_distance_matrix(A, dim, x);
   dd = (double*) ID->a;

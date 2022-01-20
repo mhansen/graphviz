@@ -15,6 +15,7 @@
 #include <assert.h>
 #include <common/arith.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 Multilevel_control Multilevel_control_new(int scheme, int mode){
   Multilevel_control ctrl;
@@ -258,7 +259,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode(SparseMatrix A, in
   for (i = 0; i < m; i++) (*matching)[i] = i;
   *nmatch = n;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
   assert(A->type == MATRIX_TYPE_REAL);
 
   a = (double*) A->a;
@@ -344,7 +345,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
 
   for (i = 0; i < m; i++) matched[i] = i;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
   assert(A->type == MATRIX_TYPE_REAL);
 
   *ncluster = 0;
@@ -521,7 +522,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
 
   for (i = 0; i < m; i++) matched[i] = i;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
   assert(A->type == MATRIX_TYPE_REAL);
 
   SparseMatrix_decompose_to_supervariables(A, &nsuper, &super, &superp);
@@ -666,7 +667,7 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
 
   for (i = 0; i < m; i++) matched[i] = i;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
   assert(A->type == MATRIX_TYPE_REAL);
 
   *ncluster = 0;
@@ -756,7 +757,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatri
   for (i = 0; i < m; i++) (*matching)[i] = i;
   *nmatch = n;
 
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
   assert(A->type == MATRIX_TYPE_REAL);
 
   a = (double*) A->a;
@@ -1183,10 +1184,10 @@ Multilevel Multilevel_new(SparseMatrix A0, SparseMatrix D0, double *node_weights
   Multilevel grid;
   SparseMatrix A = A0, D = D0;
 
-  if (!SparseMatrix_is_symmetric(A, FALSE) || A->type != MATRIX_TYPE_REAL){
+  if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
     A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   }
-  if (D && (!SparseMatrix_is_symmetric(D, FALSE) || D->type != MATRIX_TYPE_REAL)){
+  if (D && (!SparseMatrix_is_symmetric(D, false) || D->type != MATRIX_TYPE_REAL)){
     D = SparseMatrix_symmetrize_nodiag(D);
   }
   grid = Multilevel_init(A, D, node_weights);

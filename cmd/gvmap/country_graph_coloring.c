@@ -64,7 +64,7 @@ void improve_antibandwidth_by_swapping(SparseMatrix A, int *p){
     fprintf(stderr,"saving timing vs antiband data to timing_greedy\n");
     fp = fopen("timing_greedy","w");
   }
-  assert(SparseMatrix_is_symmetric(A, TRUE));
+  assert(SparseMatrix_is_symmetric(A, true));
   while (improved){
     improved = false;
     for (i = 0; i < n; i++){
@@ -116,7 +116,7 @@ static void country_graph_coloring_internal(int seed, SparseMatrix A, int **p){
 
   start = clock();
   assert(A->m == A->n);
-  A2 = SparseMatrix_symmetrize(A, TRUE);
+  A2 = SparseMatrix_symmetrize(A, true);
   ia = A2->ia; ja = A2->ja;
 
   /* Laplacian */

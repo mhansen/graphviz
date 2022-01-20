@@ -20,6 +20,7 @@
 #include <math.h>
 #include <common/memory.h>
 #include <common/globals.h>
+#include <stdbool.h>
 #include <time.h>
 
 static void ideal_distance_avoid_overlap(int dim, SparseMatrix A, double *x, double *width, double *ideal_distance, double *tmax, double *tmin){
@@ -35,7 +36,7 @@ static void ideal_distance_avoid_overlap(int dim, SparseMatrix A, double *x, dou
 
   *tmax = 0;
   *tmin = 1.e10;
-  assert(SparseMatrix_is_symmetric(A, FALSE));
+  assert(SparseMatrix_is_symmetric(A, false));
   for (i = 0; i < A->m; i++){
     for (j = ia[i]; j < ia[i+1]; j++){
       jj = ja[j];
@@ -243,7 +244,7 @@ check_overlap_RETURN:
 
   B = SparseMatrix_from_coordinate_format(A);
   SparseMatrix_delete(A);
-  A = SparseMatrix_symmetrize(B, FALSE);
+  A = SparseMatrix_symmetrize(B, false);
   SparseMatrix_delete(B);
   if (Verbose) fprintf(stderr, "found %d clashes\n", A->nz);
   return A;
@@ -371,7 +372,7 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
   SparseMatrix B;
   double *lambda, *d, *w, diag_d, diag_w, dist;
 
-  assert((!A) || SparseMatrix_is_symmetric(A, FALSE));
+  assert((!A) || SparseMatrix_is_symmetric(A, false));
 
   sm = GNEW(struct OverlapSmoother_struct);
   sm->scheme = SM_SCHEME_NORMAL;
@@ -607,7 +608,7 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
     if (check_convergence(max_overlap, res, has_penalty_terms, epsilon)){
     
       OverlapSmoother_delete(sm);
-      if (neighborhood_only == FALSE){
+      if (!neighborhood_only){
 	break;
       } else {
 	res = LARGE;

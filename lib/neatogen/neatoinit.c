@@ -709,7 +709,7 @@ dfsCycle (vtx_data* graph, int i,int mode, node_t* nodes[])
 
     np = nodes[i];
     ND_mark(np) = TRUE;
-    ND_onstack(np) = TRUE;
+    ND_onstack(np) = true;
     for (e = 1; e < graph[i].nedges; e++) {
 	if (graph[i].edists[e] == 1.0) continue;  /* in edge */
 	j = graph[i].edges[e];
@@ -720,10 +720,10 @@ dfsCycle (vtx_data* graph, int i,int mode, node_t* nodes[])
             assert (f < graph[j].nedges);
             graph[j].edists[f] = -1.0;
         }
-	else if (ND_mark(hp) == FALSE) dfsCycle(graph, j, mode, nodes);
+	else if (!ND_mark(hp)) dfsCycle(graph, j, mode, nodes);
 
     }
-    ND_onstack(np) = FALSE;
+    ND_onstack(np) = false;
 }
 
 /* acyclic:
@@ -738,7 +738,7 @@ acyclic (vtx_data* graph, int nv, int mode, node_t* nodes[])
     for (i = 0; i < nv; i++) {
 	np = nodes[i];
 	ND_mark(np) = FALSE;
-	ND_onstack(np) = FALSE;
+	ND_onstack(np) = false;
     }
     for (i = 0; i < nv; i++) {
 	if (ND_mark(nodes[i])) continue;

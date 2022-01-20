@@ -15,6 +15,7 @@
 #include <common/memory.h>
 #include <neatogen/delaunay.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 SparseMatrix call_tri(int n, int dim, double * x)
 {
@@ -52,7 +53,7 @@ SparseMatrix call_tri(int n, int dim, double * x)
     }
     B = SparseMatrix_from_coordinate_format(A);
     SparseMatrix_delete(A);
-    A = SparseMatrix_symmetrize(B, FALSE);
+    A = SparseMatrix_symmetrize(B, false);
     SparseMatrix_delete(B);
     B = A;
 
@@ -93,7 +94,7 @@ SparseMatrix call_tri2(int n, int dim, double * xx)
 	SparseMatrix_coordinate_form_add_entries(A, 1, &i, &i, &one);
     }
     B = SparseMatrix_from_coordinate_format(A);
-    B = SparseMatrix_symmetrize(B, FALSE);
+    B = SparseMatrix_symmetrize(B, false);
     SparseMatrix_delete(A);
 
     free (x);

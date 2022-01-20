@@ -33,7 +33,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_init(SparseMatrix A
   Agglomerative_Ink_Bundling grid;
   int n = A->n, i;
 
-  assert(SparseMatrix_is_symmetric(A, TRUE));
+  assert(SparseMatrix_is_symmetric(A, true));
 
   if (!A) return NULL;
   assert(A->m == n);
@@ -286,7 +286,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_new(SparseMatrix A0
   Agglomerative_Ink_Bundling grid;
   SparseMatrix A = A0;
 
-  if (!SparseMatrix_is_symmetric(A, FALSE) || A->type != MATRIX_TYPE_REAL){
+  if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
     A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   }
   grid = Agglomerative_Ink_Bundling_init(A, edges, 0);

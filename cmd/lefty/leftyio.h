@@ -49,7 +49,7 @@ typedef struct io_t {
 } while (0)
 #endif
 
-#define IOismonitored(ioi) (iop[ioi].ismonitored == TRUE)
+#define IOismonitored(ioi) iop[ioi].ismonitored
 #define IOINCR 5
 #define IOSIZE sizeof (io_t)
 #define IOBUFSIZE 2048
