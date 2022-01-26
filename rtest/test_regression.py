@@ -42,6 +42,18 @@ def is_ndebug_defined() -> bool:
 
   return False
 
+def remove_xtype_warnings(s: str) -> str:
+  """
+  Remove macOS XType warnings from a string. These appear to be harmless, but
+  occur in CI.
+  """
+
+  # avoid doing this anywhere except on macOS
+  if platform.system() != "Darwin":
+    return s
+
+  return re.sub(r"^.* XType: .*\.$", "", s, flags=re.MULTILINE)
+
 # The terminology used in rtest.py is a little inconsistent. At the
 # end it reports the total number of tests, the number of "failures"
 # (crashes) and the number of "changes" (which is the number of tests
@@ -447,7 +459,8 @@ def test_1444():
 
     assert p.returncode == 0, "failed to process a headport edge"
 
-  assert stderr.strip() == "", "emitted an error for a legal graph"
+  stderr = remove_xtype_warnings(stderr).strip()
+  assert stderr == "", "emitted an error for a legal graph"
 
   # now locate our second variant, that simply has the attributes swapped
   input2 = Path(__file__).parent / "1444-2.dot"
@@ -460,7 +473,8 @@ def test_1444():
 
     assert p.returncode == 0, "failed to process a headport edge"
 
-  assert stderr.strip() == "", "emitted an error for a legal graph"
+  stderr = remove_xtype_warnings(stderr).strip()
+  assert stderr == "", "emitted an error for a legal graph"
 
   assert stdout1 == stdout2, \
     "swapping edge attributes altered the output graph"
@@ -998,7 +1012,7 @@ def test_1913():
                           stdin=subprocess.PIPE, stderr=subprocess.PIPE,
                           universal_newlines=True) as p:
       _, stderr = p.communicate(input)
-      return p.returncode, stderr
+      return p.returncode, remove_xtype_warnings(stderr)
 
   # Graphviz should accept all legal values for this attribute
   for align in ("left", "right", "center"):
