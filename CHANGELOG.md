@@ -88,6 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - lneato -? sometimes fails with STATUS_STACK_BUFFER_OVERRUN on Windows #1934
 - expr misinterprets `<<` and `>>` #2103
 - stdout and stderr are not flushed at exit on MinGW #2178
+- Gvedit on macOS now understands the `-?` help command line argument
 
 ## [2.50.0] – 2021-12-04
 
