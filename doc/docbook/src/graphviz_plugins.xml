@@ -314,7 +314,6 @@ can probably be used without change:
         graphviz-cairo/
         autogen.sh
         cpl1.0.txt
-        ltmain.sh.patch
         mkinstalldirs
 </programlisting>
 </para>
