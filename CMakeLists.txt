@@ -100,7 +100,7 @@ if(WIN32)
 endif()
 
 find_package(ANN)
-find_package(Cairo)
+find_package(CAIRO)
 
 if(with_expat)
   find_package(EXPAT)

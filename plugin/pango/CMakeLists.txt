@@ -1,4 +1,4 @@
-if(Cairo_FOUND AND PangoCairo_FOUND)
+if(CAIRO_FOUND AND PangoCairo_FOUND)
 
 add_library(gvplugin_pango SHARED
     # Header files
@@ -22,14 +22,14 @@ target_include_directories(gvplugin_pango PRIVATE
     ${GRAPHVIZ_LIB_DIR}/common
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${Cairo_INCLUDE_DIRS}/cairo
+    ${CAIRO_INCLUDE_DIRS}/cairo
     ${PangoCairo_INCLUDE_DIRS}
 )
 
 target_link_libraries(gvplugin_pango
     cgraph
     gvc
-    ${Cairo_LINK_LIBRARIES}
+    ${CAIRO_LINK_LIBRARIES}
     ${PangoCairo_LINK_LIBRARIES}
 )
 
@@ -45,7 +45,7 @@ install(
 if(WIN32 AND install_win_dependency_dlls)
     install(
         FILES
-            ${Cairo_RUNTIME_LIBRARIES}
+            ${CAIRO_RUNTIME_LIBRARIES}
             ${PangoCairo_RUNTIME_LIBRARIES}
         DESTINATION ${BINARY_INSTALL_DIR}
     )
