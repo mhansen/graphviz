@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include "convert.h"
+#include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
 
 typedef enum { Unset, ToGV, ToGXL } mode;
@@ -64,7 +65,7 @@ static FILE *openFile(const char *name)
     if (!fp) {
 	fprintf(stderr, "%s: could not open file %s for writing\n", CmdName, name);
 	perror(name);
-	exit(1);
+	graphviz_exit(1);
     }
     return fp;
 }
@@ -78,7 +79,7 @@ static const char *use = "Usage: %s [-gd?] [-o<file>] [<graphs>]\n\
 static void usage(int v)
 {
     fprintf(stderr, use, CmdName);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static char *cmdName(char *path)
@@ -156,12 +157,12 @@ static void initargs(int argc, char **argv)
 	    else {
 		fprintf(stderr, "%s: option -%c unrecognized\n", CmdName,
 			optopt);
-		exit(1);
+		graphviz_exit(1);
 	    }
 	    break;
 	default:
 	    fprintf(stderr, "cvtgxl: unexpected error\n");
-	    exit(EXIT_FAILURE);
+	    graphviz_exit(EXIT_FAILURE);
 	}
     }
 
@@ -213,9 +214,9 @@ int main(int argc, char **argv)
 #else
 	fputs("cvtgxl: not configured for conversion from GXL to GV\n",
 	      stderr);
-	exit(1);
+	graphviz_exit(1);
 
 #endif
     }
-    exit(0);
+    graphviz_exit(0);
 }

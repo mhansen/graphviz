@@ -27,6 +27,8 @@
 
 #include <cgraph/cgraph.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/exit.h>
+
 typedef struct {
     Agrec_t h;
     int dfs_mark;
@@ -79,7 +81,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf("%s",useString);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static void init(int argc, char *argv[])
@@ -131,7 +133,7 @@ static void init(int argc, char *argv[])
 	    break;
 	default:
 	    fprintf(stderr, "gc: unexpected error\n");
-	    exit(EXIT_FAILURE);
+	    graphviz_exit(EXIT_FAILURE);
 	}
     }
     argv += optind;
@@ -182,14 +184,14 @@ static void push(Agnode_t * np)
 	    blk_t *bp = NEW(blk_t);
 	    if (bp == 0) {
 		fprintf(stderr, "gc: Out of memory\n");
-		exit(1);
+		graphviz_exit(1);
 	    }
 	    bp->prev = Stk.curblk;
 	    bp->next = NULL;
 	    bp->data = N_NEW(BIGBUF, Agnode_t *);
 	    if (bp->data == 0) {
 		fprintf(stderr, "gc: Out of memory\n");
-		exit(1);
+		graphviz_exit(1);
 	    }
 	    bp->endp = bp->data + BIGBUF;
 	    Stk.curblk->next = bp;
@@ -375,5 +377,5 @@ int main(int argc, char *argv[])
     if (n_graphs > 1)
 	wcp(tot_nodes, tot_edges, tot_cc, tot_cl, "total", 0);
 
-    return rv;
+    graphviz_exit(rv);
 }

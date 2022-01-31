@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <cgraph/sprint.h>
+#include <cgraph/exit.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,7 +60,7 @@ char *NONNULL gv_sprint_or_exit(const char *NONNULL format, ...) {
 
   if (s == NULL) {
     fprintf(stderr, "gv_sprint failed\n");
-    exit(EXIT_FAILURE);
+    graphviz_exit(EXIT_FAILURE);
   }
 
   return s;

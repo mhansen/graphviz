@@ -16,6 +16,7 @@
  */
 
 #include <assert.h>
+#include <cgraph/exit.h>
 #include <expr/exlib.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -74,7 +75,7 @@ exerror(const char* format, ...)
     free(s);
 	}
 	else if (expr.program->disc->flags & EX_FATAL)
-		exit(1);
+		graphviz_exit(1);
 }
 
 void 

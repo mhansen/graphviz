@@ -26,6 +26,7 @@
 #include <gvpr/gprstate.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <common/globals.h>
 #include <ingraphs/ingraphs.h>
 #include <gvpr/compile.h>
@@ -908,7 +909,7 @@ gverrorf (Expr_t *handle, Exdisc_t *discipline, int level, const char *fmt, ...)
     if (level >= ERROR_ERROR) {
 	Gpr_t *state = (Gpr_t*)(discipline->user);
 	if (state->flags & GV_USE_EXIT)
-            exit(1);
+            graphviz_exit(1);
 	else if (state->flags & GV_USE_JUMP)
 	    longjmp (jbuf, 1);
     }

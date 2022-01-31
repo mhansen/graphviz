@@ -27,6 +27,7 @@
 
 
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <gvpr/gvpr.h>
 
 #ifdef DEBUG
@@ -86,7 +87,7 @@ main (int argc, char* argv[])
 
     rv = gvpr (argc, argv, &opts);
 
-    return rv;
+    graphviz_exit(rv);
 }
 
 #else
@@ -100,8 +101,7 @@ main (int argc, char* argv[])
     opts.flags = GV_USE_EXIT;
     opts.bindings = 0;
     
-    
-    return gvpr (argc, argv, &opts);
+    graphviz_exit(gvpr(argc, argv, &opts));
 }
 
 #endif

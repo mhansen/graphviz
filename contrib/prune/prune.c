@@ -21,6 +21,7 @@
 #include <getopt.h>
 
 #include "cgraph.h"
+#include "exit.h"
 #include "ingraphs.h"
 #include "generic_list.h"
 
@@ -103,7 +104,7 @@ int main(int argc, char **argv)
 	case 'h':
 	    {
 		help_message(progname);
-		exit(EXIT_SUCCESS);
+		graphviz_exit(EXIT_SUCCESS);
 		break;
 	    }
 	case 'v':
@@ -114,19 +115,19 @@ int main(int argc, char **argv)
 	case '?':
 	    if (optopt == '?') {
 		help_message(progname);
-		exit(EXIT_SUCCESS);
+		graphviz_exit(EXIT_SUCCESS);
 	    } else if (isprint(optopt)) {
 		fprintf(stderr, "Unknown option `-%c'.\n", optopt);
 	    } else {
 		fprintf(stderr, "Unknown option character `\\x%X'.\n",
 			optopt);
 	    }
-	    exit(EXIT_FAILURE);
+	    graphviz_exit(EXIT_FAILURE);
 	    break;
 
 	default:
 	    help_message(progname);
-	    exit(EXIT_FAILURE);
+	    graphviz_exit(EXIT_FAILURE);
 	    break;
 	}
     }
@@ -143,7 +144,7 @@ int main(int argc, char **argv)
 	if (agisdirected(graph) == 0) {
 	    fprintf(stderr,
 		    "*** Error: Graph is undirected! Pruning works only with directed graphs!\n");
-	    exit(EXIT_FAILURE);
+	    graphviz_exit(EXIT_FAILURE);
 	}
 
 	/* attach node data for marking to all nodes */
@@ -185,7 +186,7 @@ int main(int argc, char **argv)
 		    if (attr == NULL) {
 			fprintf(stderr, "Couldn't create attribute: %s\n",
 				((strattr_t *) attr_list->data[j])->n);
-			exit(EXIT_FAILURE);
+			graphviz_exit(EXIT_FAILURE);
 		    }
 		    agxset(node, attr,
 			   ((strattr_t *) attr_list->data[j])->v);
@@ -197,7 +198,7 @@ int main(int argc, char **argv)
     }
     free(attr_list);
     free(node_list);
-    exit(EXIT_SUCCESS);
+    graphviz_exit(EXIT_SUCCESS);
 }
 
 int remove_child(Agraph_t * graph, Agnode_t * node)
@@ -263,14 +264,14 @@ generic_list_t *addattr(generic_list_t * l, char *a)
     sp = malloc(sizeof(strattr_t));
     if (sp == NULL) {
 	perror("[addattr()->malloc()]");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
 
     /* Split argument spec. at first '=' */
     p = strchr(a, '=');
     if (p == NULL) {
 	fprintf(stderr, "Invalid argument specification: %s\n", a);
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
     *(p++) = '\0';
 
@@ -278,14 +279,14 @@ generic_list_t *addattr(generic_list_t * l, char *a)
     sp->n = strdup(a);
     if (sp->n == NULL) {
 	perror("[addattr()->strdup()]");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
 
     /* pointer to argument value */
     sp->v = strdup(p);
     if (sp->v == NULL) {
 	perror("[addattr()->strdup()]");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
 
     return add_to_generic_list(l, (gl_data) sp);
@@ -299,7 +300,7 @@ generic_list_t *addnode(generic_list_t * l, char *n)
     sp = strdup(n);
     if (sp == NULL) {
 	perror("[addnode()->strdup()]");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
 
     return add_to_generic_list(l, (gl_data) sp);

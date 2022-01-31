@@ -214,7 +214,7 @@ static char* useString = "Usage: %s [-uvcl] [-o file] matrix_market_filename\n\
 static void usage(int eval)
 {
     fprintf(stderr, useString, cmd);
-    exit(eval);
+    graphviz_exit(eval);
 }
 
 static FILE *openF(char *fname, char *mode)
@@ -223,7 +223,7 @@ static FILE *openF(char *fname, char *mode)
     if (!f) {
 	fprintf(stderr, "Could not open %s for %s\n", fname,
 		((*mode == 'r') ? "reading" : "writing"));
-	exit(1);
+	graphviz_exit(1);
     }
     return f;
 }
@@ -325,7 +325,7 @@ int main(int argc, char *argv[])
 
     if (!A) {
 	fprintf(stderr, "cannot import from file %s\n", pv.infile);
-	exit(1);
+	graphviz_exit(1);
     }
 
     if (pv.undirected) {
@@ -338,6 +338,6 @@ int main(int argc, char *argv[])
 
     agwrite(g, pv.outf);
 
-    return 0;
+    graphviz_exit(0);
 }
 

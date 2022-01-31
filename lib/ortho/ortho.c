@@ -28,6 +28,7 @@
 #include <ortho/maze.h>
 #include <ortho/fPQ.h>
 #include <ortho/ortho.h>
+#include <cgraph/exit.h>
 #include <common/memory.h>
 #include <common/geomprocs.h>
 #include <common/globals.h>
@@ -1439,7 +1440,7 @@ coordOf (cell* cp, snode* np)
     }
     else {
 	agerr (AGERR, "Node not adjacent to cell -- Aborting\n");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
     return p;
 }

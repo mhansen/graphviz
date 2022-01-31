@@ -23,6 +23,7 @@
 #include <unistd.h>
 #endif
 #include    <cgraph/cgraph.h>
+#include    <cgraph/exit.h>
 #include    <ingraphs/ingraphs.h>
 
 #include <getopt.h>
@@ -142,7 +143,7 @@ static char *useString =
 static void usage(int v)
 {
     fprintf(stderr, useString, cmd);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static FILE *openFile(const char *name)
@@ -152,7 +153,7 @@ static FILE *openFile(const char *name)
     fp = fopen(name, "w");
     if (!fp) {
 	fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
-	exit(-1);
+	graphviz_exit(-1);
     }
     return fp;
 }
@@ -229,5 +230,5 @@ int main(int argc, char **argv)
 	transform(g);
 	agwrite(g, outFile);
     }
-    return 0;
+    graphviz_exit(0);
 }

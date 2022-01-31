@@ -21,6 +21,7 @@
 	int		tmp;		/* temp var index		*/ \
 	Exccdisc_t*	ccdisc;		/* excc() discipline		*/
 
+#include <cgraph/exit.h>
 #include <expr/exlib.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -224,7 +225,7 @@ gen(Excc_t* cc, Exnode_t* expr)
 		sfprintf(cc->ccdisc->text, "%s", expr->data.variable.symbol->name);
 		return;
 	case EXIT:
-		sfprintf(cc->ccdisc->text, "exit(");
+                sfprintf(cc->ccdisc->text, "exit(");
 		gen(cc, x);
 		sfprintf(cc->ccdisc->text, ");\n");
 		return;

@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <cgraph/exit.h>
+
 void find_intersection(struct vertex *l, struct vertex *m,
 		       struct intersection ilist[], struct data *input);
 static int gt(const void *a, const void *b);
@@ -73,7 +75,7 @@ void find_ints(struct vertex vertex_list[],
 		if ((tempa = templ->active) == NULL) {
 		    fprintf(stderr,
 			    "\n***ERROR***\n trying to delete a non line\n");
-		    exit(1);
+		    graphviz_exit(1);
 		}
 		if (all.number == 1)
 		    all.final = all.first = NULL;	/* delete the line */

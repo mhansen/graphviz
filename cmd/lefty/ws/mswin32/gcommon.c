@@ -11,6 +11,8 @@
 /* Lefteris Koutsofios - AT&T Labs Research */
 
 #include <stdbool.h>
+
+#include <cgraph/exit.h>
 #include "common.h"
 #include "g.h"
 #include "gcommon.h"
@@ -188,7 +190,7 @@ int Gprocessevents (int waitflag, int mode) {
     switch (waitflag) {
     case TRUE:
         if (!GetMessage(&msg, (HWND) NULL, (UINT) NULL, (UINT) NULL))
-            exit (msg.wParam);
+            graphviz_exit(msg.wParam);
         TranslateMessage(&msg);
         DispatchMessage(&msg);
         if (mode == G_ONEEVENT)
@@ -198,7 +200,7 @@ int Gprocessevents (int waitflag, int mode) {
     case FALSE:
         while (PeekMessage(&msg, (HWND) 0, (UINT) 0, (UINT) 0, PM_REMOVE)) {
             if (msg.message == WM_QUIT)
-                exit (msg.wParam);
+                graphviz_exit(msg.wParam);
             TranslateMessage(&msg);
             DispatchMessage(&msg);
             if (mode == G_ONEEVENT)
@@ -233,17 +235,17 @@ LRESULT CALLBACK LeftyWndProc (
         break;
     case WM_CLOSE:
         if (!widget)
-            exit (0);
+            graphviz_exit(0);
         if (WVU->closing)
             DestroyWindow (hwnd);
         if (Gnocallbacks)
-            exit (0);
+            graphviz_exit(0);
         gev.type = 0, gev.code = 0, gev.data = 0;
         gev.wi = widget - &Gwidgets[0];
         if (WVU->func)
             (*WVU->func) (&gev);
         else
-            exit (0);
+            graphviz_exit(0);
         break;
     case WM_PALETTECHANGED:
         palettechanged = (HWND) wparam;

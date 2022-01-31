@@ -11,6 +11,7 @@
 #include    <assert.h>
 #include    "convert.h"
 #include    <cgraph/agxbuf.h>
+#include    <cgraph/exit.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <ctype.h>
@@ -56,7 +57,7 @@ static void *gcalloc(size_t nmemb, size_t size)
     char *rv = calloc(nmemb, size);
     if (rv == NULL) {
 	fprintf(stderr, "out of memory\n");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
     return rv;
 }
@@ -78,7 +79,7 @@ static void popString(slist ** stk)
     slist *sp = *stk;
     if (!sp) {
 	fprintf(stderr, "PANIC: gxl2gv: empty element stack\n");
-	exit(1);
+	graphviz_exit(1);
     }
     *stk = sp->next;
     free(sp);
@@ -88,7 +89,7 @@ static char *topString(slist * stk)
 {
     if (!stk) {
 	fprintf(stderr, "PANIC: gxl2gv: empty element stack\n");
-	exit(1);
+	graphviz_exit(1);
     }
     return stk->buf;
 }
@@ -224,7 +225,7 @@ static void push_subg(Agraph_t * g)
     if (GSP == STACK_DEPTH) {
 	fprintf(stderr, "gxl2gv: Too many (> %d) nestings of subgraphs\n",
 		STACK_DEPTH);
-	exit(1);
+	graphviz_exit(1);
     } else if (GSP == 0)
 	root = g;
     G = Gstack[GSP++] = g;
@@ -235,7 +236,7 @@ static Agraph_t *pop_subg(void)
     Agraph_t *g;
     if (GSP == 0) {
 	fprintf(stderr, "gxl2gv: Gstack underflow in graph parser\n");
-	exit(1);
+	graphviz_exit(1);
     }
     g = Gstack[--GSP];
     if (GSP > 0)
@@ -709,7 +710,7 @@ Agraph_t *gxl_to_gv(FILE * gxlFile)
 
     if (udata == NULL) {
 	fprintf(stderr, "out of memory\n");
-	exit(1);
+	graphviz_exit(1);
     }
 
     XML_SetUserData(parser, udata);
@@ -729,7 +730,7 @@ Agraph_t *gxl_to_gv(FILE * gxlFile)
 		    "%s at line %lu\n",
 		    XML_ErrorString(XML_GetErrorCode(parser)),
 		    XML_GetCurrentLineNumber(parser));
-	    exit(1);
+	    graphviz_exit(1);
 	}
     } while (!done);
     XML_ParserFree(parser);

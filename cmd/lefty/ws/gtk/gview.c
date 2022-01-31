@@ -9,6 +9,7 @@
  *************************************************************************/
 
 
+#include <cgraph/exit.h>
 #include "common.h"
 #include "g.h"
 #include "gcommon.h"
@@ -182,12 +183,12 @@ void Gwmdelaction(GtkWidget * w, GdkEvent * evp, char **app,
 
     widget = findwidget((unsigned long) w, G_VIEWWIDGET);
     if (!widget)
-	exit(0);
+	graphviz_exit(0);
 
     gev.type = 0, gev.code = 0, gev.data = 0;
     gev.wi = widget - &Gwidgets[0];
     if (WVU->func)
 	(*WVU->func) (&gev);
     else
-	exit(0);
+	graphviz_exit(0);
 }

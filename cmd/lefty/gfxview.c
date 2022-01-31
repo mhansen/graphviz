@@ -10,6 +10,7 @@
 
 /* Lefteris Koutsofios - AT&T Labs Research */
 
+#include <cgraph/exit.h>
 #include "common.h"
 #include "g.h"
 #include "mem.h"
@@ -234,7 +235,7 @@ void GFXviewcb (Gevent_t *evp) {
     fn = "closeview";
     if (!wo || !(fo = Tfinds (wo, fn)) || Tgettype (fo) != T_CODE)
         if (!(fo = Tfinds (root, fn)) || Tgettype (fo) != T_CODE)
-            exit (0);
+            graphviz_exit(0);
     fm = Mpushmark (fo);
     to = Ttable (2);
     Mpushmark (to);

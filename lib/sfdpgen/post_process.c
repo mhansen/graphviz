@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include <cgraph/exit.h>
 #include <common/types.h>
 #include <common/memory.h>
 #include <common/globals.h>
@@ -197,7 +198,7 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
 	} else {
 	  fprintf(stderr,"ideal_dist_scheme value wrong");
 	  assert(0);
-	  exit(1);
+	  graphviz_exit(1);
 	}
 
 	/*	
@@ -239,7 +240,7 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
 	  } else {
 	    fprintf(stderr,"ideal_dist_scheme value wrong");
 	    assert(0);
-	    exit(1);
+	    graphviz_exit(1);
 	  }
 
 	  jw[nz] = ja[l];

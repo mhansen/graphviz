@@ -15,6 +15,7 @@
 #include <gvc/gvc.h>
 #include <xdot/xdot.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/exit.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -91,7 +92,7 @@ int dotneato_usage(int exval)
     fputs(configItems, outs);
 
     if (GvExitOnUsage && (exval >= 0))
-	exit(exval);
+	graphviz_exit(exval);
     return (exval+1);
 	
 }
@@ -248,7 +249,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     /* must happen before trying to select any plugins */
     if (gvc->common.config) {
         gvconfig(gvc, gvc->common.config);
-	exit (0);
+	graphviz_exit(0);
     }
 
     /* feed the globals */
@@ -307,7 +308,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 			/* Q: Should 'dot -c' be suggested generally or only when val = "dot"? */
 			fprintf(stderr, " No formats found.\nPerhaps \"dot -c\" needs to be run (with installer's privileges) to register the plugins?\n");
 		    }
-		    if (GvExitOnUsage) exit(1);
+		    if (GvExitOnUsage) graphviz_exit(1);
 		    return(2);
 		}
 		break;
@@ -335,7 +336,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 			    fprintf(stderr, " No layouts found.\nPerhaps \"dot -c\" needs to be run (with installer's privileges) to register the plugins?\n");
 			}
 		    }
-		    if (GvExitOnUsage) exit(1);
+		    if (GvExitOnUsage) graphviz_exit(1);
 		    return(2);
                 }
 		Kflag = 1;
@@ -347,7 +348,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 		fprintf(stderr, "%s - %s version %s (%s)\n",
 			gvc->common.cmdname, gvc->common.info[0], 
 			gvc->common.info[1], gvc->common.info[2]);
-		if (GvExitOnUsage) exit(0);
+		if (GvExitOnUsage) graphviz_exit(0);
 		return (1);
 		break;
 	    case 'l':
@@ -442,7 +443,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 		}
 	    }
 
-	    if (GvExitOnUsage) exit(1);
+	    if (GvExitOnUsage) graphviz_exit(1);
 	    return(2);
 	}
     }

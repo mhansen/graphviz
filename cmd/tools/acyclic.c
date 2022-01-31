@@ -24,6 +24,8 @@
 
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
+
 typedef struct {
     Agrec_t h;
     int mark;
@@ -106,7 +108,7 @@ static char *useString = "Usage: %s [-nv?] [-o outfile] <file>\n\
 static void usage(int v)
 {
     fprintf(stderr, useString, cmd);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static FILE *openFile(const char *name, const char *mode)
@@ -122,7 +124,7 @@ static FILE *openFile(const char *name, const char *mode)
 	    modestr = "writing";
 	fprintf(stderr, "%s: could not open file %s for %s\n",
 		cmd, name, modestr);
-	exit(-1);
+	graphviz_exit(-1);
     }
     return (fp);
 }
@@ -200,7 +202,7 @@ int main(int argc, char *argv[])
 	    if (Verbose)
 		fprintf(stderr, "Graph \"%s\" is undirected\n", graphName(g));
 	}
-	exit(rv);
+	graphviz_exit(rv);
     } else
-	exit(-1);
+	graphviz_exit(-1);
 }

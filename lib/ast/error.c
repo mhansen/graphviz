@@ -22,6 +22,7 @@
 
 #include <ast/ast.h>
 #include <ast/error.h>
+#include <cgraph/exit.h>
 #include <stddef.h>
 #include <string.h>
 #include <errno.h>
@@ -82,7 +83,7 @@ void errorv(const char *id, int level, const char *s, va_list ap)
 	sfprintf(sfstderr, "\n%s", strerror(errno));
     sfprintf(sfstderr, "\n");
     if (level >= ERROR_FATAL)
-	exit(level - ERROR_FATAL + 1);
+	graphviz_exit(level - ERROR_FATAL + 1);
 }
 
 void error(int level, const char *s, ...)

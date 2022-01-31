@@ -18,6 +18,7 @@
 
 #include <assert.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <dotgen/dot.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -1870,7 +1871,7 @@ void virtual_weight(edge_t * e)
     assert(t >= 0);
     if (INT_MAX / t < ED_weight(e)) {
 	agerr(AGERR, "overflow when calculating virtual weight of edge\n");
-	exit(EXIT_FAILURE);
+	graphviz_exit(EXIT_FAILURE);
     }
 
     ED_weight(e) *= t;

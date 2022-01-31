@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
 #include <common/pointset.h>
 #include <getopt.h>
@@ -57,7 +58,7 @@ static FILE *openFile(const char *name, const char* cmd)
 	fp = fopen(name, "w");
 	if (!fp) {
 		std::cerr << cmd << ": could not open file " << name << " for writing\n";
-		exit(-1);
+		graphviz_exit(-1);
 	}
 	return (fp);
 }
@@ -81,7 +82,7 @@ static void
 usage (int eval)
 {
 	std::cerr << use_msg;
-	exit(eval);
+	graphviz_exit(eval);
 }
 
 /* checkG:
@@ -503,5 +504,5 @@ int main(int argc, char *argv[])
 		rv |= bundle (g, &opts);
 	}
 
-	return rv;
+	graphviz_exit(rv);
 }

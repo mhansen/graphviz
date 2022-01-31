@@ -2,7 +2,9 @@
 
 VERSION=0.2
 
-AM_CPPFLAGS = @GDLIB_CFLAGS@
+AM_CPPFLAGS = \
+	@GDLIB_CFLAGS@ \
+	-I$(top_srcdir)/lib
 
 pdfdir = $(pkgdatadir)/doc/pdf
 

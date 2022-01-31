@@ -12,7 +12,7 @@ AM_CFLAGS = -DEXPORT_CGRAPH -DEXPORT_AGXBUF -DEXPORT_CGHDR
 endif
 
 pkginclude_HEADERS = cgraph.h
-noinst_HEADERS = agxbuf.h bitarray.h cghdr.h itos.h likely.h prisize_t.h \
+noinst_HEADERS = agxbuf.h bitarray.h cghdr.h exit.h itos.h likely.h prisize_t.h \
 	sprint.h strcasecmp.h unreachable.h
 noinst_LTLIBRARIES = libcgraph_C.la
 lib_LTLIBRARIES = libcgraph.la

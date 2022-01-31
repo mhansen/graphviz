@@ -18,6 +18,7 @@
 
 #define FDP_PRIVATE
 
+#include <cgraph/exit.h>
 #include <fdpgen/dbg.h>
 #include <neatogen/neatoprocs.h>
 #include <fdpgen/fdp.h>
@@ -182,7 +183,7 @@ void dumpG(graph_t * g, char *fname, int expMode)
     fp = fopen(fname, "w");
     if (!fp) {
 	fprintf(stderr, "Couldn not open %s \n", fname);
-	exit(1);
+	graphviz_exit(1);
     }
     outputGraph(g, fp, expMode);
     fclose(fp);

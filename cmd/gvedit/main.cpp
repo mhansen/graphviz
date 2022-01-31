@@ -21,6 +21,7 @@
 #include <getopt.h>
 #include <gvc/gvc.h>
 #include <common/globals.h>
+#include <cgraph/exit.h>
 
 
 #ifdef _WIN32
@@ -42,7 +43,7 @@ static char useString[] = "Usage: gvedit [-v?] <files>\n\
 static void usage(int v)
 {
     printf("%s",useString);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static char **parseArgs(int argc, char *argv[])
@@ -89,5 +90,5 @@ int main(int argc, char *argv[])
     CMainWindow mainWin(&files);
     mainWin.show();
     ret = app.exec();
-    return ret;
+    graphviz_exit(ret);
 }

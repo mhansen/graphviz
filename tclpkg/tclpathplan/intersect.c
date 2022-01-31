@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <cgraph/unreachable.h>
+#include <cgraph/exit.h>
 #include <math.h>
 #include <stdio.h>
 #include "simple.h"
@@ -181,7 +182,7 @@ void find_intersection(struct vertex *l,
 
     if (input->ninters >= MAXINTS) {
 	fprintf(stderr, "\n**ERROR**\n using too many intersections\n");
-	exit(1);
+	graphviz_exit(1);
     }
 
     ilist[input->ninters].firstv = l;

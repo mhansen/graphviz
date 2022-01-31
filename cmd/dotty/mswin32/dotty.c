@@ -19,6 +19,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <cgraph/exit.h>
+
 static char *shellpath;
 
 static char *buildpath (char *);
@@ -50,16 +52,16 @@ int APIENTRY WinMain (
     if (!shellpath || !(path = buildpath ("lefty"))) {
         if (!GetModuleFileName (hInstance, cmd, 256) ||
                 !(s = strrchr (cmd, '\\')))
-            exit (1);
+            graphviz_exit(1);
         *s = 0;
         shellpath = &cmd[0];
         if (!(path = buildpath ("lefty")))
-            exit (1);
+            graphviz_exit(1);
     }
     argv = CommandLineToArgvW(lpCmdLine, &argc);
     if (argc == 1 && strcmp(argv[0], "-?") == 0) {
         fprintf(stderr, "usage: dotty [-V] [-lm (sync|async)] [-el (0|1)] <filename>\n");
-        exit(0);
+        graphviz_exit(0);
     }
     if (lpCmdLine[0] == 0)
         snprintf(cmd, sizeof(cmd), "%s -e \"load('dotty.lefty');%sdotty.init();"
@@ -82,7 +84,7 @@ int APIENTRY WinMain (
         &si,              // Pointer to STARTUPINFO structure.
         &pi             // Pointer to PROCESS_INFORMATION structure.
     );
-    exit (0);
+    graphviz_exit(0);
 }
 
 #define PATHDEL '\\'

@@ -22,6 +22,7 @@
 #include <gvpr/compile.h>
 #include <assert.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <cgraph/itos.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
@@ -205,7 +206,7 @@ static char *symName(Expr_t * ex, int op)
 	int bytes = vsnprintf(NULL, 0, "<unknown (%d)>", op);
 	if (bytes < 0) {
 		fprintf(stderr, "%s: vsnprintf failure\n", __func__);
-		exit(EXIT_FAILURE);
+		graphviz_exit(EXIT_FAILURE);
 	}
 
 	// construct a managed buffer to store this name

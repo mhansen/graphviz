@@ -15,6 +15,7 @@
 #include "config.h"
 
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
 
@@ -40,7 +41,7 @@ static void intr(int s)
 	gvRenderJobs(Gvc, G);
 /* Note that we don't call gvFinalize() so that we don't start event-driven
  * devices like -Tgtk or -Txlib */
-    exit (gvFreeContext(Gvc));
+    graphviz_exit(gvFreeContext(Gvc));
 }
 
 #ifndef NO_FPERR
@@ -48,7 +49,7 @@ static void fperr(int s)
 {
     fprintf(stderr, "caught SIGFPE %d\n", s);
     /* signal (s, SIG_DFL); raise (s); */
-    exit(1);
+    graphviz_exit(1);
 }
 #endif
 #endif
@@ -133,5 +134,5 @@ int main(int argc, char **argv)
     }
     gvFinalize(Gvc);
     r = gvFreeContext(Gvc);
-    return (MAX(rc,r));
+    graphviz_exit(MAX(rc,r));
 }

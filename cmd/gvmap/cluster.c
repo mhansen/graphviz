@@ -61,7 +61,7 @@ static void usage(char* cmd, int eval)
 {
     fprintf(stderr, "Usage: %s <options> graphfile\n", cmd);
     fputs (usestr, stderr);
-    exit(eval);
+    graphviz_exit(eval);
 }
 
 static FILE *openFile(const char *name, const char* cmd)
@@ -71,7 +71,7 @@ static FILE *openFile(const char *name, const char* cmd)
     fp = fopen(name, "w");
     if (!fp) {
 	fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
-	exit(-1);
+	graphviz_exit(-1);
     }
     return fp;
 }
@@ -153,5 +153,5 @@ int main(int argc, char *argv[])
     prevg = g;
   }
 
-  return 0; 
+  graphviz_exit(0);
 }

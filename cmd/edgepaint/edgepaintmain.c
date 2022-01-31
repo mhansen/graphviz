@@ -12,6 +12,7 @@
 
 #include <cgraph/cgraph.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/exit.h>
 #include <cgraph/unreachable.h>
 #include <ingraphs/ingraphs.h>
 #include <common/pointset.h>
@@ -50,7 +51,7 @@ static FILE *openFile(const char *name, const char* cmd)
 	fp = fopen(name, "w");
 	if (!fp) {
 		fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
-		exit(EXIT_FAILURE);
+		graphviz_exit(EXIT_FAILURE);
 	}
 	return fp;
 }
@@ -70,7 +71,7 @@ static void usage (char* cmd, int eval){
   fprintf(stderr, "       parallel but is on the opposite ends of the shared point (around 180 degree).\n");
   fprintf(stderr, " -v               : verbose\n");
   fprintf(stderr, " -o fname         :  write output to file fname (stdout)\n");
-  exit(eval);
+  graphviz_exit(eval);
 }
 
 /* checkG:
@@ -307,5 +308,5 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	return rv;
+	graphviz_exit(rv);
 }

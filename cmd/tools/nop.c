@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -32,7 +33,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf("%s",useString);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static void init(int argc, char *argv[])
@@ -56,7 +57,7 @@ static void init(int argc, char *argv[])
 	    break;
 	default:
 	    fprintf(stderr, "nop: unexpected error\n");
-	    exit(EXIT_FAILURE);
+	    graphviz_exit(EXIT_FAILURE);
 	}
     }
     argv += optind;
@@ -84,5 +85,5 @@ int main(int argc, char **argv)
 	agclose(g);
     }
 
-    return (ig.errors != 0 || agerrors() != 0) ? EXIT_FAILURE : EXIT_SUCCESS;
+    graphviz_exit(ig.errors != 0 || agerrors() != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
 }

@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 
 typedef struct {
     Agrec_t h;
@@ -153,7 +154,7 @@ static void gwrite(Agraph_t * g, int ng, int nb)
 	if (!outf) {
 	    fprintf(stderr, "Could not open %s for writing\n", name);
 	    perror("bcomps");
-	    exit(1);
+	    graphviz_exit(1);
 	}
 	agwrite(g, outf);
 	fclose(outf);
@@ -305,7 +306,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf("%s",useString);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static void split(char *name)
@@ -391,5 +392,5 @@ int main(int argc, char *argv[])
 	gcnt++;
     }
 
-    return r;
+    graphviz_exit(r);
 }

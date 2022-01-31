@@ -2612,7 +2612,7 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
       fprintf(stderr,"{%d,%d}=%f,",94,list[j],dist[list[j]]);
     }
     fprintf(stderr,"\n");
-    exit(1);
+    graphviz_exit(1);
 
     */
 

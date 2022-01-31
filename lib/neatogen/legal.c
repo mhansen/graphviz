@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <math.h>
+#include <cgraph/exit.h>
 #include <neatogen/neato.h>
 #include <pathplan/pathutil.h>
 
@@ -263,7 +264,7 @@ static int find_intersection(vertex *l,
 #ifdef RECORD_INTERSECTS
     if (input->ninters >= MAXINTS) {
 	agerr(AGERR, "using too many intersections\n");
-	exit(1);
+	graphviz_exit(1);
     }
 
     ilist[input->ninters].firstv = l;

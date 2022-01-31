@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
 #include <getopt.h>
 
@@ -225,7 +226,7 @@ If no files are specified, stdin is used\n";
 static void usage(int v)
 {
     printf("%s",useString);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static void init(int argc, char *argv[])
@@ -307,5 +308,5 @@ int main(int argc, char **argv)
     }
     free(Nodes);
     free(Files);
-    exit(code);
+    graphviz_exit(code);
 }

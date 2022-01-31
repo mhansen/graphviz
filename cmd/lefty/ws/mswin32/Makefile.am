@@ -1,6 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
-AM_CPPFLAGS = -I$(top_srcdir)/cmd/lefty 
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/lib \
+	-I$(top_srcdir)/cmd/lefty
+
 
 noinst_HEADERS = gcommon.h resource.h
 if WITH_WIN32

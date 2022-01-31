@@ -25,6 +25,7 @@
 #include "support.h"
 #include "menucallbacks.h"
 #include "gltemplate.h"
+#include <cgraph/exit.h>
 #include <common/memory.h>
 #include "gvprpipe.h"
 #include "frmobjectui.h"
@@ -79,7 +80,7 @@ static char *useString = "Usage: smyrna [-v?] <file>\n\
 static void usage(int v)
 {
     fputs(useString, stdout);
-    exit(v);
+    graphviz_exit(v);
 }
 
 static char *Info[] = {
@@ -108,7 +109,7 @@ static char *parseArgs(int argc, char *argv[], ViewInfo * view)
 	case 'V':
 	    fprintf(stderr, "%s version %s (%s)\n",
 		    Info[0], Info[1], Info[2]);
-	    exit (0);
+	    graphviz_exit(0);
 	    break;
 	case '?':
 	    if (optopt == '\0')
@@ -189,12 +190,12 @@ int main(int argc, char *argv[])
 
 	if (VirtualQuery (&main, &mbi, sizeof(mbi)) == 0) {
 	    fprintf (stderr,"failed to get handle for executable.\n");
-	    return 1;
+	    graphviz_exit(1);
 	}
 	r = GetModuleFileName ((HMODULE)mbi.AllocationBase, line, BSZ);
 	if (!r || (r == BSZ)) {
 	    fprintf (stderr,"failed to get path for executable.\n");
-	    return 1;
+	    graphviz_exit(1);
 	}
 
 	/* line contains path to smyrna: "$GVROOT\bin\smyrna.exe" 
@@ -204,12 +205,12 @@ int main(int argc, char *argv[])
 	s = strrchr(line,'\\');
 	if (!s) {
 	    fprintf (stderr,"no backslash in path %s.\n", line);
-	    return 1;
+	    graphviz_exit(1);
 	}
 	while ((s != line) && (*(--s) != '\\')) ;
 	if (s == line) {
 	    fprintf (stderr,"no backslash in path %s.\n", line);
-	    return 1;
+	    graphviz_exit(1);
 	}
 	*s = '\0';
 
@@ -252,5 +253,5 @@ int main(int argc, char *argv[])
     g_free(package_data_dir);
 #endif
     g_free(package_locale_dir);
-    return 0;
+    graphviz_exit(0);
 }
