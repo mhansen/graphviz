@@ -31,7 +31,7 @@ target_include_directories(gvpr PRIVATE
     ${GRAPHVIZ_LIB_DIR}/cgraph
     ${GRAPHVIZ_LIB_DIR}/common
     ${GRAPHVIZ_LIB_DIR}/expr
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(gvpr
@@ -45,5 +45,5 @@ target_link_libraries(gvpr
 )
 
 if(NOT HAVE_GETOPT_H)
-    target_link_libraries(gvpr ${Getopt_LINK_LIBRARIES})
+    target_link_libraries(gvpr ${GETOPT_LINK_LIBRARIES})
 endif()

@@ -4,7 +4,7 @@
 # - installation of manpage
 function(tool_defaults name)
     if(NOT HAVE_GETOPT_H)
-        target_link_libraries(${name} ${Getopt_LINK_LIBRARIES})
+        target_link_libraries(${name} ${GETOPT_LINK_LIBRARIES})
     endif()
 
     install(
@@ -48,7 +48,7 @@ function(add_simple_tool name)
         ${GRAPHVIZ_LIB_DIR}/gvc
         ${GRAPHVIZ_LIB_DIR}/pack
         ${GRAPHVIZ_LIB_DIR}/pathplan
-        ${Getopt_INCLUDE_DIRS}
+        ${GETOPT_INCLUDE_DIRS}
     )
 
     target_link_libraries(${name}
@@ -88,7 +88,7 @@ target_include_directories(dijkstra PRIVATE
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(dijkstra
@@ -122,7 +122,7 @@ target_include_directories(gml2gv PRIVATE
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(gml2gv
@@ -139,10 +139,10 @@ target_include_directories(gv2gml PRIVATE
     ${GRAPHVIZ_LIB_DIR}/common
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${Getopt_INCLUDE_DIRS})
+    ${GETOPT_INCLUDE_DIRS})
 target_link_libraries(gv2gml cgraph gvc ingraphs)
 if(NOT HAVE_GETOPT_H)
-    target_link_libraries(gv2gml ${Getopt_LINK_LIBRARIES})
+    target_link_libraries(gv2gml ${GETOPT_LINK_LIBRARIES})
 endif()
 install(TARGETS gv2gml RUNTIME DESTINATION ${BINARY_INSTALL_DIR})
 
@@ -165,7 +165,7 @@ target_include_directories(graphml2gv PRIVATE
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
     ${EXPAT_INCLUDE_DIRS}
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(graphml2gv
@@ -197,7 +197,7 @@ target_include_directories(gvcolor PRIVATE
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(gvcolor
@@ -224,7 +224,7 @@ target_include_directories(gvgen PRIVATE
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(gvgen cgraph)
@@ -256,7 +256,7 @@ target_include_directories(gvpack PRIVATE
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(gvpack
@@ -289,7 +289,7 @@ target_include_directories(gxl2gv PRIVATE
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
     ${EXPAT_INCLUDE_DIRS}
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(gxl2gv
@@ -321,7 +321,7 @@ target_include_directories(mm2gv PRIVATE
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(mm2gv
@@ -348,7 +348,7 @@ target_include_directories(sccmap PRIVATE
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${Getopt_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(sccmap
@@ -369,7 +369,7 @@ endif()
 
 if(WIN32 AND install_win_dependency_dlls)
     install(
-        FILES ${Getopt_RUNTIME_LIBRARIES}
+        FILES ${GETOPT_RUNTIME_LIBRARIES}
         DESTINATION ${BINARY_INSTALL_DIR}
     )
 endif()
