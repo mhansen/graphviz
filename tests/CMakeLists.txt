@@ -40,6 +40,7 @@ target_link_libraries(test_common PUBLIC
   gvc++
 )
 
+# common steps for creating a test case
 macro(CREATE_TEST testname)
   add_executable(test_${testname} test_${testname}.cpp)
   set_target_properties(test_${testname} PROPERTIES CXX_STANDARD 20)
