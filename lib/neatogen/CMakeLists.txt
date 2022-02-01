@@ -1,6 +1,6 @@
 add_definitions(-DNEATOGEN_EXPORTS)
 
-set(sources
+set(SOURCES
   # Header files
   adjust.h
   bfs.h
@@ -80,7 +80,7 @@ set(sources
 )
 
 if(with_ipsepcola)
-  list(APPEND ${sources}
+  list(APPEND ${SOURCES}
     constrained_majorization_ipsep.c
     mosek_quad_solve.c
     mosek_quad_solve.h
@@ -90,7 +90,7 @@ endif()
 
 
 add_library(neatogen STATIC
-  ${sources}
+  ${SOURCES}
 )
 
 target_include_directories(neatogen PRIVATE
