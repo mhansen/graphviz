@@ -34,7 +34,7 @@ endfunction(tool_defaults)
 # ================================ simple tools ================================
 # These tools have a single source file and share linked libraries, etc.
 
-# This function adds a simple tool using only it's name
+# This function adds a simple tool using only its name
 function(add_simple_tool name)
   add_executable(${name} ${name}.c)
 
