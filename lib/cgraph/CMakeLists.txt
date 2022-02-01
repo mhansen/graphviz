@@ -74,13 +74,15 @@ install(
 
 # Specify man pages to be installed
 if(GZIP)
-  add_custom_target(man-cgraph ALL DEPENDS cgraph.3.gz)
+  add_custom_target(man-cgraph ALL DEPENDS cgraph.3.gz
+                    COMMENT "cgraph man page")
   add_custom_command(
     OUTPUT cgraph.3.gz
     COMMAND ${GZIP} -9 --no-name --to-stdout cgraph.3
       >"${CMAKE_CURRENT_BINARY_DIR}/cgraph.3.gz"
     MAIN_DEPENDENCY cgraph.3
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "compress cgraph man page")
   install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/cgraph.3.gz
     DESTINATION ${MAN_INSTALL_DIR}/man3)

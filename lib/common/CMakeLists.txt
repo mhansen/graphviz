@@ -15,6 +15,7 @@ add_custom_command(
   COMMAND ${AWK_EXECUTABLE} ${AWK_OPTIONS} -f ${TOP_SOURCE_DIR}/awk/svgcolor.awk
           ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
           >${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
+  COMMENT "generate SVG color library"
 )
 add_custom_command(
   OUTPUT brewer_lib
@@ -23,6 +24,7 @@ add_custom_command(
   COMMAND ${AWK_EXECUTABLE} -f ${TOP_SOURCE_DIR}/awk/brewer.awk
           ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
           >${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
+  COMMENT "generate Brewer color library"
 )
 configure_file(
   "${TOP_SOURCE_DIR}/cmake/generate_color_lib.cmake.in"
@@ -36,6 +38,7 @@ add_custom_command(
           ${CMAKE_CURRENT_SOURCE_DIR}/color_names
   COMMAND ${CMAKE_COMMAND} -P
           ${CMAKE_CURRENT_BINARY_DIR}/generate_color_lib.cmake
+  COMMENT "generate amalgamated color library"
 )
 add_custom_command(
   OUTPUT common/colortbl.h
@@ -45,6 +48,7 @@ add_custom_command(
   COMMAND ${AWK_EXECUTABLE} -f ${TOP_SOURCE_DIR}/awk/colortbl.awk
           ${CMAKE_CURRENT_BINARY_DIR}/color_lib
           >${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h
+  COMMENT "generate color table"
 )
 
 add_library(common_obj OBJECT

@@ -13,13 +13,15 @@ function(tool_defaults name)
   )
 
   if(GZIP)
-    add_custom_target(man-${name} ALL DEPENDS ${name}.1.gz)
+    add_custom_target(man-${name} ALL DEPENDS ${name}.1.gz
+                      COMMENT "${name} man page")
     add_custom_command(
       OUTPUT ${name}.1.gz
       COMMAND ${GZIP} -9 --no-name --to-stdout ${name}.1
         >"${CMAKE_CURRENT_BINARY_DIR}/${name}.1.gz"
       MAIN_DEPENDENCY ${name}.1
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMENT "compress ${name} man page")
     install(
       FILES ${CMAKE_CURRENT_BINARY_DIR}/${name}.1.gz
       DESTINATION ${MAN_INSTALL_DIR}/man1)

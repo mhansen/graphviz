@@ -10,6 +10,7 @@ add_custom_command(
   MAIN_DEPENDENCY y.tab.c
   COMMAND ${CMAKE_COMMAND}
   ARGS -P ${CMAKE_CURRENT_SOURCE_DIR}/exparse-replacements.cmake
+  COMMENT "exparse replacements"
 )
 
 add_library(expr STATIC

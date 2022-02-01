@@ -44,13 +44,15 @@ install(
 
 # Specify man pages to be installed
 if(GZIP)
-  add_custom_target(man-cdt ALL DEPENDS cdt.3.gz)
+  add_custom_target(man-cdt ALL DEPENDS cdt.3.gz
+                    COMMENT "cdt man page")
   add_custom_command(
     OUTPUT cdt.3.gz
     COMMAND ${GZIP} -9 --no-name --to-stdout cdt.3
       >"${CMAKE_CURRENT_BINARY_DIR}/cdt.3.gz"
     MAIN_DEPENDENCY cdt.3
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "compress cdt man page")
   install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/cdt.3.gz
     DESTINATION ${MAN_INSTALL_DIR}/man3)
