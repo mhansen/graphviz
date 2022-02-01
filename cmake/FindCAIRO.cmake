@@ -7,7 +7,8 @@ if(WIN32)
 
   find_program(CAIRO_RUNTIME_LIBRARY NAMES cairo.dll libcairo-2.dll)
   find_program(EXPAT_RUNTIME_LIBRARY NAMES expat.dll libexpat-1.dll)
-  find_program(FONTCONFIG_RUNTIME_LIBRARY NAMES fontconfig.dll libfontconfig-1.dll)
+  find_program(FONTCONFIG_RUNTIME_LIBRARY
+               NAMES fontconfig.dll libfontconfig-1.dll)
   find_program(PIXMAN_RUNTIME_LIBRARY NAMES pixman-1.dll libpixman-1-0.dll)
 
   find_package_handle_standard_args(CAIRO DEFAULT_MSG

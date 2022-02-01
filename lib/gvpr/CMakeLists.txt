@@ -25,7 +25,8 @@ target_include_directories(gvpr PRIVATE
   ${GRAPHVIZ_LIB_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/.. # needed to find generated expr/exparse.h
-  ${CMAKE_CURRENT_BINARY_DIR}/../common # needed to find generated common/colortbl.h
+  ${CMAKE_CURRENT_BINARY_DIR}/../common
+    # needed to find generated common/colortbl.h
   ${GRAPHVIZ_LIB_DIR}/ast
   ${GRAPHVIZ_LIB_DIR}/cdt
   ${GRAPHVIZ_LIB_DIR}/cgraph

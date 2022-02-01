@@ -1,4 +1,5 @@
-BISON_TARGET(HTMLparse ${CMAKE_CURRENT_SOURCE_DIR}/htmlparse.y ${CMAKE_CURRENT_BINARY_DIR}/htmlparse.c)
+BISON_TARGET(HTMLparse ${CMAKE_CURRENT_SOURCE_DIR}/htmlparse.y
+                       ${CMAKE_CURRENT_BINARY_DIR}/htmlparse.c)
 
 add_definitions(-DGVC_EXPORTS)
 
@@ -9,15 +10,19 @@ endif()
 # Generate colortbl.h from sources
 add_custom_command(
   OUTPUT svgcolor_lib
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names ${TOP_SOURCE_DIR}/awk/svgcolor.awk
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
+          ${TOP_SOURCE_DIR}/awk/svgcolor.awk
   COMMAND ${AWK_EXECUTABLE} ${AWK_OPTIONS} -f ${TOP_SOURCE_DIR}/awk/svgcolor.awk
-          ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names > ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
+          ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
+          >${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
 )
 add_custom_command(
   OUTPUT brewer_lib
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors ${TOP_SOURCE_DIR}/awk/brewer.awk
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
+          ${TOP_SOURCE_DIR}/awk/brewer.awk
   COMMAND ${AWK_EXECUTABLE} -f ${TOP_SOURCE_DIR}/awk/brewer.awk
-          ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors > ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
+          ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
+          >${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
 )
 configure_file(
   "${TOP_SOURCE_DIR}/cmake/generate_color_lib.cmake.in"
@@ -26,15 +31,20 @@ configure_file(
 )
 add_custom_command(
   OUTPUT color_lib
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib ${CMAKE_CURRENT_SOURCE_DIR}/color_names
-  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/generate_color_lib.cmake
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
+          ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
+          ${CMAKE_CURRENT_SOURCE_DIR}/color_names
+  COMMAND ${CMAKE_COMMAND} -P
+          ${CMAKE_CURRENT_BINARY_DIR}/generate_color_lib.cmake
 )
 add_custom_command(
   OUTPUT common/colortbl.h
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/color_lib
-  COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/common"
+  COMMAND ${CMAKE_COMMAND} -E make_directory
+          "${CMAKE_CURRENT_BINARY_DIR}/common"
   COMMAND ${AWK_EXECUTABLE} -f ${TOP_SOURCE_DIR}/awk/colortbl.awk
-          ${CMAKE_CURRENT_BINARY_DIR}/color_lib > ${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h
+          ${CMAKE_CURRENT_BINARY_DIR}/color_lib
+          >${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h
 )
 
 add_library(common_obj OBJECT
@@ -110,7 +120,8 @@ target_include_directories(common_obj PRIVATE
 )
 
 if(WIN32)
-  target_include_directories(common_obj PRIVATE ${WINDOWS_DEPENDENCY_DIR}/include)
+  target_include_directories(common_obj
+                             PRIVATE ${WINDOWS_DEPENDENCY_DIR}/include)
 endif()
 
 # From https://gitlab.com/graphviz/graphviz/-/issues/1613 @mdwies 20093010

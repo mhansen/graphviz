@@ -9,7 +9,8 @@
 #
 # For the ZIP CPack generator:
 #   $ENV{DESTDIR} is empty
-#   ${CMAKE_INSTALL_PREFIX} is the absolute path to the staging install directory
+#   ${CMAKE_INSTALL_PREFIX} is the absolute path to the staging install
+#     directory
 #
 # For the NSIS and DEB CPack generators:
 #   $ENV{DESTDIR} is the absolute path to the staging install directory
@@ -19,6 +20,7 @@
 # ${CMAKE_INSTALL_PREFIX} to get the location of the 'bin' and 'lib'
 # directories in the staging install area.
 #
+# cmake-lint: disable=C0301
 # More info:
 #   https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html#variable:CMAKE_INSTALL_PREFIX
 #   https://cmake.org/cmake/help/latest/envvar/DESTDIR.html

@@ -38,7 +38,8 @@ list(APPEND dot_aliases circo fdp neato osage patchwork sfdp twopi)
 if(WIN32 OR CYGWIN)
   # Copy dot executable to each alias name then install copies to bindir
   foreach(cmd_alias IN LISTS dot_aliases)
-    set(dotcopy "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}${CMAKE_EXECUTABLE_SUFFIX}")
+    set(dotcopy
+        "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}${CMAKE_EXECUTABLE_SUFFIX}")
     add_custom_command(
       TARGET dot
       POST_BUILD
@@ -51,18 +52,19 @@ if(WIN32 OR CYGWIN)
     )
   endforeach()
 else()
-  # For not-WIN32, install symlinks from dot_aliases -> dot_executable in bindir.
-  # Note: This may be brittle. This builds a symlink from ./cmd_alias -> ./dot
-  # in ${CMAKE_CURRENT_BINARY_DIR}, then installs that symlink
-  # into ${BINARY_INSTALL_DIR}. This presumes ${CMAKE_CURRENT_BINARY_DIR}/dot
-  # is installed to ${BINARY_INSTALL_DIR}/dot. There is a (small?) risk of
-  # dangling symlinks
+  # For not-WIN32, install symlinks from dot_aliases -> dot_executable in
+  # bindir. Note: This may be brittle. This builds a symlink from
+  # ./cmd_alias -> ./dot in ${CMAKE_CURRENT_BINARY_DIR}, then installs that
+  # symlink into ${BINARY_INSTALL_DIR}. This presumes
+  # ${CMAKE_CURRENT_BINARY_DIR}/dot is installed to ${BINARY_INSTALL_DIR}/dot.
+  # There is a (small?) risk of dangling symlinks
   foreach(cmd_alias IN LISTS dot_aliases)
     set(dotlink "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}")
     add_custom_command(
       TARGET dot
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dot> ${cmd_alias}
+      COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dot>
+        ${cmd_alias}
       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
       COMMENT "Linking $<TARGET_FILE_NAME:dot> as ${cmd_alias}"
     )
