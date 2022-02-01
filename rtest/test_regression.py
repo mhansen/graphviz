@@ -509,7 +509,7 @@ def test_1594():
 
   # run GVPR with our (malformed) input program
   with subprocess.Popen(["gvpr", "-f", input], stdin=subprocess.PIPE,
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                        stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
                         universal_newlines=True) as p:
     _, stderr = p.communicate()
 
