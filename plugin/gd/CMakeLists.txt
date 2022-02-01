@@ -50,7 +50,6 @@ if(GD_FOUND)
     SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
   )
 
-
   if(MINGW)
     # work around https://gitlab.kitware.com/cmake/cmake/-/issues/21716
     set_target_properties(gvplugin_gd PROPERTIES

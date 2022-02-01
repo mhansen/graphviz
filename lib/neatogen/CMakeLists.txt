@@ -88,7 +88,6 @@ if(with_ipsepcola)
   )
 endif()
 
-
 add_library(neatogen STATIC
   ${SOURCES}
 )
