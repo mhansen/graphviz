@@ -4,11 +4,11 @@ find_program(GD_RUNTIME_LIBRARY libgd.dll)
 
 include(FindPackageHandleStandardArgs)
 if(WIN32)
-    find_package_handle_standard_args(GD DEFAULT_MSG
-                                      GD_LIBRARY GD_INCLUDE_DIR GD_RUNTIME_LIBRARY)
+  find_package_handle_standard_args(GD DEFAULT_MSG
+                                    GD_LIBRARY GD_INCLUDE_DIR GD_RUNTIME_LIBRARY)
 else()
-    find_package_handle_standard_args(GD DEFAULT_MSG
-                                      GD_LIBRARY GD_INCLUDE_DIR)
+  find_package_handle_standard_args(GD DEFAULT_MSG
+                                    GD_LIBRARY GD_INCLUDE_DIR)
 endif()
 
 mark_as_advanced(GD_INCLUDE_DIR GD_LIBRARY GD_RUNTIME_LIBRARY)

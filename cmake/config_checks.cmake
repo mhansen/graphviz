@@ -45,42 +45,42 @@ set( HAVE_LIBGD     ${GD_FOUND}         )
 set( HAVE_ZLIB      ${ZLIB_FOUND}       )
 
 if(LTDL_FOUND)
-    set(ENABLE_LTDL 1)
-    set(LTDL_H 1)
+  set(ENABLE_LTDL 1)
+  set(LTDL_H 1)
 endif()
 
 # Values
 if(WIN32)
 
-    set( BROWSER            start                                   )
-    set( DEFAULT_FONTPATH   "C:/Windows/Fonts"                      )
+  set( BROWSER            start                                   )
+  set( DEFAULT_FONTPATH   "C:/Windows/Fonts"                      )
 
 elseif(APPLE)
 
-    set( BROWSER            open                                    )
-    set( DEFAULT_FONTPATH   "~/Library/Fonts:/Library/Fonts:"
-                            "/Network/Library/Fonts:"
-                            "/System/Library/Fonts"                 )
-    set( DARWIN             1                                       )
-    set( DARWIN_DYLIB       1                                       )
+  set( BROWSER            open                                    )
+  set( DEFAULT_FONTPATH   "~/Library/Fonts:/Library/Fonts:"
+                          "/Network/Library/Fonts:"
+                          "/System/Library/Fonts"                 )
+  set( DARWIN             1                                       )
+  set( DARWIN_DYLIB       1                                       )
 
 else()
 
-    set( BROWSER            xdg-open                                )
-    set( DEFAULT_FONTPATH   "/usr/share/fonts/sun/TrueType:"
-                            "/usr/share/fonts/TrueType:"
-                            "/usr/X11/lib/X11/fonts/TrueType:"
-                            "/usr/share/fonts/sun/Type1:"
-                            "/usr/openwin/lib/X11/fonts/Type1:"
-                            "/usr/share/fonts/X11/Type1:"
-                            "/usr/share/fonts/default/Type1:"
-                            "/usr/X11R6/lib/X11/fonts/TrueType:"
-                            "/usr/X11R6/lib/X11/fonts/truetype:"
-                            "/usr/X11R6/lib/X11/fonts/TTF:"
-                            "/usr/share/fonts/truetype:"
-                            "/usr/openwin/lib/X11/fonts/TrueType:"
-                            "/usr/X11R6/lib/X11/fonts/Type1:"
-                            "/usr/common/share/fonts/ttf"           )
+  set( BROWSER            xdg-open                                )
+  set( DEFAULT_FONTPATH   "/usr/share/fonts/sun/TrueType:"
+                          "/usr/share/fonts/TrueType:"
+                          "/usr/X11/lib/X11/fonts/TrueType:"
+                          "/usr/share/fonts/sun/Type1:"
+                          "/usr/openwin/lib/X11/fonts/Type1:"
+                          "/usr/share/fonts/X11/Type1:"
+                          "/usr/share/fonts/default/Type1:"
+                          "/usr/X11R6/lib/X11/fonts/TrueType:"
+                          "/usr/X11R6/lib/X11/fonts/truetype:"
+                          "/usr/X11R6/lib/X11/fonts/TTF:"
+                          "/usr/share/fonts/truetype:"
+                          "/usr/openwin/lib/X11/fonts/TrueType:"
+                          "/usr/X11R6/lib/X11/fonts/Type1:"
+                          "/usr/common/share/fonts/ttf"           )
 
 endif()
 

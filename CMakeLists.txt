@@ -19,34 +19,34 @@ option(with_cxx_tests  "enables building the C++ tests" OFF)
 option(use_win_pre_inst_libs "enables building using pre-installed Windows libraries" ON)
 
 if(WIN32)
-    # Build dynamic-link libraries on Windows, including MinGW. The
-    # CMake build system does not currently support building static
-    # libraries, so the GVDLL symbol can be unconditionally set until
-    # such support is introduced.
-    add_definitions(-DGVDLL)
+  # Build dynamic-link libraries on Windows, including MinGW. The
+  # CMake build system does not currently support building static
+  # libraries, so the GVDLL symbol can be unconditionally set until
+  # such support is introduced.
+  add_definitions(-DGVDLL)
 
-    option(install_win_dependency_dlls "Install 3rd party dependencies" ON)
+  option(install_win_dependency_dlls "Install 3rd party dependencies" ON)
 endif()
 
 if(with_digcola)
-    add_definitions(-DDIGCOLA)
+  add_definitions(-DDIGCOLA)
 endif()
 
 if(with_ipsepcola)
-    add_definitions(-DIPSEPCOLA)
+  add_definitions(-DIPSEPCOLA)
 endif()
 
 if(with_ortho)
-    add_definitions(-DORTHO)
+  add_definitions(-DORTHO)
 endif()
 
 if(with_sfdp)
-    add_definitions(-DSFDP)
+  add_definitions(-DSFDP)
 endif()
 
 if(with_smyrna)
-    # TODO include dependency checks
-    add_definitions(-DSMYRNA)
+  # TODO include dependency checks
+  add_definitions(-DSMYRNA)
 endif()
 
 # ===================== Append local CMake module directory ====================
@@ -77,11 +77,11 @@ set(GRAPHVIZ_LIB_DIR        "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 set(WINDOWS_DEPENDENCY_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/windows/dependencies/libraries")
 set(WINDOWS_DEPENDENCY_VCPKG_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/windows/dependencies/libraries/vcpkg/installed")
 if(CMAKE_CL_64)
-    set(WINDOWS_DEPENDENCY_DIR "${WINDOWS_DEPENDENCY_DIR}/x64")
-    set(WINDOWS_DEPENDENCY_VCPKG_DIR "${WINDOWS_DEPENDENCY_VCPKG_DIR}/x64-windows")
+  set(WINDOWS_DEPENDENCY_DIR "${WINDOWS_DEPENDENCY_DIR}/x64")
+  set(WINDOWS_DEPENDENCY_VCPKG_DIR "${WINDOWS_DEPENDENCY_VCPKG_DIR}/x64-windows")
 else()
-    set(WINDOWS_DEPENDENCY_DIR "${WINDOWS_DEPENDENCY_DIR}/x86")
-    set(WINDOWS_DEPENDENCY_VCPKG_DIR "${WINDOWS_DEPENDENCY_VCPKG_DIR}/x86-windows")
+  set(WINDOWS_DEPENDENCY_DIR "${WINDOWS_DEPENDENCY_DIR}/x86")
+  set(WINDOWS_DEPENDENCY_VCPKG_DIR "${WINDOWS_DEPENDENCY_VCPKG_DIR}/x86-windows")
 endif()
 
 set(GRAPHVIZ_PLUGIN_VERSION 6)
@@ -90,13 +90,13 @@ set(GVPLUGIN_CONFIG_FILE config${GRAPHVIZ_PLUGIN_VERSION})
 
 # ============================ Library dependencies ============================
 if(WIN32)
-    if(use_win_pre_inst_libs)
-        list(APPEND CMAKE_PREFIX_PATH ${WINDOWS_DEPENDENCY_DIR})
-        list(APPEND CMAKE_PREFIX_PATH ${WINDOWS_DEPENDENCY_VCPKG_DIR})
-    endif()
-    if(MINGW)
-        list(APPEND CMAKE_PREFIX_PATH $ENV{MSYSTEM_PREFIX})
-    endif()
+  if(use_win_pre_inst_libs)
+    list(APPEND CMAKE_PREFIX_PATH ${WINDOWS_DEPENDENCY_DIR})
+    list(APPEND CMAKE_PREFIX_PATH ${WINDOWS_DEPENDENCY_VCPKG_DIR})
+  endif()
+  if(MINGW)
+    list(APPEND CMAKE_PREFIX_PATH $ENV{MSYSTEM_PREFIX})
+  endif()
 endif()
 
 find_package(ANN)
@@ -122,17 +122,17 @@ if(with_zlib)
 endif()
 
 if(UNIX)
-    find_library(MATH_LIB m)
+  find_library(MATH_LIB m)
 endif()
 
 if(WIN32)
-    # Find Windows specific dependencies
+  # Find Windows specific dependencies
 
-    # Find DLLs on Windows
-    find_program(EXPAT_RUNTIME_LIBRARIES NAMES libexpat.dll expat.dll msys-expat-1.dll)
-    if(CMAKE_CL_64)
-        find_program(MSYS_RUNTIME_LIBRARIES NAMES msys-2.0.dll)
-    endif()
+  # Find DLLs on Windows
+  find_program(EXPAT_RUNTIME_LIBRARIES NAMES libexpat.dll expat.dll msys-expat-1.dll)
+  if(CMAKE_CL_64)
+    find_program(MSYS_RUNTIME_LIBRARIES NAMES msys-2.0.dll)
+  endif()
 endif()
 
 # ============================ Set Graphviz version ============================
@@ -144,23 +144,23 @@ else()
 endif()
 
 if(DEFINED VERSION)
-    set(GRAPHVIZ_VERSION_STRING "${VERSION}")
+  set(GRAPHVIZ_VERSION_STRING "${VERSION}")
 else()
-    if(NOT Python3_EXECUTABLE)
-      message(FATAL_ERROR "Python 3 not found")
-    endif()
-    execute_process(
-        COMMAND           ${Python3_EXECUTABLE} gen_version.py
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-        RESULT_VARIABLE   gen_version_result
-        OUTPUT_VARIABLE   GRAPHVIZ_VERSION_STRING
-        ERROR_VARIABLE    gen_version_error
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        ERROR_STRIP_TRAILING_WHITESPACE
-        )
-    if(NOT gen_version_result EQUAL 0)
-        message(FATAL_ERROR "Failed to set version: ${gen_version_error}")
-    endif()
+  if(NOT Python3_EXECUTABLE)
+    message(FATAL_ERROR "Python 3 not found")
+  endif()
+  execute_process(
+    COMMAND           ${Python3_EXECUTABLE} gen_version.py
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    RESULT_VARIABLE   gen_version_result
+    OUTPUT_VARIABLE   GRAPHVIZ_VERSION_STRING
+    ERROR_VARIABLE    gen_version_error
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_STRIP_TRAILING_WHITESPACE
+  )
+  if(NOT gen_version_result EQUAL 0)
+    message(FATAL_ERROR "Failed to set version: ${gen_version_error}")
+  endif()
 endif()
 
 if(NOT Python3_EXECUTABLE)
@@ -168,27 +168,27 @@ if(NOT Python3_EXECUTABLE)
 endif()
 # Set GRAPHVIZ_VERSION_BUILD to time of last commit, or to 0 if that fails.
 execute_process(
-    COMMAND           ${Python3_EXECUTABLE} gen_version.py --committer-date-graphviz
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    RESULT_VARIABLE   gen_date_result
-    OUTPUT_VARIABLE   GRAPHVIZ_VERSION_BUILD
-    ERROR_VARIABLE    gen_date_error
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    ERROR_STRIP_TRAILING_WHITESPACE
-    )
+  COMMAND           ${Python3_EXECUTABLE} gen_version.py --committer-date-graphviz
+  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+  RESULT_VARIABLE   gen_date_result
+  OUTPUT_VARIABLE   GRAPHVIZ_VERSION_BUILD
+  ERROR_VARIABLE    gen_date_error
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  ERROR_STRIP_TRAILING_WHITESPACE
+)
 if(NOT gen_date_result EQUAL 0)
-    message(FATAL_ERROR "Failed to set date: ${gen_date_error}")
+  message(FATAL_ERROR "Failed to set date: ${gen_date_error}")
 endif()
 
 string(REGEX REPLACE "\\..*"
-   "" GRAPHVIZ_VERSION_MAJOR
-   ${GRAPHVIZ_VERSION_STRING})
+  "" GRAPHVIZ_VERSION_MAJOR
+  ${GRAPHVIZ_VERSION_STRING})
 string(REGEX REPLACE "[^.]*\\.([^.]*)\\..*"
-   "\\1" GRAPHVIZ_VERSION_MINOR
-   ${GRAPHVIZ_VERSION_STRING})
+  "\\1" GRAPHVIZ_VERSION_MINOR
+  ${GRAPHVIZ_VERSION_STRING})
 string(REGEX REPLACE "[^.]*\\.[^.]*\\.(.*)$"
-   "\\1" GRAPHVIZ_VERSION_PATCH
-   ${GRAPHVIZ_VERSION_STRING})
+  "\\1" GRAPHVIZ_VERSION_PATCH
+  ${GRAPHVIZ_VERSION_STRING})
 
 set(GRAPHVIZ_VERSION_FULL "${GRAPHVIZ_VERSION_STRING}")
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/builddate.h "#define BUILDDATE \"${GRAPHVIZ_VERSION_BUILD}\"")
@@ -200,18 +200,18 @@ message(STATUS "Graphviz version: ${GRAPHVIZ_VERSION_FULL}")
 
 include(config_checks)
 if(NOT HAVE_GETOPT_H)
-    find_package(GETOPT REQUIRED)
+  find_package(GETOPT REQUIRED)
 endif()
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # ==================== Custom target for `make uninstall` ======================
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+  IMMEDIATE @ONLY)
 
 add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 
 # =========================== Compiler configuration ===========================
 
@@ -224,37 +224,37 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-    # MSVC warning C4996 mostly fires on completely valid code. The changes
-    # proposed in the warning text often seriously compromise the code
-    # portability, while they never substantially improve the code quality. Thus
-    # we suppress this warning.
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996")
+  # MSVC warning C4996 mostly fires on completely valid code. The changes
+  # proposed in the warning text often seriously compromise the code
+  # portability, while they never substantially improve the code quality. Thus
+  # we suppress this warning.
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996")
 else()
-    # Enable common warnings flags
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+  # Enable common warnings flags
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 endif()
 
 if(use_sanitizers)
-    add_compile_options("-fsanitize=address,undefined")
-    add_compile_options("-g")
-    if(${CMAKE_VERSION} VERSION_LESS "3.13.0")
-        link_libraries("-fsanitize=address,undefined")
-        link_libraries("-g")
-    else()
-        add_link_options("-fsanitize=address,undefined")
-        add_link_options("-g")
-    endif()
+  add_compile_options("-fsanitize=address,undefined")
+  add_compile_options("-g")
+  if(${CMAKE_VERSION} VERSION_LESS "3.13.0")
+    link_libraries("-fsanitize=address,undefined")
+    link_libraries("-g")
+  else()
+    add_link_options("-fsanitize=address,undefined")
+    add_link_options("-g")
+  endif()
 endif()
 
 if(use_coverage)
-    add_compile_options("-coverage")
-    if(${CMAKE_VERSION} VERSION_LESS "3.16.0")
-        link_libraries("-coverage")
-    else()
-        add_link_options("-coverage")
-    endif()
+  add_compile_options("-coverage")
+  if(${CMAKE_VERSION} VERSION_LESS "3.16.0")
+    link_libraries("-coverage")
+  else()
+    add_link_options("-coverage")
+  endif()
 endif()
 
 # ============================ Packaging information ===========================
@@ -270,7 +270,7 @@ add_subdirectory(lib)
 add_subdirectory(plugin)
 add_subdirectory(cmd)
 if(with_cxx_tests)
-    add_subdirectory(tests)
+  add_subdirectory(tests)
 endif()
 
 MATH(EXPR GRAPHVIZ_PLUGIN_VERSION "${GRAPHVIZ_PLUGIN_VERSION}+1")

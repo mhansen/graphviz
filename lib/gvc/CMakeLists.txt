@@ -1,36 +1,36 @@
 add_definitions(-DGVC_EXPORTS -DGVLIBDIR="${LIBRARY_INSTALL_DIR}/graphviz")
 
 add_library(gvc SHARED
-    # Header files
-    gvc.h
-    gvcext.h
-    gvcint.h
-    gvcjob.h
-    gvconfig.h
-    gvcommon.h
-    gvcproc.h
-    gvio.h
-    gvplugin.h
-    gvplugin_device.h
-    gvplugin_layout.h
-    gvplugin_loadimage.h
-    gvplugin_render.h
-    gvplugin_textlayout.h
+  # Header files
+  gvc.h
+  gvcext.h
+  gvcint.h
+  gvcjob.h
+  gvconfig.h
+  gvcommon.h
+  gvcproc.h
+  gvio.h
+  gvplugin.h
+  gvplugin_device.h
+  gvplugin_layout.h
+  gvplugin_loadimage.h
+  gvplugin_render.h
+  gvplugin_textlayout.h
 
-    # Source files
-    gvc.c
-    gvconfig.c
-    gvcontext.c
-    gvdevice.c
-    gvevent.c
-    gvjobs.c
-    gvlayout.c
-    gvloadimage.c
-    gvplugin.c
-    gvrender.c
-    gvtextlayout.c
-    gvtool_tred.c
-    gvusershape.c
+  # Source files
+  gvc.c
+  gvconfig.c
+  gvcontext.c
+  gvdevice.c
+  gvevent.c
+  gvjobs.c
+  gvlayout.c
+  gvloadimage.c
+  gvplugin.c
+  gvrender.c
+  gvtextlayout.c
+  gvtool_tred.c
+  gvusershape.c
 )
 
 target_include_directories(gvc
@@ -47,62 +47,62 @@ target_include_directories(gvc
 )
 
 target_link_libraries(gvc PRIVATE
-    $<TARGET_OBJECTS:common_obj>
-    $<TARGET_OBJECTS:pack_obj>
+  $<TARGET_OBJECTS:common_obj>
+  $<TARGET_OBJECTS:pack_obj>
 )
 
 target_link_libraries(gvc PRIVATE
-    cdt
-    cgraph
-    common
-    pack
+  cdt
+  cgraph
+  common
+  pack
 )
 
 target_link_libraries(gvc PUBLIC
-    ${MATH_LIB}
+  ${MATH_LIB}
 )
 
 if(LTDL_FOUND)
-    target_include_directories(gvc PRIVATE ${LTDL_INCLUDE_DIRS})
-    if(NOT WIN32 OR MINGW)
-        target_link_libraries(gvc PUBLIC ${LTDL_LIBRARIES})
-    endif()
+  target_include_directories(gvc PRIVATE ${LTDL_INCLUDE_DIRS})
+  if(NOT WIN32 OR MINGW)
+    target_link_libraries(gvc PUBLIC ${LTDL_LIBRARIES})
+  endif()
 endif()
 
 if(ZLIB_FOUND)
-   target_link_libraries(gvc PUBLIC ${ZLIB_LIBRARIES})
+  target_link_libraries(gvc PUBLIC ${ZLIB_LIBRARIES})
 endif()
 
 if(${with_ortho})
-    target_link_libraries(gvc PRIVATE
-        $<TARGET_OBJECTS:ortho_obj>
-    )
-    target_link_libraries(gvc PRIVATE ortho)
+  target_link_libraries(gvc PRIVATE
+    $<TARGET_OBJECTS:ortho_obj>
+  )
+  target_link_libraries(gvc PRIVATE ortho)
 endif()
 
 # Installation location of library files
 install(
-    TARGETS gvc
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+  TARGETS gvc
+  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+  LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
 )
 
 # Specify headers to be installed
 install(
-    FILES
-        gvc.h
-        gvcext.h
-        gvcjob.h
-        gvconfig.h
-        gvcommon.h
-        gvplugin.h
-        gvplugin_device.h
-        gvplugin_layout.h
-        gvplugin_loadimage.h
-        gvplugin_render.h
-        gvplugin_textlayout.h
-    DESTINATION ${HEADER_INSTALL_DIR}
+  FILES
+    gvc.h
+    gvcext.h
+    gvcjob.h
+    gvconfig.h
+    gvcommon.h
+    gvplugin.h
+    gvplugin_device.h
+    gvplugin_layout.h
+    gvplugin_loadimage.h
+    gvplugin_render.h
+    gvplugin_textlayout.h
+  DESTINATION ${HEADER_INSTALL_DIR}
 )
 
 # Specify man pages to be installed
@@ -126,15 +126,15 @@ endif()
 
 # Specify library version and soversion
 set_target_properties(gvc PROPERTIES
-    VERSION 6.0.0
-    SOVERSION 6
+  VERSION 6.0.0
+  SOVERSION 6
 )
 
 # Include DLLs with this library on Windows
 if(WIN32 AND EXPAT_FOUND AND install_win_dependency_dlls)
-    install(
-        FILES
-            ${EXPAT_RUNTIME_LIBRARIES}
-        DESTINATION ${BINARY_INSTALL_DIR}
-    )
+  install(
+    FILES
+      ${EXPAT_RUNTIME_LIBRARIES}
+    DESTINATION ${BINARY_INSTALL_DIR}
+  )
 endif()
