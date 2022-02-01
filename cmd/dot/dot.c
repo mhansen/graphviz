@@ -54,40 +54,6 @@ static void fperr(int s)
 #endif
 #endif
 
-static graph_t *create_test_graph(void)
-{
-#define NUMNODES 5
-
-    Agnode_t *node[NUMNODES];
-    Agedge_t *e;
-    Agraph_t *g;
-    Agraph_t *sg;
-    int j, k;
-    char name[10];
-
-    /* Create a new graph */
-    g = agopen("new_graph", Agdirected,NULL);
-
-    /* Add nodes */
-    for (j = 0; j < NUMNODES; j++) {
-	snprintf(name, sizeof(name), "%d", j);
-	node[j] = agnode(g, name, 1);
-	agbindrec(node[j], "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
-    }
-
-    /* Connect nodes */
-    for (j = 0; j < NUMNODES; j++) {
-	for (k = j + 1; k < NUMNODES; k++) {
-	    e = agedge(g, node[j], node[k], NULL, 1);
-	    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);	//edge custom data
-	}
-    }
-    sg = agsubg (g, "cluster1", 1);
-    agsubnode (sg, node[0], 1);
-
-    return g;
-}
-
 int main(int argc, char **argv)
 {
     graph_t *prev = NULL;
@@ -105,15 +71,8 @@ int main(int argc, char **argv)
 #endif
 
     if (MemTest) {
-	while (MemTest--) {
-	    /* Create a test graph */
-	    G = create_test_graph();
-
-	    /* Perform layout and cleanup */
-	    gvLayoutJobs(Gvc, G);  /* take layout engine from command line */
-	    gvFreeLayout(Gvc, G);
-	    agclose (G);
-	}
+        // TODO: fully remove `MemTest` and associated `-m` parsing in future
+        fprintf(stderr, "The -m command-line option is no longer supported.\n");
     }
     else if ((G = gvPluginsGraph(Gvc))) {
 	    gvLayoutJobs(Gvc, G);  /* take layout engine from command line */
