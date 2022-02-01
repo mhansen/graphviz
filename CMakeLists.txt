@@ -115,7 +115,7 @@ if(enable_ltdl)
   endif()
 endif()
 
-find_package(PangoCairo)
+find_package(PANGOCAIRO)
 
 if(with_zlib)
   find_package(ZLIB)
