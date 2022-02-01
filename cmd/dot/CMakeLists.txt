@@ -38,16 +38,16 @@ list(APPEND dot_aliases circo fdp neato osage patchwork sfdp twopi)
 if(WIN32 OR CYGWIN)
   # Copy dot executable to each alias name then install copies to bindir
   foreach(cmd_alias IN LISTS dot_aliases)
-    set(dotcopy
+    set(DOTCOPY
         "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}${CMAKE_EXECUTABLE_SUFFIX}")
     add_custom_command(
       TARGET dot
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dot> ${dotcopy}
-      COMMENT "Copying $<TARGET_FILE:dot> to ${dotcopy}"
+      COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dot> ${DOTCOPY}
+      COMMENT "Copying $<TARGET_FILE:dot> to ${DOTCOPY}"
     )
     install(
-      PROGRAMS ${dotcopy}
+      PROGRAMS ${DOTCOPY}
       DESTINATION ${BINARY_INSTALL_DIR}
     )
   endforeach()
