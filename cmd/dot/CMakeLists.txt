@@ -59,7 +59,7 @@ else()
   # ${CMAKE_CURRENT_BINARY_DIR}/dot is installed to ${BINARY_INSTALL_DIR}/dot.
   # There is a (small?) risk of dangling symlinks
   foreach(cmd_alias IN LISTS dot_aliases)
-    set(dotlink "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}")
+    set(DOTLINK "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}")
     add_custom_command(
       TARGET dot
       POST_BUILD
@@ -69,7 +69,7 @@ else()
       COMMENT "Linking $<TARGET_FILE_NAME:dot> as ${cmd_alias}"
     )
     install(
-      FILES ${dotlink}
+      FILES ${DOTLINK}
       DESTINATION ${BINARY_INSTALL_DIR}
     )
   endforeach()
