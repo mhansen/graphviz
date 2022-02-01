@@ -487,7 +487,7 @@ def test_1449():
 
   # start Graphviz
   with subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull],
-                        stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                        stdin=subprocess.PIPE,
                         stderr=subprocess.PIPE, universal_newlines=True) as p:
 
     # pass it some input that uses the SVG color scheme
