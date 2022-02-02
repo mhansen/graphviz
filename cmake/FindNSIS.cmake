@@ -1,4 +1,5 @@
-# CMake does not allow for braces in $ENV{}, so a temporary variable must be used.
+# CMake does not allow for braces in $ENV{}, so a temporary variable must be
+# used.
 set(PROGRAMFILES_X86 "ProgramFiles(x86)")
 
 find_program(NSIS_MAKE

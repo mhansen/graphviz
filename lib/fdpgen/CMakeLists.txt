@@ -1,37 +1,37 @@
 add_definitions(-DNEATOGEN_EXPORTS=1)
 
 add_library(fdpgen STATIC
-    # Header files
-    clusteredges.h
-    comp.h
-    dbg.h
-    fdp.h
-    grid.h
-    tlayout.h
-    xlayout.h
+  # Header files
+  clusteredges.h
+  comp.h
+  dbg.h
+  fdp.h
+  grid.h
+  tlayout.h
+  xlayout.h
 
-    # Source files
-    clusteredges.c
-    comp.c
-    dbg.c
-    fdpinit.c
-    grid.c
-    layout.c
-    tlayout.c
-    xlayout.c
+  # Source files
+  clusteredges.c
+  comp.c
+  dbg.c
+  fdpinit.c
+  grid.c
+  layout.c
+  tlayout.c
+  xlayout.c
 )
 
 target_include_directories(fdpgen PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pack
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+  ${GRAPHVIZ_LIB_DIR}
+  ${GRAPHVIZ_LIB_DIR}/cdt
+  ${GRAPHVIZ_LIB_DIR}/cgraph
+  ${GRAPHVIZ_LIB_DIR}/common
+  ${GRAPHVIZ_LIB_DIR}/gvc
+  ${GRAPHVIZ_LIB_DIR}/pack
+  ${GRAPHVIZ_LIB_DIR}/pathplan
 )
 
 target_link_libraries(fdpgen PRIVATE
-    cgraph
-    pathplan
+  cgraph
+  pathplan
 )

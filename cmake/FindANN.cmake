@@ -4,11 +4,12 @@ find_program(ANN_RUNTIME_LIBRARY ANN.dll)
 
 include(FindPackageHandleStandardArgs)
 if(WIN32)
-    find_package_handle_standard_args(ANN DEFAULT_MSG
-                                      ANN_LIBRARY ANN_INCLUDE_DIR ANN_RUNTIME_LIBRARY)
+  find_package_handle_standard_args(ANN DEFAULT_MSG
+                                    ANN_LIBRARY ANN_INCLUDE_DIR
+                                    ANN_RUNTIME_LIBRARY)
 else()
-    find_package_handle_standard_args(ANN DEFAULT_MSG
-                                      ANN_LIBRARY ANN_INCLUDE_DIR)
+  find_package_handle_standard_args(ANN DEFAULT_MSG
+                                    ANN_LIBRARY ANN_INCLUDE_DIR)
 endif()
 
 mark_as_advanced(ANN_INCLUDE_DIR ANN_LIBRARY ANN_RUNTIME_LIBRARY)

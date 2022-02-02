@@ -1473,6 +1473,16 @@ docker_push_ubuntu-21.10:
   needs:
     - docker_build_ubuntu-21.10
 
+lint_cmake_format:
+  image: "$CI_REGISTRY_IMAGE/ubuntu-21.10:$CI_COMMIT_SHA"
+  stage: test
+  needs:
+    - docker_build_ubuntu-21.10
+  script:
+    - git ls-files -z -- '**/CMakeLists.txt' '**/*.cmake' '**/*.cmake.in' | xargs -0 -- python3 -m cmakelang.lint
+  except:
+    - tags
+
 lint_pylint:
   image: "$CI_REGISTRY_IMAGE/ubuntu-21.10:$CI_COMMIT_SHA"
   stage: test

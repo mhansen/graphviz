@@ -1,16 +1,16 @@
 if(GD_FOUND)
 
-add_library(gvplugin_gd SHARED
+  add_library(gvplugin_gd SHARED
     # Source files
     gvdevice_gd.c
     gvloadimage_gd.c
     gvplugin_gd.c
-	gvrender_gd.c
-	gvrender_gd_vrml.c
-	gvtextlayout_gd.c
-)
+    gvrender_gd.c
+    gvrender_gd_vrml.c
+    gvtextlayout_gd.c
+  )
 
-target_include_directories(gvplugin_gd PRIVATE
+  target_include_directories(gvplugin_gd PRIVATE
     ${GRAPHVIZ_LIB_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${GRAPHVIZ_LIB_DIR}/cdt
@@ -19,43 +19,42 @@ target_include_directories(gvplugin_gd PRIVATE
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pathplan
     ${GD_INCLUDE_DIRS}
-)
+  )
 
-target_link_libraries(gvplugin_gd
+  target_link_libraries(gvplugin_gd
     cgraph
     gvc
     ${GD_LIBRARIES}
-)
+  )
 
-# Installation location of library files
-install(
+  # Installation location of library files
+  install(
     TARGETS gvplugin_gd
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-)
+  )
 
-# Include DLLs with this library on Windows
-if(WIN32 AND install_win_dependency_dlls)
+  # Include DLLs with this library on Windows
+  if(WIN32 AND install_win_dependency_dlls)
     install(
-        FILES
-            ${GD_RUNTIME_LIBRARIES}
-        DESTINATION ${BINARY_INSTALL_DIR}
+      FILES
+        ${GD_RUNTIME_LIBRARIES}
+      DESTINATION ${BINARY_INSTALL_DIR}
     )
-endif()
+  endif()
 
-# Specify library version and soversion
-set_target_properties(gvplugin_gd PROPERTIES
+  # Specify library version and soversion
+  set_target_properties(gvplugin_gd PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0
     SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
-)
+  )
 
-
-if(MINGW)
+  if(MINGW)
     # work around https://gitlab.kitware.com/cmake/cmake/-/issues/21716
     set_target_properties(gvplugin_gd PROPERTIES
-        RUNTIME_OUTPUT_NAME gvplugin_gd-${GRAPHVIZ_PLUGIN_VERSION}
+      RUNTIME_OUTPUT_NAME gvplugin_gd-${GRAPHVIZ_PLUGIN_VERSION}
     )
-endif()
+  endif()
 
 endif()

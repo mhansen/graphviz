@@ -1,23 +1,23 @@
 add_definitions(-DNEATOGEN_EXPORTS)
 
 add_library(osage STATIC
-    # Header files
-    osage.h
+  # Header files
+  osage.h
 
-    # Source files
-    osageinit.c
+  # Source files
+  osageinit.c
 )
 
 target_include_directories(osage PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pack
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+  ${GRAPHVIZ_LIB_DIR}
+  ${GRAPHVIZ_LIB_DIR}/cdt
+  ${GRAPHVIZ_LIB_DIR}/cgraph
+  ${GRAPHVIZ_LIB_DIR}/common
+  ${GRAPHVIZ_LIB_DIR}/gvc
+  ${GRAPHVIZ_LIB_DIR}/pack
+  ${GRAPHVIZ_LIB_DIR}/pathplan
 )
 
 target_link_libraries(osage PRIVATE
-    cgraph
+  cgraph
 )
