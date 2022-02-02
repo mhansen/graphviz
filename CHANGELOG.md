@@ -68,6 +68,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: Graphviz headers no longer (re-)define the C constants `INT_MIN`
   and `INT_MAX`. Replacements can be found in the C standard library’s limits.h.
 - **Breaking**: Graphviz headers no longer define the constant `_DUMMY_ELEM`.
+- **Breaking**: The `-m` memory test option to Graphviz command-line programs
+  has been deprecated. Tools such as
+  [Leak Sanitizer](https://clang.llvm.org/docs/LeakSanitizer.html) are a more
+  effective modern way of diagnosing memory safety issues.
 - The Ming plugin that produced Shockwave files has been removed. This format
   was EOLed by Adobe in April 2019. #2160
 - CentOS 7 packages now include libmingle and the `mingle` program.
