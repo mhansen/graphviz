@@ -9,7 +9,7 @@ import pytest
 sys.path.append(os.path.dirname(__file__))
 from gvtest import run_c #pylint: disable=C0413
 
-@pytest.mark.parametrize("utility", ("bitarray", "sprint"))
+@pytest.mark.parametrize("utility", ("bitarray", "sprint", "stack"))
 def test_utility(utility: str):
   """run the given utility’s unit tests"""
 
