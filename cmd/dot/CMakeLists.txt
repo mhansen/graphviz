@@ -121,7 +121,8 @@ else()
 endif()
 
 if(NOT CMAKE_CROSSCOMPILING)
-  install(
-    SCRIPT ../../cmake/configure_plugins.cmake
-  )
+  configure_file(
+    ../../cmake/configure_plugins.cmake.in configure_plugins.cmake @ONLY)
+
+  install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/configure_plugins.cmake)
 endif()

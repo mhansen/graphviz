@@ -78,6 +78,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The tclpkg Makefile no longer suppresses `-fstack-clash-protection` nor
   other compiler options containing `-x`
 - Lefty is no longer enabled in the portable source tarball.
+- on Linux, the CMake build system uses the standard `GNUInstallDirs` to locate
+  target installation paths
 
 ### Fixed
 
@@ -93,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - expr misinterprets `<<` and `>>` #2103
 - stdout and stderr are not flushed at exit on MinGW #2178
 - Gvedit on macOS now understands the `-?` help command line argument
+- CMAKE_LIBRARY_PATH is not honored #1973
 
 ## [2.50.0] – 2021-12-04
 
