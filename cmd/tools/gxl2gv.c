@@ -12,6 +12,7 @@
 #include    "convert.h"
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/exit.h>
+#include    <common/memory.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <ctype.h>
@@ -51,16 +52,6 @@ struct slist {
     slist *next;
     char buf[1];
 };
-
-static void *gcalloc(size_t nmemb, size_t size)
-{
-    char *rv = calloc(nmemb, size);
-    if (rv == NULL) {
-	fprintf(stderr, "out of memory\n");
-	graphviz_exit(EXIT_FAILURE);
-    }
-    return rv;
-}
 
 /* Round x up to next multiple of y, which is a power of 2 */
 #define ROUND2(x,y) (((x) + ((y)-1)) & ~((y)-1))
