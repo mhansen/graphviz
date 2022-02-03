@@ -211,7 +211,7 @@ static char *mapLookup(Dt_t * nm, char *name)
 	return 0;
 }
 
-static int isAnonGraph(char *name)
+static int isAnonGraph(const char *name)
 {
     if (*name++ != '%')
 	return 0;
@@ -468,7 +468,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    push_subg(g);
 	} else {
 	    Agraph_t *subg;
-	    if (isAnonGraph((char *) id)) {
+	    if (isAnonGraph(id)) {
 		static int anon_id = 1;
 		snprintf(buf, sizeof(buf), "%%%d", anon_id++);
 		id = buf;
