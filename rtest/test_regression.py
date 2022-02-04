@@ -487,7 +487,7 @@ def test_1449():
 
   # start Graphviz
   with subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull],
-                        stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                        stdin=subprocess.PIPE,
                         stderr=subprocess.PIPE, universal_newlines=True) as p:
 
     # pass it some input that uses the SVG color scheme
@@ -1311,6 +1311,29 @@ def test_2138(examine: str):
       "junk chars" in result, "token 3456789 not found or has trailing garbage"
     assert "// tok[7]    >>012<<   should NOT include trailing spaces or "     \
       "junk chars" in result, "token 012 not found or has trailing garbage"
+
+@pytest.mark.xfail(strict=True) # FIXME
+def test_2179():
+  """
+  processing a label with an empty line should not yield a warning
+  https://gitlab.com/graphviz/graphviz/-/issues/2179
+  """
+
+  # a graph containing a label with an empty line
+  input = 'digraph "" {\n' \
+          '  0 -> 1 [fontname="Lato",label=<<br/>1>]\n' \
+          '}'
+
+  # run a graph with an empty label through Graphviz
+  with subprocess.Popen(["dot", "-Tsvg", "-o", os.devnull],
+                        stdin=subprocess.PIPE, stderr=subprocess.PIPE,
+                        universal_newlines=True) as p:
+    _, stderr = p.communicate(input)
+
+    assert p.returncode == 0
+
+  assert "Warning: no hard-coded metrics for" not in stderr, \
+    "incorrect warning triggered"
 
 def test_package_version():
   """
