@@ -11,7 +11,9 @@
 
 #include    "convert.h"
 #include    <cgraph/agxbuf.h>
+#include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
+#include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
 #include    <getopt.h>
 #ifdef HAVE_EXPAT
@@ -47,55 +49,45 @@ static char **Files;
 static int Verbose;
 static char* gname = "";
 
-typedef struct slist slist;
-struct slist {
-    slist *next;
-    char buf[1];
-};
-
 #define NEW(t)      malloc(sizeof(t))
 #define N_NEW(n,t)  calloc((n),sizeof(t))
-/* Round x up to next multiple of y, which is a power of 2 */
-#define ROUND2(x,y) (((x) + ((y)-1)) & ~((y)-1))
 
-static void pushString(slist ** stk, const char *s)
-{
-    int sz = ROUND2(sizeof(slist) + strlen(s), sizeof(void *));
-    slist *sp = N_NEW(sz, char);
-    strcpy(sp->buf, s);
-    sp->next = *stk;
-    *stk = sp;
+static void pushString(gv_stack_t *stk, const char *s) {
+
+  // duplicate the string we will push
+  char *copy = gv_strdup(s);
+
+  // push this onto the stack
+  stack_push_or_exit(stk, copy);
 }
 
-static void popString(slist ** stk)
-{
-    slist *sp = *stk;
-    if (!sp) {
-	fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
-	graphviz_exit(1);
-    }
-    *stk = sp->next;
-    free(sp);
+static void popString(gv_stack_t *stk) {
+
+  if (UNLIKELY(stack_is_empty(stk))) {
+    fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
+    graphviz_exit(EXIT_FAILURE);
+  }
+
+  char *s = stack_pop(stk);
+  free(s);
 }
 
-static char *topString(slist * stk)
-{
-    if (!stk) {
-	fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
-	graphviz_exit(1);
-    }
-    return stk->buf;
+static char *topString(gv_stack_t *stk) {
+
+  if (UNLIKELY(stack_is_empty(stk))) {
+    fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
+    graphviz_exit(EXIT_FAILURE);
+  }
+
+  return stack_top(stk);
 }
 
-static void freeString(slist * stk)
-{
-    slist *sp;
-
-    while (stk) {
-	sp = stk->next;
-	free(stk);
-	stk = sp;
-    }
+static void freeString(gv_stack_t *stk) {
+  while (!stack_is_empty(stk)) {
+    char *s = stack_pop(stk);
+    free(s);
+  }
+  stack_reset(stk);
 }
 
 typedef struct {
@@ -103,7 +95,7 @@ typedef struct {
     agxbuf xml_attr_value;
     agxbuf composite_buffer;
     char* gname;
-    slist *elements;
+    gv_stack_t elements;
     int listen;
     int closedElementType;
     int globalAttrType;
@@ -155,7 +147,7 @@ static userdata_t *genUserdata(char* dfltname)
     agxbinit(&(user->xml_attr_value), SMALLBUF, 0);
     agxbinit(&(user->composite_buffer), SMALLBUF, 0);
     user->listen = FALSE;
-    user->elements = 0;
+    user->elements = (gv_stack_t){0};
     user->closedElementType = TAG_NONE;
     user->globalAttrType = TAG_NONE;
     user->compositeReadState = FALSE;
@@ -171,7 +163,7 @@ static void freeUserdata(userdata_t * ud)
     agxbfree(&(ud->xml_attr_name));
     agxbfree(&(ud->xml_attr_value));
     agxbfree(&(ud->composite_buffer));
-    freeString(ud->elements);
+    freeString(&ud->elements);
     free(ud);
 }
 
@@ -532,7 +524,7 @@ static void endElementHandler(void *userData, const char *name)
 	popString(&ud->elements);
 	ud->closedElementType = TAG_GRAPH;
     } else if (strcmp(name, "node") == 0) {
-	char *ele_name = topString(ud->elements);
+	char *ele_name = topString(&ud->elements);
 	if (ud->closedElementType == TAG_GRAPH) {
 	    Agnode_t *node = agnode(root, ele_name, 0);
 	    if (node) agdelete(root, node);
