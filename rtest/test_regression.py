@@ -505,15 +505,11 @@ def test_1594():
   """
 
   # locate our associated test case in this directory
-# FIXME: remove cwd workaround when
-# https://gitlab.com/graphviz/graphviz/-/issues/1780 is fixed
-#    input = Path(__file__).parent / "1594.gvpr"
-  input = "1594.gvpr"
+  input = Path(__file__).parent / "1594.gvpr"
 
   # run GVPR with our (malformed) input program
   with subprocess.Popen(["gvpr", "-f", input], stdin=subprocess.PIPE,
-                        cwd=os.path.join(os.path.dirname(__file__)),
-                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                        stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
                         universal_newlines=True) as p:
     _, stderr = p.communicate()
 
