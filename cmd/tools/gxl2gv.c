@@ -12,6 +12,7 @@
 #include    "convert.h"
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/exit.h>
+#include    <common/memory.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <ctype.h>
@@ -51,16 +52,6 @@ struct slist {
     slist *next;
     char buf[1];
 };
-
-static void *gcalloc(size_t nmemb, size_t size)
-{
-    char *rv = calloc(nmemb, size);
-    if (rv == NULL) {
-	fprintf(stderr, "out of memory\n");
-	graphviz_exit(EXIT_FAILURE);
-    }
-    return rv;
-}
 
 /* Round x up to next multiple of y, which is a power of 2 */
 #define ROUND2(x,y) (((x) + ((y)-1)) & ~((y)-1))
@@ -211,7 +202,7 @@ static char *mapLookup(Dt_t * nm, char *name)
 	return 0;
 }
 
-static int isAnonGraph(char *name)
+static int isAnonGraph(const char *name)
 {
     if (*name++ != '%')
 	return 0;
@@ -468,7 +459,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    push_subg(g);
 	} else {
 	    Agraph_t *subg;
-	    if (isAnonGraph((char *) id)) {
+	    if (isAnonGraph(id)) {
 		static int anon_id = 1;
 		snprintf(buf, sizeof(buf), "%%%d", anon_id++);
 		id = buf;

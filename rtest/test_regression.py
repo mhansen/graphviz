@@ -1235,6 +1235,17 @@ def test_2089_2():
   # run it
   _, _ = run_c(c_src, link=["cgraph"])
 
+@pytest.mark.skipif(shutil.which("dot2gxl") is None,
+                    reason="dot2gxl not available")
+@pytest.mark.xfail(strict=True) # FIXME
+def test_2092():
+  """
+  an empty node ID should not cause a dot2gxl NULL pointer dereference
+  https://gitlab.com/graphviz/graphviz/-/issues/2092
+  """
+  subprocess.run(["dot2gxl", "-d"], input='<node id="">', check=True,
+                 universal_newlines=True)
+
 @pytest.mark.skipif(os.environ.get("build_system") == "msbuild" and
                     os.environ.get("configuration") == "Debug",
                     reason="Graphviz built with MSBuild in Debug mode has an "
