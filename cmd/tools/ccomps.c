@@ -20,11 +20,11 @@
 #include <stdlib.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/stack.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
 
 #define N_NEW(n,t) gv_calloc((n), sizeof(t))
-#define NEW(t) gv_alloc(sizeof(t))
 
 typedef struct {
     Agrec_t h;
@@ -230,63 +230,20 @@ static void init(int argc, char *argv[])
 	Files = argv;
 }
 
-typedef struct blk_t {
-    Agnode_t **data;
-    Agnode_t **endp;
-    struct blk_t *prev;
-    struct blk_t *next;
-} blk_t;
-
-typedef struct {
-    blk_t *fstblk;
-    blk_t *curblk;
-    Agnode_t **curp;
-} stk_t;
-
-
-#define SMALLBUF 1024
-#define BIGBUF 1000000
-
-static Agnode_t *base[SMALLBUF];
-static blk_t Blk;
-static stk_t Stk;
-
-static void initStk(void)
-{
-    Blk.data = base;
-    Blk.endp = Blk.data + SMALLBUF;
-    Stk.curblk = Stk.fstblk = &Blk;
-    Stk.curp = Stk.curblk->data;
-}
+static gv_stack_t Stk;
 
 static void push(Agnode_t * np)
 {
-    if (Stk.curp == Stk.curblk->endp) {
-	if (Stk.curblk->next == NULL) {
-	    blk_t *bp = NEW(blk_t);
-	    bp->prev = Stk.curblk;
-	    bp->next = NULL;
-	    bp->data = N_NEW(BIGBUF, Agnode_t *);
-	    bp->endp = bp->data + BIGBUF;
-	    Stk.curblk->next = bp;
-	}
-	Stk.curblk = Stk.curblk->next;
-	Stk.curp = Stk.curblk->data;
-    }
-    ND_mark(np) = -1;
-    *Stk.curp++ = np;
+  ND_mark(np) = -1;
+  stack_push_or_exit(&Stk, np);
 }
 
 static Agnode_t *pop(void)
 {
-    if (Stk.curp == Stk.curblk->data) {
-	if (Stk.curblk == Stk.fstblk)
-	    return 0;
-	Stk.curblk = Stk.curblk->prev;
-	Stk.curp = Stk.curblk->endp;
-    }
-    Stk.curp--;
-    return *Stk.curp;
+  if (stack_is_empty(&Stk)) {
+    return NULL;
+  }
+  return stack_pop(&Stk);
 }
 
 static int dfs(Agraph_t * g, Agnode_t * n, Agraph_t * out)
@@ -733,7 +690,6 @@ static int process(Agraph_t * g, char* graphName)
 
     aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), TRUE);
     bindGraphinfo (g);
-    initStk();
 
     if (useClusters)
 	return processClusters(g, graphName);
@@ -881,6 +837,8 @@ int main(int argc, char *argv[])
 	r += process(g, chkGraphName(g));
 	agclose(g);
     }
+
+    stack_reset(&Stk);
 
     graphviz_exit(r);
 }
