@@ -12,6 +12,7 @@
 #include    "convert.h"
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/exit.h>
+#include    <cgraph/stack.h>
 #include    <common/memory.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
@@ -24,7 +25,6 @@
 #define XML_STATUS_ERROR 0
 #endif
 
-#define STACK_DEPTH	32
 #define BUFSIZE		20000
 #define SMALLBUF	1000
 #define NAMEBUF		100
@@ -115,8 +115,7 @@ static Agraph_t *G;		/* Current graph */
 static Agnode_t *N;		/* Set if Current_class == TAG_NODE */
 static Agedge_t *E;		/* Set if Current_class == TAG_EDGE */
 
-static int GSP;
-static Agraph_t *Gstack[STACK_DEPTH];
+static gv_stack_t Gstack;
 
 typedef struct {
     Dtlink_t link;
@@ -212,26 +211,34 @@ static int isAnonGraph(const char *name)
 
 static void push_subg(Agraph_t * g)
 {
-    if (GSP == STACK_DEPTH) {
-	fprintf(stderr, "gxl2gv: Too many (> %d) nestings of subgraphs\n",
-		STACK_DEPTH);
-	graphviz_exit(1);
-    } else if (GSP == 0)
-	root = g;
-    G = Gstack[GSP++] = g;
+  // insert the new graph
+  stack_push_or_exit(&Gstack, g);
+
+  // save the root if this is the first graph
+  if (stack_size(&Gstack) == 1) {
+    root = g;
+  }
+
+  // update the top graph
+  G = g;
 }
 
 static Agraph_t *pop_subg(void)
 {
-    Agraph_t *g;
-    if (GSP == 0) {
-	fprintf(stderr, "gxl2gv: Gstack underflow in graph parser\n");
-	graphviz_exit(1);
-    }
-    g = Gstack[--GSP];
-    if (GSP > 0)
-	G = Gstack[GSP - 1];
-    return g;
+  // is the stack empty?
+  if (stack_is_empty(&Gstack)) {
+    fprintf(stderr, "gxl2gv: Gstack underflow in graph parser\n");
+    graphviz_exit(EXIT_FAILURE);
+  }
+
+  // pop the top graph
+  Agraph_t *g = stack_pop(&Gstack);
+
+  // update the top graph
+  if (!stack_is_empty(&Gstack))
+    G = stack_top(&Gstack);
+
+  return g;
 }
 
 static Agnode_t *bind_node(const char *name)
@@ -444,7 +451,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    edgeMode = atts[pos];
 	}
 
-	if (GSP == 0) {
+	if (stack_is_empty(&Gstack)) {
 	    if (strcmp(edgeMode, "directed") == 0) {
 		g = agopen((char *) id, Agdirected, &AgDefaultDisc);
 	    } else if (strcmp(edgeMode, "undirected") == 0) {
@@ -727,6 +734,7 @@ Agraph_t *gxl_to_gv(FILE * gxlFile)
     } while (!done);
     XML_ParserFree(parser);
     freeUserdata(udata);
+    stack_reset(&Gstack);
 
     return root;
 }
