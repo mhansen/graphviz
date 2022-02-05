@@ -148,7 +148,7 @@ static int isLegal(char *p)
  */
 static void insertFn(Agnode_t * n, void *state)
 {
-    agsubnode((Agraph_t *) state,n,1);
+    agsubnode(state, n, 1);
 }
 
 /* markFn:
