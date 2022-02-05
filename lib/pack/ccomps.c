@@ -137,7 +137,7 @@ static int isLegal(char *p)
     unsigned char c;
 
     while ((c = *(unsigned char *) p++)) {
-	if ((c != '_') && !isalnum(c))
+	if (c != '_' && !isalnum(c))
 	    return 0;
     }
 

@@ -98,7 +98,7 @@ static int cmpf(const void *X, const void *Y)
     const ginfo *x = *(ginfo *const *) X;
     const ginfo *y = *(ginfo *const *) Y;
     /* flip order to get descending array */
-    return (y->perim - x->perim);
+    return y->perim - x->perim;
 }
 
 /* fillLine:
@@ -314,7 +314,7 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 	for (i = 1; i <= GD_n_cluster(g); i++) {
 	    subg = GD_clust(g)[i];
 	    BF2B(GD_bb(subg), bb);
-	    if ((bb.UR.x > bb.LL.x) && (bb.UR.y > bb.LL.y)) {
+	    if (bb.UR.x > bb.LL.x && bb.UR.y > bb.LL.y) {
 		MOVEPT(bb.LL);
 		MOVEPT(bb.UR);
 		bb.LL.x -= margin;
@@ -752,7 +752,7 @@ polyRects(int ng, boxf* gs, pack_info * pinfo)
     ps = newPS();
     places = N_NEW(ng, point);
     for (i = 0; i < ng; i++)
-	placeGraph(i, sinfo[i], ps, places + (sinfo[i]->index),
+	placeGraph(i, sinfo[i], ps, places + sinfo[i]->index,
 		       stepSize, pinfo->margin, gs);
 
     free(sinfo);
@@ -874,17 +874,16 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
     if (fixed) {
 	for (i = 0; i < ng; i++) {
 	    if (fixed[i])
-		placeFixed(sinfo[i], ps, places + (sinfo[i]->index),
-			   center);
+		placeFixed(sinfo[i], ps, places + sinfo[i]->index, center);
 	}
 	for (i = 0; i < ng; i++) {
 	    if (!fixed[i])
-		placeGraph(i, sinfo[i], ps, places + (sinfo[i]->index),
+		placeGraph(i, sinfo[i], ps, places + sinfo[i]->index,
 			   stepSize, pinfo->margin, bbs);
 	}
     } else {
 	for (i = 0; i < ng; i++)
-	    placeGraph(i, sinfo[i], ps, places + (sinfo[i]->index),
+	    placeGraph(i, sinfo[i], ps, places + sinfo[i]->index,
 		       stepSize, pinfo->margin, bbs);
     }
 
@@ -930,7 +929,7 @@ point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
 	    pinfo->vals = N_NEW(ng, packval_t);
 	    for (i = 0; i < ng; i++) {
 		s = agget (gs[i], "sortv");
-		if (s && (sscanf (s, "%d", &v) > 0) && (v >= 0))
+		if (s && sscanf(s, "%d", &v) > 0 && v >= 0)
 		    pinfo->vals[i] = v;
 	    }
 
@@ -949,7 +948,7 @@ point *
 putRects(int ng, boxf* bbs, pack_info* pinfo)
 {
     if (ng <= 0) return NULL;
-    if ((pinfo->mode == l_node) || (pinfo->mode == l_clust)) return NULL;
+    if (pinfo->mode == l_node || pinfo->mode == l_clust) return NULL;
     if (pinfo->mode == l_graph)
 	return polyRects (ng, bbs, pinfo);
     else if (pinfo->mode == l_array)
@@ -1296,7 +1295,7 @@ parsePackModeInfo(char* p, pack_mode dflt, pack_info* pinfo)
 	    }
 	    else if (strneq(p, ASPECT, SLEN(ASPECT))) {
 		pinfo->mode = l_aspect;
-		if ((sscanf (p + SLEN(ARRAY), "%f", &v)>0) && (v > 0))
+		if (sscanf(p + SLEN(ARRAY), "%f", &v) > 0 && v > 0)
 		    pinfo->aspect = v;
 		else
 		    pinfo->aspect = 1;
@@ -1357,9 +1356,9 @@ int getPack(Agraph_t * g, int not_def, int dflt)
     int v = not_def;
 
     if ((p = agget(g, "pack"))) {
-	if ((sscanf(p, "%d", &i) == 1) && (i >= 0))
+	if (sscanf(p, "%d", &i) == 1 && i >= 0)
 	    v = i;
-	else if ((*p == 't') || (*p == 'T'))
+	else if (*p == 't' || *p == 'T')
 	    v = dflt;
     }
 
