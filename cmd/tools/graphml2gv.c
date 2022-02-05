@@ -187,8 +187,7 @@ static void addToMap(Dt_t * map, char *name, char *uniqueName)
     objp->unique_name = strdup(uniqueName);
 }
 
-static char *mapLookup(Dt_t * nm, char *name)
-{
+static char *mapLookup(Dt_t *nm, const char *name) {
     namev_t *objp = dtmatch(nm, name);
     if (objp)
 	return objp->unique_name;
@@ -196,8 +195,7 @@ static char *mapLookup(Dt_t * nm, char *name)
 	return 0;
 }
 
-static int isAnonGraph(char *name)
-{
+static int isAnonGraph(const char *name) {
     if (*name++ != '%')
 	return 0;
     while (isdigit((int)*name))
@@ -446,7 +444,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    push_subg(g);
 	} else {
 	    Agraph_t *subg;
-	    if (isAnonGraph((char *) id)) {
+	    if (isAnonGraph(id)) {
 		static int anon_id = 1;
 		snprintf(buf, sizeof(buf), "%%%d", anon_id++);
 		id = buf;
@@ -483,11 +481,11 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	if (pos > 0)
 	    head = atts[pos];
 
-	tname = mapLookup(ud->nameMap, (char *) tail);
+	tname = mapLookup(ud->nameMap, tail);
 	if (tname)
 	    tail = tname;
 
-	tname = mapLookup(ud->nameMap, (char *) head);
+	tname = mapLookup(ud->nameMap, head);
 	if (tname)
 	    head = tname;
 

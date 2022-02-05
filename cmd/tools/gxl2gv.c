@@ -193,8 +193,7 @@ static void addToMap(Dt_t * map, char *name, char *uniqueName)
     objp->unique_name = strdup(uniqueName);
 }
 
-static char *mapLookup(Dt_t * nm, char *name)
-{
+static char *mapLookup(Dt_t *nm, const char *name) {
     namev_t *objp = dtmatch(nm, name);
     if (objp)
 	return objp->unique_name;
@@ -504,11 +503,11 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	if (pos > 0)
 	    head = atts[pos];
 
-	tname = mapLookup(ud->nameMap, (char *) tail);
+	tname = mapLookup(ud->nameMap, tail);
 	if (tname)
 	    tail = tname;
 
-	tname = mapLookup(ud->nameMap, (char *) head);
+	tname = mapLookup(ud->nameMap, head);
 	if (tname)
 	    head = tname;
 
