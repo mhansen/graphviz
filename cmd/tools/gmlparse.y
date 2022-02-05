@@ -24,18 +24,15 @@
 #include <agxbuf.h>
 #include <assert.h>
 #include <cgraph/exit.h>
+#include <cgraph/stack.h>
 
 #define NEW(t)       malloc(sizeof(t))
-#define N_NEW(n,t)   calloc((n),sizeof(t))
-#define RALLOC(size,ptr,type) realloc(ptr,(size)*sizeof(type))
 
 static gmlgraph* G;
 static gmlnode* N;
 static gmledge* E;
 static Dt_t* L;
-static Dt_t** liststk;
-static size_t liststk_sz;
-static size_t liststk_cnt;
+static gv_stack_t liststk;
 
 static void free_attr (Dt_t*d, gmlattr* p, Dtdisc_t* ds); /* forward decl */
 static char *sortToStr(unsigned short sort);
@@ -109,22 +106,13 @@ static Dtdisc_t graphDisc = {
 };
 
 static void
-initstk (void)
-{
-    liststk_sz = 10;
-    liststk_cnt = 0;
-    liststk = N_NEW(liststk_sz, Dt_t*);
-}
-
-static void
 cleanup (void)
 {
-    if (liststk) {
-	for (size_t i = 0; i < liststk_cnt; i++)
-	    dtclose (liststk[i]);
-	free (liststk);
-	liststk = NULL;
+    while (!stack_is_empty(&liststk)) {
+	Dt_t *dt = stack_pop(&liststk);
+	dtclose(dt);
     }
+    stack_reset(&liststk);
     if (L) {
 	dtclose (L);
 	L = NULL;
@@ -149,11 +137,7 @@ pushAlist (void)
     Dt_t* lp = dtopen (&attrDisc, Dtqueue);
 
     if (L) {
-	if (liststk_cnt == liststk_sz) {
-	    liststk_sz *= 2;
-	    liststk = RALLOC(liststk_sz, liststk, Dt_t*);
-	}
-	liststk[liststk_cnt++] = L;
+	stack_push_or_exit(&liststk, L);
     }
     L = lp;
 }
@@ -163,8 +147,8 @@ popAlist (void)
 {
     Dt_t* lp = L;
 
-    if (liststk_cnt)
-	L = liststk[--liststk_cnt];
+    if (!stack_is_empty(&liststk))
+	L = stack_pop(&liststk);
     else
 	L = NULL;
 
@@ -777,7 +761,6 @@ gml_to_gv (char* name, FILE* fp, int cnt, int* errors)
     else
 	initgmlscan(0);
 		
-    initstk();
     L = NULL;
     pushAlist ();
     gmlparse ();
