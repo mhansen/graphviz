@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/stack.h>
 #include <ingraphs/ingraphs.h>
 
 #include <getopt.h>
@@ -66,42 +67,6 @@ static void setval(Agnode_t *n, unsigned v) {
     ((Agnodeinfo_t *)n->base.data)->val = v;
 }
 
-/********* stack ***********/
-typedef struct {
-    Agnode_t **data;
-    Agnode_t **ptr;
-} Stack;
-
-static void initStack(Stack * sp, int sz)
-{
-    sp->data = malloc(sz * sizeof(Agnode_t *));
-    sp->ptr = sp->data;
-}
-
-static void freeStack(Stack * sp)
-{
-    free(sp->data);
-}
-
-static void push(Stack * sp, Agnode_t * n)
-{
-    *(sp->ptr++) = n;
-}
-
-static Agnode_t *top(Stack * sp)
-{
-    return *(sp->ptr - 1);
-}
-
-static Agnode_t *pop(Stack * sp)
-{
-    sp->ptr--;
-    return *sp->ptr;
-}
-
-
-/********* end stack ***********/
-
 typedef struct {
     unsigned Comp;
     unsigned ID;
@@ -138,8 +103,7 @@ static void nodeInduce(Agraph_t * g, Agraph_t* map)
     }
 }
 
-static unsigned visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
-{
+static unsigned visit(Agnode_t *n, Agraph_t *map, gv_stack_t *sp, sccstate *st) {
     unsigned int m, min;
     Agnode_t *t;
     Agraph_t *subg;
@@ -147,7 +111,7 @@ static unsigned visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
 
     min = ++st->ID;
     setval(n, min);
-    push(sp, n);
+    stack_push_or_exit(sp, n);
 
     for (e = agfstout(n->root, n); e; e = agnxtout(n->root, e)) {
 	t = aghead(e);
@@ -160,9 +124,9 @@ static unsigned visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
     }
 
     if (getval(n) == min) {
-	if (!wantDegenerateComp && top(sp) == n) {
+	if (!wantDegenerateComp && stack_top(sp) == n) {
 	    setval(n, INF);
-	    pop(sp);
+	    stack_pop(sp);
 	} else {
 	    char name[32];
 	    Agraph_t *G = agraphof(n);;
@@ -171,7 +135,7 @@ static unsigned visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
 	    agbindrec(subg, "scc_graph", sizeof(Agraphinfo_t), true);
 	    setrep(subg, agnode(map, name, TRUE));
 	    do {
-		t = pop(sp);
+		t = stack_pop(sp);
 		agsubnode(subg, t, TRUE);
 		setval(t, INF);
 		setscc(t, subg);
@@ -247,7 +211,7 @@ static void process(Agraph_t * G)
     int nc = 0;
     float nontree_frac = 0;
     int Maxdegree = 0;
-    Stack stack;
+    gv_stack_t stack = {0};
     sccstate state;
 
     aginit(G, AGRAPH, "scc_graph", sizeof(Agraphinfo_t), TRUE);
@@ -258,12 +222,11 @@ static void process(Agraph_t * G)
     if (Verbose)
 	nc = countComponents(G, &Maxdegree, &nontree_frac);
 
-    initStack(&stack, agnnodes(G) + 1);
     map = agopen("scc_map", Agdirected, (Agdisc_t *) 0);
     for (n = agfstnode(G); n; n = agnxtnode(G, n))
 	if (getval(n) == 0)
 	    visit(n, map, &stack, &state);
-    freeStack(&stack);
+    stack_reset(&stack);
     if (!StatsOnly)
 	agwrite(map, outfp);
     agclose(map);
