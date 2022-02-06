@@ -111,7 +111,7 @@ portable-source:
             metrics: metrics.txt
     except:
         - tags
-    image: macos-11-xcode-12
+    image: macos-12-xcode-13
     # Most submitters don't have access to the macOS runners, and if they try
     # to run macOS pipeline jobs, the jobs will hang forever.  This variable is
     # only set on repos that have access to macOS runners, in GitLab repo
@@ -1166,7 +1166,7 @@ macos-autotools-test:
           artifacts: true
     tags:
         - shared-macos-amd64
-    image: macos-11-xcode-12
+    image: macos-12-xcode-13
     # Most submitters don't have access to the macOS runners, and if they try
     # to run macOS pipeline jobs, the jobs will hang forever.  This variable is
     # only set on repos that have access to macOS runners, in GitLab repo
@@ -1276,7 +1276,7 @@ macos-cmake-test:
           artifacts: true
     tags:
         - shared-macos-amd64
-    image: macos-11-xcode-12
+    image: macos-12-xcode-13
     # Most submitters don't have access to the macOS runners, and if they try
     # to run macOS pipeline jobs, the jobs will hang forever.  This variable is
     # only set on repos that have access to macOS runners, in GitLab repo
