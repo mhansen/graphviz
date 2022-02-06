@@ -137,7 +137,7 @@ static int isLegal(char *p)
     unsigned char c;
 
     while ((c = *(unsigned char *) p++)) {
-	if ((c != '_') && !isalnum(c))
+	if (c != '_' && !isalnum(c))
 	    return 0;
     }
 
@@ -148,7 +148,7 @@ static int isLegal(char *p)
  */
 static void insertFn(Agnode_t * n, void *state)
 {
-    agsubnode((Agraph_t *) state,n,1);
+    agsubnode(state, n, 1);
 }
 
 /* markFn:
@@ -201,7 +201,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
     size_t c_cnt = 0;
     char buffer[SMALLBUF];
     char *name;
-    Agraph_t *out = 0;
+    Agraph_t *out = NULL;
     Agnode_t *n;
     Agraph_t **ccs;
     size_t len;
@@ -214,7 +214,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 
     if (agnnodes(g) == 0) {
 	*ncc = 0;
-	return 0;
+	return NULL;
     }
     name = setPrefix (pfx, &len, buffer, SMALLBUF);
 
@@ -305,7 +305,7 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
 
     if (agnnodes(g) == 0) {
 	*ncc = 0;
-	return 0;
+	return NULL;
     }
     name = setPrefix (pfx, &len, buffer, SMALLBUF);
 
@@ -369,7 +369,7 @@ dnodeOf (Agnode_t* v)
   if (ip)
     return ip->ptr.n;
   fprintf (stderr, "nodeinfo undefined\n");
-  return 0;
+  return NULL;
 }
 void
 dnodeSet (Agnode_t* v, Agnode_t* n)
@@ -432,7 +432,7 @@ static Agraph_t *deriveGraph(Agraph_t * g)
     Agnode_t *dn;
     Agnode_t *n;
 
-    dg = agopen("dg", Agstrictundirected, (Agdisc_t *) 0);
+    dg = agopen("dg", Agstrictundirected, NULL);
 
     deriveClusters (dg, g);
 
@@ -455,9 +455,9 @@ static Agraph_t *deriveGraph(Agraph_t * g)
 	    if (hd == tl)
 		continue;
 	    if (hd > tl)
-		agedge(dg, tl, hd, 0, 1);
+		agedge(dg, tl, hd, NULL, 1);
 	    else
-		agedge(dg, hd, tl, 0, 1);
+		agedge(dg, hd, tl, NULL, 1);
 	}
     }
 
@@ -543,14 +543,14 @@ mapClust(Agraph_t *cl)
  */
 static Agraph_t *projectG(Agraph_t * subg, Agraph_t * g, int inCluster)
 {
-    Agraph_t *proj = 0;
+    Agraph_t *proj = NULL;
     Agnode_t *n;
     Agnode_t *m;
     orig_t *op;
 
     for (n = agfstnode(subg); n; n = agnxtnode(subg, n)) {
 	if ((m = agfindnode(g, agnameof(n)))) {
-	    if (proj == 0) {
+	    if (proj == NULL) {
 		proj = agsubg(g, agnameof(subg), 1);
 	    }
 	    agsubnode(proj, m, 1);
@@ -626,7 +626,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
 
     if (agnnodes(g) == 0) {
 	*ncc = 0;
-	return 0;
+	return NULL;
     }
     
     /* Bind ccgraphinfo to graph and all subgraphs */
