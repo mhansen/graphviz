@@ -49,15 +49,21 @@ static void freeStack(PairStack * s)
     free(s->data);
 }
 
-#define push(s,x) { \
-	if (s->top>=s->max_size) { \
-		s->max_size *= 2; \
-		s->data = realloc(s->data, s->max_size*sizeof(Pair)); \
-	} \
-	s->data[s->top++] = x; \
+static void push(PairStack *s, Pair x) {
+  if (s->top >= s->max_size) {
+    s->max_size *= 2;
+    s->data = realloc(s->data, s->max_size * sizeof(Pair));
+  }
+  s->data[s->top++] = x;
 }
 
-#define pop(s,x) ((s->top==0) ? FALSE : (s->top--, x = s->data[s->top], TRUE))
+static bool pop(PairStack *s, Pair *x) {
+  if (s->top == 0)
+    return false;
+  --s->top;
+  *x = s->data[s->top];
+  return true;
+}
 
 #define sub(h,i) (h->data[i])
 
@@ -307,7 +313,7 @@ construct_graph(int n, PairStack * edges_stack, vtx_data ** New_graph)
     free(degrees);
 
     /* add all edges from stack */
-    while (pop(edges_stack, pair)) {
+    while (pop(edges_stack, &pair)) {
 	add_edge(new_graph, pair.left, pair.right);
     }
 }
