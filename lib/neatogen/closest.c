@@ -59,8 +59,6 @@ static void freeStack(PairStack * s)
 
 #define pop(s,x) ((s->top==0) ? FALSE : (s->top--, x = s->data[s->top], TRUE))
 
-#define read_top(h,x) ((s->top==0) ? FALSE : (x = s->data[s->top-1], TRUE))
-
 #define sub(h,i) (h->data[i])
 
 /* An auxulliary data structure (a heap) for 
