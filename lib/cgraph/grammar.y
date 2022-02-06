@@ -227,7 +227,7 @@ static gstack_t *push(gstack_t *s, Agraph_t *subg) {
 static gstack_t *pop(gstack_t *s)
 {
 	gstack_t *rv;
-	rv = S->down;
+	rv = s->down;
 	agfree(G,s);
 	return rv;
 }
