@@ -8,7 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
+#include <cgraph/stack.h>
 #include <neatogen/kkutils.h>
 #include <neatogen/closest.h>
 #include <stdbool.h>
@@ -31,41 +32,33 @@ typedef struct {
 #define LT(p,q) ((p).dist < (q).dist)
 #define EQ(p,q) ((p).dist == (q).dist)
 
-typedef struct {
-    Pair *data;
-    int max_size;
-    int top;
-} PairStack;
+static void push(gv_stack_t *s, Pair x) {
 
-static void initStack(PairStack * s, int n)
-{
-    s->data = N_GNEW(n, Pair);
-    s->max_size = n;
-    s->top = 0;
+  // copy the item to save it on the stack
+  Pair *copy = gv_alloc(sizeof(x));
+  *copy = x;
+
+  stack_push_or_exit(s, copy);
 }
 
-static void freeStack(PairStack * s)
-{
-    free(s->data);
-}
+static bool pop(gv_stack_t *s, Pair *x) {
 
-static void push(PairStack *s, Pair x) {
-  if (s->top >= s->max_size) {
-    s->max_size *= 2;
-    s->data = realloc(s->data, s->max_size * sizeof(Pair));
-  }
-  s->data[s->top++] = x;
-}
-
-static bool pop(PairStack *s, Pair *x) {
-  if (s->top == 0)
+  // is the stack empty?
+  if (stack_is_empty(s)) {
     return false;
-  --s->top;
-  *x = s->data[s->top];
+  }
+
+  // remove the top and pass it back to the caller
+  Pair *top = stack_pop(s);
+  *x = *top;
+
+  // discard the previously saved copy
+  free(top);
+
   return true;
 }
 
-#define sub(h,i) (h->data[i])
+#define sub(h,i) (*(Pair*)(h)->base[i])
 
 /* An auxulliary data structure (a heap) for 
  * finding the closest pair in the layout
@@ -170,10 +163,8 @@ static void insert(PairHeap * h, Pair edge)
     }
 }
 
-static void
-find_closest_pairs(double *place, int n, int num_pairs,
-		   PairStack * pairs_stack)
-{
+static void find_closest_pairs(double *place, int n, int num_pairs,
+                               gv_stack_t* pairs_stack) {
     /* Fill the stack 'pairs_stack' with 'num_pairs' closest pairs int the 1-D layout 'place' */
     int i;
     PairHeap heap;
@@ -267,37 +258,35 @@ static void add_edge(vtx_data * graph, int u, int v)
     }
 }
 
-static void
-construct_graph(int n, PairStack * edges_stack, vtx_data ** New_graph)
-{
+static void construct_graph(int n, gv_stack_t *edges_stack,
+                            vtx_data **New_graph) {
     /* construct an unweighted graph using the edges 'edges_stack' */
-    int i;
     vtx_data *new_graph;
 
     /* first compute new degrees and nedges; */
     int *degrees = N_GNEW(n, int);
-    int top = edges_stack->top;
-    int new_nedges = 2 * top + n;
+    size_t top = stack_size(edges_stack);
+    size_t new_nedges = 2 * top + n;
     Pair pair;
     int *edges = N_GNEW(new_nedges, int);
     float *weights = N_GNEW(new_nedges, float);
 
-    for (i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
 	degrees[i] = 1;		/* save place for the self loop */
     }
-    for (i = 0; i < top; i++) {
+    for (size_t i = 0; i < top; i++) {
 	pair = sub(edges_stack, i);
 	degrees[pair.left]++;
 	degrees[pair.right]++;
     }
 
     /* copy graph into new_graph: */
-    for (i = 0; i < new_nedges; i++) {
+    for (size_t i = 0; i < new_nedges; i++) {
 	weights[i] = 1.0;
     }
 
     *New_graph = new_graph = N_GNEW(n, vtx_data);
-    for (i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
 	new_graph[i].nedges = 1;
 	new_graph[i].ewgts = weights;
 #ifdef USE_STYLES
@@ -322,9 +311,8 @@ void
 closest_pairs2graph(double *place, int n, int num_pairs, vtx_data ** graph)
 {
     /* build a graph with with edges between the 'num_pairs' closest pairs in the 1-D space: 'place' */
-    PairStack pairs_stack;
-    initStack(&pairs_stack, num_pairs);
+    gv_stack_t pairs_stack = {0};
     find_closest_pairs(place, n, num_pairs, &pairs_stack);
     construct_graph(n, &pairs_stack, graph);
-    freeStack(&pairs_stack);
+    stack_reset(&pairs_stack);
 }
