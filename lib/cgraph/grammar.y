@@ -227,7 +227,7 @@ static gstack_t *push(gstack_t *s, Agraph_t *subg) {
 static gstack_t *pop(gstack_t *s)
 {
 	gstack_t *rv;
-	rv = S->down;
+	rv = s->down;
 	agfree(G,s);
 	return rv;
 }
@@ -521,13 +521,9 @@ static void newedge(Agnode_t *t, char *tport, Agnode_t *h, char *hport, char *ke
 
 static void startgraph(char *name, bool directed, bool strict)
 {
-	static Agdesc_t	req;	/* get rid of warnings */
-
 	if (G == NULL) {
 		SubgraphDepth = 0;
-		req.directed = directed;
-		req.strict = strict;
-		req.maingraph = TRUE;
+		Agdesc_t req = {.directed = directed, .strict = strict, .maingraph = true};
 		Ag_G_global = G = agopen(name,req,Disc);
 	}
 	else {
