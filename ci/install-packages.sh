@@ -52,16 +52,6 @@ else
         cp -rp build/* /usr/local
     else
         tar xvf ${DIR}/graphviz-${GV_VERSION}-rpms.tar.xz
-        rpm --install --force \
-            graphviz-${GV_VERSION}*.rpm \
-            graphviz-libs-${GV_VERSION}*.rpm \
-            graphviz-devel-${GV_VERSION}*.rpm \
-            graphviz-plugins-core-${GV_VERSION}*.rpm \
-            graphviz-plugins-x-${GV_VERSION}*.rpm \
-            graphviz-x-${GV_VERSION}*.rpm \
-            graphviz-gd-${GV_VERSION}*.rpm \
-            graphviz-qt-${GV_VERSION}*.rpm \
-            graphviz-plugins-gd-${GV_VERSION}*.rpm \
-            graphviz-nox-${GV_VERSION}*.rpm
+        rpm --install --force graphviz-*${GV_VERSION}*.rpm
     fi
 fi
