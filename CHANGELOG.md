@@ -83,6 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Breaking**: GVPR now typedefs `ssize_t` as `SSIZE_T` on Windows instead of
+  `int` #1804
 - fix detection of unavailable output format
 - SVG layout doesn't always respect requested size #1855
 - mismatched format string in `mingle`

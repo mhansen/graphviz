@@ -28,7 +28,8 @@ extern "C" {
 
 #include "cgraph.h"
 #ifdef _MSC_VER
-typedef int ssize_t;
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
 #endif
 
 /* Bits for flags variable in gvprstate_t.

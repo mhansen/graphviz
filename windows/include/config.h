@@ -276,5 +276,6 @@
 /* Define to `int' if <sys/types.h> does not define. */
 /* #undef pid_t */
 
-/* Define to `int' if <sys/types.h> does not define. */
-typedef int ssize_t;
+/* Define to `SSIZE_T' if <sys/types.h> does not define. */
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
