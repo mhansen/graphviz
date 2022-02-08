@@ -87,6 +87,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking**: GVPR now typedefs `ssize_t` as `SSIZE_T` on Windows instead of
   `int` #1804
+- **Breaking**: `vgpanecmd` in the TCL tclpathplan library no longer accepts
+  abbreviated commands (e.g. `r` for `rotate`) and commands must be given in
+  full #1961
 - fix detection of unavailable output format
 - SVG layout doesn't always respect requested size #1855
 - mismatched format string in `mingle`
