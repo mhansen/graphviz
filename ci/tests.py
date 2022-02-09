@@ -7,7 +7,11 @@ test cases that are only relevant to run in CI
 import os
 import platform
 import shutil
+import sys
 import pytest
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
+from gvtest import dot #pylint: disable=C0413
 
 @pytest.mark.parametrize("binary", [
   "acyclic",
@@ -138,3 +142,13 @@ def check_that_tool_does_not_exist(tool, os_id):
   """
   assert shutil.which(tool) is None, f"{tool} has been resurrected in the " \
     f'{os.getenv("build_system")} build on {os_id}. Please remove skip.'
+
+@pytest.mark.xfail(strict=os.getenv("build_system") == "cmake") # FIXME
+def test_1786():
+  """
+  png:gd format should be supported
+  https://gitlab.com/graphviz/graphviz/-/issues/1786
+  """
+
+  # run a trivial graph through Graphviz
+  dot("png:gd", source="digraph { a -> b; }")
