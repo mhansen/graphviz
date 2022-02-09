@@ -173,7 +173,7 @@ LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 %license COPYING
 %endif
 %doc COPYING AUTHORS CHANGELOG.md NEWS README
-%exclude %{_bindir}/dot_builtins
+%{_bindir}/dot_builtins
 %{_bindir}/acyclic
 %{_bindir}/bcomps
 %{_bindir}/ccomps
