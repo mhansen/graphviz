@@ -13,6 +13,12 @@ import pytest
 sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
 from gvtest import dot #pylint: disable=C0413
 
+def is_cmake() -> bool:
+  """
+  is the current CI environment a CMake job?
+  """
+  return os.getenv("build_system") == "cmake"
+
 @pytest.mark.parametrize("binary", [
   "acyclic",
   "bcomps",
@@ -143,7 +149,7 @@ def check_that_tool_does_not_exist(tool, os_id):
   assert shutil.which(tool) is None, f"{tool} has been resurrected in the " \
     f'{os.getenv("build_system")} build on {os_id}. Please remove skip.'
 
-@pytest.mark.xfail(strict=os.getenv("build_system") == "cmake") # FIXME
+@pytest.mark.xfail(strict=is_cmake()) # FIXME
 def test_1786():
   """
   png:gd format should be supported
