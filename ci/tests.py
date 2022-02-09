@@ -149,7 +149,9 @@ def check_that_tool_does_not_exist(tool, os_id):
   assert shutil.which(tool) is None, f"{tool} has been resurrected in the " \
     f'{os.getenv("build_system")} build on {os_id}. Please remove skip.'
 
-@pytest.mark.xfail(strict=is_cmake()) # FIXME
+@pytest.mark.xfail(is_cmake(),
+                   reason="png:gd unavailable when built with CMake",
+                   strict=True) # FIXME
 def test_1786():
   """
   png:gd format should be supported
