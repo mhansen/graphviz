@@ -101,7 +101,6 @@ static SparseMatrix ideal_distance_matrix(SparseMatrix A, int dim, double *x){
 
 StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int dim, double lambda0, double *x, 
 							  int ideal_dist_scheme){
-  /* use up to dist 2 neighbor */
   /* use up to dist 2 neighbor. This is used in overcoming pherical effect with ideal distance of
      2-neighbors equal graph distance etc.
    */
