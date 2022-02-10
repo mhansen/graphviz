@@ -12,7 +12,7 @@ from typing import List
 
 def run(args: List[str], cwd: Path): #pylint: disable=C0116
   print(f"+ {' '.join(str(x) for x in args)}")
-  subprocess.check_call(args, cwd=cwd)
+  subprocess.check_call(args, stderr=subprocess.STDOUT, cwd=cwd)
 
 def main(args: List[str]) -> int: #pylint: disable=C0116
 
