@@ -815,10 +815,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatri
   }
 }
 
-static SparseMatrix DistanceMatrix_restrict_cluster(int ncluster, int *clusterp, int *cluster, SparseMatrix P, SparseMatrix R, SparseMatrix D){
-  return NULL;
-}
-
 static SparseMatrix DistanceMatrix_restrict_matching(int *matching, SparseMatrix D){
   if (!D) return NULL;
   assert(0);/* not yet implemented! */
@@ -934,7 +930,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
                                              MATRIX_TYPE_REAL, sizeof(double));
     *R = SparseMatrix_transpose(*P);
 
-    *cD = DistanceMatrix_restrict_cluster(ncluster, clusterp, cluster, *P, *R, D);
+    *cD = NULL;
 
     *cA = SparseMatrix_multiply3(*R, A, *P); 
 
