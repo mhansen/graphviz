@@ -30,7 +30,7 @@ UniformStressSmoother UniformStressSmoother_new(int dim, SparseMatrix A, double 
   UniformStressSmoother sm;
   int i, j, k, m = A->m, *ia = A->ia, *ja = A->ja, *iw, *jw, *id, *jd;
   int nz;
-  double *d, *w, *a = (double*) A->a;
+  double *d, *w, *a = A->a;
   double diag_d, diag_w, dist, epsilon = 0.01;
 
   assert(SparseMatrix_is_symmetric(A, false));
@@ -57,7 +57,8 @@ UniformStressSmoother UniformStressSmoother_new(int dim, SparseMatrix A, double 
 
   iw = sm->Lw->ia; jw = sm->Lw->ja;
   id = sm->Lwd->ia; jd = sm->Lwd->ja;
-  w = (double*) sm->Lw->a; d = (double*) sm->Lwd->a;
+  w = sm->Lw->a;
+  d = sm->Lwd->a;
   iw[0] = id[0] = 0;
 
   nz = 0;
@@ -117,7 +118,7 @@ static SparseMatrix get_distance_matrix(SparseMatrix A, double scaling){
   } else {
     B = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   }
-  val = (double*) B->a;
+  val = B->a;
   if (scaling != 1) for (i = 0; i < B->nz; i++) val[i] *= scaling;
   return B;
 }

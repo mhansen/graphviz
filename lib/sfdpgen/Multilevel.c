@@ -262,7 +262,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode(SparseMatrix A, in
   assert(SparseMatrix_is_symmetric(A, false));
   assert(A->type == MATRIX_TYPE_REAL);
 
-  a = (double*) A->a;
+  a = A->a;
   if (!randomize){
     for (i = 0; i < m; i++){
       first = TRUE;
@@ -351,7 +351,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
   *ncluster = 0;
   (*clusterp)[0] = 0;
   nz = 0;
-  a = (double*) A->a;
+  a = A->a;
   if (!randomize){
     for (i = 0; i < m; i++){
       if (matched[i] == MATCHED || node_degree(i) != 1) continue;
@@ -530,7 +530,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   *ncluster = 0;
   (*clusterp)[0] = 0;
   nz = 0;
-  a = (double*) A->a;
+  a = A->a;
 
   for (i = 0; i < nsuper; i++){
     if (superp[i+1] - superp[i] <= 1) continue;
@@ -632,9 +632,8 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
 }
 
 static int scomp(const void *s1, const void *s2){
-  const double *ss1, *ss2;
-  ss1 = (const double*) s1;
-  ss2 = (const double*) s2;
+  const double *ss1 = s1;
+  const double *ss2 = s2;
 
   if ((ss1)[1] > (ss2)[1]){
     return -1;
@@ -673,7 +672,7 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
   *ncluster = 0;
   (*clusterp)[0] = 0;
   nz = 0;
-  a = (double*) A->a;
+  a = A->a;
 
   p = random_permutation(m);
   for (ii = 0; ii < m; ii++){
@@ -760,7 +759,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatri
   assert(SparseMatrix_is_symmetric(A, false));
   assert(A->type == MATRIX_TYPE_REAL);
 
-  a = (double*) A->a;
+  a = A->a;
   if (!randomize){
     for (i = 0; i < m; i++){
       first = TRUE;
@@ -931,7 +930,8 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
      }
     }
     assert(nzc == n);
-    *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, (void *) val, MATRIX_TYPE_REAL, sizeof(double));
+    *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, val,
+                                             MATRIX_TYPE_REAL, sizeof(double));
     *R = SparseMatrix_transpose(*P);
 
     *cD = DistanceMatrix_restrict_cluster(ncluster, clusterp, cluster, *P, *R, D);
@@ -995,7 +995,8 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
     }
     assert(nc == nmatch);
     assert(nzc == n);
-    *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, (void *) val, MATRIX_TYPE_REAL, sizeof(double));
+    *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, val,
+                                             MATRIX_TYPE_REAL, sizeof(double));
     *R = SparseMatrix_transpose(*P);
     *cA = SparseMatrix_multiply3(*R, A, *P); 
     /*
@@ -1060,7 +1061,8 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
       }
     }
 
-    *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, (void *) val, MATRIX_TYPE_REAL, sizeof(double));
+    *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, val,
+                                             MATRIX_TYPE_REAL, sizeof(double));
     *R = SparseMatrix_transpose(*P);
     *cA = SparseMatrix_multiply3(*R, A, *P); 
     if (!*cA) goto RETURN;

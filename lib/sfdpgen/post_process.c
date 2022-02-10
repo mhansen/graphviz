@@ -49,7 +49,7 @@ static SparseMatrix ideal_distance_matrix(SparseMatrix A, int dim, double *x){
     D->type = MATRIX_TYPE_REAL;
     D->a = N_GNEW(D->nz,double);
   }
-  d = (double*) D->a;
+  d = D->a;
 
   mask = N_GNEW(D->m,int);
   for (i = 0; i < D->m; i++) mask[i] = -1;
@@ -174,7 +174,8 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
 
   iw = sm->Lw->ia; jw = sm->Lw->ja;
 
-  w = (double*) sm->Lw->a; d = (double*) sm->Lwd->a;
+  w = sm->Lw->a;
+  d = sm->Lwd->a;
 
   id = sm->Lwd->ia; jd = sm->Lwd->ja;
   iw[0] = id[0] = 0;
@@ -314,7 +315,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
 
   ia = A->ia;
   ja = A->ja;
-  a = (double*) A->a;
+  a = A->a;
 
 
   sm = MALLOC(sizeof(struct StressMajorizationSmoother_struct));
@@ -339,7 +340,8 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
 
   iw = sm->Lw->ia; jw = sm->Lw->ja;
   id = sm->Lwd->ia; jd = sm->Lwd->ja;
-  w = (double*) sm->Lw->a; d = (double*) sm->Lwd->a;
+  w = sm->Lw->a;
+  d = sm->Lwd->a;
   iw[0] = id[0] = 0;
 
   nz = 0;
@@ -609,9 +611,9 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
   if (!y) goto RETURN;
 
   id = Lwd->ia; jd = Lwd->ja;
-  d = (double*) Lwd->a;
-  dd = (double*) Lwdd->a;
-  w = (double*) Lw->a;
+  d = Lwd->a;
+  dd = Lwdd->a;
+  w = Lw->a;
   iw = Lw->ia; jw = Lw->ja;
 
 #ifdef DEBUG_PRINT
@@ -812,7 +814,8 @@ TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double lambda0, d
 
   iw = sm->Lw->ia; jw = sm->Lw->ja;
 
-  w = (double*) sm->Lw->a; d = (double*) sm->Lwd->a;
+  w = sm->Lw->a;
+  d = sm->Lwd->a;
 
   for (i = 0; i < m; i++){
     diag_d = diag_w = 0;
@@ -881,7 +884,7 @@ SpringSmoother SpringSmoother_new(SparseMatrix A, int dim, spring_electrical_con
   assert(SparseMatrix_is_symmetric(A, false));
 
   ID = ideal_distance_matrix(A, dim, x);
-  dd = (double*) ID->a;
+  dd = ID->a;
 
   sm = N_GNEW(1,struct SpringSmoother_struct);
   mask = N_GNEW(m,int);
@@ -931,7 +934,7 @@ SpringSmoother SpringSmoother_new(SparseMatrix A, int dim, spring_electrical_con
   }
 
   id = sm->D->ia; jd = sm->D->ja;
-  d = (double*) sm->D->a;
+  d = sm->D->a;
   id[0] = 0;
 
   nz = 0;

@@ -81,7 +81,7 @@ static void Operator_matmul_delete(Operator o){
 
 static double* Operator_diag_precon_apply(Operator o, double *x, double *y){
   int i, m;
-  double *diag = (double*) o->data;
+  double *diag = o->data;
   m = (int) diag[0];
   diag++;
   for (i = 0; i < m; i++) y[i] = x[i]*diag[i];
@@ -93,7 +93,7 @@ Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, double alpha){
   Operator o;
   double *diag;
   int i, j, m = A->m, *ia = A->ia, *ja = A->ja;
-  double *a = (double*) A->a;
+  double *a = A->a;
 
   assert(A->type == MATRIX_TYPE_REAL);
 
@@ -101,7 +101,7 @@ Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, double alpha){
 
   o = MALLOC(sizeof(struct Operator_struct));
   o->data = MALLOC(sizeof(double)*(m + 1));
-  diag = (double*) o->data;
+  diag = o->data;
 
   diag[0] = m;
   diag++;
@@ -122,7 +122,7 @@ static Operator Operator_diag_precon_new(SparseMatrix A){
   Operator o;
   double *diag;
   int i, j, m = A->m, *ia = A->ia, *ja = A->ja;
-  double *a = (double*) A->a;
+  double *a = A->a;
 
   assert(A->type == MATRIX_TYPE_REAL);
 
@@ -130,7 +130,7 @@ static Operator Operator_diag_precon_new(SparseMatrix A){
 
   o = N_GNEW(1,struct Operator_struct);
   o->data = N_GNEW((A->m + 1),double);
-  diag = (double*) o->data;
+  diag = o->data;
 
   diag[0] = m;
   diag++;
@@ -245,7 +245,9 @@ static double* jacobi(SparseMatrix A, int dim, double *x0, double *rhs, int maxi
   y = MALLOC(sizeof(double)*n);
   b = MALLOC(sizeof(double)*n);
   assert(A->type == MATRIX_TYPE_REAL);
-  ia = A->ia; ja = A->ja; a = (double*) A->a;
+  ia = A->ia;
+  ja = A->ja;
+  a = A->a;
 
   for (k = 0; k < dim; k++){
     for (i = 0; i < n; i++) {
