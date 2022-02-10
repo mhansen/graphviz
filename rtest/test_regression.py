@@ -1515,3 +1515,21 @@ def test_gvmap_fclose():
 
   # pass this through gvmap
   subprocess.run(["gvmap"], input=input.encode("utf-8"), check=True)
+
+@pytest.mark.xfail(strict=True) # FIXME
+def test_bitarray():
+  """run the bitarray unit tests"""
+
+  # locate the bitarray unit tests
+  src = Path(__file__).parent.resolve() / "../lib/cgraph/test_bitarray.c"
+  assert src.exists()
+
+  # locate lib directory that needs to be in the include path
+  lib = Path(__file__).parent.resolve() / "../lib"
+
+  # extra C flags this compilation needs
+  cflags = ["-I", lib]
+  if platform.system() != "Windows":
+    cflags += ["-std=gnu99", "-Wall", "-Wextra", "-Werror"]
+
+  _, _ = run_c(src, cflags=cflags)
