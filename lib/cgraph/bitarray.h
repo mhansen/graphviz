@@ -113,7 +113,7 @@ static inline void bitarray_set(bitarray_t *self, size_t index, bool value) {
   if (value) {
     base[index / 8] |= (uint8_t)(UINT8_C(1) << (index % 8));
   } else {
-    base[index / 8] ^= (uint8_t)(UINT8_C(1) << (index % 8));
+    base[index / 8] &= (uint8_t)~(UINT8_C(1) << (index % 8));
   }
 }
 

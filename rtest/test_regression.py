@@ -1516,7 +1516,6 @@ def test_gvmap_fclose():
   # pass this through gvmap
   subprocess.run(["gvmap"], input=input.encode("utf-8"), check=True)
 
-@pytest.mark.xfail(strict=True) # FIXME
 def test_bitarray():
   """run the bitarray unit tests"""
 
