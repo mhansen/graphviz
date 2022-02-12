@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <float.h>
 #include <neatogen/multispline.h>
 #include <neatogen/delaunay.h>
 #include <neatogen/neatoprocs.h>
@@ -1277,7 +1278,7 @@ typedef struct {
 
 #define N_DAD(n) dad[n]
 #define E_WT(e) (e->dist)
-#define UNSEEN -MAXFLOAT
+#define UNSEEN (-FLT_MAX)
 
 /* triPath:
  * Find the shortest path with lengths in g from
