@@ -81,14 +81,18 @@ def dot(T: str, source_file: Optional[Path] = None, source: Optional[str] = None
     "one of `source_file` or `source` needs to be provided"
 
   # is the output format a textual format?
+  output_is_text = T in ("cmapx", "json", "pic", "svg", "xdot")
+
   kwargs = {}
-  if T in ("cmapx", "json", "pic", "svg", "xdot"):
+  if output_is_text:
     kwargs["universal_newlines"] = True
 
   args = ["dot", f"-T{T}"]
 
   if source_file is not None:
     args += [source_file]
+  elif not output_is_text:
+    kwargs["input"] = source.encode("utf-8")
   else:
     kwargs["input"] = source
 
