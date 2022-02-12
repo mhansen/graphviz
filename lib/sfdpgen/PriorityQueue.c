@@ -96,7 +96,7 @@ int PriorityQueue_pop(PriorityQueue q, int *i, int *gain){
   *gain = gain_max = q->gain_max;
   (q->count)--;
   l = (q->buckets)[gain_max];
-  data = (int*) DoubleLinkedList_get_data(l);
+  data = DoubleLinkedList_get_data(l);
   *i = data[0];
 
   DoubleLinkedList_delete_element(l, free, &((q->buckets)[gain_max]));

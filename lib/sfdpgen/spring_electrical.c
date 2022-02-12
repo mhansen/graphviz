@@ -352,8 +352,8 @@ static double get_angle(double *x, int dim, int i, int j){
 }
 
 static int comp_real(const void *x, const void *y){
-  const double *xx = (const double*) x;
-  const double *yy = (const double*) y;
+  const double *xx = x;
+  const double *yy = y;
 
   if (*xx > *yy){
     return 1;
@@ -1483,7 +1483,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   ja = A->ja;
   id = D->ia;
   jd = D->ja;
-  d = (double*) D->a;
+  d = D->a;
 
   if (ctrl->random_start){
     srand(ctrl->random_seed);
