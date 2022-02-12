@@ -1082,11 +1082,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
     lap1 = N_NEW(lap_length, float);
 
 
-#ifdef USE_MAXFLOAT
-    old_stress = MAXFLOAT;	/* at least one iteration */
-#else
     old_stress = MAXDOUBLE;	/* at least one iteration */
-#endif
     if (Verbose) {
 	fprintf(stderr, ": %.2f sec\n", elapsed_sec());
 	fprintf(stderr, "Solving model: ");
