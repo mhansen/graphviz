@@ -186,9 +186,6 @@ extern "C" {
 #define EINVAL	22
 #endif
 /* function to get the decimal point for local environment */
-#ifdef MAXFLOAT			/* we don't need these, so we zap them to avoid compiler warnings */
-#undef MAXFLOAT
-#endif
 #include	<locale.h>
 #define SFSETLOCALE(decimal,thousand) \
 	{ struct lconv*	lv; \

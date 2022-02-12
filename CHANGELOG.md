@@ -72,6 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   has been deprecated. Tools such as
   [Leak Sanitizer](https://clang.llvm.org/docs/LeakSanitizer.html) are a more
   effective modern way of diagnosing memory safety issues.
+- **Breaking**: Graphviz headers no longer define the constant `MAXFLOAT`. A
+  replacement is `FLT_MAX` in the C standard library’s float.h.
 - The Ming plugin that produced Shockwave files has been removed. This format
   was EOLed by Adobe in April 2019. #2160
 - CentOS 7 packages now include libmingle and the `mingle` program.
