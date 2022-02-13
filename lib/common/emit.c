@@ -3383,7 +3383,7 @@ static void emit_begin_graph(GVJ_t * job, graph_t * g)
     gvrender_begin_graph(job, g);
 }
 
-static void emit_end_graph(GVJ_t * job, graph_t * g)
+static void emit_end_graph(GVJ_t * job)
 {
     gvrender_end_graph(job);
     pop_obj_state(job);
@@ -3516,7 +3516,7 @@ void emit_graph(GVJ_t * job, graph_t * g)
 	if (numPhysicalLayers (job) > 1)
 	    gvrender_end_layer(job);
     } 
-    emit_end_graph(job, g);
+    emit_end_graph(job);
 }
 
 /* support for stderr_once */
