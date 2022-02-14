@@ -5,13 +5,14 @@
 import argparse
 import os
 from pathlib import Path
+import shlex
 import shutil
 import subprocess
 import sys
 from typing import List
 
 def run(args: List[str], cwd: Path): #pylint: disable=C0116
-  print(f"+ {' '.join(str(x) for x in args)}")
+  print(f"+ {' '.join(shlex.quote(str(x)) for x in args)}")
   subprocess.check_call(args, stderr=subprocess.STDOUT, cwd=cwd)
 
 def main(args: List[str]) -> int: #pylint: disable=C0116
