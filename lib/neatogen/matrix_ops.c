@@ -585,7 +585,7 @@ double max_absf(int n, float *vector)
     float max_val = -1e30f;
     for (i = 0; i < n; i++)
 	if (fabs(vector[i]) > max_val)
-	    max_val = (float) (fabs(vector[i]));
+	    max_val = fabsf(vector[i]);
 
     return max_val;
 }
