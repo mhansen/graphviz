@@ -28,9 +28,6 @@
 				   by d_{ij}^{-2} otherwise, they are normalized by d_{ij}^{-1}
 				 */
 
- /* relevant when using sparse distance matrix not within subspace */
-#define smooth_pivots true
-
 /* dimensionality of subspace; relevant 
  * when optimizing within subspace) 
  */
