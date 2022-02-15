@@ -793,18 +793,18 @@ def test_1898():
 
 @pytest.mark.xfail(strict=not is_ndebug_defined()) # FIXME
 def test_1902():
-  '''
+  """
   test a segfault from https://gitlab.com/graphviz/graphviz/-/issues/1902 has
   not reappeared
-  '''
+  """
 
   # locate our associated test case in this directory
-  input = Path(__file__).parent / '1902.dot'
-  assert input.exists(), 'unexpectedly missing test case'
+  input = Path(__file__).parent / "1902.dot"
+  assert input.exists(), "unexpectedly missing test case"
 
   # ask Graphviz to process it, which should generate a segfault if this bug
   # has been reintroduced
-  dot('svg', input)
+  dot("svg", input)
 
 # root directory of this checkout
 ROOT = Path(__file__).parent.parent.resolve()
