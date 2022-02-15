@@ -804,7 +804,7 @@ def test_1902():
 
   # ask Graphviz to process it, which should generate a segfault if this bug
   # has been reintroduced
-  subprocess.check_call(['dot', '-Tsvg', '-o', os.devnull, input])
+  dot('svg', input)
 
 # root directory of this checkout
 ROOT = Path(__file__).parent.parent.resolve()
