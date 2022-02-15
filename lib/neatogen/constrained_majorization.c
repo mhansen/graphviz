@@ -273,7 +273,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     for (i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * n;
 	for (j = 0; j < n; j++) {
-	    coords[i][j] = (float) (d_coords[i][j]);
+	    coords[i][j] = (float)d_coords[i][j];
 	}
     }
 

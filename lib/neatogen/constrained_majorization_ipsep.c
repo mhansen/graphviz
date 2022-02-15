@@ -252,7 +252,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     for (i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * n;
 	for (j = 0; j < n; j++) {
-	    coords[i][j] = j < orig_n ? (float) (d_coords[i][j]) : 0;
+	    coords[i][j] = j < orig_n ? (float)d_coords[i][j] : 0;
 	}
     }
 

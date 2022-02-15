@@ -306,7 +306,7 @@ void vecscale(double *vec1, int beg, int end, double alpha, double *vec2)
 /* Returns 2-norm of a double n-vector over range. */
 double norm(double *vec, int beg, int end)
 {
-    return (sqrt(dot(vec, beg, end, vec)));
+    return sqrt(dot(vec, beg, end, vec));
 }
 
 void orthog1(int n, double *vec	/* vector to be orthogonalized against 1 */

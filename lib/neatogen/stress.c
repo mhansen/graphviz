@@ -63,14 +63,14 @@ static double compute_stressf(float **coords, float *lap, int dim, int n, int ex
 	    if (exp == 2) {
 #ifdef Dij2
 		Dij = 1.0 / sqrt(lap[count]);
-		sum += (Dij - dist) * (Dij - dist) * (lap[count]);
+		sum += (Dij - dist) * (Dij - dist) * lap[count];
 #else
 		Dij = 1.0 / lap[count];
-		sum += (Dij - dist) * (Dij - dist) * (lap[count]);
+		sum += (Dij - dist) * (Dij - dist) * lap[count];
 #endif
 	    } else {
 		Dij = 1.0 / lap[count];
-		sum += (Dij - dist) * (Dij - dist) * (lap[count]);
+		sum += (Dij - dist) * (Dij - dist) * lap[count];
 	    }
 	}
     }
@@ -579,7 +579,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	/* random initialization */
 	for (k = 0; k < dim; k++) {
 	    for (i = 0; i < subspace_dim; i++) {
-		directions[k][i] = (double) (rand()) / RAND_MAX;
+		directions[k][i] = (double) rand() / RAND_MAX;
 	    }
 	}
     }
@@ -764,7 +764,7 @@ float *compute_apsp_packed(vtx_data * graph, int n)
     for (i = 0; i < n; i++) {
 	bfs(i, graph, n, Di, &Q);
 	for (j = i; j < n; j++) {
-	    Dij[count++] = ((float) Di[j]);
+	    Dij[count++] = (float)Di[j];
 	}
     }
     free(Di);
@@ -954,14 +954,14 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	** Layout initialization **
 	**************************/
 
-    if (smart_ini && (n > 1)) {
+    if (smart_ini && n > 1) {
 	havePinned = 0;
 	/* optimize layout quickly within subspace */
 	/* perform at most 50 iterations within 30-D subspace to 
 	   get an estimate */
 	if (sparse_stress_subspace_majorization_kD(graph, n, nedges_graph,
 					       d_coords, dim, smart_ini, exp,
-					       (model == MODEL_SUBSET), 50,
+					       model == MODEL_SUBSET, 50,
 					       neighborhood_radius_subspace,
 					       num_pivots_stress) < 0) {
 	    iterations = -1;
@@ -990,7 +990,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
     }
     if (Verbose)
 	fprintf(stderr, ": %.2f sec", elapsed_sec());
-    if ((n == 1) || (maxi == 0))
+    if (n == 1 || maxi == 0)
 	return 0;
 
     if (Verbose) {
@@ -1003,7 +1003,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
     for (i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * n;
 	for (j = 0; j < n; j++) {
-	    coords[i][j] = ((float) d_coords[i][j]);
+	    coords[i][j] = (float)d_coords[i][j];
 	}
     }
 
@@ -1011,7 +1011,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
     /* which is \sum_{i<j} w_{ij}d_{ij}^2 */
     if (exp) {
 #ifdef Dij2
-	constant_term = ((float) n * (n - 1) / 2);
+	constant_term = (float)n * (n - 1) / 2;
 #else
 	constant_term = 0;
 	for (count = 0, i = 0; i < n - 1; i++) {
@@ -1205,7 +1205,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 		}
 	    }
 	}
-	if (Verbose && (iterations % 5 == 0)) {
+	if (Verbose && iterations % 5 == 0) {
 	    fprintf(stderr, "%.3f ", new_stress);
 	    if ((iterations + 5) % 50 == 0)
 		fprintf(stderr, "\n");
