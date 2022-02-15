@@ -179,7 +179,7 @@ static double l2dist (pointf p0, pointf p1)
 /* analyze current path, creating pathpoints array
  * turn all curves into lines
  */
-static vararr_t* pathtolines (bezier* bez, double initwid)
+static vararr_t* pathtolines (bezier* bez)
 {
     int i, j, step;
     double seglen, linelen = 0;
@@ -259,7 +259,7 @@ stroke_t* taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, i
     int i, l, n;
     int pathcount, bevel;
     double direction=0, direction_2=0;
-    vararr_t* arr = pathtolines (bez, initwid);
+    vararr_t* arr = pathtolines (bez);
     pathpoint* pathpoints;
     pathpoint cur_point, last_point, next_point;
     double x=0, y=0, dist;
