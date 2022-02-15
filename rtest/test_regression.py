@@ -627,16 +627,6 @@ def test_1783():
 
   assert ret != -signal.SIGSEGV, "Graphviz segfaulted"
 
-@pytest.mark.xfail(strict=os.getenv("build_system") == "cmake") # FIXME
-def test_1786():
-  """
-  png:gd format should be supported
-  https://gitlab.com/graphviz/graphviz/-/issues/1786
-  """
-
-  # run a trivial graph through Graphviz
-  dot("png:gd", source="digraph { a -> b; }")
-
 @pytest.mark.skipif(shutil.which("gvedit") is None, reason="Gvedit not available")
 def test_1813():
   """

@@ -44,6 +44,12 @@ typedef int ssize_t;
 #cmakedefine HAVE_ANN
 #cmakedefine HAVE_EXPAT
 #cmakedefine HAVE_LIBGD
+#cmakedefine HAVE_GD_PNG
+#cmakedefine HAVE_GD_JPEG
+#cmakedefine HAVE_GD_XPM
+#cmakedefine HAVE_GD_FONTCONFIG
+#cmakedefine HAVE_GD_FREETYPE
+#cmakedefine HAVE_GD_GIF
 #cmakedefine HAVE_ZLIB
 
 // Values
