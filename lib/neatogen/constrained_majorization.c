@@ -86,8 +86,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     if (graph[0].edists != NULL) {
 	for (i = 0; i < n; i++) {
 	    for (j = 1; j < graph[i].nedges; j++) {
-		directionalityExist = directionalityExist
-		    || (graph[i].edists[j] != 0);
+		directionalityExist |= graph[i].edists[j] != 0;
 	    }
 	}
     }
@@ -418,8 +417,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	converged =
 	    fabs(new_stress - old_stress) / fabs(old_stress + 1e-10) <
 	    Epsilon;
-	converged = converged || (iterations > 1
-				  && new_stress > old_stress);
+	converged |= iterations > 1 && new_stress > old_stress;
 	/* in first iteration we allowed stress increase, which 
 	 * might result ny imposing constraints
 	 */
