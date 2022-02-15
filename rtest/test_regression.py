@@ -799,8 +799,8 @@ def test_1902():
   '''
 
   # locate our associated test case in this directory
-  input = os.path.join(os.path.dirname(__file__), '1902.dot')
-  assert os.path.exists(input), 'unexpectedly missing test case'
+  input = Path(__file__).parent / '1902.dot'
+  assert input.exists(), 'unexpectedly missing test case'
 
   # ask Graphviz to process it, which should generate a segfault if this bug
   # has been reintroduced
