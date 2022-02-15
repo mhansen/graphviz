@@ -543,7 +543,7 @@ void vectors_scalar_multf(int n, float *vector, float alpha, float *result)
 {
     int i;
     for (i = 0; i < n; i++) {
-	result[i] = (float) vector[i] * alpha;
+	result[i] = vector[i] * alpha;
     }
 }
 
