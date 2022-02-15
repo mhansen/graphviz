@@ -1779,7 +1779,6 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
     obj->emit_state = EMIT_NDRAW;
 
     if (flags & GVRENDER_DOES_Z) {
-        /* obj->z = late_double(n, N_z, 0.0, -MAXFLOAT); */
 	if (GD_odim(agraphof(n)) >=3)
             obj->z = POINTS(ND_pos(n)[2]);
 	else
@@ -2518,8 +2517,6 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
     }
 
     if (flags & GVRENDER_DOES_Z) {
-        /* obj->tail_z = late_double(agtail(e), N_z, 0.0, -1000.0); */
-        /* obj->head_z = late_double(aghead(e), N_z, 0.0, -MAXFLOAT); */
 	if (GD_odim(agraphof(agtail(e))) >=3) {
             obj->tail_z = POINTS(ND_pos(agtail(e))[2]);
             obj->head_z = POINTS(ND_pos(aghead(e))[2]);

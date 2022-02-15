@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <float.h>
 #include <neatogen/neato.h>
 #include <neatogen/dijkstra.h>
 #include <neatogen/bfs.h>
@@ -1082,11 +1082,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
     lap1 = N_NEW(lap_length, float);
 
 
-#ifdef USE_MAXFLOAT
-    old_stress = MAXFLOAT;	/* at least one iteration */
-#else
     old_stress = MAXDOUBLE;	/* at least one iteration */
-#endif
     if (Verbose) {
 	fprintf(stderr, ": %.2f sec\n", elapsed_sec());
 	fprintf(stderr, "Solving model: ");
@@ -1122,8 +1118,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	    invert_sqrt_vec(len, dist_accumulator);
 	    /* detect overflows */
 	    for (j = 0; j < len; j++) {
-		if (dist_accumulator[j] >= MAXFLOAT
-		    || dist_accumulator[j] < 0) {
+		if (dist_accumulator[j] >= FLT_MAX || dist_accumulator[j] < 0) {
 		    dist_accumulator[j] = 0;
 		}
 	    }

@@ -43,10 +43,6 @@ extern "C" {
 #define MAXDOUBLE	1.7976931348623157e+308
 #endif
 
-#ifndef MAXFLOAT
-#define MAXFLOAT	((float)3.40282347e+38)  // exact value: 0x1.fffffep+127f
-#endif
-
 #ifdef BETWEEN
 #undef BETWEEN
 #endif
