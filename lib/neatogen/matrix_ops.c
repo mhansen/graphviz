@@ -611,11 +611,8 @@ void invert_vec(int n, float *vec)
 void sqrt_vec(int n, float *vec)
 {
     int i;
-    double d;
     for (i = 0; i < n; i++) {
-	/* do this in two steps to avoid a bug in gcc-4.00 on AIX */
-	d = sqrt(vec[i]);
-	vec[i] = (float) d;
+	vec[i] = (float) sqrt(vec[i]);
     }
 }
 
