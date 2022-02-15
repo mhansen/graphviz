@@ -348,19 +348,16 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	     */
 	    for (k = 0; k < dim; k++) {
 		set_vector_valf(len, coords[k][i], tmp_coords);
-		vectors_mult_additionf(len, tmp_coords, -1,
-				       coords[k] + i + 1);
+		vectors_mult_additionf(len, tmp_coords, -1, coords[k] + i + 1);
 		square_vec(len, tmp_coords);
-		vectors_additionf(len, tmp_coords, dist_accumulator,
-				  dist_accumulator);
+		vectors_additionf(len, tmp_coords, dist_accumulator, dist_accumulator);
 	    }
 
 	    /* convert to 1/d_{ij} */
 	    invert_sqrt_vec(len, dist_accumulator);
 	    /* detect overflows */
 	    for (j = 0; j < len; j++) {
-		if (dist_accumulator[j] >= FLT_MAX
-		    || dist_accumulator[j] < 0) {
+		if (dist_accumulator[j] >= FLT_MAX || dist_accumulator[j] < 0) {
 		    dist_accumulator[j] = 0;
 		}
 	    }
