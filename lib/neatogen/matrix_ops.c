@@ -624,8 +624,9 @@ void sqrt_vecf(int n, float *source, float *target)
     int i;
     float v;
     for (i = 0; i < n; i++) {
-	if ((v = source[i]) >= 0.0)
+	if ((v = source[i]) >= 0.0) {
 	    target[i] = (float) sqrt(v);
+	}
     }
 }
 
@@ -634,7 +635,8 @@ void invert_sqrt_vec(int n, float *vec)
     int i;
     float v;
     for (i = 0; i < n; i++) {
-	if ((v = vec[i]) > 0.0)
+	if ((v = vec[i]) > 0.0) {
 	    vec[i] = 1.0f / (float) sqrt(v);
+	}
     }
 }
