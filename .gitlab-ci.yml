@@ -39,8 +39,7 @@ portable-source:
     script:
         - logfile=`mktemp`
         - ci/build.sh |& tee $logfile
-        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" > metrics.txt
-        - cat metrics.txt
+        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
     artifacts:
         when: on_success
         expire_in: 1 week
@@ -60,8 +59,7 @@ portable-source:
     script:
         - logfile=`mktemp`
         - ci/build.sh |& tee $logfile
-        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" > metrics.txt
-        - cat metrics.txt
+        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
     artifacts:
         when: on_success
         expire_in: 1 week
@@ -95,8 +93,7 @@ portable-source:
         - export PATH="/usr/local/opt/bison/bin:$PATH"
         - logfile=`mktemp`
         - ci/build.sh 2>&1 | tee $logfile
-        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" > metrics.txt
-        - cat metrics.txt
+        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
     artifacts:
         when: on_success
         expire_in: 1 week
@@ -148,8 +145,7 @@ portable-source:
         - windows/bin/setup-build-utilities.ps1 2>&1 | tee $logfile
         - python ci/build_windows.py --build-system $env:build_system --platform $Env:project_platform --configuration $env:configuration 2>&1 | tee -a $logfile
         - $warnings_count = (Select-String -Pattern " warning " -Path $logfile).length
-        - echo "$CI_JOB_NAME-warnings $warnings_count" > metrics.txt
-        - cat metrics.txt
+        - echo "$CI_JOB_NAME-warnings $warnings_count" | tee metrics.txt
         - python gen_version.py --output GRAPHVIZ_VERSION
         # Package
         - $Env:GV_VERSION=$( cat GRAPHVIZ_VERSION )
@@ -422,8 +418,7 @@ out-of-source-build:
     script:
         - logfile=`mktemp`
         - ci/out-of-source-build.sh |& tee $logfile
-        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" > metrics.txt
-        - cat metrics.txt
+        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
     needs:
         - job: docker_build_ubuntu-21.10
           artifacts: false
@@ -1496,8 +1491,7 @@ lint_pylint:
   script:
     - logfile=`mktemp`
     - python3 -m pylint --rcfile=.pylintrc `find . -name '*.py' | xargs` --exit-zero |& tee $logfile
-    - echo "$CI_JOB_NAME-warnings `egrep -c '\<[CRWEF][[:digit:]]{4}\>' $logfile`" > metrics.txt
-    - cat metrics.txt
+    - echo "$CI_JOB_NAME-warnings `egrep -c '\<[CRWEF][[:digit:]]{4}\>' $logfile`" | tee metrics.txt
     - python3 -m pylint --rcfile=.pylintrc --disable=fixme `find . -name '*.py' | xargs`
   artifacts:
     when: on_success
