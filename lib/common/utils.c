@@ -974,6 +974,7 @@ static int cmpItem(Dt_t * d, void *p1[], void *p2[], Dtdisc_t * disc)
  */
 static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
 {
+    (void)d;
     item *newp = NEW(item);
 
     (void)disc;
