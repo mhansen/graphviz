@@ -86,8 +86,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     if (graph[0].edists != NULL) {
 	for (i = 0; i < n; i++) {
 	    for (j = 1; j < graph[i].nedges; j++) {
-		directionalityExist = directionalityExist
-		    || (graph[i].edists[j] != 0);
+		directionalityExist |= graph[i].edists[j] != 0;
 	    }
 	}
     }
@@ -273,7 +272,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     for (i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * n;
 	for (j = 0; j < n; j++) {
-	    coords[i][j] = (float) (d_coords[i][j]);
+	    coords[i][j] = (float)d_coords[i][j];
 	}
     }
 
@@ -349,19 +348,16 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	     */
 	    for (k = 0; k < dim; k++) {
 		set_vector_valf(len, coords[k][i], tmp_coords);
-		vectors_mult_additionf(len, tmp_coords, -1,
-				       coords[k] + i + 1);
+		vectors_mult_additionf(len, tmp_coords, -1, coords[k] + i + 1);
 		square_vec(len, tmp_coords);
-		vectors_additionf(len, tmp_coords, dist_accumulator,
-				  dist_accumulator);
+		vectors_additionf(len, tmp_coords, dist_accumulator, dist_accumulator);
 	    }
 
 	    /* convert to 1/d_{ij} */
 	    invert_sqrt_vec(len, dist_accumulator);
 	    /* detect overflows */
 	    for (j = 0; j < len; j++) {
-		if (dist_accumulator[j] >= FLT_MAX
-		    || dist_accumulator[j] < 0) {
+		if (dist_accumulator[j] >= FLT_MAX || dist_accumulator[j] < 0) {
 		    dist_accumulator[j] = 0;
 		}
 	    }
@@ -418,8 +414,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	converged =
 	    fabs(new_stress - old_stress) / fabs(old_stress + 1e-10) <
 	    Epsilon;
-	converged = converged || (iterations > 1
-				  && new_stress > old_stress);
+	converged |= iterations > 1 && new_stress > old_stress;
 	/* in first iteration we allowed stress increase, which 
 	 * might result ny imposing constraints
 	 */

@@ -306,7 +306,7 @@ void vecscale(double *vec1, int beg, int end, double alpha, double *vec2)
 /* Returns 2-norm of a double n-vector over range. */
 double norm(double *vec, int beg, int end)
 {
-    return (sqrt(dot(vec, beg, end, vec)));
+    return sqrt(dot(vec, beg, end, vec));
 }
 
 void orthog1(int n, double *vec	/* vector to be orthogonalized against 1 */
@@ -424,8 +424,7 @@ double max_abs(int n, double *vector)
     double max_val = -1e50;
     int i;
     for (i = 0; i < n; i++)
-	if (fabs(vector[i]) > max_val)
-	    max_val = fabs(vector[i]);
+	max_val = fmax(max_val, fabs(vector[i]));
 
     return max_val;
 }
@@ -543,7 +542,7 @@ void vectors_scalar_multf(int n, float *vector, float alpha, float *result)
 {
     int i;
     for (i = 0; i < n; i++) {
-	result[i] = (float) vector[i] * alpha;
+	result[i] = vector[i] * alpha;
     }
 }
 
@@ -584,8 +583,7 @@ double max_absf(int n, float *vector)
     int i;
     float max_val = -1e30f;
     for (i = 0; i < n; i++)
-	if (fabs(vector[i]) > max_val)
-	    max_val = (float) (fabs(vector[i]));
+	max_val = fmaxf(max_val, fabsf(vector[i]));
 
     return max_val;
 }
@@ -601,34 +599,27 @@ void square_vec(int n, float *vec)
 void invert_vec(int n, float *vec)
 {
     int i;
-    float v;
     for (i = 0; i < n; i++) {
-	if ((v = vec[i]) != 0.0)
-	    vec[i] = 1.0f / v;
+	if (vec[i] != 0.0) {
+	    vec[i] = 1.0f / vec[i];
+	}
     }
 }
 
 void sqrt_vec(int n, float *vec)
 {
     int i;
-    double d;
     for (i = 0; i < n; i++) {
-	/* do this in two steps to avoid a bug in gcc-4.00 on AIX */
-	d = sqrt(vec[i]);
-	vec[i] = (float) d;
+	vec[i] = sqrtf(vec[i]);
     }
 }
 
 void sqrt_vecf(int n, float *source, float *target)
 {
     int i;
-    double d;
-    float v;
     for (i = 0; i < n; i++) {
-	if ((v = source[i]) >= 0.0) {
-	    /* do this in two steps to avoid a bug in gcc-4.00 on AIX */
-	    d = sqrt(v);
-	    target[i] = (float) d;
+	if (source[i] >= 0.0) {
+	    target[i] = sqrtf(source[i]);
 	}
     }
 }
@@ -636,13 +627,9 @@ void sqrt_vecf(int n, float *source, float *target)
 void invert_sqrt_vec(int n, float *vec)
 {
     int i;
-    double d;
-    float v;
     for (i = 0; i < n; i++) {
-	if ((v = vec[i]) > 0.0) {
-	    /* do this in two steps to avoid a bug in gcc-4.00 on AIX */
-	    d = 1. / sqrt(v);
-	    vec[i] = (float) d;
+	if (vec[i] > 0.0) {
+	    vec[i] = 1.0f / sqrtf(vec[i]);
 	}
     }
 }
