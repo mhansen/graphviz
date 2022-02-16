@@ -600,8 +600,9 @@ void invert_vec(int n, float *vec)
 {
     int i;
     for (i = 0; i < n; i++) {
-	if (vec[i] != 0.0)
+	if (vec[i] != 0.0) {
 	    vec[i] = 1.0f / vec[i];
+	}
     }
 }
 
