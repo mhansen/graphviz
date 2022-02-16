@@ -153,31 +153,31 @@ install(TARGETS gv2gml RUNTIME DESTINATION ${BINARY_INSTALL_DIR})
 # ================================= graphml2gv =================================
 if(EXPAT_FOUND)
 
-add_executable(graphml2gv
-  # Source files
-  graphml2gv.c
-)
+  add_executable(graphml2gv
+    # Source files
+    graphml2gv.c
+  )
 
-target_include_directories(graphml2gv PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
-  ${EXPAT_INCLUDE_DIRS}
-  ${GETOPT_INCLUDE_DIRS}
-)
+  target_include_directories(graphml2gv PRIVATE
+    ${GRAPHVIZ_LIB_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${GRAPHVIZ_LIB_DIR}/cdt
+    ${GRAPHVIZ_LIB_DIR}/cgraph
+    ${GRAPHVIZ_LIB_DIR}/common
+    ${GRAPHVIZ_LIB_DIR}/gvc
+    ${GRAPHVIZ_LIB_DIR}/pack
+    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ${EXPAT_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
+  )
 
-target_link_libraries(graphml2gv
-  cgraph
-  ${EXPAT_LIBRARIES}
-)
+  target_link_libraries(graphml2gv
+    cgraph
+    ${EXPAT_LIBRARIES}
+  )
 
-tool_defaults(graphml2gv)
+  tool_defaults(graphml2gv)
 
 endif()
 
@@ -275,35 +275,59 @@ tool_defaults(gvpack)
 # =================================== gxl2gv ===================================
 if(EXPAT_FOUND)
 
-add_executable(gxl2gv
-  # Source files
-  cvtgxl.c
-  gv2gxl.c
-  gxl2gv.c
-)
+  add_executable(gxl2gv
+    # Source files
+    cvtgxl.c
+    gv2gxl.c
+    gxl2gv.c
+  )
 
-target_include_directories(gxl2gv PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
-  ${EXPAT_INCLUDE_DIRS}
-  ${GETOPT_INCLUDE_DIRS}
-)
+  target_include_directories(gxl2gv PRIVATE
+    ${GRAPHVIZ_LIB_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${GRAPHVIZ_LIB_DIR}/cdt
+    ${GRAPHVIZ_LIB_DIR}/cgraph
+    ${GRAPHVIZ_LIB_DIR}/common
+    ${GRAPHVIZ_LIB_DIR}/gvc
+    ${GRAPHVIZ_LIB_DIR}/pack
+    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ${EXPAT_INCLUDE_DIRS}
+    ${GETOPT_INCLUDE_DIRS}
+  )
 
-target_link_libraries(gxl2gv
-  cgraph
-  gvc
-  ingraphs
-  ${EXPAT_LIBRARIES}
-)
+  target_link_libraries(gxl2gv
+    cgraph
+    gvc
+    ingraphs
+    ${EXPAT_LIBRARIES}
+  )
 
-tool_defaults(gxl2gv)
+  tool_defaults(gxl2gv)
+
+  set(DOT2GXL "${CMAKE_CURRENT_BINARY_DIR}/dot2gxl${CMAKE_EXECUTABLE_SUFFIX}")
+  if(WIN32 OR CYGWIN)
+    # copy instead of symlink to avoid
+    # https://gitlab.com/graphviz/graphviz/-/issues/2123
+    add_custom_command(
+      TARGET gxl2gv
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:gxl2gv> ${DOT2GXL}
+      COMMENT "Copying $<TARGET_FILE:gxl2gv> to ${DOT2GXL}")
+    install(
+      PROGRAMS ${DOT2GXL}
+      DESTINATION ${BINARY_INSTALL_DIR})
+  else()
+    add_custom_command(
+      TARGET gxl2gv
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:gxl2gv>
+        ${DOT2GXL}
+      COMMENT "Linking $<TARGET_FILE_NAME:gxl2gv> as ${DOT2GXL}")
+    install(
+      FILES ${DOT2GXL}
+      DESTINATION ${BINARY_INSTALL_DIR})
+  endif()
 
 endif()
 
