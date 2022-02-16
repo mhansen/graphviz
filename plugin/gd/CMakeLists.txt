@@ -24,6 +24,7 @@ if(GD_FOUND)
   target_link_libraries(gvplugin_gd
     cgraph
     gvc
+    pathplan
     ${GD_LIBRARIES}
   )
 
