@@ -230,7 +230,7 @@ static Rect_t objplpmks(object_t * objp)
 }
 
 /* determine the position clp will occupy in intrsx[] */
-static int getintrsxi(XLabels_t * xlp, object_t * op, object_t * cp)
+static int getintrsxi(object_t * op, object_t * cp)
 {
     int i = -1;
     xlabel_t *lp = op->lbl, *clp = cp->lbl;
@@ -270,7 +270,7 @@ static double
 recordointrsx(XLabels_t * xlp, object_t * op, object_t * cp, Rect_t * rp,
 	      double a, object_t * intrsx[XLNBR])
 {
-    int i = getintrsxi(xlp, op, cp);
+    int i = getintrsxi(op, cp);
     if (i < 0)
 	i = 5;
     if (intrsx[i] != NULL) {
@@ -303,7 +303,7 @@ static double
 recordlintrsx(XLabels_t * xlp, object_t * op, object_t * cp, Rect_t * rp,
 	      double a, object_t * intrsx[XLNBR])
 {
-    int i = getintrsxi(xlp, op, cp);
+    int i = getintrsxi(op, cp);
     if (i < 0)
 	i = 5;
     if (intrsx[i] != NULL) {
