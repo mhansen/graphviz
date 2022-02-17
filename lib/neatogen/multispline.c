@@ -279,10 +279,6 @@ raySegIntersect(pointf v, pointf w, pointf a, pointf b, pointf * p)
 	return 0;
 }
 
-#ifdef DEVDBG
-#include <psdbg.c>
-#endif
-
 /* triPoint:
  * Given the triangle vertex v, and point w so that v->w points
  * into the polygon, return where the ray v->w intersects the
@@ -300,16 +296,6 @@ triPoint(tripoly_t * trip, int vx, pointf v, pointf w, pointf * ip)
 	    (v, w, trip->poly.ps[tp->v.i], trip->poly.ps[tp->v.j], ip))
 	    return 0;
     }
-#ifdef DEVDBG
-    psInit();
-    psComment ("Failure in triPoint");
-    psColor("0 0 1");
-    psSeg (v, w);
-    for (tp = trip->triMap[vx]; tp; tp = tp->nxttri) {
-	psTri(v, trip->poly.ps[tp->v.i], trip->poly.ps[tp->v.j]);
-    }
-    psOut(stderr);
-#endif
     return 1;
 }
 
@@ -645,52 +631,6 @@ void freeRouter(router_t * rtr)
     freeTriGraph(rtr->tg);
     free(rtr);
 }
-
-#ifdef DEVDBG
-static void
-prTriPoly (tripoly_t *poly, int si, int ei)
-{
-    FILE* fp = fopen ("dumppoly","w");
-    
-    psInit();
-    psPoly (&(poly->poly));
-    psPoint (poly->poly.ps[si]);
-    psPoint (poly->poly.ps[ei]);
-    psOut(fp);
-    fclose(fp);
-}
-
-static void
-prTriGraph (router_t* rtr, int n)
-{
-    FILE* fp = fopen ("dump","w");
-    int i;
-    pointf* pts = rtr->ps;
-    tnode* nodes = rtr->tg->nodes;
-    char buf[BUFSIZ];
-    
-    psInit();
-    for (i=0;i < rtr->tn; i++) {
-        pointf a = pts[rtr->tris[3*i]];
-        pointf b = pts[rtr->tris[3*i+1]];
-        pointf c = pts[rtr->tris[3*i+2]];
-	psTri (a, b,c);
-	snprintf(buf, sizeof(buf), "%d", i);
-        psTxt (buf, nodes[i].ctr);
-    }
-    for (i=rtr->tn;i < n; i++) {
-	snprintf(buf, sizeof(buf), "%d", i);
-        psTxt (buf, nodes[i].ctr);
-    }
-    psColor ("1 0 0");
-    for (i=0;i < rtr->tg->nedges; i++) {
-        tedge* e = rtr->tg->edges+i;
-        psSeg (nodes[e->t].ctr, nodes[e->h].ctr);
-    }
-    psOut(fp);
-    fclose(fp);
-}
-#endif
 
 router_t *mkRouter(Ppoly_t** obsp, int npoly)
 {
