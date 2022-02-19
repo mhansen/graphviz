@@ -128,7 +128,7 @@ def test_existence(binary: str):
     "smyrna",
   ]
 
-  os_id = os.getenv("OS_ID")
+  os_id = _freedesktop_os_release().get("ID")
 
   # FIXME: Remove skip when
   # https://gitlab.com/graphviz/graphviz/-/issues/1835 is fixed
