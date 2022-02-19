@@ -112,9 +112,6 @@
     <ClInclude Include="nearest_neighbor_graph.h" />
     <ClInclude Include="nearest_neighbor_graph_ann.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
