@@ -1536,3 +1536,24 @@ def test_bitarray():
     cflags += ["-std=gnu99", "-Wall", "-Wextra", "-Werror"]
 
   _, _ = run_c(src, cflags=cflags)
+
+@pytest.mark.xfail(strict=True) # FIXME
+@pytest.mark.skipif(shutil.which("gvpr") is None, reason="gvpr not available")
+def test_gvpr_usage():
+  """
+  gvpr usage information should be included when erroring on a malformed command
+  """
+
+  # create a temporary directory, under which we know no files will exist
+  with tempfile.TemporaryDirectory() as tmp:
+
+    # ask GVPR to process a non-existent file
+    with subprocess.Popen(["gvpr", "-f", "nofile"], stderr=subprocess.PIPE,
+                          cwd=tmp, universal_newlines=True) as p:
+      _, stderr = p.communicate()
+
+      assert p.returncode != 0, "GVPR accepted a non-existent file"
+
+  # the stderr output should have contained full usage instructions
+  assert "-o <ofile> - write output to <ofile>; stdout by default" in stderr, \
+    "truncated or malformed GVPR usage information"
