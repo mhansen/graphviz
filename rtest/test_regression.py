@@ -791,6 +791,20 @@ def test_1898():
   # has been reintroduced
   dot("svg", input)
 
+def test_1902():
+  """
+  test a segfault from https://gitlab.com/graphviz/graphviz/-/issues/1902 has
+  not reappeared
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "1902.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # ask Graphviz to process it, which should generate a segfault if this bug
+  # has been reintroduced
+  dot("svg", input)
+
 # root directory of this checkout
 ROOT = Path(__file__).parent.parent.resolve()
 

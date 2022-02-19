@@ -100,6 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - stdout and stderr are not flushed at exit on MinGW #2178
 - Gvedit on macOS now understands the `-?` help command line argument
 - CMAKE_LIBRARY_PATH is not honored #1973
+- assert failure with `nslimit1=0` #1902
 
 ## [2.50.0] – 2021-12-04
 
