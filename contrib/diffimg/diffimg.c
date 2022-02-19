@@ -33,6 +33,7 @@
 #define EX_DATAERR		65
 #define EX_NOINPUT		66
 #define EX_UNAVAILABLE	69
+#define EX_OSERR	71
 #else
 #include <sysexits.h>
 #endif
@@ -42,6 +43,15 @@
 #include <cgraph/exit.h>
 
 static char *pstopng="gs -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=- -q -";
+
+static void *xmalloc(size_t size) {
+  void *p = malloc(size);
+  if (size > 0 && p == NULL) {
+    fprintf(stderr, "Out of memory\n");
+    graphviz_exit(EX_OSERR);
+  }
+  return p;
+}
 
 static gdImagePtr imageLoad (char *filename)
 {
@@ -63,11 +73,11 @@ static gdImagePtr imageLoad (char *filename)
     }
     if (strcasecmp(ext, ".ps") == 0) {
 	ext = ".png";
-	tmp = malloc(strlen(filename) + strlen(ext) + 1);
+	tmp = xmalloc(strlen(filename) + strlen(ext) + 1);
 	strcpy(tmp,filename);
 	strcat(tmp,ext);
 	
-	cmd = malloc(strlen(pstopng) + 2 + strlen(filename) + 2 + strlen(tmp) + 1);
+	cmd = xmalloc(strlen(pstopng) + 2 + strlen(filename) + 2 + strlen(tmp) + 1);
 	strcpy(cmd,pstopng);
 	strcat(cmd," <");
 	strcat(cmd,filename);
