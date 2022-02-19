@@ -22,7 +22,7 @@ static void *memalloc(void *heap, size_t request)
 {
     void *rv;
 
-    NOTUSED(heap);
+    (void)heap;
     rv = calloc(1, request);
     return rv;
 }
@@ -32,7 +32,7 @@ static void *memresize(void *heap, void *ptr, size_t oldsize,
 {
     void *rv;
 
-    NOTUSED(heap);
+    (void)heap;
     rv = realloc(ptr, request);
     if (request > oldsize)
 	memset((char *) rv + oldsize, 0, request - oldsize);
@@ -41,7 +41,7 @@ static void *memresize(void *heap, void *ptr, size_t oldsize,
 
 static void memfree(void *heap, void *ptr)
 {
-    NOTUSED(heap);
+    (void)heap;
     free(ptr);
 }
 

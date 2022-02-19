@@ -18,8 +18,8 @@ void *agdictobjmem(Dict_t * dict, void * p, size_t size, Dtdisc_t * disc)
 {
     Agraph_t *g;
 
-    NOTUSED(dict);
-    NOTUSED(disc);
+    (void)dict;
+    (void)disc;
     g = Ag_dictop_G;
     if (g) {
 	if (p)
@@ -39,8 +39,8 @@ void agdictobjfree(Dict_t * dict, void * p, Dtdisc_t * disc)
 {
     Agraph_t *g;
 
-    NOTUSED(dict);
-    NOTUSED(disc);
+    (void)dict;
+    (void)disc;
     g = Ag_dictop_G;
     if (g)
 	agfree(g, p);

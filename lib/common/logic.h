@@ -23,10 +23,6 @@ extern "C" {
 #define TRUE (!FALSE)
 #endif
 
-#ifndef NOTUSED
-#define NOTUSED(var) (void) var
-#endif
-
 #ifdef __cplusplus
 }
 #endif

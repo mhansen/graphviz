@@ -159,7 +159,7 @@ static void ins(Dict_t * d, Dtlink_t ** set, Agedge_t * e)
 static void del(Dict_t * d, Dtlink_t ** set, Agedge_t * e)
 {
     void *x;
-    NOTUSED(x);
+    (void)x;
     dtrestore(d, *set);
     x = dtdelete(d, e);
     assert(x);
@@ -314,7 +314,7 @@ void agdeledgeimage(Agraph_t * g, Agedge_t * e, void *ignored)
     Agnode_t *t, *h;
     Agsubnode_t *sn;
 
-    NOTUSED(ignored);
+    (void)ignored;
     if (AGTYPE(e) == AGINEDGE) {
 	in = e;
 	out = AGIN2OUT(e);
@@ -384,10 +384,10 @@ static int agedgeidcmpf(Dict_t * d, void *arg_e0, void *arg_e1, Dtdisc_t * disc)
 {
     Agedge_t *e0, *e1;
 
-    NOTUSED(d);
+    (void)d;
     e0 = arg_e0;
     e1 = arg_e1;
-    NOTUSED(disc);
+    (void)disc;
 
     if (AGID(e0->node) < AGID(e1->node)) return -1;
     if (AGID(e0->node) > AGID(e1->node)) return 1;
@@ -404,10 +404,10 @@ static int agedgeseqcmpf(Dict_t * d, void *arg_e0, void *arg_e1, Dtdisc_t * disc
 {
     Agedge_t *e0, *e1;
 
-    NOTUSED(d);
+    (void)d;
     e0 = arg_e0;
     e1 = arg_e1;
-    NOTUSED(disc);
+    (void)disc;
     assert(arg_e0 && arg_e1);
 
     if (e0->node != e1->node) {

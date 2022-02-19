@@ -289,7 +289,7 @@ static int gridRepulse(Dt_t * dt, cell * cellp, Grid * grid)
     node_list *p;
     node_list *q;
 
-    NOTUSED(dt);
+    (void)dt;
 #ifdef DEBUG
     if (Verbose >= 3) {
 	prIndent();

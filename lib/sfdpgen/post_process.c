@@ -618,8 +618,8 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
 #ifdef DEBUG_PRINT
   if (Verbose) fprintf(stderr, "initial stress = %f\n", get_stress(m, dim, iw, jw, w, d, x, sm->scaling, sm->data, 1));
 #else
-  NOTUSED(iw);
-  NOTUSED(jw);
+  (void)iw;
+  (void)jw;
 #endif
   /* for the additional matrix L due to the position constraints */
   if (sm->scheme == SM_SCHEME_NORMAL_ELABEL){

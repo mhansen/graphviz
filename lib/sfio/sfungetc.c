@@ -18,7 +18,7 @@
 static int _uexcept(Sfio_t * f, int type, void * val,
 		    Sfdisc_t * disc)
 {
-    NOTUSED(val);
+    (void)val;
 
     /* hmm! This should never happen */
     if (disc != _Sfudisc)

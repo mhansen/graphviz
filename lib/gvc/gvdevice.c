@@ -239,7 +239,7 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	}
 
 #else
-        NOTUSED(olen);
+        (void)olen;
 	(job->common->errorfn) ("No libz support.\n");
 	graphviz_exit(1);
 #endif

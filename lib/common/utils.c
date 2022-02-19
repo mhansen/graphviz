@@ -955,8 +955,8 @@ typedef struct {
 
 static int cmpItem(Dt_t * d, void *p1[], void *p2[], Dtdisc_t * disc)
 {
-    NOTUSED(d);
-    NOTUSED(disc);
+    (void)d;
+    (void)disc;
 
     if (p1[0] < p2[0])
 	return -1;
@@ -976,7 +976,7 @@ static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
 {
     item *newp = NEW(item);
 
-    NOTUSED(disc);
+    (void)disc;
     newp->p[0] = objp->p[0];
     newp->p[1] = objp->p[1];
     newp->t = objp->t;

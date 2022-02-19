@@ -96,8 +96,8 @@ static int ijcmpf(Dt_t * d, gridpt * p1, gridpt * p2, Dtdisc_t * disc)
 {
     int diff;
 
-    NOTUSED(d);
-    NOTUSED(disc);
+    (void)d;
+    (void)disc;
     if ((diff = p1->i - p2->i))
 	return diff;
     else
@@ -115,8 +115,8 @@ static void *newCell(Dt_t * d, void *obj, Dtdisc_t * disc)
     cell *cellp = obj;
     cell *newp;
 
-    NOTUSED(d);
-    NOTUSED(disc);
+    (void)d;
+    (void)disc;
     newp = getCell(_grid);
     newp->p.i = cellp->p.i;
     newp->p.j = cellp->p.j;

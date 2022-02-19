@@ -326,7 +326,7 @@ static int write_hdr(Agraph_t * g, iochan_t * ofile, int top)
 
 static int write_trl(Agraph_t * g, iochan_t * ofile)
 {
-    NOTUSED(g);
+    (void)g;
     Level--;
     CHKRV(indent(g, ofile));
     CHKRV(ioput(g, ofile, "}\n"));
@@ -396,7 +396,7 @@ static bool not_default_attrs(Agraph_t * g, Agnode_t * n)
     Agattr_t *data;
     Agsym_t *sym;
 
-    NOTUSED(g);
+    (void)g;
     if ((data = agattrrec(n))) {
 	for (sym = dtfirst(data->dict); sym; sym = dtnext(data->dict, sym)) {
 	    if (data->str[sym->id] != sym->defval)

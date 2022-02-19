@@ -35,8 +35,8 @@ typedef int (*intersectfn) (nitem *, nitem *);
 
 static int cmpitem(Dt_t * d, int *p1, int *p2, Dtdisc_t * disc)
 {
-    NOTUSED(d);
-    NOTUSED(disc);
+    (void)d;
+    (void)disc;
 
     return (*p1 - *p2);
 }

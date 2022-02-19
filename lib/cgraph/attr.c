@@ -218,9 +218,9 @@ static void freesym(Dict_t * d, void * obj, Dtdisc_t * disc)
 {
     Agsym_t *sym;
 
-    NOTUSED(d);
+    (void)d;
     sym = obj;
-    NOTUSED(disc);
+    (void)disc;
     agstrfree(Ag_G_global, sym->name);
     agstrfree(Ag_G_global, sym->defval);
     agfree(Ag_G_global, sym);
