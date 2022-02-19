@@ -1537,7 +1537,6 @@ def test_bitarray():
 
   _, _ = run_c(src, cflags=cflags)
 
-@pytest.mark.xfail(strict=True) # FIXME
 @pytest.mark.skipif(shutil.which("gvpr") is None, reason="gvpr not available")
 def test_gvpr_usage():
   """
