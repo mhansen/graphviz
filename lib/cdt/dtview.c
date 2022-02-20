@@ -10,7 +10,7 @@
 static void* dtvsearch(Dt_t* dt, void* obj, int type)
 {
 	Dt_t		*d, *p;
-	void		*o, *n, *ok, *nk;
+	void *o = NULL, *n, *ok, *nk;
 	int		cmp, lk, sz, ky;
 	Dtcompar_f	cmpf;
 	(void)lk;
