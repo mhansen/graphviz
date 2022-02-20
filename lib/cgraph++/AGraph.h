@@ -3,7 +3,7 @@
 #include <string>
 #include <utility>
 
-#include <cgraph.h>
+#include "cgraph.h"
 
 #ifdef GVDLL
 #if cgraph___EXPORTS // CMake's substitution of cgraph++_EXPORTS
