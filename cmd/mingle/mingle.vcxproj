@@ -102,9 +102,6 @@
     <ClCompile Include="minglemain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\lib\cgraph\cgraph.vcxproj">
       <Project>{c0663a08-f276-4dd6-b17c-e501ee066f7c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

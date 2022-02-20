@@ -96,9 +96,6 @@
     <ClInclude Include="node_distinct_coloring.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\cdt\cdt.vcxproj">
       <Project>{83cf0498-7884-49d3-8b3c-263c5af5fe1b}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
