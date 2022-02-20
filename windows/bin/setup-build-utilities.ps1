@@ -49,7 +49,7 @@ function find_or_fallback($programs, $fallback_path) {
 
 $build_utilities_path = "$GRAPHVIZ_ROOT\windows\dependencies\graphviz-build-utilities"
 
-find_or_fallback "awk sed swig" "$build_utilities_path"
+find_or_fallback "awk swig" "$build_utilities_path"
 find_or_fallback "win_bison win_flex" "$build_utilities_path\winflexbison"
 find_or_fallback "makensis" "$build_utilities_path\NSIS\Bin"
 find_or_fallback "cmake cpack" "$CMAKE_BIN"
