@@ -30,7 +30,7 @@ static Agobj_t *subedge_search(Agraph_t * sub, Agobj_t * e)
 
 static Agobj_t *subgraph_search(Agraph_t * sub, Agobj_t * g)
 {
-    NOTUSED(g);
+    (void)g;
     return (Agobj_t *) sub;
 }
 

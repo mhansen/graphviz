@@ -114,8 +114,8 @@ static void *newitem(Dt_t * d, edgeitem * obj, Dtdisc_t * disc)
 {
     edgeitem *newp;
 
-    NOTUSED(d);
-    NOTUSED(disc);
+    (void)d;
+    (void)disc;
     newp = NEW(edgeitem);
     newp->id = obj->id;
     newp->e = obj->e;
@@ -126,16 +126,16 @@ static void *newitem(Dt_t * d, edgeitem * obj, Dtdisc_t * disc)
 
 static void freeitem(Dt_t * d, edgeitem * obj, Dtdisc_t * disc)
 {
-    NOTUSED(d);
-    NOTUSED(disc);
+    (void)d;
+    (void)disc;
     free(obj);
 }
 
 static int
 cmpitems(Dt_t * d, edgeinfo * key1, edgeinfo * key2, Dtdisc_t * disc)
 {
-    NOTUSED(d);
-    NOTUSED(disc);
+    (void)d;
+    (void)disc;
 
     if (key1->n1 > key2->n1)
 	return 1;

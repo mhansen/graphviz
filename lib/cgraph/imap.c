@@ -22,10 +22,10 @@ static int idcmpf(Dict_t * d, void *arg_p0, void *arg_p1, Dtdisc_t * disc)
 {
     IMapEntry_t *p0, *p1;
 
-    NOTUSED(d);
+    (void)d;
     p0 = arg_p0;
     p1 = arg_p1;
-    NOTUSED(disc);
+    (void)disc;
     if (p0->id > p1->id)
     {
         return 1;
@@ -48,10 +48,10 @@ static int namecmpf(Dict_t * d, void *arg_p0, void *arg_p1,
 {
     IMapEntry_t *p0, *p1;
 
-    NOTUSED(d);
+    (void)d;
     p0 = arg_p0;
     p1 = arg_p1;
-    NOTUSED(disc);
+    (void)disc;
     if (p0->str > p1->str)
     {
         return 1;

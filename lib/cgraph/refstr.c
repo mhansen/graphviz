@@ -198,9 +198,9 @@ static int refstrprint(Dict_t * dict, void *ptr, void *user)
 {
     refstr_t *r;
 
-    NOTUSED(dict);
+    (void)dict;
     r = ptr;
-    NOTUSED(user);
+    (void)user;
     fprintf(stderr, "%s\n", r->s);
     return 0;
 }

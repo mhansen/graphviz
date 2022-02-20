@@ -87,7 +87,7 @@ static void installnode(Agraph_t * g, Agnode_t * n)
 {
     Agsubnode_t *sn;
     int osize;
-    NOTUSED(osize);
+    (void)osize;
 
     assert(dtsize(g->n_id) == dtsize(g->n_seq));
     osize = dtsize(g->n_id);
@@ -177,7 +177,7 @@ void agdelnodeimage(Agraph_t * g, Agnode_t * n, void *ignored)
     static Agsubnode_t template;
     template.node = n;
 
-    NOTUSED(ignored);
+    (void)ignored;
     for (e = agfstedge(g, n); e; e = f) {
 	f = agnxtedge(g, e, n);
 	agdeledgeimage(g, e, 0);
@@ -334,14 +334,14 @@ static void agnodesetfinger(Agraph_t * g, Agnode_t * n, void *ignored)
     static Agsubnode_t template;
 	template.node = n;
 	dtsearch(g->n_seq,&template);
-    NOTUSED(ignored);
+    (void)ignored;
 }
 
 static void agnoderenew(Agraph_t * g, Agnode_t * n, void *ignored)
 {
     dtrenew(g->n_seq, dtfinger(g->n_seq));
-    NOTUSED(n);
-    NOTUSED(ignored);
+    (void)n;
+    (void)ignored;
 }
 
 int agnodebefore(Agnode_t *fst, Agnode_t *snd)

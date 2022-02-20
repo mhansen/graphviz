@@ -50,8 +50,8 @@ static void freef(Dict_t * dict, void *ptr, Dtdisc_t * disc)
 {
     pending_cb_t *pcb;
 
-    NOTUSED(dict);
-    NOTUSED(disc);
+    (void)dict;
+    (void)disc;
     pcb = ptr;
     free_symlist(pcb);
     agfree(pcb->g, pcb);

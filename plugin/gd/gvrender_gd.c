@@ -21,8 +21,6 @@
 #include <gvc/gvcint.h>	/* for gvc->g for agget */
 #include <gd.h>
 
-#define NOTUSED(x)	(void) (x)
-
 typedef enum {
 	FORMAT_GIF,
 	FORMAT_JPEG,
@@ -176,7 +174,7 @@ static void gdgen_end_page(GVJ_t * job)
 	    gdImageTrueColorToPalette(im, 0, 256);
 	    gdImageGifCtx(im, &ctx);
 #else
-            NOTUSED(ctx);
+            (void)ctx;
 #endif
 	    break;
 	case FORMAT_JPEG:

@@ -18,7 +18,7 @@
 
 static void *idopen(Agraph_t * g, Agdisc_t* disc)
 {
-    NOTUSED(disc);
+    (void)disc;
     return g;
 }
 
@@ -28,7 +28,7 @@ static long idmap(void *state, int objtype, char *str, IDTYPE *id,
     char *s;
     static IDTYPE ctr = 1;
 
-    NOTUSED(objtype);
+    (void)objtype;
     if (str) {
         Agraph_t *g;
         g = state;
@@ -47,23 +47,23 @@ static long idmap(void *state, int objtype, char *str, IDTYPE *id,
 	/* we don't allow users to explicitly set IDs, either */
 static long idalloc(void *state, int objtype, IDTYPE request)
 {
-    NOTUSED(state);
-    NOTUSED(objtype);
-    NOTUSED(request);
+    (void)state;
+    (void)objtype;
+    (void)request;
     return FALSE;
 }
 
 static void idfree(void *state, int objtype, IDTYPE id)
 {
-    NOTUSED(objtype);
+    (void)objtype;
     if (id % 2 == 0)
 	agstrfree(state, (char *)(uintptr_t)id);
 }
 
 static char *idprint(void *state, int objtype, IDTYPE id)
 {
-    NOTUSED(state);
-    NOTUSED(objtype);
+    (void)state;
+    (void)objtype;
     if (id % 2 == 0)
 	return (char *)(uintptr_t)id;
     else
@@ -72,14 +72,14 @@ static char *idprint(void *state, int objtype, IDTYPE id)
 
 static void idclose(void *state)
 {
-    NOTUSED(state);
+    (void)state;
 }
 
 static void idregister(void *state, int objtype, void *obj)
 {
-    NOTUSED(state);
-    NOTUSED(objtype);
-    NOTUSED(obj);
+    (void)state;
+    (void)objtype;
+    (void)obj;
 }
 
 Agiddisc_t AgIdDisc = {

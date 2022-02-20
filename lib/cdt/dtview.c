@@ -13,7 +13,7 @@ static void* dtvsearch(Dt_t* dt, void* obj, int type)
 	void		*o, *n, *ok, *nk;
 	int		cmp, lk, sz, ky;
 	Dtcompar_f	cmpf;
-	NOTUSED(lk);
+	(void)lk;
 
 	/* these operations only happen at the top level */
 	if(type&(DT_INSERT|DT_DELETE|DT_CLEAR|DT_RENEW))

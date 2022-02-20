@@ -83,7 +83,7 @@ void Multilevel_delete(Multilevel grid){
 
 static void maximal_independent_vertex_set(SparseMatrix A, int randomize, int **vset, int *nvset, int *nzc){
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
-  NOTUSED(n);
+  (void)n;
   assert(A);
   assert(SparseMatrix_known_strucural_symmetric(A));
   ia = A->ia;
@@ -136,8 +136,8 @@ static void maximal_independent_vertex_set_RS(SparseMatrix A, int randomize, int
    */
   int i, jj, ii, *p = NULL, j, k, *ia, *ja, m, n, gain, removed, nf = 0;
   PriorityQueue q;
-  NOTUSED(removed);
-  NOTUSED(n);
+  (void)removed;
+  (void)n;
   assert(A);
   assert(SparseMatrix_known_strucural_symmetric(A));
 
@@ -326,7 +326,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode(SparseMatrix A, in
 
 static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(SparseMatrix A, int randomize, int **cluster, int **clusterp, int *ncluster){
   int i, ii, j, *ia, *ja, m, n, *p = NULL, q;
-  NOTUSED(n);
+  (void)n;
   double *a, amax = 0;
   int first = TRUE, jamax = 0;
   int *matched, nz, ncmax = 0, nz0, nzz,k ;
@@ -502,7 +502,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
 
 static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(SparseMatrix A, int randomize, int **cluster, int **clusterp, int *ncluster){
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
-  NOTUSED(n);
+  (void)n;
   double *a, amax = 0;
   int first = TRUE, jamax = 0;
   int *matched, nz, nz0;
@@ -646,7 +646,7 @@ static int scomp(const void *s1, const void *s2){
 static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(SparseMatrix A, int csize, 
 									      int randomize, int **cluster, int **clusterp, int *ncluster){
   int i, ii, j, *ia, *ja, m, n, *p = NULL, q, iv;
-  NOTUSED(n);
+  (void)n;
   double *a;
   int *matched, nz,  nz0, nzz,k, nv;
   enum {UNMATCHED = -2, MATCHED = -1};
