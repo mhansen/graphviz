@@ -106,6 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - assert failure with `nslimit1=0` #1902
 - `gvpr` usage output has been restored. This was a regression in Graphviz
   2.46.0.
+- C++ API not usable after install #2196
 
 ## [2.50.0] – 2021-12-04
 
