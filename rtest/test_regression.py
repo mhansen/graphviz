@@ -1356,6 +1356,126 @@ def test_2179():
   assert "Warning: no hard-coded metrics for" not in stderr, \
     "incorrect warning triggered"
 
+# FIXME: this has been root caused to 84b2983edf458098bb6233368904265c92da4e65
+# but a fix has not yet been devised
+@pytest.mark.xfail()
+def test_2185_1():
+  """
+  GVPR should deal with strings correctly
+  https://gitlab.com/graphviz/graphviz/-/issues/2185
+  """
+
+  # find our collocated GVPR program
+  script = Path(__file__).parent / "2185.gvpr"
+  assert script.exists(), "missing test case"
+
+  # run this with NUL input, checking output is valid UTF-8
+  _ = subprocess.check_output(["gvpr", "-f", script],
+                              stdin=subprocess.DEVNULL,
+                              universal_newlines=True)
+
+@pytest.mark.xfail()
+def test_2185_2():
+  """
+  GVPR should deal with strings correctly
+  https://gitlab.com/graphviz/graphviz/-/issues/2185
+  """
+
+  # find our collocated GVPR program
+  script = Path(__file__).parent / "2185.gvpr"
+  assert script.exists(), "missing test case"
+
+  # run this with NUL input
+  out = subprocess.check_output(["gvpr", "-f", script],
+                                stdin=subprocess.DEVNULL)
+
+  # decode output in a separate step to gracefully cope with garbage unicode
+  out = out.decode("utf-8", "replace")
+
+  # deal with Windows eccentricities
+  eol = "\r\n" if platform.system() == "Windows" else "\n"
+  expected = f"one two three{eol}"
+
+  # check the first line is as expected
+  assert out.startswith(expected), "incorrect GVPR interpretation"
+
+# FIXME: like `test_2185_1`, it is believed that
+# 84b2983edf458098bb6233368904265c92da4e65 is the root cause of this
+@pytest.mark.xfail()
+def test_2185_3():
+  """
+  GVPR should deal with strings correctly
+  https://gitlab.com/graphviz/graphviz/-/issues/2185
+  """
+
+  # find our collocated GVPR program
+  script = Path(__file__).parent / "2185.gvpr"
+  assert script.exists(), "missing test case"
+
+  # run this with NUL input
+  out = subprocess.check_output(["gvpr", "-f", script],
+                                stdin=subprocess.DEVNULL)
+
+  # decode output in a separate step to gracefully cope with garbage unicode
+  out = out.decode("utf-8", "replace")
+
+  # deal with Windows eccentricities
+  eol = "\r\n" if platform.system() == "Windows" else "\n"
+  expected = f"one two three{eol}one  five three{eol}"
+
+  # check the first two lines are as expected
+  assert out.startswith(expected), "incorrect GVPR interpretation"
+
+@pytest.mark.xfail() # FIXME
+def test_2185_4():
+  """
+  GVPR should deal with strings correctly
+  https://gitlab.com/graphviz/graphviz/-/issues/2185
+  """
+
+  # find our collocated GVPR program
+  script = Path(__file__).parent / "2185.gvpr"
+  assert script.exists(), "missing test case"
+
+  # run this with NUL input
+  out = subprocess.check_output(["gvpr", "-f", script],
+                                stdin=subprocess.DEVNULL)
+
+  # decode output in a separate step to gracefully cope with garbage unicode
+  out = out.decode("utf-8", "replace")
+
+  # deal with Windows eccentricities
+  eol = "\r\n" if platform.system() == "Windows" else "\n"
+  expected = f"one two three{eol}one  five three{eol}99{eol}"
+
+  # check the first three lines are as expected
+  assert out.startswith(expected), "incorrect GVPR interpretation"
+
+@pytest.mark.xfail() # FIXME
+def test_2185_5():
+  """
+  GVPR should deal with strings correctly
+  https://gitlab.com/graphviz/graphviz/-/issues/2185
+  """
+
+  # find our collocated GVPR program
+  script = Path(__file__).parent / "2185.gvpr"
+  assert script.exists(), "missing test case"
+
+  # run this with NUL input
+  out = subprocess.check_output(["gvpr", "-f", script],
+                                stdin=subprocess.DEVNULL)
+
+  # decode output in a separate step to gracefully cope with garbage unicode
+  out = out.decode("utf-8", "replace")
+
+  # deal with Windows eccentricities
+  eol = "\r\n" if platform.system() == "Windows" else "\n"
+  expected = f"one two three{eol}one  five three{eol}99{eol}Constant{eol}"
+
+  # check the first four lines are as expected
+  assert out.startswith(expected), "incorrect GVPR interpretation"
+
 @pytest.mark.xfail(strict=True) # FIXME
 def test_2193():
   """
