@@ -28,14 +28,14 @@ int dtclose(Dt_t* dt)
 			return -1;
 
 		if(dt->data->ntab > 0)
-			(*dt->memoryf)(dt,(void*)dt->data->htab,0,disc);
-		(*dt->memoryf)(dt,(void*)dt->data,0,disc);
+			(*dt->memoryf)(dt, dt->data->htab, 0, disc);
+		(*dt->memoryf)(dt, dt->data, 0, disc);
 	}
 
 	if(dt->type == DT_MALLOC)
 		free(dt);
 	else if(ev == 0 && dt->type == DT_MEMORYF)
-		(*dt->memoryf)(dt, (void*)dt, 0, disc);
+		(*dt->memoryf)(dt, dt, 0, disc);
 
 	if(disc->eventf)
 		(void)(*disc->eventf)(dt, DT_ENDCLOSE, NULL, disc);

@@ -39,7 +39,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 					if(disc->freef)
 						(*disc->freef)(dt,_DTOBJ(r,lk),disc);
 					if(disc->link < 0)
-						(*dt->memoryf)(dt,(void*)r,0,disc);
+						(*dt->memoryf)(dt, r, 0, disc);
 				}
 			}
 			dt->data->head = dt->data->here = NULL;
@@ -156,7 +156,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 		if(disc->freef && (type&DT_DELETE))
 			(*disc->freef)(dt,obj,disc);
 		if(disc->link < 0)
-			(*dt->memoryf)(dt,(void*)r,0,disc);
+			(*dt->memoryf)(dt, r, 0, disc);
 		return obj;
 	}
 	else if(type&DT_NEXT)

@@ -28,7 +28,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 		dt->data->head = NULL;
 	else if(dt->data->type&(DT_SET|DT_BAG) )
 	{	if(dt->data->ntab > 0)
-			(*dt->memoryf)(dt,(void*)dt->data->htab,0,disc);
+			(*dt->memoryf)(dt, dt->data->htab, 0, disc);
 		dt->data->ntab = 0;
 		dt->data->htab = NULL;
 	}

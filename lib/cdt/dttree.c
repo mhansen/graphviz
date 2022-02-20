@@ -37,7 +37,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 					if(disc->freef)
 						(*disc->freef)(dt,_DTOBJ(root,lk),disc);
 					if(disc->link < 0)
-						(*dt->memoryf)(dt,(void*)root,0,disc);
+						(*dt->memoryf)(dt, root, 0, disc);
 				} while((root = t) );
 			}
 
@@ -261,7 +261,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			if(disc->freef && (type&DT_DELETE))
 				(*disc->freef)(dt,obj,disc);
 			if(disc->link < 0)
-				(*dt->memoryf)(dt,(void*)root,0,disc);
+				(*dt->memoryf)(dt, root, 0, disc);
 			if((dt->data->size -= 1) < 0)
 				dt->data->size = -1;
 			goto no_root;
@@ -281,7 +281,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			{	if(disc->freef)
 					(*disc->freef)(dt,obj,disc);
 				if(disc->link < 0)
-					(*dt->memoryf)(dt,(void*)me,0,disc);
+					(*dt->memoryf)(dt, me, 0, disc);
 			}
 			else
 			{	me->left = NULL;
