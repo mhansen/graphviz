@@ -1356,6 +1356,24 @@ def test_2179():
   assert "Warning: no hard-coded metrics for" not in stderr, \
     "incorrect warning triggered"
 
+@pytest.mark.xfail(strict=True) # FIXME
+def test_2193():
+  """
+  the canonical format should be stable
+  https://gitlab.com/graphviz/graphviz/-/issues/2193
+  """
+
+  # find our collocated test case
+  input = Path(__file__).parent / "2193.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # derive the initial canonicalization
+  canonical = dot("canon", input)
+
+  # now canonicalize this again to see if it changes
+  new = dot("canon", source=canonical)
+  assert canonical == new, "canonical translation is not stable"
+
 def test_package_version():
   """
   The graphviz_version.h header should define a non-empty PACKAGE_VERSION
