@@ -4,7 +4,7 @@
 
 #include "GVContext.h"
 #include "GVRenderData.h"
-#include <AGraph.h>
+#include "AGraph.h"
 
 #ifdef GVDLL
 #if gvc___EXPORTS // CMake's substitution of gvc++_EXPORTS
