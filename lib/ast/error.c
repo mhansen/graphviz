@@ -50,11 +50,12 @@ void errorv(const char *id, int level, const char *s, va_list ap)
 	flags = level & ~ERROR_LEVEL;
 	level &= ERROR_LEVEL;
     }
-    if (level && ((s = error_info.id) || (s = id))) {
+    const char *prefix;
+    if (level && ((prefix = error_info.id) || (prefix = id))) {
 	if (flags & ERROR_USAGE)
-	    sfprintf(sfstderr, "Usage: %s ", s);
+	    sfprintf(sfstderr, "Usage: %s ", prefix);
 	else
-	    sfprintf(sfstderr, "%s: ", s);
+	    sfprintf(sfstderr, "%s: ", prefix);
     }
     if (flags & ERROR_USAGE)
 	/*nop */ ;
