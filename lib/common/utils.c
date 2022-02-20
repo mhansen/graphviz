@@ -1872,6 +1872,8 @@ typedef struct {
 
 static void free_clust (Dt_t* dt, clust_t* clp, Dtdisc_t* disc)
 {
+    (void)dt;
+    (void)disc;
     free (clp);
 }
 
