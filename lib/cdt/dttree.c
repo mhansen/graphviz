@@ -85,7 +85,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			goto do_search;
 	}
 	else if(type&DT_RENEW)
-	{	me = (Dtlink_t*)obj;
+	{	me = obj;
 		obj = _DTOBJ(me,lk);
 		key = _DTKEY(obj,ky,sz);
 		if(root)

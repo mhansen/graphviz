@@ -155,7 +155,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		goto do_search;
 	}
 	else if(type&(DT_RENEW|DT_VSEARCH) )
-	{	r = (Dtlink_t*)obj;
+	{	r = obj;
 		obj = _DTOBJ(r,lk);
 		key = _DTKEY(obj,ky,sz);
 		hsh = r->hash;
