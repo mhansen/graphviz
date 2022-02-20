@@ -16,7 +16,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 		return oldmeth;
 
 	if(disc->eventf &&
-	   (*disc->eventf)(dt,DT_METH,(void*)meth,disc) < 0)
+	   (*disc->eventf)(dt, DT_METH, meth, disc) < 0)
 		return NULL;
 
 	dt->data->minp = 0;
