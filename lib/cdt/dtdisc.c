@@ -83,7 +83,7 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 		{	t = r->right;
 			if(!(type&DT_SAMEHASH))	/* new hash value */
 			{	k = _DTOBJ(r,disc->link);
-				k = _DTKEY((void*)k,disc->key,disc->size);
+				k = _DTKEY(k, disc->key, disc->size);
 				r->hash = _DTHSH(dt,k,disc,disc->size);
 			}
 			(void)(*searchf)(dt, r, DT_RENEW);
