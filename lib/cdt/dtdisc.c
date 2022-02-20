@@ -86,7 +86,7 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 				k = _DTKEY((void*)k,disc->key,disc->size);
 				r->hash = _DTHSH(dt,k,disc,disc->size);
 			}
-			(void)(*searchf)(dt,(void*)r,DT_RENEW);
+			(void)(*searchf)(dt, r, DT_RENEW);
 			r = t;
 		}
 	}

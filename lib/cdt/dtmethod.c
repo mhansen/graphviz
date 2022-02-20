@@ -54,7 +54,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 	{	dt->data->size = 0;
 		while(list)
 		{	r = list->right;
-			(*meth->searchf)(dt,(void*)list,DT_RENEW);
+			(*meth->searchf)(dt, list, DT_RENEW);
 			list = r;
 		}
 	}
@@ -72,7 +72,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 				key = _DTKEY(key,disc->key,disc->size);
 				list->hash = _DTHSH(dt,key,disc,disc->size);
 			}
-			(void)(*meth->searchf)(dt,(void*)list,DT_RENEW);
+			(void)(*meth->searchf)(dt, list, DT_RENEW);
 			list = r;
 		}
 	}
