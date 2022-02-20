@@ -990,6 +990,8 @@ static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
  */
 static void freeItem(Dt_t * d, item * obj, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
     free(obj);
 }
 
