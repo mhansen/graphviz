@@ -12,7 +12,6 @@ else
     cat /etc/os-release
     . /etc/os-release
 fi
-printf '%s\n' "${ID}" >OS_ID
 GV_VERSION=$( cat GRAPHVIZ_VERSION )
 DIR=Packages/${ID}/${VERSION_ID}
 ARCH=$( uname -m )
