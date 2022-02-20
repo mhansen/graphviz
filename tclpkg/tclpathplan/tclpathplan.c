@@ -424,9 +424,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
     }
     vgp = *vgpp;
 
-    size_t length = strlen(argv[1]);
-
-    if (strncmp(argv[1], "coords", length) == 0) {
+    if (strcmp(argv[1], "coords") == 0) {
 	if (argc < 3) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 			     " ", argv[1], " id ?x1 y1 x2 y2...?\"", NULL);
@@ -478,12 +476,12 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 
 	return insert_poly(interp, vgp, polyid, vargv, vargc);
 
-    } else if (strncmp(argv[1], "debug", length) == 0) {
+    } else if (strcmp(argv[1], "debug") == 0) {
 	/* debug only */
 	printf("debug output goes here\n");
 	return TCL_OK;
 
-    } else if (strncmp(argv[1], "delete", length) == 0) {
+    } else if (strcmp(argv[1], "delete") == 0) {
 	/* delete a vgpane and all memory associated with it */
 	if (vgp->vc)
 	    Pobsclose(vgp->vc);
@@ -492,7 +490,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	free(tclhandleFree(vgpaneTable, argv[0]));
 	return TCL_OK;
 
-    } else if (strncmp(argv[1], "find", length) == 0) {
+    } else if (strcmp(argv[1], "find") == 0) {
 	/* find the polygon that the point is inside and return it
 	   id, or null */
 	if (argc < 3) {
@@ -524,7 +522,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	}
 	return TCL_OK;
 
-    } else if (strncmp(argv[1], "insert", length) == 0) {
+    } else if (strcmp(argv[1], "insert") == 0) {
 	/* add poly to end poly list, and it coordinates to the end of 
 	   the point list */
 	if ((argc < 3)) {
@@ -561,7 +559,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	Tcl_AppendResult(interp, vbuf, NULL);
 	return TCL_OK;
 
-    } else if (strncmp(argv[1], "list", length) == 0) {
+    } else if (strcmp(argv[1], "list") == 0) {
 	/* return list of polygon ids */
 	for (i = 0; i < vgp->Npoly; i++) {
 	    snprintf(vbuf, sizeof(vbuf), "%d", vgp->poly[i].id);
@@ -569,7 +567,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	}
 	return TCL_OK;
 
-    } else if (strncmp(argv[1], "path", length) == 0) {
+    } else if (strcmp(argv[1], "path") == 0) {
 	/* return a list of points corresponding to the shortest path
 	   that does not cross the remaining "visible" polygons. */
 	if (argc < 3) {
@@ -611,7 +609,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 
 	return TCL_OK;
 
-    } else if (strncmp(argv[1], "bind", length) == 0) {
+    } else if (strcmp(argv[1], "bind") == 0) {
 	if (argc < 2 || argc > 4) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"",
 			     argv[0], " bind triangle ?command?\"", NULL);
@@ -621,8 +619,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	    Tcl_AppendElement(interp, "triangle");
 	    return TCL_OK;
 	}
-	length = strlen(argv[2]);
-	if (strncmp(argv[2], "triangle", length) == 0) {
+	if (strcmp(argv[2], "triangle") == 0) {
 	    s = vgp->triangle_cmd;
 	    if (argc == 4)
 		vgp->triangle_cmd = s = buildBindings(s, argv[3]);
@@ -635,7 +632,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	    Tcl_AppendResult(interp, s, NULL);
 	return TCL_OK;
 
-    } else if (strncmp(argv[1], "bpath", length) == 0) {
+    } else if (strcmp(argv[1], "bpath") == 0) {
 	/* return a list of points corresponding to the shortest path
 	   that does not cross the remaining "visible" polygons. */
 	if (argc < 3) {
@@ -690,7 +687,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	}
 	return TCL_OK;
 
-    } else if (strncmp(argv[1], "bbox", length) == 0) {
+    } else if (strcmp(argv[1], "bbox") == 0) {
 	if (argc < 3) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 			     " ", argv[1], " id\"", NULL);
@@ -720,7 +717,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	Tcl_AppendResult(interp, " no such polygon: ", argv[2], NULL);
 	return TCL_ERROR;
 
-    } else if (strncmp(argv[1], "center", length) == 0) {
+    } else if (strcmp(argv[1], "center") == 0) {
 	if (argc < 3) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 			     " ", argv[1], " id\"", NULL);
@@ -740,7 +737,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	Tcl_AppendResult(interp, " no such polygon: ", argv[2], NULL);
 	return TCL_ERROR;
 
-    } else if (strncmp(argv[1], "triangulate", length) == 0) {
+    } else if (strcmp(argv[1], "triangulate") == 0) {
 	if (argc < 2) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 			     " id ", NULL);
@@ -761,7 +758,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	}
 	Tcl_AppendResult(interp, " no such polygon: ", argv[2], NULL);
 	return TCL_ERROR;
-    } else if (strncmp(argv[1], "rotate", length) == 0) {
+    } else if (strcmp(argv[1], "rotate") == 0) {
 	if (argc < 4) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 			     " ", argv[1], " id alpha\"", NULL);
@@ -789,7 +786,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	Tcl_AppendResult(interp, " no such polygon: ", argv[2], NULL);
 	return TCL_ERROR;
 
-    } else if (strncmp(argv[1], "scale", length) == 0) {
+    } else if (strcmp(argv[1], "scale") == 0) {
 	if (argc < 4) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 			     " ", argv[1], " id gain\"", NULL);
@@ -816,7 +813,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	Tcl_AppendResult(interp, " no such polygon: ", argv[2], NULL);
 	return TCL_ERROR;
 
-    } else if (strncmp(argv[1], "remove", length) == 0) {
+    } else if (strcmp(argv[1], "remove") == 0) {
 	if (argc < 3) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 			     " ", argv[1], " id\"", NULL);
