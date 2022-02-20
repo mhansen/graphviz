@@ -47,7 +47,7 @@ static void dthtab(Dt_t* dt)
 
 	/* allocate new table */
 	olds = dt->data->ntab == 0 ? NULL : dt->data->htab;
-	if(!(s = (Dtlink_t**)(*dt->memoryf)(dt,olds,n*sizeof(Dtlink_t*),dt->disc)) )
+	if(!(s = (*dt->memoryf)(dt, olds, n * sizeof(Dtlink_t*), dt->disc)) )
 		return;
 	olds = s + dt->data->ntab;
 	dt->data->htab = s;
@@ -210,8 +210,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		if(lk >= 0)
 			r = _DTLNK(obj,lk);
 		else
-		{	r = (Dtlink_t*)(*dt->memoryf)
-				(dt,NULL,sizeof(Dthold_t),disc);
+		{	r = (*dt->memoryf)(dt, NULL, sizeof(Dthold_t), disc);
 			if(r)
 				((Dthold_t*)r)->obj = obj;
 			else

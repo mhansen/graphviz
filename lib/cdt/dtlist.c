@@ -56,8 +56,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 		if(lk >= 0)
 			r = _DTLNK(obj,lk);
 		else
-		{	r = (Dtlink_t*)(*dt->memoryf)
-				(dt,NULL,sizeof(Dthold_t),disc);
+		{	r = (*dt->memoryf)(dt, NULL, sizeof(Dthold_t), disc);
 			if(r)
 				((Dthold_t*)r)->obj = obj;
 			else

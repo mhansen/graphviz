@@ -58,7 +58,7 @@ Dt_t* dtopen(Dtdisc_t* disc, Dtmethod_t* meth)
 	}
 
 	/* allocate sharable data */
-	if(!(data = (Dtdata_t*)(dt->memoryf)(dt,NULL,sizeof(Dtdata_t),disc)) )
+	if(!(data = (dt->memoryf)(dt, NULL, sizeof(Dtdata_t), disc)) )
 	{ err_open:
 		free(dt);
 		return NULL;

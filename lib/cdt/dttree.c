@@ -317,8 +317,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			{	if(lk >= 0)
 					root = _DTLNK(obj,lk);
 				else
-				{	root = (Dtlink_t*)(*dt->memoryf)
-						(dt,NULL,sizeof(Dthold_t),disc);
+				{	root = (*dt->memoryf)(dt, NULL, sizeof(Dthold_t), disc);
 					if(root)
 						((Dthold_t*)root)->obj = obj;
 					else if(disc->makef && disc->freef &&
