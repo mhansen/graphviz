@@ -15,8 +15,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 	if(!meth || meth->type == oldmeth->type)
 		return oldmeth;
 
-	if(disc->eventf &&
-	   (*disc->eventf)(dt, DT_METH, meth, disc) < 0)
+	if (disc->eventf && disc->eventf(dt, DT_METH, meth, disc) < 0)
 		return NULL;
 
 	dt->data->minp = 0;
@@ -28,7 +27,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 		dt->data->head = NULL;
 	else if(dt->data->type&(DT_SET|DT_BAG) )
 	{	if(dt->data->ntab > 0)
-			(*dt->memoryf)(dt, dt->data->htab, 0, disc);
+			dt->memoryf(dt, dt->data->htab, 0, disc);
 		dt->data->ntab = 0;
 		dt->data->htab = NULL;
 	}
@@ -54,7 +53,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 	{	dt->data->size = 0;
 		while(list)
 		{	r = list->right;
-			(*meth->searchf)(dt, list, DT_RENEW);
+			meth->searchf(dt, list, DT_RENEW);
 			list = r;
 		}
 	}
@@ -72,7 +71,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 				key = _DTKEY(key,disc->key,disc->size);
 				list->hash = _DTHSH(dt,key,disc,disc->size);
 			}
-			(void)(*meth->searchf)(dt, list, DT_RENEW);
+			(void)meth->searchf(dt, list, DT_RENEW);
 			list = r;
 		}
 	}

@@ -32,7 +32,7 @@ Dt_t* dtopen(Dtdisc_t* disc, Dtmethod_t* meth)
 	if(disc->eventf)
 	{	/* if shared/persistent dictionary, get existing data */
 		data = NULL;
-		if((e = (*disc->eventf)(dt, DT_OPEN, &data, disc)) < 0)
+		if ((e = disc->eventf(dt, DT_OPEN, &data, disc)) < 0)
 			goto err_open;
 		else if(e > 0)
 		{	if(data)
@@ -45,7 +45,7 @@ Dt_t* dtopen(Dtdisc_t* disc, Dtmethod_t* meth)
 				goto err_open;
 
 			free(dt);
-			if(!(dt = (*disc->memoryf)(0, 0, sizeof(Dt_t), disc)) )
+			if (!(dt = disc->memoryf(0, 0, sizeof(Dt_t), disc)))
 				return NULL;
 			dt->searchf = NULL;
 			dt->meth = NULL;
@@ -58,7 +58,7 @@ Dt_t* dtopen(Dtdisc_t* disc, Dtmethod_t* meth)
 	}
 
 	/* allocate sharable data */
-	if(!(data = (dt->memoryf)(dt, NULL, sizeof(Dtdata_t), disc)) )
+	if (!(data = dt->memoryf(dt, NULL, sizeof(Dtdata_t), disc)))
 	{ err_open:
 		free(dt);
 		return NULL;

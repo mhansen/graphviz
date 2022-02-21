@@ -22,7 +22,7 @@ static void* dtvsearch(Dt_t* dt, void* obj, int type)
 	if((type&(DT_MATCH|DT_SEARCH)) || /* order sets first/last done below */
 	   ((type&(DT_FIRST|DT_LAST)) && !(dt->meth->type&(DT_OBAG|DT_OSET)) ) )
 	{	for(d = dt; d; d = d->view)
-			if((o = (*(d->meth->searchf))(d,obj,type)) )
+			if ((o = d->meth->searchf(d, obj, type)))
 				break;
 		dt->walk = d;
 		return o;
@@ -34,7 +34,7 @@ static void* dtvsearch(Dt_t* dt, void* obj, int type)
 
 		n = nk = NULL; p = NULL;
 		for(d = dt; d; d = d->view)
-		{	if(!(o = (*d->meth->searchf)(d, obj, type)) )
+		{	if (!(o = d->meth->searchf(d, obj, type)))
 				continue;
 			_DTDSC(d->disc,ky,sz,lk,cmpf);
 			ok = _DTKEY(o,ky,sz);
@@ -62,29 +62,29 @@ static void* dtvsearch(Dt_t* dt, void* obj, int type)
 
 	if(!dt->walk || obj != _DTOBJ(dt->walk->data->here, dt->walk->disc->link) )
 	{	for(d = dt; d; d = d->view)
-			if((o = (*(d->meth->searchf))(d, obj, DT_SEARCH)) )
+			if ((o = d->meth->searchf(d, obj, DT_SEARCH)))
 				break;
 		dt->walk = d;
 		if(!(obj = o) )
 			return NULL;
 	}
 
-	for(d = dt->walk, obj = (*d->meth->searchf)(d, obj, type);; )
+	for (d = dt->walk, obj = d->meth->searchf(d, obj, type);; )
 	{	while(obj) /* keep moving until finding an uncovered object */
 		{	for(p = dt; ; p = p->view)
 			{	if(p == d) /* adjacent object is uncovered */	
 					return obj;
-				if((*(p->meth->searchf))(p, obj, DT_SEARCH) )
+				if (p->meth->searchf(p, obj, DT_SEARCH))
 					break;
 			}
-			obj = (*d->meth->searchf)(d, obj, type);
+			obj = d->meth->searchf(d, obj, type);
 		}
 
 		if(!(d = dt->walk = d->view) ) /* move on to next dictionary */
 			return NULL;
 		else if(type&DT_NEXT)
-			obj = (*(d->meth->searchf))(d,NULL,DT_FIRST);
-		else	obj = (*(d->meth->searchf))(d,NULL,DT_LAST);
+			obj = d->meth->searchf(d, NULL, DT_FIRST);
+		else	obj = d->meth->searchf(d, NULL, DT_LAST);
 	}
 }
 
