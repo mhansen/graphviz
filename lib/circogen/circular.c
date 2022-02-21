@@ -48,16 +48,6 @@ static void initGraphAttrs(Agraph_t * g, circ_state * state)
     state->rootname = rootname;
 }
 
-/* cleanup:
- * We need to cleanup objects created in initGraphAttrs
- * and all blocks. All graph objects are components of the
- * initial derived graph and will be freed when it is closed. 
- */
-static void cleanup(block_t * root, circ_state * sp)
-{
-    freeBlocktree(root);
-}
-
 static block_t*
 createOneBlock(Agraph_t * g, circ_state * state)
 {
@@ -106,7 +96,12 @@ void circularLayout(Agraph_t * g, Agraph_t* realg)
 	root = createBlocktree(g, &state);
     circPos(g, root, &state);
 
-    cleanup(root, &state);
+    /* cleanup:
+     * We need to cleanup objects created in initGraphAttrs
+     * and all blocks. All graph objects are components of the
+     * initial derived graph and will be freed when it is closed.
+     */
+    freeBlocktree(root);
 }
 
 #ifdef DEBUG
