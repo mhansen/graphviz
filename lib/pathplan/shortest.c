@@ -378,7 +378,8 @@ static void connecttris(int tri1, int tri2)
 
     for (ei = 0; ei < 3; ei++) {
 	for (ej = 0; ej < 3; ej++) {
-	    tri1p = &tris[tri1], tri2p = &tris[tri2];
+	    tri1p = &tris[tri1];
+	    tri2p = &tris[tri2];
 	    if ((tri1p->e[ei].pnl0p->pp == tri2p->e[ej].pnl0p->pp &&
 		 tri1p->e[ei].pnl1p->pp == tri2p->e[ej].pnl1p->pp) ||
 		(tri1p->e[ei].pnl0p->pp == tri2p->e[ej].pnl1p->pp &&
