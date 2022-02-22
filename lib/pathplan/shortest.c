@@ -502,11 +502,13 @@ static int growpnls(int newpnln)
 {
     if (newpnln <= pnln)
 	return 0;
-    if (!(pnls = realloc(pnls, POINTNLINKSIZE * newpnln))) {
+    pnls = realloc(pnls, POINTNLINKSIZE * newpnln);
+    if (pnls == NULL) {
 	prerror("cannot realloc pnls");
 	return -1;
     }
-    if (!(pnlps = realloc(pnlps, POINTNLINKPSIZE * newpnln))) {
+    pnlps = realloc(pnlps, POINTNLINKPSIZE * newpnln);
+    if (pnlps == NULL) {
 	prerror("cannot realloc pnlps");
 	return -1;
     }
@@ -518,7 +520,8 @@ static int growtris(int newtrin)
 {
     if (newtrin <= trin)
 	return 0;
-    if (!(tris = realloc(tris, TRIANGLESIZE * newtrin))) {
+    tris = realloc(tris, TRIANGLESIZE * newtrin);
+    if (tris == NULL) {
 	prerror("cannot realloc tris");
 	return -1;
     }
@@ -531,7 +534,8 @@ static int growdq(int newdqn)
 {
     if (newdqn <= dq.pnlpn)
 	return 0;
-    if (!(dq.pnlps = realloc(dq.pnlps, POINTNLINKPSIZE * newdqn))) {
+    dq.pnlps = realloc(dq.pnlps, POINTNLINKPSIZE * newdqn);
+    if (dq.pnlps == NULL) {
 	prerror("cannot realloc dq.pnls");
 	return -1;
     }
@@ -543,7 +547,8 @@ static int growops(int newopn)
 {
     if (newopn <= opn)
 	return 0;
-    if (!(ops = realloc(ops, POINTSIZE * newopn))) {
+    ops = realloc(ops, POINTSIZE * newopn);
+    if (ops == NULL) {
 	prerror("cannot realloc ops");
 	return -1;
     }
