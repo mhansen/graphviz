@@ -119,9 +119,9 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	    minx = polyp->ps[pi].x, minpi = pi;
     }
     p2 = polyp->ps[minpi];
-    p1 = polyp->ps[((minpi == 0) ? polyp->pn - 1 : minpi - 1)];
-    p3 = polyp->ps[((minpi == polyp->pn - 1) ? 0 : minpi + 1)];
-    if (((p1.x == p2.x && p2.x == p3.x) && (p3.y > p2.y)) ||
+    p1 = polyp->ps[minpi == 0 ? polyp->pn - 1 : minpi - 1];
+    p3 = polyp->ps[(minpi == polyp->pn - 1) ? 0 : minpi + 1];
+    if ((p1.x == p2.x && p2.x == p3.x && p3.y > p2.y) ||
 	ccw(&p1, &p2, &p3) != ISCCW) {
 	for (pi = polyp->pn - 1; pi >= 0; pi--) {
 	    if (pi < polyp->pn - 1
@@ -331,22 +331,22 @@ static bool isdiagonal(int pnli, int pnlip2, pointnlink_t ** pnlps,
     if (ccw(pnlps[pnlim1]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) ==
 	ISCCW)
 	res =
-	    (ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlim1]->pp) ==
-	     ISCCW)
-	    && (ccw(pnlps[pnlip2]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp)
-		== ISCCW);
+	    ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlim1]->pp) ==
+	     ISCCW
+	    && ccw(pnlps[pnlip2]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp)
+		== ISCCW;
     /* Assume (pnli - 1, pnli, pnli + 1) not collinear. */
     else
-	res = (ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp,
-		   pnlps[pnlip1]->pp) == ISCW);
+	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp,
+		   pnlps[pnlip1]->pp) == ISCW;
     if (!res)
 	return false;
 
     /* check against all other edges */
     for (pnlj = 0; pnlj < pnln; pnlj++) {
 	pnljp1 = (pnlj + 1) % pnln;
-	if (!((pnlj == pnli) || (pnljp1 == pnli) ||
-	      (pnlj == pnlip2) || (pnljp1 == pnlip2)))
+	if (!(pnlj == pnli || pnljp1 == pnli ||
+	      pnlj == pnlip2 || pnljp1 == pnlip2))
 	    if (intersects(pnlps[pnli]->pp, pnlps[pnlip2]->pp,
 			   pnlps[pnlj]->pp, pnlps[pnljp1]->pp))
 		return false;
@@ -459,9 +459,9 @@ static int ccw(Ppoint_t * p1p, Ppoint_t * p2p, Ppoint_t * p3p)
 {
     double d;
 
-    d = ((p1p->y - p2p->y) * (p3p->x - p2p->x)) -
-	((p3p->y - p2p->y) * (p1p->x - p2p->x));
-    return (d > 0) ? ISCCW : ((d < 0) ? ISCW : ISON);
+    d = (p1p->y - p2p->y) * (p3p->x - p2p->x) -
+	(p3p->y - p2p->y) * (p1p->x - p2p->x);
+    return d > 0 ? ISCCW : (d < 0 ? ISCW : ISON);
 }
 
 /* line to line intersection */
@@ -476,10 +476,10 @@ static bool intersects(Ppoint_t * pap, Ppoint_t * pbp,
 	    between(pcp, pdp, pap) || between(pcp, pdp, pbp))
 	    return true;
     } else {
-	ccw1 = (ccw(pap, pbp, pcp) == ISCCW) ? 1 : 0;
-	ccw2 = (ccw(pap, pbp, pdp) == ISCCW) ? 1 : 0;
-	ccw3 = (ccw(pcp, pdp, pap) == ISCCW) ? 1 : 0;
-	ccw4 = (ccw(pcp, pdp, pbp) == ISCCW) ? 1 : 0;
+	ccw1 = ccw(pap, pbp, pcp) == ISCCW ? 1 : 0;
+	ccw2 = ccw(pap, pbp, pdp) == ISCCW ? 1 : 0;
+	ccw3 = ccw(pcp, pdp, pap) == ISCCW ? 1 : 0;
+	ccw4 = ccw(pcp, pdp, pbp) == ISCCW ? 1 : 0;
 	return (ccw1 ^ ccw2) && (ccw3 ^ ccw4);
     }
     return false;
@@ -494,8 +494,8 @@ static bool between(Ppoint_t * pap, Ppoint_t * pbp, Ppoint_t * pcp)
     p2.x = pcp->x - pap->x, p2.y = pcp->y - pap->y;
     if (ccw(pap, pbp, pcp) != ISON)
 	return false;
-    return (p2.x * p1.x + p2.y * p1.y >= 0) &&
-	(p2.x * p2.x + p2.y * p2.y <= p1.x * p1.x + p1.y * p1.y);
+    return p2.x * p1.x + p2.y * p1.y >= 0 &&
+	p2.x * p2.x + p2.y * p2.y <= p1.x * p1.x + p1.y * p1.y;
 }
 
 static int pointintri(int trii, Ppoint_t * pp)
@@ -506,7 +506,7 @@ static int pointintri(int trii, Ppoint_t * pp)
 	if (ccw(tris[trii].e[ei].pnl0p->pp,
 		tris[trii].e[ei].pnl1p->pp, pp) != ISCW)
 	    sum++;
-    return (sum == 3 || sum == 0);
+    return sum == 3 || sum == 0;
 }
 
 static int growpnls(int newpnln)
