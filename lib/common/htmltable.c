@@ -35,6 +35,7 @@
 #include <common/pointset.h>
 #include <common/intset.h>
 #include <cdt/cdt.h>
+#include <cgraph/itos.h>
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -1304,25 +1305,6 @@ static void sizeLinearArray(htmltbl_t * tbl)
     }
 }
 
-static char *nnames[] = {
-    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-    "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-};
-
-/* nToName:
- * Convert int to its decimal string representation.
- */
-static char *nToName(int c)
-{
-    static char name[100];
-
-    if (c < sizeof(nnames) / sizeof(char *))
-	return nnames[c];
-
-    snprintf(name, sizeof(name), "%d", c);
-    return name;
-}
-
 /* closeGraphs:
  * Clean up graphs made for setting column and row widths.
  */
@@ -1401,7 +1383,7 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 
     lastn = NULL;
     for (i = 0; i <= tbl->cc; i++) {
-	t = agnode(colg, nToName(i), 1);
+	t = agnode(colg, itos(i).str, 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	alloc_elist(tbl->rc, ND_in(t));
 	alloc_elist(tbl->rc, ND_out(t));
@@ -1414,7 +1396,7 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
     }
     lastn = NULL;
     for (i = 0; i <= tbl->rc; i++) {
-	t = agnode(rowg, nToName(i), 1);
+	t = agnode(rowg, itos(i).str, 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	alloc_elist(tbl->cc, ND_in(t));
 	alloc_elist(tbl->cc, ND_out(t));
@@ -1428,12 +1410,12 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
-	t = agfindnode(colg, nToName(cp->col));
-	h = agfindnode(colg, nToName(cp->col + cp->cspan));
+	t = agfindnode(colg, itos(cp->col).str);
+	h = agfindnode(colg, itos(cp->col + cp->cspan).str);
 	checkEdge (colg, t, h, cp->data.box.UR.x);
 
-	t = agfindnode(rowg, nToName(cp->row));
-	h = agfindnode(rowg, nToName(cp->row + cp->rspan));
+	t = agfindnode(rowg, itos(cp->row).str);
+	h = agfindnode(rowg, itos(cp->row + cp->rspan).str);
 	checkEdge (rowg, t, h, cp->data.box.UR.y);
     }
 
