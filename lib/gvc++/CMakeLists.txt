@@ -15,6 +15,7 @@ target_include_directories(gvc++ PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${GRAPHVIZ_LIB_DIR}/cdt
   ${GRAPHVIZ_LIB_DIR}/cgraph
+  ${GRAPHVIZ_LIB_DIR}/cgraph++
   ${GRAPHVIZ_LIB_DIR}/common
   ${GRAPHVIZ_LIB_DIR}/gvc
   ${GRAPHVIZ_LIB_DIR}/pathplan

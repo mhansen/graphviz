@@ -8,6 +8,7 @@ set_property(TARGET cgraph++ PROPERTY CXX_STANDARD_REQUIRED ON)
 target_include_directories(cgraph++ PRIVATE
   ${GRAPHVIZ_LIB_DIR}
   ${GRAPHVIZ_LIB_DIR}/cdt
+  ${GRAPHVIZ_LIB_DIR}/cgraph
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 

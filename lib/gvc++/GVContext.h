@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include <gvc/gvc.h>
+#include "gvc.h"
 
 #ifdef GVDLL
 #if gvc___EXPORTS // CMake's substitution of gvc++_EXPORTS
