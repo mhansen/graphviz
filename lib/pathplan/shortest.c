@@ -328,25 +328,19 @@ static bool isdiagonal(int pnli, int pnlip2, pointnlink_t ** pnlps,
     pnlip1 = (pnli + 1) % pnln;
     pnlim1 = (pnli + pnln - 1) % pnln;
     /* If P[pnli] is a convex vertex [ pnli+1 left of (pnli-1,pnli) ]. */
-    if (ccw(pnlps[pnlim1]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) ==
-	ISCCW)
-	res =
-	    ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlim1]->pp) ==
-	     ISCCW
-	    && ccw(pnlps[pnlip2]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp)
-		== ISCCW;
+    if (ccw(pnlps[pnlim1]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) == ISCCW)
+	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlim1]->pp) == ISCCW
+	   && ccw(pnlps[pnlip2]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) == ISCCW;
     /* Assume (pnli - 1, pnli, pnli + 1) not collinear. */
     else
-	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp,
-		   pnlps[pnlip1]->pp) == ISCW;
+	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlip1]->pp) == ISCW;
     if (!res)
 	return false;
 
     /* check against all other edges */
     for (pnlj = 0; pnlj < pnln; pnlj++) {
 	pnljp1 = (pnlj + 1) % pnln;
-	if (!(pnlj == pnli || pnljp1 == pnli ||
-	      pnlj == pnlip2 || pnljp1 == pnlip2))
+	if (!(pnlj == pnli || pnljp1 == pnli || pnlj == pnlip2 || pnljp1 == pnlip2))
 	    if (intersects(pnlps[pnli]->pp, pnlps[pnlip2]->pp,
 			   pnlps[pnlj]->pp, pnlps[pnljp1]->pp))
 		return false;
@@ -367,12 +361,9 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
     }
     trip = &tris[tril++];
     trip->mark = 0;
-    trip->e[0].pnl0p = pnlap, trip->e[0].pnl1p = pnlbp, trip->e[0].rtp =
-	NULL;
-    trip->e[1].pnl0p = pnlbp, trip->e[1].pnl1p = pnlcp, trip->e[1].rtp =
-	NULL;
-    trip->e[2].pnl0p = pnlcp, trip->e[2].pnl1p = pnlap, trip->e[2].rtp =
-	NULL;
+    trip->e[0].pnl0p = pnlap, trip->e[0].pnl1p = pnlbp, trip->e[0].rtp = NULL;
+    trip->e[1].pnl0p = pnlbp, trip->e[1].pnl1p = pnlcp, trip->e[1].rtp = NULL;
+    trip->e[2].pnl0p = pnlcp, trip->e[2].pnl1p = pnlap, trip->e[2].rtp = NULL;
     for (ei = 0; ei < 3; ei++)
 	trip->e[ei].ltp = trip;
 
@@ -444,12 +435,10 @@ static int finddqsplit(pointnlink_t * pnlp)
     int index;
 
     for (index = dq.fpnlpi; index < dq.apex; index++)
-	if (ccw(dq.pnlps[index + 1]->pp, dq.pnlps[index]->pp, pnlp->pp) ==
-	    ISCCW)
+	if (ccw(dq.pnlps[index + 1]->pp, dq.pnlps[index]->pp, pnlp->pp) == ISCCW)
 	    return index;
     for (index = dq.lpnlpi; index > dq.apex; index--)
-	if (ccw(dq.pnlps[index - 1]->pp, dq.pnlps[index]->pp, pnlp->pp) ==
-	    ISCW)
+	if (ccw(dq.pnlps[index - 1]->pp, dq.pnlps[index]->pp, pnlp->pp) == ISCW)
 	    return index;
     return dq.apex;
 }
@@ -503,8 +492,7 @@ static int pointintri(int trii, Ppoint_t * pp)
     int ei, sum;
 
     for (ei = 0, sum = 0; ei < 3; ei++)
-	if (ccw(tris[trii].e[ei].pnl0p->pp,
-		tris[trii].e[ei].pnl1p->pp, pp) != ISCW)
+	if (ccw(tris[trii].e[ei].pnl0p->pp, tris[trii].e[ei].pnl1p->pp, pp) != ISCW)
 	    sum++;
     return sum == 3 || sum == 0;
 }
