@@ -39,7 +39,7 @@ void agxbinit(agxbuf * xb, unsigned int hint, unsigned char *init)
 /* agxbmore;
  * Expand buffer to hold at least ssz more bytes.
  */
-int agxbmore(agxbuf * xb, size_t ssz)
+void agxbmore(agxbuf * xb, size_t ssz)
 {
     size_t cnt = 0;         /* current no. of characters in buffer */
     size_t size = 0;        /* current buffer size */
@@ -61,7 +61,6 @@ int agxbmore(agxbuf * xb, size_t ssz)
     xb->buf = nbuf;
     xb->ptr = xb->buf + cnt;
     xb->eptr = xb->buf + nsize;
-    return 0;
 }
 
 int agxbprint(agxbuf * xb, const char *fmt, ...) {
@@ -90,7 +89,7 @@ int agxbprint(agxbuf * xb, const char *fmt, ...) {
     size_t unused_space = (size_t)(xb->eptr - xb->ptr);
     if (unused_space < size) {
       size_t extra = size - unused_space;
-      (void)agxbmore(xb, extra);
+      agxbmore(xb, extra);
     }
   }
 

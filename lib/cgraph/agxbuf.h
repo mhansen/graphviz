@@ -85,7 +85,7 @@ extern "C" {
 /* agxbmore:
  * Expand buffer to hold at least ssz more bytes.
  */
-    AGXBUF_API int agxbmore(agxbuf * xb, size_t ssz);
+    AGXBUF_API void agxbmore(agxbuf * xb, size_t ssz);
 
 /* agxbputc:
  * Add character to buffer.
@@ -93,9 +93,7 @@ extern "C" {
  */
 static inline int agxbputc(agxbuf * xb, char c) {
   if (xb->ptr >= xb->eptr) {
-    if (agxbmore(xb, 1) != 0) {
-      return -1;
-    }
+    agxbmore(xb, 1);
   }
   *xb->ptr++ = (unsigned char)c;
   return 0;
