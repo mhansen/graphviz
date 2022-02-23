@@ -48,5 +48,5 @@ void* dtrenew(Dt_t* dt, void* obj)
 	}
 
 	dt->data->size -= 1;
-	return (*dt->meth->searchf)(dt,(void*)e,DT_RENEW) ? obj : NULL;
+	return dt->meth->searchf(dt, e, DT_RENEW) ? obj : NULL;
 }

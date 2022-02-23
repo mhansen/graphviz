@@ -16,7 +16,7 @@ int dtwalk(Dt_t* dt, int (*userf)(Dt_t*, void*, void*), void* data)
 	{	if(!(walk = dt->walk) )
 			walk = dt;
 		next = dtnext(dt,obj);
-		if((rv = (*userf)(walk, obj, data )) < 0)
+		if ((rv = userf(walk, obj, data )) < 0)
 			return rv;
 		obj = next;
 	}

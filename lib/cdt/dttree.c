@@ -35,9 +35,9 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 						RROTATE(root,t);
 					t = root->right;
 					if(disc->freef)
-						(*disc->freef)(dt,_DTOBJ(root,lk),disc);
+						disc->freef(dt, _DTOBJ(root, lk), disc);
 					if(disc->link < 0)
-						(*dt->memoryf)(dt,(void*)root,0,disc);
+						dt->memoryf(dt, root, 0, disc);
 				} while((root = t) );
 			}
 
@@ -85,7 +85,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			goto do_search;
 	}
 	else if(type&DT_RENEW)
-	{	me = (Dtlink_t*)obj;
+	{	me = obj;
 		obj = _DTOBJ(me,lk);
 		key = _DTKEY(obj,ky,sz);
 		if(root)
@@ -259,9 +259,9 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 		dt_delete:
 			obj = _DTOBJ(root,lk);
 			if(disc->freef && (type&DT_DELETE))
-				(*disc->freef)(dt,obj,disc);
+				disc->freef(dt, obj, disc);
 			if(disc->link < 0)
-				(*dt->memoryf)(dt,(void*)root,0,disc);
+				dt->memoryf(dt, root, 0, disc);
 			if((dt->data->size -= 1) < 0)
 				dt->data->size = -1;
 			goto no_root;
@@ -279,9 +279,9 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 		else if(type&DT_RENEW) /* a duplicate */
 		{	if(dt->meth->type&DT_OSET)
 			{	if(disc->freef)
-					(*disc->freef)(dt,obj,disc);
+					disc->freef(dt, obj, disc);
 				if(disc->link < 0)
-					(*dt->memoryf)(dt,(void*)me,0,disc);
+					dt->memoryf(dt, me, 0, disc);
 			}
 			else
 			{	me->left = NULL;
@@ -312,18 +312,17 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 		else if(type&(DT_INSERT|DT_ATTACH))
 		{ dt_insert:
 			if(disc->makef && (type&DT_INSERT))
-				obj = (*disc->makef)(dt,obj,disc);
+				obj = disc->makef(dt, obj, disc);
 			if(obj)
 			{	if(lk >= 0)
 					root = _DTLNK(obj,lk);
 				else
-				{	root = (Dtlink_t*)(*dt->memoryf)
-						(dt,NULL,sizeof(Dthold_t),disc);
+				{	root = dt->memoryf(dt, NULL, sizeof(Dthold_t), disc);
 					if(root)
 						((Dthold_t*)root)->obj = obj;
 					else if(disc->makef && disc->freef &&
 						(type&DT_INSERT))
-						(*disc->freef)(dt,obj,disc);
+						disc->freef(dt, obj, disc);
 				}
 			}
 			if(root)
