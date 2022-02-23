@@ -49,7 +49,7 @@ function find_or_fallback($programs, $fallback_path) {
 
 $build_utilities_path = "$GRAPHVIZ_ROOT\windows\dependencies\graphviz-build-utilities"
 
-find_or_fallback "awk sed swig" "$build_utilities_path"
+find_or_fallback "awk swig" "$build_utilities_path"
 find_or_fallback "win_bison win_flex" "$build_utilities_path\winflexbison"
 find_or_fallback "makensis" "$build_utilities_path\NSIS\Bin"
 find_or_fallback "cmake cpack" "$CMAKE_BIN"
@@ -57,8 +57,6 @@ find_or_fallback "msbuild" "$MSBUILD_BIN"
 
 if (-NOT (cpack.exe --help | Select-String 'CPACK_GENERATOR')) {
     echo "Moving $CMAKE_BIN to front of PATH in order to find CMake's cpack"
-    $CMAKE_BIN_ESCAPED = echo $CMAKE_BIN | sed 's#\\#\\\\#g'
-    $path = (Invoke-Expression 'echo $Env:Path' | sed "s#;$CMAKE_BIN_ESCAPED##")
     $Env:Path="$CMAKE_BIN;$path"
 }
 
@@ -66,8 +64,7 @@ $ErrorActionPreference = "Continue"
 if (-NOT (sort.exe /? 2>$null | Select-String "SORT")) {
     $ErrorActionPreference = "Stop"
     echo "Moving C:\WINDOWS\system32 to front of PATH in order to find Windows' sort"
-    $path = (Invoke-Expression 'echo $Env:Path' | sed 's#;C:\\WINDOWS\\system32;#;#')
-    $Env:Path="C:\WINDOWS\system32;$path"
+    $Env:Path="C:\WINDOWS\system32;$Env:Path"
 }
 $ErrorActionPreference = "Stop"
 
