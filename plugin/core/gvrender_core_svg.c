@@ -50,6 +50,10 @@ static char *sdasharray = "5,2";
 /* SVG dot array */
 static char *sdotarray = "1,5";
 
+static char *transparent = "transparent";
+static char *none = "none";
+static char *black = "black";
+
 static void svg_bzptarray(GVJ_t * job, pointf * A, int n)
 {
     int i;
@@ -103,18 +107,49 @@ static void svg_print_id_class(GVJ_t * job, char* id, char* idx, char* kind, voi
     gvputc(job, '"');
 }
 
-static void svg_print_color(GVJ_t * job, gvcolor_t color)
+/* svg_print_paint assumes the caller will set the opacity if the alpha channel
+ * is greater than 0 and less than 255
+ */
+static void svg_print_paint(GVJ_t * job, gvcolor_t color)
 {
     switch (color.type) {
     case COLOR_STRING:
-	gvputs(job, color.u.string);
+	if (!strcmp(color.u.string, transparent))
+	    gvputs(job, none);
+	else
+	    gvputs(job, color.u.string);
 	break;
     case RGBA_BYTE:
 	if (color.u.rgba[3] == 0)	/* transparent */
-	    gvputs(job, "transparent");
+	    gvputs(job, none);
 	else
 	    gvprintf(job, "#%02x%02x%02x",
 		     color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
+	break;
+    default:
+	assert(0);		/* internal error */
+    }
+}
+
+/* svg_print_gradient_color assumes the caller will set the opacity if the
+ * alpha channel is less than 255.
+ *
+ * "transparent" in SVG 2 gradients is considered to be black with 0 opacity,
+ * so for compatibility with SVG 1.1 output we use black when the color string
+ * is transparent and assume the caller will also check and set opacity 0.
+ */
+static void svg_print_gradient_color(GVJ_t * job, gvcolor_t color)
+{
+    switch (color.type) {
+    case COLOR_STRING:
+	if (!strcmp(color.u.string, transparent))
+	    gvputs(job, black);
+	else
+	    gvputs(job, color.u.string);
+	break;
+    case RGBA_BYTE:
+	gvprintf(job, "#%02x%02x%02x",
+		 color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
 	break;
     default:
 	assert(0);		/* internal error */
@@ -131,7 +166,7 @@ static void svg_grstyle(GVJ_t * job, int filled, int gid)
     } else if (filled == RGRADIENT) {
 	gvprintf(job, "url(#r_%d)", gid);
     } else if (filled) {
-	svg_print_color(job, obj->fillcolor);
+	svg_print_paint(job, obj->fillcolor);
 	if (obj->fillcolor.type == RGBA_BYTE
 	    && obj->fillcolor.u.rgba[3] > 0
 	    && obj->fillcolor.u.rgba[3] < 255)
@@ -141,7 +176,7 @@ static void svg_grstyle(GVJ_t * job, int filled, int gid)
 	gvputs(job, "none");
     }
     gvputs(job, "\" stroke=\"");
-    svg_print_color(job, obj->pencolor);
+    svg_print_paint(job, obj->pencolor);
     if (obj->penwidth != PENWIDTH_NORMAL) {
 	gvputs(job, "\" stroke-width=\"");
         gvprintdouble(job, obj->penwidth);
@@ -484,6 +519,25 @@ static void svg_textspan(GVJ_t * job, pointf p, textspan_t * span)
     gvputs(job, "</text>\n");
 }
 
+static void svg_print_stop(GVJ_t * job, double offset, gvcolor_t color)
+{
+    if (offset == 0.0)
+	gvputs(job, "<stop offset=\"0\" style=\"stop-color:");
+    else if (offset == 1.0)
+	gvputs(job, "<stop offset=\"1\" style=\"stop-color:");
+    else
+	gvprintf(job, "<stop offset=\"%.03f\" style=\"stop-color:", offset);
+    svg_print_gradient_color(job, color);
+    gvputs(job, ";stop-opacity:");
+    if (color.type == RGBA_BYTE && color.u.rgba[3] < 255)
+	gvprintf(job, "%f", ((float) color.u.rgba[3] / 255.0));
+    else if (color.type == COLOR_STRING && !strcmp(color.u.string, transparent))
+	gvputs(job, "0");
+    else
+	gvputs(job, "1.");
+    gvputs(job, ";\"/>\n");
+}
+
 /* svg_gradstyle
  * Outputs the SVG statements that define the gradient pattern
  */
@@ -509,30 +563,11 @@ static int svg_gradstyle(GVJ_t * job, pointf * A, int n)
     gvputs(job, "\" y2=\"");
     gvprintdouble(job, G[1].y);
     gvputs(job, "\" >\n");
-    if (obj->gradient_frac > 0)
-	gvprintf(job, "<stop offset=\"%.03f\" style=\"stop-color:", obj->gradient_frac - 0.001);
-    else
-	gvputs(job, "<stop offset=\"0\" style=\"stop-color:");
-    svg_print_color(job, obj->fillcolor);
-    gvputs(job, ";stop-opacity:");
-    if (obj->fillcolor.type == RGBA_BYTE && obj->fillcolor.u.rgba[3] > 0
-	&& obj->fillcolor.u.rgba[3] < 255)
-	gvprintf(job, "%f", ((float) obj->fillcolor.u.rgba[3] / 255.0));
-    else
-	gvputs(job, "1.");
-    gvputs(job, ";\"/>\n");
-    if (obj->gradient_frac > 0)
-	gvprintf(job, "<stop offset=\"%.03f\" style=\"stop-color:", obj->gradient_frac);
-    else
-	gvputs(job, "<stop offset=\"1\" style=\"stop-color:");
-    svg_print_color(job, obj->stopcolor);
-    gvputs(job, ";stop-opacity:");
-    if (obj->stopcolor.type == RGBA_BYTE && obj->stopcolor.u.rgba[3] > 0
-	&& obj->stopcolor.u.rgba[3] < 255)
-	gvprintf(job, "%f", ((float) obj->stopcolor.u.rgba[3] / 255.0));
-    else
-	gvputs(job, "1.");
-    gvputs(job, ";\"/>\n</linearGradient>\n</defs>\n");
+
+    svg_print_stop(job, obj->gradient_frac > 0 ? obj->gradient_frac - 0.001 : 0.0, obj->fillcolor);
+    svg_print_stop(job, obj->gradient_frac > 0 ? obj->gradient_frac : 1.0, obj->stopcolor);
+
+    gvputs(job, "</linearGradient>\n</defs>\n");
     return id;
 }
 
@@ -557,24 +592,11 @@ static int svg_rgradstyle(GVJ_t * job)
 	     "<defs>\n<radialGradient id=\"r_%d\" cx=\"50%%\" cy=\"50%%\" r=\"75%%\" "
 	     "fx=\"%.0f%%\" fy=\"%.0f%%\">\n",
 	     id, ifx, ify);
-    gvputs(job, "<stop offset=\"0\" style=\"stop-color:");
-    svg_print_color(job, obj->fillcolor);
-    gvputs(job, ";stop-opacity:");
-    if (obj->fillcolor.type == RGBA_BYTE && obj->fillcolor.u.rgba[3] > 0
-	&& obj->fillcolor.u.rgba[3] < 255)
-	gvprintf(job, "%f", ((float) obj->fillcolor.u.rgba[3] / 255.0));
-    else
-	gvputs(job, "1.");
-    gvputs(job, ";\"/>\n"
-                "<stop offset=\"1\" style=\"stop-color:");
-    svg_print_color(job, obj->stopcolor);
-    gvputs(job, ";stop-opacity:");
-    if (obj->stopcolor.type == RGBA_BYTE && obj->stopcolor.u.rgba[3] > 0
-	&& obj->stopcolor.u.rgba[3] < 255)
-	gvprintf(job, "%f", ((float) obj->stopcolor.u.rgba[3] / 255.0));
-    else
-	gvputs(job, "1.");
-    gvputs(job, ";\"/>\n</radialGradient>\n</defs>\n");
+
+    svg_print_stop(job, 0.0, obj->fillcolor);
+    svg_print_stop(job, 1.0, obj->stopcolor);
+
+    gvputs(job, "</radialGradient>\n</defs>\n");
     return id;
 }
 
