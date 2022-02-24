@@ -11,17 +11,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void test_0(void) {
-  assert(strcmp(itos(0).str, "0") == 0);
-}
+static void test_0(void) { assert(strcmp(itos(0).str, "0") == 0); }
 
-static void test_1(void) {
-  assert(strcmp(itos(1).str, "1") == 0);
-}
+static void test_1(void) { assert(strcmp(itos(1).str, "1") == 0); }
 
-static void test_neg_1(void) {
-  assert(strcmp(itos(-1).str, "-1") == 0);
-}
+static void test_neg_1(void) { assert(strcmp(itos(-1).str, "-1") == 0); }
 
 static void test_min(void) {
 
