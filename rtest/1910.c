@@ -6,7 +6,7 @@
 #include <graphviz/cgraph.h>
 
 #ifdef NDEBUG
-  #error "this code is not intended to be compiled with assertions disabled"
+#error "this code is not intended to be compiled with assertions disabled"
 #endif
 
 int main(void) {
