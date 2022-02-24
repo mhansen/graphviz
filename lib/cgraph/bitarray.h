@@ -38,7 +38,7 @@
 /// these to zero gives you a valid zero-length bit array.
 typedef struct {
   union {
-    uint8_t block[sizeof(uint8_t*)]; ///< inline storage for small arrays
+    uint8_t block[sizeof(uint8_t *)]; ///< inline storage for small arrays
     uint8_t *base; ///< start of the underlying allocated buffer
   };
   size_t size_bits; ///< extent in bits
@@ -53,7 +53,7 @@ static inline int bitarray_new(bitarray_t *self, size_t size_bits) {
   if (size_bits <= sizeof(self->block) * 8) {
     memset(self->block, 0, sizeof(self->block));
 
-  // otherwise we need to heap-allocate
+    // otherwise we need to heap-allocate
   } else {
     size_t capacity = size_bits / 8 + (size_bits % 8 == 0 ? 0 : 1);
     uint8_t *base = calloc(capacity, sizeof(self->base[0]));
@@ -113,7 +113,7 @@ static inline void bitarray_set(bitarray_t *self, size_t index, bool value) {
   if (value) {
     base[index / 8] |= (uint8_t)(UINT8_C(1) << (index % 8));
   } else {
-    base[index / 8] &= (uint8_t)~(UINT8_C(1) << (index % 8));
+    base[index / 8] &= (uint8_t) ~(UINT8_C(1) << (index % 8));
   }
 }
 
