@@ -119,9 +119,9 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	    minx = polyp->ps[pi].x, minpi = pi;
     }
     p2 = polyp->ps[minpi];
-    p1 = polyp->ps[((minpi == 0) ? polyp->pn - 1 : minpi - 1)];
-    p3 = polyp->ps[((minpi == polyp->pn - 1) ? 0 : minpi + 1)];
-    if (((p1.x == p2.x && p2.x == p3.x) && (p3.y > p2.y)) ||
+    p1 = polyp->ps[minpi == 0 ? polyp->pn - 1 : minpi - 1];
+    p3 = polyp->ps[(minpi == polyp->pn - 1) ? 0 : minpi + 1];
+    if ((p1.x == p2.x && p2.x == p3.x && p3.y > p2.y) ||
 	ccw(&p1, &p2, &p3) != ISCCW) {
 	for (pi = polyp->pn - 1; pi >= 0; pi--) {
 	    if (pi < polyp->pn - 1
@@ -328,25 +328,19 @@ static bool isdiagonal(int pnli, int pnlip2, pointnlink_t ** pnlps,
     pnlip1 = (pnli + 1) % pnln;
     pnlim1 = (pnli + pnln - 1) % pnln;
     /* If P[pnli] is a convex vertex [ pnli+1 left of (pnli-1,pnli) ]. */
-    if (ccw(pnlps[pnlim1]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) ==
-	ISCCW)
-	res =
-	    (ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlim1]->pp) ==
-	     ISCCW)
-	    && (ccw(pnlps[pnlip2]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp)
-		== ISCCW);
+    if (ccw(pnlps[pnlim1]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) == ISCCW)
+	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlim1]->pp) == ISCCW
+	   && ccw(pnlps[pnlip2]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) == ISCCW;
     /* Assume (pnli - 1, pnli, pnli + 1) not collinear. */
     else
-	res = (ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp,
-		   pnlps[pnlip1]->pp) == ISCW);
+	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlip1]->pp) == ISCW;
     if (!res)
 	return false;
 
     /* check against all other edges */
     for (pnlj = 0; pnlj < pnln; pnlj++) {
 	pnljp1 = (pnlj + 1) % pnln;
-	if (!((pnlj == pnli) || (pnljp1 == pnli) ||
-	      (pnlj == pnlip2) || (pnljp1 == pnlip2)))
+	if (!(pnlj == pnli || pnljp1 == pnli || pnlj == pnlip2 || pnljp1 == pnlip2))
 	    if (intersects(pnlps[pnli]->pp, pnlps[pnlip2]->pp,
 			   pnlps[pnlj]->pp, pnlps[pnljp1]->pp))
 		return false;
@@ -367,12 +361,9 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
     }
     trip = &tris[tril++];
     trip->mark = 0;
-    trip->e[0].pnl0p = pnlap, trip->e[0].pnl1p = pnlbp, trip->e[0].rtp =
-	NULL;
-    trip->e[1].pnl0p = pnlbp, trip->e[1].pnl1p = pnlcp, trip->e[1].rtp =
-	NULL;
-    trip->e[2].pnl0p = pnlcp, trip->e[2].pnl1p = pnlap, trip->e[2].rtp =
-	NULL;
+    trip->e[0].pnl0p = pnlap, trip->e[0].pnl1p = pnlbp, trip->e[0].rtp = NULL;
+    trip->e[1].pnl0p = pnlbp, trip->e[1].pnl1p = pnlcp, trip->e[1].rtp = NULL;
+    trip->e[2].pnl0p = pnlcp, trip->e[2].pnl1p = pnlap, trip->e[2].rtp = NULL;
     for (ei = 0; ei < 3; ei++)
 	trip->e[ei].ltp = trip;
 
@@ -387,7 +378,8 @@ static void connecttris(int tri1, int tri2)
 
     for (ei = 0; ei < 3; ei++) {
 	for (ej = 0; ej < 3; ej++) {
-	    tri1p = &tris[tri1], tri2p = &tris[tri2];
+	    tri1p = &tris[tri1];
+	    tri2p = &tris[tri2];
 	    if ((tri1p->e[ei].pnl0p->pp == tri2p->e[ej].pnl0p->pp &&
 		 tri1p->e[ei].pnl1p->pp == tri2p->e[ej].pnl1p->pp) ||
 		(tri1p->e[ei].pnl0p->pp == tri2p->e[ej].pnl1p->pp &&
@@ -444,12 +436,10 @@ static int finddqsplit(pointnlink_t * pnlp)
     int index;
 
     for (index = dq.fpnlpi; index < dq.apex; index++)
-	if (ccw(dq.pnlps[index + 1]->pp, dq.pnlps[index]->pp, pnlp->pp) ==
-	    ISCCW)
+	if (ccw(dq.pnlps[index + 1]->pp, dq.pnlps[index]->pp, pnlp->pp) == ISCCW)
 	    return index;
     for (index = dq.lpnlpi; index > dq.apex; index--)
-	if (ccw(dq.pnlps[index - 1]->pp, dq.pnlps[index]->pp, pnlp->pp) ==
-	    ISCW)
+	if (ccw(dq.pnlps[index - 1]->pp, dq.pnlps[index]->pp, pnlp->pp) == ISCW)
 	    return index;
     return dq.apex;
 }
@@ -459,9 +449,9 @@ static int ccw(Ppoint_t * p1p, Ppoint_t * p2p, Ppoint_t * p3p)
 {
     double d;
 
-    d = ((p1p->y - p2p->y) * (p3p->x - p2p->x)) -
-	((p3p->y - p2p->y) * (p1p->x - p2p->x));
-    return (d > 0) ? ISCCW : ((d < 0) ? ISCW : ISON);
+    d = (p1p->y - p2p->y) * (p3p->x - p2p->x) -
+	(p3p->y - p2p->y) * (p1p->x - p2p->x);
+    return d > 0 ? ISCCW : (d < 0 ? ISCW : ISON);
 }
 
 /* line to line intersection */
@@ -476,10 +466,10 @@ static bool intersects(Ppoint_t * pap, Ppoint_t * pbp,
 	    between(pcp, pdp, pap) || between(pcp, pdp, pbp))
 	    return true;
     } else {
-	ccw1 = (ccw(pap, pbp, pcp) == ISCCW) ? 1 : 0;
-	ccw2 = (ccw(pap, pbp, pdp) == ISCCW) ? 1 : 0;
-	ccw3 = (ccw(pcp, pdp, pap) == ISCCW) ? 1 : 0;
-	ccw4 = (ccw(pcp, pdp, pbp) == ISCCW) ? 1 : 0;
+	ccw1 = ccw(pap, pbp, pcp) == ISCCW ? 1 : 0;
+	ccw2 = ccw(pap, pbp, pdp) == ISCCW ? 1 : 0;
+	ccw3 = ccw(pcp, pdp, pap) == ISCCW ? 1 : 0;
+	ccw4 = ccw(pcp, pdp, pbp) == ISCCW ? 1 : 0;
 	return (ccw1 ^ ccw2) && (ccw3 ^ ccw4);
     }
     return false;
@@ -494,8 +484,8 @@ static bool between(Ppoint_t * pap, Ppoint_t * pbp, Ppoint_t * pcp)
     p2.x = pcp->x - pap->x, p2.y = pcp->y - pap->y;
     if (ccw(pap, pbp, pcp) != ISON)
 	return false;
-    return (p2.x * p1.x + p2.y * p1.y >= 0) &&
-	(p2.x * p2.x + p2.y * p2.y <= p1.x * p1.x + p1.y * p1.y);
+    return p2.x * p1.x + p2.y * p1.y >= 0 &&
+	p2.x * p2.x + p2.y * p2.y <= p1.x * p1.x + p1.y * p1.y;
 }
 
 static int pointintri(int trii, Ppoint_t * pp)
@@ -503,21 +493,22 @@ static int pointintri(int trii, Ppoint_t * pp)
     int ei, sum;
 
     for (ei = 0, sum = 0; ei < 3; ei++)
-	if (ccw(tris[trii].e[ei].pnl0p->pp,
-		tris[trii].e[ei].pnl1p->pp, pp) != ISCW)
+	if (ccw(tris[trii].e[ei].pnl0p->pp, tris[trii].e[ei].pnl1p->pp, pp) != ISCW)
 	    sum++;
-    return (sum == 3 || sum == 0);
+    return sum == 3 || sum == 0;
 }
 
 static int growpnls(int newpnln)
 {
     if (newpnln <= pnln)
 	return 0;
-    if (!(pnls = realloc(pnls, POINTNLINKSIZE * newpnln))) {
+    pnls = realloc(pnls, POINTNLINKSIZE * newpnln);
+    if (pnls == NULL) {
 	prerror("cannot realloc pnls");
 	return -1;
     }
-    if (!(pnlps = realloc(pnlps, POINTNLINKPSIZE * newpnln))) {
+    pnlps = realloc(pnlps, POINTNLINKPSIZE * newpnln);
+    if (pnlps == NULL) {
 	prerror("cannot realloc pnlps");
 	return -1;
     }
@@ -529,7 +520,8 @@ static int growtris(int newtrin)
 {
     if (newtrin <= trin)
 	return 0;
-    if (!(tris = realloc(tris, TRIANGLESIZE * newtrin))) {
+    tris = realloc(tris, TRIANGLESIZE * newtrin);
+    if (tris == NULL) {
 	prerror("cannot realloc tris");
 	return -1;
     }
@@ -542,7 +534,8 @@ static int growdq(int newdqn)
 {
     if (newdqn <= dq.pnlpn)
 	return 0;
-    if (!(dq.pnlps = realloc(dq.pnlps, POINTNLINKPSIZE * newdqn))) {
+    dq.pnlps = realloc(dq.pnlps, POINTNLINKPSIZE * newdqn);
+    if (dq.pnlps == NULL) {
 	prerror("cannot realloc dq.pnls");
 	return -1;
     }
@@ -554,7 +547,8 @@ static int growops(int newopn)
 {
     if (newopn <= opn)
 	return 0;
-    if (!(ops = realloc(ops, POINTSIZE * newopn))) {
+    ops = realloc(ops, POINTSIZE * newopn);
+    if (ops == NULL) {
 	prerror("cannot realloc ops");
 	return -1;
     }
