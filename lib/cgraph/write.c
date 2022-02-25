@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>		/* need sprintf() */
@@ -655,13 +656,12 @@ static void set_attrwf(Agraph_t * g, bool toplevel, bool value)
 int agwrite(Agraph_t * g, void *ofile)
 {
     char* s;
-    int len;
     Level = 0;			/* re-initialize tab level */
     s = agget(g, "linelength");
     if (s != NULL && isdigit((int)*s)) {
-	len = (int)strtol(s, (char **)NULL, 10);
-	if (len == 0 || len >= MIN_OUTPUTLINE)
-	    Max_outputline = len;
+	unsigned long len = strtoul(s, NULL, 10);
+	if ((len == 0 || len >= MIN_OUTPUTLINE) && len <= (unsigned long)INT_MAX)
+	    Max_outputline = (int)len;
     }
     set_attrwf(g, true, false);
     CHKRV(write_hdr(g, ofile, TRUE));
