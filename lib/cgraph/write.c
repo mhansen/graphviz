@@ -14,6 +14,7 @@
 #include <stdio.h>		/* need sprintf() */
 #include <ctype.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/likely.h>
 #include <cgraph/strcasecmp.h>
 #include <inttypes.h>
 
@@ -168,7 +169,10 @@ static char *getoutputbuffer(const char *str)
 
     req = MAX(2 * strlen(str) + 2, BUFSIZ);
     if (req > len) {
-	rv = realloc(rv, req);
+	char *r = realloc(rv, req);
+	if (UNLIKELY(r == NULL))
+	    return NULL;
+	rv = r;
 	len = req;
     }
     return rv;
@@ -181,7 +185,10 @@ static char *getoutputbuffer(const char *str)
  */
 char *agcanonStr(char *str)
 {
-    return agstrcanon(str, getoutputbuffer(str));
+    char *buffer = getoutputbuffer(str);
+    if (UNLIKELY(buffer == NULL))
+        return NULL;
+    return agstrcanon(str, buffer);
 }
 
 /*
@@ -192,6 +199,8 @@ char *agcanonStr(char *str)
 char *agcanon(char *str, int html)
 {
     char* buf = getoutputbuffer(str);
+    if (UNLIKELY(buf == NULL))
+	return NULL;
     if (html)
 	return agcanonhtmlstr(str, buf);
     else
@@ -201,10 +210,14 @@ char *agcanon(char *str, int html)
 static int _write_canonstr(Agraph_t * g, iochan_t * ofile, char *str,
 			   int chk)
 {
-    if (chk)
+    if (chk) {
 	str = agcanonStr(str);
-    else
-	str = _agstrcanon(str, getoutputbuffer(str));
+    } else {
+	char *buffer = getoutputbuffer(str);
+	if (UNLIKELY(buffer == NULL))
+	    return EOF;
+	str = _agstrcanon(str, buffer);
+    }
     return ioput(g, ofile, str);
 }
 

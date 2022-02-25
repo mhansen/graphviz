@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (3.0.1)]
 
+### Fixed
+
+- `agcanon`, `agcanonStr`, and `agwrite` now return error values on memory
+  allocation failures instead of crashing or corrupting data
+
 ## [3.0.0] – 2022-02-26
 
 ### Changed
