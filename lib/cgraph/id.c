@@ -148,12 +148,13 @@ char *agnameof(void *obj)
 
     /* perform internal lookup first */
     g = agraphof(obj);
-    if ((rv = aginternalmapprint(g, AGTYPE(obj), AGID(obj))))
+    rv = aginternalmapprint(g, AGTYPE(obj), AGID(obj));
+    if (rv != NULL)
 	return rv;
 
     if (AGDISC(g, id)->print) {
-	if ((rv =
-	     AGDISC(g, id)->print(AGCLOS(g, id), AGTYPE(obj), AGID(obj))))
+	rv = AGDISC(g, id)->print(AGCLOS(g, id), AGTYPE(obj), AGID(obj));
+	if (rv != NULL)
 	    return rv;
     }
     if (AGTYPE(obj) != AGEDGE) {
