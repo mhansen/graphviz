@@ -648,7 +648,7 @@ static void
 freeTreeList (graph_t* g)
 {
     node_t *n;
-    for (n = GD_nlist(G); n; n = ND_next(n)) {
+    for (n = GD_nlist(g); n; n = ND_next(n)) {
 	free_list(ND_tree_in(n));
 	free_list(ND_tree_out(n));
 	ND_mark(n) = FALSE;
