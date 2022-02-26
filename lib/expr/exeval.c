@@ -1088,8 +1088,9 @@ xConvert(Expr_t * ex, Exnode_t * expr, int type, Extype_t v,
 {
 	*tmp = *expr->data.operand.left;
 	tmp->data.constant.value = v;
-	if ((*ex->disc->convertf) (ex, tmp, type, expr->data.operand.right ? expr->data.
-		operand.right->data.variable.symbol : (Exid_t *) 0, 0, ex->disc)) {
+	if (ex->disc->convertf(ex, tmp, type, expr->data.operand.right
+	                       ? expr->data.operand.right->data.variable.symbol
+	                       : NULL, 0, ex->disc)) {
 		exerror("%s: cannot convert %s value to %s",
 			expr->data.operand.left->data.variable.symbol->name,
 			extypename(ex, expr->data.operand.left->type), extypename(ex, type));
@@ -1705,7 +1706,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			{
 				tmp.data.constant.value.string = exprintf(ex->ve, "%g", v.floating);
 			}
-			else if ((*ex->disc->convertf)(ex, &tmp, STRING, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc)) {
+			else if (ex->disc->convertf(ex, &tmp, STRING, expr->data.operand.right
+			                            ? expr->data.operand.right->data.variable.symbol
+			                            : NULL, 0, ex->disc)) {
 				tmp.data.constant.value.string = exprintf(ex->ve, "%g", v.floating);
 			}
 			tmp.type = STRING;
@@ -1713,7 +1716,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case F2X:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, expr->type, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, expr->type, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 				exerror("%s: cannot convert floating value to external", tmp.data.variable.symbol->name);
 			tmp.type = expr->type;
 			return tmp.data.constant.value;
@@ -1856,7 +1861,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 					str = exprintf(ex->ve, "%lld", (long long)v.integer);
 				tmp.data.constant.value.string = str;
 			}
-			else if ((*ex->disc->convertf)(ex, &tmp, STRING, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc)) {
+			else if (ex->disc->convertf(ex, &tmp, STRING, expr->data.operand.right
+			                            ? expr->data.operand.right->data.variable.symbol
+			                            : NULL, 0, ex->disc)) {
 				char *str = NULL;
 				if (expr->data.operand.left->type == UNSIGNED)
 					str = exprintf(ex->ve, "%llu", (unsigned long long)v.integer);
@@ -1869,7 +1876,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case I2X:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, expr->type, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, expr->type, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 				exerror("%s: cannot convert integer value to external", tmp.data.variable.symbol->name);
 			tmp.type = expr->type;
 			return tmp.data.constant.value;
@@ -1947,7 +1956,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case S2F:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, FLOATING, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, FLOATING, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 			{
 				tmp.data.constant.value.floating = strtod(v.string, &e);
 				if (*e)
@@ -1958,7 +1969,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case S2I:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, INTEGER, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, INTEGER, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 			{
 				if (v.string) {
 					tmp.data.constant.value.integer = strtoll(v.string, &e, 0);
@@ -1973,7 +1986,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case S2X:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, expr->type, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, expr->type, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 				exerror("%s: cannot convert string value to external", tmp.data.variable.symbol->name);
 			tmp.type = expr->type;
 			return tmp.data.constant.value;
