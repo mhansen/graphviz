@@ -1303,7 +1303,10 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 							break;
 						continue;
 					case STRING:
-						if ((ex->disc->version >= 19981111L && ex->disc->matchf) ? (*ex->disc->matchf)(ex, x, (*t)->string, expr->data.operand.left, v.string, env, ex->disc) : strmatch((*t)->string, v.string))
+						if ((ex->disc->version >= 19981111L && ex->disc->matchf)
+						      ? ex->disc->matchf(ex, x, (*t)->string, expr->data.operand.left,
+						                         v.string, env, ex->disc)
+						      : strmatch((*t)->string, v.string))
 							break;
 						continue;
 					case FLOATING:
@@ -1975,7 +1978,13 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			return tmp.data.constant.value;
 		case EQ:
 		case NE:
-			v.integer = ((v.string && r.string) ? ((ex->disc->version >= 19981111L && ex->disc->matchf) ? (*ex->disc->matchf)(ex, expr->data.operand.left, v.string, expr->data.operand.right, r.string, env, ex->disc) : strmatch(v.string, r.string)) : (v.string == r.string)) == (expr->op == EQ);
+			v.integer = ((v.string && r.string)
+			              ? ((ex->disc->version >= 19981111L && ex->disc->matchf)
+			                ? ex->disc->matchf(ex, expr->data.operand.left, v.string,
+			                                   expr->data.operand.right, r.string, env,
+			                                   ex->disc)
+			                : strmatch(v.string, r.string))
+			              : (v.string == r.string)) == (expr->op == EQ);
 			return v;
 		case '+':
 			v.string = str_add(ex, v.string, r.string);
