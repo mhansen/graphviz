@@ -861,9 +861,9 @@ exsplit(Expr_t * ex, Exnode_t * expr, void *env)
 	size_t sz;
 	Dt_t* arr = (Dt_t*)expr->data.split.array->local.pointer;
 
-	str = (eval(ex, expr->data.split.string, env)).string;
+	str = eval(ex, expr->data.split.string, env).string;
 	if (expr->data.split.seps)
-		seps = (eval(ex, expr->data.split.seps, env)).string;
+		seps = eval(ex, expr->data.split.seps, env).string;
 	else
 		seps = " \t\n";
 
@@ -916,9 +916,9 @@ extokens(Expr_t * ex, Exnode_t * expr, void *env)
 	size_t sz;
 	Dt_t* arr = (Dt_t*)expr->data.split.array->local.pointer;
 
-	str = (eval(ex, expr->data.split.string, env)).string;
+	str = eval(ex, expr->data.split.string, env).string;
 	if (expr->data.split.seps)
-		seps = (eval(ex, expr->data.split.seps, env)).string;
+		seps = eval(ex, expr->data.split.seps, env).string;
 	else
 		seps = " \t\n";
 
@@ -962,10 +962,10 @@ exsub(Expr_t * ex, Exnode_t * expr, void *env, bool global)
 	int flags = STR_MAXIMAL;
 	int ng;
 
-	str = (eval(ex, expr->data.string.base, env)).string;
-	pat = (eval(ex, expr->data.string.pat, env)).string;
+	str = eval(ex, expr->data.string.base, env).string;
+	pat = eval(ex, expr->data.string.pat, env).string;
 	if (expr->data.string.repl)
-		repl = (eval(ex, expr->data.string.repl, env)).string;
+		repl = eval(ex, expr->data.string.repl, env).string;
 	else
 		repl = 0;
 
