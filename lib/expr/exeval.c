@@ -2062,13 +2062,13 @@ exeval(Expr_t* ex, Exnode_t* expr, void* env)
 		switch (expr->type)
 		{
 		case FLOATING:
-			v.floating = (*expr->compiled.floating)(ex->disc->data);
+			v.floating = expr->compiled.floating(ex->disc->data);
 			break;
 		case STRING:
-			v.string = (*expr->compiled.string)(ex->disc->data);
+			v.string = expr->compiled.string(ex->disc->data);
 			break;
 		default:
-			v.integer = (*expr->compiled.integer)(ex->disc->data);
+			v.integer = expr->compiled.integer(ex->disc->data);
 			break;
 		}
 	}
