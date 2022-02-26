@@ -139,7 +139,7 @@ static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
 				if (!(b = newof(0, Exassoc_t, 1, 0)))
 					exnospace();
 				b->key = v;
-				dtinsert((Dt_t *)exnode->data.variable.symbol->local.  pointer, b);
+				dtinsert((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
 			}
 		} else {
 			int type = exnode->data.variable.index->type;
@@ -1469,7 +1469,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		if (expr->data.variable.dyna) {
 			Extype_t locv;
 			locv = getdyn(ex, expr->data.variable.dyna, env, &assoc);
-			expr->data.variable.dyna->data.variable.dyna->data.constant.  value = locv;
+			expr->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
 		}
 		return ex->disc->getf(ex, expr, expr->data.variable.symbol,
 		                      expr->data.variable.reference, env, (int)i.integer,
@@ -1519,7 +1519,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				if (x->data.variable.dyna) {
 					Extype_t locv;
 					locv = getdyn(ex, x->data.variable.dyna, env, &assoc);
-					x->data.variable.dyna->data.variable.dyna->data.  constant.value = locv;
+					x->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
 				}
 				v = ex->disc->getf(ex, x, x->data.variable.symbol,
 				                   x->data.variable.reference, env, (int)v.integer,
