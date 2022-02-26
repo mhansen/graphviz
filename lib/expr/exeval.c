@@ -1167,7 +1167,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				locv = getdyn(ex, x->data.variable.dyna, env, &assoc);
 				x->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
 			}
-			r = (*ex->disc->getf)(ex, x, x->data.variable.symbol, x->data.variable.reference, env, (int)i.integer, ex->disc);
+			r = ex->disc->getf(ex, x, x->data.variable.symbol,
+			                   x->data.variable.reference, env, (int)i.integer,
+			                   ex->disc);
 		}
 		v = r;
 		switch (x->type)
@@ -1354,7 +1356,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		}
 		else
 		{
-			r = (*ex->disc->getf)(ex, expr, expr->data.generate.array->data.variable.symbol, expr->data.generate.array->data.variable.reference, env, 0, ex->disc);
+			r = ex->disc->getf(ex, expr, expr->data.generate.array->data.variable.symbol,
+			                   expr->data.generate.array->data.variable.reference, env,
+			                   0, ex->disc);
 			for (v.integer = 0; v.integer < r.integer; v.integer++)
 			{
 				expr->data.generate.index->value->data.constant.value.integer = v.integer;
@@ -1389,8 +1393,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				}
 			}
 		} else {
-			r = (*ex->disc->getf) (ex, expr, expr->data.generate.array->data.
-				   variable.symbol, expr->data.generate.array->data.  variable.reference, env, 0, ex->disc);
+			r = ex->disc->getf(ex, expr, expr->data.generate.array->data.variable.symbol,
+			                   expr->data.generate.array->data.variable.reference, env,
+			                   0, ex->disc);
 			for (v.integer = r.integer-1; 0 <= v.integer; v.integer--) {
 				expr->data.generate.index->value->data.constant.value.integer = v.integer;
 				eval(ex, expr->data.generate.statement, env);
@@ -1443,14 +1448,19 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		n = 0;
 		for (x = expr->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
 			args[n++] = eval(ex, x->data.operand.left, env);
-		return (*ex->disc->getf) (ex, expr->data.operand.left, expr->data.operand.left->data.variable.symbol,
-			expr->data.operand.left->data.variable.reference, args, EX_ARRAY, ex->disc);
+		return ex->disc->getf(ex, expr->data.operand.left,
+		                      expr->data.operand.left->data.variable.symbol,
+		                      expr->data.operand.left->data.variable.reference, args,
+		                      EX_ARRAY, ex->disc);
 	case FUNCTION:
 		n = 0;
 		args[n++].string = env;
 		for (x = expr->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
 			args[n++] = eval(ex, x->data.operand.left, env);
-		return (*ex->disc->getf)(ex, expr->data.operand.left, expr->data.operand.left->data.variable.symbol, expr->data.operand.left->data.variable.reference, args+1, EX_CALL, ex->disc);
+		return ex->disc->getf(ex, expr->data.operand.left,
+		                      expr->data.operand.left->data.variable.symbol,
+		                      expr->data.operand.left->data.variable.reference,
+		                      args+1, EX_CALL, ex->disc);
 	case ID:
 		if (expr->data.variable.index)
 			i = eval(ex, expr->data.variable.index, env);
@@ -1461,7 +1471,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			locv = getdyn(ex, expr->data.variable.dyna, env, &assoc);
 			expr->data.variable.dyna->data.variable.dyna->data.constant.  value = locv;
 		}
-		return (*ex->disc->getf)(ex, expr, expr->data.variable.symbol, expr->data.variable.reference, env, (int)i.integer, ex->disc);
+		return ex->disc->getf(ex, expr, expr->data.variable.symbol,
+		                      expr->data.variable.reference, env, (int)i.integer,
+		                      ex->disc);
 	case INC:
 		n = 1;
 		goto add;
@@ -1509,7 +1521,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 					locv = getdyn(ex, x->data.variable.dyna, env, &assoc);
 					x->data.variable.dyna->data.variable.dyna->data.  constant.value = locv;
 				}
-				v = (*ex->disc->getf)(ex, x, x->data.variable.symbol, x->data.variable.reference, env, (int)v.integer, ex->disc);
+				v = ex->disc->getf(ex, x, x->data.variable.symbol,
+				                   x->data.variable.reference, env, (int)v.integer,
+				                   ex->disc);
 			}
 			switch (x->type)
 			{
