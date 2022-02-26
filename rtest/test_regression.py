@@ -269,6 +269,26 @@ def test_167():
   # Graphviz should not have caused a segfault
   assert ret != -signal.SIGSEGV, "Graphviz segfaulted"
 
+def test_191():
+  """
+  a comma-separated list without quotes should cause a hard error, not a warning
+  https://gitlab.com/graphviz/graphviz/-/issues/191
+  """
+
+  source = 'graph {\n' \
+           '  "Trackable" [fontcolor=grey45,labelloc=c,fontname=Vera Sans, ' \
+           'DejaVu Sans, Liberation Sans, Arial, Helvetica, sans,shape=box,' \
+           'height=0.3,align=center,fontsize=10,style="setlinewidth(0.5)"];\n' \
+           '}'
+
+  with subprocess.Popen(["dot", "-Tdot"], stdin=subprocess.PIPE,
+                        stderr=subprocess.PIPE, universal_newlines=True) as p:
+    _, stderr = p.communicate(source)
+
+    assert "syntax error" in stderr, "missing error message for unquoted list"
+
+    assert p.returncode != 0, "syntax error was only a warning, not an error"
+
 @pytest.mark.skipif(shutil.which("gv2gxl") is None or
                     shutil.which("gxl2gv") is None,
                     reason="GXL tools not available")
