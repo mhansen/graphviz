@@ -153,6 +153,13 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
     package_version = options.version
   log.info(f"using generic package version {package_version}")
 
+  # we only create Gitlab releases for stable version numbers
+  if not options.force:
+    if re.match(r"\d+\.\d+\.\d+$", options.version) is None:
+      log.warning(f"skipping release creation because {options.version} is not "
+        "of the form \\d+.\\d+.\\d+")
+      return 0
+
   # list of assets we have uploaded
   assets: List[str] = []
 
@@ -225,13 +232,6 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
     log.error(f"upload has {len(assets)} assets, which will result in some of "
               "them being unviewable in web page lists")
     return -1
-
-  # we only create Gitlab releases for stable version numbers
-  if not options.force:
-    if re.match(r"\d+\.\d+\.\d+$", options.version) is None:
-      log.warning(f"skipping release creation because {options.version} is not "
-        "of the form \\d+.\\d+.\\d+")
-      return 0
 
   # construct a command to create the release itself
   cmd = ["release-cli", "create", "--name", options.version, "--tag-name",
