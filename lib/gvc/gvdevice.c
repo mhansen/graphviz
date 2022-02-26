@@ -145,7 +145,7 @@ int gvdevice_initialize(GVJ_t * job)
 		job->common->errorfn("Could not open \"%s\" for writing : %s\n",
 		    job->output_filename, strerror(errno));
                 /* perror(job->output_filename); */
-                return(1);
+                return 1;
             }
         }
         else
@@ -178,12 +178,12 @@ int gvdevice_initialize(GVJ_t * job)
 
 	if (deflateInit2(z, Z_DEFAULT_COMPRESSION, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY) != Z_OK) {
 	    job->common->errorfn("Error initializing for deflation\n");
-	    return(1);
+	    return 1;
 	}
 	gvwrite_no_z(job, z_file_header, sizeof(z_file_header));
 #else
 	job->common->errorfn("No libz support.\n");
-	return(1);
+	return 1;
 #endif
     }
     return 0;

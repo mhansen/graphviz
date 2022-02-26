@@ -184,7 +184,7 @@ static graph_t *gvevent_find_cluster(graph_t *g, boxf b)
     for (i = 1; i <= GD_n_cluster(g); i++) {
 	sg = gvevent_find_cluster(GD_clust(g)[i], b);
 	if (sg)
-	    return(sg);
+	    return sg;
     }
     B2BF(GD_bb(g), bb);
     if (OVERLAP(b, bb))
