@@ -50,6 +50,17 @@ if(GD_LIBRARY)
       set(HAVE_GD_GIF 1)
     endif()
   else()
-    message(WARNING "gdlib-config not found; skipping feature checks")
+    if(APPLE)
+      # At time of writing, Macports does not package libgd. So assume the user
+      # obtained this through Homebrew and hard code the options the Homebrew
+      # package enables.
+      set(HAVE_GD_PNG 1)
+      set(HAVE_GD_JPEG 1)
+      set(HAVE_GD_FONTCONFIG 1)
+      set(HAVE_GD_FREETYPE 1)
+      set(HAVE_GD_GIF 1)
+    else()
+      message(WARNING "gdlib-config not found; skipping feature checks")
+    endif()
   endif()
 endif()
