@@ -162,7 +162,7 @@ static void gdgen_end_page(GVJ_t * job)
 	/* Only save the alpha channel in outputs that support it if
 	   the base color was transparent.   Otherwise everything
 	   was blended so there is no useful alpha info */
-	gdImageSaveAlpha(im, (basecolor == transparent));
+	gdImageSaveAlpha(im, basecolor == transparent);
 	switch (job->render.id) {
 	case FORMAT_GIF:
 #ifdef HAVE_GD_GIF
@@ -234,7 +234,7 @@ static void gdgen_missingfont(char *err, char *fontreq)
 
     if (n_errors >= 20)
 	return;
-    if ((lastmissing == 0) || (strcmp(lastmissing, fontreq))) {
+    if (lastmissing == 0 || strcmp(lastmissing, fontreq)) {
 #ifndef HAVE_GD_FONTCONFIG
 	char *p = getenv("GDFONTPATH");
 	if (!p)
@@ -436,8 +436,8 @@ gdgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
 	return;
 
     pen = gdgen_set_penstyle(job, im, &brush);
-    pen_ok = (pen != gdImageGetTransparent(im));
-    fill_ok = (filled && obj->fillcolor.u.index != gdImageGetTransparent(im));
+    pen_ok = pen != gdImageGetTransparent(im);
+    fill_ok = filled && obj->fillcolor.u.index != gdImageGetTransparent(im);
 
     if (pen_ok || fill_ok) {
         V[3] = A[0];
@@ -480,8 +480,8 @@ static void gdgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
 	return;
 
     pen = gdgen_set_penstyle(job, im, &brush);
-    pen_ok = (pen != gdImageGetTransparent(im));
-    fill_ok = (filled && obj->fillcolor.u.index != gdImageGetTransparent(im));
+    pen_ok = pen != gdImageGetTransparent(im);
+    fill_ok = filled && obj->fillcolor.u.index != gdImageGetTransparent(im);
 
     if (pen_ok || fill_ok) {
         if (n > points_allocated) {
@@ -515,8 +515,8 @@ static void gdgen_ellipse(GVJ_t * job, pointf * A, int filled)
 	return;
 
     pen = gdgen_set_penstyle(job, im, &brush);
-    pen_ok = (pen != gdImageGetTransparent(im));
-    fill_ok = (filled && obj->fillcolor.u.index != gdImageGetTransparent(im));
+    pen_ok = pen != gdImageGetTransparent(im);
+    fill_ok = filled && obj->fillcolor.u.index != gdImageGetTransparent(im);
 
     dx = 2 * (A[1].x - A[0].x);
     dy = 2 * (A[1].y - A[0].y);
@@ -545,7 +545,7 @@ static void gdgen_polyline(GVJ_t * job, pointf * A, int n)
 	return;
 
     pen = gdgen_set_penstyle(job, im, &brush);
-    pen_ok = (pen != gdImageGetTransparent(im));
+    pen_ok = pen != gdImageGetTransparent(im);
 
     if (pen_ok) {
         p = A[0];

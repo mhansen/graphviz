@@ -146,13 +146,13 @@ static int color_index(gdImagePtr im, gvcolor_t color)
     alpha = (255 - color.u.rgba[3]) * gdAlphaMax / 255;
 
     if(alpha == gdAlphaMax)
-        return (gdImageGetTransparent(im));
+        return gdImageGetTransparent(im);
     else
-        return (gdImageColorResolveAlpha(im,
+        return gdImageColorResolveAlpha(im,
 		    color.u.rgba[0],
 		    color.u.rgba[1],
 		    color.u.rgba[2],
-		    alpha));
+		    alpha);
 }
 
 static int set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr brush)
@@ -416,7 +416,7 @@ collinear (pointf * A)
     double w;
 
     w = wind(A[0],A[1],A[2]);
-    return (fabs(w) <= 1);
+    return fabs(w) <= 1;
 }
 
 /* straight:
@@ -427,7 +427,7 @@ static int
 straight (pointf * A, int n)
 {
     if (n != 4) return 0;
-    return (collinear(A) && collinear(A+1));
+    return collinear(A) && collinear(A + 1);
 }
 
 static void
