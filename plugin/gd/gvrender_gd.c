@@ -59,7 +59,7 @@ static void gdgen_resolve_color(GVJ_t * job, gvcolor_t * color)
     color->type = COLOR_INDEX;
 }
 
-static int black, transparent, basecolor;
+static int transparent, basecolor;
 
 #define GD_XYMAX INT32_MAX
 
@@ -128,8 +128,6 @@ static void gdgen_begin_page(GVJ_t * job)
 					   gdRedMax - 1, gdGreenMax,
 					   gdBlueMax, gdAlphaTransparent);
     gdImageColorTransparent(im, transparent);
-
-    black = gdImageColorResolveAlpha(im, 0, 0, 0, gdAlphaOpaque);
 
     /* Blending must be off to lay a transparent basecolor.
        Nothing to blend with anyway. */
