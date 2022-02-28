@@ -246,7 +246,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 #endif
 
     layout = pango_layout_new (context);
-    span->layout = (void *)layout;    /* layout free with textspan - see labels.c */
+    span->layout = layout;    /* layout free with textspan - see labels.c */
     span->free_layout = pango_free_layout;    /* function for freeing pango layout */
 
     pango_layout_set_text (layout, text, -1);
