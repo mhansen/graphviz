@@ -9,6 +9,7 @@ RUN apt-get update -y \
 && apt-get install --no-install-recommends -y \
 # Development tools
 build-essential \
+clang-format \
 cmake \
 git \
 pkg-config \
