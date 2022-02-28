@@ -41,11 +41,8 @@ typedef enum { FORMAT_VRML, } format_type;
 
 #define BEZIERSUBDIVISION 10
 
-/* static int	N_pages; */
-/* static point	Pages; */
 static double Scale;
 static double MinZ;
-/* static int	onetime = TRUE; */
 static int Saw_skycolor;
 
 static gdImagePtr im;
