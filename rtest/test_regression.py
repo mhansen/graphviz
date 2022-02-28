@@ -1353,7 +1353,6 @@ def test_2138(examine: str):
     assert "// tok[7]    >>012<<   should NOT include trailing spaces or "     \
       "junk chars" in result, "token 012 not found or has trailing garbage"
 
-@pytest.mark.xfail(strict=True) # FIXME
 def test_2179():
   """
   processing a label with an empty line should not yield a warning
