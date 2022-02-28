@@ -28,10 +28,8 @@
 /* for gvcolor_t */
 #include <common/color.h>
 
-/* for late_double() */
 #include <cgraph/agxbuf.h>
 #include <cgraph/cgraph.h>
-#include <common/utils.h>
 #include <common/render.h>
 
 /* for wind() */
