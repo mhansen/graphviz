@@ -139,7 +139,7 @@ static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
 				if (!(b = newof(0, Exassoc_t, 1, 0)))
 					exnospace();
 				b->key = v;
-				dtinsert((Dt_t *)exnode->data.variable.symbol->local.  pointer, b);
+				dtinsert((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
 			}
 		} else {
 			int type = exnode->data.variable.index->type;
@@ -861,9 +861,9 @@ exsplit(Expr_t * ex, Exnode_t * expr, void *env)
 	size_t sz;
 	Dt_t* arr = (Dt_t*)expr->data.split.array->local.pointer;
 
-	str = (eval(ex, expr->data.split.string, env)).string;
+	str = eval(ex, expr->data.split.string, env).string;
 	if (expr->data.split.seps)
-		seps = (eval(ex, expr->data.split.seps, env)).string;
+		seps = eval(ex, expr->data.split.seps, env).string;
 	else
 		seps = " \t\n";
 
@@ -916,9 +916,9 @@ extokens(Expr_t * ex, Exnode_t * expr, void *env)
 	size_t sz;
 	Dt_t* arr = (Dt_t*)expr->data.split.array->local.pointer;
 
-	str = (eval(ex, expr->data.split.string, env)).string;
+	str = eval(ex, expr->data.split.string, env).string;
 	if (expr->data.split.seps)
-		seps = (eval(ex, expr->data.split.seps, env)).string;
+		seps = eval(ex, expr->data.split.seps, env).string;
 	else
 		seps = " \t\n";
 
@@ -962,10 +962,10 @@ exsub(Expr_t * ex, Exnode_t * expr, void *env, bool global)
 	int flags = STR_MAXIMAL;
 	int ng;
 
-	str = (eval(ex, expr->data.string.base, env)).string;
-	pat = (eval(ex, expr->data.string.pat, env)).string;
+	str = eval(ex, expr->data.string.base, env).string;
+	pat = eval(ex, expr->data.string.pat, env).string;
 	if (expr->data.string.repl)
-		repl = (eval(ex, expr->data.string.repl, env)).string;
+		repl = eval(ex, expr->data.string.repl, env).string;
 	else
 		repl = 0;
 
@@ -1088,8 +1088,9 @@ xConvert(Expr_t * ex, Exnode_t * expr, int type, Extype_t v,
 {
 	*tmp = *expr->data.operand.left;
 	tmp->data.constant.value = v;
-	if ((*ex->disc->convertf) (ex, tmp, type, expr->data.operand.right ? expr->data.
-		operand.right->data.variable.symbol : (Exid_t *) 0, 0, ex->disc)) {
+	if (ex->disc->convertf(ex, tmp, type, expr->data.operand.right
+	                       ? expr->data.operand.right->data.variable.symbol
+	                       : NULL, 0, ex->disc)) {
 		exerror("%s: cannot convert %s value to %s",
 			expr->data.operand.left->data.variable.symbol->name,
 			extypename(ex, expr->data.operand.left->type), extypename(ex, type));
@@ -1167,7 +1168,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				locv = getdyn(ex, x->data.variable.dyna, env, &assoc);
 				x->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
 			}
-			r = (*ex->disc->getf)(ex, x, x->data.variable.symbol, x->data.variable.reference, env, (int)i.integer, ex->disc);
+			r = ex->disc->getf(ex, x, x->data.variable.symbol,
+			                   x->data.variable.reference, env, (int)i.integer,
+			                   ex->disc);
 		}
 		v = r;
 		switch (x->type)
@@ -1207,7 +1210,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				locv = getdyn(ex, x->data.variable.dyna, env, &assoc);
 				x->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
 			}
-			if ((*ex->disc->setf)(ex, x, x->data.variable.symbol, x->data.variable.reference, env, (int)i.integer, v, ex->disc) < 0)
+			if (ex->disc->setf(ex, x, x->data.variable.symbol,
+			                   x->data.variable.reference, env, (int)i.integer, v,
+			                   ex->disc) < 0)
 				exerror("%s: cannot set value", x->data.variable.symbol->name);
 		}
 		if (expr->subop == PRE)
@@ -1239,7 +1244,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 	case EXIT:
 		v = eval(ex, x, env);
 		if (ex->disc->exitf)
-			(*ex->disc->exitf) (ex, env, (int)v.integer);
+			ex->disc->exitf(ex, env, (int)v.integer);
 		else
 			graphviz_exit((int)v.integer);
 		/*NOTREACHED*/
@@ -1299,7 +1304,10 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 							break;
 						continue;
 					case STRING:
-						if ((ex->disc->version >= 19981111L && ex->disc->matchf) ? (*ex->disc->matchf)(ex, x, (*t)->string, expr->data.operand.left, v.string, env, ex->disc) : strmatch((*t)->string, v.string))
+						if ((ex->disc->version >= 19981111L && ex->disc->matchf)
+						      ? ex->disc->matchf(ex, x, (*t)->string, expr->data.operand.left,
+						                         v.string, env, ex->disc)
+						      : strmatch((*t)->string, v.string))
 							break;
 						continue;
 					case FLOATING:
@@ -1354,7 +1362,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		}
 		else
 		{
-			r = (*ex->disc->getf)(ex, expr, expr->data.generate.array->data.variable.symbol, expr->data.generate.array->data.variable.reference, env, 0, ex->disc);
+			r = ex->disc->getf(ex, expr, expr->data.generate.array->data.variable.symbol,
+			                   expr->data.generate.array->data.variable.reference, env,
+			                   0, ex->disc);
 			for (v.integer = 0; v.integer < r.integer; v.integer++)
 			{
 				expr->data.generate.index->value->data.constant.value.integer = v.integer;
@@ -1389,8 +1399,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				}
 			}
 		} else {
-			r = (*ex->disc->getf) (ex, expr, expr->data.generate.array->data.
-				   variable.symbol, expr->data.generate.array->data.  variable.reference, env, 0, ex->disc);
+			r = ex->disc->getf(ex, expr, expr->data.generate.array->data.variable.symbol,
+			                   expr->data.generate.array->data.variable.reference, env,
+			                   0, ex->disc);
 			for (v.integer = r.integer-1; 0 <= v.integer; v.integer--) {
 				expr->data.generate.index->value->data.constant.value.integer = v.integer;
 				eval(ex, expr->data.generate.statement, env);
@@ -1443,14 +1454,19 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		n = 0;
 		for (x = expr->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
 			args[n++] = eval(ex, x->data.operand.left, env);
-		return (*ex->disc->getf) (ex, expr->data.operand.left, expr->data.operand.left->data.variable.symbol,
-			expr->data.operand.left->data.variable.reference, args, EX_ARRAY, ex->disc);
+		return ex->disc->getf(ex, expr->data.operand.left,
+		                      expr->data.operand.left->data.variable.symbol,
+		                      expr->data.operand.left->data.variable.reference, args,
+		                      EX_ARRAY, ex->disc);
 	case FUNCTION:
 		n = 0;
 		args[n++].string = env;
 		for (x = expr->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
 			args[n++] = eval(ex, x->data.operand.left, env);
-		return (*ex->disc->getf)(ex, expr->data.operand.left, expr->data.operand.left->data.variable.symbol, expr->data.operand.left->data.variable.reference, args+1, EX_CALL, ex->disc);
+		return ex->disc->getf(ex, expr->data.operand.left,
+		                      expr->data.operand.left->data.variable.symbol,
+		                      expr->data.operand.left->data.variable.reference,
+		                      args+1, EX_CALL, ex->disc);
 	case ID:
 		if (expr->data.variable.index)
 			i = eval(ex, expr->data.variable.index, env);
@@ -1459,9 +1475,11 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		if (expr->data.variable.dyna) {
 			Extype_t locv;
 			locv = getdyn(ex, expr->data.variable.dyna, env, &assoc);
-			expr->data.variable.dyna->data.variable.dyna->data.constant.  value = locv;
+			expr->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
 		}
-		return (*ex->disc->getf)(ex, expr, expr->data.variable.symbol, expr->data.variable.reference, env, (int)i.integer, ex->disc);
+		return ex->disc->getf(ex, expr, expr->data.variable.symbol,
+		                      expr->data.variable.reference, env, (int)i.integer,
+		                      ex->disc);
 	case INC:
 		n = 1;
 		goto add;
@@ -1507,9 +1525,11 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				if (x->data.variable.dyna) {
 					Extype_t locv;
 					locv = getdyn(ex, x->data.variable.dyna, env, &assoc);
-					x->data.variable.dyna->data.variable.dyna->data.  constant.value = locv;
+					x->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
 				}
-				v = (*ex->disc->getf)(ex, x, x->data.variable.symbol, x->data.variable.reference, env, (int)v.integer, ex->disc);
+				v = ex->disc->getf(ex, x, x->data.variable.symbol,
+				                   x->data.variable.reference, env, (int)v.integer,
+				                   ex->disc);
 			}
 			switch (x->type)
 			{
@@ -1667,7 +1687,8 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			tmp.data.constant.value = v;
 			rtmp = *x;
 			rtmp.data.constant.value = r;
-			if (!(*ex->disc->binaryf) (ex, &tmp, expr, &rtmp, 0, ex->disc)) return tmp.data.constant.value;
+			if (!ex->disc->binaryf(ex, &tmp, expr, &rtmp, 0, ex->disc))
+			  return tmp.data.constant.value;
 		}
 	}
 	switch (expr->data.operand.left->type)
@@ -1685,7 +1706,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			{
 				tmp.data.constant.value.string = exprintf(ex->ve, "%g", v.floating);
 			}
-			else if ((*ex->disc->convertf)(ex, &tmp, STRING, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc)) {
+			else if (ex->disc->convertf(ex, &tmp, STRING, expr->data.operand.right
+			                            ? expr->data.operand.right->data.variable.symbol
+			                            : NULL, 0, ex->disc)) {
 				tmp.data.constant.value.string = exprintf(ex->ve, "%g", v.floating);
 			}
 			tmp.type = STRING;
@@ -1693,7 +1716,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case F2X:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, expr->type, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, expr->type, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 				exerror("%s: cannot convert floating value to external", tmp.data.variable.symbol->name);
 			tmp.type = expr->type;
 			return tmp.data.constant.value;
@@ -1789,7 +1814,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				rp = &rtmp;
 			} else
 				rp = 0;
-			if (!(*ex->disc->binaryf) (ex, &tmp, expr, rp, 0, ex->disc))
+			if (!ex->disc->binaryf(ex, &tmp, expr, rp, 0, ex->disc))
 				return tmp.data.constant.value;
 		}
 		goto integer;
@@ -1836,7 +1861,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 					str = exprintf(ex->ve, "%lld", (long long)v.integer);
 				tmp.data.constant.value.string = str;
 			}
-			else if ((*ex->disc->convertf)(ex, &tmp, STRING, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc)) {
+			else if (ex->disc->convertf(ex, &tmp, STRING, expr->data.operand.right
+			                            ? expr->data.operand.right->data.variable.symbol
+			                            : NULL, 0, ex->disc)) {
 				char *str = NULL;
 				if (expr->data.operand.left->type == UNSIGNED)
 					str = exprintf(ex->ve, "%llu", (unsigned long long)v.integer);
@@ -1849,7 +1876,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case I2X:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, expr->type, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, expr->type, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 				exerror("%s: cannot convert integer value to external", tmp.data.variable.symbol->name);
 			tmp.type = expr->type;
 			return tmp.data.constant.value;
@@ -1927,7 +1956,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case S2F:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, FLOATING, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, FLOATING, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 			{
 				tmp.data.constant.value.floating = strtod(v.string, &e);
 				if (*e)
@@ -1938,7 +1969,9 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case S2I:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, INTEGER, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, INTEGER, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 			{
 				if (v.string) {
 					tmp.data.constant.value.integer = strtoll(v.string, &e, 0);
@@ -1953,13 +1986,21 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		case S2X:
 			tmp = *expr->data.operand.left;
 			tmp.data.constant.value = v;
-			if ((*ex->disc->convertf)(ex, &tmp, expr->type, expr->data.operand.right ? expr->data.operand.right->data.variable.symbol : (Exid_t*)0, 0, ex->disc))
+			if (ex->disc->convertf(ex, &tmp, expr->type, expr->data.operand.right
+			                       ? expr->data.operand.right->data.variable.symbol
+			                       : NULL, 0, ex->disc))
 				exerror("%s: cannot convert string value to external", tmp.data.variable.symbol->name);
 			tmp.type = expr->type;
 			return tmp.data.constant.value;
 		case EQ:
 		case NE:
-			v.integer = ((v.string && r.string) ? ((ex->disc->version >= 19981111L && ex->disc->matchf) ? (*ex->disc->matchf)(ex, expr->data.operand.left, v.string, expr->data.operand.right, r.string, env, ex->disc) : strmatch(v.string, r.string)) : (v.string == r.string)) == (expr->op == EQ);
+			v.integer = ((v.string && r.string)
+			              ? ((ex->disc->version >= 19981111L && ex->disc->matchf)
+			                ? ex->disc->matchf(ex, expr->data.operand.left, v.string,
+			                                   expr->data.operand.right, r.string, env,
+			                                   ex->disc)
+			                : strmatch(v.string, r.string))
+			              : (v.string == r.string)) == (expr->op == EQ);
 			return v;
 		case '+':
 			v.string = str_add(ex, v.string, r.string);
@@ -2021,13 +2062,13 @@ exeval(Expr_t* ex, Exnode_t* expr, void* env)
 		switch (expr->type)
 		{
 		case FLOATING:
-			v.floating = (*expr->compiled.floating)(ex->disc->data);
+			v.floating = expr->compiled.floating(ex->disc->data);
 			break;
 		case STRING:
-			v.string = (*expr->compiled.string)(ex->disc->data);
+			v.string = expr->compiled.string(ex->disc->data);
 			break;
 		default:
-			v.integer = (*expr->compiled.integer)(ex->disc->data);
+			v.integer = expr->compiled.integer(ex->disc->data);
 			break;
 		}
 	}
