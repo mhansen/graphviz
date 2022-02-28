@@ -39,7 +39,7 @@ int gvlayout_select(GVC_t * gvc, const char *layout)
 	gvc->layout.type = typeptr->type;
 	gvc->layout.engine = typeptr->engine;
 	gvc->layout.id = typeptr->id;
-	gvc->layout.features = (gvlayout_features_t *) (typeptr->features);
+	gvc->layout.features = typeptr->features;
 	return GVRENDER_PLUGIN;  /* FIXME - need better return code */
     }
     return NO_SUPPORT;
