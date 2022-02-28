@@ -28,7 +28,7 @@ int gvtextlayout_select(GVC_t * gvc)
     plugin = gvplugin_load(gvc, API_textlayout, "textlayout");
     if (plugin) {
 	typeptr = plugin->typeptr;
-	gvc->textlayout.engine = (gvtextlayout_engine_t *) (typeptr->engine);
+	gvc->textlayout.engine = typeptr->engine;
 	return GVRENDER_PLUGIN;  /* FIXME - need more suitable success code */
     }
     return NO_SUPPORT;

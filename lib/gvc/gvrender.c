@@ -51,7 +51,7 @@ int gvrender_select(GVJ_t * job, const char *str)
     plugin = gvc->api[API_device];
     if (plugin) {
 	typeptr = plugin->typeptr;
-	job->device.engine = (gvdevice_engine_t *) (typeptr->engine);
+	job->device.engine = typeptr->engine;
 	job->device.features = (gvdevice_features_t *) (typeptr->features);
 	job->device.id = typeptr->id;
 	job->device.type = plugin->typestr;
@@ -65,7 +65,7 @@ int gvrender_select(GVJ_t * job, const char *str)
     plugin = gvc->api[API_render];
     if (plugin) {
 	typeptr = plugin->typeptr;
-	job->render.engine = (gvrender_engine_t *) (typeptr->engine);
+	job->render.engine = typeptr->engine;
 	job->render.features = (gvrender_features_t *) (typeptr->features);
 	job->render.type = plugin->typestr;
 

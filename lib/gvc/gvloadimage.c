@@ -35,7 +35,7 @@ static int gvloadimage_select(GVJ_t * job, char *str)
     plugin = gvplugin_load(job->gvc, API_loadimage, str);
     if (plugin) {
         typeptr = plugin->typeptr;
-        job->loadimage.engine = (gvloadimage_engine_t *) (typeptr->engine);
+        job->loadimage.engine = typeptr->engine;
         job->loadimage.id = typeptr->id;
         return GVRENDER_PLUGIN;
     }
