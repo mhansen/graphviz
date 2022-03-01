@@ -974,6 +974,7 @@ static int cmpItem(Dt_t * d, void *p1[], void *p2[], Dtdisc_t * disc)
  */
 static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
 {
+    (void)d;
     item *newp = NEW(item);
 
     (void)disc;
@@ -989,6 +990,8 @@ static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
  */
 static void freeItem(Dt_t * d, item * obj, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
     free(obj);
 }
 
@@ -1869,6 +1872,8 @@ typedef struct {
 
 static void free_clust (Dt_t* dt, clust_t* clp, Dtdisc_t* disc)
 {
+    (void)dt;
+    (void)disc;
     free (clp);
 }
 
