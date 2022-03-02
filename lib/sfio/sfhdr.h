@@ -589,7 +589,6 @@ extern "C" {
     extern int isatty(int);
     extern int wait(int *);
     extern int pipe(int *);
-    extern int access(const char *, int);
     extern uint sleep(uint);
     extern int execl(const char *, const char *, ...);
 
