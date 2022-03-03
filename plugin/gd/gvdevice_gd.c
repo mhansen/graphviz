@@ -9,23 +9,27 @@
  *************************************************************************/
 
 #include "config.h"
+#include "gdioctx_wrapper.h"
 
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 
 #include <gd.h>
+#include <stddef.h>
 
 int gvdevice_gd_putBuf (gdIOCtx *context, const void *buffer, int len)
 {
-    return gvwrite((GVJ_t *)(context->tell), buffer, len);
+    gd_context_t *gd_context = get_containing_context(context);
+    return gvwrite(gd_context->job, buffer, len);
 }
 
 /* used by gif output */
 void gvdevice_gd_putC (gdIOCtx *context, int C)
 {
+    gd_context_t *gd_context = get_containing_context(context);
     char c = C;
 
-    gvwrite((GVJ_t *)(context->tell), &c, 1);
+    gvwrite(gd_context->job, &c, 1);
 }
 
 #ifdef HAVE_PANGOCAIRO
@@ -46,11 +50,11 @@ static void gd_format(GVJ_t * job)
     unsigned int *data = (unsigned int*)(job->imagedata);
     unsigned int width = job->width;
     unsigned int height = job->height;
-    gdIOCtx ctx = {0};
+    gd_context_t gd_context = {{0}};
 
-    ctx.putBuf = gvdevice_gd_putBuf;
-    ctx.putC = gvdevice_gd_putC;
-    ctx.tell = (void*)job;    /* hide *job here */
+    gd_context.ctx.putBuf = gvdevice_gd_putBuf;
+    gd_context.ctx.putC = gvdevice_gd_putC;
+    gd_context.job = job;
 
     im = gdImageCreateTrueColor(width, height);
     switch (job->device.id) {
@@ -92,7 +96,7 @@ static void gd_format(GVJ_t * job)
 #ifdef HAVE_GD_GIF
     case FORMAT_GIF:
 	gdImageTrueColorToPalette(im, 0, 256);
-	gdImageGifCtx(im, &ctx);
+	gdImageGifCtx(im, &gd_context.ctx);
         break;
 #endif
 
@@ -108,14 +112,14 @@ static void gd_format(GVJ_t * job)
 	 * library documentation for more details.
 	 */ 
 #define JPEG_QUALITY -1
-	gdImageJpegCtx(im, &ctx, JPEG_QUALITY);
+	gdImageJpegCtx(im, &gd_context.ctx, JPEG_QUALITY);
 	break;
 #endif
 
 #ifdef HAVE_GD_PNG
     case FORMAT_PNG:
         gdImageTrueColorToPalette(im, 0, 256);
-	gdImagePngCtx(im, &ctx);
+	gdImagePngCtx(im, &gd_context.ctx);
         break;
 #endif
 
@@ -135,7 +139,7 @@ static void gd_format(GVJ_t * job)
 	{
 	    /* Use black for the foreground color for the B&W wbmp image. */
             int black = gdImageColorResolveAlpha(im, 0, 0, 0, gdAlphaOpaque);
-	    gdImageWBMPCtx(im, black, &ctx);
+	    gdImageWBMPCtx(im, black, &gd_context.ctx);
 	}
 	break;
 #endif
