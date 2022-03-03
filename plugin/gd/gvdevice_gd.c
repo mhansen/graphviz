@@ -46,7 +46,7 @@ static void gd_format(GVJ_t * job)
     unsigned int *data = (unsigned int*)(job->imagedata);
     unsigned int width = job->width;
     unsigned int height = job->height;
-    gdIOCtx ctx;
+    gdIOCtx ctx = {0};
 
     ctx.putBuf = gvdevice_gd_putBuf;
     ctx.putC = gvdevice_gd_putC;
