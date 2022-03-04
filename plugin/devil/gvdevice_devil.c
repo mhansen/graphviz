@@ -63,7 +63,7 @@ static void devil_format(GVJ_t * job)
     		job->imagedata);
     
     // output to the provided open file handle
-    ilSaveF(job->device.id, job->output_file);
+    ilSaveF((ILenum)job->device.id, job->output_file);
     
     // We're done with the image, so delete it.
     ilDeleteImages(1, &ImgId);
