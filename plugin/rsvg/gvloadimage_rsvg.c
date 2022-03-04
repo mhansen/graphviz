@@ -39,7 +39,7 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
     RsvgHandle* rsvgh = NULL;
     guchar *fileBuf = NULL;
     GError *err = NULL;
-    gsize fileSize;
+    size_t fileSize;
 
     int fd;
     struct stat stbuf;
@@ -90,7 +90,7 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 
 	 	fd = fileno(us->f);
 		fstat(fd, &stbuf);
-  		fileSize = stbuf.st_size;	
+  		fileSize = (size_t)stbuf.st_size;	
 
 		fileBuf = calloc(fileSize + 1, sizeof(guchar));
 
