@@ -40,7 +40,6 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
     guchar *fileBuf = NULL;
     GError *err = NULL;
     gsize fileSize;
-    gint result;
 
     int fd;
     struct stat stbuf;
@@ -113,7 +112,7 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 	
 		rewind(us->f);
 
-		if ((result = fread(fileBuf, 1, fileSize, us->f)) < fileSize) {
+		if (fread(fileBuf, 1, fileSize, us->f) < fileSize) {
 			free(fileBuf);
 #if HAVE_G_OBJECT_UNREF
 			g_object_unref(rsvgh);
