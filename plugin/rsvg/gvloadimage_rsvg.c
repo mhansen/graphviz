@@ -78,12 +78,8 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 		
 		if (rsvgh == NULL) {
 			fprintf(stderr, "rsvg_handle_new_from_file returned an error: %s\n", err->message);
-#if HAVE_G_TYPE_TERM
-			g_type_term();
-#else
 #ifndef HAVE_SVG_2_36
 			rsvg_term();
-#endif
 #endif
 			return NULL;
 		} 
@@ -100,12 +96,8 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 #else
 			rsvg_handle_free(rsvgh);
 #endif
-#if HAVE_G_TYPE_TERM
-			g_type_term();
-#else
 #ifndef HAVE_SVG_2_36
                         rsvg_term();
-#endif
 #endif
 			return NULL;
 		}
@@ -119,12 +111,8 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 #else
 			rsvg_handle_free(rsvgh);
 #endif
-#if HAVE_G_TYPE_TERM
-			g_type_term();
-#else
 #ifndef HAVE_SVG_2_36
                         rsvg_term();
-#endif
 #endif
 			return NULL;
 		}
@@ -137,12 +125,8 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 #else
 			rsvg_handle_free(rsvgh);
 #endif
-#if HAVE_G_TYPE_TERM
-			g_type_term();
-#else
 #ifndef HAVE_SVG_2_36
                         rsvg_term();
-#endif
 #endif
 			return NULL;
 		} 
