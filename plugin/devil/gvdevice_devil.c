@@ -51,7 +51,7 @@ static void devil_format(GVJ_t * job)
     // Bind this image name.
     ilBindImage(ImgId);
 
-    // cairo's inmemory image format needs inverting for DevIL 
+    // cairo's in-memory image format needs inverting for DevIL
     Y_inv ( job->width, job->height, job->imagedata );
     
     // let the DevIL do its thing
