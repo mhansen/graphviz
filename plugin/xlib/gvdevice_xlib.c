@@ -74,8 +74,8 @@ static void handle_configure_notify(GVJ_t * job, XConfigureEvent * cev)
     if ((unsigned)cev->width > job->width ||
         (unsigned)cev->height > job->height)
         job->has_grown = true;
-    job->width = cev->width;
-    job->height = cev->height;
+    job->width = (unsigned)cev->width;
+    job->height = (unsigned)cev->height;
     job->needs_refresh = true;
 }
 
