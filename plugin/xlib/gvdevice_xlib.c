@@ -107,7 +107,7 @@ static bool handle_keypress(GVJ_t *job, XKeyEvent *kev)
     keycodes = job->keycodes;
     for (i=0; i < job->numkeys; i++) {
 	if (kev->keycode == keycodes[i])
-	    return (job->keybindings[i].callback)(job) != 0;
+	    return job->keybindings[i].callback(job) != 0;
     }
     return false;
 }
@@ -182,21 +182,21 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                 case ButtonPress:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    (job->callbacks->button_press)(job, xev.xbutton.button, pointer);
+                    job->callbacks->button_press(job, xev.xbutton.button, pointer);
 		    rc++;
                     break;
                 case MotionNotify:
 		    if (job->button) { /* only interested while a button is pressed */
 		        pointer.x = (double)xev.xbutton.x;
 		        pointer.y = (double)xev.xbutton.y;
-                        (job->callbacks->motion)(job, pointer);
+                        job->callbacks->motion(job, pointer);
 		        rc++;
 		    }
                     break;
                 case ButtonRelease:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    (job->callbacks->button_release)(job, xev.xbutton.button, pointer);
+                    job->callbacks->button_release(job, xev.xbutton.button, pointer);
 		    if (job->selected_href && job->selected_href[0] && xev.xbutton.button == 1)
 		        browser_show(job);
 		    rc++;
@@ -248,7 +248,7 @@ static void update_display(GVJ_t *job, Display *dpy)
 			job->width, job->height);
     	job->context = (void *)cairo_create(surface);
 	job->external_context = true;
-        (job->callbacks->refresh)(job);
+        job->callbacks->refresh(job);
 	cairo_surface_destroy(surface);
 	XCopyArea(dpy, window->pix, window->win, window->gc,
 			0, 0, job->width, job->height, 0, 0);
@@ -373,7 +373,7 @@ static int handle_stdin_events(GVJ_t *job, int stdin_fd)
 
     if (feof(stdin))
 	return -1;
-    (job->callbacks->read)(job, job->input_filename, job->layout_type);
+    job->callbacks->read(job, job->input_filename, job->layout_type);
     
     rc++;
     return rc;
@@ -414,8 +414,8 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
 		    p++;
 		else 
 		    p = job->input_filename;
-		if (strcmp((char*)(&(event->name)), p) == 0) {
-		    (job->callbacks->read)(job, job->input_filename, job->layout_type);
+		if (strcmp((char*)&event->name, p) == 0) {
+		    job->callbacks->read(job, job->input_filename, job->layout_type);
 		    rc++;
 		}
 		break;
