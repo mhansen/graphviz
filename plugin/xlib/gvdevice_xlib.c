@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,10 +65,14 @@ static void handle_configure_notify(GVJ_t * job, XConfigureEvent * cev)
 /*	plugin/xlib/gvdevice_xlib.c */
 /*	lib/gvc/gvevent.c */
 
+    assert(cev->width >= 0 && "Xlib returned an event with negative width");
+    assert(cev->height >= 0 && "Xlib returned an event with negative height");
+
     job->zoom *= 1 + MIN(
 	((double) cev->width - (double) job->width) / (double) job->width,
 	((double) cev->height - (double) job->height) / (double) job->height);
-    if (cev->width > job->width || cev->height > job->height)
+    if ((unsigned)cev->width > job->width ||
+        (unsigned)cev->height > job->height)
         job->has_grown = true;
     job->width = cev->width;
     job->height = cev->height;
