@@ -1502,14 +1502,6 @@ lint_pylint:
   needs:
     - docker_build_ubuntu-21.10
   script:
-    - logfile=`mktemp`
-    - python3 -m pylint --rcfile=.pylintrc `find . -name '*.py' | xargs` --exit-zero |& tee $logfile
-    - echo "$CI_JOB_NAME-warnings `egrep -c '\<[CRWEF][[:digit:]]{4}\>' $logfile`" | tee metrics.txt
     - python3 -m pylint --rcfile=.pylintrc --disable=fixme `find . -name '*.py' | xargs`
-  artifacts:
-    when: on_success
-    expire_in: 1 week
-    reports:
-        metrics: metrics.txt
   except:
     - tags
