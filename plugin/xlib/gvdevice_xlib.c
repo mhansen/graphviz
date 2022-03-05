@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <assert.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -325,7 +326,9 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     normalhints->flags = 0;
     normalhints->x = 0;
     normalhints->y = 0;
+    assert(job->width <= (unsigned)INT_MAX && "out of range width");
     normalhints->width = job->width;
+    assert(job->height <= (unsigned)INT_MAX && "out of range height");
     normalhints->height = job->height;
 
     classhint = XAllocClassHint();
