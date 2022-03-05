@@ -34,7 +34,6 @@ Y_inv ( unsigned int width, unsigned int height, char *data)
 static void devil_format(GVJ_t * job)
 {
     ILuint	ImgId;
-    ILenum	Error;
 
     // Check if the shared lib's version matches the executable's version.
     if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION ||
@@ -61,9 +60,15 @@ static void devil_format(GVJ_t * job)
     		IL_BGRA,	// Format
     		IL_UNSIGNED_BYTE,// Type
     		job->imagedata);
-    
-    // output to the provided open file handle
-    ilSaveF((ILenum)job->device.id, job->output_file);
+
+    // check the last step succeeded
+    ILenum Error = ilGetError();
+    if (Error == 0) {
+    	// output to the provided open file handle
+    	ilSaveF((ILenum)job->device.id, job->output_file);
+    } else {
+    	fprintf(stderr, "Error: %s\n", iluErrorString(Error));
+    }
     
     // We're done with the image, so delete it.
     ilDeleteImages(1, &ImgId);
