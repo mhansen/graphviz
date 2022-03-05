@@ -2056,7 +2056,6 @@ exeval(Expr_t* ex, Exnode_t* expr, void* env)
 {
 	Extype_t	v;
 
-	vmclear(ex->ve);
 	if (expr->compiled.integer)
 	{
 		switch (expr->type)

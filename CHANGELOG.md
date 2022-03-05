@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `agcanon`, `agcanonStr`, and `agwrite` now return error values on memory
   allocation failures instead of crashing or corrupting data
+- `gvpr` programs can now pass dynamically allocated arguments to user-defined
+  functions without corrupting their content. Some cases of this were a
+  regression in Graphviz 2.46.0. Other cases have existed since the first
+  release of `gvpr`. #2185
 
 ## [3.0.0] – 2022-02-26
 
