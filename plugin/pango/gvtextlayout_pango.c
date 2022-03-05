@@ -246,7 +246,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 #endif
 
     layout = pango_layout_new (context);
-    span->layout = (void *)layout;    /* layout free with textspan - see labels.c */
+    span->layout = layout;    /* layout free with textspan - see labels.c */
     span->free_layout = pango_free_layout;    /* function for freeing pango layout */
 
     pango_layout_set_text (layout, text, -1);
@@ -289,7 +289,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     /* The distance below midline for y centering of text strings */
     span->yoffset_centerline = 0.2 * span->font->size;
 
-    return logical_rect.width != 0;
+    return logical_rect.width != 0 || strcmp(text, "") == 0;
 }
 
 static gvtextlayout_engine_t pango_textlayout_engine = {

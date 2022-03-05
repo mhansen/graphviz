@@ -37,9 +37,9 @@ int gvlayout_select(GVC_t * gvc, const char *layout)
     if (plugin) {
 	typeptr = plugin->typeptr;
 	gvc->layout.type = typeptr->type;
-	gvc->layout.engine = (gvlayout_engine_t *) (typeptr->engine);
+	gvc->layout.engine = typeptr->engine;
 	gvc->layout.id = typeptr->id;
-	gvc->layout.features = (gvlayout_features_t *) (typeptr->features);
+	gvc->layout.features = typeptr->features;
 	return GVRENDER_PLUGIN;  /* FIXME - need better return code */
     }
     return NO_SUPPORT;
