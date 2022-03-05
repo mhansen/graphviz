@@ -148,7 +148,6 @@ static void browser_show(GVJ_t *job)
 #if defined HAVE_SYS_TYPES_H && defined HAVE_UNISTD_H
    char *exec_argv[3] = {BROWSER, NULL, NULL};
    pid_t pid;
-   int err;
 
    exec_argv[1] = job->selected_href;
 
@@ -157,7 +156,7 @@ static void browser_show(GVJ_t *job)
        fprintf(stderr,"fork failed: %s\n", strerror(errno));
    }
    else if (pid == 0) {
-       err = execvp(exec_argv[0], exec_argv);
+       execvp(exec_argv[0], exec_argv);
        fprintf(stderr,"error starting %s: %s\n", exec_argv[0], strerror(errno));
    }
 #else
