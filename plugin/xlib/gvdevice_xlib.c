@@ -246,7 +246,7 @@ static void update_display(GVJ_t *job, Display *dpy)
 	surface = cairo_xlib_surface_create(dpy,
 			window->pix, window->visual,
 			job->width, job->height);
-    	job->context = (void *)cairo_create(surface);
+    	job->context = cairo_create(surface);
 	job->external_context = true;
         job->callbacks->refresh(job);
 	cairo_surface_destroy(surface);
