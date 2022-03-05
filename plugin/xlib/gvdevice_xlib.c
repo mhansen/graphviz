@@ -268,7 +268,6 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     uint64_t attributemask = 0;
     char *name;
     window_t *window;
-    int w, h;
     double zoom_to_fit;
 
     window = malloc(sizeof(window_t));
@@ -277,8 +276,8 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
 	return;
     }
 
-    w = 480;    /* FIXME - w,h should be set by a --geometry commandline option */
-    h = 325;
+    unsigned w = 480;    /* FIXME - w,h should be set by a --geometry commandline option */
+    unsigned h = 325;
     
     zoom_to_fit = MIN((double) w / (double) job->width,
 			(double) h / (double) job->height);
