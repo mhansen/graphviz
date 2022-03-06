@@ -26,8 +26,6 @@
 #include <common/arith.h>
 #include <topfish/hierarchy.h>
 
-static int cur_level = 0;
-
 /////////////////////////
 // Some utilities for  //
 // 'maxmatch(..)'      //
@@ -913,7 +911,7 @@ set_active_levels(Hierarchy * hierarchy, int *foci_nodes, int num_foci,
     ex_vtx_data *cgraph;
     int *cv2v;
     int v, u;
-    int min_level = cur_level;
+    int min_level = 0;
 
     graph = hierarchy->geom_graphs[min_level];	// finest graph
     n = hierarchy->nvtxs[min_level];
@@ -1086,7 +1084,7 @@ find_closest_active_node(Hierarchy * hierarchy, double x, double y,
 	{
 		min_dist = findClosestActiveNode(hierarchy, i, top_level, x, y,min_dist, &closest_node, &closest_node_level);
     }
-    *closest_fine_node =find_leftmost_descendant(hierarchy, closest_node,closest_node_level, cur_level);
+    *closest_fine_node =find_leftmost_descendant(hierarchy, closest_node,closest_node_level, 0);
 
     return min_dist;
 }
