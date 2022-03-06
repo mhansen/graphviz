@@ -75,37 +75,54 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
                       gvplugin_installed_t *typeptr)
 {
     gvplugin_available_t *plugin, **pnext;
-#define TYPSIZ 63
-    char *p, *t, pins[TYPSIZ + 1], pnxt[TYPSIZ + 1];
+    char *t;
 
     /* duplicate typestr to later save in the plugin list */
     t = strdup(typestr);
     if (t == NULL)
         return false;
 
-    strncpy(pins, typestr, TYPSIZ);
-    if ((p = strchr(pins, ':')))
-        *p = '\0';
+    // find the end of the current plugin
+    const char *end = strchr(typestr, ':');
+    if (end == NULL)
+        end = typestr + strlen(typestr);
+    size_t length = end - typestr;
 
     /* point to the beginning of the linked list of plugins for this api */
     pnext = &gvc->apis[api];
 
     /* keep alpha-sorted and insert new duplicates ahead of old */
     while (*pnext) {
-        strncpy(pnxt, (*pnext)->typestr, TYPSIZ);
-        if ((p = strchr(pnxt, ':')))
-            *p = '\0';
-        if (strcmp(pins, pnxt) <= 0)
+
+        const char *next_typestr = (*pnext)->typestr;
+
+        // find the end of the next plugin
+        const char *next_end = strchr(next_typestr, ':');
+        if (next_end == NULL)
+            next_end = next_typestr + strlen(next_typestr);
+        size_t next_length = next_end - next_typestr;
+
+        size_t limit = next_length < length ? next_length : length;
+        if (strncmp(typestr, next_typestr, limit) < 0 ||
+            (strncmp(typestr, next_typestr, limit) == 0 &&
+             length <= next_length))
             break;
         pnext = &(*pnext)->next;
     }
 
     /* keep quality sorted within type and insert new duplicates ahead of old */
     while (*pnext) {
-        strncpy(pnxt, (*pnext)->typestr, TYPSIZ);
-        if ((p = strchr(pnxt, ':')))
-            *p = '\0';
-        if (strcmp(pins, pnxt) != 0)
+
+        const char *next_typestr = (*pnext)->typestr;
+
+        // find the end of the next plugin
+        const char *next_end = strchr(next_typestr, ':');
+        if (next_end == NULL)
+            next_end = next_typestr + strlen(next_typestr);
+        size_t next_length = next_end - next_typestr;
+
+        size_t limit = next_length < length ? next_length : length;
+        if (strncmp(typestr, next_typestr, limit) != 0 || length != next_length)
             break;
         if (quality >= (*pnext)->quality)
             break;
