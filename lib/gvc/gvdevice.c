@@ -61,14 +61,14 @@ static const int PAGE_ALIGN = 4095;		/* align to a 4K boundary (less one), typic
 
 static size_t gvwrite_no_z(GVJ_t * job, const void *s, size_t len) {
     if (job->gvc->write_fn)   /* externally provided write discipline */
-	return (job->gvc->write_fn)(job, s, len);
+	return job->gvc->write_fn(job, s, len);
     if (job->output_data) {
 	if (len > job->output_data_allocated - (job->output_data_position + 1)) {
 	    /* ensure enough allocation for string = null terminator */
 	    job->output_data_allocated = (job->output_data_position + len + 1 + PAGE_ALIGN) & ~PAGE_ALIGN;
 	    job->output_data = realloc(job->output_data, job->output_data_allocated);
 	    if (!job->output_data) {
-                (job->common->errorfn) ("memory allocation failure\n");
+                job->common->errorfn("memory allocation failure\n");
 		graphviz_exit(1);
 	    }
 	}
@@ -142,10 +142,10 @@ int gvdevice_initialize(GVJ_t * job)
         if (job->output_filename) {
             job->output_file = fopen(job->output_filename, "w");
             if (job->output_file == NULL) {
-		(job->common->errorfn) ("Could not open \"%s\" for writing : %s\n", 
+		job->common->errorfn("Could not open \"%s\" for writing : %s\n",
 		    job->output_filename, strerror(errno));
                 /* perror(job->output_filename); */
-                return(1);
+                return 1;
             }
         }
         else
@@ -177,13 +177,13 @@ int gvdevice_initialize(GVJ_t * job)
 	crc = crc32(0L, Z_NULL, 0);
 
 	if (deflateInit2(z, Z_DEFAULT_COMPRESSION, Z_DEFLATED, -MAX_WBITS, MAX_MEM_LEVEL, Z_DEFAULT_STRATEGY) != Z_OK) {
-	    (job->common->errorfn) ("Error initializing for deflation\n");
-	    return(1);
+	    job->common->errorfn("Error initializing for deflation\n");
+	    return 1;
 	}
 	gvwrite_no_z(job, z_file_header, sizeof(z_file_header));
 #else
-	(job->common->errorfn) ("No libz support.\n");
-	return(1);
+	job->common->errorfn("No libz support.\n");
+	return 1;
 #endif
     }
     return 0;
@@ -211,7 +211,7 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	    dfallocated = (dflen + 1 + PAGE_ALIGN) & ~PAGE_ALIGN;
 	    df = realloc(df, dfallocated);
 	    if (! df) {
-                (job->common->errorfn) ("memory allocation failure\n");
+                job->common->errorfn("memory allocation failure\n");
 		graphviz_exit(1);
 	    }
 	}
@@ -225,14 +225,14 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	    z->avail_out = dfallocated;
 	    int r = deflate(z, Z_NO_FLUSH);
 	    if (r != Z_OK) {
-                (job->common->errorfn) ("deflation problem %d\n", r);
+                job->common->errorfn("deflation problem %d\n", r);
 	        graphviz_exit(1);
 	    }
 
 	    if ((olen = z->next_out - df)) {
 		ret = gvwrite_no_z(job, df, olen);
 	        if (ret != olen) {
-                    (job->common->errorfn) ("gvwrite_no_z problem %d\n", ret);
+                    job->common->errorfn("gvwrite_no_z problem %d\n", ret);
 	            graphviz_exit(1);
 	        }
 	    }
@@ -240,14 +240,14 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 
 #else
         (void)olen;
-	(job->common->errorfn) ("No libz support.\n");
+	job->common->errorfn("No libz support.\n");
 	graphviz_exit(1);
 #endif
     }
     else { /* uncompressed write */
 	ret = gvwrite_no_z (job, s, len);
 	if (ret != len) {
-	    (job->common->errorfn) ("gvwrite_no_z problem %d\n", len);
+	    job->common->errorfn("gvwrite_no_z problem %d\n", len);
 	    graphviz_exit(1);
 	}
     }
@@ -356,14 +356,14 @@ void gvdevice_finalize(GVJ_t * job)
 	    z->avail_out = dfallocated;
 	}
 	if (ret != Z_STREAM_END) {
-            (job->common->errorfn) ("deflation finish problem %d cnt=%d\n", ret, cnt);
+            job->common->errorfn("deflation finish problem %d cnt=%d\n", ret, cnt);
 	    graphviz_exit(1);
 	}
 	gvwrite_no_z(job, df, z->next_out - df);
 
 	ret = deflateEnd(z);
 	if (ret != Z_OK) {
-	    (job->common->errorfn) ("deflation end problem %d\n", ret);
+	    job->common->errorfn("deflation end problem %d\n", ret);
 	    graphviz_exit(1);
 	}
 	out[0] = (unsigned char)crc;
@@ -376,7 +376,7 @@ void gvdevice_finalize(GVJ_t * job)
 	out[7] = (unsigned char)(z->total_in >> 24);
 	gvwrite_no_z(job, out, sizeof(out));
 #else
-	(job->common->errorfn) ("No libz support\n");
+	job->common->errorfn("No libz support\n");
 	graphviz_exit(1);
 #endif
     }
