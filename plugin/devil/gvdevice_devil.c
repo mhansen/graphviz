@@ -35,7 +35,6 @@ static void devil_format(GVJ_t * job)
 {
     ILuint	ImgId;
     ILenum	Error;
-    ILboolean rc;
 
     // Check if the shared lib's version matches the executable's version.
     if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION ||
@@ -56,7 +55,7 @@ static void devil_format(GVJ_t * job)
     Y_inv ( job->width, job->height, job->imagedata );
     
     // let the DevIL do its thing
-    rc = ilTexImage( job->width, job->height,
+    (void)ilTexImage(job->width, job->height,
     		1,		// Depth
     		4,		// Bpp
     		IL_BGRA,	// Format
@@ -64,7 +63,7 @@ static void devil_format(GVJ_t * job)
     		job->imagedata);
     
     // output to the provided open file handle
-    ilSaveF(job->device.id, job->output_file);
+    ilSaveF((ILenum)job->device.id, job->output_file);
     
     // We're done with the image, so delete it.
     ilDeleteImages(1, &ImgId);
