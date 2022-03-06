@@ -30,6 +30,7 @@
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
+#include <math.h>
 #include <stdlib.h>
 #include <time.h>
 #ifndef _WIN32
@@ -645,7 +646,7 @@ void dumpstat(graph_t * g)
 	    dx = ND_pos(np)[0] - ND_pos(aghead(ep))[0];
 	    dy = ND_pos(np)[1] - ND_pos(aghead(ep))[1];
 	    fprintf(stderr, "  %s --  %s  (%f)\n", agnameof(np),
-		    agnameof(aghead(ep)), sqrt(dx * dx + dy * dy));
+		    agnameof(aghead(ep)), hypot(dx, dy));
 	}
     }
 }
