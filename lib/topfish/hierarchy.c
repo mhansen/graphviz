@@ -127,7 +127,7 @@ static double ddist(ex_vtx_data * geom_graph, int v, int u)
     double x_v = geom_graph[v].x_coord, y_v = geom_graph[v].y_coord,
 	x_u = geom_graph[u].x_coord, y_u = geom_graph[u].y_coord;
 
-    return sqrt((x_v - x_u) * (x_v - x_u) + (y_v - y_u) * (y_v - y_u));
+    return hypot(x_v - x_u, y_v - y_u);
 }
 
 extern void quicksort_place(double *, int *, int first, int last);
