@@ -188,22 +188,20 @@ void cat_libfile(GVJ_t * job, const char **arglib, const char **stdlib)
  */
 void epsf_emit_body(GVJ_t *job, usershape_t *us)
 {
-    char *p;
-    char c;
-    p = us->data;
+    char *p = us->data;
     while (*p) {
 	/* skip %%EOF lines */
 	if (!strncasecmp(p, "%%EOF", 5) || !strncasecmp(p, "%%BEGIN", 7) ||
 	    !strncasecmp(p, "%%END", 5) || !strncasecmp(p, "%%TRAILER", 9)) {
 	    /* check for *p since last line might not end in '\n' */
-	    while ((c = *p) && (c != '\r') && (c != '\n')) p++;
+	    while (*p != '\0' && *p != '\r' && *p != '\n') p++;
 	    if ((*p == '\r') && (*(p+1) == '\n')) p += 2;
 	    else if (*p) p++;
 	    continue;
 	}
 	/* output line */
-	while ((c = *p) && (c != '\r') && (c != '\n')) {
-	    gvputc(job, c);
+	while (*p != '\0' && *p != '\r' && *p != '\n') {
+	    gvputc(job, *p);
 	    p++;
 	}
 	if ((*p == '\r') && (*(p+1) == '\n')) p += 2;
