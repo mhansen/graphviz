@@ -11,6 +11,7 @@
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <limits.h>
+#include <math.h>
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -562,7 +563,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	    p1 = AF[0];
 	dx = p1.x - p0.x;
 	dy = p1.y - p0.y;
-	d = sqrt(dx * dx + dy * dy);
+	d = hypot(dx, dy);
 	rbconst = MIN(rbconst, d / 3.0);
     }
     for (seg = 0; seg < sides; seg++) {
@@ -573,7 +574,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	    p1 = AF[0];
 	dx = p1.x - p0.x;
 	dy = p1.y - p0.y;
-	d = sqrt(dx * dx + dy * dy);
+	d = hypot(dx, dy);
 	t = rbconst / d;
 	if (shape == BOX3D || shape == COMPONENT)
 	    t /= 3;
