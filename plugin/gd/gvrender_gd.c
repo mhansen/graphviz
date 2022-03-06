@@ -215,7 +215,6 @@ static void gdgen_end_page(GVJ_t * job)
 #ifdef HAVE_LIBZ
 	case FORMAT_GD2:
 #define GD2_CHUNKSIZE 128
-#define GD2_RAW 1
 #define GD2_COMPRESSED 2
 	    gdImageGd2(im, job->output_file, GD2_CHUNKSIZE, GD2_COMPRESSED);
 	    break;

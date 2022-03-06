@@ -28,10 +28,9 @@
 /* for gvcolor_t */
 #include <common/color.h>
 
-/* for late_double() */
 #include <cgraph/agxbuf.h>
 #include <cgraph/cgraph.h>
-#include <common/utils.h>
+#include <common/memory.h>
 #include <common/render.h>
 
 /* for wind() */
@@ -41,20 +40,27 @@ typedef enum { FORMAT_VRML, } format_type;
 
 #define BEZIERSUBDIVISION 10
 
-/* static int	N_pages; */
-/* static point	Pages; */
-static double Scale;
-static double MinZ;
-/* static int	onetime = TRUE; */
-static int Saw_skycolor;
+typedef struct {
+  double Scale;
+  double MinZ;
+  int Saw_skycolor;
 
-static gdImagePtr im;
-static FILE *PNGfile;
-static int    IsSegment;   /* set true if edge is line segment */
-static double CylHt;       /* height of cylinder part of edge */
-static double EdgeLen;     /* length between centers of endpoints */
-static double HeadHt, TailHt;  /* height of arrows */
-static double Fstz, Sndz;  /* z values of tail and head points */
+  gdImagePtr im;
+  FILE *PNGfile;
+  int    IsSegment;   /* set true if edge is line segment */
+  double CylHt;       /* height of cylinder part of edge */
+  double EdgeLen;     /* length between centers of endpoints */
+  double HeadHt, TailHt;  /* height of arrows */
+  double Fstz, Sndz;  /* z values of tail and head points */
+} state_t;
+
+static void vrml_begin_job(GVJ_t *job) {
+  job->context = zmalloc(sizeof(state_t));
+}
+
+static void vrml_end_job(GVJ_t *job) {
+  free(job->context);
+}
 
 /* gdirname:
  * Returns directory pathname prefix
@@ -119,14 +125,15 @@ static FILE *nodefile(const char *filename, node_t * n)
 static pointf vrml_node_point(GVJ_t *job, node_t *n, pointf p)
 {
     pointf rv;
+    state_t *state = job->context;
 
     /* make rv relative to PNG canvas */
     if (job->rotation) {
-	rv.x = ( (p.y - job->pad.y) - ND_coord(n).y + ND_lw(n)     ) * Scale + NODE_PAD;
-	rv.y = (-(p.x - job->pad.x) + ND_coord(n).x + ND_ht(n) / 2.) * Scale + NODE_PAD;
+	rv.x = ( (p.y - job->pad.y) - ND_coord(n).y + ND_lw(n)     ) * state->Scale + NODE_PAD;
+	rv.y = (-(p.x - job->pad.x) + ND_coord(n).x + ND_ht(n) / 2.) * state->Scale + NODE_PAD;
     } else {
-	rv.x = ( (p.x - job->pad.x) - ND_coord(n).x + ND_lw(n)     ) * Scale + NODE_PAD;
-	rv.y = (-(p.y - job->pad.y) + ND_coord(n).y + ND_ht(n) / 2.) * Scale + NODE_PAD;
+	rv.x = ( (p.x - job->pad.x) - ND_coord(n).x + ND_lw(n)     ) * state->Scale + NODE_PAD;
+	rv.y = (-(p.y - job->pad.y) + ND_coord(n).y + ND_ht(n) / 2.) * state->Scale + NODE_PAD;
     }
     return rv;
 }
@@ -192,11 +199,12 @@ static int set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr brush)
 
 static void vrml_begin_page(GVJ_t *job)
 {
-    Scale = (double) DEFAULT_DPI / POINTS_PER_INCH;
+    state_t *state = job->context;
+    state->Scale = (double) DEFAULT_DPI / POINTS_PER_INCH;
     gvputs(job,   "#VRML V2.0 utf8\n");
 
-    Saw_skycolor = FALSE;
-    MinZ = MAXDOUBLE;
+    state->Saw_skycolor = FALSE;
+    state->MinZ = MAXDOUBLE;
     gvputs(job,   "Group { children [\n"
                   "  Transform {\n");
     gvprintf(job, "    scale %.3f %.3f %.3f\n", .0278, .0278, .0278);
@@ -207,20 +215,21 @@ static void vrml_end_page(GVJ_t *job)
 {
     double d, z;
     box bb = job->boundingBox;
+    state_t *state = job->context;
 
     d = MAX(bb.UR.x - bb.LL.x,bb.UR.y - bb.LL.y);
     /* Roughly fill 3/4 view assuming FOV angle of M_PI/4.
      * Small graphs and non-square aspect ratios will upset this.
      */
-    z = (0.6667*d)/tan(M_PI/8.0) + MinZ;  /* fill 3/4 of view */
+    z = (0.6667*d)/tan(M_PI/8.0) + state->MinZ;  /* fill 3/4 of view */
 
-    if (!Saw_skycolor)
+    if (!state->Saw_skycolor)
 	gvputs(job,   " Background { skyColor 1 1 1 }\n");
     gvputs(job,   "  ] }\n");
     gvprintf(job, "  Viewpoint {position %.3f %.3f %.3f}\n",
-	    Scale * (bb.UR.x + bb.LL.x) / 72.,
-	    Scale * (bb.UR.y + bb.LL.y) / 72.,
-	    Scale * 2 * z / 72.);
+	    state->Scale * (bb.UR.x + bb.LL.x) / 72.,
+	    state->Scale * (bb.UR.y + bb.LL.y) / 72.,
+	    state->Scale * 2 * z / 72.);
     gvputs(job,   "] }\n");
 }
 
@@ -231,37 +240,39 @@ static void vrml_begin_node(GVJ_t *job)
     double z = obj->z;
     int width, height;
     int transparent;
+    state_t *state = job->context;
 
     gvprintf(job, "# node %s\n", agnameof(n));
-    if (z < MinZ)
-	MinZ = z;
+    if (z < state->MinZ)
+	state->MinZ = z;
     if (shapeOf(n) != SH_POINT) {
-	PNGfile = nodefile(job->output_filename, n);
-	if (PNGfile == NULL) {
+	state->PNGfile = nodefile(job->output_filename, n);
+	if (state->PNGfile == NULL) {
 		agerrorf("failed to open file for writing PNG node image\n");
 	}
 
-	width  = (ND_lw(n) + ND_rw(n)) * Scale + 2 * NODE_PAD;
-	height = (ND_ht(n)           ) * Scale + 2 * NODE_PAD;
-	im = gdImageCreate(width, height);
+	width  = (ND_lw(n) + ND_rw(n)) * state->Scale + 2 * NODE_PAD;
+	height = (ND_ht(n)           ) * state->Scale + 2 * NODE_PAD;
+	state->im = gdImageCreate(width, height);
 
 	/* make background transparent */
-	transparent = gdImageColorResolveAlpha(im,
+	transparent = gdImageColorResolveAlpha(state->im,
                                            gdRedMax - 1, gdGreenMax,
                                            gdBlueMax, gdAlphaTransparent);
-	gdImageColorTransparent(im, transparent);
+	gdImageColorTransparent(state->im, transparent);
     }
 }
 
 static void vrml_end_node(GVJ_t *job)
 {
-    if (im) {
-	if (PNGfile != NULL) {
-		gdImagePng(im, PNGfile);
-		fclose(PNGfile);
+    state_t *state = job->context;
+    if (state->im) {
+	if (state->PNGfile != NULL) {
+		gdImagePng(state->im, state->PNGfile);
+		fclose(state->PNGfile);
 	}
-	gdImageDestroy(im);
-	im = NULL;
+	gdImageDestroy(state->im);
+	state->im = NULL;
     }
 }
 
@@ -269,8 +280,9 @@ static void vrml_begin_edge(GVJ_t *job)
 {
     obj_state_t *obj = job->obj;
     edge_t *e = obj->u.e;
+    state_t *state = job->context;
 
-    IsSegment = 0;
+    state->IsSegment = 0;
     gvprintf(job, "# edge %s -> %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
     gvputs(job,   " Group { children [\n");
 }
@@ -282,34 +294,35 @@ finishSegment (GVJ_t *job, edge_t *e)
     pointf p1 = gvrender_ptf(job, ND_coord(aghead(e)));
     double o_x, o_y, o_z;
     double x, y, y0, z, theta;
+    state_t *state = job->context;
 
     o_x = ((double)(p0.x + p1.x))/2;
     o_y = ((double)(p0.y + p1.y))/2;
-    o_z = (Fstz + Sndz)/2;
+    o_z = (state->Fstz + state->Sndz) / 2;
     /* Compute rotation */
     /* Pick end point with highest y */
     if (p0.y > p1.y) {
 	x = p0.x;
 	y = p0.y;
-        z = Fstz;
+        z = state->Fstz;
     }
     else {
 	x = p1.x;
 	y = p1.y;
-        z = Sndz;
+        z = state->Sndz;
     }
     /* Translate center to the origin */
     x -= o_x;
     y -= o_y;
     z -= o_z;
     if (p0.y > p1.y)
-	theta = acos(2*y/EdgeLen) + M_PI;
+	theta = acos(2 * y / state->EdgeLen) + M_PI;
     else
-	theta = acos(2*y/EdgeLen);
+	theta = acos(2 * y / state->EdgeLen);
     if (!x && !z)   /* parallel  to y-axis */
 	x = 1;
 
-    y0 = (HeadHt-TailHt)/2.0;
+    y0 = (state->HeadHt - state->TailHt) / 2.0;
     gvputs(job,   "      ]\n");
     gvprintf(job, "      center 0 %.3f 0\n", y0);
     gvprintf(job, "      rotation %.3f 0 %.3f %.3f\n", -z, x, -theta);
@@ -319,7 +332,9 @@ finishSegment (GVJ_t *job, edge_t *e)
 
 static void vrml_end_edge(GVJ_t *job)
 {
-    if (IsSegment)
+    state_t *state = job->context;
+
+    if (state->IsSegment)
 	finishSegment(job, job->obj->u.e);
     gvputs(job,   "] }\n");
 }
@@ -330,8 +345,9 @@ static void vrml_textspan(GVJ_t *job, pointf p, textspan_t * span)
 {
     obj_state_t *obj = job->obj;
     pointf spf, epf, q;
+    state_t *state = job->context;
 
-    if (! obj->u.n || ! im)   /* if not a node - or if no im (e.g. for cluster) */
+    if (!obj->u.n || !state->im)   /* if not a node - or if no im (e.g. for cluster) */
 	return;
 
     switch (span->just) {
@@ -351,8 +367,8 @@ static void vrml_textspan(GVJ_t *job, pointf p, textspan_t * span)
     spf = vrml_node_point(job, obj->u.n, p);
     epf = vrml_node_point(job, obj->u.n, q);
 
-    gdgen_text(im, spf, epf,
-	color_index(im, obj->pencolor),
+    gdgen_text(state->im, spf, epf,
+	color_index(state->im, obj->pencolor),
 	span->font->size,
         DEFAULT_DPI,
 	job->rotation ? (M_PI / 2) : 0,
@@ -420,23 +436,24 @@ doSegment (GVJ_t *job, pointf* A, pointf p0, double z0, pointf p1, double z1)
     obj_state_t *obj = job->obj;
     double d1, d0;
     double delx, dely, delz;
+    state_t *state = job->context;
 
     delx = p0.x - p1.x;
     dely = p0.y - p1.y;
     delz = z0 - z1;
-    EdgeLen = sqrt(delx*delx + dely*dely + delz*delz);
+    state->EdgeLen = sqrt(delx*delx + dely*dely + delz*delz);
     d0 = DIST(A[0],p0);
     d1 = DIST(A[3],p1);
-    CylHt = EdgeLen - d0 - d1;
-    TailHt = HeadHt = 0;
+    state->CylHt = state->EdgeLen - d0 - d1;
+    state->TailHt = state->HeadHt = 0;
 
-    IsSegment = 1;
+    state->IsSegment = 1;
     gvputs(job,   "Transform {\n"
                   "  children [\n"
                   "    Shape {\n"
                   "      geometry Cylinder {\n"
                   "        bottom FALSE top FALSE\n");
-    gvprintf(job, "        height %.3f radius %.3f }\n", CylHt, obj->penwidth);
+    gvprintf(job, "        height %.3f radius %.3f }\n", state->CylHt, obj->penwidth);
     gvputs(job,   "      appearance Appearance {\n"
                   "        material Material {\n"
                   "          ambientIntensity 0.33\n");
@@ -473,13 +490,14 @@ vrml_bezier(GVJ_t *job, pointf * A, int n, int arrow_at_start, int arrow_at_end,
     double fstz, sndz;
     pointf p1, V[4];
     int i, j, step;
+    state_t *state = job->context;
 
     assert(e);
 
-    fstz = Fstz = obj->tail_z; 
-    sndz = Sndz = obj->head_z;
+    fstz = state->Fstz = obj->tail_z; 
+    sndz = state->Sndz = obj->head_z;
     if (straight(A,n)) {
-	doSegment (job, A, gvrender_ptf(job, ND_coord(agtail(e))),Fstz,gvrender_ptf(job, ND_coord(aghead(e))),Sndz);
+	doSegment (job, A, gvrender_ptf(job, ND_coord(agtail(e))),state->Fstz,gvrender_ptf(job, ND_coord(aghead(e))),state->Sndz);
 	return;
     }
 
@@ -523,22 +541,23 @@ static void doArrowhead (GVJ_t *job, pointf * A)
     edge_t *e = obj->u.e;
     double rad, ht, y;
     pointf p0;      /* center of triangle base */
+    state_t *state = job->context;
 
     p0.x = (A[0].x + A[2].x)/2.0;
     p0.y = (A[0].y + A[2].y)/2.0;
     rad = DIST(A[0],A[2])/2.0;
     ht = DIST(p0,A[1]);
 
-    y = (CylHt + ht)/2.0;
+    y = (state->CylHt + ht)/2.0;
 
     gvputs(job,   "Transform {\n");
     if (nearTail (job, A[1], e)) {
-	TailHt = ht;
+	state->TailHt = ht;
 	gvprintf(job, "  translation 0 %.3f 0\n", -y);
 	gvprintf(job, "  rotation 0 0 1 %.3f\n", M_PI);
     }
     else {
-	HeadHt = ht;
+	state->HeadHt = ht;
 	gvprintf(job, "  translation 0 %.3f 0\n", y);
     }
     gvputs(job,   "  children [\n"
@@ -570,6 +589,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
     int i, pen;
     gdImagePtr brush = NULL;
     double theta;
+    state_t *state = job->context;
 
     switch (obj->type) {
     case ROOTGRAPH_OBJTYPE:
@@ -577,13 +597,13 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	    obj->fillcolor.u.rgba[0] / 255.,
 	    obj->fillcolor.u.rgba[1] / 255.,
 	    obj->fillcolor.u.rgba[2] / 255.);
-	Saw_skycolor = TRUE;
+	state->Saw_skycolor = TRUE;
 	break;
     case CLUSTER_OBJTYPE:
 	break;
     case NODE_OBJTYPE:
 	n = obj->u.n;
-	pen = set_penstyle(job, im, brush);
+	pen = set_penstyle(job, state->im, brush);
 	points = N_GGNEW(np, gdPoint);
 	for (i = 0; i < np; i++) {
 	    mp = vrml_node_point(job, n, A[i]);
@@ -591,8 +611,8 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	    points[i].y = ROUND(mp.y);
 	}
 	if (filled)
-	    gdImageFilledPolygon(im, points, np, color_index(im, obj->fillcolor));
-	gdImagePolygon(im, points, np, pen);
+	    gdImageFilledPolygon(state->im, points, np, color_index(state->im, obj->fillcolor));
+	gdImagePolygon(state->im, points, np, pen);
 	free(points);
 	if (brush)
 	    gdImageDestroy(brush);
@@ -631,7 +651,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 		  "vrml_polygon: non-triangle arrowheads not supported - ignoring\n");
 	    }
 	}
-	if (IsSegment) {
+	if (state->IsSegment) {
 	    doArrowhead (job, A);
 	    return;
 	}
@@ -718,6 +738,7 @@ static void vrml_ellipse(GVJ_t * job, pointf * A, int filled)
     point np;
     int pen;
     gdImagePtr brush = NULL;
+    state_t *state = job->context;
 
     rx = A[1].x - A[0].x;
     ry = A[1].y - A[0].y;
@@ -732,7 +753,7 @@ static void vrml_ellipse(GVJ_t * job, pointf * A, int filled)
 	    doSphere (job, n, A[0], z, rx, ry);
 	    return;
 	}
-	pen = set_penstyle(job, im, brush);
+	pen = set_penstyle(job, state->im, brush);
 
 	npf = vrml_node_point(job, n, A[0]);
 	nqf = vrml_node_point(job, n, A[1]);
@@ -743,8 +764,8 @@ static void vrml_ellipse(GVJ_t * job, pointf * A, int filled)
 	PF2P(npf, np);
 
 	if (filled)
-	    gdImageFilledEllipse(im, np.x, np.y, dx, dy, color_index(im, obj->fillcolor));
-	gdImageArc(im, np.x, np.y, dx, dy, 0, 360, pen);
+	    gdImageFilledEllipse(state->im, np.x, np.y, dx, dy, color_index(state->im, obj->fillcolor));
+	gdImageArc(state->im, np.x, np.y, dx, dy, 0, 360, pen);
 
 	if (brush)
 	    gdImageDestroy(brush);
@@ -788,8 +809,8 @@ static void vrml_ellipse(GVJ_t * job, pointf * A, int filled)
 }
 
 static gvrender_engine_t vrml_engine = {
-    0,                          /* vrml_begin_job */
-    0,                          /* vrml_end_job */
+    vrml_begin_job,
+    vrml_end_job,
     0,                          /* vrml_begin_graph */
     0,                          /* vrml_end_graph */
     0,                          /* vrml_begin_layer */
