@@ -10,6 +10,8 @@
 
 #include "config.h"
 
+#include <assert.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,13 +66,17 @@ static void handle_configure_notify(GVJ_t * job, XConfigureEvent * cev)
 /*	plugin/xlib/gvdevice_xlib.c */
 /*	lib/gvc/gvevent.c */
 
+    assert(cev->width >= 0 && "Xlib returned an event with negative width");
+    assert(cev->height >= 0 && "Xlib returned an event with negative height");
+
     job->zoom *= 1 + MIN(
 	((double) cev->width - (double) job->width) / (double) job->width,
 	((double) cev->height - (double) job->height) / (double) job->height);
-    if (cev->width > job->width || cev->height > job->height)
+    if ((unsigned)cev->width > job->width ||
+        (unsigned)cev->height > job->height)
         job->has_grown = true;
-    job->width = cev->width;
-    job->height = cev->height;
+    job->width = (unsigned)cev->width;
+    job->height = (unsigned)cev->height;
     job->needs_refresh = true;
 }
 
@@ -102,7 +108,7 @@ static bool handle_keypress(GVJ_t *job, XKeyEvent *kev)
     keycodes = job->keycodes;
     for (i=0; i < job->numkeys; i++) {
 	if (kev->keycode == keycodes[i])
-	    return (job->keybindings[i].callback)(job) != 0;
+	    return job->keybindings[i].callback(job) != 0;
     }
     return false;
 }
@@ -143,7 +149,6 @@ static void browser_show(GVJ_t *job)
 #if defined HAVE_SYS_TYPES_H && defined HAVE_UNISTD_H
    char *exec_argv[3] = {BROWSER, NULL, NULL};
    pid_t pid;
-   int err;
 
    exec_argv[1] = job->selected_href;
 
@@ -152,7 +157,7 @@ static void browser_show(GVJ_t *job)
        fprintf(stderr,"fork failed: %s\n", strerror(errno));
    }
    else if (pid == 0) {
-       err = execvp(exec_argv[0], exec_argv);
+       execvp(exec_argv[0], exec_argv);
        fprintf(stderr,"error starting %s: %s\n", exec_argv[0], strerror(errno));
    }
 #else
@@ -178,21 +183,21 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                 case ButtonPress:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    (job->callbacks->button_press)(job, xev.xbutton.button, pointer);
+                    job->callbacks->button_press(job, xev.xbutton.button, pointer);
 		    rc++;
                     break;
                 case MotionNotify:
 		    if (job->button) { /* only interested while a button is pressed */
 		        pointer.x = (double)xev.xbutton.x;
 		        pointer.y = (double)xev.xbutton.y;
-                        (job->callbacks->motion)(job, pointer);
+                        job->callbacks->motion(job, pointer);
 		        rc++;
 		    }
                     break;
                 case ButtonRelease:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    (job->callbacks->button_release)(job, xev.xbutton.button, pointer);
+                    job->callbacks->button_release(job, xev.xbutton.button, pointer);
 		    if (job->selected_href && job->selected_href[0] && xev.xbutton.button == 1)
 		        browser_show(job);
 		    rc++;
@@ -242,9 +247,9 @@ static void update_display(GVJ_t *job, Display *dpy)
 	surface = cairo_xlib_surface_create(dpy,
 			window->pix, window->visual,
 			job->width, job->height);
-    	job->context = (void *)cairo_create(surface);
+    	job->context = cairo_create(surface);
 	job->external_context = true;
-        (job->callbacks->refresh)(job);
+        job->callbacks->refresh(job);
 	cairo_surface_destroy(surface);
 	XCopyArea(dpy, window->pix, window->win, window->gc,
 			0, 0, job->width, job->height, 0, 0);
@@ -264,7 +269,6 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     uint64_t attributemask = 0;
     char *name;
     window_t *window;
-    int w, h;
     double zoom_to_fit;
 
     window = malloc(sizeof(window_t));
@@ -273,8 +277,8 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
 	return;
     }
 
-    w = 480;    /* FIXME - w,h should be set by a --geometry commandline option */
-    h = 325;
+    unsigned w = 480;    /* FIXME - w,h should be set by a --geometry commandline option */
+    unsigned h = 325;
     
     zoom_to_fit = MIN((double) w / (double) job->width,
 			(double) h / (double) job->height);
@@ -322,7 +326,9 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     normalhints->flags = 0;
     normalhints->x = 0;
     normalhints->y = 0;
+    assert(job->width <= (unsigned)INT_MAX && "out of range width");
     normalhints->width = job->width;
+    assert(job->height <= (unsigned)INT_MAX && "out of range height");
     normalhints->height = job->height;
 
     classhint = XAllocClassHint();
@@ -369,7 +375,7 @@ static int handle_stdin_events(GVJ_t *job, int stdin_fd)
 
     if (feof(stdin))
 	return -1;
-    (job->callbacks->read)(job, job->input_filename, job->layout_type);
+    job->callbacks->read(job, job->input_filename, job->layout_type);
     
     rc++;
     return rc;
@@ -410,8 +416,8 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
 		    p++;
 		else 
 		    p = job->input_filename;
-		if (strcmp((char*)(&(event->name)), p) == 0) {
-		    (job->callbacks->read)(job, job->input_filename, job->layout_type);
+		if (strcmp((char*)&event->name, p) == 0) {
+		    job->callbacks->read(job, job->input_filename, job->layout_type);
 		    rc++;
 		}
 		break;
