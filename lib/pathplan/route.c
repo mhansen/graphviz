@@ -196,9 +196,7 @@ static double dist_n(Ppoint_t * p, int n)
 
     rv = 0.0;
     for (i = 1; i < n; i++) {
-	rv +=
-	    sqrt((p[i].x - p[i - 1].x) * (p[i].x - p[i - 1].x) +
-		 (p[i].y - p[i - 1].y) * (p[i].y - p[i - 1].y));
+	rv += hypot(p[i].x - p[i - 1].x, p[i].y - p[i - 1].y);
     }
     return rv;
 }
