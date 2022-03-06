@@ -47,7 +47,7 @@ static void ideal_distance_avoid_overlap(int dim, SparseMatrix A, double *x, dou
       wx = width[i*dim]+width[jj*dim];
       wy = width[i*dim+1]+width[jj*dim+1];
       if (dx < MACHINEACC*wx && dy < MACHINEACC*wy){
-	ideal_distance[j] = sqrt(wx*wx+wy*wy);
+	ideal_distance[j] = hypot(wx, wy);
 	*tmax = 2;
       } else {
 	if (dx < MACHINEACC*wx){
