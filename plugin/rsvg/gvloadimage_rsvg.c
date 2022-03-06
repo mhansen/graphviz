@@ -39,8 +39,7 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
     RsvgHandle* rsvgh = NULL;
     guchar *fileBuf = NULL;
     GError *err = NULL;
-    gsize fileSize;
-    gint result;
+    size_t fileSize;
 
     int fd;
     struct stat stbuf;
@@ -79,19 +78,15 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 		
 		if (rsvgh == NULL) {
 			fprintf(stderr, "rsvg_handle_new_from_file returned an error: %s\n", err->message);
-#if HAVE_G_TYPE_TERM
-			g_type_term();
-#else
 #ifndef HAVE_SVG_2_36
 			rsvg_term();
-#endif
 #endif
 			return NULL;
 		} 
 
 	 	fd = fileno(us->f);
 		fstat(fd, &stbuf);
-  		fileSize = stbuf.st_size;	
+  		fileSize = (size_t)stbuf.st_size;	
 
 		fileBuf = calloc(fileSize + 1, sizeof(guchar));
 
@@ -101,31 +96,23 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 #else
 			rsvg_handle_free(rsvgh);
 #endif
-#if HAVE_G_TYPE_TERM
-			g_type_term();
-#else
 #ifndef HAVE_SVG_2_36
                         rsvg_term();
-#endif
 #endif
 			return NULL;
 		}
 	
 		rewind(us->f);
 
-		if ((result = fread(fileBuf, 1, fileSize, us->f)) < fileSize) {
+		if (fread(fileBuf, 1, fileSize, us->f) < fileSize) {
 			free(fileBuf);
 #if HAVE_G_OBJECT_UNREF
 			g_object_unref(rsvgh);
 #else
 			rsvg_handle_free(rsvgh);
 #endif
-#if HAVE_G_TYPE_TERM
-			g_type_term();
-#else
 #ifndef HAVE_SVG_2_36
                         rsvg_term();
-#endif
 #endif
 			return NULL;
 		}
@@ -138,12 +125,8 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 #else
 			rsvg_handle_free(rsvgh);
 #endif
-#if HAVE_G_TYPE_TERM
-			g_type_term();
-#else
 #ifndef HAVE_SVG_2_36
                         rsvg_term();
-#endif
 #endif
 			return NULL;
 		} 
