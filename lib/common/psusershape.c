@@ -74,7 +74,7 @@ static usershape_t *user_init(const char *str)
 	us->x = lx;
 	us->y = ly;
 	us->w = ux - lx;
-	us->y = uy - ly;
+	us->h = uy - ly;
 	us->name = str;
 	us->macro_id = N_EPSF_files++;
 	fstat(fileno(fp), &statbuf);
