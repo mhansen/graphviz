@@ -193,12 +193,8 @@ void epsf_emit_body(GVJ_t *job, usershape_t *us)
     p = us->data;
     while (*p) {
 	/* skip %%EOF lines */
-	if ((p[0] == '%') && (p[1] == '%')
-		&& (!strncasecmp(&p[2], "EOF", 3)
-		|| !strncasecmp(&p[2], "BEGIN", 5)
-		|| !strncasecmp(&p[2], "END", 3)
-		|| !strncasecmp(&p[2], "TRAILER", 7)
-	)) {
+	if (!strncasecmp(p, "%%EOF", 5) || !strncasecmp(p, "%%BEGIN", 7) ||
+	    !strncasecmp(p, "%%END", 5) || !strncasecmp(p, "%%TRAILER", 9)) {
 	    /* check for *p since last line might not end in '\n' */
 	    while ((c = *p) && (c != '\r') && (c != '\n')) p++;
 	    if ((*p == '\r') && (*(p+1) == '\n')) p += 2;
