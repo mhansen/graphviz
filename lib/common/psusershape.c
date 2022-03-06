@@ -195,7 +195,7 @@ void epsf_emit_body(GVJ_t *job, usershape_t *us)
 	    !strncasecmp(p, "%%END", 5) || !strncasecmp(p, "%%TRAILER", 9)) {
 	    /* check for *p since last line might not end in '\n' */
 	    while (*p != '\0' && *p != '\r' && *p != '\n') p++;
-	    if ((*p == '\r') && (*(p+1) == '\n')) p += 2;
+	    if (*p == '\r' && p[1] == '\n') p += 2;
 	    else if (*p) p++;
 	    continue;
 	}
@@ -204,7 +204,7 @@ void epsf_emit_body(GVJ_t *job, usershape_t *us)
 	    gvputc(job, *p);
 	    p++;
 	}
-	if ((*p == '\r') && (*(p+1) == '\n')) p += 2;
+	if (*p == '\r' && p[1] == '\n') p += 2;
 	else if (*p) p++;
 	gvputc(job, '\n');
     }
