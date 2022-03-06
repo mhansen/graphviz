@@ -173,7 +173,7 @@ static double l2dist (pointf p0, pointf p1)
 {
     double delx = p0.x - p1.x;
     double dely = p0.y - p1.y;
-    return sqrt(delx*delx + dely*dely);
+    return hypot(delx, dely);
 }
 
 /* analyze current path, creating pathpoints array
