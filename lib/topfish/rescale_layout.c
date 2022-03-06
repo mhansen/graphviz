@@ -44,9 +44,7 @@ static double *compute_densities(v_data * graph, int n, double *x,
 	sum = 0;
 	for (j = 1; j < graph[i].nedges; j++) {
 	    neighbor = graph[i].edges[j];
-	    sum +=
-		sqrt((x[i] - x[neighbor]) * (x[i] - x[neighbor]) +
-		     (y[i] - y[neighbor]) * (y[i] - y[neighbor]));
+	    sum += hypot(x[i] - x[neighbor], y[i] - y[neighbor]);
 	}
 	densities[i] = sum / graph[i].nedges;
     }
