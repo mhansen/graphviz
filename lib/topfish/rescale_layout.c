@@ -315,7 +315,7 @@ rescale_layout(double *x_coords, double *y_coords,
     }
 }
 
-#define DIST(x1,y1,x2,y2) (sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
+#define DIST(x1, y1, x2, y2) hypot((x1) - (x2), (y1) - (y2))
 
 static void
 rescale_layout_polarFocus(v_data * graph, int n,
