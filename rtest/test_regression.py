@@ -1399,7 +1399,6 @@ def test_2179_1():
     "incorrect warning triggered"
 
 @pytest.mark.skipif(shutil.which("nop") is None, reason="nop not available")
-@pytest.mark.xfail(strict=True) # FIXME
 def test_2184_1():
   """
   nop should not reposition labelled graph nodes
@@ -1418,7 +1417,6 @@ def test_2184_1():
   assert m is not None, \
     "nop rearranged a graph in a not-semantically-preserving way"
 
-@pytest.mark.xfail(strict=True) # FIXME
 def test_2184_2():
   """
   canonicalization should not reposition labelled graph nodes

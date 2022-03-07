@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   release of `gvpr`. #2185
 - spurious "no hard-coded metrics" warnings on labels with empty lines #2179
 - fixed corruption of user shape characteristics during EPSF initialization
+- output formats canon, dot, and xdot are not completely faithful to input #2184
 
 ## [3.0.0] – 2022-02-26
 

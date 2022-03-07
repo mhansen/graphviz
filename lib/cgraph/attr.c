@@ -246,6 +246,32 @@ static void addattr(Agraph_t * g, Agobj_t * obj, Agsym_t * sym)
     attr->str[sym->id] = agstrdup(g, sym->defval);
 }
 
+static Agsym_t *getattr(Agraph_t * g, int kind, char *name)
+{
+    Agsym_t *rv = 0;
+    Dict_t *dict;
+    dict = agdictof(g, kind);
+    if (dict)
+	rv = agdictsym(dict, name);	/* viewpath up to root */
+    return rv;
+}
+
+static void unviewsubgraphsattr(Agraph_t *parent, char *name)
+{
+    Agraph_t *subg;
+    Agsym_t *psym, *lsym;
+    Dict_t *ldict;
+
+    psym = getattr(parent, AGRAPH, name);
+    if (!psym) return; // supposedly can't happen, see setattr()
+    for (subg = agfstsubg(parent); subg; subg = agnxtsubg(subg)) {
+	ldict = agdatadict(subg, TRUE)->dict.g;
+        lsym = aglocaldictsym(ldict, name);
+        if (lsym) continue;
+        lsym = agnewsym(agroot(subg), name, agxget(subg,psym), psym->id, AGRAPH);
+        dtinsert(ldict, lsym);
+    }
+}
 
 static Agsym_t *setattr(Agraph_t * g, int kind, char *name, const char *value) {
     Dict_t *ldict, *rdict;
@@ -262,6 +288,7 @@ static Agsym_t *setattr(Agraph_t * g, int kind, char *name, const char *value) {
     if (lsym) {			/* update old local definition */
 	if (g != root && streq(name, "layout"))
 	    agerr(AGWARN, "layout attribute is invalid except on the root graph\n");
+        if (kind == AGRAPH) unviewsubgraphsattr(g,name);
 	agstrfree(g, lsym->defval);
 	lsym->defval = agstrdup(g, value);
 	rv = lsym;
@@ -299,16 +326,6 @@ static Agsym_t *setattr(Agraph_t * g, int kind, char *name, const char *value) {
     if (rv && kind == AGRAPH)
 	agxset(g, rv, value);
     agmethod_upd(g, g, rv);
-    return rv;
-}
-
-static Agsym_t *getattr(Agraph_t * g, int kind, char *name)
-{
-    Agsym_t *rv = 0;
-    Dict_t *dict;
-    dict = agdictof(g, kind);
-    if (dict)
-	rv = agdictsym(dict, name);	/* viewpath up to root */
     return rv;
 }
 
