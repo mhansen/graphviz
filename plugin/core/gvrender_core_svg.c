@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
@@ -543,7 +544,7 @@ static int svg_gradstyle(GVJ_t * job, pointf * A, int n)
  */
 static int svg_rgradstyle(GVJ_t * job)
 {
-    int ifx, ify;
+    double ifx, ify;
     static int rgradId;
     int id = rgradId++;
 
@@ -552,11 +553,12 @@ static int svg_rgradstyle(GVJ_t * job)
     if (angle == 0.) {
 	ifx = ify = 50;
     } else {
-	ifx = 50 * (1 + cos(angle));
-	ify = 50 * (1 - sin(angle));
+	ifx = round(50 * (1 + cos(angle)));
+	ify = round(50 * (1 - sin(angle)));
     }
     gvprintf(job,
-	     "<defs>\n<radialGradient id=\"r_%d\" cx=\"50%%\" cy=\"50%%\" r=\"75%%\" fx=\"%d%%\" fy=\"%d%%\">\n",
+	     "<defs>\n<radialGradient id=\"r_%d\" cx=\"50%%\" cy=\"50%%\" r=\"75%%\" "
+	     "fx=\"%.0f%%\" fy=\"%.0f%%\">\n",
 	     id, ifx, ify);
     GVPUTS(job, "<stop offset=\"0\" style=\"stop-color:");
     svg_print_color(job, obj->fillcolor);
