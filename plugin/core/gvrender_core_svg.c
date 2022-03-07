@@ -543,13 +543,12 @@ static int svg_gradstyle(GVJ_t * job, pointf * A, int n)
  */
 static int svg_rgradstyle(GVJ_t * job)
 {
-    float angle;
     int ifx, ify;
     static int rgradId;
     int id = rgradId++;
 
     obj_state_t *obj = job->obj;
-    angle = obj->gradient_angle * M_PI / 180;	//angle of gradient line
+    double angle = obj->gradient_angle * M_PI / 180;	//angle of gradient line
     if (angle == 0.) {
 	ifx = ify = 50;
     } else {
