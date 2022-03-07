@@ -27,6 +27,7 @@
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
@@ -296,6 +297,8 @@ static void write_xdot (xdot_op * op, GVJ_t * job, state_t* sp)
  	indent(job, sp->Level);
 	gvprintf(job, "\"fontchar\": %d\n", op->u.fontchar);
 	break;
+    default:
+	UNREACHABLE();
     }
     sp->Level--;
     indent(job, sp->Level);
