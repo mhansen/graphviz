@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string_view>
 #include <utility>
 
 #include "gvc.h"
@@ -53,6 +54,8 @@ public:
 
   // get a non-owning pointer to the underlying C data structure
   GVC_t *c_struct() const { return m_gvc; }
+
+  std::string_view version() const;
 
 private:
   // the underlying C data structure

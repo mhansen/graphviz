@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Generated SVG files no longer use `transparent` paint or color as this keyword
   does not exist in SVG 1.1, and instead use `none` or a zero-opacity color.
 
+### Added
+ - GVContext::version() to lib/gvc++
+
 ## [5.0.0] – 2022-07-07
 
 ### Changed
