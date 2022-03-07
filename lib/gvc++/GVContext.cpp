@@ -15,6 +15,8 @@ GVContext::~GVContext() {
   gvFreeContext(m_gvc);
 }
 
+std::string_view GVContext::buildDate() const { return gvcBuildDate(m_gvc); }
+
 std::string_view GVContext::version() const { return gvcVersion(m_gvc); }
 
 } // namespace GVC
