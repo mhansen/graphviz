@@ -31,34 +31,33 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
 {
     int i;
 
-    static point *A;
-    static int size_A;
-
     if (!AF || !nump)
 	return;
 
-    if (size_A < nump) {
-	size_A = nump + 10;
-	A = realloc(A, size_A * sizeof(point));
-    }
-    for (i = 0; i < nump; i++)
-	PF2P(AF[i], A[i]);
-
     if (job->render.id == FORMAT_IMAP && url && url[0]) {
         switch (map_shape) {
-        case MAP_RECTANGLE:
+        case MAP_RECTANGLE: {
+            point A, B;
+            PF2P(AF[0], A);
+            PF2P(AF[1], B);
 	    /* Y_GOES_DOWN so need UL to LR */
-            gvprintf(job, "rect %s %d,%d %d,%d\n", url,
-                A[0].x, A[1].y, A[1].x, A[0].y);
+            gvprintf(job, "rect %s %d,%d %d,%d\n", url, A.x, B.y, B.x, A.y);
             break;
-        case MAP_CIRCLE:
-            gvprintf(job, "circle %s %d,%d,%d\n", url,
-                A[0].x, A[0].y, A[1].x-A[0].x);
+        }
+        case MAP_CIRCLE: {
+            point A, B;
+            PF2P(AF[0], A);
+            PF2P(AF[1], B);
+            gvprintf(job, "circle %s %d,%d,%d\n", url, A.x, A.y, B.x - A.x);
             break;
+        }
         case MAP_POLYGON:
             gvprintf(job, "poly %s", url);
-            for (i = 0; i < nump; i++)
-                gvprintf(job, " %d,%d", A[i].x, A[i].y);
+            for (i = 0; i < nump; i++) {
+                point A;
+                PF2P(AF[i], A);
+                gvprintf(job, " %d,%d", A.x, A.y);
+            }
             gvputs(job, "\n");
             break;
         default:
@@ -68,11 +67,15 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
 
     } else if (job->render.id == FORMAT_ISMAP && url && url[0]) {
         switch (map_shape) {
-        case MAP_RECTANGLE:
+        case MAP_RECTANGLE: {
+            point A, B;
+            PF2P(AF[0], A);
+            PF2P(AF[1], B);
 	    /* Y_GOES_DOWN so need UL to LR */
             gvprintf(job, "rectangle (%d,%d) (%d,%d) %s %s\n",
-                A[0].x, A[1].y, A[1].x, A[0].y, url, tooltip);
+                A.x, B.y, B.x, A.y, url, tooltip);
 	    break;
+        }
         default:
             assert(0);
             break;
@@ -127,18 +130,31 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
 
         gvputs(job, " coords=\"");
         switch (map_shape) {
-        case MAP_CIRCLE:
-            gvprintf(job, "%d,%d,%d", A[0].x, A[0].y, A[1].x-A[0].x);
+        case MAP_CIRCLE: {
+            point A, B;
+            PF2P(AF[0], A);
+            PF2P(AF[1], B);
+            gvprintf(job, "%d,%d,%d", A.x, A.y, B.x - A.x);
             break;
-        case MAP_RECTANGLE:
+        }
+        case MAP_RECTANGLE: {
+            point A, B;
+            PF2P(AF[0], A);
+            PF2P(AF[1], B);
 	    /* Y_GOES_DOWN so need UL to LR */
-            gvprintf(job, "%d,%d,%d,%d", A[0].x, A[1].y, A[1].x, A[0].y);  
+            gvprintf(job, "%d,%d,%d,%d", A.x, B.y, B.x, A.y);
             break;
-        case MAP_POLYGON:
-            gvprintf(job, "%d,%d", A[0].x, A[0].y);
-            for (i = 1; i < nump; i++)
-                gvprintf(job, ",%d,%d", A[i].x, A[i].y);
+        }
+        case MAP_POLYGON: {
+            point A;
+            PF2P(AF[0], A);
+            gvprintf(job, "%d,%d", A.x, A.y);
+            for (i = 1; i < nump; i++) {
+                PF2P(AF[i], A);
+                gvprintf(job, ",%d,%d", A.x, A.y);
+            }
             break;
+        }
         default:
             break;
         }
