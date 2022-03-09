@@ -7,7 +7,7 @@ AM_CPPFLAGS = \
         -I$(top_srcdir)/lib/gvc \
         -I$(top_srcdir)/lib/cgraph \
         -I$(top_srcdir)/lib/cdt \
-	$(GTK_CFLAGS)
+        $(GTK_CFLAGS:-I%=-isystem%)
 
 if WITH_PANGOCAIRO
 if WITH_GTK
