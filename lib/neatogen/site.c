@@ -38,7 +38,7 @@ double dist(Site * s, Site * t)
 
     dx = s->coord.x - t->coord.x;
     dy = s->coord.y - t->coord.y;
-    ans = sqrt(dx * dx + dy * dy);
+    ans = hypot(dx, dy);
     return ans;
 }
 

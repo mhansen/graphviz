@@ -482,7 +482,9 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
 
       for (j = 1; j <= np - 2; j++){
 	for (k = 0; k < dim; k++) {
-	  x[j*dim + k] += step*edge_length*(force_t[j*dim+k] + K*force_a[j*dim+k])/(sqrt(fnorm_t*fnorm_t + K*K*fnorm_a*fnorm_a));
+	  x[j * dim + k] += step * edge_length
+	                  * (force_t[j * dim + k] + K * force_a[j * dim+k])
+	                  / hypot(fnorm_t, K * fnorm_a);
 	}
       }
       

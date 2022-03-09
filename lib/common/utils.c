@@ -1773,8 +1773,7 @@ void get_gradient_points(pointf *A, pointf *G, int n, double angle, int flags) {
       center.y = min.y + (max.y - min.y)/2;
     if (isRadial) {
 	double inner_r, outer_r;
-	outer_r = sqrt((center.x - min.x)*(center.x - min.x) +
-		      (center.y - min.y)*(center.y - min.y));
+	outer_r = hypot(center.x - min.x, center.y - min.y);
 	inner_r = outer_r /4.;
 	if (isRHS) {
 	    G[0].y = center.y;

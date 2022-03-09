@@ -196,9 +196,7 @@ static double dist_n(Ppoint_t * p, int n)
 
     rv = 0.0;
     for (i = 1; i < n; i++) {
-	rv +=
-	    sqrt((p[i].x - p[i - 1].x) * (p[i].x - p[i - 1].x) +
-		 (p[i].y - p[i - 1].y) * (p[i].y - p[i - 1].y));
+	rv += hypot(p[i].x - p[i - 1].x, p[i].y - p[i - 1].y);
     }
     return rv;
 }
@@ -438,7 +436,7 @@ static double dist(Ppoint_t p1, Ppoint_t p2)
     double dx, dy;
 
     dx = p2.x - p1.x, dy = p2.y - p1.y;
-    return sqrt(dx * dx + dy * dy);
+    return hypot(dx, dy);
 }
 
 static Ppoint_t scale(Ppoint_t p, double c)

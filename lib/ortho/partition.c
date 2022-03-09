@@ -39,7 +39,7 @@
 
 #define DOT(v0, v1) ((v0).x * (v1).x + (v0).y * (v1).y)
 #define CROSS_SINE(v0, v1) ((v0).x * (v1).y - (v1).x * (v0).y)
-#define LENGTH(v0) (sqrt((v0).x * (v0).x + (v0).y * (v0).y))
+#define LENGTH(v0) hypot((v0).x, (v0).y)
 
 #ifndef HAVE_SRAND48
 #define srand48 srand

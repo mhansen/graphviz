@@ -44,9 +44,7 @@ static double *compute_densities(v_data * graph, int n, double *x,
 	sum = 0;
 	for (j = 1; j < graph[i].nedges; j++) {
 	    neighbor = graph[i].edges[j];
-	    sum +=
-		sqrt((x[i] - x[neighbor]) * (x[i] - x[neighbor]) +
-		     (y[i] - y[neighbor]) * (y[i] - y[neighbor]));
+	    sum += hypot(x[i] - x[neighbor], y[i] - y[neighbor]);
 	}
 	densities[i] = sum / graph[i].nedges;
     }
@@ -317,7 +315,7 @@ rescale_layout(double *x_coords, double *y_coords,
     }
 }
 
-#define DIST(x1,y1,x2,y2) (sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)))
+#define DIST(x1, y1, x2, y2) hypot((x1) - (x2), (y1) - (y2))
 
 static void
 rescale_layout_polarFocus(v_data * graph, int n,
