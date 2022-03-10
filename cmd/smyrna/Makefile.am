@@ -13,7 +13,7 @@ AM_CPPFLAGS = \
         -I$(top_srcdir)/lib/common \
         -I$(top_srcdir)/lib/pathplan \
         -I$(top_srcdir)/cmd/smyrna/gui \
-        $(patsubst -I%,-isystem%,$(GTK_CFLAGS)) \
+        $(GTK_CFLAGS:-I%=-isystem%) \
 	$(GLUT_CFLAGS) $(GTKGLEXT_CFLAGS) $(GLADE_CFLAGS) $(FREETYPE2_CFLAGS) $(FONTCONFIG_CFLAGS) $(GTS_CFLAGS) $(XRENDER_CFLAGS)
 
 bin_PROGRAMS =
