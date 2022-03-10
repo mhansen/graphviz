@@ -2,7 +2,7 @@
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
-        -I$(top_srcdir)/libltdl \
+	-I$(top_srcdir)/libltdl \
 	-I$(top_srcdir)/lib/gvc \
 	-I$(top_srcdir)/lib/pack \
 	-I$(top_srcdir)/lib/xdot \
