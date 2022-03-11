@@ -31,7 +31,7 @@ def compile_c(src: Path, cflags: List[str] = None, link: List[str] = None,
   if dst is None:
     _, dst = tempfile.mkstemp(".exe")
 
-  if platform.system() == "Windows" and "mingw" not in sysconfig.get_platform():
+  if platform.system() == "Windows" and not is_mingw():
     # determine which runtime library option we need
     rtflag = "-MDd" if os.environ.get("configuration") == "Debug" else "-MD"
 
