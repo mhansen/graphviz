@@ -83,6 +83,7 @@ portable-source:
         - brew install automake || brew upgrade automake
         - brew install cmake || brew upgrade cmake
         - brew install bison || brew upgrade bison
+        - export PATH="/usr/local/opt/bison/bin:$PATH"
         - brew install pango || brew upgrade pango
         - brew install qt5 || brew upgrade qt5
         - export PATH="/usr/local/opt/qt@5/bin:$PATH"
@@ -90,7 +91,6 @@ portable-source:
         - export CPPFLAGS="-I/usr/local/opt/qt@5/include"
         - export PKG_CONFIG_PATH="/usr/local/opt/qt@5/lib/pkgconfig"
         - brew install libxaw || brew upgrade libxaw
-        - export PATH="/usr/local/opt/bison/bin:$PATH"
         - logfile=`mktemp`
         - ci/build.sh 2>&1 | tee $logfile
         - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
