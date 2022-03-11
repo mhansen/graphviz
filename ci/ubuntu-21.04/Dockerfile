@@ -36,6 +36,8 @@ libglade2-dev \
 libqt5gui5 \
 qt5-qmake \
 qtbase5-dev \
+# for libmingle
+libann-dev \
 # Plugin library devil
 libdevil-dev \
 # Plugin library gd
