@@ -109,6 +109,10 @@ def gvpr(program: Path) -> str:
                                  stdin=subprocess.DEVNULL,
                                  universal_newlines=True)
 
+def is_mingw() -> bool:
+  """is the current platform MinGW?"""
+  return "mingw" in sysconfig.get_platform()
+
 def run_c(src: Path, args: List[str] = None, input: str = "",
           cflags: List[str] = None, link: List[str] = None
           ) -> Tuple[str, str]:

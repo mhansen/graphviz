@@ -15,21 +15,13 @@ import signal
 import stat
 import subprocess
 import sys
-import sysconfig
 import tempfile
 from typing import List
 import xml.etree.ElementTree as ET
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import dot, gvpr, ROOT, run_c #pylint: disable=C0413
-
-def is_mingw() -> bool:
-  """
-  are we running on MinGW?
-  """
-
-  return "mingw" in sysconfig.get_platform()
+from gvtest import dot, gvpr, is_mingw, ROOT, run_c #pylint: disable=C0413
 
 def is_ndebug_defined() -> bool:
   """
