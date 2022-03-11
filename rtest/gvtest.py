@@ -109,6 +109,10 @@ def gvpr(program: Path) -> str:
                                  stdin=subprocess.DEVNULL,
                                  universal_newlines=True)
 
+def is_cmake() -> bool:
+  """was the Graphviz under test built with CMake?"""
+  return os.getenv("build_system") == "cmake"
+
 def is_mingw() -> bool:
   """is the current platform MinGW?"""
   return "mingw" in sysconfig.get_platform()

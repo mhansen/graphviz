@@ -13,13 +13,7 @@ from typing import Dict
 import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
-from gvtest import dot #pylint: disable=C0413
-
-def is_cmake() -> bool:
-  """
-  is the current CI environment a CMake job?
-  """
-  return os.getenv("build_system") == "cmake"
+from gvtest import dot, is_cmake #pylint: disable=C0413
 
 def _freedesktop_os_release() -> Dict[str, str]:
   """
