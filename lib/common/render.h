@@ -124,7 +124,7 @@ extern "C" {
     RENDER_API int place_portlabel(edge_t * e, bool head_p);
     RENDER_API void makePortLabels(edge_t * e);
     RENDER_API pointf edgeMidpoint(graph_t* g, edge_t * e);
-    RENDER_API void addEdgeLabels(edge_t * e, pointf rp, pointf rq);
+    RENDER_API void addEdgeLabels(edge_t *e);
     RENDER_API void pop_obj_state(GVJ_t *job);
     RENDER_API obj_state_t* push_obj_state(GVJ_t *job);
     RENDER_API int rank(graph_t * g, int balance, int maxiter);

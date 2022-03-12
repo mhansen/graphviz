@@ -738,7 +738,7 @@ static void finishEdge(edge_t* e, Ppoly_t spl, int flip, pointf p, pointf q) {
     clip_and_install(e, aghead(e), spline, spl.pn, &sinfo);
     free(spline);
 
-    addEdgeLabels(e, p1, q1);
+    addEdgeLabels(e);
 }
 
 #define EQPT(p,q) (((p).x==(q).x)&&((p).y==(q).y))
