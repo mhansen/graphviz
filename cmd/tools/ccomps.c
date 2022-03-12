@@ -133,19 +133,18 @@ static void usage(int v)
     graphviz_exit(v);
 }
 
-static void split(char *name)
-{
+static void split(void) {
     char *sfx = 0;
 
-    sfx = strrchr(name, '.');
+    sfx = strrchr(outfile, '.');
     if (sfx) {
 	suffix = sfx + 1;
-	size_t size = (size_t)(sfx - name);
+	size_t size = (size_t)(sfx - outfile);
 	path = xmalloc(size + 1);
-	strncpy(path, name, size);
+	strncpy(path, outfile, size);
 	*(path + size) = '\0';
     } else {
-	path = name;
+	path = outfile;
     }
 }
 
@@ -168,7 +167,7 @@ static void init(int argc, char *argv[])
 	switch (c) {
 	case 'o':
 	    outfile = optarg;
-	    split(outfile);
+	    split();
 	    break;
 	case 'C':
 	    useClusters = 1;
