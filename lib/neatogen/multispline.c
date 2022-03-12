@@ -717,21 +717,16 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
 static void finishEdge(edge_t* e, Ppoly_t spl, int flip, pointf p, pointf q) {
     int j;
     pointf *spline = N_GNEW(spl.pn, pointf);
-    pointf p1, q1;
 
     if (flip) {
 	for (j = 0; j < spl.pn; j++) {
 	    spline[spl.pn - 1 - j] = spl.ps[j];
 	}
-	p1 = q;
-	q1 = p;
     }
     else {
 	for (j = 0; j < spl.pn; j++) {
 	    spline[j] = spl.ps[j];
 	}
-	p1 = p;
-	q1 = q;
     }
     if (Verbose > 1)
 	fprintf(stderr, "spline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
