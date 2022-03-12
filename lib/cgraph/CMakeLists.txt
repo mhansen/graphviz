@@ -12,6 +12,7 @@ endif()
 add_library(cgraph SHARED
   # Header files
   agxbuf.h
+  alloc.h
   bitarray.h
   cghdr.h
   cgraph.h
