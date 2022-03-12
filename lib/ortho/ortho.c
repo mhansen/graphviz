@@ -1294,7 +1294,7 @@ orthoEdges (Agraph_t* g, int doLbls)
 	agerr(AGWARN, "Orthogonal edges do not currently handle edge labels. Try using xlabels.\n");
 	doLbls = 0;
     }
-    mp = mkMaze (g, doLbls);
+    mp = mkMaze(g);
     sg = mp->sg;
 #ifdef DEBUG
     if (odb_flags & ODB_SGRAPH) emitSearchGraph (stderr, sg);

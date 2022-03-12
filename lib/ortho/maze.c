@@ -443,9 +443,7 @@ chkSgraph (g);
 
 /* mkMaze:
  */
-maze*
-mkMaze (graph_t* g, int doLbls)
-{
+maze *mkMaze(graph_t *g) {
     node_t* n;
     maze* mp = NEW(maze);
     boxf* rects;
@@ -453,9 +451,6 @@ mkMaze (graph_t* g, int doLbls)
     cell* cp;
     double w2, h2;
     boxf bb, BB;
-
-    // unused
-    (void)doLbls;
 
     mp->ngcells = agnnodes(g);
     cp = mp->gcells = N_NEW(mp->ngcells, cell);
