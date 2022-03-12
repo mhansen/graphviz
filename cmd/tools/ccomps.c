@@ -94,24 +94,24 @@ typedef struct {
 #define BY_INDEX 1
 #define BY_SIZE  2
 
-char* Cmd;
-char **Files;
-int verbose;
-int printMode = INTERNAL;
-int useClusters = 0;
-int doEdges = 1;		/* induce edges */
-int doAll = 1;			/* induce subgraphs */
-char *suffix = 0;
-char *outfile = 0;
-char *path = 0;
-int sufcnt = 0;
-int sorted = 0;
-int sortIndex = 0;
-int sortFinal;
-int x_index = -1;
-int x_final = -1;  /* require 0 <= x_index <= x_final or x_final= -1 */ 
-int x_mode;
-char *x_node;
+static char* Cmd;
+static char **Files;
+static int verbose;
+static int printMode = INTERNAL;
+static int useClusters = 0;
+static int doEdges = 1; // induce edges
+static int doAll = 1; // induce subgraphs
+static char *suffix = 0;
+static char *outfile = 0;
+static char *path = 0;
+static int sufcnt = 0;
+static int sorted = 0;
+static int sortIndex = 0;
+static int sortFinal;
+static int x_index = -1;
+static int x_final = -1; // require 0 <= x_index <= x_final or x_final= -1
+static int x_mode;
+static char *x_node;
 
 static char *useString =
     "Usage: ccomps [-svenCx?] [-X[#%]s[-f]] [-o<out template>] <files>\n\
