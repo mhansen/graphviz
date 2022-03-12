@@ -153,7 +153,7 @@ static void split(void) {
  */
 static int isCluster(Agraph_t * g)
 {
-    return (strncmp(agnameof(g), "cluster", 7) == 0);
+    return strncmp(agnameof(g), "cluster", 7) == 0;
 }
 
 static void init(int argc, char *argv[])
@@ -185,7 +185,7 @@ static void init(int argc, char *argv[])
 	    printMode = SILENT;
 	    break;
 	case 'X':
-	    if ((*optarg == '#') || (*optarg == '%')) {
+	    if (*optarg == '#' || *optarg == '%') {
 		char *p = optarg + 1;
 		if (*optarg == '#') x_mode = BY_INDEX;
 		else x_mode = BY_SIZE;
@@ -248,7 +248,7 @@ static void init(int argc, char *argv[])
     argc -= optind;
 
     if (sorted) {
-	if ((printMode == EXTRACT) && (x_index >= 0)) {
+	if (printMode == EXTRACT && x_index >= 0) {
 	    printMode = INTERNAL;
 	    sortIndex = x_index;
 	    sortFinal = x_final;
@@ -563,7 +563,7 @@ typedef int (*qsort_cmpf) (const void *, const void *);
 
 static int cmp(Agraph_t** p0, Agraph_t** p1)
 {
-    return (agnnodes(*p1) - agnnodes(*p0));
+    return agnnodes(*p1) - agnnodes(*p0);
 }
 
 static void
@@ -707,7 +707,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    }
 	    else if (x_mode == BY_SIZE) {
 		int sz = agnnodes(out);
-		if ((x_index <= sz) && ((x_final == -1) || (sz <= x_final))) {
+		if (x_index <= sz && (x_final == -1 || sz <= x_final)) {
 		    extracted = 1;
 		    if (doAll)
 			subGInduce(g, out);
@@ -723,7 +723,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 		    c_cnt, n_cnt, e_cnt);
 	c_cnt++;
     }
-    if ((printMode == EXTRACT) && !extracted && (x_mode == BY_INDEX))  {
+    if (printMode == EXTRACT && !extracted && x_mode == BY_INDEX)  {
 	fprintf(stderr,
 		"ccomps: component %d not found in graph %s - ignored\n",
 		x_index, agnameof(g));
@@ -835,7 +835,7 @@ static int process(Agraph_t * g, char* graphName)
 	    }
 	    else if (x_mode == BY_SIZE) {
 		int sz = agnnodes(out);
-		if ((x_index <= sz) && ((x_final == -1) || (sz <= x_final))) {
+		if (x_index <= sz && (x_final == -1 || sz <= x_final)) {
 		    extracted = 1;
 		    if (doAll)
 			subGInduce(g, out);
@@ -850,7 +850,7 @@ static int process(Agraph_t * g, char* graphName)
 		    c_cnt, n_cnt, e_cnt);
 	c_cnt++;
     }
-    if ((printMode == EXTRACT) && !extracted && (x_mode == BY_INDEX))  {
+    if (printMode == EXTRACT && !extracted && x_mode == BY_INDEX)  {
 	fprintf(stderr,
 		"ccomps: component %d not found in graph %s - ignored\n",
 		x_index, agnameof(g));
@@ -865,7 +865,7 @@ static int process(Agraph_t * g, char* graphName)
     if (verbose)
 	fprintf(stderr, "       %7d nodes %7d edges %7ld components %s\n",
 		agnnodes(g), agnedges(g), c_cnt, agnameof(g));
-    return (c_cnt > 1);
+    return c_cnt > 1;
 }
 
 static Agraph_t *gread(FILE * fp)
