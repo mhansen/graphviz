@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regression in Graphviz 2.46.0. Other cases have existed since the first
   release of `gvpr`. #2185
 - spurious "no hard-coded metrics" warnings on labels with empty lines #2179
+- fixed corruption of user shape characteristics during EPSF initialization
 
 ## [3.0.0] – 2022-02-26
 
