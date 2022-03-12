@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
@@ -267,7 +268,7 @@ static void fig_ellipse(GVJ_t * job, pointf * A, int filled)
     int object_code = 1;        /* always 1 for ellipse */
     int sub_type = 1;           /* ellipse defined by radii */
     int line_style;		/* solid, dotted, dashed */
-    int thickness = obj->penwidth;
+    double thickness = round(obj->penwidth);
     int pen_color = obj->pencolor.u.index;
     int fill_color = obj->fillcolor.u.index;
     int depth = Depth;
@@ -289,7 +290,7 @@ static void fig_ellipse(GVJ_t * job, pointf * A, int filled)
     end_y = ROUND(A[1].y);
 
     gvprintf(job,
-            "%d %d %d %d %d %d %d %d %d %.3f %d %.4f %d %d %d %d %d %d %d %d\n",
+            "%d %d %d %.0f %d %d %d %d %d %.3f %d %.4f %d %d %d %d %d %d %d %d\n",
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, direction,
             angle, center_x, center_y, radius_x, radius_y, start_x,
@@ -307,7 +308,7 @@ static void fig_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
     int object_code = 3;        /* always 3 for spline */
     int sub_type;
     int line_style;		/* solid, dotted, dashed */
-    int thickness = obj->penwidth;
+    double thickness = round(obj->penwidth);
     int pen_color = obj->pencolor.u.index;
     int fill_color = obj->fillcolor.u.index;
     int depth = Depth;
@@ -371,7 +372,7 @@ static void fig_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
         }
     }
 
-    gvprintf(job, "%d %d %d %d %d %d %d %d %d %.1f %d %d %d %d\n",
+    gvprintf(job, "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d\n",
             object_code,
             sub_type,
             line_style,
@@ -398,7 +399,7 @@ static void fig_polygon(GVJ_t * job, pointf * A, int n, int filled)
     int object_code = 2;        /* always 2 for polyline */
     int sub_type = 3;           /* always 3 for polygon */
     int line_style;		/* solid, dotted, dashed */
-    int thickness = obj->penwidth;
+    double thickness = round(obj->penwidth);
     int pen_color = obj->pencolor.u.index;
     int fill_color = obj->fillcolor.u.index;
     int depth = Depth;
@@ -415,7 +416,7 @@ static void fig_polygon(GVJ_t * job, pointf * A, int n, int filled)
     fig_line_style(obj, &line_style, &style_val);
 
     gvprintf(job,
-            "%d %d %d %d %d %d %d %d %d %.1f %d %d %d %d %d %d\n",
+            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %d\n",
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, join_style,
             cap_style, radius, forward_arrow, backward_arrow, npoints);
@@ -429,7 +430,7 @@ static void fig_polyline(GVJ_t * job, pointf * A, int n)
     int object_code = 2;        /* always 2 for polyline */
     int sub_type = 1;           /* always 1 for polyline */
     int line_style;		/* solid, dotted, dashed */
-    int thickness = obj->penwidth;
+    double thickness = round(obj->penwidth);
     int pen_color = obj->pencolor.u.index;
     int fill_color = 0;
     int depth = Depth;
@@ -446,7 +447,7 @@ static void fig_polyline(GVJ_t * job, pointf * A, int n)
     fig_line_style(obj, &line_style, &style_val);
 
     gvprintf(job,
-            "%d %d %d %d %d %d %d %d %d %.1f %d %d %d %d %d %d\n",
+            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %d\n",
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, join_style,
             cap_style, radius, forward_arrow, backward_arrow, npoints);
