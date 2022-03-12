@@ -463,10 +463,8 @@ mkMaze (graph_t* g, int doLbls)
     BB.LL.x = BB.LL.y = MAXDOUBLE;
     BB.UR.x = BB.UR.y = -MAXDOUBLE;
     for (n = agfstnode (g); n; n = agnxtnode(g,n)) {
-        w2 = ND_xsize(n)/2.0;
-	if (w2 < 1) w2 = 1;
-        h2 = ND_ysize(n)/2.0;
-	if (h2 < 1) h2 = 1;
+        w2 = fmax(1, ND_xsize(n) / 2.0);
+        h2 = fmax(1, ND_ysize(n) / 2.0);
         bb.LL.x = ND_coord(n).x - w2;
         bb.UR.x = ND_coord(n).x + w2;
         bb.LL.y = ND_coord(n).y - h2;
