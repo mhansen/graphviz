@@ -401,7 +401,6 @@ static void gwrite(Agraph_t * g)
 	    perror("ccomps");
 	}
 	agwrite(g, outf);
-	fflush(outf);
 	fclose(outf);
     }
 }
