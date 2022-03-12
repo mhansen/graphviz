@@ -406,23 +406,6 @@ static void gwrite(Agraph_t * g)
     }
 }
 
-/* getBuf
- * Return pointer to buffer containing at least n bytes.
- * Non-reentrant.
- */
-static char *getBuf(size_t n)
-{
-    static size_t len = 0;
-    static char *buf = 0;
-
-    if (n > len) {
-	size_t sz = n + 100;
-	buf = xrealloc(buf, sz);
-	len = sz;
-    }
-    return buf;
-}
-
 /* projectG:
  * If any nodes of subg are in g, create a subgraph of g
  * and fill it with all nodes of subg in g and their induced
@@ -666,10 +649,11 @@ static int processClusters(Agraph_t * g, char* graphName)
 		    x_node, agnameof(g));
 	    return 1;
 	}
-	name = getBuf(sizeof(PFX1) + strlen(graphName));
+	name = xmalloc(sizeof(PFX1) + strlen(graphName));
 	sprintf(name, PFX1, graphName);
 	dout = agsubg(dg, name, 1);
 	out = agsubg(g, name, 1);
+	free(name);
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
 	dn = ND_dn(n);
@@ -691,10 +675,11 @@ static int processClusters(Agraph_t * g, char* graphName)
     for (dn = agfstnode(dg); dn; dn = agnxtnode(dg, dn)) {
 	if (ND_mark(dn))
 	    continue;
-	name = getBuf(sizeof(PFX2) + strlen(graphName) + 32);
+	name = xmalloc(sizeof(PFX2) + strlen(graphName) + 32);
 	sprintf(name, PFX2, graphName, c_cnt);
 	dout = agsubg(dg, name, 1);
 	out = agsubg(g, name, 1);
+	free(name);
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(dg, dn, dout);
@@ -794,9 +779,10 @@ static int process(Agraph_t * g, char* graphName)
 		    x_node, agnameof(g));
 	    return 1;
 	}
-	name = getBuf(sizeof(PFX1) + strlen(graphName));
+	name = xmalloc(sizeof(PFX1) + strlen(graphName));
 	sprintf(name, PFX1, graphName);
 	out = agsubg(g, name, 1);
+	free(name);
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
@@ -816,9 +802,10 @@ static int process(Agraph_t * g, char* graphName)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (ND_mark(n))
 	    continue;
-	name = getBuf(sizeof(PFX2) + strlen(graphName) + 32);
+	name = xmalloc(sizeof(PFX2) + strlen(graphName) + 32);
 	sprintf(name, PFX2, graphName, c_cnt);
 	out = agsubg(g, name, 1);
+	free(name);
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
