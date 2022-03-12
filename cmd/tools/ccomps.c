@@ -762,7 +762,6 @@ bindGraphinfo (Agraph_t * g)
 static int process(Agraph_t * g, char* graphName)
 {
     long n_cnt, c_cnt, e_cnt;
-    char *name;
     Agraph_t *out;
     Agnode_t *n;
     int extracted = 0;
@@ -782,10 +781,12 @@ static int process(Agraph_t * g, char* graphName)
 		    x_node, agnameof(g));
 	    return 1;
 	}
-	name = xmalloc(sizeof(PFX1) + strlen(graphName));
-	sprintf(name, PFX1, graphName);
-	out = agsubg(g, name, 1);
-	free(name);
+	{
+	    char *name = xmalloc(sizeof(PFX1) + strlen(graphName));
+	    sprintf(name, PFX1, graphName);
+	    out = agsubg(g, name, 1);
+	    free(name);
+	}
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
@@ -805,10 +806,12 @@ static int process(Agraph_t * g, char* graphName)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (ND_mark(n))
 	    continue;
-	name = xmalloc(sizeof(PFX2) + strlen(graphName) + 32);
-	sprintf(name, PFX2, graphName, c_cnt);
-	out = agsubg(g, name, 1);
-	free(name);
+	{
+	    char *name = xmalloc(sizeof(PFX2) + strlen(graphName) + 32);
+	    sprintf(name, PFX2, graphName, c_cnt);
+	    out = agsubg(g, name, 1);
+	    free(name);
+	}
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
