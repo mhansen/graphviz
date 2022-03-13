@@ -269,8 +269,7 @@ static pitem* addRow (void)
 /* setCell:
  * Set cell body and type and attach to row
  */
-static void setCell (htmlcell_t* cp, void* obj, int kind)
-{
+static void setCell(htmlcell_t *cp, void *obj, char kind) {
   pitem*     sp = NEW(pitem);
   htmltbl_t* tbl = HTMLstate.tblstack;
   pitem*     rp = dtlast (tbl->u.p.rows);
@@ -292,8 +291,7 @@ static void setCell (htmlcell_t* cp, void* obj, int kind)
 /* mkLabel:
  * Create label, given body and type.
  */
-static htmllabel_t* mkLabel (void* obj, int kind)
-{
+static htmllabel_t *mkLabel(void *obj, char kind) {
   htmllabel_t* lp = NEW(htmllabel_t);
 
   lp->kind = kind;
