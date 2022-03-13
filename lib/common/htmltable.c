@@ -1199,7 +1199,6 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     pitem *rp;
     pitem *cp;
     Dt_t *cdict;
-    int r, c;
     htmlcell_t *cellp;
     htmlcell_t **cells;
     Dt_t *rows = tbl->u.p.rows;
@@ -1211,7 +1210,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 
     rp = (pitem *) dtflatten(rows);
     size_t cnt = 0;
-    r = 0;
+    unsigned short r = 0;
     while (rp) {
 	cdict = rp->u.rp;
 	cp = (pitem *) dtflatten(cdict);
@@ -1233,7 +1232,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     while (rp) {
 	cdict = rp->u.rp;
 	cp = (pitem *) dtflatten(cdict);
-	c = 0;
+	unsigned short c = 0;
 	while (cp) {
 	    cellp = cp->u.cp;
 	    *cells++ = cellp;
