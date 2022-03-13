@@ -714,31 +714,26 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
  * Finish edge generation, clipping to nodes and adding arrowhead
  * if necessary, and adding edge labels
  */
-static void finishEdge(edge_t* e, Ppoly_t spl, int flip, pointf p, pointf q) {
+static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
     int j;
     pointf *spline = N_GNEW(spl.pn, pointf);
-    pointf p1, q1;
 
     if (flip) {
 	for (j = 0; j < spl.pn; j++) {
 	    spline[spl.pn - 1 - j] = spl.ps[j];
 	}
-	p1 = q;
-	q1 = p;
     }
     else {
 	for (j = 0; j < spl.pn; j++) {
 	    spline[j] = spl.ps[j];
 	}
-	p1 = p;
-	q1 = q;
     }
     if (Verbose > 1)
 	fprintf(stderr, "spline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
     clip_and_install(e, aghead(e), spline, spl.pn, &sinfo);
     free(spline);
 
-    addEdgeLabels(e, p1, q1);
+    addEdgeLabels(e);
 }
 
 #define EQPT(p,q) (((p).x==(q).x)&&((p).y==(q).y))
@@ -838,7 +833,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	    rv = 1;
 	    goto finish;
 	}
-	finishEdge(e, spl, aghead(e) != head, eps[0], eps[1]);
+	finishEdge(e, spl, aghead(e) != head);
 	free(medges);
 
 	return 0;
@@ -891,7 +886,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 		goto finish;
 	    }
 	}
-	finishEdge(e, spl, aghead(e) != head, eps[0], eps[1]);
+	finishEdge(e, spl, aghead(e) != head);
 
 	e = ED_to_virt(e);
     }

@@ -1205,7 +1205,7 @@ attachOrthoEdges(maze* mp, size_t n_edges, route* route_list, splineInfo *sinfo,
 	    fprintf(stderr, "ortho %s %s\n", agnameof(agtail(e)),agnameof(aghead(e)));
 	clip_and_install(e, aghead(e), ispline, npts, sinfo);
 	if (doLbls && (lbl = ED_label(e)) && !lbl->set)
-	    addEdgeLabels(e, p1, q1);
+	    addEdgeLabels(e);
     }
     free(ispline);
 }
@@ -1294,7 +1294,7 @@ orthoEdges (Agraph_t* g, int doLbls)
 	agerr(AGWARN, "Orthogonal edges do not currently handle edge labels. Try using xlabels.\n");
 	doLbls = 0;
     }
-    mp = mkMaze (g, doLbls);
+    mp = mkMaze(g);
     sg = mp->sg;
 #ifdef DEBUG
     if (odb_flags & ODB_SGRAPH) emitSearchGraph (stderr, sg);

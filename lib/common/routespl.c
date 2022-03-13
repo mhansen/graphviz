@@ -1105,17 +1105,16 @@ makeStraightEdges(graph_t * g, edge_t** edges, int e_cnt, int et, splineInfo* si
     int i, j, xstep, dx;
     double l_perp;
     pointf dumber[4];
-    pointf p, q;
 
     e = edges[0];
     n = agtail(e);
     head = aghead(e);
-    p = dumb[1] = dumb[0] = add_pointf(ND_coord(n), ED_tail_port(e).p);
-    q = dumb[2] = dumb[3] = add_pointf(ND_coord(head), ED_head_port(e).p);
+    dumb[1] = dumb[0] = add_pointf(ND_coord(n), ED_tail_port(e).p);
+    dumb[2] = dumb[3] = add_pointf(ND_coord(head), ED_head_port(e).p);
     if (e_cnt == 1 || Concentrate) {
 	if (curved) bend(dumb,get_cycle_centroid(g, edges[0]));
 	clip_and_install(e, aghead(e), dumb, 4, sinfo);
-	addEdgeLabels(e, p, q);
+	addEdgeLabels(e);
 	return;
     }
 
@@ -1144,14 +1143,10 @@ makeStraightEdges(graph_t * g, edge_t** edges, int e_cnt, int et, splineInfo* si
     for (i = 0; i < e_cnt; i++) {
 	e0 = edges[i];
 	if (aghead(e0) == head) {
-	    p = dumb[0];
-	    q = dumb[3];
 	    for (j = 0; j < 4; j++) {
 		dumber[j] = dumb[j];
 	    }
 	} else {
-	    p = dumb[3];
-	    q = dumb[0];
 	    for (j = 0; j < 4; j++) {
 		dumber[3 - j] = dumb[j];
 	    }
@@ -1171,7 +1166,7 @@ makeStraightEdges(graph_t * g, edge_t** edges, int e_cnt, int et, splineInfo* si
 	else
 	    clip_and_install(e0, aghead(e0), dumber, 4, sinfo);
 
-	addEdgeLabels(e0, p, q);
+	addEdgeLabels(e0);
 	dumb[1].x += del.x;
 	dumb[1].y += del.y;
 	dumb[2].x += del.x;

@@ -473,15 +473,12 @@ getPath(edge_t * e, vconfig_t * vconfig, int chkPts, Ppoly_t ** obs,
  */
 static void makePolyline(edge_t * e) {
     Ppolyline_t spl, line = ED_path(e);
-    Ppoint_t p0, q0;
 
-    p0 = line.ps[0];
-    q0 = line.ps[line.pn - 1];
     make_polyline (line, &spl);
     if (Verbose > 1)
 	fprintf(stderr, "polyline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
     clip_and_install(e, aghead(e), spl.ps, spl.pn, &sinfo);
-    addEdgeLabels(e, p0, q0);
+    addEdgeLabels(e);
 }
 
 /* makeSpline:
@@ -528,7 +525,7 @@ void makeSpline(edge_t *e, Ppoly_t **obs, int npoly, bool chkPts) {
 	fprintf(stderr, "spline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
     clip_and_install(e, aghead(e), spline.ps, spline.pn, &sinfo);
     free(barriers);
-    addEdgeLabels(e, p, q);
+    addEdgeLabels(e);
 }
 
   /* True if either head or tail has a port on its boundary */
@@ -616,9 +613,9 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 /* fprintf (stderr, "%s -- %s %d\n", agnameof(agtail(e)), agnameof(aghead(e)), ED_count(e)); */
 	    node_t *head = aghead(e);
 	    if (useEdges && ED_spl(e)) {
-		addEdgeLabels(e,
-			      add_pointf(ND_coord(n), ED_tail_port(e).p),
-			      add_pointf(ND_coord(head), ED_head_port(e).p));
+		add_pointf(ND_coord(n), ED_tail_port(e).p);
+		add_pointf(ND_coord(head), ED_head_port(e).p);
+		addEdgeLabels(e);
 	    } 
 	    else if (ED_count(e) == 0) continue;  /* only do representative */
 	    else if (n == head) {    /* self arc */

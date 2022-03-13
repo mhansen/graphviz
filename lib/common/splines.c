@@ -1341,15 +1341,11 @@ edgeMidpoint (graph_t* g, edge_t * e)
 #define MAXLABELWD  (POINTS_PER_INCH/2.0)
 
 /* addEdgeLabels:
- * rp and rq are the port points of the tail and head node.
  * Adds label, headlabel and taillabel.
  * Updates bounding box.
- * We try to use the actual endpoints of the spline, as they may differ
- * significantly from rp and rq, but if the spline is degenerate (e.g.,
- * the nodes overlap), we use rp and rq.
+ * We use the endpoints of the spline.
  */
-void addEdgeLabels(edge_t * e, pointf rp, pointf rq)
-{
+void addEdgeLabels(edge_t *e) {
     makePortLabels(e);
 }
 
