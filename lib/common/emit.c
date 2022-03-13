@@ -2783,8 +2783,8 @@ static void emit_end_edge(GVJ_t * job)
 	    p = bz.sp;
 	else /* No arrow at start of splines */
 	    p = bz.list[0];
-	nodeIntersect (job, p, obj->explicit_tailurl, obj->tailurl,
-	    obj->explicit_tailtooltip);
+	nodeIntersect(job, p, obj->explicit_tailurl != 0, obj->tailurl,
+	              obj->explicit_tailtooltip != 0);
         
 	/* process intersection with head node */
 	bz = ED_spl(e)->list[ED_spl(e)->size - 1];
@@ -2792,8 +2792,8 @@ static void emit_end_edge(GVJ_t * job)
 	    p = bz.ep;
 	else /* No arrow at end of splines */
 	    p = bz.list[bz.size - 1];
-	nodeIntersect (job, p, obj->explicit_headurl, obj->headurl,
-	    obj->explicit_headtooltip);
+	nodeIntersect(job, p, obj->explicit_headurl != 0, obj->headurl,
+	              obj->explicit_headtooltip != 0);
     }
 
     emit_edge_label(job, ED_label(e), EMIT_ELABEL,
