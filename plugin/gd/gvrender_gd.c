@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
+#include "gdioctx_wrapper.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -150,11 +151,11 @@ static void gdgen_end_page(GVJ_t * job)
 {
     gdImagePtr im = (gdImagePtr) job->context;
 
-    gdIOCtx ctx;
+    gd_context_t gd_context = {{0}};
 
-    ctx.putBuf = gvdevice_gd_putBuf;
-    ctx.putC = gvdevice_gd_putC;
-    ctx.tell = (void*)job;    /* hide *job here */
+    gd_context.ctx.putBuf = gvdevice_gd_putBuf;
+    gd_context.ctx.putC = gvdevice_gd_putC;
+    gd_context.job = job;
 
     if (!im)
 	return;
@@ -172,9 +173,9 @@ static void gdgen_end_page(GVJ_t * job)
 	case FORMAT_GIF:
 #ifdef HAVE_GD_GIF
 	    gdImageTrueColorToPalette(im, 0, 256);
-	    gdImageGifCtx(im, &ctx);
+	    gdImageGifCtx(im, &gd_context.ctx);
 #else
-            (void)ctx;
+            (void)gd_context;
 #endif
 	    break;
 	case FORMAT_JPEG:
@@ -188,13 +189,13 @@ static void gdgen_end_page(GVJ_t * job)
 	     * be near optimal for many applications).  See the IJG JPEG
 	     * library documentation for more details.  */
 #define JPEG_QUALITY -1
-	    gdImageJpegCtx(im, &ctx, JPEG_QUALITY);
+	    gdImageJpegCtx(im, &gd_context.ctx, JPEG_QUALITY);
 #endif
 
 	    break;
 	case FORMAT_PNG:
 #ifdef HAVE_GD_PNG
-	    gdImagePngCtx(im, &ctx);
+	    gdImagePngCtx(im, &gd_context.ctx);
 #endif
 	    break;
 
@@ -203,7 +204,7 @@ static void gdgen_end_page(GVJ_t * job)
 	    {
 	        /* Use black for the foreground color for the B&W wbmp image. */
 		int black = gdImageColorResolveAlpha(im, 0, 0, 0, gdAlphaOpaque);
-		gdImageWBMPCtx(im, black, &ctx);
+		gdImageWBMPCtx(im, black, &gd_context.ctx);
 	    }
 	    break;
 #endif

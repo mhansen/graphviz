@@ -19,6 +19,7 @@ pkglib_LTLIBRARIES = libgvplugin_gd.la
 endif
 endif
 
+noinst_HEADERS = gdioctx_wrapper.h
 libgvplugin_gd_C_la_SOURCES = \
 	gvplugin_gd.c \
 	gvrender_gd.c \
