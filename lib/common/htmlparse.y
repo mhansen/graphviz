@@ -281,11 +281,11 @@ static void setCell(htmlcell_t *cp, void *obj, char kind) {
     cp->ruled = HTML_VRULE;
   
   if(kind == HTML_TEXT)
-  	cp->child.u.txt = (htmltxt_t*)obj;
+  	cp->child.u.txt = obj;
   else if (kind == HTML_IMAGE)
-    cp->child.u.img = (htmlimg_t*)obj;
+    cp->child.u.img = obj;
   else
-    cp->child.u.tbl = (htmltbl_t*)obj;
+    cp->child.u.tbl = obj;
 }
 
 /* mkLabel:
@@ -296,9 +296,9 @@ static htmllabel_t *mkLabel(void *obj, char kind) {
 
   lp->kind = kind;
   if (kind == HTML_TEXT)
-    lp->u.txt = (htmltxt_t*)obj;
+    lp->u.txt = obj;
   else
-    lp->u.tbl = (htmltbl_t*)obj;
+    lp->u.tbl = obj;
   return lp;
 }
 
