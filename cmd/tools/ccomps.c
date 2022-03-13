@@ -633,7 +633,6 @@ static int processClusters(Agraph_t * g, char* graphName)
 {
     Agraph_t *dg;
     long n_cnt, c_cnt, e_cnt;
-    char *name;
     Agraph_t *out;
     Agnode_t *n;
     Agraph_t *dout;
@@ -649,11 +648,13 @@ static int processClusters(Agraph_t * g, char* graphName)
 		    x_node, agnameof(g));
 	    return 1;
 	}
-	name = xmalloc(sizeof(PFX1) + strlen(graphName));
-	sprintf(name, PFX1, graphName);
-	dout = agsubg(dg, name, 1);
-	out = agsubg(g, name, 1);
-	free(name);
+	{
+	    char *name = xmalloc(sizeof(PFX1) + strlen(graphName));
+	    sprintf(name, PFX1, graphName);
+	    dout = agsubg(dg, name, 1);
+	    out = agsubg(g, name, 1);
+	    free(name);
+	}
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
 	dn = ND_dn(n);
@@ -675,11 +676,13 @@ static int processClusters(Agraph_t * g, char* graphName)
     for (dn = agfstnode(dg); dn; dn = agnxtnode(dg, dn)) {
 	if (ND_mark(dn))
 	    continue;
-	name = xmalloc(sizeof(PFX2) + strlen(graphName) + 32);
-	sprintf(name, PFX2, graphName, c_cnt);
-	dout = agsubg(dg, name, 1);
-	out = agsubg(g, name, 1);
-	free(name);
+	{
+	    char *name = xmalloc(sizeof(PFX2) + strlen(graphName) + 32);
+	    sprintf(name, PFX2, graphName, c_cnt);
+	    dout = agsubg(dg, name, 1);
+	    out = agsubg(g, name, 1);
+	    free(name);
+	}
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(dg, dn, dout);
