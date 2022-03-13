@@ -952,18 +952,18 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
     textspan_t lp;
     textfont_t tf = {NULL,NULL,NULL,0.0,0,0};
     double maxoffset, mxysize;
-    int simple = 1;              /* one item per span, same font size/face, no flags */
+    bool simple = true; // one item per span, same font size/face, no flags
     double prev_fsize = -1;
     char* prev_fname = NULL;
 
     for (i = 0; i < ftxt->nspans; i++) {
 	if (ftxt->spans[i].nitems > 1) {
-	    simple = 0;
+	    simple = false;
 	    break;
 	}
 	if (ftxt->spans[i].items[0].font) {
 	    if (ftxt->spans[i].items[0].font->flags) {
-		simple = 0;
+		simple = false;
 		break;
 	    }
 	    if (ftxt->spans[i].items[0].font->size > 0)
@@ -982,13 +982,13 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
 	if (prev_fsize == -1)
 	    prev_fsize = tf.size;
 	else if (tf.size != prev_fsize) {
-	    simple = 0;
+	    simple = false;
 	    break;
 	}
 	if (prev_fname == NULL)
 	    prev_fname = tf.name;
 	else if (strcmp(tf.name,prev_fname)) {
-	    simple = 0;
+	    simple = false;
 	    break;
 	}
     }
