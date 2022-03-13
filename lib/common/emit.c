@@ -769,17 +769,14 @@ static pointf *pEllipse(double a, double b, int np)
 /* check_control_points:
  * check_control_points function checks the size of quadrilateral
  * formed by four control points
- * returns 1 if four points are in line (or close to line)
- * else return 0
+ * returns true if four points are in line (or close to line)
+ * else return false
  */
-static int check_control_points(pointf *cp)
+static bool check_control_points(pointf *cp)
 {
     double dis1 = ptToLine2 (cp[0], cp[3], cp[1]);
     double dis2 = ptToLine2 (cp[0], cp[3], cp[2]);
-    if (dis1 < HW*HW && dis2 < HW*HW)
-        return 1;
-    else
-        return 0;
+    return dis1 < HW * HW && dis2 < HW * HW;
 }
 
 /* update bounding box to contain a bezier segment */
