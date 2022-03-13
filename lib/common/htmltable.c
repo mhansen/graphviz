@@ -385,7 +385,7 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
     save->tooltip = obj->tooltip;
     save->target = obj->target;
     save->id = obj->id;
-    save->explicit_tooltip = obj->explicit_tooltip;
+    save->explicit_tooltip = obj->explicit_tooltip != 0;
     id = data->id;
     if (!id || !*id) {		/* no external id, so use the internal one */
 	agxbinit(&xb, SMALLBUF, buf);
