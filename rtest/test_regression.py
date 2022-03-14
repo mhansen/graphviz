@@ -1562,6 +1562,26 @@ def test_2193():
   new = dot("canon", source=canonical)
   assert canonical == new, "canonical translation is not stable"
 
+@pytest.mark.skipif(shutil.which("gvpr") is None, reason="GVPR not available")
+@pytest.mark.xfail(strict=True)
+def test_2211():
+  """
+  GVPR’s `index` function should return correct results
+  https://gitlab.com/graphviz/graphviz/-/issues/2211
+  """
+
+  # find our collocated test case
+  program = Path(__file__).parent / "2211.gvpr"
+  assert program.exists(), "unexpectedly missing test case"
+
+  # run it through GVPR
+  output = gvpr(program)
+
+  # it should have found the right string indices for characters
+  assert output == "index: 9  should be 9\n" \
+                   "index: 3  should be 3\n" \
+                   "index: -1  should be -1\n"
+
 def test_package_version():
   """
   The graphviz_version.h header should define a non-empty PACKAGE_VERSION
