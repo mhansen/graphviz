@@ -22,11 +22,6 @@ extern "C" {
 #define PATH_MAX    1024
 #endif
 
-#define PATH_PHYSICAL   01
-#define PATH_DOTDOT 02
-#define PATH_EXISTS 04
-#define PATH_VERIFIED(n) (((n)&01777)<<5)
-
 #define PATH_REGULAR    010
 #define PATH_EXECUTE      001
 #define PATH_READ 004

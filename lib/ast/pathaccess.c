@@ -28,7 +28,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-char *pathcanon(char *path, int flags);
+char *pathcanon(char *path);
 
 char *pathaccess(char *path, const char *dirs,
 		 const char *a, const char *b, int mode)
@@ -57,7 +57,7 @@ char *pathaccess(char *path, const char *dirs,
     }
     do {
 	dirs = pathcat(path, dirs, sep, a, b);
-	pathcanon(path, 0);
+	pathcanon(path);
 	if (!access(path, m)) {
 	    if ((mode & PATH_REGULAR)
 		&& (stat(path, &st) || S_ISDIR(st.st_mode)))
