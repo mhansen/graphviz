@@ -22,7 +22,7 @@ import xml.etree.ElementTree as ET
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import dot, ROOT, run_c #pylint: disable=C0413
+from gvtest import dot, gvpr, ROOT, run_c #pylint: disable=C0413
 
 def is_mingw() -> bool:
   """
@@ -628,7 +628,7 @@ def test_1780():
   clustg = Path(__file__).resolve().parent.parent / "cmd/gvpr/lib/clustg"
 
   # GVPR should not fail when given this path
-  subprocess.check_call(["gvpr", "-f", clustg], stdin=subprocess.DEVNULL)
+  gvpr(clustg)
 
 def test_1783():
   """
@@ -1446,9 +1446,7 @@ def test_2185_1():
   assert script.exists(), "missing test case"
 
   # run this with NUL input, checking output is valid UTF-8
-  _ = subprocess.check_output(["gvpr", "-f", script],
-                              stdin=subprocess.DEVNULL,
-                              universal_newlines=True)
+  gvpr(script)
 
 def test_2185_2():
   """

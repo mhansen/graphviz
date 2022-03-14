@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import platform
 import shlex
+import shutil
 import subprocess
 import sys
 import sysconfig
@@ -97,6 +98,16 @@ def dot(T: str, source_file: Optional[Path] = None, source: Optional[str] = None
     kwargs["input"] = source
 
   return subprocess.check_output(args, **kwargs)
+
+def gvpr(program: Path) -> str:
+  """run a GVPR program on empty input"""
+
+  assert shutil.which("gvpr") is not None, \
+    "attempt to run GVPR without it available"
+
+  return subprocess.check_output(["gvpr", "-f", program],
+                                 stdin=subprocess.DEVNULL,
+                                 universal_newlines=True)
 
 def run_c(src: Path, args: List[str] = None, input: str = "",
           cflags: List[str] = None, link: List[str] = None
