@@ -1563,7 +1563,6 @@ def test_2193():
   assert canonical == new, "canonical translation is not stable"
 
 @pytest.mark.skipif(shutil.which("gvpr") is None, reason="GVPR not available")
-@pytest.mark.xfail(strict=True)
 def test_2211():
   """
   GVPR’s `index` function should return correct results
