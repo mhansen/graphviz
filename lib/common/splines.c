@@ -1158,10 +1158,8 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
  * so using the constant SELF_EDGE_SIZE is going to be wrong.
  * Fortunately, the default nodesep is the same as SELF_EDGE_SIZE.
  */
-int
-selfRightSpace (edge_t* e)
-{
-    int sw;
+double selfRightSpace(edge_t *e) {
+    double sw;
     double label_width;
     textlabel_t* l = ED_label(e);
 
