@@ -18,7 +18,6 @@
  *	remove redundant .'s and /'s
  *	move ..'s to the front
  *	/.. preserved (for pdu and newcastle hacks)
- *	FS_3D handles ...
  */
 
 #include <ast/ast.h>
@@ -30,17 +29,11 @@ char *pathcanon(char *path) {
     char *s;
     char *t;
     int dots;
-    char *phys;
     int loop;
     int oerrno;
-#if defined(FS_3D)
-    long visits = 0;
-#endif
 
     oerrno = errno;
     dots = loop = 0;
-    phys = path;
-    (void)phys;
     if (*path == '/' && *(path + 1) == '/')
 	do
 	    path++;
@@ -71,30 +64,7 @@ char *pathcanon(char *path) {
 		    for (t -= 5; t > r && *(t - 1) != '/'; t--);
 		break;
 	    case 3:
-#if defined(FS_3D)
-		{
-		    char *x;
-		    char *o;
-		    int c;
-
-		    o = t;
-		    if ((t -= 5) <= path)
-			t = path + 1;
-		    c = *t;
-		    *t = 0;
-		    if (x = pathnext(phys, s - (*s != 0), &visits)) {
-			r = path;
-			if (t == r + 1)
-			    x = r;
-			s = t = x;
-		    } else {
-			*t = c;
-			t = o;
-		    }
-		}
-#else
 		r = t;
-#endif
 		break;
 	    default:
 		break;
