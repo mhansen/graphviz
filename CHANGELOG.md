@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - the `mingle` binary is now included in the CMake build
+- a brief note about the (previously undocumented) behavior of Graphviz when
+  sent `SIGUSR1` is now mentioned in the man page
 
 ### Fixed
 
