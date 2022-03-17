@@ -66,3 +66,14 @@ static inline void *gv_recalloc(void *ptr, size_t old_nmemb, size_t new_nmemb,
 
   return gv_realloc(ptr, old_nmemb * size, new_nmemb * size);
 }
+
+static inline char *gv_strdup(const char *original) {
+
+  char *copy = strdup(original);
+  if (UNLIKELY(copy == NULL)) {
+    fprintf(stderr, "out of memory\n");
+    graphviz_exit(EXIT_FAILURE);
+  }
+
+  return copy;
+}
