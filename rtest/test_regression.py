@@ -1398,6 +1398,43 @@ def test_2179_1():
   assert "Warning: no hard-coded metrics for" not in stderr, \
     "incorrect warning triggered"
 
+@pytest.mark.skipif(shutil.which("nop") is None, reason="nop not available")
+def test_2184_1():
+  """
+  nop should not reposition labelled graph nodes
+  https://gitlab.com/graphviz/graphviz/-/issues/2184
+  """
+
+  # run `nop` on a sample with a labelled graph node at the end
+  source = Path(__file__).parent / "2184.dot"
+  assert source.exists(), "missing test case"
+  nopped = subprocess.check_output(["nop", source], universal_newlines=True)
+
+  # the normalized output should have a graph with no label within
+  # `clusterSurround1`
+  m = re.search(r'\bclusterSurround1\b.*\bgraph\b.*\bcluster1\b', nopped,
+                flags=re.DOTALL)
+  assert m is not None, \
+    "nop rearranged a graph in a not-semantically-preserving way"
+
+def test_2184_2():
+  """
+  canonicalization should not reposition labelled graph nodes
+  https://gitlab.com/graphviz/graphviz/-/issues/2184
+  """
+
+  # canonicalize a sample with a labelled graph node at the end
+  source = Path(__file__).parent / "2184.dot"
+  assert source.exists(), "missing test case"
+  canonicalized = dot("canon", source)
+
+  # the canonicalized output should have a graph with no label within
+  # `clusterSurround1`
+  m = re.search(r'\bclusterSurround1\b.*\bgraph\b.*\bcluster1\b', canonicalized,
+                flags=re.DOTALL)
+  assert m is not None, \
+    "`dot -Tcanon` rearranged a graph in a not-semantically-preserving way"
+
 def test_2185_1():
   """
   GVPR should deal with strings correctly
