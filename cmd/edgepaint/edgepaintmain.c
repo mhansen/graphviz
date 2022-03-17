@@ -309,5 +309,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	free(lightness);
+
 	graphviz_exit(rv);
 }
