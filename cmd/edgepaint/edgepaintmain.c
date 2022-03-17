@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/exit.h>
@@ -229,7 +230,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy, int *c
         usage(cmd, EXIT_FAILURE);
       }
       free(*lightness);
-      *lightness = strdup(arg);
+      *lightness = gv_strdup(arg);
       break;
     }
 
