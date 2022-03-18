@@ -77,3 +77,42 @@ static inline char *gv_strdup(const char *original) {
 
   return copy;
 }
+
+static inline char *gv_strndup(const char *original, size_t length) {
+
+  char *copy;
+
+// non-Cygwin Windows environments do not provide strndup
+#if defined(_MSC_VER) || defined(__MINGW32__)
+
+  // does the string end before the given length?
+  {
+    const char *end = memchr(original, '\0', length);
+    if (end != NULL) {
+      length = (size_t)(end - original);
+    }
+  }
+
+  // will our calculation to include the NUL byte below overflow?
+  if (UNLIKELY(SIZE_MAX - length < 1)) {
+    fprintf(stderr, "integer overflow in strndup calculation\n");
+    graphviz_exit(EXIT_FAILURE);
+  }
+
+  copy = gv_alloc(length + 1);
+  memcpy(copy, original, length);
+
+  // `gv_alloc` has already zeroed the backing memory, so no need to manually
+  // add a NUL terminator
+
+#else
+  copy = strndup(original, length);
+#endif
+
+  if (UNLIKELY(copy == NULL)) {
+    fprintf(stderr, "out of memory\n");
+    graphviz_exit(EXIT_FAILURE);
+  }
+
+  return copy;
+}
