@@ -20,40 +20,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/likely.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
 
-static void *xmalloc(size_t size) {
-  void *p = malloc(size);
-  if (UNLIKELY(size > 0 && p == NULL)) {
-    fprintf(stderr, "ccomps: out of memory\n");
-    graphviz_exit(EXIT_FAILURE);
-  }
-  return p;
-}
-
-static void *xcalloc(size_t count, size_t size) {
-  void *p = calloc(count, size);
-  if (UNLIKELY(count > 0 && size > 0 && p == NULL)) {
-    fprintf(stderr, "ccomps: out of memory\n");
-    graphviz_exit(EXIT_FAILURE);
-  }
-  return p;
-}
-
-static void *xrealloc(void *ptr, size_t size) {
-  void *p = realloc(ptr, size);
-  if (UNLIKELY(size > 0 && p == NULL)) {
-    fprintf(stderr, "ccomps: out of memory\n");
-    graphviz_exit(EXIT_FAILURE);
-  }
-  return p;
-}
-
-#define N_NEW(n,t)       xcalloc((n),sizeof(t))
-#define NEW(t)           xmalloc(sizeof(t))
+#define N_NEW(n,t) gv_calloc((n), sizeof(t))
+#define NEW(t) gv_alloc(sizeof(t))
 
 typedef struct {
     Agrec_t h;
@@ -140,7 +113,7 @@ static void split(void) {
     if (sfx) {
 	suffix = sfx + 1;
 	size_t size = (size_t)(sfx - outfile);
-	path = xmalloc(size + 1);
+	path = gv_alloc(size + 1);
 	strncpy(path, outfile, size);
 	*(path + size) = '\0';
     } else {
@@ -374,7 +347,7 @@ static char *getName(void)
 	name = outfile;
     else {
 	if (!buf)
-	    buf = xmalloc(strlen(outfile) + 20);	/* enough to handle '_number' */
+	    buf = gv_alloc(strlen(outfile) + 20); // enough to handle '_number'
 	if (suffix)
 	    sprintf(buf, "%s_%d.%s", path, sufcnt, suffix);
 	else
@@ -648,7 +621,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    return 1;
 	}
 	{
-	    char *name = xmalloc(sizeof(PFX1) + strlen(graphName));
+	    char *name = gv_alloc(sizeof(PFX1) + strlen(graphName));
 	    sprintf(name, PFX1, graphName);
 	    dout = agsubg(dg, name, 1);
 	    out = agsubg(g, name, 1);
@@ -676,7 +649,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	if (ND_mark(dn))
 	    continue;
 	{
-	    char *name = xmalloc(sizeof(PFX2) + strlen(graphName) + 32);
+	    char *name = gv_alloc(sizeof(PFX2) + strlen(graphName) + 32);
 	    sprintf(name, PFX2, graphName, c_cnt);
 	    dout = agsubg(dg, name, 1);
 	    out = agsubg(g, name, 1);
@@ -781,7 +754,7 @@ static int process(Agraph_t * g, char* graphName)
 	    return 1;
 	}
 	{
-	    char *name = xmalloc(sizeof(PFX1) + strlen(graphName));
+	    char *name = gv_alloc(sizeof(PFX1) + strlen(graphName));
 	    sprintf(name, PFX1, graphName);
 	    out = agsubg(g, name, 1);
 	    free(name);
@@ -806,7 +779,7 @@ static int process(Agraph_t * g, char* graphName)
 	if (ND_mark(n))
 	    continue;
 	{
-	    char *name = xmalloc(sizeof(PFX2) + strlen(graphName) + 32);
+	    char *name = gv_alloc(sizeof(PFX2) + strlen(graphName) + 32);
 	    sprintf(name, PFX2, graphName, c_cnt);
 	    out = agsubg(g, name, 1);
 	    free(name);
@@ -894,7 +867,7 @@ chkGraphName (Agraph_t* g)
     if (*s != '%') return s;
     size_t len = strlen(s) + 2;   /* plus '\0' and '_' */
     if (len > buflen) {
-	buf = xrealloc (buf, len);
+	buf = gv_realloc(buf, buflen, len);
 	buflen = len;
     }
     buf[0] = '_';
