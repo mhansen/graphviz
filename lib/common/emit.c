@@ -769,17 +769,14 @@ static pointf *pEllipse(double a, double b, int np)
 /* check_control_points:
  * check_control_points function checks the size of quadrilateral
  * formed by four control points
- * returns 1 if four points are in line (or close to line)
- * else return 0
+ * returns true if four points are in line (or close to line)
+ * else return false
  */
-static int check_control_points(pointf *cp)
+static bool check_control_points(pointf *cp)
 {
     double dis1 = ptToLine2 (cp[0], cp[3], cp[1]);
     double dis2 = ptToLine2 (cp[0], cp[3], cp[2]);
-    if (dis1 < HW*HW && dis2 < HW*HW)
-        return 1;
-    else
-        return 0;
+    return dis1 < HW * HW && dis2 < HW * HW;
 }
 
 /* update bounding box to contain a bezier segment */
@@ -2786,8 +2783,8 @@ static void emit_end_edge(GVJ_t * job)
 	    p = bz.sp;
 	else /* No arrow at start of splines */
 	    p = bz.list[0];
-	nodeIntersect (job, p, obj->explicit_tailurl, obj->tailurl,
-	    obj->explicit_tailtooltip);
+	nodeIntersect(job, p, obj->explicit_tailurl != 0, obj->tailurl,
+	              obj->explicit_tailtooltip != 0);
         
 	/* process intersection with head node */
 	bz = ED_spl(e)->list[ED_spl(e)->size - 1];
@@ -2795,8 +2792,8 @@ static void emit_end_edge(GVJ_t * job)
 	    p = bz.ep;
 	else /* No arrow at end of splines */
 	    p = bz.list[bz.size - 1];
-	nodeIntersect (job, p, obj->explicit_headurl, obj->headurl,
-	    obj->explicit_headtooltip);
+	nodeIntersect(job, p, obj->explicit_headurl != 0, obj->headurl,
+	              obj->explicit_headtooltip != 0);
     }
 
     emit_edge_label(job, ED_label(e), EMIT_ELABEL,
