@@ -22,7 +22,7 @@ import xml.etree.ElementTree as ET
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import dot, ROOT, run_c #pylint: disable=C0413
+from gvtest import dot, gvpr, ROOT, run_c #pylint: disable=C0413
 
 def is_mingw() -> bool:
   """
@@ -628,7 +628,7 @@ def test_1780():
   clustg = Path(__file__).resolve().parent.parent / "cmd/gvpr/lib/clustg"
 
   # GVPR should not fail when given this path
-  subprocess.check_call(["gvpr", "-f", clustg], stdin=subprocess.DEVNULL)
+  gvpr(clustg)
 
 def test_1783():
   """
@@ -1446,9 +1446,7 @@ def test_2185_1():
   assert script.exists(), "missing test case"
 
   # run this with NUL input, checking output is valid UTF-8
-  _ = subprocess.check_output(["gvpr", "-f", script],
-                              stdin=subprocess.DEVNULL,
-                              universal_newlines=True)
+  gvpr(script)
 
 def test_2185_2():
   """
@@ -1563,6 +1561,25 @@ def test_2193():
   # now canonicalize this again to see if it changes
   new = dot("canon", source=canonical)
   assert canonical == new, "canonical translation is not stable"
+
+@pytest.mark.skipif(shutil.which("gvpr") is None, reason="GVPR not available")
+def test_2211():
+  """
+  GVPR’s `index` function should return correct results
+  https://gitlab.com/graphviz/graphviz/-/issues/2211
+  """
+
+  # find our collocated test case
+  program = Path(__file__).parent / "2211.gvpr"
+  assert program.exists(), "unexpectedly missing test case"
+
+  # run it through GVPR
+  output = gvpr(program)
+
+  # it should have found the right string indices for characters
+  assert output == "index: 9  should be 9\n" \
+                   "index: 3  should be 3\n" \
+                   "index: -1  should be -1\n"
 
 def test_package_version():
   """
