@@ -28,9 +28,8 @@ char *pathcanon(char *path) {
     char *s;
     char *t;
     int dots;
-    int loop;
 
-    dots = loop = 0;
+    dots = 0;
     if (*path == '/' && *(path + 1) == '/')
 	do
 	    path++;
