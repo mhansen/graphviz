@@ -28,9 +28,6 @@ extern "C" {
 #include <stdlib.h>
 #endif
 #include <stddef.h>
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
 #include <string.h>
 
 #include <inttypes.h>
