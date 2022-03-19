@@ -23,9 +23,6 @@
 #include <ast/compat_unistd.h>
 #endif
 #include <stdio.h>
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
-#endif
 #include <string.h>
 
 typedef struct Dir_s {		/* directory list element */
