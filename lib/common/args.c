@@ -39,7 +39,7 @@ static int neato_extra_args(int argc, char** argv) {
   for (i = 1; i < argc; i++) {
     arg = argv[i];
     assert(arg != NULL);
-    if (*arg == '-') {
+    if (arg[0] == '-') {
       switch (arg[1]) {
       case 'x' : Reduce = TRUE; break;
       case 'n':
@@ -128,7 +128,7 @@ config_extra_args(GVC_t *gvc, int argc, char** argv)
   for (i = 1; i < argc; i++) {
     arg = argv[i];
     assert(arg != NULL);
-    if (*arg == '-') {
+    if (arg[0] == '-') {
       switch (arg[1]) {
       case 'v':
 	gvc->common.verbose = 1;
@@ -247,7 +247,7 @@ static int fdp_extra_args(int argc, char** argv) {
   for (i = 1; i < argc; i++) {
     arg = argv[i];
     assert(arg != NULL);
-    if ((*arg == '-') && (*(arg+1) == 'L')) {
+    if (arg[0] == '-' && arg[1] == 'L') {
       if (setFDPAttr (arg+2)) {
 	dotneato_usage(1);
 	return -1;
