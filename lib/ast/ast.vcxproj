@@ -91,7 +91,6 @@
     <ClCompile Include="pathcanon.c" />
     <ClCompile Include="pathcat.c" />
     <ClCompile Include="pathfind.c" />
-    <ClCompile Include="pathgetlink.c" />
     <ClCompile Include="pathpath.c" />
     <ClCompile Include="strcopy.c" />
     <ClCompile Include="stresc.c" />

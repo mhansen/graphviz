@@ -243,7 +243,6 @@ EXCLUDE = (
   "lib/ast/pathcanon.c",
   "lib/ast/pathcat.c",
   "lib/ast/pathfind.c",
-  "lib/ast/pathgetlink.c",
   "lib/ast/pathpath.c",
   "lib/ast/sfstr.h",
   "lib/ast/strcopy.c",

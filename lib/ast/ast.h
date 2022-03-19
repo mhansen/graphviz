@@ -22,11 +22,6 @@ extern "C" {
 #define PATH_MAX    1024
 #endif
 
-#define PATH_PHYSICAL   01
-#define PATH_DOTDOT 02
-#define PATH_EXISTS 04
-#define PATH_VERIFIED(n) (((n)&01777)<<5)
-
 #define PATH_REGULAR    010
 #define PATH_EXECUTE      001
 #define PATH_READ 004
@@ -69,7 +64,6 @@ extern "C" {
 			    const char *, int);
     extern const char *pathcat(char *, const char *, int, const char *,
 			 const char *);
-    extern size_t pathgetlink(const char *, char *, size_t);
 
     extern int chresc(const char *, char **);
     extern int chrtoi(const char *);
