@@ -129,11 +129,11 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
 	  pick[0] = i; pick[1] = jj;
 	  ni = nj = 1;
 	}
-	if (Verbose && DEBUG) fprintf(stderr, "ink(%d)=%f, ink(%d)=%f", i, inki, jj, inkj);
+	if (DEBUG) if (Verbose) fprintf(stderr, "ink(%d)=%f, ink(%d)=%f", i, inki, jj, inkj);
       } else {
 	/* j is already matched. Its content is on cedges[jc] */
 	inki = inks[i]; inkj = cinks[jc];
-	if (Verbose && DEBUG) fprintf(stderr, "ink(%d)=%f, ink(%d->%d)=%f", i, inki, jj, jc, inkj);
+	if (DEBUG) if (Verbose) fprintf(stderr, "ink(%d)=%f, ink(%d->%d)=%f", i, inki, jj, jc, inkj);
 	if (ip) {
 	  ni = (ip[i+1] - ip[i]);/* number of edges represented by i */
 	  memcpy(pick, &(jp[ip[i]]), sizeof(int)*ni);
@@ -149,22 +149,24 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
 
       npicks = ni + nj;
       ink1 = ink(edges, npicks, pick, &ink0, &meet1, &meet2, angle_param, angle);
-      if (Verbose && DEBUG) {
-	fprintf(stderr,", if merging {");
-	for (k = 0; k < npicks; k++) fprintf(stderr,"%d,", pick[k]);
-	fprintf(stderr,"}, ");
-	fprintf(stderr, " ink0=%f, ink1=%f", inki+inkj, ink1);
+      if (DEBUG) {
+	if (Verbose) {
+		fprintf(stderr,", if merging {");
+		for (k = 0; k < npicks; k++) fprintf(stderr,"%d,", pick[k]);
+		fprintf(stderr,"}, ");
+		fprintf(stderr, " ink0=%f, ink1=%f", inki+inkj, ink1);
+	}
       }
 
       gain = inki + inkj - ink1;
-      if (Verbose && DEBUG) fprintf(stderr, " gain=%f", gain);
+      if (DEBUG) if (Verbose) fprintf(stderr, " gain=%f", gain);
       if (gain > maxgain){
 	maxgain = gain;
 	minink = ink1;
 	jmax = jj;
-	if (Verbose && DEBUG) fprintf(stderr, "maxgain=%f", maxgain);
+	if (DEBUG) if (Verbose) fprintf(stderr, "maxgain=%f", maxgain);
       } 
-      if (Verbose && DEBUG) fprintf(stderr, "\n");
+      if (DEBUG) if (Verbose) fprintf(stderr, "\n");
 
       
 
@@ -177,7 +179,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
       total_gain += maxgain;
       jc = matching[jmax];
       if (jc == UNMATCHED){/* i and j both unmatched. Add j in the table first */
-	if (Verbose && DEBUG) printf("maxgain=%f, merge %d with best edge: %d to form coarsen edge %d. Ink=%f\n",maxgain, i, jmax, nc, minink);
+	if (DEBUG) if (Verbose) printf("maxgain=%f, merge %d with best edge: %d to form coarsen edge %d. Ink=%f\n",maxgain, i, jmax, nc, minink);
 	matching[i] = matching[jmax] = nc;
 	if (ip){
 	  for (k = ip[jmax]; k < ip[jmax+1]; k++) {
@@ -190,12 +192,12 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
 	jc = nc;
 	nc++;
       } else {/*j is already matched */
-	if (Verbose && DEBUG) printf("maxgain=%f, merge %d with existing cluster %d\n",maxgain, i, jc);
+	if (DEBUG) if (Verbose) printf("maxgain=%f, merge %d with existing cluster %d\n",maxgain, i, jc);
 	matching[i] = jc;
 	grand_total_ink -= cinks[jc];/* ink of cluster jc was already added, and will be added again as part of a larger cluster with i, so dicount */
       }
     } else {/*i can not match/bundle successfully */
-      if (Verbose && DEBUG) fprintf(stderr, "no gain in bundling node %d\n",i);
+      if (DEBUG) if (Verbose) fprintf(stderr, "no gain in bundling node %d\n",i);
       assert(maxgain <= 0);
       matching[i] = nc;
       jc = nc;
@@ -217,12 +219,14 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
     grand_total_ink += minink;
     grand_total_gain += maxgain;
 
-    if (Verbose && DEBUG){
-      fprintf(stderr," coarse edge[%d]={",jc);
-      for (const int &cedge : cedges[jc]) {
-	fprintf(stderr,"%d,", cedge);
+    if (DEBUG){
+      if (Verbose) {
+        fprintf(stderr," coarse edge[%d]={",jc);
+        for (const int &cedge : cedges[jc]) {
+          fprintf(stderr,"%d,", cedge);
+        }
+        fprintf(stderr,"}, grand_total_gain=%f\n",grand_total_gain);
       }
-      fprintf(stderr,"}, grand_total_gain=%f\n",grand_total_gain);
     }
 
   }
@@ -355,9 +359,9 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
       for (i = 0; i < R->m; i++){
 	pick = &(ja[ia[i]]);
 	
-	if (Verbose && DEBUG) fprintf(stderr,"calling ink2...\n");
+	if (DEBUG) if (Verbose) fprintf(stderr,"calling ink2...\n");
 	ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
-	if (Verbose && DEBUG) fprintf(stderr,"finish calling ink2...\n");
+	if (DEBUG) if (Verbose) fprintf(stderr,"finish calling ink2...\n");
 	assert(fabs(ink1 - cgrid->inks[i])<=MAX(TOL, TOL*ink1) && ink1 - ink0 <= TOL);
 	assert(ink1 < 1000 * ink0); /* assert that points were found */
 	wgt_all = 0.;
@@ -414,9 +418,9 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
       wgt = 0.;
       for (j = ia[i]; j < ia[i+1]; j++) wgt += edges[j]->wgt;
       total_wgt += wgt;
-      if (Verbose && DEBUG) fprintf(stderr,"calling ink3...\n");
+      if (DEBUG) if (Verbose) fprintf(stderr,"calling ink3...\n");
       ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
-      if (Verbose && DEBUG) fprintf(stderr,"done calling ink3...\n");
+      if (DEBUG) if (Verbose) fprintf(stderr,"done calling ink3...\n");
       assert(fabs(ink1 - cgrid->inks[i])<=MAX(TOL, TOL*ink1) && ink1 - ink0 <= TOL);
       assert(ink1 < 1000 * ink0); /* assert that points were found */
       xx[i*4 + 0] = meet1.x;

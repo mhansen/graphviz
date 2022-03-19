@@ -295,7 +295,6 @@ double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, 
   if (angle > 0 && angle < M_PI){
     if (cbegin + cend > 1 || cbegin > 1 || cend > 1){
       /* no point can be found that satisfies the angular constraints, so we give up and set ink to a large value */
-      if (Verbose && 0) fprintf(stderr,"no point satisfying any angle constraints can be found. cbeg=%f cend=%f\n",cbegin,cend);
       inkUsed = 1000*(*ink0);
       return inkUsed;
     }

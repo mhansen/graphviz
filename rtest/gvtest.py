@@ -31,7 +31,7 @@ def compile_c(src: Path, cflags: List[str] = None, link: List[str] = None,
   if dst is None:
     _, dst = tempfile.mkstemp(".exe")
 
-  if platform.system() == "Windows" and "mingw" not in sysconfig.get_platform():
+  if platform.system() == "Windows" and not is_mingw():
     # determine which runtime library option we need
     rtflag = "-MDd" if os.environ.get("configuration") == "Debug" else "-MD"
 
@@ -108,6 +108,14 @@ def gvpr(program: Path) -> str:
   return subprocess.check_output(["gvpr", "-f", program],
                                  stdin=subprocess.DEVNULL,
                                  universal_newlines=True)
+
+def is_cmake() -> bool:
+  """was the Graphviz under test built with CMake?"""
+  return os.getenv("build_system") == "cmake"
+
+def is_mingw() -> bool:
+  """is the current platform MinGW?"""
+  return "mingw" in sysconfig.get_platform()
 
 def run_c(src: Path, args: List[str] = None, input: str = "",
           cflags: List[str] = None, link: List[str] = None

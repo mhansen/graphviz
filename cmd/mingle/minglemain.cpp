@@ -207,7 +207,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 			}
 			break;
 		case '?':
-			if (optopt == '\0')
+			if (optopt == '\0' || optopt == '?')
 				usage(0);
 			else {
 				std::cerr << cmd << ": option -" << optopt << " unrecognized\n";
