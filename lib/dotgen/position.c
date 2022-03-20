@@ -211,7 +211,6 @@ static void
 make_LR_constraints(graph_t * g)
 {
     int i, j, k;
-    int sw;			/* self width */
     int m0, m1;
     double width;
     int sep[2];
@@ -245,7 +244,7 @@ make_LR_constraints(graph_t * g)
                  * Note that this would not only affect left and right
                  * positioning but may also affect interrank spacing.
                  */
-		sw = 0;
+		double sw = 0; // self width
 		for (k = 0; (e = ND_other(u).list[k]); k++) {
 		    if (agtail(e) == aghead(e)) {
 			sw += selfRightSpace (e);
