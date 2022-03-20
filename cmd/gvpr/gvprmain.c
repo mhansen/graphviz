@@ -21,20 +21,11 @@
 #include <stddef.h>
 #include <stdio.h>
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#else
-#include <ast/compat_unistd.h>
-#endif
-
-
-
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <gvpr/gvpr.h>
 
 #ifdef DEBUG
-#include <sfio/sfio.h>
 static ssize_t outfn (void* sp, const char *buf, size_t nbyte, void* dp)
 {
   if (nbyte > (size_t)INT_MAX) {
@@ -53,17 +44,17 @@ static ssize_t errfn (void* sp, const char *buf, size_t nbyte, void* dp)
 
 static int iofread(void *chan, char *buf, int bufsize)
 {
-    return read(sffileno(chan), buf, bufsize);
+  return (int)fread(buf, 1, (size_t)bufsize, chan);
 }
 
 static int ioputstr(void *chan, const char *str)
 {
-    return sfputr(chan, str, -1);
+  return fputs(str, chan);
 }
 
 static int ioflush(void *chan)
 {
-    return sfsync(chan);
+  return fflush(chan);
 }
 
 static Agiodisc_t gprIoDisc = { iofread, ioputstr, ioflush };
@@ -74,7 +65,7 @@ int
 main (int argc, char* argv[])
 {
     Agraph_t* gs[2];
-    Agraph_t* g = agread (sfstdin, &gprDisc);
+    Agraph_t* g = agread(stdin, &gprDisc);
     int rv;
     gvpropts opts;
 
@@ -88,9 +79,7 @@ main (int argc, char* argv[])
     
     rv = gvpr (argc, argv, &opts);
 
-    sfprintf (sfstderr, "rv %d\n", rv);
-    /* for (i = 0; i < opts.n_outgraphs; i++) */
-	/* agwrite (opts.outgraphs[i], sfstdout); */
+    fprintf(stderr, "rv %d\n", rv);
 
     rv = gvpr (argc, argv, &opts);
 
