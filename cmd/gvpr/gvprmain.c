@@ -17,6 +17,9 @@
 
 
 #include "config.h"
+#include <limits.h>
+#include <stddef.h>
+#include <stdio.h>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -34,14 +37,18 @@
 #include <sfio/sfio.h>
 static ssize_t outfn (void* sp, const char *buf, size_t nbyte, void* dp)
 {
-    write (1, "<stdout> ", 8);
-    return write (1, buf, nbyte);
+  if (nbyte > (size_t)INT_MAX) {
+    return -1;
+  }
+  return printf("<stdout>%.*s", (int)nbyte, buf);
 }
 
 static ssize_t errfn (void* sp, const char *buf, size_t nbyte, void* dp)
 {
-    write (2, "<stderr> ", 8);
-    return write (2, buf, nbyte);
+  if (nbyte > (size_t)INT_MAX) {
+    return -1;
+  }
+  return fprintf(stderr, "<stderr>%.*s", (int)nbyte, buf);
 }
 
 static int iofread(void *chan, char *buf, int bufsize)
