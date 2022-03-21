@@ -682,35 +682,3 @@ void showAttrsWidget(topview * t)
     set_header_text();
     filter_attributes("", view->Topview);
 }
-
-static void gvpr_select(char *attr, char *regex_str, int objType)
-{
-
-    char *bf2;
-    int i, j, argc;
-    char **argv;
-
-    agxbuf sf;
-    agxbinit(&sf, 0, NULL);
-
-    if (objType == AGNODE)
-	agxbprint(&sf, "N[%s==\"%s\"]{selected = \"1\"}", attr, regex_str);
-    else if (objType == AGEDGE)
-	agxbprint(&sf, "E[%s==\"%s\"]{selected = \"1\"}", attr, regex_str);
-
-    bf2 = agxbdisown(&sf);
-
-    argc = 1;
-    if (*bf2 != '\0')
-	argc++;
-    argv = N_NEW(argc + 1, char *);
-    j = 0;
-    argv[j++] = "smyrna";
-    argv[j++] = bf2;
-
-    run_gvpr(view->g[view->activeGraph], j, argv);
-    for (i = 1; i < argc; i++)
-	free(argv[i]);
-    free(argv);
-    set_header_text();
-}
