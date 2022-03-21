@@ -428,7 +428,6 @@ static void doApply (GtkWidget * widget, int doAll)
     char *value;
     char *def_val;
     int prog;
-    topview *t;
     Agnode_t *v;
     Agedge_t *e;
     Agraph_t *g;
@@ -452,7 +451,6 @@ static void doApply (GtkWidget * widget, int doAll)
 				     glade_xml_get_widget(xml,
 							  "attrProg"));
     g = view->g[view->activeGraph];
-    t = view->Topview;
     objKind = get_object_type();
     attr = binarySearch(view->Topview->attributes, attr_name);
     assert(attr);
