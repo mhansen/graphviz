@@ -34,9 +34,9 @@ glCompPanel *glCompPanelNew(glCompObj * parentObj, GLfloat x, GLfloat y,
     p->common.height = h;
 
     p->common.font = glNewFontFromParent((glCompObj *) p, NULL);
-    p->text = (char *) 0;
+    p->text = NULL;
     p->common.functions.draw = (glcompdrawfunc_t)glCompPanelDraw;
-    p->image = (glCompImage *) 0;
+    p->image = NULL;
     return p;
 }
 void glCompSetPanelText(glCompPanel * p, char *t)
