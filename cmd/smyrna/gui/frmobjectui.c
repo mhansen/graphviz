@@ -502,7 +502,6 @@ _BB void on_attrProg_toggled(GtkWidget * widget, gpointer user_data)
 _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
     char *attr_name;
-    char *value;
     char *defValue;
     int objKind;
     topview *t;
@@ -514,9 +513,6 @@ _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
     attr_name =
 	(char *) gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtAttr"));
-    value =
-	(char *) gtk_entry_get_text((GtkEntry *)
-				    glade_xml_get_widget(xml, "txtValue"));
     defValue =
 	(char *) gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml,
