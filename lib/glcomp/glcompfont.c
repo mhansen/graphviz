@@ -149,13 +149,12 @@ void glCompDrawText(glCompFont * f,GLfloat x,GLfloat y)
 /*text rendering functions, depends on a globject to retrieve stats*/
 void glCompRenderText(glCompFont * f, glCompObj * parentObj)
 {
-    static glCompCommon ref;
     GLfloat x, y;
     if (!f->tex)
 	return;
     x = 0;
     y = 0;
-    ref = parentObj->common;
+    glCompCommon ref = parentObj->common;
     switch (f->justify.HJustify) 
     {
     case glFontHJustifyNone:
