@@ -28,6 +28,7 @@ ann-devel \
 # Option swig
 swig \
 # Command smyra
+libglade2-devel \
 # Command gvedit
 qt5-qtbase-devel \
 ncurses-devel \
