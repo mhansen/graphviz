@@ -505,7 +505,6 @@ _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
     char *value;
     char *defValue;
     int objKind;
-    int prog;
     topview *t;
     Agraph_t *g;
     attr_t *attr;
@@ -522,10 +521,6 @@ _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
 	(char *) gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml,
 							 "txtDefValue"));
-    prog =
-	gtk_toggle_button_get_active((GtkToggleButton *)
-				     glade_xml_get_widget(xml,
-							  "attrProg"));
     g = view->g[view->activeGraph];
     t = view->Topview;
     /*try to find first */
