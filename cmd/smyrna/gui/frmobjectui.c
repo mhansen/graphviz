@@ -60,11 +60,11 @@ static void free_attr(attr_t *at) {
 
 static attr_t *new_attr(void) {
     attr_t *attr = malloc(sizeof(attr_t));
-    attr->defValG = (char *) 0;
-    attr->defValN = (char *) 0;
-    attr->defValE = (char *) 0;
-    attr->name = (char *) 0;
-    attr->value = (char *) 0;
+    attr->defValG = NULL;
+    attr->defValN = NULL;
+    attr->defValE = NULL;
+    attr->name = NULL;
+    attr->value = NULL;
     attr->propagate = 0;
     attr->objType[0] = 0;
     attr->objType[1] = 0;
