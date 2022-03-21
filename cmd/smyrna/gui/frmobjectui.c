@@ -72,7 +72,6 @@ static attr_t *new_attr(void) {
     return attr;
 }
 
-
 static attr_t *new_attr_with_ref(Agsym_t * sym)
 {
     attr_t *attr = new_attr();
@@ -117,8 +116,6 @@ static void reset_attr_list_widgets(attr_list * l)
 	gtk_label_set_text(l->fLabels[id], "");
     }
 }
-
-
 
 static void free_attr_list_widgets(attr_list * l)
 {
@@ -181,7 +178,6 @@ static int attr_compare(const void *a, const void *b)
 static void attr_list_sort(attr_list * l)
 {
     qsort(l->attributes, l->attr_count, sizeof(attr_t *), attr_compare);
-
 }
 
 static void attr_list_add(attr_list *l, attr_t *a) {
@@ -200,10 +196,8 @@ static void attr_list_add(attr_list *l, attr_t *a) {
     /*update indices */
     for (id = 0; id < l->attr_count; id++)
 	l->attributes[id]->index = id;
-
-
-
 }
+
 static attr_data_type get_attr_data_type(char c)
 {
     switch (c) {
@@ -221,8 +215,8 @@ static attr_data_type get_attr_data_type(char c)
 	break;
     }
     return attr_alpha;
-
 }
+
 static void object_type_helper(char *a, int *t)
 {
     if (strcmp(a, "GRAPH") == 0)
@@ -242,13 +236,11 @@ static void object_type_helper(char *a, int *t)
 
 static void set_attr_object_type(char *str, int *t)
 {
-
     char *a;
     a = strtok(str, " ");
     object_type_helper(a, t);
     while ((a = strtok(NULL, " or ")))
 	object_type_helper(a, t);
-
 }
 
 static attr_t *binarySearch(attr_list * l, char *searchKey)
@@ -270,11 +262,6 @@ static attr_t *binarySearch(attr_list * l, char *searchKey)
     }
     return NULL;
 }
-
-
-
-
-
 
 static attr_t *pBinarySearch(attr_list * l, char *searchKey)
 {
@@ -298,7 +285,6 @@ static attr_t *pBinarySearch(attr_list * l, char *searchKey)
 	}
     }
     return NULL;
-
 }
 
 static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
@@ -333,9 +319,9 @@ static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
 	    attr_list_add(tl, new_attr_ref(at));
     }
 }
+
 static void filter_attributes(char *prefix, topview * t)
 {
-
     int ind;
     int tmp;
 
@@ -372,9 +358,6 @@ static void filter_attributes(char *prefix, topview * t)
     gtk_toggle_button_set_active((GtkToggleButton *)
 				 glade_xml_get_widget(xml, "attrProg"), 0);
 
-
-
-
     if (strlen(prefix) == 0) {
 	gtk_widget_hide(glade_xml_get_widget(xml, "attrAddBtn"));
 	gtk_widget_hide(glade_xml_get_widget(xml, "attrApplyBtn"));
@@ -385,7 +368,6 @@ static void filter_attributes(char *prefix, topview * t)
 	gtk_widget_hide(glade_xml_get_widget(xml, "txtDefValue"));
 	Color_Widget_bg("white", glade_xml_get_widget(xml, "txtAttr"));
     }
-
 
     for (ind = 0; ind < fl->attr_count; ind++) {
 	if (strcasecmp(prefix, fl->attributes[ind]->name) == 0) {	/*an existing attribute */
@@ -418,7 +400,6 @@ static void filter_attributes(char *prefix, topview * t)
 							      "attrProg"),
 					 fl->attributes[0]->propagate);
 	    break;
-
 	}
     }
 
@@ -436,7 +417,6 @@ _BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data)
     filter_attributes((char *) gtk_entry_get_text((GtkEntry *) widget),
 		      view->Topview);
 }
-
 
 static void set_refresh_filters(ViewInfo * v, int type, char *name)
 {
@@ -590,7 +570,6 @@ _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
 	fprintf(stderr, "on_attrAddBtn_clicked: unknown object kind %d\n",
 		objKind);
     filter_attributes(attr_name, view->Topview);
-
 }
 
 attr_list *load_attr_list(Agraph_t * g)
@@ -733,8 +712,6 @@ static void gvpr_select(char *attr, char *regex_str, int objType)
 	agxbprint(&sf, "N[%s==\"%s\"]{selected = \"1\"}", attr, regex_str);
     else if (objType == AGEDGE)
 	agxbprint(&sf, "E[%s==\"%s\"]{selected = \"1\"}", attr, regex_str);
-
-
 
     bf2 = agxbdisown(&sf);
 
