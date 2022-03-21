@@ -122,7 +122,7 @@ int glCompCreateFontFile(char *fontdescription, int fs, char *fontfile,
 
     for (c = 0; c < 256; c++) {
 	counter++;
-	if ((c != 38) && (c != 60) && (c != 128) && (c < 129))
+	if (c != 38 && c != 60 && c != 128 && c < 129)
 	    buf[0] = (char)c;
 	else
 	    buf[0] = ' ';

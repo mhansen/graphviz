@@ -152,7 +152,7 @@ void glCompButtonClick(glCompObj * o, GLfloat x, GLfloat y,
     {
 	for (; ind < s->objcnt; ind++) {
 	    obj = s->obj[ind];
-	    if ((obj->objType == glButtonObj)&&(obj!=o)) {
+	    if (obj->objType == glButtonObj && obj != o) {
 		if (((glCompButton *) obj)->groupid == p->groupid)
 		    ((glCompButton *) obj)->status = 0;
 	    }

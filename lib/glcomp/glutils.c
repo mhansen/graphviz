@@ -123,7 +123,7 @@ void to3D(int x, int y, GLfloat * X, GLfloat * Y, GLfloat * Z)
 		 GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
     comp = -9999999;
     for (idx = 0; idx < WIDTH * WIDTH; idx++) {
-	if ((winZ[idx] > comp) && (winZ[idx] < 1))
+	if (winZ[idx] > comp && winZ[idx] < 1)
 	    comp = winZ[idx];
     }
 
@@ -148,7 +148,7 @@ static glCompPoint sub(glCompPoint p, glCompPoint q)
 
 static double dot(glCompPoint p, glCompPoint q)
 {
-    return (p.x * q.x + p.y * q.y + p.z * q.z);
+    return p.x * q.x + p.y * q.y + p.z * q.z;
 }
 
 static double len(glCompPoint p)
@@ -168,7 +168,7 @@ static glCompPoint blend(glCompPoint p, glCompPoint q, float m)
 
 static double dist(glCompPoint p, glCompPoint q)
 {
-    return (len(sub(p, q)));
+    return len(sub(p, q));
 }
 
 /*
@@ -395,7 +395,7 @@ GLfloat distBetweenPts(glCompPoint A,glCompPoint B,float R)
 
 int is_point_in_rectangle(float X, float Y, float RX, float RY, float RW,float RH)
 {
-    if ((X >= RX) && (X <= (RX + RW)) && (Y >= RY) && (Y <= (RY + RH)))
+    if (X >= RX && X <= RX + RW && Y >= RY && Y <= RY + RH)
 	return 1;
     else
 	return 0;
