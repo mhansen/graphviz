@@ -265,16 +265,13 @@ static attr_t *binarySearch(attr_list * l, char *searchKey)
 
 static attr_t *pBinarySearch(attr_list * l, char *searchKey)
 {
-    char buf[512];
     int middle, low, high, res;
     low = 0;
     high = l->attr_count - 1;
 
     while (low <= high) {
 	middle = (low + high) / 2;
-	strncpy(buf, l->attributes[middle]->name, strlen(searchKey));
-	buf[strlen(searchKey)] = '\0';
-	res = strcasecmp(searchKey, buf);
+	res = strncasecmp(searchKey, l->attributes[middle]->name, strlen(searchKey));
 	if (res == 0) {
 	    return l->attributes[middle];
 	}
@@ -290,7 +287,6 @@ static attr_t *pBinarySearch(attr_list * l, char *searchKey)
 static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
 {
     int res;
-    char buf[512];
     attr_t *at;
     int objKind = get_object_type();
 
@@ -305,16 +301,12 @@ static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
     /*go backward to get the first */
     while ((at->index > 0) && (res == 0)) {
 	at = sl->attributes[at->index - 1];
-	strncpy(buf, at->name, strlen(prefix));
-	buf[strlen(prefix)] = '\0';;
-	res = strcasecmp(prefix, buf);
+	res = strncasecmp(prefix, at->name, strlen(prefix));
     }
     res = 0;
     while ((at->index < sl->attr_count) && (res == 0)) {
 	at = sl->attributes[at->index + 1];
-	strncpy(buf, at->name, strlen(prefix));
-	buf[strlen(prefix)] = '\0';
-	res = strcasecmp(prefix, buf);
+	res = strncasecmp(prefix, at->name, strlen(prefix));
 	if ((res == 0) && (at->objType[objKind] == 1))
 	    attr_list_add(tl, new_attr_ref(at));
     }
