@@ -79,7 +79,7 @@ static PangoLayout *get_pango_layout(char *markup_text,
 static cairo_status_t
 writer(void *closure, const unsigned char *data, unsigned int length)
 {
-    if (length == fwrite(data, 1, length, (FILE *) closure)) {
+    if (length == fwrite(data, 1, length, closure)) {
 	return CAIRO_STATUS_SUCCESS;
     }
 

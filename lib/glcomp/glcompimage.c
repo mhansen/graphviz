@@ -87,7 +87,7 @@ int glCompImageLoadPng(glCompImage * i, char *pngFile,int is2D)
 
 void glCompImageDraw(void *obj)
 {
-    glCompImage *p = (glCompImage *) obj;
+    glCompImage *p = obj;
     glCompCommon ref = p->common;
     GLfloat w,h,d;
 

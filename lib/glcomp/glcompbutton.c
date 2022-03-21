@@ -137,7 +137,7 @@ void glCompButtonDraw(glCompButton * p)
     if (p->image)
 	p->image->common.functions.draw((void *) p->image);
     if (p->common.callbacks.draw)
-	p->common.callbacks.draw((void *) p);	/*user defined drawing routines are called here. */
+	p->common.callbacks.draw(p);	/*user defined drawing routines are called here. */
 }
 
 void glCompButtonClick(glCompObj * o, GLfloat x, GLfloat y,
