@@ -56,20 +56,17 @@ unweighted_common_fraction(v_data * graph, int v, int u, float *v_vector)
 					      num_shared_neighbors);
 }
 
-static float fill_neighbors_vec(v_data * graph, int vtx, float *vtx_vec)
-{
-    float sum_weights = 0;
+static void fill_neighbors_vec(v_data *graph, int vtx, float *vtx_vec) {
     int j;
     if (graph[0].ewgts != NULL) {
 	for (j = 0; j < graph[vtx].nedges; j++) {
-	    sum_weights += (vtx_vec[graph[vtx].edges[j]] = (float) fabs(graph[vtx].ewgts[j]));	// use fabs for the self loop
+	    vtx_vec[graph[vtx].edges[j]] = (float) fabs(graph[vtx].ewgts[j]);	// use fabs for the self loop
 	}
     } else {
 	for (j = 0; j < graph[vtx].nedges; j++) {
-	    sum_weights += (vtx_vec[graph[vtx].edges[j]] = 1);
+	    vtx_vec[graph[vtx].edges[j]] = 1;
 	}
     }
-    return sum_weights;
 }
 
 static void
@@ -163,7 +160,6 @@ maxmatch(v_data * graph,	/* array of vtx data for graph */
     int closest_neighbor;
     float *vtx_vec = N_NEW(nvtxs, float);
     float *weighted_vtx_vec = N_NEW(nvtxs, float);
-    float sum_weights;
 
     // gather statistics, to enable normalizing the values
     double avg_edge_len = 0, avg_deg_2 = 0;
@@ -247,7 +243,7 @@ maxmatch(v_data * graph,	/* array of vtx data for graph */
 	    continue;
 	}
 	inv_size = sqrt(1.0 / geom_graph[vtx].size);
-	sum_weights = fill_neighbors_vec(graph, vtx, weighted_vtx_vec);
+	fill_neighbors_vec(graph, vtx, weighted_vtx_vec);
 	fill_neighbors_vec_unweighted(graph, vtx, vtx_vec);
 	closest_neighbor = -1;
 
