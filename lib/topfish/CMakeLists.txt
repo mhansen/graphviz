@@ -14,4 +14,9 @@ if(with_smyrna)
     ${GRAPHVIZ_LIB_DIR}/common
   )
 
+  target_link_libraries(topfish PRIVATE
+    gvc
+    neatogen
+  )
+
 endif()
