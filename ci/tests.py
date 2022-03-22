@@ -110,7 +110,6 @@ def test_existence(binary: str):
     "gxl2dot",
     "lneato",
     "prune",
-    "smyrna",
     "vimdot",
   ]
 
@@ -174,6 +173,11 @@ def test_existence(binary: str):
   if binary == "diffimg" and is_win64():
     check_that_tool_does_not_exist(binary, os_id)
     pytest.skip(f"{binary} is not built on 64-bit Windows due to lacking libgd")
+
+  # FIXME: Smyrna dependencies are not avaiable in other jobs
+  if binary == "smyrna" and is_cmake() and platform.system() != "Linux":
+    check_that_tool_does_not_exist(binary, os_id)
+    pytest.skip("smyrna is not built on non-Linux due to lacking dependencies")
 
   assert shutil.which(binary) is not None
 
