@@ -9,7 +9,7 @@ icons = cursor.png \
 	move.png new_delete.png \
 	pan.png selectx.png zoom_in.png \
 	zoom_out.png zoom.png \
-	fisheye.raw ok.raw ok2.raw ok3.raw pan.raw zoom.raw \
+	fisheye.raw pan.raw zoom.raw \
 	zoomminus.raw zoomplus.raw rotate.raw \
     dot.PNG glade-3.png lcirco.png ldot.png lfdp.png lneato.png \
     ltwopi.png selectr.png single_select.png 2D.png 3D.png center.png \
