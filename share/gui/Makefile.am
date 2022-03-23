@@ -7,7 +7,7 @@ iconsdir = $(pkgdatadir)/smyrna
 icons = cursor.png \
 	fit_to_screen.png \
 	move.png new_delete.png \
-	pan.png select.png selectx.png zoom_in.png \
+	pan.png selectx.png zoom_in.png \
 	zoom_out.png zoom.png \
 	fisheye.raw ok.raw ok2.raw ok3.raw pan.raw zoom.raw \
 	zoomminus.raw zoomplus.raw rotate.raw \
