@@ -12,7 +12,7 @@ icons = cursor.png \
 	fisheye.raw pan.raw zoom.raw \
     selectr.png single_select.png 2D.png 3D.png center.png \
     details.png fisheye.png mod_3D.png \
-    mod_fisheye.png move.png no_fisheye.png \
+    mod_fisheye.png no_fisheye.png \
     zoom.png zoomin.png zoomout.png
 
 if WITH_SMYRNA
