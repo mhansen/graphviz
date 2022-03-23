@@ -1475,6 +1475,16 @@ lint_cmake_format:
   except:
     - tags
 
+lint_html:
+  image: "$CI_REGISTRY_IMAGE/ubuntu-21.10:$CI_COMMIT_SHA"
+  stage: test
+  needs:
+    - docker_build_ubuntu-21.10
+  script:
+    - git ls-files -z -- '**/*.html' | xargs -0 -- xmllint --nonet --noout --html --valid
+  except:
+    - tags
+
 lint_pylint:
   image: "$CI_REGISTRY_IMAGE/ubuntu-21.10:$CI_COMMIT_SHA"
   stage: test

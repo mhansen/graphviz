@@ -820,30 +820,6 @@ def test_1902():
 # root directory of this checkout
 ROOT = Path(__file__).parent.parent.resolve()
 
-# find all HTML files
-html = set()
-for (prefix, _, files) in os.walk(ROOT):
-  for name in files:
-    if Path(name).suffix.lower() in (".htm", ".html"):
-      html.add(Path(prefix) / name)
-
-@pytest.mark.parametrize("src", html)
-@pytest.mark.skipif(shutil.which("xmllint") is None, reason="xmllint not found")
-def test_html(src: Path):
-  """
-  check that HTML files are valid and conforming
-  """
-
-  # validate the file
-  with subprocess.Popen(["xmllint", "--nonet", "--noout", "--html", "--valid",
-                         src], stderr=subprocess.PIPE,
-                        universal_newlines=True) as p:
-    _, stderr = p.communicate()
-
-    # expect it to succeed
-    assert p.returncode == 0
-  assert stderr == ""
-
 def test_1855():
   """
   SVGs should have a scale with sufficient precision
