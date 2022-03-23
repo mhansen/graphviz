@@ -10,7 +10,7 @@ icons = cursor.png \
 	pan.png selectx.png zoom_in.png \
 	zoom_out.png zoom.png \
 	fisheye.raw pan.raw zoom.raw \
-    dot.PNG glade-3.png lcirco.png ldot.png lfdp.png lneato.png \
+    glade-3.png lcirco.png ldot.png lfdp.png lneato.png \
     ltwopi.png selectr.png single_select.png 2D.png 3D.png center.png \
     details.png edge.png fish.PNG fisheye.png fit.png mod_3D.png \
     mod_fisheye.png move.png no_fisheye.png node.png pan.png preview.png \
