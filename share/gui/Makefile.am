@@ -11,7 +11,7 @@ icons = cursor.png \
 	zoom_out.png zoom.png \
 	fisheye.raw pan.raw zoom.raw \
     selectr.png single_select.png 2D.png 3D.png center.png \
-    details.png edge.png fish.PNG fisheye.png fit.png mod_3D.png \
+    details.png fish.PNG fisheye.png fit.png mod_3D.png \
     mod_fisheye.png move.png no_fisheye.png node.png pan.png preview.png \
     rect_select.png rect_select2.png zoom.png zoomin.png zoomout.png
 
