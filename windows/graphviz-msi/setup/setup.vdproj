@@ -14212,26 +14212,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BBD74472379B48FCBC2A31D4BDE7303E"
-            {
-            "SourcePath" = "8:..\\..\\release\\share\\graphviz\\smyrna\\preview.png"
-            "TargetName" = "8:preview.png"
-            "Tag" = "8:"
-            "Folder" = "8:_A86D6EE186DF4E79B112E4E66EE0BFE4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BBDAE1E01DBD427F992CC8D7E9CAABD6"
             {
             "SourcePath" = "8:..\\..\\release\\share\\man\\man1\\gvpack.1"
