@@ -5,7 +5,7 @@ guidir = $(pkgdatadir)/smyrna
 gui = smyrna.glade attrs.txt arial.tga template.dot attr_widgets.dot mouse_actions.txt
 iconsdir = $(pkgdatadir)/smyrna
 icons = cursor.png \
-	deletE_edge.png delete_node.png find_edge.png find_node.png \
+	delete_node.png find_edge.png find_node.png \
 	fit_to_screen.png hourglass.png magifier_zoom_out.png magnifier.png \
 	magnifier_zoom_in.png move.png new_delete.png new_node.png \
 	newzoom.png pan.png select.png selectx.png zoom_in.png \
