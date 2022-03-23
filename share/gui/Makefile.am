@@ -13,7 +13,7 @@ icons = cursor.png \
     selectr.png single_select.png 2D.png 3D.png center.png \
     details.png fisheye.png mod_3D.png \
     mod_fisheye.png move.png no_fisheye.png \
-    rect_select.png rect_select2.png zoom.png zoomin.png zoomout.png
+    zoom.png zoomin.png zoomout.png
 
 if WITH_SMYRNA
 gui_DATA = $(gui)
