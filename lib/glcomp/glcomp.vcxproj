@@ -85,6 +85,7 @@
     <ClInclude Include="glcomptrackbar.h" />
     <ClInclude Include="glpangofont.h" />
     <ClInclude Include="glutils.h" />
+    <ClInclude Include="opengl.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glcompbutton.c" />

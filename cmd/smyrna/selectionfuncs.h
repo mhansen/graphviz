@@ -11,7 +11,7 @@
 #pragma once
 
 #include "draw.h"
-#include <GL/gl.h>
+#include <glcomp/opengl.h>
 
 extern void pick_objects_rect(Agraph_t* g) ;
 extern void deselect_all(Agraph_t* g);

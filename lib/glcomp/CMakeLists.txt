@@ -22,6 +22,7 @@ if(with_smyrna)
     glcomptexture.h
     glpangofont.h
     glutils.h
+    opengl.h
 
     glcompbutton.c
     glcompfont.c

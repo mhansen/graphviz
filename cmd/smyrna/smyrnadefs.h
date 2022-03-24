@@ -18,8 +18,7 @@
 
 #include <xdot/xdot.h>
 #include <gtk/gtk.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <glcomp/opengl.h>
 #include <gtk/gtkgl.h>
 #include <cgraph/cgraph.h>
 #include <glcomp/glcompset.h>
