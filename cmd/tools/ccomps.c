@@ -113,9 +113,7 @@ static void split(void) {
     if (sfx) {
 	suffix = sfx + 1;
 	size_t size = (size_t)(sfx - outfile);
-	path = gv_alloc(size + 1);
-	strncpy(path, outfile, size);
-	*(path + size) = '\0';
+	path = gv_strndup(outfile, size);
     } else {
 	path = outfile;
     }
