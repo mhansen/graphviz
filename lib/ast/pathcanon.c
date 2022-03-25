@@ -21,7 +21,6 @@
  */
 
 #include <ast/ast.h>
-#include <errno.h>
 #include <ast/error.h>
 
 char *pathcanon(char *path) {
@@ -29,11 +28,8 @@ char *pathcanon(char *path) {
     char *s;
     char *t;
     int dots;
-    int loop;
-    int oerrno;
 
-    oerrno = errno;
-    dots = loop = 0;
+    dots = 0;
     if (*path == '/' && *(path + 1) == '/')
 	do
 	    path++;
@@ -78,7 +74,6 @@ char *pathcanon(char *path) {
 			 && *(t - 1) == '/')
 		    t--;
 		*t = 0;
-		errno = oerrno;
 		return t;
 	    }
 	    dots = 0;
