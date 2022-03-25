@@ -106,7 +106,7 @@ void glCompImageDraw(void *obj)
     {
 	w = p->width;
 	h = p->height;
-	d=(GLfloat)p->common.layer* (GLfloat)GLCOMPSET_BEVEL_DIFF;
+	d=(GLfloat)p->common.layer * GLCOMPSET_BEVEL_DIFF;
 	glDisable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
