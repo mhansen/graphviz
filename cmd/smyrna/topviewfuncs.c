@@ -872,7 +872,7 @@ void initSmGraph(Agraph_t * g,topview* rv)
     rv->attributes=load_attr_list(view->g[view->activeGraph]);
     rv->filtered_attr_list=NULL;
 
-    /*set topologilca fisheye to NULL */
+    // set topological fisheye to NULL
     rv->fisheyeParams.h = NULL;
 
     rv->fisheyeParams.active = 0;
