@@ -44,7 +44,7 @@ if(WIN32 OR CYGWIN)
       TARGET dot
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dot> ${DOTCOPY}
-      COMMENT "Copying $<TARGET_FILE:dot> to ${DOTCOPY}"
+      COMMENT "Copying dot to ${DOTCOPY}"
     )
     install(
       PROGRAMS ${DOTCOPY}
@@ -66,7 +66,7 @@ else()
       COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:dot>
         ${cmd_alias}
       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-      COMMENT "Linking $<TARGET_FILE_NAME:dot> as ${cmd_alias}"
+      COMMENT "Linking dot as ${cmd_alias}"
     )
     install(
       FILES ${DOTLINK}

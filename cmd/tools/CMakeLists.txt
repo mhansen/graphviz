@@ -313,7 +313,7 @@ if(EXPAT_FOUND)
       TARGET gxl2gv
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:gxl2gv> ${DOT2GXL}
-      COMMENT "Copying $<TARGET_FILE:gxl2gv> to ${DOT2GXL}")
+      COMMENT "Copying gxl2gv to ${DOT2GXL}")
     install(
       PROGRAMS ${DOT2GXL}
       DESTINATION ${BINARY_INSTALL_DIR})
@@ -323,7 +323,7 @@ if(EXPAT_FOUND)
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:gxl2gv>
         ${DOT2GXL}
-      COMMENT "Linking $<TARGET_FILE_NAME:gxl2gv> as ${DOT2GXL}")
+      COMMENT "Linking gxl2gv as ${DOT2GXL}")
     install(
       FILES ${DOT2GXL}
       DESTINATION ${BINARY_INSTALL_DIR})
