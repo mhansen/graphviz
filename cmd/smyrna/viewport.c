@@ -388,7 +388,7 @@ void init_viewport(ViewInfo * view)
     view->active_frame = 0;
     view->total_frames = 1500;
     /*add a call back to the main() */
-    g_timeout_add_full((gint) G_PRIORITY_DEFAULT, (guint) 100,
+    g_timeout_add_full((gint) G_PRIORITY_DEFAULT, 100u,
 		       gl_main_expose, NULL, NULL);
     view->cameras = '\0';;
     view->camera_count = 0;
