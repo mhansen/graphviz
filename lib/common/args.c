@@ -17,6 +17,7 @@
  * Needs to be fixed before layout engines can be plugins.
  */
 
+#include <assert.h>
 #include <cgraph/likely.h>
 #include <ctype.h>
 #include <common/render.h>
@@ -37,7 +38,8 @@ static int neato_extra_args(int argc, char** argv) {
 
   for (i = 1; i < argc; i++) {
     arg = argv[i];
-    if (arg && *arg == '-') {
+    assert(arg != NULL);
+    if (arg[0] == '-') {
       switch (arg[1]) {
       case 'x' : Reduce = TRUE; break;
       case 'n':
@@ -80,7 +82,8 @@ static int memtest_extra_args(int argc, char** argv) {
 
   for (i = 1; i < argc; i++) {
     arg = argv[i];
-    if (arg && *arg == '-') {
+    assert(arg != NULL);
+    if (*arg == '-') {
       switch (arg[1]) {
       case 'm' :
         if (arg[2]) {
@@ -124,7 +127,8 @@ config_extra_args(GVC_t *gvc, int argc, char** argv)
 
   for (i = 1; i < argc; i++) {
     arg = argv[i];
-    if (arg && *arg == '-') {
+    assert(arg != NULL);
+    if (arg[0] == '-') {
       switch (arg[1]) {
       case 'v':
 	gvc->common.verbose = 1;
@@ -242,7 +246,8 @@ static int fdp_extra_args(int argc, char** argv) {
 
   for (i = 1; i < argc; i++) {
     arg = argv[i];
-    if (arg && (*arg == '-') && (*(arg+1) == 'L')) {
+    assert(arg != NULL);
+    if (arg[0] == '-' && arg[1] == 'L') {
       if (setFDPAttr (arg+2)) {
 	dotneato_usage(1);
 	return -1;

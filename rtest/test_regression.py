@@ -1573,6 +1573,22 @@ def test_2211():
                    "index: 3  should be 3\n" \
                    "index: -1  should be -1\n"
 
+def test_2215():
+  """
+  Graphviz should not crash with `-v`
+  https://gitlab.com/graphviz/graphviz/-/issues/2215
+  """
+
+  # try it on a simple graph
+  input = "graph g { a -- b; }"
+  subprocess.run(["dot", "-v"], input=input, check=True,
+                 universal_newlines=True)
+
+  # try the same on a labelled version of this graph
+  input = 'graph g { node[label=""] a -- b; }'
+  subprocess.run(["dot", "-v"], input=input, check=True,
+                 universal_newlines=True)
+
 def test_package_version():
   """
   The graphviz_version.h header should define a non-empty PACKAGE_VERSION
