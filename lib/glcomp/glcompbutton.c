@@ -15,6 +15,7 @@
 #include <glcomp/glutils.h>
 #include <glcomp/glcompset.h>
 #include <common/memory.h>
+#include <stddef.h>
 #include <string.h>
 #include <GL/glut.h>
 
@@ -40,7 +41,7 @@ glCompButton *glCompButtonNew(glCompObj * par, GLfloat x, GLfloat y,
     p->common.height = h;
     p->status = 0;		//0 not pressed 1 pressed;
     p->groupid = 0;
-    p->common.callbacks.click = '\0';
+    p->common.callbacks.click = NULL;
     /*set event functions */
 
     p->common.functions.draw = (glcompdrawfunc_t)glCompButtonDraw;
