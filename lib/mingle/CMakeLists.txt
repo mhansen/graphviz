@@ -23,6 +23,9 @@ if(ANN_FOUND)
     ${GRAPHVIZ_LIB_DIR}/common
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pathplan
+  )
+
+  target_include_directories(libmingle SYSTEM PRIVATE
     ${ANN_INCLUDE_DIR}
   )
 

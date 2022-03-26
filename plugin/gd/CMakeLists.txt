@@ -19,6 +19,9 @@ if(GD_FOUND)
     ${GRAPHVIZ_LIB_DIR}/common
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pathplan
+  )
+
+  target_include_directories(gvplugin_gd SYSTEM PRIVATE
     ${GD_INCLUDE_DIRS}
   )
 

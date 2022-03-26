@@ -22,6 +22,9 @@ if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
     ${GRAPHVIZ_LIB_DIR}/common
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pathplan
+  )
+
+  target_include_directories(gvplugin_pango SYSTEM PRIVATE
     ${CAIRO_INCLUDE_DIRS}/cairo
     ${PANGOCAIRO_INCLUDE_DIRS}
   )

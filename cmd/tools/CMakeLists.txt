@@ -50,6 +50,9 @@ function(add_simple_tool name)
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
+  )
+
+  target_include_directories(${name} SYSTEM PRIVATE
     ${GETOPT_INCLUDE_DIRS}
   )
 
@@ -90,6 +93,9 @@ target_include_directories(dijkstra PRIVATE
   ${GRAPHVIZ_LIB_DIR}/gvc
   ${GRAPHVIZ_LIB_DIR}/pack
   ${GRAPHVIZ_LIB_DIR}/pathplan
+)
+
+target_include_directories(dijkstra SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
 )
 
@@ -126,6 +132,9 @@ target_include_directories(gml2gv PRIVATE
   ${GRAPHVIZ_LIB_DIR}/gvc
   ${GRAPHVIZ_LIB_DIR}/pack
   ${GRAPHVIZ_LIB_DIR}/pathplan
+)
+
+target_include_directories(gml2gv SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
 )
 
@@ -143,7 +152,10 @@ target_include_directories(gv2gml PRIVATE
   ${GRAPHVIZ_LIB_DIR}/common
   ${GRAPHVIZ_LIB_DIR}/gvc
   ${GRAPHVIZ_LIB_DIR}/pathplan
-  ${GETOPT_INCLUDE_DIRS})
+)
+target_include_directories(gv2gml SYSTEM PRIVATE
+  ${GETOPT_INCLUDE_DIRS}
+)
 target_link_libraries(gv2gml cgraph gvc ingraphs)
 if(NOT HAVE_GETOPT_H)
   target_link_libraries(gv2gml ${GETOPT_LINK_LIBRARIES})
@@ -168,6 +180,9 @@ if(EXPAT_FOUND)
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
+  )
+
+  target_include_directories(graphml2gv SYSTEM PRIVATE
     ${EXPAT_INCLUDE_DIRS}
     ${GETOPT_INCLUDE_DIRS}
   )
@@ -201,6 +216,9 @@ target_include_directories(gvcolor PRIVATE
   ${GRAPHVIZ_LIB_DIR}/gvc
   ${GRAPHVIZ_LIB_DIR}/pack
   ${GRAPHVIZ_LIB_DIR}/pathplan
+)
+
+target_include_directories(gvcolor SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
 )
 
@@ -228,6 +246,9 @@ target_include_directories(gvgen PRIVATE
   ${GRAPHVIZ_LIB_DIR}/gvc
   ${GRAPHVIZ_LIB_DIR}/pack
   ${GRAPHVIZ_LIB_DIR}/pathplan
+)
+
+target_include_directories(gvgen SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
 )
 
@@ -260,6 +281,9 @@ target_include_directories(gvpack PRIVATE
   ${GRAPHVIZ_LIB_DIR}/gvc
   ${GRAPHVIZ_LIB_DIR}/pack
   ${GRAPHVIZ_LIB_DIR}/pathplan
+)
+
+target_include_directories(gvpack SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
 )
 
@@ -292,6 +316,9 @@ if(EXPAT_FOUND)
     ${GRAPHVIZ_LIB_DIR}/gvc
     ${GRAPHVIZ_LIB_DIR}/pack
     ${GRAPHVIZ_LIB_DIR}/pathplan
+  )
+
+  target_include_directories(gxl2gv SYSTEM PRIVATE
     ${EXPAT_INCLUDE_DIRS}
     ${GETOPT_INCLUDE_DIRS}
   )
@@ -349,6 +376,9 @@ target_include_directories(mm2gv PRIVATE
   ${GRAPHVIZ_LIB_DIR}/gvc
   ${GRAPHVIZ_LIB_DIR}/pack
   ${GRAPHVIZ_LIB_DIR}/pathplan
+)
+
+target_include_directories(mm2gv SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
 )
 
@@ -376,6 +406,9 @@ target_include_directories(sccmap PRIVATE
   ${GRAPHVIZ_LIB_DIR}/gvc
   ${GRAPHVIZ_LIB_DIR}/pack
   ${GRAPHVIZ_LIB_DIR}/pathplan
+)
+
+target_include_directories(sccmap SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
 )
 

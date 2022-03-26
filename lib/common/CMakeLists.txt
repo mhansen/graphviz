@@ -120,6 +120,9 @@ target_include_directories(common_obj PRIVATE
   ${GRAPHVIZ_LIB_DIR}/pack
   ${GRAPHVIZ_LIB_DIR}/pathplan
   ${GRAPHVIZ_LIB_DIR}/xdot
+)
+
+target_include_directories(common_obj SYSTEM PRIVATE
   ${EXPAT_INCLUDE_DIRS}
 )
 
