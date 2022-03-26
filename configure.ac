@@ -2038,8 +2038,6 @@ if test "x$with_gtkglext" != "xyes"; then
 else
   PKG_CHECK_MODULES(GTKGLEXT, [gtkglext-1.0],[
     use_gtkglext="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_GTKGLEXT,1,
-      [Define if you have the gtkglext library])
     AC_SUBST([GTKGLEXT_CFLAGS])
     AC_SUBST([GTKGLEXT_LIBS])
   ],[

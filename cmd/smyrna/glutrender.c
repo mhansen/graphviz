@@ -90,10 +90,7 @@ static void cb_display(void)
 
 static void cb_mouseclick(int button, int state, int x, int y)
 {
-    Agraph_t* g;
-
     if (view->g == 0) return;
-    g=view->g[view->activeGraph];
     begin_x = (float) x;
     begin_y = (float) y;
     if(state==GLUT_DOWN)

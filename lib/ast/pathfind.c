@@ -73,7 +73,7 @@ char *pathfind(const char *name, const char *lib, const char *type,
 	}
 	if (lib) {
 	    if ((s = strrchr(lib, ':')))
-		lib = (const char *) s + 1;
+		lib = s + 1;
 	    snprintf(tmp, sizeof(tmp), "lib/%s/%s", lib, name);
 	    if (pathpath(buf, tmp))
 		return buf;

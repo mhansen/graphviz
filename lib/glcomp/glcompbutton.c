@@ -61,7 +61,7 @@ glCompButton *glCompButtonNew(glCompObj * par, GLfloat x, GLfloat y,
     p->label->common.font->justify.HJustify = glFontHJustifyCenter;
     p->label->common.align = glAlignParent;
     /*image */
-    p->image = (glCompImage *) 0;
+    p->image = NULL;
     p->glyphPos = glButtonGlyphLeft;
     return p;
 }
@@ -137,7 +137,7 @@ void glCompButtonDraw(glCompButton * p)
     if (p->image)
 	p->image->common.functions.draw((void *) p->image);
     if (p->common.callbacks.draw)
-	p->common.callbacks.draw((void *) p);	/*user defined drawing routines are called here. */
+	p->common.callbacks.draw(p);	/*user defined drawing routines are called here. */
 }
 
 void glCompButtonClick(glCompObj * o, GLfloat x, GLfloat y,
@@ -152,7 +152,7 @@ void glCompButtonClick(glCompObj * o, GLfloat x, GLfloat y,
     {
 	for (; ind < s->objcnt; ind++) {
 	    obj = s->obj[ind];
-	    if ((obj->objType == glButtonObj)&&(obj!=o)) {
+	    if (obj->objType == glButtonObj && obj != o) {
 		if (((glCompButton *) obj)->groupid == p->groupid)
 		    ((glCompButton *) obj)->status = 0;
 	    }

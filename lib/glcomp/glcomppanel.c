@@ -34,9 +34,9 @@ glCompPanel *glCompPanelNew(glCompObj * parentObj, GLfloat x, GLfloat y,
     p->common.height = h;
 
     p->common.font = glNewFontFromParent((glCompObj *) p, NULL);
-    p->text = (char *) 0;
+    p->text = NULL;
     p->common.functions.draw = (glcompdrawfunc_t)glCompPanelDraw;
-    p->image = (glCompImage *) 0;
+    p->image = NULL;
     return p;
 }
 void glCompSetPanelText(glCompPanel * p, char *t)
@@ -77,8 +77,8 @@ int glCompPanelDraw(glCompObj * o)
     r.pos.z = -0.001f;
     glCompDrawRectangle(&r);
     /*draw panel */
-    glCompDrawRectPrism(&(ref.pos), ref.width, ref.height,
-			p->common.borderWidth, 0.01f, &(ref.color), 1);
+    glCompDrawRectPrism(&ref.pos, ref.width, ref.height,
+			p->common.borderWidth, 0.01f, &ref.color, 1);
     /*draw image if there is */
     if (p->image) {
 	p->image->common.callbacks.draw((void *) p->image);

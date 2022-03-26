@@ -3,7 +3,7 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/lib/common \
-	$(GTK_CFLAGS:-I%=-isystem%) $(GLUT_CFLAGS) $(GTKGL_CFLAGS) $(GTKGLEXT_CFLAGS) $(GLADE_CFLAGS) $(FREETYPE2_CFLAGS) $(XRENDER_CFLAGS)
+	$(GTK_CFLAGS:-I%=-isystem%) $(GLUT_CFLAGS) $(GTKGL_CFLAGS) $(GLADE_CFLAGS) $(FREETYPE2_CFLAGS) $(XRENDER_CFLAGS)
 
 if WITH_SMYRNA
 noinst_HEADERS = glcompbutton.h glcompdefs.h glcomplabel.h \
@@ -16,6 +16,6 @@ endif
 
 libglcomp_C_la_SOURCES = glcompbutton.c glcomplabel.c \
 	glcomppanel.c glcompset.c glcomptexture.c glcomptextpng.c\
-	glpangofont.c glutils.c glcompimage.c glcompmouse.c glcompfont.c            
+	glpangofont.c glutils.c glcompimage.c glcompmouse.c glcompfont.c
 
 EXTRA_DIST = glcomp.vcxproj*

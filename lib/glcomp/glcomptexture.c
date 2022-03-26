@@ -111,10 +111,10 @@ glCompTex *glCompSetAddNewTexLabel(glCompSet * s, char *def, int fs,
      */
     for (ind = 0; ind < s->textureCount; ind++) {
 	if (s->textures[ind]->type == glTexLabel) {
-	    if ((strcmp(def, s->textures[ind]->def) == 0)
-		&& (s->textures[ind]->type == glTexLabel)
-		&& (strcmp(text, s->textures[ind]->text) == 0)
-		&& (s->textures[ind]->fontSize==fs)) {
+	    if (strcmp(def, s->textures[ind]->def) == 0
+		&& s->textures[ind]->type == glTexLabel
+		&& strcmp(text, s->textures[ind]->text) == 0
+		&& s->textures[ind]->fontSize==fs) {
 		s->textures[ind]->userCount++;
 		return s->textures[ind];
 	    }

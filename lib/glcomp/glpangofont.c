@@ -56,7 +56,7 @@ static PangoLayout *get_pango_layout(char *markup_text,
 
     if (!pango_parse_markup
 	(markup_text, -1, '\0', &attr_list, &text, NULL, NULL))
-	return (PangoLayout *) 0;
+	return NULL;
     layout = pango_layout_new(context);
     pango_layout_set_text(layout, text, -1);
     pango_layout_set_font_description(layout, desc);
@@ -79,7 +79,7 @@ static PangoLayout *get_pango_layout(char *markup_text,
 static cairo_status_t
 writer(void *closure, const unsigned char *data, unsigned int length)
 {
-    if (length == fwrite(data, 1, length, (FILE *) closure)) {
+    if (length == fwrite(data, 1, length, closure)) {
 	return CAIRO_STATUS_SUCCESS;
     }
 
@@ -122,7 +122,7 @@ int glCompCreateFontFile(char *fontdescription, int fs, char *fontfile,
 
     for (c = 0; c < 256; c++) {
 	counter++;
-	if ((c != 38) && (c != 60) && (c != 128) && (c < 129))
+	if (c != 38 && c != 60 && c != 128 && c < 129)
 	    buf[0] = (char)c;
 	else
 	    buf[0] = ' ';

@@ -111,9 +111,6 @@
 /* Define if you have the gtkgl library */
 /* #undef HAVE_GTKGL */
 
-/* Define if you have the gtkglext library */
-#define HAVE_GTKGLEXT 1
-
 /* Define if you have the gts library */
 /* #undef HAVE_GTS */
 

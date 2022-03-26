@@ -42,15 +42,30 @@ static void CALLBACK vertexCallback(GLvoid *vertex)
 
 }
 
+// OpenGL’s `gluTessCallback` function has a prototype indicating it takes a
+// `void(*)(void)`. But its documentation describes passing in various function
+// pointers with differing calling conventions. To use this API while also
+// pacifying all the various build environments, we need this rather silly
+// wrapper.
+#ifdef _MSC_VER
+// MSVC is of the (correct) opinion that casting between function pointers of
+// incompatible calling conventions is unacceptable behavior…
+#define MAKE_GLU_CALLBACK(f) f
+#else
+// …nevertheless other compilers insist we cast or they believe we have made a
+// typo
+#define MAKE_GLU_CALLBACK(f) ((void (*)(void))(f))
+#endif
+
 static GLUtesselator* Init(void)
 {
     // Create a new tessellation object 
     GLUtesselator* tobj = gluNewTess(); 
     // Set callback functions
-    gluTessCallback(tobj, GLU_TESS_VERTEX, &vertexCallback);
-    gluTessCallback(tobj, GLU_TESS_BEGIN, &glBegin);
-    gluTessCallback(tobj, GLU_TESS_END, &glEnd);
-    gluTessCallback(tobj, GLU_TESS_COMBINE,&combineCallback);
+    gluTessCallback(tobj, GLU_TESS_VERTEX, MAKE_GLU_CALLBACK(vertexCallback));
+    gluTessCallback(tobj, GLU_TESS_BEGIN, MAKE_GLU_CALLBACK(glBegin));
+    gluTessCallback(tobj, GLU_TESS_END, MAKE_GLU_CALLBACK(glEnd));
+    gluTessCallback(tobj, GLU_TESS_COMBINE, MAKE_GLU_CALLBACK(combineCallback));
     return tobj;
 }
 

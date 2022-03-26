@@ -21,9 +21,6 @@
 #include <tchar.h>
 #endif
 #include <GL/gl.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <GL/gl.h>
 #include <GL/glu.h>
 
 #ifdef __cplusplus

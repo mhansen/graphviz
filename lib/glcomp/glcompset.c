@@ -22,10 +22,10 @@ static GLfloat startX, startY;
 
 static int glCompPointInObject(glCompObj * p, float x, float y)
 {
-    return ((x > p->common.refPos.x)
-	    && (x < p->common.refPos.x + p->common.width)
-	    && (y > p->common.refPos.y)
-	    && (y < p->common.refPos.y + p->common.height));
+  return x > p->common.refPos.x
+	    && x < p->common.refPos.x + p->common.width
+	    && y > p->common.refPos.y
+	    && y < p->common.refPos.y + p->common.height;
 }
 
 glCompObj *glCompGetObjByMouse(glCompSet * s, glCompMouse * m,
@@ -36,12 +36,12 @@ glCompObj *glCompGetObjByMouse(glCompSet * s, glCompMouse * m,
     if (!s || !m)
 	return NULL;
     for (ind = 0; ind < s->objcnt; ind++) {
-	if ((s->obj[ind]->common.visible)
-	    && (glCompPointInObject(s->obj[ind], m->pos.x, m->pos.y))) {
-	    if ((!rv) || (s->obj[ind]->common.layer >= rv->common.layer)) {
-		if (((onlyClickable)
-		     && (s->obj[ind]->common.functions.click))
-		    || (!onlyClickable))
+	if (s->obj[ind]->common.visible
+	    && glCompPointInObject(s->obj[ind], m->pos.x, m->pos.y)) {
+	    if (!rv || s->obj[ind]->common.layer >= rv->common.layer) {
+		if ((onlyClickable
+		     && s->obj[ind]->common.functions.click)
+		    || !onlyClickable)
 		    rv = s->obj[ind];
 	    }
 	}
@@ -123,7 +123,7 @@ static void glCompSetMouseUp(void *obj, GLfloat x, GLfloat y,
     if (((glCompSet *) obj)->common.callbacks.mouseup)
 	((glCompSet *) obj)->common.callbacks.mouseup(obj, x, y, t);
     /*check if mouse is clicked or dragged */
-    if ((startX == (int) tempX) && (startY == tempY))
+    if (startX == (int)tempX && startY == tempY)
 	glCompSetMouseClick(obj, x, y, t);
 }
 
@@ -207,7 +207,7 @@ glCompSet *glCompSetNew(int w, int h)
     s->objcnt = 0;
     s->obj = NULL;
     s->textureCount = 0;
-    s->textures = (glCompTex **) 0;
+    s->textures = NULL;
     s->common.font = glNewFontFromParent((glCompObj *) s, NULL);
     s->common.compset = (glCompSet *) s;
     s->common.functions.mouseover = (glcompmouseoverfunc_t)glCompMouseMove;

@@ -110,7 +110,6 @@ void to3D(int x, int y, GLfloat * X, GLfloat * Y, GLfloat * Z)
     GLfloat winZ[400];
     GLdouble posX, posY, posZ;
     int idx;
-    static float comp;
 
     glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
     glGetDoublev(GL_PROJECTION_MATRIX, projection);
@@ -121,9 +120,9 @@ void to3D(int x, int y, GLfloat * X, GLfloat * Y, GLfloat * Z)
 
     glReadPixels(x - WIDTH / 2, (int) winY - WIDTH / 2, WIDTH, WIDTH,
 		 GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
-    comp = -9999999;
+    float comp = -9999999;
     for (idx = 0; idx < WIDTH * WIDTH; idx++) {
-	if ((winZ[idx] > comp) && (winZ[idx] < 1))
+	if (winZ[idx] > comp && winZ[idx] < 1)
 	    comp = winZ[idx];
     }
 
@@ -148,7 +147,7 @@ static glCompPoint sub(glCompPoint p, glCompPoint q)
 
 static double dot(glCompPoint p, glCompPoint q)
 {
-    return (p.x * q.x + p.y * q.y + p.z * q.z);
+    return p.x * q.x + p.y * q.y + p.z * q.z;
 }
 
 static double len(glCompPoint p)
@@ -168,7 +167,7 @@ static glCompPoint blend(glCompPoint p, glCompPoint q, float m)
 
 static double dist(glCompPoint p, glCompPoint q)
 {
-    return (len(sub(p, q)));
+    return len(sub(p, q));
 }
 
 /*
@@ -322,8 +321,8 @@ void glCompDrawRectangle(glCompRect * r)
 void glCompDrawRectPrism(glCompPoint * p, GLfloat w, GLfloat h, GLfloat b,
 			 GLfloat d, glCompColor * c, int bumped)
 {
-    static GLfloat color_fac;
-    static glCompPoint A, B, C, D, E, F, G, H;
+    GLfloat color_fac;
+    glCompPoint A, B, C, D, E, F, G, H;
     GLfloat dim = 1.00;
     if (!bumped) {
 	color_fac = (GLfloat) 1.3;
@@ -395,7 +394,7 @@ GLfloat distBetweenPts(glCompPoint A,glCompPoint B,float R)
 
 int is_point_in_rectangle(float X, float Y, float RX, float RY, float RW,float RH)
 {
-    if ((X >= RX) && (X <= (RX + RW)) && (Y >= RY) && (Y <= (RY + RH)))
+    if (X >= RX && X <= RX + RW && Y >= RY && Y <= RY + RH)
 	return 1;
     else
 	return 0;
