@@ -1,0 +1,55 @@
+if(with_sfdp)
+
+  add_executable(edgepaint edgepaintmain.c)
+
+  target_include_directories(edgepaint PRIVATE
+    ${GRAPHVIZ_LIB_DIR}
+    ${GRAPHVIZ_LIB_DIR}/common
+    ${GRAPHVIZ_LIB_DIR}/cgraph
+    ${GRAPHVIZ_LIB_DIR}/cdt
+    ${GETOPT_INCLUDE_DIRS}
+  )
+
+  target_link_libraries(edgepaint PRIVATE
+    cdt
+    cgraph
+    edgepaintlib
+    gvc
+    ingraphs
+    neatogen
+    rbtree
+    sfdpgen
+    sparse
+    ${MATH_LIB}
+  )
+
+  if(NOT HAVE_GETOPT_H)
+    target_link_libraries(edgepaint PRIVATE ${GETOPT_LINK_LIBRARIES})
+  endif()
+
+  install(
+    TARGETS edgepaint
+    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+  )
+
+  if(GZIP)
+    add_custom_target(man-edgepaint ALL DEPENDS edgepaint.1.gz
+                      COMMENT "edgepaint man page")
+    add_custom_command(
+      OUTPUT edgepaint.1.gz
+      COMMAND ${GZIP} -9 --no-name --to-stdout edgepaint.1
+        >"${CMAKE_CURRENT_BINARY_DIR}/edgepaint.1.gz"
+      MAIN_DEPENDENCY edgepaint.1
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMENT "compress edgepaint man page")
+    install(
+      FILES ${CMAKE_CURRENT_BINARY_DIR}/edgepaint.1.gz
+      DESTINATION ${MAN_INSTALL_DIR}/man1)
+  else()
+    install(
+      FILES edgepaint.1
+      DESTINATION ${MAN_INSTALL_DIR}/man1
+    )
+  endif()
+
+endif()

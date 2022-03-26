@@ -36,7 +36,7 @@ edgepaint_LDADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(top_builddir)/lib/gvc/libgvc.la \
-	$(ANN_LIBS) -lm
+	-lm
 
 # add a non-existent C++ source to force the C++ compiler to be used for
 # linking, so the C++ standard library is included for our C++ dependencies

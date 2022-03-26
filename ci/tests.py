@@ -103,7 +103,6 @@ def test_existence(binary: str):
     "diffimg",
     "dot_builtins",
     "dotty",
-    "edgepaint",
     "gv2gxl",
     "gvedit",
     "gvmap",
