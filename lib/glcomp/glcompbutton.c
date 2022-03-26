@@ -41,7 +41,6 @@ glCompButton *glCompButtonNew(glCompObj * par, GLfloat x, GLfloat y,
     p->status = 0;		//0 not pressed 1 pressed;
     p->groupid = 0;
     p->common.callbacks.click = '\0';
-    p->customptr = '\0';
     /*set event functions */
 
     p->common.functions.draw = (glcompdrawfunc_t)glCompButtonDraw;
