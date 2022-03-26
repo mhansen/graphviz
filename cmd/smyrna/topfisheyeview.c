@@ -242,7 +242,7 @@ static void drawtopfishnodes(topview * t)
 		glColor4f(color.R, color.G, color.B,
 			  (GLfloat) view->defaultnodealpha);
 
-		glVertex3f((GLfloat) x0, (GLfloat) y0, (GLfloat) 0);
+		glVertex3f((GLfloat) x0, (GLfloat) y0, 0.0f);
 	    }
 	}
     }
@@ -287,9 +287,8 @@ static void drawtopfishedges(topview * t)
 
 
 		    if (get_temp_coords(t, level, n, &x, &y)) {
-			glVertex3f((GLfloat) x0, (GLfloat) y0,
-				   (GLfloat) 0);
-			glVertex3f((GLfloat) x, (GLfloat) y, (GLfloat) 0);
+			glVertex3f((GLfloat) x0, (GLfloat) y0, 0.0f);
+			glVertex3f((GLfloat) x, (GLfloat) y, 0.0f);
 		    } else
 		    {
 			int levell, nodee;
@@ -310,10 +309,8 @@ static void drawtopfishedges(topview * t)
 				continue;
 
 
-			    glVertex3f((GLfloat) x0, (GLfloat) y0,
-				       (GLfloat) 0);
-			    glVertex3f((GLfloat) x, (GLfloat) y,
-				       (GLfloat) 0);
+			    glVertex3f((GLfloat) x0, (GLfloat) y0, 0.0f);
+			    glVertex3f((GLfloat) x, (GLfloat) y, 0.0f);
 			}
 		    }
 		}

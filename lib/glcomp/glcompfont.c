@@ -165,7 +165,7 @@ void glCompRenderText(glCompFont * f, glCompObj * parentObj)
 	x = ref.refPos.x + (ref.width - f->tex->width);
 	break;
     case glFontHJustifyCenter:
-	x = ref.refPos.x + (ref.width - f->tex->width) / (GLfloat) 2.0;
+	x = ref.refPos.x + (ref.width - f->tex->width) / 2.0f;
 	break;
     }
     switch (f->justify.VJustify) {
@@ -177,7 +177,7 @@ void glCompRenderText(glCompFont * f, glCompObj * parentObj)
 	x = ref.refPos.y + (ref.height - f->tex->height);
 	break;
     case glFontVJustifyCenter:
-	y = ref.refPos.y + (ref.height - f->tex->height) / (GLfloat) 2.0;
+	y = ref.refPos.y + (ref.height - f->tex->height) / 2.0f;
 	break;
     }
 

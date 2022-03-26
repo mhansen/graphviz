@@ -325,11 +325,11 @@ void glCompDrawRectPrism(glCompPoint * p, GLfloat w, GLfloat h, GLfloat b,
     glCompPoint A, B, C, D, E, F, G, H;
     GLfloat dim = 1.00;
     if (!bumped) {
-	color_fac = (GLfloat) 1.3;
+	color_fac = 1.3f;
 	b = b - 2;
 	dim = 0.5;
     } else
-	color_fac = (GLfloat) 1 / (GLfloat) 1.3;
+	color_fac = 1.0f / 1.3f;
 
 
     A.x = p->x;
