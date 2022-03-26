@@ -256,7 +256,7 @@ target_link_libraries(gvgen cgraph)
 
 # Link to math library
 if(UNIX)
-  target_link_libraries(gvgen m)
+  target_link_libraries(gvgen ${MATH_LIB})
 endif()
 
 tool_defaults(gvgen)
