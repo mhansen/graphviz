@@ -112,7 +112,7 @@ static char *parseArgs(int argc, char *argv[], ViewInfo * view)
 	    graphviz_exit(0);
 	    break;
 	case '?':
-	    if (optopt == '\0')
+	    if (optopt == '\0' || optopt == '?')
 		usage(0);
 	    else {
 		fprintf(stderr,
