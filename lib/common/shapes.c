@@ -2182,7 +2182,6 @@ static void poly_init(node_t * n)
 	    for (i = 0; i < sides; i++) {
 
 		/*for each vertex find the bisector */
-		P = Q;
 		Q = R;
 		R = vertices[(i + 1) % sides];
 		alpha = beta;
