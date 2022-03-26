@@ -873,7 +873,7 @@ void initSmGraph(Agraph_t * g,topview* rv)
     rv->filtered_attr_list=NULL;
 
     /*set topologilca fisheye to NULL */
-    rv->fisheyeParams.h = '\0';
+    rv->fisheyeParams.h = NULL;
 
     rv->fisheyeParams.active = 0;
     rv->cache.node_id=-1;
