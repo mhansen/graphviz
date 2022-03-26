@@ -279,6 +279,7 @@ include(CPack)
 Include(CTest)
 
 # ======================= Specify subdirectories to build ======================
+add_subdirectory(contrib/diffimg)
 add_subdirectory(lib)
 add_subdirectory(plugin)
 add_subdirectory(cmd)
