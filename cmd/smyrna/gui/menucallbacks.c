@@ -86,7 +86,7 @@ void mQuitSlot(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    if (close_graph(view));
+    close_graph(view);
     gtk_main_quit();
 }
 
