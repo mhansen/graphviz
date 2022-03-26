@@ -21,7 +21,8 @@ import xml.etree.ElementTree as ET
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import dot, gvpr, is_mingw, ROOT, run_c #pylint: disable=C0413
+from gvtest import dot, gvpr, is_mingw, ROOT, remove_xtype_warnings, run_c \
+  #pylint: disable=C0413
 
 def is_ndebug_defined() -> bool:
   """
@@ -33,18 +34,6 @@ def is_ndebug_defined() -> bool:
     return True
 
   return False
-
-def remove_xtype_warnings(s: str) -> str:
-  """
-  Remove macOS XType warnings from a string. These appear to be harmless, but
-  occur in CI.
-  """
-
-  # avoid doing this anywhere except on macOS
-  if platform.system() != "Darwin":
-    return s
-
-  return re.sub(r"^.* XType: .*\.$", "", s, flags=re.MULTILINE)
 
 # The terminology used in rtest.py is a little inconsistent. At the
 # end it reports the total number of tests, the number of "failures"
