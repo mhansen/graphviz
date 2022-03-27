@@ -128,7 +128,7 @@ def remove_xtype_warnings(s: str) -> str:
   if platform.system() != "Darwin":
     return s
 
-  return re.sub(r"^.* XType: .*\.$", "", s, flags=re.MULTILINE)
+  return re.sub(r"^.* XType: .*\.$\n", "", s, flags=re.MULTILINE)
 
 def run_c(src: Path, args: List[str] = None, input: str = "",
           cflags: List[str] = None, link: List[str] = None
