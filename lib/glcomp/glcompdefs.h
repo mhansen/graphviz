@@ -296,7 +296,6 @@ extern "C" {
 	int groupid;
 	glCompImage *image;	/*glyph */
 	glCompButtonGlyph glyphPos;
-	void *customptr;	//general purpose void pointer to pass to call back
 	int data;
 
     };

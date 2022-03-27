@@ -112,7 +112,7 @@ static char *parseArgs(int argc, char *argv[], ViewInfo * view)
 	    graphviz_exit(0);
 	    break;
 	case '?':
-	    if (optopt == '\0')
+	    if (optopt == '\0' || optopt == '?')
 		usage(0);
 	    else {
 		fprintf(stderr,
@@ -144,8 +144,7 @@ static void windowedMode(int argc, char *argv[])
 
     gladewidget = glade_xml_get_widget(xml, "frmMain");
     gtk_widget_show(gladewidget);
-    g_signal_connect((gpointer) gladewidget, "destroy",
-		     G_CALLBACK(mQuitSlot), NULL);
+    g_signal_connect(gladewidget, "destroy", G_CALLBACK(mQuitSlot), NULL);
     glade_xml_signal_autoconnect(xml);
     gtk_gl_init(0, 0);
     /* Configure OpenGL framebuffer. */

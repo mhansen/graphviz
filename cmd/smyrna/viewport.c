@@ -73,13 +73,10 @@ static void *get_glut_font(int ind)
 
 }
 
-int close_graph(ViewInfo * view)
-{
+void close_graph(ViewInfo *view) {
     if (view->activeGraph < 0)
-	return 1;
+	return;
     clear_viewport(view);
-    return 1;
-
 }
 
 char *get_attribute_value(char *attr, ViewInfo * view, Agraph_t * g)
@@ -388,9 +385,8 @@ void init_viewport(ViewInfo * view)
     view->active_frame = 0;
     view->total_frames = 1500;
     /*add a call back to the main() */
-    g_timeout_add_full((gint) G_PRIORITY_DEFAULT, (guint) 100,
-		       gl_main_expose, NULL, NULL);
-    view->cameras = '\0';;
+    g_timeout_add_full(G_PRIORITY_DEFAULT, 100u, gl_main_expose, NULL, NULL);
+    view->cameras = NULL;
     view->camera_count = 0;
     view->active_camera = -1;
     set_viewport_settings_from_template(view, view->systemGraphs.def_attrs);
