@@ -329,7 +329,7 @@ static availfont_t *gv_get_ps_fontlist(PangoFontMap * fontmap)
     PangoFontFamily *family;
     fontdef_t* gv_ps_fontdef;
     int n_families;
-    int i, k, array_sz, availfaces;
+    int i, k, array_sz, availfaces = 0;
     availfont_t *gv_af_p, *gv_afs;
     const char *name;
     char *family_name;
