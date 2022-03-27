@@ -73,13 +73,10 @@ static void *get_glut_font(int ind)
 
 }
 
-int close_graph(ViewInfo * view)
-{
+void close_graph(ViewInfo *view) {
     if (view->activeGraph < 0)
-	return 1;
+	return;
     clear_viewport(view);
-    return 1;
-
 }
 
 char *get_attribute_value(char *attr, ViewInfo * view, Agraph_t * g)
