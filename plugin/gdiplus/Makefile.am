@@ -9,8 +9,6 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt
 
 if WITH_GDIPLUS
-PATCHES = GdiPlusEnums.h.patch GdiPlusHeaders.h.patch GdiPlusimageAttributes.h.patch GdiPlusImaging.h.patch
-PATCHED_HEADS = $(PATCHES:.h.patch=.h)
 
 noinst_LTLIBRARIES = libgvplugin_gdiplus_C.la
 if WITH_WIN32
@@ -45,25 +43,4 @@ if WITH_DARWIN9
 libgvplugin_gdiplus_la_LDFLAGS += -Wl,-exported_symbol,_gvplugin_gdiplus_LTX_library
 endif
 
-# object code is dependent on all the local GDI+ headers
-
-gvdevice_gdiplus.lo : $(GDIPLUS_HEADS)
-
-gvloadimage_gdiplus.lo : $(GDIPLUS_HEADS)
-
-gvrender_gdiplus.lo : $(GDIPLUS_HEADS)
-
-if WITH_GDIPLUS
-# patched GDI+ headers are dependent on the patches
-$(PATCHED_HEADS) : %.h : %.h.patch
-
-# all the local GDI+ headers are dependent on the originals in PlatformSDK
-# if the GDI+ header needs to be patched, patch it, else just copy it over
-$(GDIPLUS_HEADS) : %.h : $(PLATFORMSDKINCLUDE_ESCAPED)/%.h
-	if expr "$(PATCHED_HEADS)" : '.*$*.h' >/dev/null 2>&1; \
-	then patch -o $*.h "$(PLATFORMSDKINCLUDE)\$*.h" $*.h.patch; \
-	else cp "$(PLATFORMSDKINCLUDE)\$*.h" $*.h; \
-	fi
-endif
-
-EXTRA_DIST = $(PATCHES) gvplugin_gdiplus.vcxproj*
+EXTRA_DIST = gvplugin_gdiplus.vcxproj*
