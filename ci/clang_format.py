@@ -841,7 +841,6 @@ EXCLUDE = (
   "plugin/webp/gvplugin_webp.c",
   "plugin/xlib/gvdevice_xlib.c",
   "plugin/xlib/gvplugin_xlib.c",
-  "rtest/cdiff.c",
   "rtest/check-package-version.c",
   "tclpkg/gdtclft/gdtclft.c",
   "tclpkg/gv/gv.cpp",
