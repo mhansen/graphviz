@@ -1291,6 +1291,7 @@ char *colorx (Expr_t* ex, char* incolor, char* fmt, Sfio_t* fp)
     }
     else if (*fmt == 'C') {
 	type = CMYK_BYTE;
+	alpha = 0;
     }
     else
 	return "";
