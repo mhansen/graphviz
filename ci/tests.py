@@ -100,7 +100,6 @@ def test_existence(binary: str):
 
   tools_not_built_with_cmake = [
     "cluster",
-    "diffimg",
     "dot_builtins",
     "dotty",
     "gv2gxl",
@@ -170,6 +169,10 @@ def test_existence(binary: str):
   if binary == "mingle" and is_cmake() and (is_win64() or is_mingw()):
     check_that_tool_does_not_exist(binary, os_id)
     pytest.skip(f"{binary} is not built on some Windows due to lacking libANN")
+
+  if binary == "diffimg" and is_win64():
+    check_that_tool_does_not_exist(binary, os_id)
+    pytest.skip(f"{binary} is not built on 64-bit Windows due to lacking libgd")
 
   assert shutil.which(binary) is not None
 

@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- the `mingle` and `edgepaint` binaries are now included in the CMake build
+- the `mingle`, `diffimg`, and `edgepaint` binaries are now included in the
+  CMake build system
 - a brief note about the (previously undocumented) behavior of Graphviz when
   sent `SIGUSR1` is now mentioned in the man page
 

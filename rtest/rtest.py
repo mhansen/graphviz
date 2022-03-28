@@ -152,10 +152,11 @@ def doDiff(OUTFILE, testname, subtest_index, fmt):
     returncode = 0 if a.strip() == b.strip() else -1
   elif F == "png":
     # FIXME: remove when https://gitlab.com/graphviz/graphviz/-/issues/1788 is fixed
-    if os.environ.get("build_system") == "cmake":
+    if os.environ.get("build_system") == "cmake" and \
+        platform.system() == "Windows":
       print(f"Warning: Skipping PNG image comparison for test {testname}:"
-            f"{subtest_index} : format: {fmt} because CMake builds does not "
-             "contain the diffimg utility (#1788)",
+            f"{subtest_index} : format: {fmt} because CMake builds on Windows "
+             "do not contain the diffimg utility (#1788)",
             file=sys.stderr)
       return
     returncode = subprocess.call(
@@ -404,7 +405,8 @@ if not GENERATE:
     print("Could not find a value for DIFFIMG", file=sys.stderr)
     # FIXME: Remove workaround for missing diffimg when
     # https://gitlab.com/graphviz/graphviz/-/issues/1788 is fixed
-    if os.environ.get("build_system") != "cmake":
+    if os.environ.get("build_system") != "cmake" or \
+        platform.system() != "Windows":
       sys.exit(1)
 #    sys.exit(1)
 
