@@ -6,10 +6,6 @@ pdf = dotguide.pdf neatoguide.pdf libgraph/Agraph.pdf libguide/libguide.pdf
 html = build.html FAQ.html index.html winbuild.html pspdf.png char.html gdtclft.entities.example.png todo.html internal_todo.html
 txt = Dot.ref latex_suggestions.txt fontfaq.txt addingLayout.txt
 
-if WITH_LEFTY
-pdf += leftyguide.pdf
-endif
-
 if WITH_SMYRNA
 pdf += smyrna/smyrna.pdf
 endif

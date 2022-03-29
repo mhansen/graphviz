@@ -216,8 +216,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gvplugin_gdiplus", "plugin\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "version", "lib\version\version.vcxproj", "{320318AF-81FB-446A-9DB4-7D561F712761}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lefty", "cmd\lefty\lefty.vcxproj", "{40597156-1B95-4A22-8F2B-D6B81B747CF0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
