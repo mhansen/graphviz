@@ -912,8 +912,7 @@ for source in sources.split("\x00")[:-1]:
 
   print(f"checking {source}...")
 
-  with open(source, "rt", encoding="utf-8") as f:
-    original = f.read()
+  original = Path(source).read_text(encoding="utf-8")
 
   # ask `clang-format` to style the file
   reformatted = subprocess.check_output(["clang-format", "--style=file", "--",
