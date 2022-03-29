@@ -2715,7 +2715,6 @@ AC_CONFIG_FILES(Makefile
 	cmd/lefty/dot2l/Makefile
 	cmd/lefty/examples/Makefile
 	cmd/lefty/Makefile
-	cmd/lneato/Makefile
 	cmd/dotty/Makefile
 	cmd/smyrna/Makefile
 	cmd/gvmap/Makefile

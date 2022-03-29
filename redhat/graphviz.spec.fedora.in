@@ -320,10 +320,8 @@ Graphviz commands with X11 dependencies
 %license COPYING
 %endif
 %doc COPYING AUTHORS CHANGELOG.md NEWS README
-%{_bindir}/lneato
 %{_bindir}/dotty
 %{_bindir}/vimdot
-%{_mandir}/man1/lneato.1*
 %{_mandir}/man1/dotty.1*
 %{_mandir}/man1/vimdot.1*
 %if %{GTK}

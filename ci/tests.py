@@ -78,7 +78,6 @@ def is_win64() -> bool:
   "gvpr",
   "gxl2dot",
   "gxl2gv",
-  "lneato",
   "mingle",
   "mm2gv",
   "neato",
@@ -108,7 +107,6 @@ def test_existence(binary: str):
     "gvmap",
     "gvmap.sh",
     "gxl2dot",
-    "lneato",
     "prune",
     "vimdot",
   ]

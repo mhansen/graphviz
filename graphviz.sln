@@ -121,8 +121,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tred", "cmd\tools\tred.vcxp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dotty", "cmd\dotty\dotty.vcxproj", "{863A7931-DC7C-47C4-94E6-3D053BFE771A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lneato", "cmd\lneato\lneato.vcxproj", "{23D7A1F0-621B-474A-A45F-2490C9935C1E}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unflatten", "cmd\tools\unflatten.vcxproj", "{0062B64B-88F1-4104-A063-3823925A7A34}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C0663A08-F276-4DD6-B17C-E501EE066F7C} = {C0663A08-F276-4DD6-B17C-E501EE066F7C}

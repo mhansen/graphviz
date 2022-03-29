@@ -45,7 +45,6 @@ from gvtest import is_cmake, remove_xtype_warnings #pylint: disable=C0413
     "gvpr",
     "gxl2dot",
     "gxl2gv",
-    "lneato",
     "mingle",
     "mm2gv",
     "neato",
