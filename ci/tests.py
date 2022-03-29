@@ -61,7 +61,6 @@ def is_win64() -> bool:
   "dot",
   "dot2gxl",
   "dot_builtins",
-  "dotty",
   "edgepaint",
   "fdp",
   "gc",
@@ -101,7 +100,6 @@ def test_existence(binary: str):
   tools_not_built_with_cmake = [
     "cluster",
     "dot_builtins",
-    "dotty",
     "gv2gxl",
     "gvedit",
     "gvmap",

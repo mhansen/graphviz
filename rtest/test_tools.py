@@ -28,7 +28,6 @@ from gvtest import is_cmake, remove_xtype_warnings #pylint: disable=C0413
     "dot",
     "dot2gxl",
     "dot_builtins",
-    "dotty",
     "edgepaint",
     "fdp",
     "gc",

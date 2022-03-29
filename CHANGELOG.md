@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   CMake build system
 - a brief note about the (previously undocumented) behavior of Graphviz when
   sent `SIGUSR1` is now mentioned in the man page
-- build system support for `lneato` has been removed
+- build system support for `dotty` and `lneato` has been removed
 
 ### Fixed
 
