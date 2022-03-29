@@ -2445,7 +2445,6 @@ else
      use_smyrna="No (requires:$requires)"
   else
      use_smyrna="Yes"
-     AC_DEFINE_UNQUOTED(SMYRNA,1,[Define if you want SMYRNA])
   fi
 fi
 AM_CONDITIONAL(WITH_SMYRNA, [test "x$use_smyrna" = "xYes"])

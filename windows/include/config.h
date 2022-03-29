@@ -251,9 +251,6 @@
 #define SFDP 1
 /* #undef SFDP */
 
-/* Define if you want SMYRNA */
-/* #undef SMYRNA */
-
 /* Define if you want CGRAPH */
 #define WITH_CGRAPH 1
 

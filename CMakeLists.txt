@@ -44,11 +44,6 @@ if(with_sfdp)
   add_definitions(-DSFDP)
 endif()
 
-if(with_smyrna)
-  # TODO include dependency checks
-  add_definitions(-DSMYRNA)
-endif()
-
 # ===================== Append local CMake module directory ====================
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
