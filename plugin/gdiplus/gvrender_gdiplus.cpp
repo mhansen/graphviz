@@ -15,12 +15,11 @@
 
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvplugin_render.h>
+#include <gvc/gvio.h>
 #include "gvplugin_gdiplus.h"
 
 #include <memory>
 #include <vector>
-
-extern "C" size_t gvwrite(GVJ_t *job, const unsigned char *s, unsigned int len);
 
 using namespace std;
 using namespace Gdiplus;
@@ -81,7 +80,7 @@ static void gdiplusgen_end_job(GVJ_t *job)
 		HGLOBAL buffer = nullptr;
 		GetHGlobalFromStream(stream, &buffer);
 		stream->Release();
-		gvwrite(job, (unsigned char*)GlobalLock(buffer), GlobalSize(buffer));
+		gvwrite(job, (char*)GlobalLock(buffer), GlobalSize(buffer));
 		GlobalFree(buffer);
 	}
 	else if (job->device.id == FORMAT_METAFILE)
