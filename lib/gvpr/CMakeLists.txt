@@ -32,6 +32,9 @@ target_include_directories(gvpr PRIVATE
   ${GRAPHVIZ_LIB_DIR}/cgraph
   ${GRAPHVIZ_LIB_DIR}/common
   ${GRAPHVIZ_LIB_DIR}/expr
+)
+
+target_include_directories(gvpr SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
 )
 

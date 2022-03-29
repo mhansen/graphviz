@@ -24,7 +24,6 @@
 static char *shellpath;
 
 static char *buildpath (char *);
-static void panic (char *, int, char *, char *, ...);
 
 int WINAPI wWinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
         PWSTR pCmdLine, int nCmdShow) {
@@ -95,16 +94,4 @@ static char *buildpath (char *file) {
             return pathbuf;
     }
     return NULL;
-}
-
-static void panic (char *file, int line, char *func, char *fmt, ...) {
-    va_list args;
-
-    va_start(args, fmt);
-    {
-        char buf[256];
-        vsprintf (buf, fmt, args);
-        MessageBox ((HWND) NULL, buf, "dotty PANIC", MB_APPLMODAL);
-    }
-    abort ();
 }

@@ -10,6 +10,10 @@ if(with_sfdp AND ANN_FOUND)
       ${GRAPHVIZ_LIB_DIR}/cdt
       ${GRAPHVIZ_LIB_DIR}/cgraph
       ${GRAPHVIZ_LIB_DIR}/common
+  )
+
+  target_include_directories(mingle
+    SYSTEM PRIVATE
       ${GETOPT_INCLUDE_DIRS}
   )
 

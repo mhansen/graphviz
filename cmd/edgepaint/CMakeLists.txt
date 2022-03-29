@@ -7,6 +7,9 @@ if(with_sfdp)
     ${GRAPHVIZ_LIB_DIR}/common
     ${GRAPHVIZ_LIB_DIR}/cgraph
     ${GRAPHVIZ_LIB_DIR}/cdt
+  )
+
+  target_include_directories(edgepaint SYSTEM PRIVATE
     ${GETOPT_INCLUDE_DIRS}
   )
 
