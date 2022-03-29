@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import platform
 import shutil
+import subprocess
 import sys
 from typing import Dict
 import pytest
@@ -195,3 +196,24 @@ def test_1786():
 
   # run a trivial graph through Graphviz
   dot("png:gd", source="digraph { a -> b; }")
+
+def test_installation():
+  """
+  check that Graphviz reports the expected version number
+  """
+
+  expected_version = os.environ["GV_VERSION"]
+
+  actual_version_string = subprocess.check_output(
+      [
+          "dot",
+          "-V",
+      ],
+      universal_newlines=True,
+      stderr=subprocess.STDOUT,
+  )
+  try:
+    actual_version = actual_version_string.split()[4]
+  except IndexError:
+    pytest.fail(f"Malformed version string: {actual_version_string}")
+  assert actual_version == expected_version
