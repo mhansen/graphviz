@@ -346,9 +346,9 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     normalhints->x = 0;
     normalhints->y = 0;
     assert(job->width <= (unsigned)INT_MAX && "out of range width");
-    normalhints->width = job->width;
+    normalhints->width = (int)job->width;
     assert(job->height <= (unsigned)INT_MAX && "out of range height");
-    normalhints->height = job->height;
+    normalhints->height = (int)job->height;
 
     classhint = XAllocClassHint();
     classhint->res_name = "graphviz";
