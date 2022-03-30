@@ -471,7 +471,7 @@ void makeRandom(int h, int w, edgefn ef)
 {
     int i, j, type, size, depth;
 
-    srand(time(0));
+    srand((unsigned)time(0));
     if (rand()%2==1)
 	type = 1;
     else
