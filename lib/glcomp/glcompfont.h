@@ -17,8 +17,8 @@
 typedef float GLfloat;
 #else
 #include <unistd.h>
-#include <GL/gl.h>
 #endif
+#include <glcomp/opengl.h>
 #include <glcomp/glcompdefs.h>
 #include <GL/glut.h>
 

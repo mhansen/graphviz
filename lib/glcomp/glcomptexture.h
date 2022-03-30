@@ -18,8 +18,7 @@
 #include "windows.h"
 #endif
 #include <stdio.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <glcomp/opengl.h>
 #include <glcomp/glcompdefs.h>
 
 #ifdef __cplusplus

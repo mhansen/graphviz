@@ -20,8 +20,7 @@
 #include <winuser.h>
 #include <tchar.h>
 #endif
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <glcomp/opengl.h>
 
 #ifdef __cplusplus
 extern "C" {

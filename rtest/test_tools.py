@@ -15,7 +15,7 @@ import sys
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import is_cmake #pylint: disable=C0413
+from gvtest import is_cmake, remove_xtype_warnings #pylint: disable=C0413
 
 @pytest.mark.parametrize("tool", [
     "acyclic",
@@ -106,6 +106,7 @@ def test_tools(tool):
 
   assert ret == 0, f"`{tool} -?` failed. Output was: {output}"
 
+  output = remove_xtype_warnings(output)
   assert re.match("usage", output, flags=re.IGNORECASE) is not None, \
     f"{tool} -? did not show usage. Output was: {output}"
 

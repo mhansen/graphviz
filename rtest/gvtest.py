@@ -3,6 +3,7 @@
 import os
 from pathlib import Path
 import platform
+import re
 import shlex
 import shutil
 import subprocess
@@ -116,6 +117,18 @@ def is_cmake() -> bool:
 def is_mingw() -> bool:
   """is the current platform MinGW?"""
   return "mingw" in sysconfig.get_platform()
+
+def remove_xtype_warnings(s: str) -> str:
+  """
+  Remove macOS XType warnings from a string. These appear to be harmless, but
+  occur in CI.
+  """
+
+  # avoid doing this anywhere except on macOS
+  if platform.system() != "Darwin":
+    return s
+
+  return re.sub(r"^.* XType: .*\.$\n", "", s, flags=re.MULTILINE)
 
 def run_c(src: Path, args: List[str] = None, input: str = "",
           cflags: List[str] = None, link: List[str] = None

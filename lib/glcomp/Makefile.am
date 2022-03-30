@@ -9,7 +9,7 @@ if WITH_SMYRNA
 noinst_HEADERS = glcompbutton.h glcompdefs.h glcomplabel.h \
 	glcomppanel.h glcompset.h glcomptexture.h \
 	glpangofont.h glcomptextpng.h glcompfont.h glcompmouse.h \
-	glutils.h glcompimage.h
+	glutils.h glcompimage.h opengl.h
 
 noinst_LTLIBRARIES = libglcomp_C.la
 endif
