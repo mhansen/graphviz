@@ -774,7 +774,7 @@ makeTreeGen (int N)
     tg->T = genCnt(N);
     tg->sp = mkStack(N+1);
     tg->tp = mkTree(N+1);
-    srand(time(0));
+    srand((unsigned)time(0));
 
     return tg;
 }
