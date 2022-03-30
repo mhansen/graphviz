@@ -365,8 +365,9 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     XFree(normalhints);
     free(name);
 
+    assert(window->depth >= 0 && "Xlib returned invalid window depth");
     window->pix = XCreatePixmap(dpy, window->win, job->width, job->height,
-		window->depth);
+                                (unsigned)window->depth);
     if (argb)
         gcv.foreground = 0;
     else
