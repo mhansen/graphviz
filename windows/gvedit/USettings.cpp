@@ -2,7 +2,6 @@
 
 #include <shlobj.h>
 
-#define NO_WIN32_LEAN_AND_MEAN 1
 #include <vcl.h>
 #pragma hdrstop
 

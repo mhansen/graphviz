@@ -13,7 +13,6 @@
 #include "builddate.h"
 //windows.h for win machines
 #if defined(_WIN32) && !defined(__CYGWIN__)
-#define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
 #include <windowsx.h>
 #endif
