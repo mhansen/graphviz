@@ -247,6 +247,10 @@ static void update_display(GVJ_t *job, Display *dpy)
 
     window = job->window;
 
+    // window geometry is set to fixed values
+    assert(job->width <= (unsigned)INT_MAX && "out of range width");
+    assert(job->height <= (unsigned)INT_MAX && "out of range height");
+
     if (job->has_grown) {
 	XFreePixmap(dpy, window->pix);
 	window->pix = XCreatePixmap(dpy, window->win,
@@ -259,7 +263,7 @@ static void update_display(GVJ_t *job, Display *dpy)
                 	job->width, job->height);
 	surface = cairo_xlib_surface_create(dpy,
 			window->pix, window->visual,
-			job->width, job->height);
+			(int)job->width, (int)job->height);
     	job->context = cairo_create(surface);
 	job->external_context = true;
         job->callbacks->refresh(job);
