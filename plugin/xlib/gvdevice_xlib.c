@@ -85,8 +85,13 @@ static void handle_expose(GVJ_t * job, XExposeEvent * eev)
     window_t *window;
 
     window = job->window;
+    assert(eev->width >= 0 &&
+           "Xlib returned an expose event with negative width");
+    assert(eev->height >= 0 &&
+           "Xlib returned an expose event with negative height");
     XCopyArea(eev->display, window->pix, eev->window, window->gc,
-              eev->x, eev->y, eev->width, eev->height, eev->x, eev->y);
+              eev->x, eev->y, (unsigned)eev->width, (unsigned)eev->height,
+              eev->x, eev->y);
 }
 
 static void handle_client_message(GVJ_t * job, XClientMessageEvent * cmev)
