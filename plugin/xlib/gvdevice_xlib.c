@@ -230,6 +230,8 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                     handle_client_message(job, &xev.xclient);
 		    rc++;
                     break;
+                default:
+                    break;
                 }
 	        break;
 	    }
