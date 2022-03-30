@@ -5,9 +5,7 @@ if(with_smyrna)
   find_package(GTK2 REQUIRED COMPONENTS gtk glade)
   find_package(PANGOCAIRO REQUIRED)
   find_package(PkgConfig REQUIRED)
-  if(PKG_CONFIG_FOUND)
-    pkg_check_modules(XRENDER REQUIRED xrender)
-  endif()
+  pkg_check_modules(XRENDER REQUIRED xrender)
 
   add_library(glcomp
     glcompbutton.h
