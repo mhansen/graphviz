@@ -188,7 +188,10 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                 case ButtonPress:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    job->callbacks->button_press(job, xev.xbutton.button, pointer);
+                    assert(xev.xbutton.button >= 1 && xev.xbutton.button <= 5 &&
+                           "Xlib returned invalid button event");
+                    job->callbacks->button_press(job, (int)xev.xbutton.button,
+                                                 pointer);
 		    rc++;
                     break;
                 case MotionNotify:
@@ -202,7 +205,10 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                 case ButtonRelease:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    job->callbacks->button_release(job, xev.xbutton.button, pointer);
+                    assert(xev.xbutton.button >= 1 && xev.xbutton.button <= 5 &&
+                           "Xlib returned invalid button event");
+                    job->callbacks->button_release(job, (int)xev.xbutton.button,
+                                                   pointer);
 		    if (job->selected_href && job->selected_href[0] && xev.xbutton.button == 1)
 		        browser_show(job);
 		    rc++;
