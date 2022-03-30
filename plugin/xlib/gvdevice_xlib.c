@@ -389,7 +389,7 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     XMapWindow(dpy, window->win);
 }
 
-static int handle_stdin_events(GVJ_t *job, int stdin_fd)
+static int handle_stdin_events(GVJ_t *job)
 {
     int rc=0;
 
@@ -600,7 +600,7 @@ static void xlib_finalize(GVJ_t *firstjob)
 
 	if (watching_stdin_p) {
 	    if (FD_ISSET(stdin_fd, &rfds)) {
-                ret = handle_stdin_events(firstjob, stdin_fd);
+                ret = handle_stdin_events(firstjob);
 	        if (ret < 0) {
 	            watching_stdin_p = false;
                     FD_CLR(stdin_fd, &rfds);
