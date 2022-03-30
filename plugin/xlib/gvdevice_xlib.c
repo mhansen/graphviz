@@ -253,8 +253,10 @@ static void update_display(GVJ_t *job, Display *dpy)
 
     if (job->has_grown) {
 	XFreePixmap(dpy, window->pix);
+	assert(window->depth >= 0 && "Xlib returned invalid window depth");
 	window->pix = XCreatePixmap(dpy, window->win,
-			job->width, job->height, window->depth);
+	                            job->width, job->height,
+	                            (unsigned)window->depth);
 	job->has_grown = false;
 	job->needs_refresh = true;
     }
