@@ -436,7 +436,7 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
 		    p++;
 		else 
 		    p = job->input_filename;
-		if (strcmp((char*)&event->name, p) == 0) {
+		if (strcmp(event->name, p) == 0) {
 		    job->callbacks->read(job, job->input_filename, job->layout_type);
 		    rc++;
 		}
