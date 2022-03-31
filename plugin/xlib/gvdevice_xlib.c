@@ -478,7 +478,8 @@ static void xlib_initialize(GVJ_t *firstjob)
     firstjob->display = dpy;
     firstjob->screen = scr;
 
-    keycodes = malloc(firstjob->numkeys * sizeof(KeyCode));
+    assert(firstjob->numkeys >= 0);
+    keycodes = malloc((size_t)firstjob->numkeys * sizeof(KeyCode));
     if (keycodes == NULL) {
         fprintf(stderr, "Failed to malloc %d*KeyCode\n", firstjob->numkeys);
         return;
