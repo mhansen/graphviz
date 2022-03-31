@@ -71,7 +71,7 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
     size_t data_size = (size_t)size;
     fseek(in, 0, SEEK_SET);
     data = malloc(data_size);
-    ok = (fread(data, data_size, 1, in) == 1);
+    ok = fread(data, data_size, 1, in) == 1;
     if (!ok) {
         fprintf(stderr, "Error: WebP could not read %zu bytes of data from %s\n",
             data_size, in_file);
@@ -93,7 +93,7 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
 	unsigned char *p, t;
 
 	for (y = 0; y < output_buffer->height; y++) {
-	    p = output_buffer->u.RGBA.rgba + (output_buffer->u.RGBA.stride * y);
+	    p = output_buffer->u.RGBA.rgba + output_buffer->u.RGBA.stride * y;
 	    for (x = 0; x < output_buffer->width; x++) {
 		t = p[0];     /* swap red/blue */
 		p[0] = p[2];
@@ -105,7 +105,7 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
 
 end:
     free(data);
-    ok = (status == VP8_STATUS_OK);
+    ok = status == VP8_STATUS_OK;
     if (!ok) {
 	fprintf(stderr, "Error: WebP decoding of %s failed.\n", in_file);
 	fprintf(stderr, "Status: %d (%s)\n", status, kStatusMessages[status]);
@@ -172,7 +172,7 @@ static void webp_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool fill
     if (surface) {
         cairo_save(cr);
 	cairo_translate(cr, b.LL.x, -b.UR.y);
-	cairo_scale(cr, (b.UR.x - b.LL.x)/(us->w), (b.UR.y - b.LL.y)/(us->h)); 
+	cairo_scale(cr, (b.UR.x - b.LL.x) / us->w, (b.UR.y - b.LL.y) / us->h);
         cairo_set_source_surface (cr, surface, 0, 0);
         cairo_paint (cr);
         cairo_restore(cr);

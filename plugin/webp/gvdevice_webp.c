@@ -40,7 +40,7 @@ typedef enum {
 } format_type;
 
 static int writer(const uint8_t* data, size_t data_size, const WebPPicture* const pic) {
-    return (gvwrite(pic->custom_ptr, (const char *)data, data_size) == data_size) ? 1 : 0;
+    return gvwrite(pic->custom_ptr, (const char *)data, data_size) == data_size ? 1 : 0;
 }
 
 static void webp_format(GVJ_t * job)
