@@ -405,7 +405,6 @@ static int handle_stdin_events(GVJ_t *job)
 static int handle_file_events(GVJ_t *job, int inotify_fd)
 {
     int avail, ret, len, ln, rc = 0;
-    static char *buf;
     char *bf, *p;
     struct inotify_event *event;
 
@@ -416,14 +415,17 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
     }
 
     if (avail) {
-        buf = realloc(buf, avail);
+        assert(avail > 0 && "invalid value from FIONREAD");
+        void *buf = malloc((size_t)avail);
         if (!buf) {
-            fprintf(stderr,"problem with realloc(%d)\n", avail);
+            fprintf(stderr, "out of memory (could not allocate %d bytes)\n",
+                    avail);
             return -1;
         }
         len = read(inotify_fd, buf, avail);
         if (len != avail) {
             fprintf(stderr,"avail = %u, len = %u\n", avail, len);
+            free(buf);
             return -1;
         }
         bf = buf;
@@ -464,6 +466,7 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
             bf += ln;
             len -= ln;
         }
+        free(buf);
         if (len != 0) {
             fprintf(stderr,"length miscalculation, len = %d\n", len);
             return -1;
