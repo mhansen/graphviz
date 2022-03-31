@@ -422,9 +422,9 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
                     avail);
             return -1;
         }
-        len = read(inotify_fd, buf, avail);
+        len = (int)read(inotify_fd, buf, (size_t)avail);
         if (len != avail) {
-            fprintf(stderr,"avail = %u, len = %u\n", avail, len);
+            fprintf(stderr,"avail = %d, len = %d\n", avail, len);
             free(buf);
             return -1;
         }
