@@ -431,8 +431,7 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
         bf = buf;
         while (len > 0) {
     	    event = (struct inotify_event *)bf;
-	    switch (event->mask) {
-	    case IN_MODIFY:
+	    if (event->mask == IN_MODIFY) {
 		p = strrchr(job->input_filename, '/');
 		if (p)
 		    p++;
@@ -442,25 +441,6 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
 		    job->callbacks->read(job, job->input_filename, job->layout_type);
 		    rc++;
 		}
-		break;
-
-            case IN_ACCESS:
-            case IN_ATTRIB:
-            case IN_CLOSE_WRITE:
-            case IN_CLOSE_NOWRITE:
-            case IN_OPEN:
-            case IN_MOVED_FROM:
-            case IN_MOVED_TO:
-            case IN_CREATE:
-            case IN_DELETE:
-            case IN_DELETE_SELF:
-            case IN_MOVE_SELF:
-            case IN_UNMOUNT:
-            case IN_Q_OVERFLOW:
-            case IN_IGNORED:
-            case IN_ISDIR:
-            case IN_ONESHOT:
-		break;
     	    }
 	    ln = event->len + sizeof(struct inotify_event);
             bf += ln;
