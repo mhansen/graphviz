@@ -382,7 +382,7 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
         | KeyPressMask
         | StructureNotifyMask
         | ExposureMask);
-    XSelectInput(dpy, window->win, window->event_mask);
+    XSelectInput(dpy, window->win, (long)window->event_mask);
     window->wm_delete_window_atom =
         XInternAtom(dpy, "WM_DELETE_WINDOW", False);
     XSetWMProtocols(dpy, window->win, &window->wm_delete_window_atom, 1);
