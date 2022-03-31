@@ -159,7 +159,7 @@ static cairo_surface_t* webp_loadimage(GVJ_t * job, usershape_t *us)
 /* paint image into required location in graph */
 static void webp_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
-    cairo_t *cr = (cairo_t *) job->context; /* target context */
+    cairo_t *cr = job->context; /* target context */
     cairo_surface_t *surface;	 /* source surface */
 
     surface = webp_loadimage(job, us);
