@@ -55,7 +55,6 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
     VP8StatusCode status = VP8_STATUS_OK;
     cairo_surface_t *surface = NULL; /* source surface */
     int ok;
-    uint32_t data_size = 0;
     void* data = NULL;
 
     if (!WebPInitDecoderConfig(&config)) {
@@ -64,12 +63,17 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
     }
 
     fseek(in, 0, SEEK_END);
-    data_size = ftell(in);
+    long size = ftell(in);
+    if (size < 0) {
+	fprintf(stderr, "Error: WebP could not determine %s size\n", in_file);
+	return NULL;
+    }
+    size_t data_size = (size_t)size;
     fseek(in, 0, SEEK_SET);
     data = malloc(data_size);
     ok = (fread(data, data_size, 1, in) == 1);
     if (!ok) {
-        fprintf(stderr, "Error: WebP could not read %d bytes of data from %s\n",
+        fprintf(stderr, "Error: WebP could not read %zu bytes of data from %s\n",
             data_size, in_file);
         free(data);
         return NULL;
