@@ -55,9 +55,17 @@ static void webp_format(GVJ_t * job)
 	goto Error;
     }
 
-    picture.width = job->width;
-    picture.height = job->height;
-    stride = 4 * job->width;
+    // if either dimension exceeds the WebP API, map this to one of its errors
+    if ((unsigned)INT_MAX / 4 < job->width || job->height > (unsigned)INT_MAX) {
+	int error = VP8_ENC_ERROR_BAD_DIMENSION;
+	fprintf(stderr, "Error! Cannot encode picture as WebP\n");
+	fprintf(stderr, "Error code: %d (%s)\n", error, kErrorMessages[error]);
+	goto Error;
+    }
+
+    picture.width = (int)job->width;
+    picture.height = (int)job->height;
+    stride = 4 * (int)job->width;
 
     picture.writer = writer;
     picture.custom_ptr = job;
