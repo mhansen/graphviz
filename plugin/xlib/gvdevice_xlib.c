@@ -404,7 +404,7 @@ static int handle_stdin_events(GVJ_t *job)
 #ifdef HAVE_SYS_INOTIFY_H
 static int handle_file_events(GVJ_t *job, int inotify_fd)
 {
-    int avail, ret, len, ln, rc = 0;
+    int avail, ret, len, rc = 0;
     char *bf, *p;
     struct inotify_event *event;
 
@@ -442,9 +442,10 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
 		    rc++;
 		}
     	    }
-	    ln = event->len + sizeof(struct inotify_event);
+	    size_t ln = event->len + sizeof(struct inotify_event);
+            assert(ln <= (size_t)len);
             bf += ln;
-            len -= ln;
+            len -= (int)ln;
         }
         free(buf);
         if (len != 0) {
