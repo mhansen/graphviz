@@ -913,11 +913,6 @@ for source in sources.split("\x00")[:-1]:
 
   print(f"checking {source}...")
 
-  # FIXME: this file contains invalid UTF-8 characters
-  if source == "windows/cmd/fc-fix/fc-fix.cpp":
-    print(f"skipping {source} due to malformed content")
-    continue
-
   with open(source, "rt", encoding="utf-8") as f:
     original = f.read()
 
