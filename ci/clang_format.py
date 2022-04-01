@@ -875,7 +875,6 @@ EXCLUDE = (
   "tclpkg/tkstubs/tkStubImg.c",
   "tclpkg/tkstubs/tkStubLib.c",
   "tests/unit_tests/lib/common/command_line.c",
-  "windows/cmd/fc-fix/fc-fix.cpp",
   "windows/cmd/lefty/dot2l/dotparse.c",
   "windows/cmd/lefty/dot2l/dotparse.h",
   "windows/gvedit/Application.h",
