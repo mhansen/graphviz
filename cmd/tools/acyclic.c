@@ -82,7 +82,7 @@ static int dfs(Agraph_t * g, Agnode_t * t, int hasCycle)
 		    addRevEdge(g, e);
 	    } else {
 		char* key = agnameof (e);
-		if (!key || (agedge(g, h, t, key, 0) == 0))
+		if (!key || agedge(g, h, t, key, 0) == 0)
 		    addRevEdge(g, e);
 	    }
 	    agdelete(g, e);
@@ -121,7 +121,7 @@ static FILE *openFile(const char *name, const char *mode)
 		cmd, name, modestr);
 	graphviz_exit(-1);
     }
-    return (fp);
+    return fp;
 }
 
 static void init(int argc, char *argv[])
