@@ -119,10 +119,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tred", "cmd\tools\tred.vcxp
 		{D6FD0DE5-5305-458E-8CA5-FCA4B8E05B04} = {D6FD0DE5-5305-458E-8CA5-FCA4B8E05B04}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dotty", "cmd\dotty\dotty.vcxproj", "{863A7931-DC7C-47C4-94E6-3D053BFE771A}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lneato", "cmd\lneato\lneato.vcxproj", "{23D7A1F0-621B-474A-A45F-2490C9935C1E}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "unflatten", "cmd\tools\unflatten.vcxproj", "{0062B64B-88F1-4104-A063-3823925A7A34}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C0663A08-F276-4DD6-B17C-E501EE066F7C} = {C0663A08-F276-4DD6-B17C-E501EE066F7C}
@@ -219,8 +215,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gvplugin_gdiplus", "plugin\gdiplus\gvplugin_gdiplus.vcxproj", "{0F4D5D8F-F4D6-4A5D-97E0-9B482257F493}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "version", "lib\version\version.vcxproj", "{320318AF-81FB-446A-9DB4-7D561F712761}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lefty", "cmd\lefty\lefty.vcxproj", "{40597156-1B95-4A22-8F2B-D6B81B747CF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

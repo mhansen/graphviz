@@ -1587,37 +1587,6 @@ fi
 AM_CONDITIONAL(WITH_DEVIL, [test "x$use_devil" = "xYes"])
 
 dnl -----------------------------------
-dnl lefty
-
-AC_ARG_ENABLE([lefty],
-  AS_HELP_STRING([--enable-lefty], [Enable building the lefty binary. Requires X11, Xaw, Xmu, Xt.]))
-
-AS_IF([test "x$enable_lefty" = "xyes"], [
-  use_lefty=Yes
-
-  PKG_CHECK_MODULES([XMU], [xmu], [
-    PKG_CHECK_MODULES([XAW], [xaw7], [
-      dnl succesfully found xmu and xaw
-    ], [
-      use_lefty="No (missing Xaw)"
-      AS_IF([test "x$enable_lefty" = "xyes"], [
-        AC_MSG_ERROR([Could not find Xaw, cannot build lefty])
-      ])
-    ])
-  ], [
-    use_lefty="No (missing Xmu)"
-    AS_IF([test "x$enable_lefty" = "xyes"], [
-      AC_MSG_ERROR([Could not find Xmu, cannot build lefty])
-    ])
-  ])
-], [
-  use_lefty="No (disabled by default)"
-])
-
-AM_CONDITIONAL(WITH_LEFTY, [test "x$use_lefty" = "xYes"])
-AM_CONDITIONAL([WITH_XAW], [test "x$use_lefty" = "xYes"])
-
-dnl -----------------------------------
 dnl INCLUDES and LIBS for Z
 
 AC_ARG_WITH(zincludedir,
@@ -2705,18 +2674,6 @@ AC_CONFIG_FILES(Makefile
 	cmd/tools/Makefile
 	cmd/gvpr/Makefile
 	cmd/gvpr/lib/Makefile
-	cmd/lefty/ws/x11/libfilereq/Makefile
-	cmd/lefty/ws/x11/Makefile
-	cmd/lefty/ws/mswin32/Makefile
-	cmd/lefty/ws/Makefile
-	cmd/lefty/os/unix/Makefile
-	cmd/lefty/os/mswin32/Makefile
-	cmd/lefty/os/Makefile
-	cmd/lefty/dot2l/Makefile
-	cmd/lefty/examples/Makefile
-	cmd/lefty/Makefile
-	cmd/lneato/Makefile
-	cmd/dotty/Makefile
 	cmd/smyrna/Makefile
 	cmd/gvmap/Makefile
 	cmd/mingle/Makefile
@@ -2819,7 +2776,6 @@ echo "  circo:         Yes (always enabled)"
 echo "  twopi:         Yes (always enabled)"
 echo "  gvpr:          Yes (always enabled)"
 echo "  gvmap:         Yes (always enabled)"
-echo "  lefty:         $use_lefty"
 echo "  smyrna:        $use_smyrna"
 echo "  gvedit:        $use_qt"
 echo ""
