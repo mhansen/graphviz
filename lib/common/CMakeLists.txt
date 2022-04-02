@@ -44,6 +44,7 @@ add_custom_command(
 add_custom_command(
   OUTPUT common/colortbl.h
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/color_lib
+          ${CMAKE_SOURCE_DIR}/awk/colortbl.awk
   COMMAND ${CMAKE_COMMAND} -E make_directory
           "${CMAKE_CURRENT_BINARY_DIR}/common"
   COMMAND ${AWK_EXECUTABLE} -f ${CMAKE_SOURCE_DIR}/awk/colortbl.awk
