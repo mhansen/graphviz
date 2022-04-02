@@ -43,7 +43,7 @@ target_include_directories(gvc
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../pathplan>
     $<INSTALL_INTERFACE:include/graphviz>
   PRIVATE
-    ${TOP_SOURCE_DIR}
+    ../..
 )
 
 target_link_libraries(gvc PRIVATE

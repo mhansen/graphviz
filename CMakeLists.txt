@@ -81,7 +81,6 @@ set(PLUGIN_INSTALL_DIR      ${LIBRARY_INSTALL_DIR}/graphviz)
 set(PKGCONFIG_DIR           ${LIBRARY_INSTALL_DIR}/pkgconfig)
 # TODO: Find a way to check for groff and ps2pdf for manpage pdf generation
 # set(MAN_PDF_INSTALL_DIR share/graphviz/doc/pdf)
-set(TOP_SOURCE_DIR          "${CMAKE_CURRENT_SOURCE_DIR}")
 set(TOP_BINARY_DIR          "${CMAKE_CURRENT_BINARY_DIR}")
 set(WINDOWS_DEPENDENCY_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/windows/dependencies/libraries")
 set(WINDOWS_DEPENDENCY_VCPKG_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/windows/dependencies/libraries/vcpkg/installed")
