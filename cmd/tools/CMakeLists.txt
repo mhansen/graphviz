@@ -41,15 +41,15 @@ function(add_simple_tool name)
   add_executable(${name} ${name}.c)
 
   target_include_directories(${name} PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
+    ../../lib
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pack
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ../../lib/cdt
+    ../../lib/cgraph
+    ../../lib/common
+    ../../lib/gvc
+    ../../lib/pack
+    ../../lib/pathplan
   )
 
   target_include_directories(${name} SYSTEM PRIVATE
@@ -84,15 +84,15 @@ add_executable(dijkstra
 )
 
 target_include_directories(dijkstra PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pack
+  ../../lib/pathplan
 )
 
 target_include_directories(dijkstra SYSTEM PRIVATE
@@ -123,15 +123,15 @@ add_executable(gml2gv
 )
 
 target_include_directories(gml2gv PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pack
+  ../../lib/pathplan
 )
 
 target_include_directories(gml2gv SYSTEM PRIVATE
@@ -146,12 +146,12 @@ tool_defaults(gml2gv)
 
 add_executable(gv2gml gv2gml.c)
 target_include_directories(gv2gml PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pathplan
 )
 target_include_directories(gv2gml SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
@@ -171,15 +171,15 @@ if(EXPAT_FOUND)
   )
 
   target_include_directories(graphml2gv PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
+    ../../lib
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pack
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ../../lib/cdt
+    ../../lib/cgraph
+    ../../lib/common
+    ../../lib/gvc
+    ../../lib/pack
+    ../../lib/pathplan
   )
 
   target_include_directories(graphml2gv SYSTEM PRIVATE
@@ -207,15 +207,15 @@ add_executable(gvcolor
 )
 
 target_include_directories(gvcolor PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pack
+  ../../lib/pathplan
 )
 
 target_include_directories(gvcolor SYSTEM PRIVATE
@@ -237,15 +237,15 @@ add_executable(gvgen
 )
 
 target_include_directories(gvgen PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pack
+  ../../lib/pathplan
 )
 
 target_include_directories(gvgen SYSTEM PRIVATE
@@ -272,15 +272,15 @@ add_executable(gvpack
 )
 
 target_include_directories(gvpack PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pack
+  ../../lib/pathplan
 )
 
 target_include_directories(gvpack SYSTEM PRIVATE
@@ -307,15 +307,15 @@ if(EXPAT_FOUND)
   )
 
   target_include_directories(gxl2gv PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
+    ../../lib
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pack
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ../../lib/cdt
+    ../../lib/cgraph
+    ../../lib/common
+    ../../lib/gvc
+    ../../lib/pack
+    ../../lib/pathplan
   )
 
   target_include_directories(gxl2gv SYSTEM PRIVATE
@@ -367,15 +367,15 @@ add_executable(mm2gv
 )
 
 target_include_directories(mm2gv PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pack
+  ../../lib/pathplan
 )
 
 target_include_directories(mm2gv SYSTEM PRIVATE
@@ -397,15 +397,15 @@ add_executable(sccmap
 )
 
 target_include_directories(sccmap PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pack
+  ../../lib/pathplan
 )
 
 target_include_directories(sccmap SYSTEM PRIVATE

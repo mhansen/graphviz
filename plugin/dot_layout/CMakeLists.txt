@@ -5,13 +5,13 @@ add_library(gvplugin_dot_layout SHARED
 )
 
 target_include_directories(gvplugin_dot_layout PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pathplan
 )
 
 target_link_libraries(gvplugin_dot_layout

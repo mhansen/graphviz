@@ -17,12 +17,12 @@ if(ANN_FOUND)
   )
 
   target_include_directories(libmingle PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ..
+    ../cdt
+    ../cgraph
+    ../common
+    ../gvc
+    ../pathplan
   )
 
   target_include_directories(libmingle SYSTEM PRIVATE

@@ -111,15 +111,15 @@ add_library(common_obj OBJECT
 )
 
 target_include_directories(common_obj PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
-  ${GRAPHVIZ_LIB_DIR}/xdot
+  ../cdt
+  ../cgraph
+  ../gvc
+  ../pack
+  ../pathplan
+  ../xdot
 )
 
 target_include_directories(common_obj SYSTEM PRIVATE

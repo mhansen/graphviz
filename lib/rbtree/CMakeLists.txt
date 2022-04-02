@@ -10,5 +10,5 @@ add_library(rbtree STATIC
 )
 
 include_directories(rbtree PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
 )

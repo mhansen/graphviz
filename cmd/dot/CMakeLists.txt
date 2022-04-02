@@ -1,13 +1,13 @@
 add_definitions(-DDEMAND_LOADING=1)
 
 include_directories(
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pathplan
 )
 
 add_executable(dot

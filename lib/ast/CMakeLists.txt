@@ -22,5 +22,5 @@ add_library(ast STATIC
 )
 
 target_include_directories(ast PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
 )

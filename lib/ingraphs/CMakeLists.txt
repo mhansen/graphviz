@@ -7,9 +7,9 @@ add_library(ingraphs STATIC
 )
 
 target_include_directories(ingraphs PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
+  ..
+  ../cdt
+  ../cgraph
 )
 
 target_link_libraries(ingraphs PRIVATE

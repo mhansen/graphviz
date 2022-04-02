@@ -6,10 +6,10 @@ add_executable(gvpr-bin
 )
 
 target_include_directories(gvpr-bin PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/gvpr
+  ../../lib
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/gvpr
 )
 
 target_link_libraries(gvpr-bin

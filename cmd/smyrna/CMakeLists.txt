@@ -75,14 +75,14 @@ if(with_smyrna)
 
   target_include_directories(smyrna PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${GRAPHVIZ_LIB_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/gvpr
-    ${GRAPHVIZ_LIB_DIR}/pathplan
-    ${GRAPHVIZ_LIB_DIR}/xdot
+    ../../lib
+    ../../lib/cdt
+    ../../lib/cgraph
+    ../../lib/common
+    ../../lib/gvc
+    ../../lib/gvpr
+    ../../lib/pathplan
+    ../../lib/xdot
     gui
   )
 

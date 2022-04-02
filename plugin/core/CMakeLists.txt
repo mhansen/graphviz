@@ -19,16 +19,16 @@ add_library(gvplugin_core SHARED
 )
 
 target_include_directories(gvplugin_core PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/gvpr
-  ${GRAPHVIZ_LIB_DIR}/pathplan
-  ${GRAPHVIZ_LIB_DIR}/xdot
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/gvpr
+  ../../lib/pathplan
+  ../../lib/xdot
 )
 
 target_link_libraries(gvplugin_core

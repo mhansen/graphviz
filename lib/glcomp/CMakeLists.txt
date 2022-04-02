@@ -36,8 +36,8 @@ if(with_smyrna)
   )
 
   target_include_directories(glcomp PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
-    ${GRAPHVIZ_LIB_DIR}/common
+    ..
+    ../common
   )
 
   target_include_directories(glcomp SYSTEM PRIVATE

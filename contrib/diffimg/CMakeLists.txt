@@ -3,7 +3,7 @@ find_package(GD)
 if(GD_FOUND)
 
   add_executable(diffimg diffimg.c)
-  target_include_directories(diffimg PRIVATE ${GRAPHVIZ_LIB_DIR})
+  target_include_directories(diffimg PRIVATE ../../lib)
   target_include_directories(diffimg SYSTEM PRIVATE ${GD_INCLUDE_DIRS})
   target_link_libraries(diffimg ${GD_LIBRARIES})
 

@@ -23,7 +23,7 @@ add_library(pathplan SHARED
 )
 
 target_include_directories(pathplan PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 

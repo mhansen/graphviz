@@ -40,11 +40,11 @@ add_library(expr STATIC
 )
 
 target_include_directories(expr PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/.. # needed to find generated expr/y.tab.h
-  ${GRAPHVIZ_LIB_DIR}/ast
-  ${GRAPHVIZ_LIB_DIR}/vmalloc
-  ${GRAPHVIZ_LIB_DIR}/sfio
-  ${GRAPHVIZ_LIB_DIR}/cdt
+  ../ast
+  ../vmalloc
+  ../sfio
+  ../cdt
 )
