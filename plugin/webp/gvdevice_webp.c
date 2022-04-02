@@ -40,7 +40,7 @@ typedef enum {
 } format_type;
 
 static int writer(const uint8_t* data, size_t data_size, const WebPPicture* const pic) {
-    return (gvwrite((GVJ_t *)pic->custom_ptr, (const char *)data, data_size) == data_size) ? 1 : 0;
+    return gvwrite(pic->custom_ptr, (const char *)data, data_size) == data_size ? 1 : 0;
 }
 
 static void webp_format(GVJ_t * job)
@@ -55,12 +55,20 @@ static void webp_format(GVJ_t * job)
 	goto Error;
     }
 
-    picture.width = job->width;
-    picture.height = job->height;
-    stride = 4 * job->width;
+    // if either dimension exceeds the WebP API, map this to one of its errors
+    if ((unsigned)INT_MAX / 4 < job->width || job->height > (unsigned)INT_MAX) {
+	int error = VP8_ENC_ERROR_BAD_DIMENSION;
+	fprintf(stderr, "Error! Cannot encode picture as WebP\n");
+	fprintf(stderr, "Error code: %d (%s)\n", error, kErrorMessages[error]);
+	goto Error;
+    }
+
+    picture.width = (int)job->width;
+    picture.height = (int)job->height;
+    stride = 4 * (int)job->width;
 
     picture.writer = writer;
-    picture.custom_ptr = (void*)job;
+    picture.custom_ptr = job;
 
     preset = WEBP_PRESET_DRAWING;
 

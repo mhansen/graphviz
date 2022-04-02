@@ -55,7 +55,6 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
     VP8StatusCode status = VP8_STATUS_OK;
     cairo_surface_t *surface = NULL; /* source surface */
     int ok;
-    uint32_t data_size = 0;
     void* data = NULL;
 
     if (!WebPInitDecoderConfig(&config)) {
@@ -64,12 +63,17 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
     }
 
     fseek(in, 0, SEEK_END);
-    data_size = ftell(in);
+    long size = ftell(in);
+    if (size < 0) {
+	fprintf(stderr, "Error: WebP could not determine %s size\n", in_file);
+	return NULL;
+    }
+    size_t data_size = (size_t)size;
     fseek(in, 0, SEEK_SET);
     data = malloc(data_size);
-    ok = (fread(data, data_size, 1, in) == 1);
+    ok = fread(data, data_size, 1, in) == 1;
     if (!ok) {
-        fprintf(stderr, "Error: WebP could not read %d bytes of data from %s\n",
+        fprintf(stderr, "Error: WebP could not read %zu bytes of data from %s\n",
             data_size, in_file);
         free(data);
         return NULL;
@@ -89,7 +93,7 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
 	unsigned char *p, t;
 
 	for (y = 0; y < output_buffer->height; y++) {
-	    p = output_buffer->u.RGBA.rgba + (output_buffer->u.RGBA.stride * y);
+	    p = output_buffer->u.RGBA.rgba + output_buffer->u.RGBA.stride * y;
 	    for (x = 0; x < output_buffer->width; x++) {
 		t = p[0];     /* swap red/blue */
 		p[0] = p[2];
@@ -101,7 +105,7 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
 
 end:
     free(data);
-    ok = (status == VP8_STATUS_OK);
+    ok = status == VP8_STATUS_OK;
     if (!ok) {
 	fprintf(stderr, "Error: WebP decoding of %s failed.\n", in_file);
 	fprintf(stderr, "Status: %d (%s)\n", status, kStatusMessages[status]);
@@ -159,14 +163,16 @@ static cairo_surface_t* webp_loadimage(GVJ_t * job, usershape_t *us)
 /* paint image into required location in graph */
 static void webp_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
-    cairo_t *cr = (cairo_t *) job->context; /* target context */
+    (void)filled;
+
+    cairo_t *cr = job->context; /* target context */
     cairo_surface_t *surface;	 /* source surface */
 
     surface = webp_loadimage(job, us);
     if (surface) {
         cairo_save(cr);
 	cairo_translate(cr, b.LL.x, -b.UR.y);
-	cairo_scale(cr, (b.UR.x - b.LL.x)/(us->w), (b.UR.y - b.LL.y)/(us->h)); 
+	cairo_scale(cr, (b.UR.x - b.LL.x) / us->w, (b.UR.y - b.LL.y) / us->h);
         cairo_set_source_surface (cr, surface, 0, 0);
         cairo_paint (cr);
         cairo_restore(cr);
