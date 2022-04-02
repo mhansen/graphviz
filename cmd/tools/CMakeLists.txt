@@ -10,6 +10,8 @@ function(tool_defaults name)
   install(
     TARGETS ${name}
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
   )
 
   if(GZIP)
