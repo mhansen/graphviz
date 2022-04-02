@@ -59,9 +59,3 @@ GtkWidget*  create_pixmap              (GtkWidget       *widget,
 
 /* This is used to create the pixbufs used in the interface. */
 GdkPixbuf*  create_pixbuf              (const gchar     *filename);
-
-/* This is used to set ATK action descriptions. */
-void        glade_set_atk_action_description (AtkAction       *action,
-                                              const gchar     *action_name,
-                                              const gchar     *description);
-
