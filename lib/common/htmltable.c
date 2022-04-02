@@ -951,7 +951,7 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
     double width;
     textspan_t lp;
     textfont_t tf = {NULL,NULL,NULL,0.0,0,0};
-    double maxoffset, mxysize;
+    double maxoffset, mxysize = 0.0;
     bool simple = true; // one item per span, same font size/face, no flags
     double prev_fsize = -1;
     char* prev_fname = NULL;

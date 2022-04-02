@@ -82,7 +82,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     agxbuf xb;
     char buf[BUFS];
     unsigned char string[BUFS];
-    Agsym_t *sym, *sym2 = NULL, *sym3 = NULL;
+    Agsym_t *sym = NULL, *sym2 = NULL, *sym3 = NULL;
     int *ia = A->ia;
     int *ja = A->ja;
     double *val = (double *) (A->a);
@@ -181,7 +181,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 	for (j = ia[i]; j < ia[i + 1]; j++) {
 	    h = arr[ja[j]];
 	    e = agedge(g, n, h, NULL, 1);
-	    if (with_val && val) {
+	    if (sym && val) {
 		sprintf(buf, "%f", val[j]);
 		agxset(e, sym, buf);
 	    }

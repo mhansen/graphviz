@@ -813,7 +813,7 @@ static void transpose(graph_t * g, bool reverse)
 
 static int mincross(graph_t * g, int startpass, int endpass, int doBalance)
 {
-    int maxthispass, iter, trying, pass;
+    int maxthispass = 0, iter, trying, pass;
     int cur_cross, best_cross;
 
     if (startpass > 1) {
