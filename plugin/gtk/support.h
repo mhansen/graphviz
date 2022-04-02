@@ -43,7 +43,3 @@
  */
 GtkWidget*  lookup_widget              (GtkWidget       *widget,
                                         const gchar     *widget_name);
-
-
-/* Use this function to set the directory containing installed pixmaps. */
-void        add_pixmap_directory       (const gchar     *directory);
