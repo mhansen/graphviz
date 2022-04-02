@@ -244,9 +244,6 @@
 /* Define to the version of this package. */
 #define PACKAGE_VERSION VERSION
 
-/* Path separator character. */
-#define PATHSEPARATOR ":"
-
 /* Define if you want SFDP */
 #define SFDP 1
 /* #undef SFDP */
