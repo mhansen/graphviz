@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/unreachable.h>
 
 typedef struct {
     Agrec_t h;
@@ -157,6 +158,8 @@ static void init(int argc, char *argv[])
 		    cmd, optopt);
 	    usage(-1);
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     if (optind < argc) {
 	inFile = openFile(argv[optind], "r");
