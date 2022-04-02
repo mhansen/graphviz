@@ -16,7 +16,7 @@ if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
   target_include_directories(gvplugin_pango PRIVATE
     ../../lib
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${TOP_BINARY_DIR}/lib/common
+    ${CMAKE_BINARY_DIR}/lib/common
     ../../lib/cdt
     ../../lib/cgraph
     ../../lib/common
