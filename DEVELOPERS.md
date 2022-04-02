@@ -24,6 +24,8 @@ who will be affected by a new Graphviz release.
   dinoex@FreeBSD.org
 * [Homebrew](https://formulae.brew.sh/formula/graphviz#default),
   [@fxcoudert on Github](https://github.com/fxcoudert)
+* [Gentoo](https://packages.gentoo.org/packages/media-gfx/graphviz),
+  [@SoapGentoo on Gitlab](https://gitlab.com/SoapGentoo)
 * [@hpcc-hs/wasm](https://www.npmjs.com/package/@hpcc-js/wasm),
   [@GordonSmith on Github](https://github.com/GordonSmith)
 * [MacPorts](https://ports.macports.org/port/graphviz/summary),

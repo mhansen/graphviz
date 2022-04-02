@@ -278,7 +278,7 @@ include(package_info)
 include(CPack)
 
 # ==================================== Test ====================================
-Include(CTest)
+include(CTest)
 
 # ======================= Specify subdirectories to build ======================
 add_subdirectory(contrib/diffimg)

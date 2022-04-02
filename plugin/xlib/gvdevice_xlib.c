@@ -85,8 +85,13 @@ static void handle_expose(GVJ_t * job, XExposeEvent * eev)
     window_t *window;
 
     window = job->window;
+    assert(eev->width >= 0 &&
+           "Xlib returned an expose event with negative width");
+    assert(eev->height >= 0 &&
+           "Xlib returned an expose event with negative height");
     XCopyArea(eev->display, window->pix, eev->window, window->gc,
-              eev->x, eev->y, eev->width, eev->height, eev->x, eev->y);
+              eev->x, eev->y, (unsigned)eev->width, (unsigned)eev->height,
+              eev->x, eev->y);
 }
 
 static void handle_client_message(GVJ_t * job, XClientMessageEvent * cmev)
@@ -183,7 +188,10 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                 case ButtonPress:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    job->callbacks->button_press(job, xev.xbutton.button, pointer);
+                    assert(xev.xbutton.button >= 1 && xev.xbutton.button <= 5 &&
+                           "Xlib returned invalid button event");
+                    job->callbacks->button_press(job, (int)xev.xbutton.button,
+                                                 pointer);
 		    rc++;
                     break;
                 case MotionNotify:
@@ -197,7 +205,10 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                 case ButtonRelease:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    job->callbacks->button_release(job, xev.xbutton.button, pointer);
+                    assert(xev.xbutton.button >= 1 && xev.xbutton.button <= 5 &&
+                           "Xlib returned invalid button event");
+                    job->callbacks->button_release(job, (int)xev.xbutton.button,
+                                                   pointer);
 		    if (job->selected_href && job->selected_href[0] && xev.xbutton.button == 1)
 		        browser_show(job);
 		    rc++;
@@ -219,6 +230,8 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                     handle_client_message(job, &xev.xclient);
 		    rc++;
                     break;
+                default:
+                    break;
                 }
 	        break;
 	    }
@@ -234,10 +247,16 @@ static void update_display(GVJ_t *job, Display *dpy)
 
     window = job->window;
 
+    // window geometry is set to fixed values
+    assert(job->width <= (unsigned)INT_MAX && "out of range width");
+    assert(job->height <= (unsigned)INT_MAX && "out of range height");
+
     if (job->has_grown) {
 	XFreePixmap(dpy, window->pix);
+	assert(window->depth >= 0 && "Xlib returned invalid window depth");
 	window->pix = XCreatePixmap(dpy, window->win,
-			job->width, job->height, window->depth);
+	                            job->width, job->height,
+	                            (unsigned)window->depth);
 	job->has_grown = false;
 	job->needs_refresh = true;
     }
@@ -246,7 +265,7 @@ static void update_display(GVJ_t *job, Display *dpy)
                 	job->width, job->height);
 	surface = cairo_xlib_surface_create(dpy,
 			window->pix, window->visual,
-			job->width, job->height);
+			(int)job->width, (int)job->height);
     	job->context = cairo_create(surface);
 	job->external_context = true;
         job->callbacks->refresh(job);
@@ -327,9 +346,9 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     normalhints->x = 0;
     normalhints->y = 0;
     assert(job->width <= (unsigned)INT_MAX && "out of range width");
-    normalhints->width = job->width;
+    normalhints->width = (int)job->width;
     assert(job->height <= (unsigned)INT_MAX && "out of range height");
-    normalhints->height = job->height;
+    normalhints->height = (int)job->height;
 
     classhint = XAllocClassHint();
     classhint->res_name = "graphviz";
@@ -346,8 +365,9 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     XFree(normalhints);
     free(name);
 
+    assert(window->depth >= 0 && "Xlib returned invalid window depth");
     window->pix = XCreatePixmap(dpy, window->win, job->width, job->height,
-		window->depth);
+                                (unsigned)window->depth);
     if (argb)
         gcv.foreground = 0;
     else
@@ -362,14 +382,14 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
         | KeyPressMask
         | StructureNotifyMask
         | ExposureMask);
-    XSelectInput(dpy, window->win, window->event_mask);
+    XSelectInput(dpy, window->win, (long)window->event_mask);
     window->wm_delete_window_atom =
         XInternAtom(dpy, "WM_DELETE_WINDOW", False);
     XSetWMProtocols(dpy, window->win, &window->wm_delete_window_atom, 1);
     XMapWindow(dpy, window->win);
 }
 
-static int handle_stdin_events(GVJ_t *job, int stdin_fd)
+static int handle_stdin_events(GVJ_t *job)
 {
     int rc=0;
 
@@ -384,8 +404,7 @@ static int handle_stdin_events(GVJ_t *job, int stdin_fd)
 #ifdef HAVE_SYS_INOTIFY_H
 static int handle_file_events(GVJ_t *job, int inotify_fd)
 {
-    int avail, ret, len, ln, rc = 0;
-    static char *buf;
+    int avail, ret, len, rc = 0;
     char *bf, *p;
     struct inotify_event *event;
 
@@ -396,54 +415,39 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
     }
 
     if (avail) {
-        buf = realloc(buf, avail);
+        assert(avail > 0 && "invalid value from FIONREAD");
+        void *buf = malloc((size_t)avail);
         if (!buf) {
-            fprintf(stderr,"problem with realloc(%d)\n", avail);
+            fprintf(stderr, "out of memory (could not allocate %d bytes)\n",
+                    avail);
             return -1;
         }
-        len = read(inotify_fd, buf, avail);
+        len = (int)read(inotify_fd, buf, (size_t)avail);
         if (len != avail) {
-            fprintf(stderr,"avail = %u, len = %u\n", avail, len);
+            fprintf(stderr,"avail = %d, len = %d\n", avail, len);
+            free(buf);
             return -1;
         }
         bf = buf;
         while (len > 0) {
     	    event = (struct inotify_event *)bf;
-	    switch (event->mask) {
-	    case IN_MODIFY:
+	    if (event->mask == IN_MODIFY) {
 		p = strrchr(job->input_filename, '/');
 		if (p)
 		    p++;
 		else 
 		    p = job->input_filename;
-		if (strcmp((char*)&event->name, p) == 0) {
+		if (strcmp(event->name, p) == 0) {
 		    job->callbacks->read(job, job->input_filename, job->layout_type);
 		    rc++;
 		}
-		break;
-
-            case IN_ACCESS:
-            case IN_ATTRIB:
-            case IN_CLOSE_WRITE:
-            case IN_CLOSE_NOWRITE:
-            case IN_OPEN:
-            case IN_MOVED_FROM:
-            case IN_MOVED_TO:
-            case IN_CREATE:
-            case IN_DELETE:
-            case IN_DELETE_SELF:
-            case IN_MOVE_SELF:
-            case IN_UNMOUNT:
-            case IN_Q_OVERFLOW:
-            case IN_IGNORED:
-            case IN_ISDIR:
-            case IN_ONESHOT:
-		break;
     	    }
-	    ln = event->len + sizeof(struct inotify_event);
+	    size_t ln = event->len + sizeof(struct inotify_event);
+            assert(ln <= (size_t)len);
             bf += ln;
-            len -= ln;
+            len -= (int)ln;
         }
+        free(buf);
         if (len != 0) {
             fprintf(stderr,"length miscalculation, len = %d\n", len);
             return -1;
@@ -474,7 +478,8 @@ static void xlib_initialize(GVJ_t *firstjob)
     firstjob->display = dpy;
     firstjob->screen = scr;
 
-    keycodes = malloc(firstjob->numkeys * sizeof(KeyCode));
+    assert(firstjob->numkeys >= 0);
+    keycodes = malloc((size_t)firstjob->numkeys * sizeof(KeyCode));
     if (keycodes == NULL) {
         fprintf(stderr, "Failed to malloc %d*KeyCode\n", firstjob->numkeys);
         return;
@@ -580,7 +585,7 @@ static void xlib_finalize(GVJ_t *firstjob)
 
 	if (watching_stdin_p) {
 	    if (FD_ISSET(stdin_fd, &rfds)) {
-                ret = handle_stdin_events(firstjob, stdin_fd);
+                ret = handle_stdin_events(firstjob);
 	        if (ret < 0) {
 	            watching_stdin_p = false;
                     FD_CLR(stdin_fd, &rfds);

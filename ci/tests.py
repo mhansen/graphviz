@@ -106,7 +106,6 @@ def test_existence(binary: str):
     "gvmap.sh",
     "gxl2dot",
     "prune",
-    "vimdot",
   ]
 
   tools_not_built_with_msbuild = [
@@ -174,6 +173,10 @@ def test_existence(binary: str):
   if binary == "smyrna" and is_cmake() and platform.system() != "Linux":
     check_that_tool_does_not_exist(binary, os_id)
     pytest.skip("smyrna is not built on non-Linux due to lacking dependencies")
+
+  if binary == "vimdot" and platform.system() == "Windows":
+    check_that_tool_does_not_exist(binary, os_id)
+    pytest.skip("vimdot is not installed on Windows")
 
   assert shutil.which(binary) is not None
 

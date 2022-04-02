@@ -1,7 +1,7 @@
 # Header checks
 include(CheckIncludeFile)
 
-check_include_file( fcntl .h            HAVE_FCNTL_H            )
+check_include_file( fcntl.h             HAVE_FCNTL_H            )
 check_include_file( search.h            HAVE_SEARCH_H           )
 check_include_file( stat.h              HAVE_STAT_H             )
 check_include_file( sys/inotify.h       HAVE_SYS_INOTIFY_H      )
