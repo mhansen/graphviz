@@ -255,9 +255,6 @@
    `char[]'. */
 /* #undef YYTEXT_POINTER */
 
-/* Define to `int' if <sys/types.h> doesn't define. */
-#define gid_t int
-
 /* Define to `int' if <sys/types.h> does not define. */
 /* #undef pid_t */
 
