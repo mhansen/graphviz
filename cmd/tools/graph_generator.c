@@ -222,12 +222,11 @@ ipow (int base, int power)
 
 void makeTree(int depth, int nary, edgefn ef)
 {
-    unsigned int i, j;
-    unsigned int n = (ipow(nary,depth)-1)/(nary-1); /* no. of non-leaf nodes */
-    unsigned int idx = 2;
+    int n = (ipow(nary, depth) - 1) / (nary - 1); // no. of non-leaf nodes
+    int idx = 2;
 
-    for (i = 1; i <= n; i++) {
-	for (j = 0; j < nary; j++) {
+    for (int i = 1; i <= n; i++) {
+	for (int j = 0; j < nary; j++) {
 	    ef (i, idx++);
 	}
     }
@@ -472,7 +471,7 @@ void makeRandom(int h, int w, edgefn ef)
 {
     int i, j, type, size, depth;
 
-    srand(time(0));
+    srand((unsigned)time(0));
     if (rand()%2==1)
 	type = 1;
     else
@@ -775,7 +774,7 @@ makeTreeGen (int N)
     tg->T = genCnt(N);
     tg->sp = mkStack(N+1);
     tg->tp = mkTree(N+1);
-    srand(time(0));
+    srand((unsigned)time(0));
 
     return tg;
 }
