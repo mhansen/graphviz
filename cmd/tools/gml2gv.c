@@ -15,6 +15,7 @@
 #include <getopt.h>
 
 #include <cgraph/exit.h>
+#include <cgraph/unreachable.h>
 
 #define N_NEW(n,t)       calloc((n),sizeof(t))
 
@@ -119,6 +120,8 @@ static void initargs(int argc, char **argv)
 			optopt);
 		usage(1);
 	    }
+	default:
+	    UNREACHABLE();
 	}
     }
 
