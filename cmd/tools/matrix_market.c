@@ -189,7 +189,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    break;
 	case MATRIX_TYPE_PATTERN:
 	    for (i = 0; i < nz; i++) {
-		fscanf(f, "%d %d\n", &I[i], &J[i]);
+		int num = fscanf(f, "%d %d\n", &I[i], &J[i]);
+		(void)num;
+		assert(num == 2);
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
