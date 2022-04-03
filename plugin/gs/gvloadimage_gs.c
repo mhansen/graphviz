@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -64,8 +64,10 @@ static int gs_writer(void *caller_handle, const char *str, int len)
 {
     GVJ_t *job = caller_handle;
 
-    if (job->common->verbose)
-    	return fwrite(str, 1, len, stderr);
+    if (job->common->verbose) {
+        assert(len >= 0);
+        return (int)fwrite(str, 1, (size_t)len, stderr);
+    }
     return len;
 }
 
