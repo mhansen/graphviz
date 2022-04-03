@@ -56,7 +56,7 @@ argb2rgba ( unsigned int width, unsigned int height, char *data)
 static gboolean
 writer ( const gchar *buf, gsize count, GError **error, gpointer data)
 {
-  return count == gvwrite((GVJ_t *)data, buf, count);
+  return count == gvwrite(data, buf, count);
 }
 
 static void gdk_format(GVJ_t * job)
