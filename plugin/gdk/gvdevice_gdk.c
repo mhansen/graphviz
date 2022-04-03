@@ -45,7 +45,7 @@ argb2rgba ( unsigned int width, unsigned int height, char *data)
     for (y = 0; y < height; y++) {
         for (x = 0; x < width; x++) {
             /* swap red and blue */
-            unsigned char r = data[Ra];
+            char r = data[Ra];
             data[Bb] = data[Ba];
 	    data[Rb] = r;
             data += 4;
