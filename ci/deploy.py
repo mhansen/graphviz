@@ -70,9 +70,9 @@ def checksum(path: Path) -> Path:
 
   log.info(f"SHA256 summing {path}")
   check = Path(f"{path}.sha256")
-  with open(check, "wt", encoding="utf-8") as f:
-    with open(path, "rb") as data:
-      f.write(f"{hashlib.sha256(data.read()).hexdigest()}  {path}\n")
+  data = path.read_bytes()
+  check.write_text(f"{hashlib.sha256(data).hexdigest()}  {path}\n",
+                   encoding="utf-8")
   return check
 
 def is_macos_artifact(path: Path) -> bool:
@@ -133,8 +133,7 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
 
   # retrieve version name left by prior CI tasks
   log.info("reading GRAPHVIZ_VERSION")
-  with open("GRAPHVIZ_VERSION", "rt", encoding="utf-8") as f:
-    gv_version = f.read().strip()
+  gv_version = Path("GRAPHVIZ_VERSION").read_text(encoding="utf-8").strip()
   log.info(f"GRAPHVIZ_VERSION == {gv_version}")
 
   # if we were not passed an explicit version, use the one from the

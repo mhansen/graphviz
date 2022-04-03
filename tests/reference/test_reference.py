@@ -141,12 +141,12 @@ def test_reference(src: str, format: str, reference: str):
       subprocess.check_call(["diffimg", ref, output])
     else:
       fail = False
-      with open(ref, "rt", encoding="utf-8") as a:
-        with open(output, "rt", encoding="utf-8") as b:
-          for line in difflib.unified_diff(a.read(), b.read(),
-                                           fromfile=str(ref),
-                                           tofile=str(output)):
-            sys.stderr.write(f"{line}\n")
-            fail = True
+      a = ref.read_text(encoding="utf-8")
+      b = output.read_text(encoding="utf-8")
+      for line in difflib.unified_diff(a, b,
+                                       fromfile=str(ref),
+                                       tofile=str(output)):
+        sys.stderr.write(f"{line}\n")
+        fail = True
       if fail:
         raise RuntimeError(f"diff {ref} {output} failed")

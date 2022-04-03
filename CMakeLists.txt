@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 3.9 FATAL_ERROR)
-project (Graphviz)
+cmake_minimum_required(VERSION 3.9 FATAL_ERROR)
+project(Graphviz)
 
 include(FeatureSummary)
 
@@ -42,11 +42,6 @@ endif()
 
 if(with_sfdp)
   add_definitions(-DSFDP)
-endif()
-
-if(with_smyrna)
-  # TODO include dependency checks
-  add_definitions(-DSMYRNA)
 endif()
 
 # ===================== Append local CMake module directory ====================
@@ -157,13 +152,13 @@ if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
 else()
   find_package(Python3 COMPONENTS Interpreter)
 endif()
+if(NOT Python3_EXECUTABLE)
+  message(FATAL_ERROR "Python 3 not found")
+endif()
 
 if(DEFINED VERSION)
   set(GRAPHVIZ_VERSION_STRING "${VERSION}")
 else()
-  if(NOT Python3_EXECUTABLE)
-    message(FATAL_ERROR "Python 3 not found")
-  endif()
   execute_process(
     COMMAND           ${Python3_EXECUTABLE} gen_version.py
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -178,9 +173,6 @@ else()
   endif()
 endif()
 
-if(NOT Python3_EXECUTABLE)
-  message(FATAL_ERROR "Python 3 not found")
-endif()
 # Set GRAPHVIZ_VERSION_BUILD to time of last commit, or to 0 if that fails.
 execute_process(
   COMMAND           ${Python3_EXECUTABLE} gen_version.py --committer-date-graphviz

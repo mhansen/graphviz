@@ -13,9 +13,8 @@
 
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvplugin_render.h>
+#include <gvc/gvio.h>
 #include "gvplugin_gdiplus.h"
-
-extern "C" size_t gvwrite(GVJ_t *job, const unsigned char *s, unsigned int len);
 
 using namespace Gdiplus;
 
@@ -40,7 +39,7 @@ static void gdiplus_format(GVJ_t *job)
 	/* NOTE: this is somewhat inefficient since we should be streaming directly to gvdevice rather than buffering first */
 	/* ... however, GDI+ requires any such direct IStream to implement Seek Read, Write, Stat methods and gvdevice really only offers a write-once model */
 	stream->Release();
-	gvwrite(job, (const unsigned char*)GlobalLock(buffer), GlobalSize(buffer));
+	gvwrite(job, (const char*)GlobalLock(buffer), GlobalSize(buffer));
 
 	GlobalFree(buffer);
 }
