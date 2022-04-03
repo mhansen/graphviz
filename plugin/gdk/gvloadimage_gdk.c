@@ -189,6 +189,8 @@ static cairo_surface_t* gdk_loadimage(GVJ_t * job, usershape_t *us)
 
 static void gdk_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+    (void)filled;
+
     cairo_t *cr = (cairo_t *) job->context; /* target context */
 #ifndef HAVE_CAIRO_SURFACE_SET_MIME_DATA
     GdkPixbuf *image;
