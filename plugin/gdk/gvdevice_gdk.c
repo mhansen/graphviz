@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/unreachable.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #ifdef HAVE_PANGOCAIRO
@@ -81,6 +81,8 @@ static void gdk_format(GVJ_t * job)
     case FORMAT_TIFF:
 	format_str = "tiff";
 	break;
+    default:
+	UNREACHABLE();
     }
 
     argb2rgba(job->width, job->height, job->imagedata);
