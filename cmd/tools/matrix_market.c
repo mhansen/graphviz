@@ -213,7 +213,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    val = malloc(2 * nz * sizeof(double));
 	    v = val;
 	    for (i = 0; i < nz; i++) {
-		fscanf(f, "%d %d %lg %lg\n", &I[i], &J[i], &v[0], &v[1]);
+		int num = fscanf(f, "%d %d %lg %lg\n", &I[i], &J[i], &v[0], &v[1]);
+		(void)num;
+		assert(num == 4);
 		v += 2;
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
