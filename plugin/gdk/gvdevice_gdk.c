@@ -9,9 +9,11 @@
  *************************************************************************/
 
 #include "config.h"
+#include <assert.h>
 #include <cgraph/unreachable.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
+#include <limits.h>
 #ifdef HAVE_PANGOCAIRO
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
@@ -87,14 +89,17 @@ static void gdk_format(GVJ_t * job)
 
     argb2rgba(job->width, job->height, job->imagedata);
 
+    assert(job->width <= (unsigned)INT_MAX / 4 && "width out of range");
+    assert(job->height <= (unsigned)INT_MAX && "height out of range");
+
     pixbuf = gdk_pixbuf_new_from_data(
                 (unsigned char*)(job->imagedata), // data
                 GDK_COLORSPACE_RGB,     // colorspace
                 TRUE,                   // has_alpha
                 8,                      // bits_per_sample
-                job->width,             // width
-                job->height,            // height
-                4 * job->width,         // rowstride
+                (int)job->width,        // width
+                (int)job->height,       // height
+                4 * (int)job->width,    // rowstride
                 NULL,                   // destroy_fn
                 NULL                    // destroy_fn_data
                );
