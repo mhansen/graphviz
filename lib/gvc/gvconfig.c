@@ -43,9 +43,6 @@ static int glob (GVC_t * gvc, char*, int, int (*errfunc)(const char *, int), glo
 #include	<glob.h>
 #endif 
 #include	<sys/stat.h>
-#ifdef HAVE_UNISTD_H
-#include	<unistd.h>
-#endif
 #endif
 
 #ifdef __APPLE__
