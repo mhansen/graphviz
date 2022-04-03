@@ -875,7 +875,6 @@ EXCLUDE = (
   "tclpkg/tkstubs/tkStubImg.c",
   "tclpkg/tkstubs/tkStubLib.c",
   "tests/unit_tests/lib/common/command_line.c",
-  "windows/cmd/fc-fix/fc-fix.cpp",
   "windows/cmd/lefty/dot2l/dotparse.c",
   "windows/cmd/lefty/dot2l/dotparse.h",
   "windows/gvedit/Application.h",
@@ -912,11 +911,6 @@ sources = subprocess.check_output(["git", "ls-files", "-z", "--", "**/*.c",
 for source in sources.split("\x00")[:-1]:
 
   print(f"checking {source}...")
-
-  # FIXME: this file contains invalid UTF-8 characters
-  if source == "windows/cmd/fc-fix/fc-fix.cpp":
-    print(f"skipping {source} due to malformed content")
-    continue
 
   with open(source, "rt", encoding="utf-8") as f:
     original = f.read()
