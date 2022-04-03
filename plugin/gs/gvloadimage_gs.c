@@ -197,7 +197,7 @@ static cairo_pattern_t* gvloadimage_gs_load(GVJ_t * job, usershape_t *us)
 
 #define GSAPI_REVISION_REQUIRED 863
 	rc = gsapi_revision(&gsapi_revision_info, sizeof(gsapi_revision_t));
-        if (rc && rc < sizeof(gsapi_revision_t)) {
+        if (rc && rc < (int)sizeof(gsapi_revision_t)) {
     	    job->common->errorfn("gs revision - struct too short %d\n", rc);
 	    return NULL;
         }
