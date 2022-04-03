@@ -23,8 +23,10 @@ add_library(test_common STATIC
 set_target_properties(test_common PROPERTIES CXX_STANDARD 20)
 set_target_properties(test_common PROPERTIES CXX_STANDARD_REQUIRED ON)
 target_include_directories(test_common PRIVATE
-  ${Boost_INCLUDE_DIRS}
   ${GRAPHVIZ_LIB_DIR}
+)
+target_include_directories(test_common SYSTEM PRIVATE
+  ${Boost_INCLUDE_DIRS}
   ${RAPIDXML_INCLUDE_DIRS}
   ${SVGPP_INCLUDE_DIRS}
 )
