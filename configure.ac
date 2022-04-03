@@ -1913,8 +1913,6 @@ if test "x$with_gdk" != "xyes"; then
 else
   PKG_CHECK_MODULES(GDK, [gdk-2.0],[
     use_gdk="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_GDK,1,
-      [Define if you have the gdk library])
     AC_SUBST([GDK_CFLAGS])
     AC_SUBST([GDK_LIBS])
     save_LIBS=$LIBS
