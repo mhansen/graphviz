@@ -224,6 +224,8 @@ static cairo_pattern_t* gvloadimage_gs_load(GVJ_t * job, usershape_t *us)
 
 static void gvloadimage_gs_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+    (void)filled;
+
     cairo_t *cr = job->context; // target context
     cairo_pattern_t *pattern = gvloadimage_gs_load(job, us);
 
