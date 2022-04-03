@@ -153,7 +153,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	case MATRIX_TYPE_INTEGER:
 	    vali = malloc(nz * sizeof(int));
 	    for (i = 0; i < nz; i++) {
-		fscanf(f, "%d %d %d\n", &I[i], &J[i], &vali[i]);
+		int num = fscanf(f, "%d %d %d\n", &I[i], &J[i], &vali[i]);
+		(void)num;
+		assert(num == 3);
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
