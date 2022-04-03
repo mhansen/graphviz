@@ -99,9 +99,6 @@
 /* Define if you have the glade library */
 #define HAVE_GLADE 1
 
-/* Define if you have the glitz library */
-/* #undef HAVE_GLITZ */
-
 /* Define if you have the gs library */
 /* #undef HAVE_GS */
 
