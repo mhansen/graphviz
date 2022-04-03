@@ -334,7 +334,9 @@ char * gvconfig_libdir(GVC_t * gvc)
 			libdir = line;
 		    else
 		        libdir = gmalloc(len);
-		    bcopy(p, libdir, ind);
+		    if (ind > 0) {
+		        memmove(libdir, p, ind);
+		    }
 		    /* plugins are in "graphviz" subdirectory */
 		    strcpy(libdir+ind, "/graphviz");  
 		    break;
