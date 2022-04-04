@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -75,7 +76,7 @@ static void lasi_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 			us->data = NULL;
 #else
 		us->data = malloc(statbuf.st_size);
-		read(fd, us->data, statbuf.st_size);
+		fread(us->data, 1, (size_t)statbuf.st_size, us->f);
 #endif
 		us->must_inline = true;
                 break;
