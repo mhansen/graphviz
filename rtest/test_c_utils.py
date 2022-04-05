@@ -1,4 +1,4 @@
-"""test ../lib/cgraph/sprint.c"""
+"""test ../lib/cgraph/ internal generic utility code"""
 
 import os
 from pathlib import Path
