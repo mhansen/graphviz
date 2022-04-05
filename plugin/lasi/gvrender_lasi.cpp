@@ -8,12 +8,21 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include "config.h"
-
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <LASi.h>
+
+// Confusingly, Freetype (included transitively by LASi), ship their Autotools
+// config.h. As a result, we get macros like `HAVE_FCNTL_H` injected from their
+// headers, overriding ours. Suppress this and force ours into scope.
+#ifdef HAVE_FCNTL_H
+#undef HAVE_FCNTL_H
+#endif
+#ifdef HAVE_UNISTD_H
+#undef HAVE_UNISTD_H
+#endif
+#include "config.h"
 
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
