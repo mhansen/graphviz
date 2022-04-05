@@ -244,9 +244,6 @@
 /* Define to the version of this package. */
 #define PACKAGE_VERSION VERSION
 
-/* Path separator character. */
-#define PATHSEPARATOR ":"
-
 /* Define if you want SFDP */
 #define SFDP 1
 /* #undef SFDP */
@@ -254,15 +251,9 @@
 /* Define if you want CGRAPH */
 #define WITH_CGRAPH 1
 
-/* Define to 1 if the X Window System is missing or not being used. */
-#define X_DISPLAY_MISSING 1
-
 /* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
    `char[]'. */
 /* #undef YYTEXT_POINTER */
-
-/* Define to `int' if <sys/types.h> doesn't define. */
-#define gid_t int
 
 /* Define to `int' if <sys/types.h> does not define. */
 /* #undef pid_t */
