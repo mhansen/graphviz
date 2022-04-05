@@ -14,8 +14,6 @@
  * Updated by Emden Gansner
  */
 
-#include "config.h"
-
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -48,9 +46,6 @@ typedef struct {
 
 #include <getopt.h>
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #include <string.h>
 #include <ingraphs/ingraphs.h>
 
