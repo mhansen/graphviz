@@ -17,12 +17,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NEW(t)           malloc(sizeof(t))
-#define N_NEW(n,t)       calloc((n),sizeof(t))
-
 #include <cgraph/cgraph.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/exit.h>
+#include <cgraph/stack.h>
 
 typedef struct {
     Agrec_t h;
@@ -143,71 +141,20 @@ static void init(int argc, char *argv[])
     outfile = stdout;
 }
 
-typedef struct blk_t {
-    Agnode_t **data;
-    Agnode_t **endp;
-    struct blk_t *prev;
-    struct blk_t *next;
-} blk_t;
-
-typedef struct {
-    blk_t *fstblk;
-    blk_t *curblk;
-    Agnode_t **curp;
-} stk_t;
-
-
-#define SMALLBUF 1024
-#define BIGBUF 1000000
-
-static Agnode_t *base[SMALLBUF];
-static blk_t Blk;
-static stk_t Stk;
-
-static void initStk(void)
-{
-    Blk.data = base;
-    Blk.endp = Blk.data + SMALLBUF;
-    Stk.curblk = Stk.fstblk = &Blk;
-    Stk.curp = Stk.curblk->data;
-}
+static gv_stack_t Stk;
 
 static void push(Agnode_t * np)
 {
-    if (Stk.curp == Stk.curblk->endp) {
-	if (Stk.curblk->next == NULL) {
-	    blk_t *bp = NEW(blk_t);
-	    if (bp == 0) {
-		fprintf(stderr, "gc: Out of memory\n");
-		graphviz_exit(1);
-	    }
-	    bp->prev = Stk.curblk;
-	    bp->next = NULL;
-	    bp->data = N_NEW(BIGBUF, Agnode_t *);
-	    if (bp->data == 0) {
-		fprintf(stderr, "gc: Out of memory\n");
-		graphviz_exit(1);
-	    }
-	    bp->endp = bp->data + BIGBUF;
-	    Stk.curblk->next = bp;
-	}
-	Stk.curblk = Stk.curblk->next;
-	Stk.curp = Stk.curblk->data;
-    }
     ND_dfs_mark(np) = -1;
-    *Stk.curp++ = np;
+    stack_push_or_exit(&Stk, np);
 }
 
 static Agnode_t *pop(void)
 {
-    if (Stk.curp == Stk.curblk->data) {
-	if (Stk.curblk == Stk.fstblk)
-	    return 0;
-	Stk.curblk = Stk.curblk->prev;
-	Stk.curp = Stk.curblk->endp;
+    if (stack_is_empty(&Stk)) {
+	return 0;
     }
-    Stk.curp--;
-    return *Stk.curp;
+    return stack_pop(&Stk);
 }
 
 static void cc_dfs(Agraph_t * g, Agnode_t * n)
@@ -355,9 +302,6 @@ int main(int argc, char *argv[])
     init(argc, argv);
     newIngraph(&ig, Files, gread);
 
-    if (flags & CC)
-	initStk();
-
     while ((g = nextGraph(&ig)) != 0) {
 	if (prev)
 	    agclose(prev);
@@ -371,6 +315,8 @@ int main(int argc, char *argv[])
 
     if (n_graphs > 1)
 	wcp(tot_nodes, tot_edges, tot_cc, tot_cl, "total", 0);
+
+    stack_reset(&Stk);
 
     graphviz_exit(rv);
 }
