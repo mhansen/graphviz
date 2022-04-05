@@ -361,13 +361,28 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    case PANGO_VARIANT_SMALL_CAPS: variant = SMALLCAPS; break;
 	}
 	switch (pango_font_description_get_weight(pango_font)) {
+#if PANGO_VERSION_CHECK(1, 24, 0)
+	    case PANGO_WEIGHT_THIN: weight = ULTRALIGHT; break; // no exact match in LASi
+#endif
 	    case PANGO_WEIGHT_ULTRALIGHT: weight = ULTRALIGHT; break;
 	    case PANGO_WEIGHT_LIGHT: weight = LIGHT; break;
+#if PANGO_VERSION_CHECK(1, 36, 7)
+	    case PANGO_WEIGHT_SEMILIGHT: weight = LIGHT; break; // no exact match in LASi
+#endif
+#if PANGO_VERSION_CHECK(1, 24, 0)
+	    case PANGO_WEIGHT_BOOK: weight = NORMAL_WEIGHT; break; // no exact match in LASi
+#endif
 	    case PANGO_WEIGHT_NORMAL: weight = NORMAL_WEIGHT; break;
+#if PANGO_VERSION_CHECK(1, 24, 0)
+	    case PANGO_WEIGHT_MEDIUM: weight = NORMAL_WEIGHT; break; // no exact match in LASi
+#endif
 	    case PANGO_WEIGHT_SEMIBOLD: weight = BOLD; break; /* no exact match in lasi */
 	    case PANGO_WEIGHT_BOLD: weight = BOLD; break;
 	    case PANGO_WEIGHT_ULTRABOLD: weight = ULTRABOLD; break;
 	    case PANGO_WEIGHT_HEAVY: weight = HEAVY; break;
+#if PANGO_VERSION_CHECK(1, 24, 0)
+	    case PANGO_WEIGHT_ULTRAHEAVY: weight = HEAVY; break; // no exact match in LASi
+#endif
 	}
     }
     else {
