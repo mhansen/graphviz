@@ -14,17 +14,13 @@
  * Updated by Emden Gansner
  */
 
-#include "config.h"
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #include <stdbool.h>
 #include <stdio.h>
 
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/unreachable.h>
 
 typedef struct {
     Agrec_t h;
@@ -87,7 +83,7 @@ static int dfs(Agraph_t * g, Agnode_t * t, int hasCycle)
 		    addRevEdge(g, e);
 	    } else {
 		char* key = agnameof (e);
-		if (!key || (agedge(g, h, t, key, 0) == 0))
+		if (!key || agedge(g, h, t, key, 0) == 0)
 		    addRevEdge(g, e);
 	    }
 	    agdelete(g, e);
@@ -126,7 +122,7 @@ static FILE *openFile(const char *name, const char *mode)
 		cmd, name, modestr);
 	graphviz_exit(-1);
     }
-    return (fp);
+    return fp;
 }
 
 static void init(int argc, char *argv[])
@@ -162,6 +158,8 @@ static void init(int argc, char *argv[])
 		    cmd, optopt);
 	    usage(-1);
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     if (optind < argc) {
 	inFile = openFile(argv[optind], "r");
