@@ -81,7 +81,7 @@ static void test_utf8(void) {
 static void test_int(void) {
   char *s =
       gv_sprint("%d is a nice number, more than %" PRId8 ", less than %lu", 7,
-                INT8_C(-1), 42ul);
+                (int8_t)INT8_C(-1), 42ul);
   assert(strcmp(s, "7 is a nice number, more than -1, less than 42") == 0);
   free(s);
 }
