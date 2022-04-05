@@ -11,5 +11,5 @@ add_library(vmalloc STATIC
 )
 
 target_include_directories(vmalloc PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
 )

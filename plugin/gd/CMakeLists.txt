@@ -12,13 +12,13 @@ if(GD_FOUND)
   )
 
   target_include_directories(gvplugin_gd PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
+    ../../lib
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ../../lib/cdt
+    ../../lib/cgraph
+    ../../lib/common
+    ../../lib/gvc
+    ../../lib/pathplan
   )
 
   target_include_directories(gvplugin_gd SYSTEM PRIVATE

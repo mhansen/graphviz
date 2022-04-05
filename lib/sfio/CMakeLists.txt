@@ -41,6 +41,6 @@ add_library(sfio STATIC
 )
 
 target_include_directories(sfio PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
 )
 

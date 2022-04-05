@@ -25,7 +25,7 @@ add_library(cdt SHARED
 )
 
 target_include_directories(cdt PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
   ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Installation location of library files

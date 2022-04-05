@@ -11,14 +11,14 @@ set_target_properties(gvc++ PROPERTIES CXX_STANDARD 20)
 set_target_properties(gvc++ PROPERTIES CXX_STANDARD_REQUIRED ON)
 
 target_include_directories(gvc++ PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/cgraph++
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ../cdt
+  ../cgraph
+  ../cgraph++
+  ../common
+  ../gvc
+  ../pathplan
 )
 
 target_link_libraries(gvc++ PUBLIC

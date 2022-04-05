@@ -24,7 +24,7 @@ add_library(vpsc STATIC
 )
 
 target_include_directories(vpsc PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
 )
 
 endif()

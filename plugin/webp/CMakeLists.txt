@@ -12,12 +12,12 @@ if(WEBP_FOUND)
   )
 
   target_include_directories(gvplugin_webp PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ../../lib
+    ../../lib/cdt
+    ../../lib/cgraph
+    ../../lib/common
+    ../../lib/gvc
+    ../../lib/pathplan
   )
 
   target_include_directories(gvplugin_webp SYSTEM PRIVATE
@@ -34,5 +34,17 @@ if(WEBP_FOUND)
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
   )
+
+  set_target_properties(gvplugin_webp PROPERTIES
+    VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0
+    SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
+  )
+
+  if(MINGW)
+    # work around https://gitlab.kitware.com/cmake/cmake/-/issues/21716
+    set_target_properties(gvplugin_webp PROPERTIES
+      RUNTIME_OUTPUT_NAME gvplugin_webp-${GRAPHVIZ_PLUGIN_VERSION}
+    )
+  endif()
 
 endif()

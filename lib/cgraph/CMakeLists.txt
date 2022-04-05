@@ -51,8 +51,8 @@ add_library(cgraph SHARED
 )
 
 target_include_directories(cgraph PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
+  ..
+  ../cdt
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
 )

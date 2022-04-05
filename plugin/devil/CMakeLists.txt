@@ -9,12 +9,12 @@ if(PANGOCAIRO_FOUND AND DevIL_FOUND)
   )
 
   target_include_directories(gvplugin_devil PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ../../lib
+    ../../lib/cdt
+    ../../lib/cgraph
+    ../../lib/common
+    ../../lib/gvc
+    ../../lib/pathplan
   )
 
   target_include_directories(gvplugin_devil SYSTEM PRIVATE

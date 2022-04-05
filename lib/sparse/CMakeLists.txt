@@ -27,10 +27,10 @@ add_library(sparse STATIC
 )
 
 target_include_directories(sparse PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
+  ..
+  ../cdt
+  ../cgraph
+  ../common
 )
 
 target_link_libraries(sparse

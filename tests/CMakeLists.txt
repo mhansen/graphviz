@@ -23,7 +23,7 @@ add_library(test_common STATIC
 set_target_properties(test_common PROPERTIES CXX_STANDARD 20)
 set_target_properties(test_common PROPERTIES CXX_STANDARD_REQUIRED ON)
 target_include_directories(test_common PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ../lib
 )
 target_include_directories(test_common SYSTEM PRIVATE
   ${Boost_INCLUDE_DIRS}
@@ -50,13 +50,13 @@ macro(CREATE_TEST testname)
   add_test(NAME test_${testname}
            COMMAND test_${testname} --reporter junit --out test_${testname}.xml)
   target_include_directories(test_${testname} PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
-    ${GRAPHVIZ_LIB_DIR}/cdt
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/cgraph++
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/gvc
-    ${GRAPHVIZ_LIB_DIR}/pathplan
+    ../lib
+    ../lib/cdt
+    ../lib/cgraph
+    ../lib/cgraph++
+    ../lib/common
+    ../lib/gvc
+    ../lib/pathplan
   )
   target_link_libraries(test_${testname} PRIVATE
     test_common

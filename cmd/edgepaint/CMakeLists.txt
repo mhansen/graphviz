@@ -3,10 +3,10 @@ if(with_sfdp)
   add_executable(edgepaint edgepaintmain.c)
 
   target_include_directories(edgepaint PRIVATE
-    ${GRAPHVIZ_LIB_DIR}
-    ${GRAPHVIZ_LIB_DIR}/common
-    ${GRAPHVIZ_LIB_DIR}/cgraph
-    ${GRAPHVIZ_LIB_DIR}/cdt
+    ../../lib
+    ../../lib/common
+    ../../lib/cgraph
+    ../../lib/cdt
   )
 
   target_include_directories(edgepaint SYSTEM PRIVATE
@@ -33,6 +33,8 @@ if(with_sfdp)
   install(
     TARGETS edgepaint
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
   )
 
   if(GZIP)

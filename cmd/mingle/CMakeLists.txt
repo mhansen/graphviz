@@ -6,10 +6,10 @@ if(with_sfdp AND ANN_FOUND)
 
   target_include_directories(mingle
     PRIVATE
-      ${GRAPHVIZ_LIB_DIR}
-      ${GRAPHVIZ_LIB_DIR}/cdt
-      ${GRAPHVIZ_LIB_DIR}/cgraph
-      ${GRAPHVIZ_LIB_DIR}/common
+      ../../lib
+      ../../lib/cdt
+      ../../lib/cgraph
+      ../../lib/common
   )
 
   target_include_directories(mingle

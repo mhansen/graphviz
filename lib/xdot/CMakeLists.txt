@@ -9,7 +9,7 @@ add_library(xdot SHARED
 )
 
 target_include_directories(xdot PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 

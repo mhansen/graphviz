@@ -17,12 +17,12 @@ add_library(edgepaintlib STATIC
 )
 
 target_include_directories(edgepaintlib PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/common
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pathplan
+  ..
+  ../cdt
+  ../cgraph
+  ../common
+  ../gvc
+  ../pathplan
 )
 
 # work around needed for an object library

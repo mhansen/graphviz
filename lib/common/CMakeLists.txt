@@ -11,8 +11,9 @@ endif()
 add_custom_command(
   OUTPUT svgcolor_lib
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
-          ${TOP_SOURCE_DIR}/awk/svgcolor.awk
-  COMMAND ${AWK_EXECUTABLE} ${AWK_OPTIONS} -f ${TOP_SOURCE_DIR}/awk/svgcolor.awk
+          ${CMAKE_SOURCE_DIR}/awk/svgcolor.awk
+  COMMAND ${AWK_EXECUTABLE} ${AWK_OPTIONS} -f
+          ${CMAKE_SOURCE_DIR}/awk/svgcolor.awk
           ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
           >${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
   COMMENT "generate SVG color library"
@@ -20,14 +21,14 @@ add_custom_command(
 add_custom_command(
   OUTPUT brewer_lib
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
-          ${TOP_SOURCE_DIR}/awk/brewer.awk
-  COMMAND ${AWK_EXECUTABLE} -f ${TOP_SOURCE_DIR}/awk/brewer.awk
+          ${CMAKE_SOURCE_DIR}/awk/brewer.awk
+  COMMAND ${AWK_EXECUTABLE} -f ${CMAKE_SOURCE_DIR}/awk/brewer.awk
           ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
           >${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
   COMMENT "generate Brewer color library"
 )
 configure_file(
-  "${TOP_SOURCE_DIR}/cmake/generate_color_lib.cmake.in"
+  "${CMAKE_SOURCE_DIR}/cmake/generate_color_lib.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/generate_color_lib.cmake"
   @ONLY
 )
@@ -43,9 +44,10 @@ add_custom_command(
 add_custom_command(
   OUTPUT common/colortbl.h
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/color_lib
+          ${CMAKE_SOURCE_DIR}/awk/colortbl.awk
   COMMAND ${CMAKE_COMMAND} -E make_directory
           "${CMAKE_CURRENT_BINARY_DIR}/common"
-  COMMAND ${AWK_EXECUTABLE} -f ${TOP_SOURCE_DIR}/awk/colortbl.awk
+  COMMAND ${AWK_EXECUTABLE} -f ${CMAKE_SOURCE_DIR}/awk/colortbl.awk
           ${CMAKE_CURRENT_BINARY_DIR}/color_lib
           >${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h
   COMMENT "generate color table"
@@ -111,15 +113,15 @@ add_library(common_obj OBJECT
 )
 
 target_include_directories(common_obj PRIVATE
-  ${GRAPHVIZ_LIB_DIR}
+  ..
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${GRAPHVIZ_LIB_DIR}/cdt
-  ${GRAPHVIZ_LIB_DIR}/cgraph
-  ${GRAPHVIZ_LIB_DIR}/gvc
-  ${GRAPHVIZ_LIB_DIR}/pack
-  ${GRAPHVIZ_LIB_DIR}/pathplan
-  ${GRAPHVIZ_LIB_DIR}/xdot
+  ../cdt
+  ../cgraph
+  ../gvc
+  ../pack
+  ../pathplan
+  ../xdot
 )
 
 target_include_directories(common_obj SYSTEM PRIVATE
