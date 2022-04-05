@@ -325,7 +325,6 @@ static void ps_set_color(GVJ_t *job, gvcolor_t *color)
 
 static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 {
-    char *str;
     const char *font;
     const PangoFontDescription *pango_font;
     FontStretch stretch; 
