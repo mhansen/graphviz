@@ -63,7 +63,7 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
 		    absolute = g_strdup (us->name);
 		} else {
 		    gchar *dir = g_get_current_dir ();
-		    absolute = g_build_filename (dir, us->name, (gchar *) 0);
+		    absolute = g_build_filename(dir, us->name, NULL);
 		    free (dir);
 		}
 
