@@ -86,9 +86,7 @@ static void quartzgen_end_job(GVJ_t * job)
 					 &device_data_consumer_callbacks);
 		CGImageDestinationRef image_destination =
 		    CGImageDestinationCreateWithDataConsumer(data_consumer,
-							     format_to_uti(job->device.id),
-								 1,
-							     NULL);
+							     format_to_uti((format_type)job->device.id), 1, NULL);
 
 		/* add the bitmap image to the destination and save it */
 		CGImageRef image = CGBitmapContextCreateImage(context);
