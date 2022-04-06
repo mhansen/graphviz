@@ -69,7 +69,7 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
 
 		uri = g_filename_to_uri (absolute, NULL, &error);
 
-		free (absolute);
+		g_free(absolute);
 		if (uri == NULL) {
 		    printf("%s\n", error->message);
 		    return NULL;
