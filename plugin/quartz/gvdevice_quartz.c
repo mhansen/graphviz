@@ -16,7 +16,7 @@
 
 #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040 && defined(HAVE_PANGOCAIRO)
 
-const void *memory_data_consumer_get_byte_pointer(void *info)
+static const void *memory_data_consumer_get_byte_pointer(void *info)
 {
 	return info;
 }
