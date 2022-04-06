@@ -269,6 +269,10 @@ static void quartzgen_end_page(GVJ_t * job)
 static void quartzgen_begin_anchor(GVJ_t * job, char *url, char *tooltip,
 				   char *target, char *id)
 {
+    (void)tooltip;
+    (void)target;
+    (void)id;
+
     pointf *url_map = job->obj->url_map_p;
     if (url && url_map) {
 	/* set up the hyperlink to the given url */
