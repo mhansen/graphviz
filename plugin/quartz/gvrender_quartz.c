@@ -170,10 +170,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 		/* clean up */
 		CGDataConsumerRelease(data_consumer);
 		CFRelease(auxiliaryInfo);
-		int i;
-		for (i = 0;
-		     i <
-		     sizeof(auxiliaryValues) / sizeof(auxiliaryValues[0]);
+		for (size_t i = 0; i < sizeof(auxiliaryValues) / sizeof(auxiliaryValues[0]);
 		     ++i)
 		    CFRelease(auxiliaryValues[i]);
 	    }
