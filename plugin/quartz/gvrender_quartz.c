@@ -342,7 +342,7 @@ static void quartzgen_path(GVJ_t * job, int filled)
     CGContextDrawPath(context, filled ? kCGPathFillStroke : kCGPathStroke);
 }
 
-void quartzgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
+static void quartzgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 {
     CGContextRef context = job->context;
 
