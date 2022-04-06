@@ -107,6 +107,8 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
 
 static void gvloadimage_poppler_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+    (void)filled;
+
     PopplerDocument* document = gvloadimage_poppler_load(job, us);
     PopplerPage* page;
 
