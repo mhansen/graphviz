@@ -47,7 +47,7 @@ static void quartzgen_begin_job(GVJ_t * job)
 
 static void quartzgen_end_job(GVJ_t * job)
 {
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
 	
 #ifdef __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
 #if __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 20000
@@ -238,8 +238,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 						     color_space,	/* color space: device RGB */
 						     kCGImageAlphaPremultipliedFirst	/* bitmap info: premul ARGB has best support in OS X */
 		    );
-		job->imagedata =
-		    CGBitmapContextGetData((CGContextRef) job->context);
+		job->imagedata = CGBitmapContextGetData(job->context);
 
 		/* clean up */
 		CGColorSpaceRelease(color_space);
@@ -250,7 +249,7 @@ static void quartzgen_begin_page(GVJ_t * job)
     }
 
     /* start the page (if this is a paged context) and graphics state */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextBeginPage(context, &bounds);
     CGContextSaveGState(context);
     /* CGContextSetMiterLimit(context, 1.0); */
@@ -265,7 +264,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 static void quartzgen_end_page(GVJ_t * job)
 {
     /* end the page (if this is a paged context) and graphics state */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextRestoreGState(context);
     CGContextEndPage(context);
 }
@@ -276,7 +275,7 @@ static void quartzgen_begin_anchor(GVJ_t * job, char *url, char *tooltip,
     pointf *url_map = job->obj->url_map_p;
     if (url && url_map) {
 	/* set up the hyperlink to the given url */
-	CGContextRef context = (CGContextRef) job->context;
+	CGContextRef context = job->context;
 	CFURLRef uri =
 	    CFURLCreateWithBytes(kCFAllocatorDefault, (const UInt8 *) url,
 				 strlen(url), kCFStringEncodingUTF8, NULL);
@@ -303,7 +302,7 @@ static void quartzgen_begin_anchor(GVJ_t * job, char *url, char *tooltip,
 
 static void quartzgen_path(GVJ_t * job, int filled)
 {
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
 
     /* set up colors */
     if (filled)
@@ -344,7 +343,7 @@ static void quartzgen_path(GVJ_t * job, int filled)
 
 void quartzgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 {
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
 
     /* adjust text position */
     switch (span->just) {
@@ -381,7 +380,7 @@ void quartzgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 static void quartzgen_ellipse(GVJ_t * job, pointf * A, int filled)
 {
     /* convert ellipse into the current path */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     double dx = A[1].x - A[0].x;
     double dy = A[1].y - A[0].y;
     CGContextAddEllipseInRect(context,
@@ -395,7 +394,7 @@ static void quartzgen_ellipse(GVJ_t * job, pointf * A, int filled)
 static void quartzgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
 {
     /* convert polygon into the current path */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextMoveToPoint(context, A[0].x, A[0].y);
     int i;
     for (i = 1; i < n; ++i)
@@ -411,7 +410,7 @@ quartzgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
 		 int arrow_at_end, int filled)
 {
     /* convert bezier into the current path */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextMoveToPoint(context, A[0].x, A[0].y);
     int i;
     for (i = 1; i < n; i += 3)
@@ -425,7 +424,7 @@ quartzgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
 static void quartzgen_polyline(GVJ_t * job, pointf * A, int n)
 {
     /* convert polyline into the current path */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextMoveToPoint(context, A[0].x, A[0].y);
     int i;
     for (i = 1; i < n; ++i)

@@ -75,7 +75,7 @@ void quartz_size_layout(void *layout, double* width, double* height, double* yof
 	CGFloat descent = 0.0;
 	CGFloat leading = 0.0;
 	
-	*width = CTLineGetTypographicBounds((CTLineRef)layout, &ascent, &descent, &leading);
+	*width = CTLineGetTypographicBounds(layout, &ascent, &descent, &leading);
 	*height = ascent + descent + leading;
 	*yoffset_layout = ascent;
 }
@@ -83,13 +83,13 @@ void quartz_size_layout(void *layout, double* width, double* height, double* yof
 void quartz_draw_layout(void *layout, CGContextRef context, CGPoint position)
 {
 	CGContextSetTextPosition(context, position.x, position.y);
-	CTLineDraw((CTLineRef)layout, context);
+	CTLineDraw(layout, context);
 }
 
 void quartz_free_layout(void *layout)
 {
 	if (layout)
-		CFRelease((CTLineRef)layout);
+		CFRelease(layout);
 };
 
 #endif
@@ -100,9 +100,9 @@ bool quartz_textlayout(textspan_t *para, char **fontpath)
 	if (line)
 	{
 		/* report the layout */
-		para->layout = (void*)line;
+		para->layout = line;
 		para->free_layout = &quartz_free_layout;
-		quartz_size_layout((void*)line, &para->size.x, &para->size.y, &para->yoffset_layout);
+		quartz_size_layout(line, &para->size.x, &para->size.y, &para->yoffset_layout);
 		para->yoffset_centerline = 0.2 * para->font->size;
 		return true;
 	}
