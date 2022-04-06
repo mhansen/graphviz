@@ -157,6 +157,8 @@ static CGImageRef quartz_loadimage(GVJ_t * job, usershape_t *us)
 
 static void quartz_loadimage_quartz(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+	(void)filled;
+
 	/* get the image from usershape details, then blit it to the context */
 	CGImageRef image = quartz_loadimage(job, us);
 	if (image)
