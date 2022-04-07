@@ -8,12 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef _WIN32 //*dependencies
-    #pragma comment( lib, "gvc.lib" )
-    #pragma comment( lib, "graph.lib" )
-#endif
-
-
 #include <gvc/gvplugin.h>
 
 extern gvplugin_installed_t gvdevice_vdx_types[];
