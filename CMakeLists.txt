@@ -74,7 +74,7 @@ else()
   set(MAN_INSTALL_DIR     share/man)
   set(libdir              "${CMAKE_INSTALL_PREFIX}/${LIBRARY_INSTALL_DIR}")
   set(includedir          "${CMAKE_INSTALL_PREFIX}/include")
-  set(DATA_INSTALL_DIR    "${CMAKE_INSTALL_PREFIX}/share")
+  set(DATA_INSTALL_DIR    share)
 endif()
 
 set(PLUGIN_INSTALL_DIR      ${LIBRARY_INSTALL_DIR}/graphviz)
