@@ -17,8 +17,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define PINC 300
-
 static int nedges, nboxes; /* total no. of edges and boxes used in routing */
 
 static int routeinit;
