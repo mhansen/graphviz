@@ -276,6 +276,7 @@ include(CTest)
 
 # ======================= Specify subdirectories to build ======================
 add_subdirectory(contrib/diffimg)
+add_subdirectory(graphs)
 add_subdirectory(lib)
 add_subdirectory(plugin)
 add_subdirectory(cmd)
