@@ -190,6 +190,6 @@ EXTRA_DIST = $(XGIF) mklang.y mkarrows.sh mkshapes.sh mkstyles.sh mktapers.sh \
              shapelist \
              lang.1 lang.2 \
              brewer.awk mkcolors.awk svg.awk sz.awk \
-             colorlist.dot html1.dot html4.dot round.dot constraint.dot \
+             colorlist.dot html4.dot round.dot constraint.dot \
              html2.dot mrecord.dot sdlshapes.dot fill.dot html3.dot record.dot \
              X11 eqn.gif plugins.gv
