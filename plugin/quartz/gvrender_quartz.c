@@ -210,7 +210,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 				     PROT_READ | PROT_WRITE,
 				     MAP_FILE | MAP_SHARED,
 				     temp_file_descriptor, 0);
-			    if (buffer == (void *) -1)
+			    if (buffer == MAP_FAILED)
 				buffer = NULL;
 			}
 			fclose(temp_file);
