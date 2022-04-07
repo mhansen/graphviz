@@ -116,7 +116,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	case MATRIX_TYPE_REAL:
 	    val = malloc(nz * sizeof(double));
 	    for (i = 0; i < nz; i++) {
-		fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
+		int num = fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
+		(void)num;
+		assert(num == 3);
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
@@ -151,7 +153,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	case MATRIX_TYPE_INTEGER:
 	    vali = malloc(nz * sizeof(int));
 	    for (i = 0; i < nz; i++) {
-		fscanf(f, "%d %d %d\n", &I[i], &J[i], &vali[i]);
+		int num = fscanf(f, "%d %d %d\n", &I[i], &J[i], &vali[i]);
+		(void)num;
+		assert(num == 3);
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
@@ -185,7 +189,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    break;
 	case MATRIX_TYPE_PATTERN:
 	    for (i = 0; i < nz; i++) {
-		fscanf(f, "%d %d\n", &I[i], &J[i]);
+		int num = fscanf(f, "%d %d\n", &I[i], &J[i]);
+		(void)num;
+		assert(num == 2);
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
@@ -207,7 +213,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    val = malloc(2 * nz * sizeof(double));
 	    v = val;
 	    for (i = 0; i < nz; i++) {
-		fscanf(f, "%d %d %lg %lg\n", &I[i], &J[i], &v[0], &v[1]);
+		int num = fscanf(f, "%d %d %lg %lg\n", &I[i], &J[i], &v[0], &v[1]);
+		(void)num;
+		assert(num == 4);
 		v += 2;
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
