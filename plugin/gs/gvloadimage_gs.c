@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -62,10 +62,12 @@ static void gvloadimage_gs_free(usershape_t *us)
 
 static int gs_writer(void *caller_handle, const char *str, int len)
 {
-    GVJ_t *job = (GVJ_t*)caller_handle;
+    GVJ_t *job = caller_handle;
 
-    if (job->common->verbose)
-    	return fwrite(str, 1, len, stderr);
+    if (job->common->verbose) {
+        assert(len >= 0);
+        return (int)fwrite(str, 1, (size_t)len, stderr);
+    }
     return len;
 }
 
@@ -172,7 +174,7 @@ static cairo_pattern_t* gvloadimage_gs_load(GVJ_t * job, usershape_t *us)
 
     if (us->data) {
         if (us->datafree == gvloadimage_gs_free
-	&& ((gs_t*)(us->data))->cr == (cairo_t *)job->context)
+	&& ((gs_t*)(us->data))->cr == job->context)
 	    gs = us->data; /* use cached data */
 	else {
 	    us->datafree(us);        /* free incompatible cache data */
@@ -185,7 +187,7 @@ static cairo_pattern_t* gvloadimage_gs_load(GVJ_t * job, usershape_t *us)
 	    job->common->errorfn("malloc() failure\n");
 	    return NULL;
 	}
-	gs->cr = (cairo_t *)job->context;
+	gs->cr = job->context;
 	gs->surface = NULL;
 	gs->pattern = NULL;
 
@@ -195,7 +197,7 @@ static cairo_pattern_t* gvloadimage_gs_load(GVJ_t * job, usershape_t *us)
 
 #define GSAPI_REVISION_REQUIRED 863
 	rc = gsapi_revision(&gsapi_revision_info, sizeof(gsapi_revision_t));
-        if (rc && rc < sizeof(gsapi_revision_t)) {
+        if (rc && rc < (int)sizeof(gsapi_revision_t)) {
     	    job->common->errorfn("gs revision - struct too short %d\n", rc);
 	    return NULL;
         }
@@ -205,7 +207,7 @@ static cairo_pattern_t* gvloadimage_gs_load(GVJ_t * job, usershape_t *us)
 	    return NULL;
 	}
 
-	rc = gsapi_new_instance(&instance, (void*)job);
+	rc = gsapi_new_instance(&instance, job);
 	if (rc)
 	    gs_error(job, us->name, "gsapi_new_instance", rc);
 	else {
@@ -222,7 +224,9 @@ static cairo_pattern_t* gvloadimage_gs_load(GVJ_t * job, usershape_t *us)
 
 static void gvloadimage_gs_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
-    cairo_t *cr = (cairo_t *) job->context; /* target context */
+    (void)filled;
+
+    cairo_t *cr = job->context; // target context
     cairo_pattern_t *pattern = gvloadimage_gs_load(job, us);
 
     if (pattern) {
