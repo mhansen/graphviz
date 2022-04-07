@@ -96,6 +96,8 @@ void quartz_free_layout(void *layout)
 
 static bool quartz_textlayout(textspan_t *para, char **fontpath)
 {
+	(void)fontpath;
+
 	void *line = quartz_new_layout(para->font->name, para->font->size, para->str);
 	if (line)
 	{
