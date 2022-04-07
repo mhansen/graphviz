@@ -102,7 +102,7 @@ INSTALL_FILES = $(HTML) $(DOTS) $(SGIF) $(AGIF) $(A2GIF) $(MGIF) $(XGIF) $(MPNG)
 	dot -Tpng -o $@ $<
 
 .PHONY: all
-all : $(HTML) $(GIF) $(MPNG) $(MJPG)
+all : $(HTML) $(GIF) $(MPNG)
 
 .PHONY: install
 install : all
@@ -181,7 +181,7 @@ clean :
 .PHONY: distclean
 distclean : clean
 	rm -f $(HTML)
-	rm -f $(A2GIF) $(AGIF) $(SGIF) $(MPJG) $(MGIF) $(MPNG) $(XGIF) shapes
+	rm -f $(A2GIF) $(AGIF) $(SGIF) $(MGIF) $(MPNG) $(XGIF) shapes
 	(for s in $$(cat shapelist); do rm -f $$s.gif; done)
 
 EXTRA_DIST = $(XGIF) mklang.y mkarrows.sh mkshapes.sh mkstyles.sh mktapers.sh \
