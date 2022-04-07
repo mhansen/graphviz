@@ -26,11 +26,6 @@ static gvplugin_api_t apis[] = {
 };
 
 #ifdef GVDLL
-#ifndef GVPLUGIN_VISIO_EXPORTS
-__declspec(dllimport) gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
-#else
-__declspec(dllexport) gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
+__declspec(dllexport)
 #endif
-#else
 gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
-#endif
