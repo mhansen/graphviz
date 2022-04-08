@@ -12,4 +12,4 @@
 
 #include "mmio.h"
 #include <sparse/SparseMatrix.h>
-SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format);
+SparseMatrix SparseMatrix_import_matrix_market(FILE * f);

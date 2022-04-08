@@ -30,7 +30,7 @@ static int mm_get_type(MM_typecode typecode)
     return MATRIX_TYPE_UNKNOWN;
 }
 
-SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
+SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 {
     int ret_code, type;
     MM_typecode matcode;
@@ -75,15 +75,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 
     I = MALLOC(nz * sizeof(int));
     J = MALLOC(nz * sizeof(int));
-
-
-
-    switch (format) {
-    case FORMAT_CSC:
-	assert(0);		/* not supported yet */
-	break;
-    case FORMAT_CSR:
-    case FORMAT_COORD:
 
 	/* NOTE: when reading in doubles, ANSI C requires the use of the "l"  */
 	/*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
@@ -246,17 +237,8 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    return 0;
 	}
 
-	if (format == FORMAT_CSR) {
-	    A = SparseMatrix_from_coordinate_arrays(nz, m, n, I, J, vp,
+	A = SparseMatrix_from_coordinate_arrays(nz, m, n, I, J, vp,
 						    type, sizeof(double));
-	} else {
-	    A = SparseMatrix_new(m, n, 1, type, FORMAT_COORD);
-	    A = SparseMatrix_coordinate_form_add_entries(A, nz, I, J, vp);
-	}
-	break;
-    default:
-	A = NULL;
-    }
     free(I);
     free(J);
     free(val);
