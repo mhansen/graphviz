@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <cgraph/prisize_t.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,8 +74,8 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
     data = malloc(data_size);
     ok = fread(data, data_size, 1, in) == 1;
     if (!ok) {
-        fprintf(stderr, "Error: WebP could not read %zu bytes of data from %s\n",
-            data_size, in_file);
+        fprintf(stderr, "Error: WebP could not read %" PRISIZE_T
+                " bytes of data from %s\n", data_size, in_file);
         free(data);
         return NULL;
     }
