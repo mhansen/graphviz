@@ -245,10 +245,7 @@ static gboolean gl_main_expose(gpointer data)
 
 static void get_data_dir(void)
 {
-    if (view->template_file) {
-	free(view->template_file);
-    }
-
+    free(view->template_file);
     view->template_file = strdup(smyrnaPath("template.dot"));
 }
 
