@@ -195,42 +195,6 @@ int mm_write_mtx_array_size(FILE * f, int M, int N)
 
 /*-------------------------------------------------------------------------*/
 
-/******************************************************************/
-/* use when I[], J[], and val[]J, and val[] are already allocated */
-/******************************************************************/
-
-int mm_read_mtx_crd_data(FILE * f, int M, int N, int nz, int I[], int J[],
-			 double val[], MM_typecode matcode)
-{
-    int i;
-    if (mm_is_complex(matcode)) {
-	for (i = 0; i < nz; i++)
-	    if (fscanf
-		(f, "%d %d %lg %lg", &I[i], &J[i], &val[2 * i],
-		 &val[2 * i + 1])
-		!= 4)
-		return MM_PREMATURE_EOF;
-    } else if (mm_is_real(matcode)) {
-	for (i = 0; i < nz; i++) {
-	    if (fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i])
-		!= 3)
-		return MM_PREMATURE_EOF;
-
-	}
-    }
-
-    else if (mm_is_pattern(matcode)) {
-	for (i = 0; i < nz; i++)
-	    if (fscanf(f, "%d %d", &I[i], &J[i])
-		!= 2)
-		return MM_PREMATURE_EOF;
-    } else
-	return MM_UNSUPPORTED_TYPE;
-
-    return 0;
-
-}
-
 int mm_write_banner(FILE * f, MM_typecode matcode)
 {
     char *str = mm_typecode_to_str(matcode);
