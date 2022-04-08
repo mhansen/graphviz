@@ -85,7 +85,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     Agsym_t *sym = NULL, *sym2 = NULL, *sym3 = NULL;
     int *ia = A->ia;
     int *ja = A->ja;
-    double *val = (double *) (A->a);
+    double *val = A->a;
     Agnode_t **arr = N_NEW(A->m, Agnode_t *);
     double *color = NULL;
     char cstring[8];
