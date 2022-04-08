@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <math.h>
 #include <stdlib.h>
 typedef struct Agnodeinfo_t {
     Agrec_t h;
@@ -155,8 +156,7 @@ static void color(Agraph_t * g)
 	p = agget(n, "pos");
 	sscanf(p, "%lf,%lf", &x, &y);
 	ND_relrank(n) = (LR ? x : y);
-	if (maxrank < ND_relrank(n))
-	    maxrank = ND_relrank(n);
+	maxrank = fmax(maxrank, ND_relrank(n));
     }
     if (LR != Forward)
 	for (i = 0; i < nnodes; i++) {
