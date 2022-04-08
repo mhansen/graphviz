@@ -14,8 +14,6 @@
  * Updated by Emden Gansner
  */
 
-#include "config.h"
-
 /* if NC changes, a bunch of scanf calls below are in trouble */
 #define	NC	3		/* size of HSB color vector */
 
@@ -35,9 +33,6 @@ typedef struct Agnodeinfo_t {
 
 #include <ingraphs/ingraphs.h>
 #include <stdio.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 
 #include <getopt.h>
 
