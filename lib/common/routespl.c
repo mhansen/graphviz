@@ -835,11 +835,16 @@ static void* vec_get(vec* pvec, size_t index)
 
 static void vec_delete(vec* pvec)
 {
-    for (size_t i = 0; i < vec_length(pvec); ++i) {
-      vec_delete(vec_get(pvec, i));
-    }
     free(pvec->_mem);
     free(pvec);
+}
+
+// cycles is assumed to be a vec of vec of nodes.
+static void cycles_delete(vec* cycles) {
+  for (size_t i = 0; i < vec_length(cycles); ++i) {
+    vec_delete(vec_get(cycles, i));
+  }
+  vec_delete(cycles);
 }
 
 static void vec_push_back(vec* pvec, void* data)
@@ -961,6 +966,7 @@ static void dfs(graph_t *g, node_t* search, vec* visited, node_t* end, vec* cycl
 	}
 }
 
+// Returns a vec of vec of nodes (aka a vector of cycles), which must be freed using cycles_delete.
 static vec* find_all_cycles(graph_t *g)
 {
     node_t *n;
@@ -976,7 +982,7 @@ static vec* find_all_cycles(graph_t *g)
 		dfs(g, n, cycle, n, cycles);
 	}
 	
-	vec_delete(alloced_cycles); //cycles contains copied vecs
+	cycles_delete(alloced_cycles); //cycles contains copied vecs
     return cycles;
 }
 
@@ -1019,7 +1025,7 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 
 	if (cycle == NULL) {
 		if (cycles != NULL)
-			vec_delete(cycles);
+			cycles_delete(cycles);
 		return get_centroid(g);
 	}
 
@@ -1033,7 +1039,7 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 	}
 
 	if (cycles != NULL)
-		vec_delete(cycles);
+		cycles_delete(cycles);
 
 	sum.x /= cnt;
     sum.y /= cnt;
