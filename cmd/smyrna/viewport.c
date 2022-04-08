@@ -596,8 +596,7 @@ int save_as_graph(void)
 {
     //check if there is an active graph
     if (view->activeGraph > -1) {
-	GtkWidget *dialog;
-	dialog = gtk_file_chooser_dialog_new("Save File",
+	GtkWidget *dialog = gtk_file_chooser_dialog_new("Save File",
 					     NULL,
 					     GTK_FILE_CHOOSER_ACTION_SAVE,
 					     GTK_STOCK_CANCEL,
@@ -607,8 +606,7 @@ int save_as_graph(void)
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER
 						       (dialog), TRUE);
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-	    char *filename;
-	    filename =
+	    char *filename =
 		gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 	    save_graph_with_file_name(view->g[view->activeGraph],
 				      filename);
