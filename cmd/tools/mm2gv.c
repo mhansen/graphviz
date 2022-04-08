@@ -43,12 +43,12 @@ static double Hue2RGB(double v1, double v2, double H)
 	H += 1.0;
     if (H > 1.0)
 	H -= 1.0;
-    if ((6.0 * H) < 1.0)
+    if (6.0 * H < 1.0)
 	return (v1 + (v2 - v1) * 6.0 * H);
-    if ((2.0 * H) < 1.0)
+    if (2.0 * H < 1.0)
 	return v2;
-    if ((3.0 * H) < 2.0)
-	return (v1 + (v2 - v1) * ((2.0 / 3.0) - H) * 6.0);
+    if (3.0 * H < 2.0)
+	return v1 + (v2 - v1) * (2.0 / 3.0 - H) * 6.0;
     return v1;
 }
 
@@ -60,13 +60,13 @@ static char *hue2rgb(double hue, char *color)
     if (lightness < 0.5)
 	v2 = lightness * (1.0 + saturation);
     else
-	v2 = (lightness + saturation) - (saturation * lightness);
+	v2 = lightness + saturation - saturation * lightness;
 
     v1 = 2.0 * lightness - v2;
 
-    red = (int) (255.0 * Hue2RGB(v1, v2, hue + (1.0 / 3.0)) + 0.5);
+    red = (int) (255.0 * Hue2RGB(v1, v2, hue + 1.0 / 3.0) + 0.5);
     green = (int) (255.0 * Hue2RGB(v1, v2, hue) + 0.5);
-    blue = (int) (255.0 * Hue2RGB(v1, v2, hue - (1.0 / 3.0)) + 0.5);
+    blue = (int) (255.0 * Hue2RGB(v1, v2, hue - 1.0 / 3.0) + 0.5);
     sprintf(color, "#%02x%02x%02x", red, green, blue);
     return color;
 }
@@ -93,11 +93,11 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     name = strip_dir(name);
 
     if (with_color) {
-	if ((A->type == MATRIX_TYPE_REAL) && !val) {
+	if (A->type == MATRIX_TYPE_REAL && !val) {
 	    fprintf (stderr, "Warning: input matrix has no values, -c flag ignored\n");
 	    with_color = 0;
 	}
-	else if ((A->type != MATRIX_TYPE_REAL) && !x) {
+	else if (A->type != MATRIX_TYPE_REAL && !x) {
 	    fprintf (stderr, "Warning: input has no coordinates, -c flag ignored\n");
 	    with_color = 0;
 	}
@@ -169,9 +169,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    i = ND_id(n);
 	    for (j = ia[i]; j < ia[i + 1]; j++) {
-		color[j] =
-		    ((color[j] - mindist) / MAX(maxdist - mindist,
-						0.000001));
+		color[j] = (color[j] - mindist) / MAX(maxdist - mindist, 0.000001);
 	    }
 	}
     }
@@ -222,7 +220,7 @@ static FILE *openF(char *fname, char *mode)
     FILE *f = fopen(fname, mode);
     if (!f) {
 	fprintf(stderr, "Could not open %s for %s\n", fname,
-		((*mode == 'r') ? "reading" : "writing"));
+		*mode == 'r' ? "reading" : "writing");
 	graphviz_exit(1);
     }
     return f;
