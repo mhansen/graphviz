@@ -104,9 +104,9 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     }
 
     if (SparseMatrix_known_undirected(A)) {
-	g = agopen("G", Agundirected, (Agdisc_t *) 0);
+	g = agopen("G", Agundirected, NULL);
     } else {
-	g = agopen("G", Agdirected, (Agdisc_t *) 0);
+	g = agopen("G", Agdirected, NULL);
     }
 
     if (with_val) {
