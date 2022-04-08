@@ -81,7 +81,7 @@ char *get_attribute_value(char *attr, ViewInfo * view, Agraph_t * g)
 {
     char *buf;
     buf = agget(g, attr);
-    if ((!buf) || (*buf == '\0'))
+    if (!buf || *buf == '\0')
 	buf = agget(view->systemGraphs.def_attrs, attr);
     return buf;
 }
@@ -281,7 +281,7 @@ void init_viewport(ViewInfo * view)
     }
     view->systemGraphs.attrs_widgets = agread(input_file2, NULL);
     fclose (input_file2);
-    if (!(view->systemGraphs.attrs_widgets )) {
+    if (!view->systemGraphs.attrs_widgets) {
 	fprintf(stderr,"could not load default attribute widgets graph file \"%s\"\n",smyrnaPath("attr_widgets.dot"));
 	graphviz_exit(-1);
     }
@@ -533,7 +533,7 @@ int add_graph_to_viewport(Agraph_t * graph, char *id)
 }
 void switch_graph(int graphId)
 {
-    if ((graphId >= view->graphCount) || (graphId < 0))
+    if (graphId >= view->graphCount || graphId < 0)
 	return;			/*wrong entry */
     else
 	activate(graphId);
@@ -629,7 +629,7 @@ void glexpose(void)
 
 static float interpol(float minv, float maxv, float minc, float maxc, float x)
 {
-    return ((x - minv) * (maxc - minc) / (maxv - minv) + minc);
+    return (x - minv) * (maxc - minc) / (maxv - minv) + minc;
 }
 
 void getcolorfromschema(colorschemaset * sc, float l, float maxl,
