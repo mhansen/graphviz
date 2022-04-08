@@ -10,8 +10,6 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <io.h>
-#else
-#include <unistd.h>
 #endif
 #include "viewport.h"
 #include "draw.h"
