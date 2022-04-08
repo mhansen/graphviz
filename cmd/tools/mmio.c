@@ -231,30 +231,6 @@ int mm_read_mtx_crd_data(FILE * f, int M, int N, int nz, int I[], int J[],
 
 }
 
-int mm_read_mtx_crd_entry(FILE * f, int *I, int *J,
-			  double *real, double *imag, MM_typecode matcode)
-{
-    if (mm_is_complex(matcode)) {
-	if (fscanf(f, "%d %d %lg %lg", I, J, real, imag)
-	    != 4)
-	    return MM_PREMATURE_EOF;
-    } else if (mm_is_real(matcode)) {
-	if (fscanf(f, "%d %d %lg\n", I, J, real)
-	    != 3)
-	    return MM_PREMATURE_EOF;
-
-    }
-
-    else if (mm_is_pattern(matcode)) {
-	if (fscanf(f, "%d %d", I, J) != 2)
-	    return MM_PREMATURE_EOF;
-    } else
-	return MM_UNSUPPORTED_TYPE;
-
-    return 0;
-
-}
-
 int mm_write_banner(FILE * f, MM_typecode matcode)
 {
     char *str = mm_typecode_to_str(matcode);

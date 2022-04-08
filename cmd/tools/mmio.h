@@ -130,5 +130,3 @@ int mm_write_mtx_crd(char fname[], int M, int N, int nz, int I[], int J[],
 		     double val[], MM_typecode matcode);
 int mm_read_mtx_crd_data(FILE * f, int M, int N, int nz, int I[], int J[],
 			 double val[], MM_typecode matcode);
-int mm_read_mtx_crd_entry(FILE * f, int *I, int *J, double *realpart,
-			  double *img, MM_typecode matcode);
