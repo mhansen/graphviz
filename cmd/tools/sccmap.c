@@ -19,15 +19,11 @@
  * connected components, and writes each as a separate graph
  * along with a map of the components.
  */
-#include "config.h"
 
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
