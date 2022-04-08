@@ -169,16 +169,6 @@ int mm_read_mtx_array_size(FILE * f, int *M, int *N)
     return 0;
 }
 
-int mm_write_mtx_array_size(FILE * f, int M, int N)
-{
-    if (fprintf(f, "%d %d\n", M, N) != 2)
-	return MM_COULD_NOT_WRITE_FILE;
-    else
-	return 0;
-}
-
-
-
 /*-------------------------------------------------------------------------*/
 
 int mm_write_banner(FILE * f, MM_typecode matcode)
