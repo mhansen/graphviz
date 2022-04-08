@@ -385,7 +385,7 @@ void init_viewport(ViewInfo * view)
     view->camera_count = 0;
     view->active_camera = -1;
     set_viewport_settings_from_template(view, view->systemGraphs.def_attrs);
-    view->Topview->Graphdata.GraphFileName = (char *) 0;
+    view->Topview->Graphdata.GraphFileName = NULL;
     view->colschms = NULL;
     view->arcball = NEW(ArcBall_t);
     view->keymap.down=0;
