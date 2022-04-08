@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifndef _WIN32
-#include <unistd.h>
-#endif
-
 #include <sys/stat.h>
 
 #include <common/render.h>

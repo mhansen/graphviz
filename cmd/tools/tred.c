@@ -17,8 +17,6 @@
  * transitive reduction on stdout
  */
 
-#include "config.h"
-
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <common/arith.h>
@@ -38,9 +36,6 @@ typedef struct {
 #define DISTANCE(ninfo,n) (ninfo[AGSEQ(n)].dist)
 #define agrootof(n) ((n)->root)
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #include <ingraphs/ingraphs.h>
 
 #include <getopt.h>

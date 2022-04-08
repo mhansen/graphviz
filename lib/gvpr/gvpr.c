@@ -863,12 +863,12 @@ static void *ing_open(char *f)
 
 static Agraph_t *ing_read(void *fp)
 {
-    return readG((Sfio_t *) fp);
+    return readG(fp);
 }
 
 static int ing_close(void *fp)
 {
-    return sfclose((Sfio_t *) fp);
+    return sfclose(fp);
 }
 
 static ingdisc ingDisc = { ing_open, ing_read, ing_close, 0 };
