@@ -1801,8 +1801,6 @@ if test "x$with_glitz" != "xyes"; then
 else
   PKG_CHECK_MODULES(GLITZ, [glitz],[
     use_glitz="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_GLITZ,1,
-      [Define if you have the glitz library])
     AC_SUBST([GLITZ_CFLAGS])
     AC_SUBST([GLITZ_LIBS])
   ],[
