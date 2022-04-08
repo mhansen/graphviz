@@ -12,5 +12,4 @@
 
 #include "mmio.h"
 #include <sparse/SparseMatrix.h>
-int mm_get_type(MM_typecode typecode);
 SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format);

@@ -16,7 +16,7 @@
 #define MALLOC gmalloc
 #define REALLOC grealloc
 
-int mm_get_type(MM_typecode typecode)
+static int mm_get_type(MM_typecode typecode)
 {
     if (mm_is_complex(typecode)) {
 	return MATRIX_TYPE_COMPLEX;
