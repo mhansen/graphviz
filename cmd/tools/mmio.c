@@ -24,20 +24,6 @@
 
 #include "mmio.h"
 
-int mm_is_valid(MM_typecode matcode)
-{
-    if (!mm_is_matrix(matcode))
-	return 0;
-    if (mm_is_dense(matcode) && mm_is_pattern(matcode))
-	return 0;
-    if (mm_is_real(matcode) && mm_is_hermitian(matcode))
-	return 0;
-    if (mm_is_pattern(matcode) && (mm_is_hermitian(matcode) ||
-				   mm_is_skew(matcode)))
-	return 0;
-    return 1;
-}
-
 int mm_read_banner(FILE * f, MM_typecode * matcode)
 {
     char line[MM_MAX_LINE_LENGTH];

@@ -53,9 +53,6 @@ int mm_write_mtx_array_size(FILE * f, int M, int N);
 #define mm_is_skew(typecode)	((typecode)[3]=='K')
 #define mm_is_hermitian(typecode)((typecode)[3]=='H')
 
-int mm_is_valid(MM_typecode matcode);	/* too complex for a macro */
-
-
 /********************* MM_typecode modify fucntions ***************************/
 
 #define mm_set_matrix(typecode)	((*typecode)[0]='M')
