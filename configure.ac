@@ -1913,8 +1913,6 @@ if test "x$with_gdk" != "xyes"; then
 else
   PKG_CHECK_MODULES(GDK, [gdk-2.0],[
     use_gdk="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_GDK,1,
-      [Define if you have the gdk library])
     AC_SUBST([GDK_CFLAGS])
     AC_SUBST([GDK_LIBS])
     save_LIBS=$LIBS
@@ -1939,8 +1937,6 @@ if test "x$with_gdk_pixbuf" != "xyes"; then
 else
   PKG_CHECK_MODULES(GDK_PIXBUF, [gdk-pixbuf-2.0],[
     use_gdk_pixbuf="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_GDK_PIXBUF,1,
-      [Define if you have the gdk_pixbuf library])
     AC_SUBST([GDK_PIXBUF_CFLAGS])
     AC_SUBST([GDK_PIXBUF_LIBS])
   ],[

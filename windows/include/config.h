@@ -75,9 +75,6 @@
 /* Define if you have the GDI+ framework for Windows */
 /* #undef HAVE_GDIPLUS */
 
-/* Define if you have the gdk_pixbuf library */
-/* #undef HAVE_GDK_PIXBUF */
-
 /* Define if the GD library has the GD_FONTCONFIG feature */
 #define HAVE_GD_FONTCONFIG 1
 

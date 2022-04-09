@@ -9,9 +9,11 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <assert.h>
+#include <cgraph/unreachable.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
+#include <limits.h>
 #ifdef HAVE_PANGOCAIRO
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
@@ -45,7 +47,7 @@ argb2rgba ( unsigned int width, unsigned int height, char *data)
     for (y = 0; y < height; y++) {
         for (x = 0; x < width; x++) {
             /* swap red and blue */
-            unsigned char r = data[Ra];
+            char r = data[Ra];
             data[Bb] = data[Ba];
 	    data[Rb] = r;
             data += 4;
@@ -56,9 +58,8 @@ argb2rgba ( unsigned int width, unsigned int height, char *data)
 static gboolean
 writer ( const gchar *buf, gsize count, GError **error, gpointer data)
 {
-    if (count == gvwrite((GVJ_t *)data, buf, count))
-        return TRUE;
-    return FALSE;
+  (void)error;
+  return count == gvwrite(data, buf, count);
 }
 
 static void gdk_format(GVJ_t * job)
@@ -82,18 +83,23 @@ static void gdk_format(GVJ_t * job)
     case FORMAT_TIFF:
 	format_str = "tiff";
 	break;
+    default:
+	UNREACHABLE();
     }
 
     argb2rgba(job->width, job->height, job->imagedata);
+
+    assert(job->width <= (unsigned)INT_MAX / 4 && "width out of range");
+    assert(job->height <= (unsigned)INT_MAX && "height out of range");
 
     pixbuf = gdk_pixbuf_new_from_data(
                 (unsigned char*)(job->imagedata), // data
                 GDK_COLORSPACE_RGB,     // colorspace
                 TRUE,                   // has_alpha
                 8,                      // bits_per_sample
-                job->width,             // width
-                job->height,            // height
-                4 * job->width,         // rowstride
+                (int)job->width,        // width
+                (int)job->height,       // height
+                4 * (int)job->width,    // rowstride
                 NULL,                   // destroy_fn
                 NULL                    // destroy_fn_data
                );
