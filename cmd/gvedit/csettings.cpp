@@ -401,7 +401,7 @@ bool CFrmSettings::renderLayout()
 		QString msg ("Output written to ");
 		msg.append(fileName);
 		msg.append("\n");
-		errorPipe((char *) msg.toLatin1().constData());
+		errorPipe(msg.toLatin1().data());
 	    }
 	}
 
