@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <memory>
 #include <QTextEdit>
 #include "imageviewer.h"
 class CMainWindow;
@@ -34,7 +35,7 @@ public:
     bool preview;
     bool applyCairo;
     QString attributes;
-    ImageViewer* previewFrm;
+    std::unique_ptr<ImageViewer> previewFrm;
     CMainWindow* parentFrm;
     bool loadPreview(QString fileName);
     bool firstTime();

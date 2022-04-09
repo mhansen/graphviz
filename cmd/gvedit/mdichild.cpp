@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <memory>
 #include <QtWidgets>
 
 #include "mdichild.h"
@@ -22,7 +22,6 @@ MdiChild::MdiChild()
     renderIdx = 0;
     preview = true;
     applyCairo = false;
-    previewFrm = NULL;
     settingsSet = false;
 }
 
@@ -156,10 +155,10 @@ QString MdiChild::strippedName(const QString & fullFileName)
 
 bool MdiChild::loadPreview(QString fileName)
 {
-    if (!this->previewFrm) {
-	previewFrm = new ImageViewer();
+    if (previewFrm == nullptr) {
+	previewFrm = std::unique_ptr<ImageViewer>(new ImageViewer());
 	previewFrm->graphWindow = this;
-	QMdiSubWindow *s = parentFrm->mdiArea->addSubWindow(previewFrm);
+	QMdiSubWindow *s = parentFrm->mdiArea->addSubWindow(previewFrm.get());
 
 	s->resize(600, 400);
 	s->move(parentFrm->mdiArea->subWindowList().count() * 5,

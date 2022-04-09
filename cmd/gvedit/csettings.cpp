@@ -357,10 +357,9 @@ static QString buildTempFile()
 
 void CFrmSettings::doPreview(QString fileName)
 {
-    if (getActiveWindow()->previewFrm) {
+    if (getActiveWindow()->previewFrm != nullptr) {
 	getActiveWindow()->parentFrm->mdiArea->
 	    removeSubWindow(getActiveWindow()->previewFrm->subWindowRef);
-	delete getActiveWindow()->previewFrm;
 	getActiveWindow()->previewFrm = NULL;
     }
 
