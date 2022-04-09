@@ -1002,7 +1002,6 @@ macos-autotools-test:
     <<: *test_definition
     before_script:
         - source ci/macos-install-runtime-dependencies.sh
-        - python3 -m pip install --requirement requirements.txt
         - export build_system="autotools"
     needs:
         - job: "macos-autotools-build"
@@ -1080,7 +1079,6 @@ macos-cmake-test:
     <<: *test_definition
     before_script:
         - source ci/macos-install-runtime-dependencies.sh
-        - python3 -m pip install --requirement requirements.txt
         - export build_system="cmake"
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:

@@ -38,3 +38,5 @@ export PATH=/opt/local/bin:${PATH}
 
 # lib/mingle dependency
 sudo port install libANN
+
+python3 -m pip install --requirement requirements.txt
