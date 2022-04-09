@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/cgraph.h>
 #include "make_map.h"
@@ -68,9 +69,9 @@ void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMat
   if (A != A0){
     SparseMatrix_delete(A);
   }
-  *rgb_r = MALLOC(sizeof(float)*(n+1));
-  *rgb_g = MALLOC(sizeof(float)*(n+1));
-  *rgb_b = MALLOC(sizeof(float)*(n+1));
+  *rgb_r = gv_calloc(n + 1, sizeof(float));
+  *rgb_g = gv_calloc(n + 1, sizeof(float));
+  *rgb_b = gv_calloc(n + 1, sizeof(float));
 
   for (i = 0; i < n; i++){
     (*rgb_r)[i+1] = (float) colors[cdim*i];
@@ -279,8 +280,8 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
   
   for (i = 0; i < npolys; i++) maxlen = MAX(maxlen, ia[i+1]-ia[i]);
 
-  xp = MALLOC(sizeof(float)*maxlen);
-  yp = MALLOC(sizeof(float)*maxlen);
+  xp = gv_calloc(maxlen, sizeof(float));
+  yp = gv_calloc(maxlen, sizeof(float));
 
   if (Verbose) fprintf(stderr,"npolys = %d\n",npolys);
   first = abs(a[0]); ipoly = first + 1;
@@ -383,7 +384,7 @@ static void get_tri(int n, int dim, double *x, int *nt, struct Triangle **T, Spa
 
   int* trilist = get_triangles(x, n, &ntri);
 
-  *T = N_NEW(ntri,struct Triangle);
+  *T = gv_calloc(ntri, sizeof(struct Triangle));
 
   A = SparseMatrix_new(n, n, 1, MATRIX_TYPE_INTEGER, FORMAT_COORD);
   for (i = 0; i < ntri; i++) {
@@ -495,7 +496,7 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
   graph = NULL;/* we disable checking whether a polyline cross an edge for now due to issues with labels */
   if (graph) {
     assert(graph->m == n);
-    gmask = malloc(sizeof(int)*n);
+    gmask = gv_calloc(n, sizeof(int));
     for (i = 0; i < n; i++) gmask[i] = -1;
     ia = graph->ia; ja = graph->ja;
     edim = 5;/* we also store info about whether an edge of a polygon corresponds to a real edge or not. */
@@ -503,10 +504,10 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
 
   for (i = 0; i < nt; i++) mask[i] = -1;
   /* loop over every point in each connected component */
-  elist = MALLOC(sizeof(int)*nt*edim);
-  tlist = MALLOC(sizeof(int)*nt*2);
+  elist = gv_calloc(nt * edim, sizeof(int));
+  tlist = gv_calloc(nt * 2, sizeof(int));
   *poly_lines = SparseMatrix_new(ncomps, nt, 1, MATRIX_TYPE_INTEGER, FORMAT_COORD);
-  *polys_groups = MALLOC(sizeof(int)*ncomps);
+  *polys_groups = gv_calloc(ncomps, sizeof(int));
 
   for (i = 0; i < nt; i++) elist[i*edim + 2] = 0;
   nz = ie[E->m] - ie[0];
@@ -715,7 +716,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
   SparseMatrix B;
 
   ne = E->nz;
-  edge_table = MALLOC(sizeof(int)*ne*2);  
+  edge_table = gv_calloc(ne * 2, sizeof(int));
 
   for (i = 0; i < n; i++) mask[i] = -1;
 
@@ -748,19 +749,19 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
   }
   assert(E->nz >= ne);
 
-  cycle = MALLOC(sizeof(int)*ne*2);
+  cycle = gv_calloc(ne * 2, sizeof(int));
   B = SparseMatrix_from_coordinate_format_not_compacted(half_edges);
   SparseMatrix_delete(half_edges);half_edges = B;
 
-  edge_cycle_map = MALLOC(sizeof(int)*ne);
-  emask = MALLOC(sizeof(int)*ne);
+  edge_cycle_map = gv_calloc(ne, sizeof(int));
+  emask = gv_calloc(ne, sizeof(int));
   for (i = 0; i < ne; i++) edge_cycle_map[i] = NOT_ON_CYCLE;
   for (i = 0; i < ne; i++) emask[i] = -1;
 
   ie = half_edges->ia;
   je = half_edges->ja;
   e = (int*) half_edges->a;
-  elist = MALLOC(sizeof(int)*nt*3);
+  elist = gv_calloc(nt * 3, sizeof(int));
   for (i = 0; i < nt; i++) elist[i*edim + 2] = 0;
 
   *polys = SparseMatrix_new(ncomps, nt, 1, MATRIX_TYPE_INTEGER, FORMAT_COORD);
@@ -955,7 +956,7 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
   assert(dim == 2);
   *nverts = nt;
  
-  groups = MALLOC(sizeof(int)*(n + nrandom));
+  groups = gv_calloc(n + nrandom, sizeof(int));
   maxgrp = grouping[0];
   for (i = 0; i < n; i++) {
     maxgrp = MAX(maxgrp, grouping[i]);
@@ -971,7 +972,7 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
   }
   
   /* finding connected components: vertices that are connected in the triangle graph, as well as in the same group */
-  mask = MALLOC(sizeof(int)*MAX(n + nrandom, 2*nt));
+  mask = gv_calloc(MAX(n + nrandom, 2 * nt), sizeof(int));
   conn_comp(n + nrandom, E, groups, poly_point_map);
 
   ncomps = (*poly_point_map)->m;
@@ -996,7 +997,7 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
   }
   *npolys = ncomps;
 
-  *x_poly = MALLOC(sizeof(double)*dim*nt);
+  *x_poly = gv_calloc(dim * nt, sizeof(double));
   for (i = 0; i < nt; i++){
     for (j = 0; j < dim; j++){
       (*x_poly)[i*dim+j] = Tp[i].center[j];
@@ -1087,9 +1088,9 @@ static int make_map_internal(int exclude_random, int include_OK_points,
     if (graph && np){
       fprintf(stderr,"add art np = %d\n",np);
       nz = graph->nz;
-      y = MALLOC(sizeof(double)*(dim*n + dim*nz*np));
+      y = gv_calloc(dim * n + dim * nz * np, sizeof(double));
       for (i = 0; i < n*dim; i++) y[i] = x[i];
-      grouping = MALLOC(sizeof(int)*(n + nz*np));
+      grouping = gv_calloc(n + nz * np, sizeof(int));
       for (i = 0; i < n; i++) grouping[i] = grouping0[i];
       nz = n;
       for (i = 0; i < graph->m; i++){
@@ -1160,16 +1161,16 @@ static int make_map_internal(int exclude_random, int include_OK_points,
       *nrandom = MAX(n1, n2);
     }
     srand(123);
-    xran = MALLOC(sizeof(double)*(*nrandom + 4)*dim2);
+    xran = gv_calloc((*nrandom + 4) * dim2, sizeof(double));
     nz = 0;
     if (INCLUDE_OK_POINTS){
       nzok0 = nzok = *nrandom - 1;/* points that are within tolerance of real or artificial points */
       if (grouping == grouping0) {
-        int *grouping2 = MALLOC(sizeof(int)*(n + *nrandom));
+        int *grouping2 = gv_calloc(n + *nrandom, sizeof(int));
         memcpy(grouping2, grouping, sizeof(int)*n);
         grouping = grouping2;
       } else {
-        grouping = REALLOC(grouping, sizeof(int)*(n + *nrandom));
+        grouping = gv_recalloc(grouping, n, n + *nrandom, sizeof(int));
       }
     }
     nn = n;
@@ -1201,7 +1202,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
     *nrandom = nz;
     if (Verbose) fprintf( stderr, "nn nrandom=%d\n",*nrandom);
   } else {
-    xran = MALLOC(sizeof(double)*4*dim2);
+    xran = gv_calloc(4 * dim2, sizeof(double));
   }
 
 
@@ -1221,9 +1222,9 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 
 
   if (INCLUDE_OK_POINTS){
-    *xcombined = MALLOC(sizeof(double)*(nn+*nrandom)*dim2);
+    *xcombined = gv_calloc((nn + *nrandom) * dim2, sizeof(double));
   } else {
-    *xcombined = MALLOC(sizeof(double)*(n+*nrandom)*dim2);
+    *xcombined = gv_calloc((n + *nrandom) * dim2, sizeof(double));
   }
   for (i = 0; i < n; i++) {
     for (j = 0; j < dim2; j++) (*xcombined)[i*dim2+j] = x[i*dim+j];
@@ -1245,7 +1246,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
     double *xtemp;
     if (HIGHLIGHT_SET){
       if (Verbose) fprintf(stderr," highlight cluster %d, n = %d\n",HIGHLIGHT_SET, n);
-      xtemp = MALLOC(sizeof(double)*n*dim);
+      xtemp = gv_calloc(n * dim, sizeof(double));
       /* shift set to the beginning */
       nz = 0;
       for (i = 0; i < n; i++){
@@ -1293,9 +1294,10 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 static void add_point(int *n, int igrp, double **x, int *nmax, double point[], int **groups){
 
   if (*n >= *nmax){
+    int old_nmax = *nmax;
     *nmax = MAX((int) 0.2*(*n), 20) + *n;
-    *x = REALLOC(*x, sizeof(double)*2*(*nmax));
-    *groups = REALLOC(*groups, sizeof(int)*(*nmax));
+    *x = gv_recalloc(*x, 2 * old_nmax, 2 * *nmax, sizeof(double));
+    *groups = gv_recalloc(*groups, old_nmax, nmax, sizeof(int));
   }
 
   (*x)[(*n)*2] = point[0];
@@ -1430,8 +1432,8 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
     if (Verbose) fprintf(stderr, "avgsize = {%f, %f}\n",avgsize[0], avgsize[1]);
 
     nmax = 2*n;
-    X = MALLOC(sizeof(double)*dim*(n+nmax));
-    groups = MALLOC(sizeof(int)*(n+nmax));
+    X = gv_calloc(dim * (n + nmax), sizeof(double));
+    groups = gv_calloc(n + nmax, sizeof(int));
     for (i = 0; i < n; i++) {
       groups[i] = grouping[i];
       for (j = 0; j < 2; j++){
