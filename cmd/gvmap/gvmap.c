@@ -46,7 +46,6 @@ typedef struct {
     double line_width;
     char *color_scheme_str;
     const char *opacity;
-    char *plot_label;
     int improve_contiguity_n;
     int nart;
     bool color_optimize;
@@ -164,7 +163,6 @@ init(int argc, char **argv, params_t* pm)
   pm->show_points = 0;
   pm->color_scheme = COLOR_SCHEME_PASTEL; 
   pm->line_width = 0;
-  pm->plot_label = NULL;
   pm->improve_contiguity_n = 0;
   pm->nart = -1;
   pm->color_optimize = true;
@@ -294,8 +292,7 @@ init(int argc, char **argv, params_t* pm)
       }
       break;
     case 'l':
-      free (pm->plot_label);
-      pm->plot_label = strdup (optarg);
+      // ignored
       break;
     case ':':
       fprintf(stderr, "gvpack: option -%c missing argument - ignored\n", optopt);
