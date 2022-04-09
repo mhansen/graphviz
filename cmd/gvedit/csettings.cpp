@@ -341,7 +341,7 @@ bool CFrmSettings::createLayout()
     layout=WIDGET(QComboBox, cbLayout)->currentText();
 
 
-    gvLayout(gvc, G, (char *)layout.toUtf8().constData());	/* library function */
+    gvLayout(gvc, G, layout.toUtf8().constData());	/* library function */
     return true;
 }
 
@@ -365,8 +365,7 @@ void CFrmSettings::doPreview(QString fileName)
 
     if ((fileName.isNull()) || !(getActiveWindow()->loadPreview(fileName))) {	//create preview
 	QString prevFile(buildTempFile());
-	gvRenderFilename(gvc, graph, "png",
-			 (char *) prevFile.toUtf8().constData());
+	gvRenderFilename(gvc, graph, "png", prevFile.toUtf8().constData());
 	getActiveWindow()->loadPreview(prevFile);
     }
 }
@@ -406,9 +405,8 @@ bool CFrmSettings::renderLayout()
 	    }
 	}
 
-	if (gvRenderFilename
-	    (gvc, graph, (char *) sfx.toUtf8().constData(),
-	     (char *) fileName.toUtf8().constData()))
+	if (gvRenderFilename(gvc, graph, sfx.toUtf8().constData(),
+	                     fileName.toUtf8().constData()))
 	    return false;
 
 	doPreview(fileName);
