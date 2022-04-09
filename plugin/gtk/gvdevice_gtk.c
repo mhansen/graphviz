@@ -81,16 +81,16 @@ static void gtk_finalize(GVJ_t *firstjob)
     for (job = firstjob; job; job = job->next_active) {
 	window1 = create_window1 ();
 
-	g_object_set_data(G_OBJECT(window1), "job", (gpointer) job);
+	g_object_set_data(G_OBJECT(window1), "job", job);
 
 	drawingarea1 = lookup_widget (window1, "drawingarea1");      /* main graph view */
-	g_object_set_data(G_OBJECT(drawingarea1), "job", (gpointer) job);
+	g_object_set_data(G_OBJECT(drawingarea1), "job", job);
 
 	drawingarea2 = lookup_widget (window1, "drawingarea2");      /* keyholeview */
-	g_object_set_data(G_OBJECT(drawingarea2), "job", (gpointer) job);
+	g_object_set_data(G_OBJECT(drawingarea2), "job", job);
 
 	treeview2 = lookup_widget (window1, "treeview2"); /* attribute/value view */
-	g_object_set_data(G_OBJECT(treeview2), "job", (gpointer) job);
+	g_object_set_data(G_OBJECT(treeview2), "job", job);
 	
 	attr_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 	
