@@ -377,7 +377,7 @@ bool CFrmSettings::renderLayout()
     QString sfx = WIDGET(QComboBox, cbExtension)->currentText();
     QString fileName(WIDGET(QLineEdit, leOutput)->text());
 
-    if (fileName == QString("") || sfx == QString("NONE"))
+    if (fileName == "" || sfx == "NONE")
 	doPreview(QString());
     else {
 	fileName = stripFileExtension(fileName);
