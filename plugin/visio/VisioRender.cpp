@@ -38,8 +38,8 @@ namespace Visio
 {
 	using namespace std;
 	
-	static const float INCHES_PER_POINT = 1.0 / 72.0;
-	static const float ZERO_ADJUST = 0.125;
+	static const float INCHES_PER_POINT = 1.0f / 72.0f;
+	static const float ZERO_ADJUST = 0.125f;
 	
 	enum ConLineRouteExt
 	{
