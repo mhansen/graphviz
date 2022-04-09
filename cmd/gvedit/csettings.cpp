@@ -113,8 +113,8 @@ CFrmSettings::CFrmSettings()
     this->gvc = gvContext();
     Ui_Dialog tempDia;
     tempDia.setupUi(this);
-    graph = NULL;
-    activeWindow = NULL;
+    graph = nullptr;
+    activeWindow = nullptr;
     QString path;
 #ifndef _WIN32
     char *s = getenv("GVEDIT_PATH");
@@ -301,7 +301,7 @@ bool CFrmSettings::loadGraph(MdiChild * m)
 {
     if (graph) {
 	agclose(graph);
-	graph = NULL;
+	graph = nullptr;
     }
     graphData.clear();
     graphData.append(m->toPlainText());
@@ -332,7 +332,7 @@ bool CFrmSettings::createLayout()
 	return false;
     if (agerrors()) {
 	agclose(graph);
-	graph = NULL;
+	graph = nullptr;
 	return false;
     }
     Agraph_t *G = this->graph;
@@ -360,7 +360,7 @@ void CFrmSettings::doPreview(QString fileName)
     if (getActiveWindow()->previewFrm != nullptr) {
 	getActiveWindow()->parentFrm->mdiArea->
 	    removeSubWindow(getActiveWindow()->previewFrm->subWindowRef);
-	getActiveWindow()->previewFrm = NULL;
+	getActiveWindow()->previewFrm = nullptr;
     }
 
     if ((fileName.isNull()) || !(getActiveWindow()->loadPreview(fileName))) {	//create preview
