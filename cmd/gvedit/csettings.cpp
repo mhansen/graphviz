@@ -45,7 +45,7 @@ QString findAttrFile ()
 	return path;
     }
     r = GetModuleFileNameA((HMODULE)mbi.AllocationBase, line, BSZ);
-    if (!r || (r == BSZ)) {
+    if (!r || r == BSZ) {
 	errout << "failed to get path for executable.\n";
 	return path;
     }
@@ -377,7 +377,7 @@ bool CFrmSettings::renderLayout()
     QString sfx = WIDGET(QComboBox, cbExtension)->currentText();
     QString fileName(WIDGET(QLineEdit, leOutput)->text());
 
-    if ((fileName == QString("")) || (sfx == QString("NONE")))
+    if (fileName == QString("") || sfx == QString("NONE"))
 	doPreview(QString());
     else {
 	fileName = stripFileExtension(fileName);
@@ -386,7 +386,7 @@ bool CFrmSettings::renderLayout()
 	    activeWindow->outputFile = fileName;
 
 #ifdef _WIN32
-	if ((!fileName.contains('/')) && (!fileName.contains('\\'))) 
+	if (!fileName.contains('/') && !fileName.contains('\\'))
 #else
 	if (!fileName.contains('/'))
 #endif
@@ -476,7 +476,7 @@ int CFrmSettings::runSettings(MdiChild * m)
 	    return drawGraph();
 
 
-    if ((m) && (m == getActiveWindow())) {
+    if (m && m == getActiveWindow()) {
 	if (this->loadGraph(m))
 	    return drawGraph();
 	else

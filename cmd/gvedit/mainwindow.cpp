@@ -42,7 +42,7 @@ static int LoadPlugins(QComboBox * cb, GVC_t * gvc, const char *kind,
     cb->clear();
     for (int id = 0; id < count; id++) {
 	cb->addItem(QString(lp[id]));
-	if (prefer && (idx < 0) && !strcmp(prefer, lp[id]))
+	if (prefer && idx < 0 && !strcmp(prefer, lp[id]))
 	    idx = id;
     };
     freeList(lp, count);
