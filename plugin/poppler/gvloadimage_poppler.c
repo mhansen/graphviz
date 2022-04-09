@@ -63,13 +63,13 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
 		    absolute = g_strdup (us->name);
 		} else {
 		    gchar *dir = g_get_current_dir ();
-		    absolute = g_build_filename (dir, us->name, (gchar *) 0);
+		    absolute = g_build_filename(dir, us->name, NULL);
 		    free (dir);
 		}
 
 		uri = g_filename_to_uri (absolute, NULL, &error);
 
-		free (absolute);
+		g_free(absolute);
 		if (uri == NULL) {
 		    printf("%s\n", error->message);
 		    return NULL;
@@ -107,10 +107,12 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
 
 static void gvloadimage_poppler_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+    (void)filled;
+
     PopplerDocument* document = gvloadimage_poppler_load(job, us);
     PopplerPage* page;
 
-    cairo_t *cr = (cairo_t *) job->context; /* target context */
+    cairo_t *cr = job->context; /* target context */
     cairo_surface_t *surface;	 /* source surface */
 
     if (document) {
