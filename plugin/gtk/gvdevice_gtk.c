@@ -12,9 +12,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 
 #include <gvc/gvplugin_device.h>
 
