@@ -15,13 +15,13 @@
 #include <math.h>
 #include <string.h>
 #include <assert.h>
+#include <cgraph/exit.h>
 /* Applications that do not use the common library can define STANDALONE
  * to get definitions/definitions that are normally provided there.
  * In particular, note that Verbose is declared but undefined.
  */
 #ifndef STANDALONE
 #include "cgraph.h"
-#include "exit.h"
 #include "globals.h"
 #include "logic.h"
 #include "arith.h"
@@ -65,26 +65,6 @@ __declspec(dllimport) extern unsigned char Verbose;
 #else
 extern unsigned char Verbose;
 #endif
-
-#ifdef __GNUC__
-// FIXME: use _Noreturn for all compilers when we move to C11
-#define NORETURN __attribute__((noreturn))
-#elif defined(_MSC_VER)
-#define NORETURN __declspec(noreturn)
-#else
-#define NORETURN /* nothing */
-#endif
-
-static inline NORETURN void graphviz_exit(int status) {
-#ifdef __MINGW32__
-  // workaround for https://gitlab.com/graphviz/graphviz/-/issues/2178
-  fflush(stdout);
-  fflush(stderr);
-#endif
-  exit(status);
-}
-
-#undef NORETURN
 
 #else  /* STANDALONE */
 #define CALLOC gcalloc
