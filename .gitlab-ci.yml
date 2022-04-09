@@ -78,7 +78,7 @@ portable-source:
     stage: build
     needs: [] # FIXME: remove when building from portable source
     script:
-        - source ci/install-build-dependencies-macos.sh
+        - source ci/macos-install-build-dependencies.sh
         - logfile=`mktemp`
         - ci/build.sh 2>&1 | tee $logfile
         - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
@@ -1001,7 +1001,7 @@ fedora35-test:
 macos-autotools-test:
     <<: *test_definition
     before_script:
-        - source ci/install-runtime-dependencies-macos.sh
+        - source ci/macos-install-runtime-dependencies.sh
         - python3 -m pip install --requirement requirements.txt
         - export build_system="autotools"
     needs:
@@ -1079,7 +1079,7 @@ centos7-cmake-test:
 macos-cmake-test:
     <<: *test_definition
     before_script:
-        - source ci/install-runtime-dependencies-macos.sh
+        - source ci/macos-install-runtime-dependencies.sh
         - python3 -m pip install --requirement requirements.txt
         - export build_system="cmake"
         - python3 gen_version.py --output GRAPHVIZ_VERSION
