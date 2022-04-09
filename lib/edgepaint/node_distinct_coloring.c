@@ -17,14 +17,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-static double mydist(int dim, double *x, double *y){
-  int k;
-  double d = 0;
-  for (k = 0; k < dim; k++) d += (x[k] - y[k])*(x[k]-y[k]);
-  return sqrt(d);
-}
-
-
 static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
                                              bool weightedQ, SparseMatrix A,
                                              int cdim, double accuracy,
@@ -124,9 +116,9 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
       }
       cc = &(colors[i*cdim]);
       if (scheme == COLOR_LAB){
-	furtherest_point_in_list(k, cdim, wgt, x, qt, max_level, mydist, &dist_max, &cc);
+	furtherest_point_in_list(k, cdim, wgt, x, qt, max_level, &dist_max, &cc);
       } else if (scheme == COLOR_RGB || scheme == COLOR_GRAY){
-	furtherest_point(k, cdim, wgt, x, center, width, max_level, mydist, &dist_max, &cc);
+	furtherest_point(k, cdim, wgt, x, center, width, max_level, &dist_max, &cc);
       } else {
 	assert(0);
       }
