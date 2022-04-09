@@ -133,9 +133,9 @@ void glCompButtonDraw(glCompButton * p)
 			p->common.borderWidth, 0.01f, &(ref.color),
 			!p->status);
     if (p->label)
-	p->label->common.functions.draw((void *) p->label);
+	p->label->common.functions.draw(p->label);
     if (p->image)
-	p->image->common.functions.draw((void *) p->image);
+	p->image->common.functions.draw(p->image);
     if (p->common.callbacks.draw)
 	p->common.callbacks.draw(p);	/*user defined drawing routines are called here. */
 }

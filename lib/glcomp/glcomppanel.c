@@ -20,7 +20,7 @@ glCompPanel *glCompPanelNew(glCompObj * parentObj, GLfloat x, GLfloat y,
 {
     glCompPanel *p;
     p = NEW(glCompPanel);
-    glCompInitCommon((glCompObj *) p, parentObj, (GLfloat) x, (GLfloat) y);
+    glCompInitCommon((glCompObj *) p, parentObj, x, y);
 
     p->shadowcolor.R = GLCOMPSET_PANEL_SHADOW_COLOR_R;
     p->shadowcolor.G = GLCOMPSET_PANEL_SHADOW_COLOR_G;
@@ -81,7 +81,7 @@ int glCompPanelDraw(glCompObj * o)
 			p->common.borderWidth, 0.01f, &ref.color, 1);
     /*draw image if there is */
     if (p->image) {
-	p->image->common.callbacks.draw((void *) p->image);
+	p->image->common.callbacks.draw(p->image);
     }
     return 1;
 }
