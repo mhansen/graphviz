@@ -60,7 +60,7 @@ htmlparse.c htmlparse.h: $(top_srcdir)/lib/common/htmlparse.y
 	$(YACC) -Wno-yacc -dv $(top_srcdir)/lib/common/htmlparse.y -o htmlparse.c
 
 DISTCLEANFILES = brewer_lib color_lib colortbl.h \
-	htmlparse.[ch]
+	htmlparse.[ch] svgcolor_lib
 
 EXTRA_DIST = README.imap \
 	htmlparse.c htmlparse.h \
