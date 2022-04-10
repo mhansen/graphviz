@@ -227,6 +227,7 @@ target_include_directories(gvcolor SYSTEM PRIVATE
 target_link_libraries(gvcolor
   cgraph
   ingraphs
+  ${MATH_LIB}
 )
 
 tool_defaults(gvcolor)

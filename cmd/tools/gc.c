@@ -13,13 +13,8 @@
  * Written by Emden Gansner
  */
 
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #include <string.h>
 
 #define NEW(t)           malloc(sizeof(t))

@@ -10,8 +10,6 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <io.h>
-#else
-#include <unistd.h>
 #endif
 #include "viewport.h"
 #include "draw.h"
@@ -83,7 +81,7 @@ char *get_attribute_value(char *attr, ViewInfo * view, Agraph_t * g)
 {
     char *buf;
     buf = agget(g, attr);
-    if ((!buf) || (*buf == '\0'))
+    if (!buf || *buf == '\0')
 	buf = agget(view->systemGraphs.def_attrs, attr);
     return buf;
 }
@@ -247,10 +245,7 @@ static gboolean gl_main_expose(gpointer data)
 
 static void get_data_dir(void)
 {
-    if (view->template_file) {
-	free(view->template_file);
-    }
-
+    free(view->template_file);
     view->template_file = strdup(smyrnaPath("template.dot"));
 }
 
@@ -286,7 +281,7 @@ void init_viewport(ViewInfo * view)
     }
     view->systemGraphs.attrs_widgets = agread(input_file2, NULL);
     fclose (input_file2);
-    if (!(view->systemGraphs.attrs_widgets )) {
+    if (!view->systemGraphs.attrs_widgets) {
 	fprintf(stderr,"could not load default attribute widgets graph file \"%s\"\n",smyrnaPath("attr_widgets.dot"));
 	graphviz_exit(-1);
     }
@@ -390,7 +385,7 @@ void init_viewport(ViewInfo * view)
     view->camera_count = 0;
     view->active_camera = -1;
     set_viewport_settings_from_template(view, view->systemGraphs.def_attrs);
-    view->Topview->Graphdata.GraphFileName = (char *) 0;
+    view->Topview->Graphdata.GraphFileName = NULL;
     view->colschms = NULL;
     view->arcball = NEW(ArcBall_t);
     view->keymap.down=0;
@@ -538,7 +533,7 @@ int add_graph_to_viewport(Agraph_t * graph, char *id)
 }
 void switch_graph(int graphId)
 {
-    if ((graphId >= view->graphCount) || (graphId < 0))
+    if (graphId >= view->graphCount || graphId < 0)
 	return;			/*wrong entry */
     else
 	activate(graphId);
@@ -601,8 +596,7 @@ int save_as_graph(void)
 {
     //check if there is an active graph
     if (view->activeGraph > -1) {
-	GtkWidget *dialog;
-	dialog = gtk_file_chooser_dialog_new("Save File",
+	GtkWidget *dialog = gtk_file_chooser_dialog_new("Save File",
 					     NULL,
 					     GTK_FILE_CHOOSER_ACTION_SAVE,
 					     GTK_STOCK_CANCEL,
@@ -612,8 +606,7 @@ int save_as_graph(void)
 	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER
 						       (dialog), TRUE);
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-	    char *filename;
-	    filename =
+	    char *filename =
 		gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 	    save_graph_with_file_name(view->g[view->activeGraph],
 				      filename);
@@ -636,7 +629,7 @@ void glexpose(void)
 
 static float interpol(float minv, float maxv, float minc, float maxc, float x)
 {
-    return ((x - minv) * (maxc - minc) / (maxv - minv) + minc);
+    return (x - minv) * (maxc - minc) / (maxv - minv) + minc;
 }
 
 void getcolorfromschema(colorschemaset * sc, float l, float maxl,
