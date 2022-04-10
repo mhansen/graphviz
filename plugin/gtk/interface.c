@@ -58,7 +58,6 @@ create_window1 (void)
   GtkWidget *scrolledwindow3;
   GtkWidget *treeview1;
   GtkWidget *toolbar1;
-  GtkIconSize tmp_toolbar_icon_size;
   GtkWidget *toolitem1;
   GtkWidget *label1;
   GtkWidget *toolitem2;
@@ -189,7 +188,6 @@ create_window1 (void)
   gtk_widget_show (toolbar1);
   gtk_box_pack_start (GTK_BOX (vbox2), toolbar1, FALSE, FALSE, 0);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar1), GTK_TOOLBAR_ICONS);
-  tmp_toolbar_icon_size = gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar1));
 
   toolitem1 = (GtkWidget*) gtk_tool_item_new ();
   gtk_widget_show (toolitem1);
