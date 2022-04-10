@@ -15,8 +15,6 @@
 #ifdef _WIN32
 #include <glcomp/glpangofont.h>
 typedef float GLfloat;
-#else
-#include <unistd.h>
 #endif
 #include <glcomp/opengl.h>
 #include <glcomp/glcompdefs.h>
