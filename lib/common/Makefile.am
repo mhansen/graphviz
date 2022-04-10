@@ -46,12 +46,9 @@ color_lib : brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names
 brewer_lib : $(top_srcdir)/lib/common/brewer_colors $(top_srcdir)/awk/brewer.awk
 	$(AWK) -f $(top_srcdir)/awk/brewer.awk $(top_srcdir)/lib/common/brewer_colors > brewer_lib
 
-if WITH_CYGWIN
-AWK_OPTIONS=-v RS="\r*\n"
-endif
-
-svgcolor_lib : $(top_srcdir)/lib/common/svgcolor_names $(top_srcdir)/awk/svgcolor.awk
-	$(AWK) $(AWK_OPTIONS) -f $(top_srcdir)/awk/svgcolor.awk $(top_srcdir)/lib/common/svgcolor_names > svgcolor_lib
+svgcolor_lib: $(top_srcdir)/lib/common/svgcolor_names \
+              $(top_srcdir)/lib/common/make_svgcolor_lib.py
+	python3 $(top_srcdir)/lib/common/make_svgcolor_lib.py "$<" "$@"
 
 htmllex.o htmllex.lo: htmllex.c htmllex.h htmlparse.h
 htmlparse.o htmlparse.lo: htmlparse.c htmlparse.h
@@ -66,4 +63,5 @@ EXTRA_DIST = README.imap \
 	htmlparse.c htmlparse.h \
 	entities.html entities.tcl \
 	brewer_colors brewer_lib svgcolor_names svgcolor_lib \
-	color_names color_lib colortbl.h
+	color_names color_lib colortbl.h \
+	make_svgcolor_lib.py

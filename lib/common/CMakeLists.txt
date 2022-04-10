@@ -3,19 +3,14 @@ BISON_TARGET(HTMLparse ${CMAKE_CURRENT_SOURCE_DIR}/htmlparse.y
 
 add_definitions(-DGVC_EXPORTS)
 
-if(CYGWIN)
-  set(AWK_OPTIONS, -v RS="\\r*\\n")
-endif()
-
 # Generate colortbl.h from sources
 add_custom_command(
   OUTPUT svgcolor_lib
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
-          ${CMAKE_SOURCE_DIR}/awk/svgcolor.awk
-  COMMAND ${AWK_EXECUTABLE} ${AWK_OPTIONS} -f
-          ${CMAKE_SOURCE_DIR}/awk/svgcolor.awk
+  MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/make_svgcolor_lib.py
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/make_svgcolor_lib.py
           ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
-          >${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
+          ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
   COMMENT "generate SVG color library"
 )
 add_custom_command(
