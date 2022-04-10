@@ -16,7 +16,7 @@
 
 #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040 && defined(HAVE_PANGOCAIRO)
 
-const void *memory_data_consumer_get_byte_pointer(void *info)
+static const void *memory_data_consumer_get_byte_pointer(void *info)
 {
 	return info;
 }
@@ -34,7 +34,9 @@ static void quartz_format(GVJ_t *job)
 	/* image destination -> data consumer -> job's gvdevice */
 	/* data provider <- job's imagedata */
 	CGDataConsumerRef data_consumer = CGDataConsumerCreate(job, &device_data_consumer_callbacks);
-	CGImageDestinationRef image_destination = CGImageDestinationCreateWithDataConsumer(data_consumer, format_to_uti(job->device.id), 1, NULL);
+	CGImageDestinationRef image_destination =
+	  CGImageDestinationCreateWithDataConsumer(data_consumer,
+	    format_to_uti((format_type)job->device.id), 1, NULL);
 	CGDataProviderRef data_provider = CGDataProviderCreateDirect(job->imagedata, BYTES_PER_PIXEL * job->width * job->height, &memory_data_provider_callbacks);
 	
 	/* add the bitmap image to the destination and save it */

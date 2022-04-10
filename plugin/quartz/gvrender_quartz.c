@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
 #if __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 20000
 #include <mach/mach_host.h>
 #include <sys/mman.h>
@@ -20,6 +21,7 @@
 
 #if __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 40000
 #include <ImageIO/ImageIO.h>
+#endif
 #endif
 
 #include <gvc/gvplugin_device.h>
@@ -45,8 +47,9 @@ static void quartzgen_begin_job(GVJ_t * job)
 
 static void quartzgen_end_job(GVJ_t * job)
 {
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
 	
+#ifdef __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
 #if __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 20000
 	void* context_data;
 	size_t context_datalen;
@@ -64,6 +67,7 @@ static void quartzgen_end_job(GVJ_t * job)
 			break;
 	}
 #endif
+#endif
 
 	switch (job->device.id) {
 
@@ -77,7 +81,10 @@ static void quartzgen_end_job(GVJ_t * job)
 		*((CGImageRef *) job->window) = CGBitmapContextCreateImage(context);
 	    break;
 
-#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040 || __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 40000
+#if (defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) &&                 \
+     __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040) ||                 \
+    (defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__) &&                \
+     __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 40000)
 	default:		/* bitmap formats */
 	    {
 		/* create an image destination */
@@ -86,9 +93,7 @@ static void quartzgen_end_job(GVJ_t * job)
 					 &device_data_consumer_callbacks);
 		CGImageDestinationRef image_destination =
 		    CGImageDestinationCreateWithDataConsumer(data_consumer,
-							     format_to_uti(job->device.id),
-								 1,
-							     NULL);
+							     format_to_uti((format_type)job->device.id), 1, NULL);
 
 		/* add the bitmap image to the destination and save it */
 		CGImageRef image = CGBitmapContextCreateImage(context);
@@ -107,9 +112,11 @@ static void quartzgen_end_job(GVJ_t * job)
 	
 	CGContextRelease(context);
 
+#ifdef __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
 #if __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 20000
 	if (context_data && context_datalen)
 		munmap(context_data, context_datalen);
+#endif
 #endif
 }
 
@@ -163,10 +170,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 		/* clean up */
 		CGDataConsumerRelease(data_consumer);
 		CFRelease(auxiliaryInfo);
-		int i;
-		for (i = 0;
-		     i <
-		     sizeof(auxiliaryValues) / sizeof(auxiliaryValues[0]);
+		for (size_t i = 0; i < sizeof(auxiliaryValues) / sizeof(auxiliaryValues[0]);
 		     ++i)
 		    CFRelease(auxiliaryValues[i]);
 	    }
@@ -180,6 +184,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 
 		void *buffer = NULL;
 
+#ifdef __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
 #if __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 20000
 
 		/* iPhoneOS has no swap files for memory, so if we're short of memory we need to make our own temp scratch file to back it */
@@ -205,7 +210,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 				     PROT_READ | PROT_WRITE,
 				     MAP_FILE | MAP_SHARED,
 				     temp_file_descriptor, 0);
-			    if (buffer == (void *) -1)
+			    if (buffer == MAP_FAILED)
 				buffer = NULL;
 			}
 			fclose(temp_file);
@@ -216,6 +221,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 				  buffer_size,
 				  PROT_READ | PROT_WRITE,
 				  MAP_ANON | MAP_SHARED, -1, 0);
+#endif
 #endif
 
 		/* create a true color bitmap for drawing into */
@@ -229,8 +235,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 						     color_space,	/* color space: device RGB */
 						     kCGImageAlphaPremultipliedFirst	/* bitmap info: premul ARGB has best support in OS X */
 		    );
-		job->imagedata =
-		    CGBitmapContextGetData((CGContextRef) job->context);
+		job->imagedata = CGBitmapContextGetData(job->context);
 
 		/* clean up */
 		CGColorSpaceRelease(color_space);
@@ -241,7 +246,7 @@ static void quartzgen_begin_page(GVJ_t * job)
     }
 
     /* start the page (if this is a paged context) and graphics state */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextBeginPage(context, &bounds);
     CGContextSaveGState(context);
     /* CGContextSetMiterLimit(context, 1.0); */
@@ -256,7 +261,7 @@ static void quartzgen_begin_page(GVJ_t * job)
 static void quartzgen_end_page(GVJ_t * job)
 {
     /* end the page (if this is a paged context) and graphics state */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextRestoreGState(context);
     CGContextEndPage(context);
 }
@@ -264,10 +269,14 @@ static void quartzgen_end_page(GVJ_t * job)
 static void quartzgen_begin_anchor(GVJ_t * job, char *url, char *tooltip,
 				   char *target, char *id)
 {
+    (void)tooltip;
+    (void)target;
+    (void)id;
+
     pointf *url_map = job->obj->url_map_p;
     if (url && url_map) {
 	/* set up the hyperlink to the given url */
-	CGContextRef context = (CGContextRef) job->context;
+	CGContextRef context = job->context;
 	CFURLRef uri =
 	    CFURLCreateWithBytes(kCFAllocatorDefault, (const UInt8 *) url,
 				 strlen(url), kCFStringEncodingUTF8, NULL);
@@ -294,7 +303,7 @@ static void quartzgen_begin_anchor(GVJ_t * job, char *url, char *tooltip,
 
 static void quartzgen_path(GVJ_t * job, int filled)
 {
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
 
     /* set up colors */
     if (filled)
@@ -333,9 +342,9 @@ static void quartzgen_path(GVJ_t * job, int filled)
     CGContextDrawPath(context, filled ? kCGPathFillStroke : kCGPathStroke);
 }
 
-void quartzgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
+static void quartzgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 {
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
 
     /* adjust text position */
     switch (span->just) {
@@ -372,7 +381,7 @@ void quartzgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 static void quartzgen_ellipse(GVJ_t * job, pointf * A, int filled)
 {
     /* convert ellipse into the current path */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     double dx = A[1].x - A[0].x;
     double dy = A[1].y - A[0].y;
     CGContextAddEllipseInRect(context,
@@ -386,7 +395,7 @@ static void quartzgen_ellipse(GVJ_t * job, pointf * A, int filled)
 static void quartzgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
 {
     /* convert polygon into the current path */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextMoveToPoint(context, A[0].x, A[0].y);
     int i;
     for (i = 1; i < n; ++i)
@@ -401,8 +410,11 @@ static void
 quartzgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
 		 int arrow_at_end, int filled)
 {
+    (void)arrow_at_start;
+    (void)arrow_at_end;
+
     /* convert bezier into the current path */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextMoveToPoint(context, A[0].x, A[0].y);
     int i;
     for (i = 1; i < n; i += 3)
@@ -416,7 +428,7 @@ quartzgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
 static void quartzgen_polyline(GVJ_t * job, pointf * A, int n)
 {
     /* convert polyline into the current path */
-    CGContextRef context = (CGContextRef) job->context;
+    CGContextRef context = job->context;
     CGContextMoveToPoint(context, A[0].x, A[0].y);
     int i;
     for (i = 1; i < n; ++i)
@@ -467,7 +479,10 @@ static gvrender_features_t render_features_quartz = {
     RGBA_DOUBLE			/* color_type */
 };
 
-#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040 || __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 20000
+#if (defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) &&                 \
+     __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040) ||                 \
+    (defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__) &&                \
+     __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 20000)
 static gvdevice_features_t device_features_quartz = {
     GVDEVICE_BINARY_FORMAT | GVDEVICE_DOES_TRUECOLOR,	/* flags */
     {0., 0.},			/* default margin - points */
@@ -490,10 +505,16 @@ gvplugin_installed_t gvrender_quartz_types[] = {
 
 gvplugin_installed_t gvdevice_quartz_types[] = {
     {FORMAT_PDF, "pdf:quartz", 8, NULL, &device_features_quartz_paged},
-#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040 || __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 20000
+#if (defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) &&                 \
+     __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040) ||                 \
+    (defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__) &&                \
+     __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 20000)
     {FORMAT_CGIMAGE, "cgimage:quartz", 8, NULL, &device_features_quartz},
 #endif
-#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040 || __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 40000
+#if (defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) &&                 \
+     __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040) ||                 \
+    (defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__) &&                \
+     __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ >= 40000)
     {FORMAT_BMP, "bmp:quartz", 8, NULL, &device_features_quartz},
     {FORMAT_GIF, "gif:quartz", 8, NULL, &device_features_quartz},
     {FORMAT_ICO, "ico:quartz", 8, NULL, &device_features_quartz},
@@ -506,6 +527,7 @@ gvplugin_installed_t gvdevice_quartz_types[] = {
     {FORMAT_TIFF, "tiff:quartz", 8, NULL, &device_features_quartz},
     {FORMAT_TGA, "tga:quartz", 8, NULL, &device_features_quartz},
 #endif
+#ifdef __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
 #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040
     {FORMAT_EXR, "exr:quartz", 8, NULL, &device_features_quartz},
     {FORMAT_ICNS, "icns:quartz", 8, NULL, &device_features_quartz},
@@ -513,6 +535,7 @@ gvplugin_installed_t gvdevice_quartz_types[] = {
     {FORMAT_PICT, "pict:quartz", 8, NULL, &device_features_quartz},
     {FORMAT_PSD, "psd:quartz", 8, NULL, &device_features_quartz},
     {FORMAT_SGI, "sgi:quartz", 8, NULL, &device_features_quartz},
+#endif
 #endif
     {0, NULL, 0, NULL, NULL}
 };
