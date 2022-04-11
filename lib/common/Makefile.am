@@ -36,12 +36,10 @@ libcommon_C_la_LIBADD = \
 
 colxlate.o colxlate.lo : colortbl.h
 
-colortbl.h : color_lib
-	$(AWK) -f $(top_srcdir)/awk/colortbl.awk color_lib > colortbl.h
-
-# ensure color names are properly sorted for bsearch operation
-color_lib : brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names
-	cat brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names | LC_ALL=C $(SORT) > color_lib
+colortbl.h: brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names \
+            $(top_srcdir)/lib/common/make_colortbl.py
+	python3 $(top_srcdir)/lib/common/make_colortbl.py brewer_lib svgcolor_lib \
+	  $(top_srcdir)/lib/common/color_names colortbl.h
 
 brewer_lib: $(top_srcdir)/lib/common/brewer_colors \
             $(top_srcdir)/lib/common/make_brewer_lib.py
@@ -57,12 +55,12 @@ htmlparse.o htmlparse.lo: htmlparse.c htmlparse.h
 htmlparse.c htmlparse.h: $(top_srcdir)/lib/common/htmlparse.y
 	$(YACC) -Wno-yacc -dv $(top_srcdir)/lib/common/htmlparse.y -o htmlparse.c
 
-DISTCLEANFILES = brewer_lib color_lib colortbl.h \
+DISTCLEANFILES = brewer_lib colortbl.h \
 	htmlparse.[ch] svgcolor_lib
 
 EXTRA_DIST = README.imap \
 	htmlparse.c htmlparse.h \
 	entities.html entities.tcl \
 	brewer_colors brewer_lib svgcolor_names svgcolor_lib \
-	color_names color_lib colortbl.h \
-	make_brewer_lib.py make_svgcolor_lib.py
+	color_names colortbl.h \
+	make_brewer_lib.py make_colortbl.py make_svgcolor_lib.py

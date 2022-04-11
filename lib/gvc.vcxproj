@@ -74,8 +74,7 @@
       <Command>win_bison -dy -Wno-yacc common\htmlparse.y -o common\htmlparse.c
 python common\make_svgcolor_lib.py common\svgcolor_names common\svgcolor_lib
 python common\make_brewer_lib.py common\brewer_colors common\brewer_lib
-type common\brewer_lib common\svgcolor_lib common\color_names | sort /L C &gt; color_lib
-awk -f $(SolutionDir)awk\colortbl.awk color_lib &gt; common\colortbl.h</Command>
+python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\color_names common\colortbl.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\x86\bin\expat.dll $(OutDir)expat.dll</Command>
@@ -105,8 +104,7 @@ awk -f $(SolutionDir)awk\colortbl.awk color_lib &gt; common\colortbl.h</Command>
       <Command>win_bison -dy -Wno-yacc common\htmlparse.y -o common\htmlparse.c
 python common\make_svgcolor_lib.py common\svgcolor_names common\svgcolor_lib
 python common\make_brewer_lib.py common\brewer_colors common\brewer_lib
-type common\brewer_lib common\svgcolor_lib common\color_names | sort /L C &gt; color_lib
-awk -f $(SolutionDir)awk\colortbl.awk color_lib &gt; common\colortbl.h</Command>
+python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\color_names common\colortbl.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\x86\bin\expat.dll $(OutDir)expat.dll</Command>

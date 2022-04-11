@@ -22,29 +22,19 @@ add_custom_command(
           ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
   COMMENT "generate Brewer color library"
 )
-configure_file(
-  "${CMAKE_SOURCE_DIR}/cmake/generate_color_lib.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/generate_color_lib.cmake"
-  @ONLY
-)
 add_custom_command(
-  OUTPUT color_lib
+  OUTPUT common/colortbl.h
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
           ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
           ${CMAKE_CURRENT_SOURCE_DIR}/color_names
-  COMMAND ${CMAKE_COMMAND} -P
-          ${CMAKE_CURRENT_BINARY_DIR}/generate_color_lib.cmake
-  COMMENT "generate amalgamated color library"
-)
-add_custom_command(
-  OUTPUT common/colortbl.h
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/color_lib
-          ${CMAKE_SOURCE_DIR}/awk/colortbl.awk
+          ${CMAKE_CURRENT_SOURCE_DIR}/make_colortbl.py
   COMMAND ${CMAKE_COMMAND} -E make_directory
           "${CMAKE_CURRENT_BINARY_DIR}/common"
-  COMMAND ${AWK_EXECUTABLE} -f ${CMAKE_SOURCE_DIR}/awk/colortbl.awk
-          ${CMAKE_CURRENT_BINARY_DIR}/color_lib
-          >${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/make_colortbl.py
+          ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
+          ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
+          ${CMAKE_CURRENT_SOURCE_DIR}/color_names
+          ${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h
   COMMENT "generate color table"
 )
 
