@@ -16,7 +16,7 @@
 #define MALLOC gmalloc
 #define REALLOC grealloc
 
-int mm_get_type(MM_typecode typecode)
+static int mm_get_type(MM_typecode typecode)
 {
     if (mm_is_complex(typecode)) {
 	return MATRIX_TYPE_COMPLEX;
@@ -30,30 +30,7 @@ int mm_get_type(MM_typecode typecode)
     return MATRIX_TYPE_UNKNOWN;
 }
 
-static void set_mm_typecode(int type, MM_typecode * typecode)
-{
-    switch (type) {
-    case MATRIX_TYPE_COMPLEX:
-	mm_set_complex(typecode);
-	break;
-    case MATRIX_TYPE_REAL:
-	mm_set_real(typecode);
-	break;
-    case MATRIX_TYPE_INTEGER:
-	mm_set_integer(typecode);
-	break;
-    case MATRIX_TYPE_PATTERN:
-	mm_set_pattern(typecode);
-	break;
-    default:
-	break;
-    }
-}
-
-
-
-
-SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
+SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 {
     int ret_code, type;
     MM_typecode matcode;
@@ -98,15 +75,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 
     I = MALLOC(nz * sizeof(int));
     J = MALLOC(nz * sizeof(int));
-
-
-
-    switch (format) {
-    case FORMAT_CSC:
-	assert(0);		/* not supported yet */
-	break;
-    case FORMAT_CSR:
-    case FORMAT_COORD:
 
 	/* NOTE: when reading in doubles, ANSI C requires the use of the "l"  */
 	/*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
@@ -269,17 +237,8 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    return 0;
 	}
 
-	if (format == FORMAT_CSR) {
-	    A = SparseMatrix_from_coordinate_arrays(nz, m, n, I, J, vp,
+	A = SparseMatrix_from_coordinate_arrays(nz, m, n, I, J, vp,
 						    type, sizeof(double));
-	} else {
-	    A = SparseMatrix_new(m, n, 1, type, FORMAT_COORD);
-	    A = SparseMatrix_coordinate_form_add_entries(A, nz, I, J, vp);
-	}
-	break;
-    default:
-	A = NULL;
-    }
     free(I);
     free(J);
     free(val);
@@ -295,29 +254,4 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 
 
     return A;
-}
-
-
-static void mm_write_comment(FILE * file, char *comment)
-{
-    char percent[2] = "%";
-    fprintf(file, "%s %s\n", percent, comment);
-}
-
-void SparseMatrix_export_matrix_market(FILE * file, SparseMatrix A,
-				       char *comment)
-{
-    MM_typecode matcode;
-
-    mm_initialize_typecode(&matcode);
-    mm_set_matrix(&matcode);
-    mm_set_sparse(&matcode);
-    mm_set_general(&matcode);
-    set_mm_typecode(A->type, &matcode);
-
-    mm_write_banner(file, matcode);
-    mm_write_comment(file, comment);
-
-    SparseMatrix_export(file, A);
-
 }

@@ -315,7 +315,7 @@ int main(int argc, char *argv[])
 
     /* ======================= read graph ==================== */
 
-    A = SparseMatrix_import_matrix_market(pv.inf, FORMAT_CSR);
+    A = SparseMatrix_import_matrix_market(pv.inf);
     if (!A) {
 	fprintf (stderr, "Unable to read input file \"%s\"\n", pv.infile); 
 	usage(1);
