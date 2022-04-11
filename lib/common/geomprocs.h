@@ -32,7 +32,6 @@ extern "C" {
 #define GEOMPROCS_API /* nothing */
 #endif
 
-GEOMPROCS_API box flip_rec_box(box b, point p);
 GEOMPROCS_API boxf flip_rec_boxf(boxf b, pointf p);
 
 GEOMPROCS_API double ptToLine2 (pointf l1, pointf l2, pointf p);
