@@ -8,12 +8,21 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include "config.h"
-
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <LASi.h>
+
+// Confusingly, Freetype (included transitively by LASi), ship their Autotools
+// config.h. As a result, we get macros like `HAVE_FCNTL_H` injected from their
+// headers, overriding ours. Suppress this and force ours into scope.
+#ifdef HAVE_FCNTL_H
+#undef HAVE_FCNTL_H
+#endif
+#ifdef HAVE_UNISTD_H
+#undef HAVE_UNISTD_H
+#endif
+#include "config.h"
 
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
@@ -316,7 +325,6 @@ static void ps_set_color(GVJ_t *job, gvcolor_t *color)
 
 static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 {
-    char *str;
     const char *font;
     const PangoFontDescription *pango_font;
     FontStretch stretch; 
@@ -352,13 +360,28 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    case PANGO_VARIANT_SMALL_CAPS: variant = SMALLCAPS; break;
 	}
 	switch (pango_font_description_get_weight(pango_font)) {
+#if PANGO_VERSION_CHECK(1, 24, 0)
+	    case PANGO_WEIGHT_THIN: weight = ULTRALIGHT; break; // no exact match in LASi
+#endif
 	    case PANGO_WEIGHT_ULTRALIGHT: weight = ULTRALIGHT; break;
 	    case PANGO_WEIGHT_LIGHT: weight = LIGHT; break;
+#if PANGO_VERSION_CHECK(1, 36, 7)
+	    case PANGO_WEIGHT_SEMILIGHT: weight = LIGHT; break; // no exact match in LASi
+#endif
+#if PANGO_VERSION_CHECK(1, 24, 0)
+	    case PANGO_WEIGHT_BOOK: weight = NORMAL_WEIGHT; break; // no exact match in LASi
+#endif
 	    case PANGO_WEIGHT_NORMAL: weight = NORMAL_WEIGHT; break;
+#if PANGO_VERSION_CHECK(1, 24, 0)
+	    case PANGO_WEIGHT_MEDIUM: weight = NORMAL_WEIGHT; break; // no exact match in LASi
+#endif
 	    case PANGO_WEIGHT_SEMIBOLD: weight = BOLD; break; /* no exact match in lasi */
 	    case PANGO_WEIGHT_BOLD: weight = BOLD; break;
 	    case PANGO_WEIGHT_ULTRABOLD: weight = ULTRABOLD; break;
 	    case PANGO_WEIGHT_HEAVY: weight = HEAVY; break;
+#if PANGO_VERSION_CHECK(1, 24, 0)
+	    case PANGO_WEIGHT_ULTRAHEAVY: weight = HEAVY; break; // no exact match in LASi
+#endif
 	}
     }
     else {
