@@ -6,8 +6,7 @@
 #include "test_utilities.h"
 
 TEST_CASE("Maximum edge node overlap",
-          "[!shouldfail] An edge connected to a node shall not overlap that "
-          "node too much") {
+          "An edge connected to a node shall not overlap that node too much") {
 
   const graph_options graph_options = {
       .node_shape = "polygon",
