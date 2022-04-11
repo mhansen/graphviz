@@ -147,11 +147,6 @@ static inline pointf exch_xyf(pointf p)
     return r;
 }
 
-static inline int box_overlap(box b0, box b1)
-{
-    return OVERLAP(b0, b1);
-}
-
 static inline int boxf_overlap(boxf b0, boxf b1)
 {
     return OVERLAP(b0, b1);
