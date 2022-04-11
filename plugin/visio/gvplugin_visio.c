@@ -8,12 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#ifdef _WIN32 //*dependencies
-    #pragma comment( lib, "gvc.lib" )
-    #pragma comment( lib, "graph.lib" )
-#endif
-
-
 #include <gvc/gvplugin.h>
 
 extern gvplugin_installed_t gvdevice_vdx_types[];
@@ -26,11 +20,6 @@ static gvplugin_api_t apis[] = {
 };
 
 #ifdef GVDLL
-#ifndef GVPLUGIN_VISIO_EXPORTS
-__declspec(dllimport) gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
-#else
-__declspec(dllexport) gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
+__declspec(dllexport)
 #endif
-#else
 gvplugin_library_t gvplugin_visio_LTX_library = { "visio", apis };
-#endif
