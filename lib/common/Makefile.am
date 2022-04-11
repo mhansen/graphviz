@@ -43,8 +43,9 @@ colortbl.h : color_lib
 color_lib : brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names
 	cat brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names | LC_ALL=C $(SORT) > color_lib
 
-brewer_lib : $(top_srcdir)/lib/common/brewer_colors $(top_srcdir)/awk/brewer.awk
-	$(AWK) -f $(top_srcdir)/awk/brewer.awk $(top_srcdir)/lib/common/brewer_colors > brewer_lib
+brewer_lib: $(top_srcdir)/lib/common/brewer_colors \
+            $(top_srcdir)/lib/common/make_brewer_lib.py
+	python3 $(top_srcdir)/lib/common/make_brewer_lib.py "$<" "$@"
 
 svgcolor_lib: $(top_srcdir)/lib/common/svgcolor_names \
               $(top_srcdir)/lib/common/make_svgcolor_lib.py
@@ -64,4 +65,4 @@ EXTRA_DIST = README.imap \
 	entities.html entities.tcl \
 	brewer_colors brewer_lib svgcolor_names svgcolor_lib \
 	color_names color_lib colortbl.h \
-	make_svgcolor_lib.py
+	make_brewer_lib.py make_svgcolor_lib.py

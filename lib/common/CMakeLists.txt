@@ -15,11 +15,11 @@ add_custom_command(
 )
 add_custom_command(
   OUTPUT brewer_lib
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
-          ${CMAKE_SOURCE_DIR}/awk/brewer.awk
-  COMMAND ${AWK_EXECUTABLE} -f ${CMAKE_SOURCE_DIR}/awk/brewer.awk
+  MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/make_brewer_lib.py
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/make_brewer_lib.py
           ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
-          >${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
+          ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
   COMMENT "generate Brewer color library"
 )
 configure_file(

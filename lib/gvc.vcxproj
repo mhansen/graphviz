@@ -73,7 +73,7 @@
     <PreBuildEvent>
       <Command>win_bison -dy -Wno-yacc common\htmlparse.y -o common\htmlparse.c
 python common\make_svgcolor_lib.py common\svgcolor_names common\svgcolor_lib
-awk -f $(SolutionDir)awk\brewer.awk common\brewer_colors &gt; common\brewer_lib
+python common\make_brewer_lib.py common\brewer_colors common\brewer_lib
 type common\brewer_lib common\svgcolor_lib common\color_names | sort /L C &gt; color_lib
 awk -f $(SolutionDir)awk\colortbl.awk color_lib &gt; common\colortbl.h</Command>
     </PreBuildEvent>
@@ -104,7 +104,7 @@ awk -f $(SolutionDir)awk\colortbl.awk color_lib &gt; common\colortbl.h</Command>
     <PreBuildEvent>
       <Command>win_bison -dy -Wno-yacc common\htmlparse.y -o common\htmlparse.c
 python common\make_svgcolor_lib.py common\svgcolor_names common\svgcolor_lib
-awk -f $(SolutionDir)awk\brewer.awk common\brewer_colors &gt; common\brewer_lib
+python common\make_brewer_lib.py common\brewer_colors common\brewer_lib
 type common\brewer_lib common\svgcolor_lib common\color_names | sort /L C &gt; color_lib
 awk -f $(SolutionDir)awk\colortbl.awk color_lib &gt; common\colortbl.h</Command>
     </PreBuildEvent>
