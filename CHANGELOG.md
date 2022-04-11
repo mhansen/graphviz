@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - build system support for `dotty`, `lefty`, and `lneato` has been removed
 - the CMake build system now includes the DevIL, GDK, GhostScript, GTK, LASi,
   Poppler, Quartz, Rsvg, Visio, WebP, and Xlib plugins
+- `awk` is no longer a build-time dependency #2118
 
 ### Fixed
 
