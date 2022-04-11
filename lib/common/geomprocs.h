@@ -162,11 +162,6 @@ static inline int box_contains(box b0, box b1)
     return CONTAINS(b0, b1);
 }
 
-static inline int boxf_contains(boxf b0, boxf b1)
-{
-    return CONTAINS(b0, b1);
-}
-
 static inline pointf perp (pointf p)
 {
     pointf r;
