@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-VERSION=0.2
+VERSION = 0.2
 
 AM_CPPFLAGS = \
 	$(GDLIB_CFLAGS) \

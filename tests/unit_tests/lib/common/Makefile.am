@@ -4,12 +4,12 @@ if HAVE_CRITERION
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
-    -I$(top_srcdir)/lib/common \
-    -I$(top_srcdir)/lib/gvc \
+	-I$(top_srcdir)/lib/common \
+	-I$(top_srcdir)/lib/gvc \
 	-I$(top_srcdir)/lib/pathplan \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt \
-    -DDEMAND_LOADING=1
+	-DDEMAND_LOADING=1
 
 AM_LDFLAGS = \
 	-lcriterion

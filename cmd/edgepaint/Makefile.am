@@ -26,8 +26,8 @@ endif
 edgepaint_SOURCES = edgepaintmain.c
 edgepaint_CPPFLAGS = $(AM_CPPFLAGS)
 edgepaint_LDADD = \
-    $(top_builddir)/lib/edgepaint/libedgepaint_C.la \
-    $(top_builddir)/lib/ingraphs/libingraphs_C.la \
+	$(top_builddir)/lib/edgepaint/libedgepaint_C.la \
+	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/sfdpgen/libsfdpgen_C.la \
 	$(top_builddir)/lib/neatogen/libneatogen_C.la \
 	$(top_builddir)/lib/sparse/libsparse_C.la \

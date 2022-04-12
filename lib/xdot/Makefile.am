@@ -2,7 +2,7 @@
 
 pkgconfigdir = $(libdir)/pkgconfig
 
-XDOT_VERSION="4:0:0"
+XDOT_VERSION = "4:0:0"
 
 pdfdir = $(pkgdatadir)/doc/pdf
 pkginclude_HEADERS = xdot.h
@@ -43,4 +43,3 @@ endif
 EXTRA_DIST = $(man_MANS) $(pdf) xdot.vcxproj*
 
 DISTCLEANFILES = $(pdf) xdot.3.ps
-

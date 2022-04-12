@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-CGRAPH_VERSION="6:0:0"
+CGRAPH_VERSION = "6:0:0"
 
 pdfdir = $(pkgdatadir)/doc/pdf
 pkgconfigdir = $(libdir)/pkgconfig

@@ -39,23 +39,23 @@ colxlate.o colxlate.lo : colortbl.h
 colortbl.h : color_lib
 	$(AWK) -f $(top_srcdir)/awk/colortbl.awk color_lib > colortbl.h
 
-# ensure color names are properly sorted for bsearch operation 
+# ensure color names are properly sorted for bsearch operation
 color_lib : brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names
 	cat brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names | LC_ALL=C $(SORT) > color_lib
 
-brewer_lib : $(top_srcdir)/lib/common/brewer_colors  $(top_srcdir)/awk/brewer.awk
+brewer_lib : $(top_srcdir)/lib/common/brewer_colors $(top_srcdir)/awk/brewer.awk
 	$(AWK) -f $(top_srcdir)/awk/brewer.awk $(top_srcdir)/lib/common/brewer_colors > brewer_lib
 
 if WITH_CYGWIN
 AWK_OPTIONS=-v RS="\r*\n"
 endif
 
-svgcolor_lib : $(top_srcdir)/lib/common/svgcolor_names  $(top_srcdir)/awk/svgcolor.awk
-	 $(AWK) $(AWK_OPTIONS) -f $(top_srcdir)/awk/svgcolor.awk $(top_srcdir)/lib/common/svgcolor_names > svgcolor_lib
+svgcolor_lib : $(top_srcdir)/lib/common/svgcolor_names $(top_srcdir)/awk/svgcolor.awk
+	$(AWK) $(AWK_OPTIONS) -f $(top_srcdir)/awk/svgcolor.awk $(top_srcdir)/lib/common/svgcolor_names > svgcolor_lib
 
 htmllex.o htmllex.lo: htmllex.c htmllex.h htmlparse.h
 htmlparse.o htmlparse.lo: htmlparse.c htmlparse.h
-                                                                                
+
 htmlparse.c htmlparse.h: $(top_srcdir)/lib/common/htmlparse.y
 	$(YACC) -Wno-yacc -dv $(top_srcdir)/lib/common/htmlparse.y -o htmlparse.c
 

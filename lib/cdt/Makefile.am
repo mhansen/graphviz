@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-CDT_VERSION="5:0:0"
+CDT_VERSION = "5:0:0"
 
 pdfdir = $(pkgdatadir)/doc/pdf
 pkgextraincludedir = $(pkgincludedir)

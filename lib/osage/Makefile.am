@@ -2,7 +2,7 @@
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
-        -I$(top_srcdir)/lib/common \
+	-I$(top_srcdir)/lib/common \
 	-I$(top_srcdir)/lib/gvc \
 	-I$(top_srcdir)/lib/pack \
 	-I$(top_srcdir)/lib/pathplan \
@@ -18,5 +18,3 @@ noinst_LTLIBRARIES = libosage_C.la
 
 libosage_C_la_SOURCES = osageinit.c
 EXTRA_DIST = osage.vcxproj*
-
-

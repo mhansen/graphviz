@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-EXPR_VERSION="4:0:0"
+EXPR_VERSION = "4:0:0"
 
 pdfdir = $(pkgdatadir)/doc/pdf
 pkgconfigdir = $(libdir)/pkgconfig
@@ -28,7 +28,7 @@ endif
 
 libexpr_C_la_SOURCES = excc.c excontext.c exdata.c exerror.c \
 	exeval.c exexpr.c exopen.c extoken.c \
-	extype.c exzero.c exparse.y exnospace.c exstash.c 
+	extype.c exzero.c exparse.y exnospace.c exstash.c
 libexpr_C_la_LIBADD = \
 	$(top_builddir)/lib/ast/libast_C.la \
 	$(top_builddir)/lib/vmalloc/libvmalloc_C.la \
@@ -38,7 +38,7 @@ libexpr_C_la_LIBADD = \
 $(libexpr_C_la_OBJECTS) $(libexpr_la_OBJECTS): \
 	exparse.h exparse.c exgram.h exop.h
 
-exparse.c: y.tab.c 
+exparse.c: y.tab.c
 	$(SED) "s/fprintf/sfprintf/g" <y.tab.c | \
 		$(SED) "s/FILE/Sfio_t/g" | \
 		$(SED) "s/stderr/sfstderr/g" > exparse.c

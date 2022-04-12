@@ -1,13 +1,13 @@
 ## Process this file with automake to produce Makefile.in
 
 AM_CPPFLAGS = \
-        -I$(top_srcdir)/lib \
-        -I$(top_srcdir)/lib/common \
-        -I$(top_srcdir)/lib/pathplan \
-        -I$(top_srcdir)/lib/gvc \
-        -I$(top_srcdir)/lib/cgraph \
-        -I$(top_srcdir)/lib/cdt \
-        $(GTK_CFLAGS:-I%=-isystem%)
+	-I$(top_srcdir)/lib \
+	-I$(top_srcdir)/lib/common \
+	-I$(top_srcdir)/lib/pathplan \
+	-I$(top_srcdir)/lib/gvc \
+	-I$(top_srcdir)/lib/cgraph \
+	-I$(top_srcdir)/lib/cdt \
+	$(GTK_CFLAGS:-I%=-isystem%)
 
 if WITH_PANGOCAIRO
 if WITH_GTK
@@ -25,8 +25,8 @@ libgvplugin_gtk_C_la_SOURCES = \
 	gvplugin_gtk.c \
 	gvdevice_gtk.c \
 	support.c \
-        interface.c \
-        callbacks.c 
+	interface.c \
+	callbacks.c
 
 libgvplugin_gtk_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_gtk_la_SOURCES = $(libgvplugin_gtk_C_la_SOURCES)
@@ -40,4 +40,4 @@ if WITH_DARWIN9
 libgvplugin_gtk_la_LDFLAGS += -Wl,-exported_symbol,_gvplugin_gtk_LTX_library
 endif
 
-EXTRA_DIST = gtk.glade gtk.gladep 
+EXTRA_DIST = gtk.glade gtk.gladep

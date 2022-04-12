@@ -55,7 +55,7 @@ gvpr_static_LDADD = \
 	$(top_builddir)/lib/ast/libast_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
-       	$(MATH_LIBS)
+	$(MATH_LIBS)
 
 EXTRA_DIST = $(man_MANS) $(pdf) lib gvpr.vcxproj*
 

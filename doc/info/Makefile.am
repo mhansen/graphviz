@@ -3,6 +3,6 @@
 htmldir = $(pkgdatadir)/doc/html/info
 
 html_DATA = attrs.html colors.html command.html \
-  index.html lang.html output.html shapes.html arrows.html
+	index.html lang.html output.html shapes.html arrows.html
 
 EXTRA_DIST = $(html_DATA)

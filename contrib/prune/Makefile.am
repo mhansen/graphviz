@@ -3,8 +3,8 @@
 pdfdir = $(pkgdatadir)/doc/pdf
 
 AM_CPPFLAGS = \
-        -I$(top_srcdir) \
-        -I$(top_srcdir)/lib/ingraphs \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/lib/ingraphs \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt
 
@@ -40,6 +40,5 @@ endif
 endif
 
 EXTRA_DIST = $(man_MANS) $(pdf) README test.gv prune.vcxproj*
-
 
 DISTCLEANFILES = $(pdf) prune.1.ps

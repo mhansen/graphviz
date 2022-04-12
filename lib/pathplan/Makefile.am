@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-PATHPLAN_VERSION="4:0:0"
+PATHPLAN_VERSION = "4:0:0"
 
 pdfdir = $(pkgdatadir)/doc/pdf
 pkgconfigdir = $(libdir)/pkgconfig

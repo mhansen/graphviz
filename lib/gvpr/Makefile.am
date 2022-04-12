@@ -3,7 +3,7 @@
 pdfdir = $(pkgdatadir)/doc/pdf
 pkgconfigdir = $(libdir)/pkgconfig
 HOSTCC ?= $(CC)
-GVPR_VERSION="2:0:0"
+GVPR_VERSION = "2:0:0"
 
 if WITH_MINGW
 # Add an extra forward slash in front of $(pkgdatadir) to avoid the
@@ -46,7 +46,7 @@ else
 pdf =
 endif
 
-libgvpr_C_la_SOURCES = actions.c compile.c gvpr.c gprstate.c parse.c queue.c 
+libgvpr_C_la_SOURCES = actions.c compile.c gvpr.c gprstate.c parse.c queue.c
 libgvpr_C_la_DEPENDENCIES = \
 	$(top_builddir)/lib/expr/libexpr_C.la \
 	$(top_builddir)/lib/common/libcommon_C.la \

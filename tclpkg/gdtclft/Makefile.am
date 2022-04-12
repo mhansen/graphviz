@@ -6,7 +6,7 @@ pdfdir = $(pkgdatadir)/doc/pdf
 pkgtcldir = $(pkglibdir)/tcl
 
 AM_CPPFLAGS = \
-	 -I$(top_srcdir) \
+	-I$(top_srcdir) \
 	$(GDLIB_CFLAGS) $(TCL_INCLUDES)
 
 LIBS = @LIBS@ -lc
@@ -69,5 +69,4 @@ endif
 EXTRA_DIST = $(man) $(pdf)
 
 CLEANFILES = pkgIndex.tcl
-
 DISTCLEANFILES = $(pdf) gdtclft.3tcl.ps

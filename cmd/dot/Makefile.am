@@ -9,7 +9,7 @@ else
 linkedpdf =
 endif
 linkedprogram = neato$(EXEEXT) twopi$(EXEEXT) fdp$(EXEEXT) circo$(EXEEXT) \
-    osage$(EXEEXT) patchwork$(EXEEXT)
+	osage$(EXEEXT) patchwork$(EXEEXT)
 
 if WITH_SFDP
 linkedman += sfdp.1
@@ -21,8 +21,8 @@ endif
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
-        -I$(top_srcdir)/lib/common \
-        -I$(top_srcdir)/lib/gvc \
+	-I$(top_srcdir)/lib/common \
+	-I$(top_srcdir)/lib/gvc \
 	-I$(top_srcdir)/lib/pathplan \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt

@@ -39,7 +39,7 @@ EXTRA_DIST = $(txt) $(html) graphviz.spec \
 	m4/README m4/lib-ld.m4 m4/lib-link.m4 m4/lib-prefix.m4 \
 	graphviz.7 Doxyfile.in Doxyfile awk \
 	config/config_perl.pl \
-	config/config_ruby.rb config/config_tcl.tcl dot.demo  plugin.demo \
+	config/config_ruby.rb config/config_tcl.tcl dot.demo plugin.demo \
 	macosx windows debian redhat graphviz.sln
 
 .PHONY: rpm
@@ -52,13 +52,13 @@ rpm: dist
 	Red) cp redhat/graphviz.spec.rhel $(HOME)/rpmbuild/$(HOSTNAME)/SPECS/graphviz.spec;; \
 	esac
 	rpmbuild -ba $(HOME)/rpmbuild/$(HOSTNAME)/SPECS/graphviz.spec
-	
+
 .PHONY: deb
 deb: dist
 	rm -rf graphviz-$(VERSION)
 	zcat graphviz-$(VERSION).tar.gz | tar xf -
 	(cd graphviz-$(VERSION); fakeroot make -f debian/rules binary)
-	
+
 .PHONY: pkg
 pkg: dist
 	tar xzf graphviz-$(VERSION).tar.gz && make -C graphviz-$(VERSION)/macosx/build && mv graphviz-$(VERSION)/macosx/build/graphviz-*.pkg .

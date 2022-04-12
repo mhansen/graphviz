@@ -23,7 +23,7 @@ AM_CPPFLAGS = \
 	$(TCL_INCLUDES) $(TCLINT_INCLUDES) \
 	$(TK_INCLUDES) $(TKINT_INCLUDES) -I$(top_srcdir)/tclpkg/tkstubs
 
-AM_CFLAGS = $(X_CFLAGS) $(TCL_CFLAGS)  $(TK_CFLAGS) $(TK_DEFS) \
+AM_CFLAGS = $(X_CFLAGS) $(TCL_CFLAGS) $(TK_CFLAGS) $(TK_DEFS) \
 	-UPACKAGE_NAME -UPACKAGE_STRING -UPACKAGE_TARNAME \
 	-UPACKAGE_VERSION -UPACKAGE_BUGREPORT
 
@@ -35,7 +35,7 @@ pdf_DATA = tkspline.3tk.pdf
 endif
 endif
 
-libtkspline_la_LDFLAGS = -no-undefined 
+libtkspline_la_LDFLAGS = -no-undefined
 libtkspline_la_SOURCES = tkspline.c
 libtkspline_la_LIBADD = \
 	$(top_builddir)/tclpkg/tkstubs/libtkstubs_C.la \
@@ -61,5 +61,4 @@ endif
 EXTRA_DIST = $(man) $(pdf) dllEntry.c
 
 CLEANFILES = pkgIndex.tcl
-
 DISTCLEANFILES = $(pdf) tkspline.3tk.ps

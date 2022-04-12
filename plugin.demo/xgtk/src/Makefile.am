@@ -15,14 +15,14 @@ libgvplugin_xgtk_C_la_SOURCES = \
 	gvplugin_xgtk.c \
 	gvdevice_xgtk.c \
 	support.c \
-        interface.c \
-        callbacks.c 
+	interface.c \
+	callbacks.c
 
 libgvplugin_xgtk_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_xgtk_la_SOURCES = $(libgvplugin_xgtk_C_la_SOURCES)
 libgvplugin_xgtk_la_LIBADD = $(GTK_LIBS)
 
-EXTRA_DIST = gtk.glade gtk.gladep 
+EXTRA_DIST = gtk.glade gtk.gladep
 
 # run "dot -c", if possible, to create plugin config
 install-exec-hook:

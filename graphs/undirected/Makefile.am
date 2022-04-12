@@ -8,7 +8,7 @@ undirected_DATA = $(GRAPHS)
 
 EXTRA_DIST = $(GRAPHS)
 
-CLEANFILES = core *.gv.* *.png .xvpics/* 
+CLEANFILES = core *.gv.* *.png .xvpics/*
 
 DOT = $(top_builddir)/cmd/dot/dot_builtins
 
@@ -19,7 +19,7 @@ test:
 		-Tjpg -Tpdf -Tfig -Tgif -Tpng \
 		-Tps -Tps2 -Tps:lasi -Tps:cairo -Tpdf \
 		-Tsvg -Tsvg:cairo -Tsvgz -Tvrml \
-		-O $(GRAPHS) 
+		-O $(GRAPHS)
 
 canon:
 	for i in $(GRAPHS); do echo "neato $$i"; \
