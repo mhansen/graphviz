@@ -37,7 +37,7 @@ namespace Visio
 {
 	using namespace std;
 	
-	static const float INCHES_PER_POINT = 1.0 / 72.0;
+	static const float INCHES_PER_POINT = 1.0f / 72.0f;
 	
 	Fill::Fill(unsigned char red, unsigned char green, unsigned char blue, double transparency):
 		_red(red),
