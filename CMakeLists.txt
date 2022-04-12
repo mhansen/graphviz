@@ -74,7 +74,7 @@ else()
   set(MAN_INSTALL_DIR     share/man)
   set(libdir              "${CMAKE_INSTALL_PREFIX}/${LIBRARY_INSTALL_DIR}")
   set(includedir          "${CMAKE_INSTALL_PREFIX}/include")
-  set(DATA_INSTALL_DIR    "${CMAKE_INSTALL_PREFIX}/share")
+  set(DATA_INSTALL_DIR    share)
 endif()
 
 set(PLUGIN_INSTALL_DIR      ${LIBRARY_INSTALL_DIR}/graphviz)
@@ -276,6 +276,7 @@ include(CTest)
 
 # ======================= Specify subdirectories to build ======================
 add_subdirectory(contrib/diffimg)
+add_subdirectory(graphs)
 add_subdirectory(lib)
 add_subdirectory(plugin)
 add_subdirectory(cmd)
