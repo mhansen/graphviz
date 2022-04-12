@@ -1790,26 +1790,6 @@ fi
 AM_CONDITIONAL(WITH_LASI, [test "x$use_lasi" = "xYes"])
 
 dnl -----------------------------------
-dnl INCLUDES and LIBS for GLITZ
-
-AC_ARG_WITH(glitz,
-  [AS_HELP_STRING([--with-glitz=no],[glitz library])],
-  [], [with_glitz=no])
-
-if test "x$with_glitz" != "xyes"; then
-  use_glitz="No (disabled by default - incomplete)"
-else
-  PKG_CHECK_MODULES(GLITZ, [glitz],[
-    use_glitz="Yes"
-    AC_SUBST([GLITZ_CFLAGS])
-    AC_SUBST([GLITZ_LIBS])
-  ],[
-    use_glitz="No (glitz library not available)"
-  ])
-fi
-AM_CONDITIONAL(WITH_GLITZ, [test "x$use_glitz" = "xYes"])
-
-dnl -----------------------------------
 dnl INCLUDES and LIBS for FREETYPE2
 
 AC_ARG_WITH(freetype2,
@@ -2646,7 +2626,6 @@ AC_CONFIG_FILES(Makefile
 	plugin/gd/Makefile
 	plugin/gdk/Makefile
 	plugin/gdiplus/Makefile
-	plugin/glitz/Makefile
 	plugin/gs/Makefile
 	plugin/gtk/Makefile
 	plugin/lasi/Makefile
@@ -2779,7 +2758,6 @@ echo "  gdiplus:       $use_gdiplus"
 echo "  gdk:           $use_gdk"
 echo "  gdk_pixbuf:    $use_gdk_pixbuf"
 echo "  ghostscript:   $use_ghostscript"
-echo "  glitz:         $use_glitz"
 echo "  gtk:           $use_gtk"
 echo "  lasi:          $use_lasi"
 echo "  pangocairo:    $use_pangocairo"
