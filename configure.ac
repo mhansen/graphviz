@@ -1920,7 +1920,7 @@ else
     AC_CHECK_FUNCS([g_object_unref g_type_init])
     LIBS=$save_LIBS
   ],[
-    use_gdk_pixbuf="No (gdk library not available)"
+    use_gdk="No (gdk library not available)"
   ])
 fi
 AM_CONDITIONAL(WITH_GDK, [test "x$use_gdk" = "xYes"])
