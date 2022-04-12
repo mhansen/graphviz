@@ -23,9 +23,9 @@ libgvplugin_webp_C_la_SOURCES = \
 	gvloadimage_webp.c \
 	gvdevice_webp.c
 
-libgvplugin_webp_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_webp_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_webp_la_SOURCES = $(libgvplugin_webp_C_la_SOURCES)
-libgvplugin_webp_la_LIBADD = @WEBP_LIBS@ @PANGOCAIRO_LIBS@ \
+libgvplugin_webp_la_LIBADD = $(WEBP_LIBS) $(PANGOCAIRO_LIBS) \
 	$(top_builddir)/lib/gvc/libgvc.la
 
 if WITH_WIN32

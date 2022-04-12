@@ -22,7 +22,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt \
 	-I$(top_srcdir)/lib/pathplan $(TCLHANDLE_INCLUDES) $(GDLIB_CFLAGS) $(TCL_INCLUDES)
 
-LIBS = -lc @TCL_STUB_LIB_SPEC@
+LIBS = -lc $(TCL_STUB_LIB_SPEC)
 
 AM_CFLAGS = $(TCL_CFLAGS)
 
@@ -124,10 +124,10 @@ endif
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 tcldot.3tcl.pdf: tcldot.3tcl.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 tcldot.3tcl.ps: $(srcdir)/tcldot.3tcl
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

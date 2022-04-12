@@ -33,7 +33,7 @@ libgvplugin_core_C_la_SOURCES = \
 	gvrender_core_pic.c \
 	gvloadimage_core.c
 
-libgvplugin_core_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_core_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_core_la_SOURCES = $(libgvplugin_core_C_la_SOURCES)
 libgvplugin_core_la_LIBADD = $(top_builddir)/lib/gvc/libgvc.la \
 				$(top_builddir)/lib/cgraph/libcgraph.la \

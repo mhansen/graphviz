@@ -27,10 +27,10 @@ libgvplugin_gdk_C_la_SOURCES = \
 	gvdevice_gdk.c \
 	gvloadimage_gdk.c
 
-libgvplugin_gdk_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_gdk_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_gdk_la_SOURCES = $(libgvplugin_gdk_C_la_SOURCES)
 libgvplugin_gdk_la_LIBADD = \
-	$(top_builddir)/lib/gvc/libgvc.la @GDK_PIXBUF_LIBS@ @PANGOCAIRO_LIBS@ @GDK_LIBS@
+	$(top_builddir)/lib/gvc/libgvc.la $(GDK_PIXBUF_LIBS) $(PANGOCAIRO_LIBS) $(GDK_LIBS)
 	
 if WITH_WIN32
 libgvplugin_gdk_la_LDFLAGS += -no-undefined

@@ -57,7 +57,7 @@ htmllex.o htmllex.lo: htmllex.c htmllex.h htmlparse.h
 htmlparse.o htmlparse.lo: htmlparse.c htmlparse.h
                                                                                 
 htmlparse.c htmlparse.h: $(top_srcdir)/lib/common/htmlparse.y
-	@YACC@ -Wno-yacc -dv $(top_srcdir)/lib/common/htmlparse.y -o htmlparse.c
+	$(YACC) -Wno-yacc -dv $(top_srcdir)/lib/common/htmlparse.y -o htmlparse.c
 
 DISTCLEANFILES = brewer_lib color_lib colortbl.h \
 	htmlparse.[ch]

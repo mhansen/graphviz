@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/pack \
 	-I$(top_srcdir)/lib/gvc \
 	-I$(top_srcdir)/lib/common \
-	@EXPAT_INCLUDES@
+	$(EXPAT_INCLUDES)
 
 pdfdir = $(pkgdatadir)/doc/pdf
 
@@ -77,15 +77,15 @@ gxl2gv_LDADD = \
 	$(top_builddir)/lib/gvc/libgvc.la \
 	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
-	$(top_builddir)/lib/cdt/libcdt.la @EXPAT_LIBS@ 
+	$(top_builddir)/lib/cdt/libcdt.la $(EXPAT_LIBS) 
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gxl2gv.1.pdf: gxl2gv.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gxl2gv.1.ps: $(srcdir)/gxl2gv.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -93,15 +93,15 @@ sccmap_SOURCES = sccmap.c
 
 sccmap_LDADD = \
 	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
-	$(top_builddir)/lib/cgraph/libcgraph.la @EXPAT_LIBS@ 
+	$(top_builddir)/lib/cgraph/libcgraph.la $(EXPAT_LIBS) 
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 sccmap.1.pdf: sccmap.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 sccmap.1.ps: $(srcdir)/sccmap.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -114,10 +114,10 @@ ccomps_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 ccomps.1.pdf: ccomps.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 ccomps.1.ps: $(srcdir)/ccomps.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -131,10 +131,10 @@ tred_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 tred.1.pdf: tred.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 tred.1.ps: $(srcdir)/tred.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -147,10 +147,10 @@ unflatten_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 unflatten.1.pdf: unflatten.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 unflatten.1.ps: $(srcdir)/unflatten.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -163,10 +163,10 @@ acyclic_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 acyclic.1.pdf: acyclic.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 acyclic.1.ps: $(srcdir)/acyclic.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -179,10 +179,10 @@ nop_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 nop.1.pdf: nop.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 nop.1.ps: $(srcdir)/nop.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -195,10 +195,10 @@ gvcolor_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gvcolor.1.pdf: gvcolor.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gvcolor.1.ps: $(srcdir)/gvcolor.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -211,10 +211,10 @@ bcomps_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 bcomps.1.pdf: bcomps.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 bcomps.1.ps: $(srcdir)/bcomps.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -227,10 +227,10 @@ gc_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gc.1.pdf: gc.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gc.1.ps: $(srcdir)/gc.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -268,10 +268,10 @@ endif
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gvpack.1.pdf: gvpack.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gvpack.1.ps: $(srcdir)/gvpack.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -282,15 +282,15 @@ mm2gv_LDADD = \
     $(top_builddir)/lib/common/libcommon_C.la \
     $(top_builddir)/lib/gvc/libgvc_C.la \
     $(top_builddir)/lib/pathplan/libpathplan_C.la \
-	$(top_builddir)/lib/cgraph/libcgraph.la @MATH_LIBS@
+	$(top_builddir)/lib/cgraph/libcgraph.la $(MATH_LIBS)
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 mm2gv.1.pdf: mm2gv.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 mm2gv.1.ps: mm2gv.1
-	@GROFF@ -Tps -man -e -t $< >$@
+	$(GROFF) -Tps -man -e -t $< >$@
 endif
 endif
 
@@ -304,24 +304,24 @@ gv2gml_LDADD = \
 gml2gv_SOURCES = gml2gv.c gmlparse.y gmlscan.l
 
 gmlparse.c gmlparse.h: $(top_srcdir)/cmd/tools/gmlparse.y
-	@YACC@ -Wno-yacc -dv $(top_srcdir)/cmd/tools/gmlparse.y -o gmlparse.c
+	$(YACC) -Wno-yacc -dv $(top_srcdir)/cmd/tools/gmlparse.y -o gmlparse.c
  
 gmlparse.o gmlparse.lo gmlscan.o gmlscan.lo : gmlscan.c gmlparse.h
 
 gmlscan.c: $(top_srcdir)/cmd/tools/gmlscan.l
-	@LEX@ --outfile=$@ -i $(top_srcdir)/cmd/tools/gmlscan.l
+	$(LEX) --outfile=$@ -i $(top_srcdir)/cmd/tools/gmlscan.l
 
 gml2gv_LDADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
-	$(top_builddir)/lib/cdt/libcdt.la @MATH_LIBS@
+	$(top_builddir)/lib/cdt/libcdt.la $(MATH_LIBS)
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gml2gv.1.pdf: gml2gv.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gml2gv.1.ps: gml2gv.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -330,15 +330,15 @@ graphml2gv_SOURCES = graphml2gv.c
 graphml2gv_LDADD = \
 	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
-	$(top_builddir)/lib/cdt/libcdt.la @EXPAT_LIBS@ 
+	$(top_builddir)/lib/cdt/libcdt.la $(EXPAT_LIBS) 
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 graphml2gv.1.pdf: graphml2gv.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 graphml2gv.1.ps: $(srcdir)/graphml2gv.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -352,25 +352,25 @@ dijkstra_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 dijkstra.1.pdf: dijkstra.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 dijkstra.1.ps: $(srcdir)/dijkstra.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
 gvgen_SOURCES = gvgen.c graph_generator.c
 
 gvgen_LDADD = \
-	$(top_builddir)/lib/cgraph/libcgraph.la @MATH_LIBS@
+	$(top_builddir)/lib/cgraph/libcgraph.la $(MATH_LIBS)
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gvgen.1.pdf: gvgen.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gvgen.1.ps: $(srcdir)/gvgen.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

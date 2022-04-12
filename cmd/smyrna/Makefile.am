@@ -92,10 +92,10 @@ smyrna_static_LDADD = $(top_builddir)/lib/cgraph/libcgraph_C.la \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 smyrna.1.pdf: smyrna.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 smyrna.1.ps: $(srcdir)/smyrna.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

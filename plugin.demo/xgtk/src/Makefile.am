@@ -5,7 +5,7 @@ ACLOCAL_AMFLAGS = -I m4
 AM_CPPFLAGS = $(GVC_CFLAGS) $(GTK_CFLAGS)
 
 #override pkglibdir
-pkglibdir = @GVPLUGIN_DIR@
+pkglibdir = $(GVPLUGIN_DIR)
 
 noinst_HEADERS = support.h interface.h callbacks.h
 noinst_LTLIBRARIES = libgvplugin_xgtk_C.la
@@ -18,7 +18,7 @@ libgvplugin_xgtk_C_la_SOURCES = \
         interface.c \
         callbacks.c 
 
-libgvplugin_xgtk_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_xgtk_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_xgtk_la_SOURCES = $(libgvplugin_xgtk_C_la_SOURCES)
 libgvplugin_xgtk_la_LIBADD = $(GTK_LIBS)
 

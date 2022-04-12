@@ -28,11 +28,11 @@ libgvplugin_pango_C_la_SOURCES = \
 	gvtextlayout_pango.c \
 	gvloadimage_pango.c
 
-libgvplugin_pango_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_pango_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_pango_la_SOURCES = $(libgvplugin_pango_C_la_SOURCES)
 libgvplugin_pango_la_LIBADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
-	$(top_builddir)/lib/gvc/libgvc.la @PANGOCAIRO_LIBS@ @PANGOFT2_LIBS@ @MATH_LIBS@
+	$(top_builddir)/lib/gvc/libgvc.la $(PANGOCAIRO_LIBS) $(PANGOFT2_LIBS) $(MATH_LIBS)
 
 if WITH_WIN32
 libgvplugin_pango_la_LDFLAGS += -no-undefined

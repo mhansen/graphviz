@@ -25,7 +25,7 @@ doxygen:
 	doxygen
 
 dist-hook:
-	echo "@VERSION@" >GRAPHVIZ_VERSION
+	echo "$(VERSION)" >GRAPHVIZ_VERSION
 
 BUILT_SOURCES = $(top_builddir)/graphviz_version.h
 
@@ -45,7 +45,7 @@ EXTRA_DIST = $(txt) $(html) graphviz.spec \
 .PHONY: rpm
 rpm: dist
 	mkdir -p $(HOME)/rpmbuild/$(HOSTNAME)/SPECS $(HOME)/rpmbuild/$(HOSTNAME)/SOURCES
-	cp graphviz-@VERSION@.tar.gz $(HOME)/rpmbuild/$(HOSTNAME)/SOURCES/
+	cp graphviz-$(VERSION).tar.gz $(HOME)/rpmbuild/$(HOSTNAME)/SOURCES/
 	case `cut -d' ' -f1 /etc/system-release` in \
 	Fedora) cp redhat/graphviz.spec.fedora $(HOME)/rpmbuild/$(HOSTNAME)/SPECS/graphviz.spec;; \
 	CentOS) cp redhat/graphviz.spec.rhel $(HOME)/rpmbuild/$(HOSTNAME)/SPECS/graphviz.spec;; \
@@ -55,13 +55,13 @@ rpm: dist
 	
 .PHONY: deb
 deb: dist
-	rm -rf graphviz-@VERSION@
-	zcat graphviz-@VERSION@.tar.gz | tar xf -
-	(cd graphviz-@VERSION@; fakeroot make -f debian/rules binary)
+	rm -rf graphviz-$(VERSION)
+	zcat graphviz-$(VERSION).tar.gz | tar xf -
+	(cd graphviz-$(VERSION); fakeroot make -f debian/rules binary)
 	
 .PHONY: pkg
 pkg: dist
-	tar xzf graphviz-@VERSION@.tar.gz && make -C graphviz-@VERSION@/macosx/build && mv graphviz-@VERSION@/macosx/build/graphviz-*.pkg .
+	tar xzf graphviz-$(VERSION).tar.gz && make -C graphviz-$(VERSION)/macosx/build && mv graphviz-$(VERSION)/macosx/build/graphviz-*.pkg .
 
 # codespell is a python script:
 #      https://github.com/lucasdemarchi/codespell
@@ -71,4 +71,4 @@ pkg: dist
 spellcheck:
 	codespell -d -q 3 --skip="*.po,*.ts"
 
-DISTCLEANFILES = config.cache builddate.h FEATURE/* graphviz-@VERSION@*
+DISTCLEANFILES = config.cache builddate.h FEATURE/* graphviz-$(VERSION)*

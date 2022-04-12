@@ -28,14 +28,14 @@ libgvplugin_gd_C_la_SOURCES = \
 	gvloadimage_gd.c \
 	gvdevice_gd.c
 
-libgvplugin_gd_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_gd_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_gd_la_SOURCES = $(libgvplugin_gd_C_la_SOURCES)
 
 if WITH_LIBGD
 libgvplugin_gd_la_LIBADD = \
 	$(top_builddir)/lib/gvc/libgvc.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
-	$(top_builddir)/lib/cdt/libcdt.la @PANGOCAIRO_LIBS@ @GDLIB_LIBS@ @MATH_LIBS@
+	$(top_builddir)/lib/cdt/libcdt.la $(PANGOCAIRO_LIBS) $(GDLIB_LIBS) $(MATH_LIBS)
 libgvplugin_gd_la_DEPENDENCIES =  $(top_builddir)/lib/gvc/libgvc.la
 
 if WITH_WIN32

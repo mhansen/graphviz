@@ -36,15 +36,15 @@ libpathplan_C_la_SOURCES = cvt.c inpoly.c route.c shortest.c \
 
 libpathplan_la_LDFLAGS = -version-info $(PATHPLAN_VERSION) -no-undefined
 libpathplan_la_SOURCES = $(libpathplan_C_la_SOURCES)
-libpathplan_la_LIBADD = @MATH_LIBS@
+libpathplan_la_LIBADD = $(MATH_LIBS)
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 pathplan.3.pdf: pathplan.3.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 pathplan.3.ps: $(srcdir)/pathplan.3
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

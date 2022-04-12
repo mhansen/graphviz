@@ -39,22 +39,22 @@ $(libexpr_C_la_OBJECTS) $(libexpr_la_OBJECTS): \
 	exparse.h exparse.c exgram.h exop.h
 
 exparse.c: y.tab.c 
-	@SED@ "s/fprintf/sfprintf/g" <y.tab.c | \
-		@SED@ "s/FILE/Sfio_t/g" | \
-		@SED@ "s/stderr/sfstderr/g" > exparse.c
+	$(SED) "s/fprintf/sfprintf/g" <y.tab.c | \
+		$(SED) "s/FILE/Sfio_t/g" | \
+		$(SED) "s/stderr/sfstderr/g" > exparse.c
 
 y.tab.c y.tab.h: y.output
 
 y.output: $(top_srcdir)/lib/expr/exparse.y
-	@YACC@ -Wno-yacc -dtv $(top_srcdir)/lib/expr/exparse.y -o y.tab.c
+	$(YACC) -Wno-yacc -dtv $(top_srcdir)/lib/expr/exparse.y -o y.tab.c
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 expr.3.pdf: expr.3.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 expr.3.ps: $(srcdir)/expr.3
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

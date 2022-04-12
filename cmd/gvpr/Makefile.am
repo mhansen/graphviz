@@ -38,10 +38,10 @@ gvpr_LDADD = $(top_builddir)/lib/gvpr/libgvpr.la \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gvpr.1.pdf: gvpr.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gvpr.1.ps: $(srcdir)/gvpr.1
-	@GROFF@ -Tps -man -t $< >$@
+	$(GROFF) -Tps -man -t $< >$@
 endif
 endif
 gvpr_static_SOURCES = gvprmain.c

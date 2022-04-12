@@ -28,7 +28,7 @@ libgvplugin_gtk_C_la_SOURCES = \
         interface.c \
         callbacks.c 
 
-libgvplugin_gtk_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_gtk_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_gtk_la_SOURCES = $(libgvplugin_gtk_C_la_SOURCES)
 libgvplugin_gtk_la_LIBADD = $(GTK_LIBS)
 

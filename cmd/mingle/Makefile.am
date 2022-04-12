@@ -42,10 +42,10 @@ mingle_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 mingle.1.pdf: mingle.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 mingle.1.ps: $(srcdir)/mingle.1
-	@GROFF@ -e -Tps -man -t $< >$@
+	$(GROFF) -e -Tps -man -t $< >$@
 endif
 endif
 

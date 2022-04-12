@@ -7,11 +7,11 @@ pkgtcldir = $(pkglibdir)/tcl
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/tclpkg/tclhandle \
-	-I$(top_srcdir)/lib/pathplan @TCL_INCLUDES@
+	-I$(top_srcdir)/lib/pathplan $(TCL_INCLUDES)
 
-AM_CFLAGS = @TCL_CFLAGS@
+AM_CFLAGS = $(TCL_CFLAGS)
 
-LIBS = -lc @TCL_STUB_LIB_SPEC@
+LIBS = -lc $(TCL_STUB_LIB_SPEC)
 
 noinst_HEADERS = makecw.h simple.h
 if WITH_TCL
