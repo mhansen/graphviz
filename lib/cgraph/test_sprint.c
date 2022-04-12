@@ -16,7 +16,17 @@
 
 // print ""
 static void test_empty_string(void) {
+// For some reason, GCC thinks this deserves a compiler warning because
+// `printf("")` is a no-op. Apparently our annotations that tell it `gv_sprint`
+// is `printf` like lead it to decide it is a little _too_ `printf` like.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-zero-length"
+#endif
   char *s = gv_sprint("");
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
   assert(strcmp(s, "") == 0);
   free(s);
 }
@@ -81,7 +91,7 @@ static void test_utf8(void) {
 static void test_int(void) {
   char *s =
       gv_sprint("%d is a nice number, more than %" PRId8 ", less than %lu", 7,
-                INT8_C(-1), 42ul);
+                (int8_t)INT8_C(-1), 42ul);
   assert(strcmp(s, "7 is a nice number, more than -1, less than 42") == 0);
   free(s);
 }
