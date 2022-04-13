@@ -885,7 +885,7 @@ EXCLUDE = (
   "windows/gvedit/USettings.h",
   "windows/gvedit/Umain.cpp",
   "windows/gvedit/Umain.h",
-  "windows/include/unistd.h",
+  "windows/include/unistd/unistd.h",
 )
 
 root = Path(__file__).parents[1]
