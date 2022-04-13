@@ -10,6 +10,6 @@
 
 #pragma once
 
-void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, double width, int max_level, double (*usr_dist)(int, double*, double*), double *dist_max, double **argmax);
+void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, double width, int max_level, double *dist_max, double **argmax);
 void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree qt, int max_level,
-			      double (*usr_dist)(int, double*, double*), double *dist_max, double **argmax);
+			      double *dist_max, double **argmax);

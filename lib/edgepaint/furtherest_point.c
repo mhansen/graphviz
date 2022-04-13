@@ -20,12 +20,12 @@ static double dist(int dim, double *x, double *y){
 }
 
 
-static double distance_to_group(int k, int dim, double *wgt, double *pts, double *center, double (*usr_dist)(int, double*, double*)){
+static double distance_to_group(int k, int dim, double *wgt, double *pts, double *center){
   int i;
   double distance = -1, dist_min = 0;
   if (!wgt){
     for (i = 0; i < k; i++){
-      distance = (*usr_dist)(dim, &(pts[i*dim]), center);
+      distance = dist(dim, &(pts[i*dim]), center);
       if (i == 0){
 	dist_min = distance;
       } else {
@@ -34,7 +34,7 @@ static double distance_to_group(int k, int dim, double *wgt, double *pts, double
     }
   } else {
     for (i = 0; i < k; i++){
-      distance = (*usr_dist)(dim, &(pts[i*dim]), center);
+      distance = dist(dim, &(pts[i*dim]), center);
       if (i == 0){
 	dist_min = wgt[i]*distance;
       } else {
@@ -45,7 +45,7 @@ static double distance_to_group(int k, int dim, double *wgt, double *pts, double
   return dist_min;
 }
 
-void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, double width, int max_level, double (*usr_dist)(int, double*, double*), double *dist_max, double **argmax){
+void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, double width, int max_level, double *dist_max, double **argmax){
   /* Assume that in the box defined by {center, width} are feasible;     
      find, in the, a point "furtherest_point" that is furtherest away from a group of k-points pts, using quadtree,
      with up to max_level. Here the distance of a point to a group of point is defined as the minimum 
@@ -62,7 +62,6 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
      center: the center of the root of quadtree
      width: the width of the root
      max_level: max level to go down
-     usr_dist: the distance function. If NULL, assume Euclidean. If NULL, set to Euclidean.
      argmax: on entry, if NULL, will be allocated, iotherwise must be an array of size >= dim which will hold the furtherest point. 
 
      Return: the point (argmax) furtherest away from the group, and the distance dist_max.
@@ -77,7 +76,6 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
   int i, ii, j, pruned;
   double wmax = 0;
 
-  if (!usr_dist) usr_dist = dist;
   if (wgt){
     for (i = 0; i < k; i++) wmax = MAX(wgt[i], wmax);
   } else {
@@ -86,7 +84,7 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
 
   qt0 = qt = QuadTree_new(dim, center, width, max_level);
 
-  qt->total_weight = *dist_max = distance_to_group(k, dim, wgt, pts, center, usr_dist);/* store distance in total_weight */
+  qt->total_weight = *dist_max = distance_to_group(k, dim, wgt, pts, center);/* store distance in total_weight */
   if (!(*argmax)) *argmax = MALLOC(sizeof(double)*dim);
   memcpy(*argmax, center, sizeof(double)*dim);
 
@@ -120,7 +118,7 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
       qt->qts = MALLOC(sizeof(QuadTree)*(1<<dim));
       for (ii = 0; ii < 1<<dim; ii++) {
 	qt->qts[ii] = QuadTree_new_in_quadrant(qt->dim, qt->center, (qt->width)/2, max_level, ii);
-	qt->qts[ii]->total_weight = distance = distance_to_group(k, dim, wgt, pts, qt->qts[ii]->center, usr_dist);/* store distance in total_weight */
+	qt->qts[ii]->total_weight = distance = distance_to_group(k, dim, wgt, pts, qt->qts[ii]->center);/* store distance in total_weight */
 	pruned = FALSE;
 	if (distance > *dist_max){
 	  *dist_max = distance;
@@ -172,7 +170,7 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
 
 
 void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree qt, int max_level, 
-			      double (*usr_dist)(int, double*, double*), double *dist_max, double **argmax){
+			      double *dist_max, double **argmax){
   /* Given a list of points in the Euclidean space contained in the quadtree qt (called the feasible points), find among them one that
      is closest to another list of point {dim, k, pts}.
 
@@ -192,7 +190,6 @@ void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree
      center: the center of the root of quadtree
      width: the width of the root
      max_level: max level to go down
-     usr_dist: the distance function. If NULL, assume Euclidean. If NULL, set to Euclidean.
      argmax: on entry, if NULL, will be allocated, otherwise must be an array of size >= dim which will hold the furtherest point. 
 
      Return: the point (argmax) furtherest away from the group, and the distance dist_max.
@@ -208,8 +205,6 @@ void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree
   double *average;
   double wmax = 0.;
 
-  if (!usr_dist) usr_dist = dist;
-
   if (wgt){
     for (i = 0; i < k; i++) wmax = MAX(wgt[i], wmax);
   } else {
@@ -217,7 +212,7 @@ void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree
   }
 
   average = qt->average;
-  qt->total_weight = *dist_max = distance_to_group(k, dim, wgt, pts, average, usr_dist);/* store distance in total_weight */
+  qt->total_weight = *dist_max = distance_to_group(k, dim, wgt, pts, average);/* store distance in total_weight */
   if (!(*argmax)) *argmax = MALLOC(sizeof(double)*dim);
   memcpy(*argmax, average, sizeof(double)*dim);
 
@@ -251,7 +246,7 @@ void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree
 
       for (ii = 0; ii < 1<<dim; ii++) {
 	if (!(qt->qts[ii])) continue;
-	qt->qts[ii]->total_weight = distance = distance_to_group(k, dim, wgt, pts, qt->qts[ii]->average, usr_dist);/* store distance in total_weight */
+	qt->qts[ii]->total_weight = distance = distance_to_group(k, dim, wgt, pts, qt->qts[ii]->average);/* store distance in total_weight */
 	pruned = FALSE;
 	if (distance > *dist_max){
 	  *dist_max = distance;
