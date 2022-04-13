@@ -18,6 +18,7 @@
 #include <stddef.h>
 #include <ortho/maze.h>
 #include <ortho/partition.h>
+#include <ortho/trap.h>
 #include <common/memory.h>
 #include <common/arith.h>
 
@@ -93,12 +94,11 @@ vcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
 {
   (void)d;
   (void)disc;
-  if (key1->x > key2->x) return 1;
-  else if (key1->x < key2->x) return -1;
-  else if (key1->y > key2->y) return 1;
-  else if (key1->y < key2->y) return -1;
-  else return 0;
-}   
+  int dx = dfp_cmp(key1->x, key2->x);
+  if (dx != 0)
+    return dx;
+  return dfp_cmp(key1->y, key2->y);
+}
 
 /// compares points by Y and then by X
 
@@ -107,12 +107,11 @@ hcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
 {
   (void)d;
   (void)disc;
-  if (key1->y > key2->y) return 1;
-  else if (key1->y < key2->y) return -1;
-  else if (key1->x > key2->x) return 1;
-  else if (key1->x < key2->x) return -1;
-  else return 0;
-}   
+  int dy = dfp_cmp(key1->y, key2->y);
+  if (dy != 0)
+    return dy;
+  return dfp_cmp(key1->x, key2->x);
+}
 
 typedef struct {
     snode*    np;

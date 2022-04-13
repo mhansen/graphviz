@@ -68,7 +68,9 @@ def test_regression_failure():
 # FIXME: re-enable when all tests pass on all platforms
 #    assert result.returncode == 0
 
-@pytest.mark.xfail(strict=not is_ndebug_defined()) # FIXME
+@pytest.mark.xfail(platform.system() == "Windows",
+        reason="#56",
+        strict=not is_ndebug_defined()) # FIXME
 def test_14():
   """
   using ortho and twopi in combination should not cause an assertion failure
