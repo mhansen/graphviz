@@ -6,7 +6,7 @@
 #include "test_utilities.h"
 
 TEST_CASE("Minimum edge node overlap",
-          "[!shouldfail] An edge connected to a node shall touch that node") {
+          "An edge connected to a node shall touch that node") {
 
   const graph_options graph_options = {
       .node_shape = "polygon",
