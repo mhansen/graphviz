@@ -2546,9 +2546,6 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
 AC_MSG_CHECKING(if intptr_t is declared)
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdlib.h>
   #include <stdint.h>
-	#if HAVE_UNISTD_H
-	#include <unistd.h>
-	#endif
 	]], [[intptr_t  abc;
 	]])],[AC_MSG_RESULT(yes)
 	AC_DEFINE_UNQUOTED(HAVE_INTPTR_T,1,Define if intptr_t is declared)

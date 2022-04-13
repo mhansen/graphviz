@@ -24,9 +24,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 
 static GVC_t *Gvc;
 static graph_t * G;
