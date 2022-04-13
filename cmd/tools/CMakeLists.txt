@@ -275,7 +275,7 @@ add_definitions(-DDEMAND_LOADING=0)
 
 add_executable(gvpack
   # Source files
-  gvpack.c
+  gvpack.cpp
 )
 
 target_include_directories(gvpack PRIVATE
