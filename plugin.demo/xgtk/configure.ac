@@ -71,7 +71,7 @@ AM_CONDITIONAL(WITH_GTK, [test "x$use_gtk" = "xYes"])
 
 # Checks for header files.
 AC_PATH_X
-AC_CHECK_HEADERS([inttypes.h libintl.h stdint.h string.h unistd.h])
+AC_CHECK_HEADERS([inttypes.h libintl.h stdint.h string.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 
