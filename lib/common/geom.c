@@ -295,22 +295,6 @@ pointf ccwrotatepf(pointf p, int ccwrot)
     return p;
 }
 
-box flip_rec_box(box b, point p)
-{
-    box r;
-    /* flip box */
-    r.UR.x = b.UR.y;
-    r.UR.y = b.UR.x;
-    r.LL.x = b.LL.y;
-    r.LL.y = b.LL.x;
-    /* move box */
-    r.LL.x += p.x;
-    r.LL.y += p.y;
-    r.UR.x += p.x;
-    r.UR.y += p.y;
-    return r;
-}
-
 boxf flip_rec_boxf(boxf b, pointf p)
 {
     boxf r;

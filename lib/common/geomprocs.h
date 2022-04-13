@@ -32,7 +32,6 @@ extern "C" {
 #define GEOMPROCS_API /* nothing */
 #endif
 
-GEOMPROCS_API box flip_rec_box(box b, point p);
 GEOMPROCS_API boxf flip_rec_boxf(boxf b, pointf p);
 
 GEOMPROCS_API double ptToLine2 (pointf l1, pointf l2, pointf p);
@@ -148,24 +147,9 @@ static inline pointf exch_xyf(pointf p)
     return r;
 }
 
-static inline int box_overlap(box b0, box b1)
-{
-    return OVERLAP(b0, b1);
-}
-
 static inline int boxf_overlap(boxf b0, boxf b1)
 {
     return OVERLAP(b0, b1);
-}
-
-static inline int box_contains(box b0, box b1)
-{
-    return CONTAINS(b0, b1);
-}
-
-static inline int boxf_contains(boxf b0, boxf b1)
-{
-    return CONTAINS(b0, b1);
 }
 
 static inline pointf perp (pointf p)
