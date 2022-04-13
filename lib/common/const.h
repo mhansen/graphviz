@@ -253,7 +253,7 @@
 
 /* Flags stored in GD_flags 
  * Bit(s):  0     unused
- *          1-3   ET_ 
+ *          1-3   EDGETYPE_
  *          4     NEW_RANK
  */
 
