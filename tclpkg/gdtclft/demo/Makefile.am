@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-demodir = $(datadir)/$(PACKAGE)/demo
+demodir = $(pkgdatadir)/demo
 
 if WITH_TCL
 dist_demo_SCRIPTS = entities.tcl

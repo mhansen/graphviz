@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-pathplanexampledir = $(datadir)/$(PACKAGE)/demo/pathplan_data
+pathplanexampledir = $(pkgdatadir)/demo/pathplan_data
 
 if WITH_TCL
 dist_pathplanexample_DATA = boxes.dat dpd.dat funny.dat maze.dat nested.dat northo.dat \
