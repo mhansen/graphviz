@@ -89,7 +89,7 @@ Agedge_t	*agopp(Agedge_t *e);
 int		ageqedge(Agedge_t *e0, Agedge_t *e1);
 .SS "STRING ATTRIBUTES"
 .P0
-Agsym_t	*agattr(Agraph_t *g, int kind, char *name, char *value);
+Agsym_t	*agattr(Agraph_t *g, int kind, char *name, const char *value);
 Agsym_t	*agattrsym(void *obj, char *name);
 Agsym_t	*agnxtattr(Agraph_t *g, int kind, Agsym_t *attr);
 char		*agget(void *obj, char *name);
