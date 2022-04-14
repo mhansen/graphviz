@@ -11,9 +11,9 @@ if WITH_MINGW
 # trick is needed since DFLT_GVPRPATH is a string which is compiled
 # and backslashes in strings are interpreted as escape sequences. See
 # https://stackoverflow.com/a/14189687
-DFLT_GVPRPATH="\".$(PATH_SEPARATOR)/$(pkgdatadir)/gvpr\""
+DFLT_GVPRPATH = .$(PATH_SEPARATOR)/$(pkgdatadir)/gvpr
 else
-DFLT_GVPRPATH="\".$(PATH_SEPARATOR)$(pkgdatadir)/gvpr\""
+DFLT_GVPRPATH = .$(PATH_SEPARATOR)$(pkgdatadir)/gvpr
 endif
 
 AM_CPPFLAGS = \
@@ -23,7 +23,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir)/lib/common \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt \
-	-DDFLT_GVPRPATH=$(DFLT_GVPRPATH)
+	-DDFLT_GVPRPATH='"$(DFLT_GVPRPATH)"'
 
 pkginclude_HEADERS = gvpr.h
 noinst_HEADERS = actions.h compile.h gdefs.h gprdata.inc gprstate.h parse.h \
