@@ -46,6 +46,12 @@ target_include_directories(gvc
     ../..
 )
 
+if(WIN32 AND NOT MINGW)
+  target_include_directories(gvc PRIVATE
+    ../../windows/include/unistd
+  )
+endif()
+
 target_link_libraries(gvc PRIVATE
   $<TARGET_OBJECTS:common_obj>
   $<TARGET_OBJECTS:pack_obj>
