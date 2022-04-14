@@ -175,7 +175,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
     char buf[BUFSIZ];
     char* bp;
 
-    agnodeattr(NULL, "label", NODENAME_ESC);
+    agnodeattr(NULL, (char*)"label", NODENAME_ESC);
     pinfo->mode = l_clust;
     pinfo->margin = CL_OFFSET;
     pinfo->doSplines = TRUE; /* Use edges in packing */
