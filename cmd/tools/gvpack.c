@@ -74,7 +74,7 @@ static int G_cnt;		/* No. of -G arguments */
 static int G_sz;		/* Storage size for -G arguments */
 static attr_t *G_args;		/* Storage for -G arguments */
 static bool doPack;              /* Do packing if true */
-static char* gname = "root";
+static char* gname = (char*)"root";
 
 #define NEWNODE(n) ((node_t*)ND_alg(n))
 
