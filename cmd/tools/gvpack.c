@@ -119,7 +119,7 @@ static FILE *openFile(const char *name)
 static int setNameValue(char *arg)
 {
     char *p;
-    char *rhs = "true";
+    char *rhs = (char*)"true";
 
     if ((p = strchr(arg, '='))) {
 	*p++ = '\0';
