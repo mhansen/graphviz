@@ -264,8 +264,8 @@ static void init_node_edge(Agraph_t * g)
     node_t *n;
     edge_t *e;
     int nG = agnnodes(g);
-    attrsym_t *N_pos = agfindnodeattr(g, "pos");
-    attrsym_t *N_pin = agfindnodeattr(g, "pin");
+    attrsym_t *N_pos = agfindnodeattr(g, (char*)"pos");
+    attrsym_t *N_pin = agfindnodeattr(g, (char*)"pin");
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	neato_init_node(n);
