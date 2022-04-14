@@ -155,18 +155,15 @@ static int setUInt(unsigned int *v, char *arg)
     return 0;
 }
 
-static Agsym_t *agraphattr(Agraph_t *g, char *name, char *value)
-{
+static Agsym_t *agraphattr(Agraph_t *g, char *name, const char *value) {
     return agattr(g, AGRAPH, name, value);
 }
 
-static Agsym_t *agnodeattr(Agraph_t *g, char *name, char *value)
-{
+static Agsym_t *agnodeattr(Agraph_t *g, char *name, const char *value) {
     return agattr(g, AGNODE, name, value);
 }
 
-static Agsym_t *agedgeattr(Agraph_t *g, char *name, char *value)
-{
+static Agsym_t *agedgeattr(Agraph_t *g, char *name, const char *value) {
     return agattr(g, AGEDGE, name, value);
 }
 
@@ -463,7 +460,7 @@ static void fillDict(Dt_t * newdict, Agraph_t* g, int kind)
  */
 static void
 fillGraph(Agraph_t * g, Dt_t * d,
-	  Agsym_t * (*setf) (Agraph_t *, char *, char *), int cnt)
+	  Agsym_t * (*setf) (Agraph_t *, char *, const char *), int cnt)
 {
     attr_t *av;
     for (av = (attr_t *) dtflatten(d); av;
