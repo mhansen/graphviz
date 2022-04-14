@@ -59,9 +59,7 @@ extern "C" {
 
 #include	<fcntl.h>
 
-#ifdef HAVE_UNISTD_H
 #include	<unistd.h>
-#endif
 
 #include	<errno.h>
 #include	<ctype.h>
@@ -579,19 +577,6 @@ extern "C" {
 #include <io.h>
 #define SF_ERROR	0000400	/* an error happened                    */
 #else
-#ifndef HAVE_UNISTD_H
-    extern int close(int);
-    extern ssize_t read(int, void *, size_t);
-    extern ssize_t write(int, const void *, size_t);
-    extern off_t lseek(int, off_t, int);
-    extern int dup(int);
-    extern int isatty(int);
-    extern int wait(int *);
-    extern int pipe(int *);
-    extern uint sleep(uint);
-    extern int execl(const char *, const char *, ...);
-
-#endif /*HAVE_UNISTD_H*/
 #endif /* _WIN32 */
 
 #ifdef HAVE_SYS_STAT_H
