@@ -292,7 +292,7 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
     aginit (g, AGEDGE, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
     GD_gvc(g) = gvc;
     graph_init(g, false);
-    d = late_int(g, agfindgraphattr(g, "dim"), 2, 2);
+    d = late_int(g, agfindgraphattr(g, (char*)"dim"), 2, 2);
     if (d != 2) {
 	fprintf(stderr, "Error: graph %s has dim = %d (!= 2)\n", agnameof(g),
 		d);
@@ -665,7 +665,7 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
 	fprintf(stderr, "Creating clone graph\n");
     root = agopen(gname, kind, &AgDefaultDisc);
     initAttrs(root, gs, cnt);
-    G_bb = agfindgraphattr(root, "bb");
+    G_bb = agfindgraphattr(root, (char*)"bb");
     if (doPack) assert(G_bb);
 
     /* add command-line attributes */
