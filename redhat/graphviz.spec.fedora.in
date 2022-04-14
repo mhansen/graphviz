@@ -888,7 +888,6 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --enable-tcl \
         --with-gdk \
         --with-ghostscript \
-        --without-glitz \
         --with-ipsepcola \
         --disable-python \
 %if ! %{PYTHON3}

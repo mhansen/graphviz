@@ -30,6 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - gvpr index function produces wrong results #2211. This was a regression in
   Graphviz 2.47.0.
 
+### Removed
+
+- the glitz plugin has been removed. The plugin was never complete and
+  distributions no longer ship glitz.
+
 ## [3.0.0] – 2022-02-26
 
 ### Changed
