@@ -124,6 +124,10 @@ add_executable(gml2gv
   ${FLEX_Gmlscan_OUTPUTS}
 )
 
+if(WIN32 AND NOT MINGW)
+  target_compile_definitions(gml2gv PRIVATE -DYY_NO_UNISTD_H)
+endif()
+
 target_include_directories(gml2gv PRIVATE
   ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}

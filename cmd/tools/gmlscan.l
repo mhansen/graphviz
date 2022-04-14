@@ -15,10 +15,6 @@
 #include <gmlparse.h>
 #include "config.h"
 
-#ifndef HAVE_UNISTD_H
-#define YY_NO_UNISTD_H
-#endif
-
 #define GRAPH_EOF_TOKEN     '@'     /* lex class must be defined below */
 
 static int line_num = 1;
