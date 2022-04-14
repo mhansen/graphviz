@@ -435,7 +435,7 @@ static void fillDict(Dt_t * newdict, Agraph_t* g, int kind)
     for (a = agnxtattr(g,kind,0); a; a = agnxtattr(g,kind,a)) {
 	name = a->name;
 	value = a->defval;
-	rv = dtmatch(newdict, name);
+	rv = (attr_t*)dtmatch(newdict, name);
 	if (!rv) {
 	    rv = NEW(attr_t);
 	    rv->name = name;
@@ -523,7 +523,7 @@ static char *xName(Dt_t * names, char *oldname)
     pair_t *p;
     size_t len;
 
-    p = dtmatch(names, oldname);
+    p = (pair_t*)dtmatch(names, oldname);
     if (p) {
 	p->cnt++;
 	len = strlen(oldname) + 100; /* 100 for "_gv" and decimal no. */
