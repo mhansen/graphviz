@@ -78,7 +78,7 @@ static char* gname = (char*)"root";
 
 #define NEWNODE(n) ((node_t*)ND_alg(n))
 
-static char *useString =
+static const char useString[] =
     "Usage: gvpack [-gnuv?] [-m<margin>] {-array[_rc][n]] [-o<outf>] <files>\n\
   -n          - use node granularity\n\
   -g          - use graph granularity\n\
