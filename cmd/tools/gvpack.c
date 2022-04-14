@@ -325,36 +325,34 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
  * Copy all attributes from old object to new. Assume
  * attributes have been initialized.
  */
-static void cloneDfltAttrs(Agraph_t *old, Agraph_t *new, int kind)
-{
+static void cloneDfltAttrs(Agraph_t *old, Agraph_t *new_graph, int kind) {
     Agsym_t *a;
 
     for (a = agnxtattr(old, kind, 0); a; a =  agnxtattr(old, kind, a)) {
 	if (aghtmlstr(a->defval)) {
-	    char *s = agstrdup_html(new, a->defval);
-	    agattr(new, kind, a->name, s);
-	    agstrfree(new, s); // drop the extra reference count we bumped for s
+	    char *s = agstrdup_html(new_graph, a->defval);
+	    agattr(new_graph, kind, a->name, s);
+	    agstrfree(new_graph, s); // drop the extra reference count we bumped for s
 	} else {
-	    agattr (new, kind, a->name, a->defval);
+	    agattr(new_graph, kind, a->name, a->defval);
 	}
     }
 }
-static void cloneAttrs(void *old, void *new)
-{
+static void cloneAttrs(void *old, void *new_graph) {
     int kind = AGTYPE(old);
     Agsym_t *a;
     char* s;
     Agraph_t *g = agroot(old);
-    Agraph_t *ng = agroot(new);
+    Agraph_t *ng = agroot(new_graph);
 
     for (a = agnxtattr(g, kind, 0); a; a =  agnxtattr(g, kind, a)) {
 	s = agxget (old, a);
 	if (aghtmlstr(s)) {
 	    char *scopy = agstrdup_html(ng, s);
-	    agset(new, a->name, scopy);
+	    agset(new_graph, a->name, scopy);
 	    agstrfree(ng, scopy); // drop the extra reference count we bumped for scopy
 	} else {
-	    agset(new, a->name, s);
+	    agset(new_graph, a->name, s);
 	}
     }
 }
@@ -365,41 +363,38 @@ static void cloneAttrs(void *old, void *new)
  * are not disturbed. In particular, we assume they are
  * not deallocated.
  */
-static void cloneEdge(Agedge_t * old, Agedge_t * new)
-{
-    cloneAttrs(old, new);
-    ED_spl(new) = ED_spl(old);
-    ED_edge_type(new) = ED_edge_type(old);
-    ED_label(new) = ED_label(old);
-    ED_head_label(new) = ED_head_label(old);
-    ED_tail_label(new) = ED_tail_label(old);
-    ED_xlabel(new) = ED_xlabel(old);
+static void cloneEdge(Agedge_t *old, Agedge_t *new_edge) {
+  cloneAttrs(old, new_edge);
+  ED_spl(new_edge) = ED_spl(old);
+  ED_edge_type(new_edge) = ED_edge_type(old);
+  ED_label(new_edge) = ED_label(old);
+  ED_head_label(new_edge) = ED_head_label(old);
+  ED_tail_label(new_edge) = ED_tail_label(old);
+  ED_xlabel(new_edge) = ED_xlabel(old);
 }
 
 /* cloneNode:
  */
-static void cloneNode(Agnode_t * old, Agnode_t * new)
-{
-    cloneAttrs(old, new);
-    ND_coord(new).x = POINTS(ND_pos(old)[0]);
-    ND_coord(new).y = POINTS(ND_pos(old)[1]);
-    ND_height(new) = ND_height(old);
-    ND_ht(new) = ND_ht(old);
-    ND_width(new) = ND_width(old);
-    ND_lw(new) = ND_lw(old);
-    ND_rw(new) = ND_rw(old);
-    ND_shape(new) = ND_shape(old);
-    ND_shape_info(new) = ND_shape_info(old);
-    ND_xlabel(new) = ND_xlabel(old);
+static void cloneNode(Agnode_t *old, Agnode_t *new_node) {
+  cloneAttrs(old, new_node);
+  ND_coord(new_node).x = POINTS(ND_pos(old)[0]);
+  ND_coord(new_node).y = POINTS(ND_pos(old)[1]);
+  ND_height(new_node) = ND_height(old);
+  ND_ht(new_node) = ND_ht(old);
+  ND_width(new_node) = ND_width(old);
+  ND_lw(new_node) = ND_lw(old);
+  ND_rw(new_node) = ND_rw(old);
+  ND_shape(new_node) = ND_shape(old);
+  ND_shape_info(new_node) = ND_shape_info(old);
+  ND_xlabel(new_node) = ND_xlabel(old);
 }
 
 /* cloneCluster:
  */
-static void cloneCluster(Agraph_t * old, Agraph_t * new)
-{
-    /* string attributes were cloned as subgraphs */
-    GD_label(new) = GD_label(old);
-    GD_bb(new) = GD_bb(old);
+static void cloneCluster(Agraph_t *old, Agraph_t *new_cluster) {
+  // string attributes were cloned as subgraphs
+  GD_label(new_cluster) = GD_label(old);
+  GD_bb(new_cluster) = GD_bb(old);
 }
 
 /* freef:
