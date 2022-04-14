@@ -287,8 +287,6 @@ EXCLUDE = (
   "lib/cgraph/prisize_t.h",
   "lib/cgraph/rec.c",
   "lib/cgraph/refstr.c",
-  "lib/cgraph/sprint.c",
-  "lib/cgraph/sprint.h",
   "lib/cgraph/subg.c",
   "lib/cgraph/utils.c",
   "lib/cgraph/write.c",
