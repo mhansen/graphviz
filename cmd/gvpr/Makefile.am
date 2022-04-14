@@ -38,10 +38,10 @@ gvpr_LDADD = $(top_builddir)/lib/gvpr/libgvpr.la \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gvpr.1.pdf: gvpr.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gvpr.1.ps: $(srcdir)/gvpr.1
-	@GROFF@ -Tps -man -t $< >$@
+	$(GROFF) -Tps -man -t $< >$@
 endif
 endif
 gvpr_static_SOURCES = gvprmain.c
@@ -55,7 +55,7 @@ gvpr_static_LDADD = \
 	$(top_builddir)/lib/ast/libast_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
-       	$(MATH_LIBS)
+	$(MATH_LIBS)
 
 EXTRA_DIST = $(man_MANS) $(pdf) lib gvpr.vcxproj*
 

@@ -28,8 +28,8 @@ endif
 mingle_SOURCES = minglemain.cpp
 mingle_CPPFLAGS = $(AM_CPPFLAGS)
 mingle_LDADD = \
-    $(top_builddir)/lib/mingle/libmingle_C.la \
-    $(top_builddir)/lib/ingraphs/libingraphs_C.la \
+	$(top_builddir)/lib/mingle/libmingle_C.la \
+	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/sfdpgen/libsfdpgen_C.la \
 	$(top_builddir)/lib/neatogen/libneatogen_C.la \
 	$(top_builddir)/lib/sparse/libsparse_C.la \
@@ -42,10 +42,10 @@ mingle_LDADD = \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 mingle.1.pdf: mingle.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 mingle.1.ps: $(srcdir)/mingle.1
-	@GROFF@ -e -Tps -man -t $< >$@
+	$(GROFF) -e -Tps -man -t $< >$@
 endif
 endif
 

@@ -9,7 +9,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt
 
 if WITH_SFDP
-bin_PROGRAMS = gvmap cluster 
+bin_PROGRAMS = gvmap cluster
 dist_bin_SCRIPTS = gvmap.sh
 endif
 
@@ -30,7 +30,7 @@ noinst_HEADERS = make_map.h power.h country_graph_coloring.h
 
 gvmap_SOURCES = gvmap.c make_map.c power.c country_graph_coloring.c
 
-cluster_SOURCES = cluster.c make_map.c power.c country_graph_coloring.c 
+cluster_SOURCES = cluster.c make_map.c power.c country_graph_coloring.c
 
 gvmap_CPPFLAGS = $(AM_CPPFLAGS)
 
@@ -65,22 +65,22 @@ gvmap.sh :
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gvmap.1.pdf: gvmap.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gvmap.1.ps: $(srcdir)/gvmap.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 
 cluster.1.pdf: cluster.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 cluster.1.ps: $(srcdir)/cluster.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 
 gvmap.sh.1.pdf: gvmap.sh.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gvmap.sh.1.ps: $(srcdir)/gvmap.sh.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

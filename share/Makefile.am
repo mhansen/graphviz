@@ -1,1 +1,1 @@
-SUBDIRS = examples  gui
+SUBDIRS = examples gui

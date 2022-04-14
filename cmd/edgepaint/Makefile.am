@@ -26,8 +26,8 @@ endif
 edgepaint_SOURCES = edgepaintmain.c
 edgepaint_CPPFLAGS = $(AM_CPPFLAGS)
 edgepaint_LDADD = \
-    $(top_builddir)/lib/edgepaint/libedgepaint_C.la \
-    $(top_builddir)/lib/ingraphs/libingraphs_C.la \
+	$(top_builddir)/lib/edgepaint/libedgepaint_C.la \
+	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/sfdpgen/libsfdpgen_C.la \
 	$(top_builddir)/lib/neatogen/libneatogen_C.la \
 	$(top_builddir)/lib/sparse/libsparse_C.la \
@@ -45,10 +45,10 @@ nodist_EXTRA_edgepaint_SOURCES = fake.cxx
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 edgepaint.1.pdf: edgepaint.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 edgepaint.1.ps: $(srcdir)/edgepaint.1
-	@GROFF@ -e -Tps -man -t $< >$@
+	$(GROFF) -e -Tps -man -t $< >$@
 endif
 endif
 

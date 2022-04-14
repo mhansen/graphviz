@@ -2,7 +2,7 @@
 
 pkgconfigdir = $(libdir)/pkgconfig
 
-XDOT_VERSION="4:0:0"
+XDOT_VERSION = "4:0:0"
 
 pdfdir = $(pkgdatadir)/doc/pdf
 pkginclude_HEADERS = xdot.h
@@ -33,14 +33,13 @@ libxdot_la_SOURCES = $(libxdot_C_la_SOURCES)
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 xdot.3.pdf: xdot.3.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 xdot.3.ps: $(srcdir)/xdot.3
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
 EXTRA_DIST = $(man_MANS) $(pdf) xdot.vcxproj*
 
 DISTCLEANFILES = $(pdf) xdot.3.ps
-

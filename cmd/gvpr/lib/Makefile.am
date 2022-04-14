@@ -7,6 +7,6 @@ gvpr_DATA = addedges addranks addrings anon attr bb bbox bipart binduce chkclust
 	deledges delmulti delnodes depath dijkstra \
 	flatten get-layers-list histogram group indent knbhd \
 	maxdeg path rotate scale scalexy span topon \
-	treetoclust 
+	treetoclust
 
 EXTRA_DIST = $(gvpr_DATA)

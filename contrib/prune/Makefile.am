@@ -3,8 +3,8 @@
 pdfdir = $(pkgdatadir)/doc/pdf
 
 AM_CPPFLAGS = \
-        -I$(top_srcdir) \
-        -I$(top_srcdir)/lib/ingraphs \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/lib/ingraphs \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt
 
@@ -32,14 +32,13 @@ prune_LDADD = $(top_builddir)/lib/ingraphs/libingraphs_C.la \
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 prune.1.pdf: prune.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 prune.1.ps: prune.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
 EXTRA_DIST = $(man_MANS) $(pdf) README test.gv prune.vcxproj*
-
 
 DISTCLEANFILES = $(pdf) prune.1.ps

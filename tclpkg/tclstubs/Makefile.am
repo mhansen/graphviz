@@ -1,8 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-AM_CPPFLAGS = @TCL_CFLAGS@ @TCL_INCLUDES@
+AM_CPPFLAGS = $(TCL_CFLAGS) $(TCL_INCLUDES)
 
-LIBS = @TCL_STUB_LIB_SPEC@
+LIBS = $(TCL_STUB_LIB_SPEC)
 
 if WITH_TCL
 noinst_LTLIBRARIES = libtclstubs_C.la

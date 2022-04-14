@@ -39,10 +39,10 @@ endif
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 vimdot.1.pdf: vimdot.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 vimdot.1.ps: $(srcdir)/vimdot.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
@@ -50,9 +50,9 @@ libgvplugin_xlib_C_la_SOURCES = \
 	gvplugin_xlib.c \
 	gvdevice_xlib.c
 
-libgvplugin_xlib_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_xlib_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_xlib_la_SOURCES = $(libgvplugin_xlib_C_la_SOURCES)
-libgvplugin_xlib_la_LIBADD = @PANGOCAIRO_LIBS@ $(X11_LIBS) $(XRENDER_LIBS) @SOCKET_LIBS@ @MATH_LIBS@
+libgvplugin_xlib_la_LIBADD = $(PANGOCAIRO_LIBS) $(X11_LIBS) $(XRENDER_LIBS) $(SOCKET_LIBS) $(MATH_LIBS)
 
 if WITH_WIN32
 libgvplugin_xlib_la_LDFLAGS += -no-undefined

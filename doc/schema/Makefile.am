@@ -2,6 +2,6 @@
 
 schemadir = $(pkgdatadir)/doc/html/schema
 
-schema_DATA =  arguments.xml  attributes.xml  attributes.xslt
+schema_DATA = arguments.xml attributes.xml attributes.xslt
 
 EXTRA_DIST = $(schema_DATA)

@@ -18,12 +18,12 @@ endif
 
 # If all else fails there is a local copy of tkInt.h in tkstubs/
 AM_CPPFLAGS = \
-	-I@TK_SRC_DIR@/generic \
-	-I@TCL_SRC_DIR@/generic \
-	@TCL_INCLUDES@ @TCLINT_INCLUDES@ \
-	@TK_INCLUDES@ @TKINT_INCLUDES@ -I$(top_srcdir)/tclpkg/tkstubs
+	-I$(TK_SRC_DIR)/generic \
+	-I$(TCL_SRC_DIR)/generic \
+	$(TCL_INCLUDES) $(TCLINT_INCLUDES) \
+	$(TK_INCLUDES) $(TKINT_INCLUDES) -I$(top_srcdir)/tclpkg/tkstubs
 
-AM_CFLAGS = @X_CFLAGS@ @TCL_CFLAGS@  @TK_CFLAGS@ @TK_DEFS@ \
+AM_CFLAGS = $(X_CFLAGS) $(TCL_CFLAGS) $(TK_CFLAGS) $(TK_DEFS) \
 	-UPACKAGE_NAME -UPACKAGE_STRING -UPACKAGE_TARNAME \
 	-UPACKAGE_VERSION -UPACKAGE_BUGREPORT
 
@@ -35,11 +35,11 @@ pdf_DATA = tkspline.3tk.pdf
 endif
 endif
 
-libtkspline_la_LDFLAGS = -no-undefined 
+libtkspline_la_LDFLAGS = -no-undefined
 libtkspline_la_SOURCES = tkspline.c
 libtkspline_la_LIBADD = \
 	$(top_builddir)/tclpkg/tkstubs/libtkstubs_C.la \
-	$(top_builddir)/tclpkg/tclstubs/libtclstubs_C.la @TK_LIB_SPEC@
+	$(top_builddir)/tclpkg/tclstubs/libtclstubs_C.la $(TK_LIB_SPEC)
 
 if WITH_TK
 all-local: pkgIndex.tcl
@@ -51,15 +51,14 @@ endif
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 tkspline.3tk.pdf: tkspline.3tk.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 tkspline.3tk.ps: $(srcdir)/tkspline.3tk
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
 EXTRA_DIST = $(man) $(pdf) dllEntry.c
 
 CLEANFILES = pkgIndex.tcl
-
 DISTCLEANFILES = $(pdf) tkspline.3tk.ps

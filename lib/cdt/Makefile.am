@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-CDT_VERSION="5:0:0"
+CDT_VERSION = "5:0:0"
 
 pdfdir = $(pkgdatadir)/doc/pdf
 pkgextraincludedir = $(pkgincludedir)
@@ -42,10 +42,10 @@ libcdt_la_SOURCES = $(libcdt_C_la_SOURCES)
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 cdt.3.pdf: cdt.3.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 cdt.3.ps: $(srcdir)/cdt.3
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

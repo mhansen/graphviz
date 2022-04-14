@@ -6,12 +6,12 @@ pdfdir = $(pkgdatadir)/doc/pdf
 pkgtcldir = $(pkglibdir)/tcl
 
 AM_CPPFLAGS = \
-	 -I$(top_srcdir) \
-	@GDLIB_CFLAGS@ @TCL_INCLUDES@
+	-I$(top_srcdir) \
+	$(GDLIB_CFLAGS) $(TCL_INCLUDES)
 
 LIBS = @LIBS@ -lc
 
-AM_CFLAGS = @TCL_CFLAGS@
+AM_CFLAGS = $(TCL_CFLAGS)
 
 man = gdtclft.3tcl
 if ENABLE_MAN_PDFS
@@ -59,15 +59,14 @@ endif
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gdtclft.3tcl.pdf: gdtclft.3tcl.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gdtclft.3tcl.ps: $(srcdir)/gdtclft.3tcl
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
 EXTRA_DIST = $(man) $(pdf)
 
 CLEANFILES = pkgIndex.tcl
-
 DISTCLEANFILES = $(pdf) gdtclft.3tcl.ps

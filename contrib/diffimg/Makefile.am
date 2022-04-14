@@ -1,9 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
-VERSION=0.2
+VERSION = 0.2
 
 AM_CPPFLAGS = \
-	@GDLIB_CFLAGS@ \
+	$(GDLIB_CFLAGS) \
 	-I$(top_srcdir)/lib
 
 pdfdir = $(pkgdatadir)/doc/pdf
@@ -27,15 +27,15 @@ endif
 
 diffimg_SOURCES = diffimg.c
 
-diffimg_LDADD = @GDLIB_LIBS@ @MATH_LIBS@
+diffimg_LDADD = $(GDLIB_LIBS) $(MATH_LIBS)
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 diffimg.1.pdf: diffimg.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 diffimg.1.ps: $(srcdir)/diffimg.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

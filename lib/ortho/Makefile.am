@@ -2,7 +2,7 @@
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
-        -I$(top_srcdir)/lib/common \
+	-I$(top_srcdir)/lib/common \
 	-I$(top_srcdir)/lib/gvc \
 	-I$(top_srcdir)/lib/pack \
 	-I$(top_srcdir)/lib/pathplan \
@@ -22,4 +22,3 @@ endif
 libortho_C_la_SOURCES = fPQ.c maze.c ortho.c partition.c rawgraph.c sgraph.c trapezoid.c
 
 EXTRA_DIST = gvortho.vcxproj*
- 

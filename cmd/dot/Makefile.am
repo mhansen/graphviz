@@ -9,7 +9,7 @@ else
 linkedpdf =
 endif
 linkedprogram = neato$(EXEEXT) twopi$(EXEEXT) fdp$(EXEEXT) circo$(EXEEXT) \
-    osage$(EXEEXT) patchwork$(EXEEXT)
+	osage$(EXEEXT) patchwork$(EXEEXT)
 
 if WITH_SFDP
 linkedman += sfdp.1
@@ -21,8 +21,8 @@ endif
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
-        -I$(top_srcdir)/lib/common \
-        -I$(top_srcdir)/lib/gvc \
+	-I$(top_srcdir)/lib/common \
+	-I$(top_srcdir)/lib/gvc \
 	-I$(top_srcdir)/lib/pathplan \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt
@@ -87,22 +87,22 @@ uninstall-hook:
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 dot.1.pdf: dot.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 dot.1.ps: $(srcdir)/dot.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 
 osage.1.pdf: osage.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 osage.1.ps: $(srcdir)/osage.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 
 patchwork.1.pdf: patchwork.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 patchwork.1.ps: $(srcdir)/patchwork.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

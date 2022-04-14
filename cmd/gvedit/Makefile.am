@@ -46,9 +46,9 @@ gvedit_LDADD = \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(QTGUI_LIBS) \
 	$(QTCORE_LIBS) \
-	$(EXPAT_LIBS) $(Z_LIBS) 
+	$(EXPAT_LIBS) $(Z_LIBS)
 
-noinst_HEADERS = csettings.h imageviewer.h mainwindow.h mdichild.h ui_settings.h 
+noinst_HEADERS = csettings.h imageviewer.h mainwindow.h mdichild.h ui_settings.h
 
 MOCABLES = moc_csettings.cpp moc_imageviewer.cpp moc_mainwindow.cpp moc_mdichild.cpp qrc_mdi.cpp
 
@@ -70,17 +70,16 @@ attrs.txt: $(top_srcdir)/doc/infosrc/attrs
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gvedit.1.pdf: gvedit.1.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gvedit.1.ps: $(srcdir)/gvedit.1
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
 EXTRA_DIST = gvedit.vcxproj* gvedit.pro.in mdi.qrc $(mans) $(pdfs)
 
 CLEANFILES = moc_csettings.cpp moc_imageviewer.cpp moc_mainwindow.cpp moc_mdichild.cpp qrc_mdi.cpp
-
 DISTCLEANFILES = attrs.txt $(pdf) qMakefile gvedit.1.ps
 
 clean-local:

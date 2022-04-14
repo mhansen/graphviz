@@ -2,7 +2,7 @@
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
-        -I$(top_srcdir)/lib/common \
+	-I$(top_srcdir)/lib/common \
 	-I$(top_srcdir)/lib/gvc \
 	-I$(top_srcdir)/lib/pack \
 	-I$(top_srcdir)/lib/pathplan \
@@ -16,7 +16,7 @@ endif
 noinst_HEADERS = sfdpinternal.h spring_electrical.h \
 	sparse_solve.h post_process.h \
 	stress_model.h uniform_stress.h \
-	Multilevel.h sfdp.h PriorityQueue.h 
+	Multilevel.h sfdp.h PriorityQueue.h
 
 if WITH_SFDP
 noinst_LTLIBRARIES = libsfdpgen_C.la

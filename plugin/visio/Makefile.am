@@ -7,7 +7,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/gvc \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt \
-	$(VISIO_CFLAGS) 
+	$(VISIO_CFLAGS)
 
 noinst_HEADERS = VisioGraphic.h VisioRender.h VisioText.h
 
@@ -27,11 +27,11 @@ libgvplugin_visio_C_la_SOURCES = \
 	VisioText.cpp \
 	gvrender_visio_vdx.cpp
 
-libgvplugin_visio_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_visio_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_visio_la_SOURCES = $(libgvplugin_visio_C_la_SOURCES)
 libgvplugin_visio_la_LIBADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
-	$(top_builddir)/lib/gvc/libgvc.la @VISIO_LIBS@ 
+	$(top_builddir)/lib/gvc/libgvc.la $(VISIO_LIBS)
 
 if WITH_WIN32
 libgvplugin_visio_la_LDFLAGS += -no-undefined
@@ -41,6 +41,6 @@ if WITH_DARWIN9
 libgvplugin_visio_la_LDFLAGS += -Wl,-exported_symbol,_gvplugin_visio_LTX_library
 endif
 
-EXTRA_DIST = 
+EXTRA_DIST =
 
-DISTCLEANFILES = 
+DISTCLEANFILES =

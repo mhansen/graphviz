@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-CGRAPH_VERSION="6:0:0"
+CGRAPH_VERSION = "6:0:0"
 
 pdfdir = $(pkgdatadir)/doc/pdf
 pkgconfigdir = $(libdir)/pkgconfig
@@ -43,18 +43,18 @@ libcgraph_la_LIBADD = $(top_builddir)/lib/cdt/libcdt.la
 scan.o scan.lo: scan.c grammar.h
 
 scan.c: $(top_srcdir)/lib/cgraph/scan.l
-	@LEX@ --outfile=$@ -i $(top_srcdir)/lib/cgraph/scan.l
+	$(LEX) --outfile=$@ -i $(top_srcdir)/lib/cgraph/scan.l
 
 grammar.c grammar.h: $(top_srcdir)/lib/cgraph/grammar.y
-	@YACC@ -Wno-yacc -dv --output=grammar.c $(top_srcdir)/lib/cgraph/grammar.y
+	$(YACC) -Wno-yacc -dv --output=grammar.c $(top_srcdir)/lib/cgraph/grammar.y
 
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 cgraph.3.pdf: cgraph.3.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 cgraph.3.ps: $(srcdir)/cgraph.3
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 

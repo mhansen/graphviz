@@ -17,7 +17,7 @@ directed_DATA = $(GRAPHS)
 
 EXTRA_DIST = $(GRAPHS)
 
-CLEANFILES = core *.gv.* *.png .xvpics/* 
+CLEANFILES = core *.gv.* *.png .xvpics/*
 
 DOT = $(top_builddir)/cmd/dot/dot_builtins
 
@@ -29,17 +29,17 @@ test:
 		-Tpng:cairo -Tpng:gd -Tpng:cairo:gd -Tpng:cairo:cairo -Tpng:gd:gd \
 		-Tps -Tps:lasi -Tps2 -Tps:cairo -Tpdf \
 		-Tsvg -Tsvg:cairo -Tsvgz -Tvrml \
-		-O $(GRAPHS) 
+		-O $(GRAPHS)
 
 ins_test:
 	dot \
-                -Tcanon -Tgv -Tplain -Tplain-ext -Txdot \
-                -Tcmap -Tcmapx -Tismap -Timap \
-                -Tjpg -Tpdf -Tfig -Tgif -Tpng \
+		-Tcanon -Tgv -Tplain -Tplain-ext -Txdot \
+		-Tcmap -Tcmapx -Tismap -Timap \
+		-Tjpg -Tpdf -Tfig -Tgif -Tpng \
 		-Tpng:cairo -Tpng:gd -Tpng:cairo:gd -Tpng:cairo:cairo -Tpng:gd:gd \
-                -Tps -Tps2 -Tps:lasi -Tps:cairo -Tpdf \
-                -Tsvg -Tsvg:cairo -Tsvgz -Tvrml \
-                -O $(GRAPHS) 
+		-Tps -Tps2 -Tps:lasi -Tps:cairo -Tpdf \
+		-Tsvg -Tsvg:cairo -Tsvgz -Tvrml \
+		-O $(GRAPHS)
 
 canon:
 	for i in $(GRAPHS); do echo "dot $$i"; \

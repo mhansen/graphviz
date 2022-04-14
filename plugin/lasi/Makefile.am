@@ -25,10 +25,10 @@ libgvplugin_lasi_C_la_SOURCES = \
 	gvrender_lasi.cpp \
 	gvloadimage_lasi.c
 
-libgvplugin_lasi_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
+libgvplugin_lasi_la_LDFLAGS = -version-info $(GVPLUGIN_VERSION_INFO)
 libgvplugin_lasi_la_SOURCES = $(libgvplugin_lasi_C_la_SOURCES)
 libgvplugin_lasi_la_LIBADD = \
-	$(top_builddir)/lib/gvc/libgvc.la @LASI_LIBS@ @PANGOCAIRO_LIBS@ @MATH_LIBS@
+	$(top_builddir)/lib/gvc/libgvc.la $(LASI_LIBS) $(PANGOCAIRO_LIBS) $(MATH_LIBS)
 
 if WITH_WIN32
 libgvplugin_lasi_la_LDFLAGS += -no-undefined

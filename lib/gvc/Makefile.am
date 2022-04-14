@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-GVC_VERSION="6:0:0"
+GVC_VERSION = "6:0:0"
 
 pdfdir = $(pkgdatadir)/doc/pdf
 pkgconfigdir = $(libdir)/pkgconfig
@@ -56,10 +56,10 @@ libgvc_C_la_DEPENDENCIES = \
 	$(top_builddir)/lib/common/libcommon_C.la
 if WITH_ORTHO
 libgvc_C_la_LIBADD += $(top_builddir)/lib/ortho/libortho_C.la
-libgvc_C_la_DEPENDENCIES +=  $(top_builddir)/lib/ortho/libortho_C.la
+libgvc_C_la_DEPENDENCIES += $(top_builddir)/lib/ortho/libortho_C.la
 endif
 if ENABLE_LTDL
-libgvc_C_la_LIBADD += @LIBLTDL@ $(LIBLTDL_LDFLAGS)
+libgvc_C_la_LIBADD += $(LIBLTDL) $(LIBLTDL_LDFLAGS)
 endif
 
 libgvc_la_LDFLAGS = -version-info $(GVC_VERSION) -no-undefined
@@ -74,10 +74,10 @@ libgvc_la_DEPENDENCIES = $(libgvc_C_la_DEPENDENCIES)
 if ENABLE_MAN_PDFS
 if HAVE_PS2PDF
 gvc.3.pdf: gvc.3.ps
-	@PS2PDF@ $<
+	$(PS2PDF) $<
 
 gvc.3.ps: $(srcdir)/gvc.3
-	@GROFF@ -Tps -man $< >$@
+	$(GROFF) -Tps -man $< >$@
 endif
 endif
 
