@@ -35,6 +35,7 @@
 #define FORK fork
 #endif
 #include <netdb.h>
+#include <unistd.h>
 
 /* AI_NUMERICSERV as a value for the `ai_flags' member
  * of `struct addrinfo' of header <netdb.h> has only
@@ -54,10 +55,6 @@
 
 #ifndef AI_NUMERICSERV
 #define AI_NUMERICSERV 0
-#endif
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 
 io_t *iop;
