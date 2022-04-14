@@ -1192,9 +1192,7 @@ pack_graph(int ng, Agraph_t** gs, Agraph_t* root, bool *fixed)
 #define ASPECT "aspect"
 #define SLEN(s) (sizeof(s)/sizeof(char) - 1)
 
-static char*
-chkFlags (char* p, pack_info* pinfo)
-{
+static const char*chkFlags(const char *p, pack_info *pinfo) {
     int c, more;
 
     if (*p != '_') return p;
@@ -1272,7 +1270,7 @@ mode2Str (pack_mode m)
  * If not defined, return dflt
  */
 pack_mode 
-parsePackModeInfo(char* p, pack_mode dflt, pack_info* pinfo)
+parsePackModeInfo(const char* p, pack_mode dflt, pack_info* pinfo)
 {
     float v;
     int i;

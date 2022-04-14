@@ -79,7 +79,8 @@ typedef unsigned int packval_t;
     PACK_API int getPack(Agraph_t *, int not_def, int dflt);
     PACK_API pack_mode getPackInfo(Agraph_t * g, pack_mode dflt, int dfltMargin, pack_info*);
     PACK_API pack_mode getPackModeInfo(Agraph_t * g, pack_mode dflt, pack_info*);
-    PACK_API pack_mode parsePackModeInfo(char* p, pack_mode dflt, pack_info* pinfo);
+    PACK_API pack_mode parsePackModeInfo(const char* p, pack_mode dflt,
+                                         pack_info* pinfo);
 
     PACK_API int isConnected(Agraph_t *);
     PACK_API Agraph_t **ccomps(Agraph_t *, int *, char *);
