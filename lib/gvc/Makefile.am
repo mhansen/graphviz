@@ -11,7 +11,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/pathplan \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt \
-	$(INCLTDL) -DGVLIBDIR=\"$(pkglibdir)\"
+	$(INCLTDL) -DGVLIBDIR='"$(pkglibdir)"'
 
 if WITH_WIN32
 AM_CFLAGS = -DGVC_EXPORTS=1
