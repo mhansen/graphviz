@@ -39,7 +39,7 @@ extern pointf Bezier(pointf * V, int degree, double t, pointf * Left, pointf * R
 
 static void gdgen_resolve_color(GVJ_t * job, gvcolor_t * color)
 {
-    gdImagePtr im = (gdImagePtr) job->context;
+    gdImagePtr im = job->context;
     int alpha;
 
     if (!im)
@@ -59,7 +59,7 @@ static void gdgen_resolve_color(GVJ_t * job, gvcolor_t * color)
     color->type = COLOR_INDEX;
 }
 
-static int white, black, transparent, basecolor;
+static int transparent, basecolor;
 
 #define GD_XYMAX INT32_MAX
 
@@ -86,7 +86,7 @@ static void gdgen_begin_page(GVJ_t * job)
     if (job->external_context) {
 	if (job->common->verbose)
 	    fprintf(stderr, "%s: using existing GD image\n", job->common->cmdname);
-	im = (gdImagePtr) (job->context);
+	im = job->context;
     } else {
         if (job->width * job->height >= GD_XYMAX) {
 	    double scale = sqrt(GD_XYMAX / (job->width * job->height));
@@ -114,7 +114,7 @@ static void gdgen_begin_page(GVJ_t * job)
 			job->width, job->height);
 	    im = gdImageCreate(job->width, job->height);
 	}
-        job->context = (void *) im;
+        job->context = im;
     }
 
     if (!im) {
@@ -128,12 +128,6 @@ static void gdgen_begin_page(GVJ_t * job)
 					   gdRedMax - 1, gdGreenMax,
 					   gdBlueMax, gdAlphaTransparent);
     gdImageColorTransparent(im, transparent);
-
-    white = gdImageColorResolveAlpha(im,
-				     gdRedMax, gdGreenMax, gdBlueMax,
-				     gdAlphaOpaque);
-
-    black = gdImageColorResolveAlpha(im, 0, 0, 0, gdAlphaOpaque);
 
     /* Blending must be off to lay a transparent basecolor.
        Nothing to blend with anyway. */
@@ -149,7 +143,7 @@ extern void gvdevice_gd_putC (gdIOCtx *context, int C);
 
 static void gdgen_end_page(GVJ_t * job)
 {
-    gdImagePtr im = (gdImagePtr) job->context;
+    gdImagePtr im = job->context;
 
     gd_context_t gd_context = {{0}};
 
@@ -168,7 +162,7 @@ static void gdgen_end_page(GVJ_t * job)
 	/* Only save the alpha channel in outputs that support it if
 	   the base color was transparent.   Otherwise everything
 	   was blended so there is no useful alpha info */
-	gdImageSaveAlpha(im, (basecolor == transparent));
+	gdImageSaveAlpha(im, basecolor == transparent);
 	switch (job->render.id) {
 	case FORMAT_GIF:
 #ifdef HAVE_GD_GIF
@@ -240,7 +234,7 @@ static void gdgen_missingfont(char *err, char *fontreq)
 
     if (n_errors >= 20)
 	return;
-    if ((lastmissing == 0) || (strcmp(lastmissing, fontreq))) {
+    if (lastmissing == 0 || strcmp(lastmissing, fontreq)) {
 #ifndef HAVE_GD_FONTCONFIG
 	char *p = getenv("GDFONTPATH");
 	if (!p)
@@ -325,7 +319,7 @@ extern char* gd_psfontResolve (PostscriptAlias* pa);
 
 static void gdgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 {
-    gdImagePtr im = (gdImagePtr) job->context;
+    gdImagePtr im = job->context;
     pointf spf, epf;
     double spanwidth = span->size.x * job->zoom * job->dpi.x / POINTS_PER_INCH;
     char* fontname;
@@ -431,7 +425,7 @@ gdgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
 	     int arrow_at_end, int filled)
 {
     obj_state_t *obj = job->obj;
-    gdImagePtr im = (gdImagePtr) job->context;
+    gdImagePtr im = job->context;
     pointf p0, p1, V[4];
     int i, j, step, pen;
     bool pen_ok, fill_ok;
@@ -442,8 +436,8 @@ gdgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
 	return;
 
     pen = gdgen_set_penstyle(job, im, &brush);
-    pen_ok = (pen != gdImageGetTransparent(im));
-    fill_ok = (filled && obj->fillcolor.u.index != gdImageGetTransparent(im));
+    pen_ok = pen != gdImageGetTransparent(im);
+    fill_ok = filled && obj->fillcolor.u.index != gdImageGetTransparent(im);
 
     if (pen_ok || fill_ok) {
         V[3] = A[0];
@@ -476,7 +470,7 @@ static int points_allocated;
 static void gdgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
 {
     obj_state_t *obj = job->obj;
-    gdImagePtr im = (gdImagePtr) job->context;
+    gdImagePtr im = job->context;
     gdImagePtr brush = NULL;
     int i;
     int pen;
@@ -486,8 +480,8 @@ static void gdgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
 	return;
 
     pen = gdgen_set_penstyle(job, im, &brush);
-    pen_ok = (pen != gdImageGetTransparent(im));
-    fill_ok = (filled && obj->fillcolor.u.index != gdImageGetTransparent(im));
+    pen_ok = pen != gdImageGetTransparent(im);
+    fill_ok = filled && obj->fillcolor.u.index != gdImageGetTransparent(im);
 
     if (pen_ok || fill_ok) {
         if (n > points_allocated) {
@@ -511,7 +505,7 @@ static void gdgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
 static void gdgen_ellipse(GVJ_t * job, pointf * A, int filled)
 {
     obj_state_t *obj = job->obj;
-    gdImagePtr im = (gdImagePtr) job->context;
+    gdImagePtr im = job->context;
     double dx, dy;
     int pen;
     bool pen_ok, fill_ok;
@@ -521,8 +515,8 @@ static void gdgen_ellipse(GVJ_t * job, pointf * A, int filled)
 	return;
 
     pen = gdgen_set_penstyle(job, im, &brush);
-    pen_ok = (pen != gdImageGetTransparent(im));
-    fill_ok = (filled && obj->fillcolor.u.index != gdImageGetTransparent(im));
+    pen_ok = pen != gdImageGetTransparent(im);
+    fill_ok = filled && obj->fillcolor.u.index != gdImageGetTransparent(im);
 
     dx = 2 * (A[1].x - A[0].x);
     dy = 2 * (A[1].y - A[0].y);
@@ -540,7 +534,7 @@ static void gdgen_ellipse(GVJ_t * job, pointf * A, int filled)
 
 static void gdgen_polyline(GVJ_t * job, pointf * A, int n)
 {
-    gdImagePtr im = (gdImagePtr) job->context;
+    gdImagePtr im = job->context;
     pointf p, p1;
     int i;
     int pen;
@@ -551,7 +545,7 @@ static void gdgen_polyline(GVJ_t * job, pointf * A, int n)
 	return;
 
     pen = gdgen_set_penstyle(job, im, &brush);
-    pen_ok = (pen != gdImageGetTransparent(im));
+    pen_ok = pen != gdImageGetTransparent(im);
 
     if (pen_ok) {
         p = A[0];
