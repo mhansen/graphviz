@@ -20,7 +20,7 @@
 #include <dotgen/dot.h>
 
 static node_t *Last_node;
-static char Cmark;
+static size_t Cmark;
 
 static void 
 begin_component(graph_t* g)

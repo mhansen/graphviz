@@ -36,7 +36,6 @@ def test_long_chain():
     "dot", "-Tsvg", "-O", os.devnull
   ])
 
-@pytest.mark.xfail(strict = True)
 def test_wide_clusters():
   """
   A simple regression test for https://gitlab.com/graphviz/graphviz/-/issues/2080#
