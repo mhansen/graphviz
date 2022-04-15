@@ -3,6 +3,7 @@ Tests of large and/or expensive graphs.
 """
 
 import os
+from pathlib import Path
 import platform
 import subprocess
 import pytest
@@ -33,4 +34,13 @@ def test_long_chain():
   """
   subprocess.check_call([
     "dot", "-Tsvg", "-O", os.devnull
+  ])
+
+@pytest.mark.xfail(strict = True)
+def test_wide_clusters():
+  """
+  A simple regression test for https://gitlab.com/graphviz/graphviz/-/issues/2080#
+  """
+  subprocess.check_call([
+    "dot", "-Tsvg", "-O", os.devnull, Path(__file__).parent / "wide_clusters"
   ])
