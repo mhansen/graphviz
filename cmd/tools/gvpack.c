@@ -29,10 +29,18 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef GVDLL
   __declspec(dllimport)
 #endif
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
+
+#ifdef __cplusplus
+}
+#endif
 
 lt_symlist_t lt_preloaded_symbols[] = {
 #ifdef GVDLL
