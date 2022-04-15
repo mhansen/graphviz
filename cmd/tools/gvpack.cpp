@@ -27,6 +27,7 @@
 #include <ingraphs/ingraphs.h>
 #include <pack/pack.h>
 #include <stddef.h>
+#include <vector>
 
 extern "C" {
 #ifdef GVDLL
@@ -71,9 +72,7 @@ static char **myFiles = 0;
 static int nGraphs = 0;		/* Guess as to no. of graphs */
 static FILE *outfp;		/* output; stdout by default */
 static Agdesc_t kind;		/* type of graph */
-static int G_cnt;		/* No. of -G arguments */
-static int G_sz;		/* Storage size for -G arguments */
-static attr_t *G_args;		/* Storage for -G arguments */
+static std::vector<attr_t> G_args; // Storage for -G arguments
 static bool doPack;              /* Do packing if true */
 static char* gname = (char*)"root";
 
@@ -111,8 +110,6 @@ static FILE *openFile(const char *name)
     return (fp);
 }
 
-#define G_CHUNK 10
-
 /* setNameValue:
  * If arg is a name-value pair, add it to the list
  * and return 0; otherwise, return 1.
@@ -126,13 +123,7 @@ static int setNameValue(char *arg)
 	*p++ = '\0';
 	rhs = p;
     }
-    if (G_cnt >= G_sz) {
-	G_sz += G_CHUNK;
-	G_args = RALLOC(G_sz, G_args, attr_t);
-    }
-    G_args[G_cnt].name = arg;
-    G_args[G_cnt].value = rhs;
-    G_cnt++;
+    G_args.push_back(attr_t{{0, {0}}, arg, rhs, 0});
 
     return 0;
 }
@@ -665,12 +656,12 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
     if (doPack) assert(G_bb);
 
     /* add command-line attributes */
-    for (i = 0; i < G_cnt; i++) {
-	rv = agfindgraphattr(root, G_args[i].name);
+    for (attr_t &a : G_args) {
+	rv = agfindgraphattr(root, a.name);
 	if (rv)
-	    agxset(root, rv, G_args[i].value);
+	    agxset(root, rv, a.value);
 	else
-	    agattr(root, AGRAPH, G_args[i].name, G_args[i].value);
+	    agattr(root, AGRAPH, a.name, a.value);
     }
 
     /* do common initialization. This will handle root's label. */
