@@ -27,7 +27,6 @@
 #include <ingraphs/ingraphs.h>
 #include <pack/pack.h>
 #include <stddef.h>
-#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
