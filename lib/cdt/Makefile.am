@@ -3,7 +3,6 @@
 CDT_VERSION = "5:0:0"
 
 pkgextraincludedir = $(pkgincludedir)
-pkgconfigdir = $(libdir)/pkgconfig
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 

@@ -949,7 +949,6 @@ make %{?_smp_mflags}
 rm -rf %{buildroot} __doc
 make DESTDIR=%{buildroot} \
         docdir=%{buildroot}%{_docdir}/%{name} \
-        pkgconfigdir=%{_libdir}/pkgconfig \
         install
 find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
 cp -a %{buildroot}%{_datadir}/%{name}/doc __doc

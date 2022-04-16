@@ -1,7 +1,5 @@
 # ## Process this file with automake to produce Makefile.in
 
-pkgconfigdir = $(libdir)/pkgconfig
-
 XDOT_VERSION = "4:0:0"
 
 pkginclude_HEADERS = xdot.h

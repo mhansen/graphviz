@@ -1,6 +1,5 @@
 ## Process this file with automake to produce Makefile.in
 
-pkgconfigdir = $(libdir)/pkgconfig
 HOSTCC ?= $(CC)
 GVPR_VERSION = "2:0:0"
 

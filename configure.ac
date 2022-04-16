@@ -286,6 +286,7 @@ AC_ARG_ENABLE([man-pdfs],
   [enable_man_pdfs=$HAVE_PS2PDF])
 AM_CONDITIONAL(ENABLE_MAN_PDFS,[test "x$enable_man_pdfs" = "xyes"])
 
+PKG_INSTALLDIR
 PKG_PROG_PKG_CONFIG
 
 AC_ARG_WITH(tclsh,
