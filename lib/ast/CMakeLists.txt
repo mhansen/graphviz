@@ -24,3 +24,7 @@ add_library(ast STATIC
 target_include_directories(ast PRIVATE
   ..
 )
+
+if(WIN32 AND NOT MINGW)
+  target_include_directories(ast PRIVATE ../../windows/include/unistd)
+endif()

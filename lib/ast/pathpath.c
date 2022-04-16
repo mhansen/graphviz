@@ -27,11 +27,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#else
-#include <ast/compat_unistd.h>
-#endif
 
 static const char *getenv_path(void) {
   const char *path = getenv("PATH");

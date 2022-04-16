@@ -15,13 +15,8 @@
  * include style search support
  */
 
-#include "config.h"
 #include <ast/ast.h>
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#else
-#include <ast/compat_unistd.h>
-#endif
 #include <stdio.h>
 #include <string.h>
 
