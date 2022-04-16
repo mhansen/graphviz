@@ -1,10 +1,7 @@
 # ## Process this file with automake to produce Makefile.in
 
-pkgconfigdir = $(libdir)/pkgconfig
-
 XDOT_VERSION = "4:0:0"
 
-pdfdir = $(pkgdatadir)/doc/pdf
 pkginclude_HEADERS = xdot.h
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib

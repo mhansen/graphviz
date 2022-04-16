@@ -1,7 +1,5 @@
 ## Process this file with automake to produce Makefile.in
 
-pkgconfigdir = $(libdir)/pkgconfig
-
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/lib/common \

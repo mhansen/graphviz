@@ -9,9 +9,6 @@ if WITH_LIBGD
 GDTCLFT_LIBS = $(top_builddir)/tclpkg/gdtclft/libgdtclft_C.la
 endif
 
-pdfdir = $(pkgdatadir)/doc/pdf
-htmldir = $(pkgdatadir)/doc/html
-
 pkgtcldir = $(pkglibdir)/tcl
 
 AM_CPPFLAGS = \

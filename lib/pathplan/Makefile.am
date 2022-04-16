@@ -2,9 +2,6 @@
 
 PATHPLAN_VERSION = "4:0:0"
 
-pdfdir = $(pkgdatadir)/doc/pdf
-pkgconfigdir = $(libdir)/pkgconfig
-
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 
 if WITH_WIN32

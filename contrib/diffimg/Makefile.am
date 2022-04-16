@@ -6,8 +6,6 @@ AM_CPPFLAGS = \
 	$(GDLIB_CFLAGS) \
 	-I$(top_srcdir)/lib
 
-pdfdir = $(pkgdatadir)/doc/pdf
-
 man_MANS = diffimg.1
 if ENABLE_MAN_PDFS
 pdf_DATA = diffimg.1.pdf

@@ -2,7 +2,6 @@
 
 SUBDIRS = demo
 
-pdfdir = $(pkgdatadir)/doc/pdf
 pkgtcldir = $(pkglibdir)/tcl
 
 AM_CPPFLAGS = \

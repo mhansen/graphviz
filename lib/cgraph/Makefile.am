@@ -2,9 +2,6 @@
 
 CGRAPH_VERSION = "6:0:0"
 
-pdfdir = $(pkgdatadir)/doc/pdf
-pkgconfigdir = $(libdir)/pkgconfig
-
 AM_CPPFLAGS = -I$(top_srcdir)/lib -I$(top_srcdir)/lib/cdt
 
 if WITH_WIN32

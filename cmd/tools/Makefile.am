@@ -10,8 +10,6 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/common \
 	$(EXPAT_INCLUDES)
 
-pdfdir = $(pkgdatadir)/doc/pdf
-
 noinst_HEADERS = colortbl.h convert.h mmio.h matrix_market.h \
 	graph_generator.h gml2gv.h gmlparse.h
 if ENABLE_STATIC

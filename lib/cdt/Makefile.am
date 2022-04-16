@@ -2,9 +2,7 @@
 
 CDT_VERSION = "5:0:0"
 
-pdfdir = $(pkgdatadir)/doc/pdf
 pkgextraincludedir = $(pkgincludedir)
-pkgconfigdir = $(libdir)/pkgconfig
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 
