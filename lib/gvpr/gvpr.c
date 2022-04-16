@@ -15,13 +15,7 @@
  * Written by Emden Gansner
  */
 
-
-#include "config.h"
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#else
-#include <ast/compat_unistd.h>
-#endif
 #include "builddate.h"
 #include <gvpr/gprstate.h>
 #include <cgraph/agxbuf.h>

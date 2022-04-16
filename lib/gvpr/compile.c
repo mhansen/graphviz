@@ -16,9 +16,7 @@
 #include "config.h"
 #include <stdlib.h>
 #include <stdint.h>
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif
 #include <gvpr/compile.h>
 #include <assert.h>
 #include <cgraph/cgraph.h>

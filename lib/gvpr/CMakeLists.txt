@@ -38,6 +38,10 @@ target_include_directories(gvpr SYSTEM PRIVATE
   ${GETOPT_INCLUDE_DIRS}
 )
 
+if(WIN32 AND NOT MINGW)
+  target_include_directories(gvpr PRIVATE ../../windows/include/unistd)
+endif()
+
 target_link_libraries(gvpr
   ast
   cgraph
