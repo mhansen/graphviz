@@ -10,7 +10,6 @@ if WITH_SMYRNA
 pdf += smyrna/smyrna.pdf
 endif
 
-htmldir = $(pkgdatadir)/doc/html
 txtdir = $(pkgdatadir)/doc
 
 pdf_DATA = $(pdf)

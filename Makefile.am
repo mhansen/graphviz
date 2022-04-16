@@ -5,7 +5,6 @@ ACLOCAL_AMFLAGS = -I m4
 export TAR_OPTIONS = --owner=0 --group=0 --exclude=windows/dependencies/*/*
 
 txtdir = $(pkgdatadir)/doc
-htmldir = $(pkgdatadir)/doc/html
 
 txt = AUTHORS COPYING CHANGELOG.md NEWS cpl1.0.txt
 html =
