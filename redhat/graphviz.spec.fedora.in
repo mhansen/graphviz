@@ -873,6 +873,8 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --includedir=%{_includedir} \
         --datadir=%{_datadir} \
         --mandir=%{_mandir} \
+        --pdfdir='$(docdir)/pdf' \
+        --htmldir='$(docdir)/html' \
         --disable-static \
         --disable-dependency-tracking \
         --enable-sharp \
@@ -947,12 +949,10 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot} __doc
-make DESTDIR=%{buildroot} \
-        docdir=%{buildroot}%{_docdir}/%{name} \
-        install
+make DESTDIR=%{buildroot} install
 find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
-cp -a %{buildroot}%{_datadir}/%{name}/doc __doc
-rm -rf %{buildroot}%{_datadir}/%{name}/doc
+cp -a %{buildroot}%{_docdir}/%{name} __doc
+rm -rf %{buildroot}%{_docdir}/%{name}
 
 # PHP configuration file
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
