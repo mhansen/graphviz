@@ -6,7 +6,11 @@ import os
 from pathlib import Path
 import platform
 import subprocess
+import sys
 import pytest
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
+from gvtest import dot #pylint: disable=wrong-import-position
 
 @pytest.mark.skipif(platform.system() == "Windows" and
                     platform.architecture()[0] == "32bit",
@@ -40,6 +44,4 @@ def test_wide_clusters():
   """
   A simple regression test for https://gitlab.com/graphviz/graphviz/-/issues/2080#
   """
-  subprocess.check_call([
-    "dot", "-Tsvg", "-O", os.devnull, Path(__file__).parent / "wide_clusters"
-  ])
+  dot("svg", Path(__file__).parent / "wide_clusters")
