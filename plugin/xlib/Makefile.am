@@ -18,10 +18,10 @@ else
 pkglib_LTLIBRARIES = libgvplugin_xlib.la
 endif
 bin_SCRIPTS = vimdot
+man_MANS = vimdot.1
 endif
 endif
 
-man_MANS = vimdot.1
 if ENABLE_MAN_PDFS
 pdf_DATA = vimdot.1.pdf
 

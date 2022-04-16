@@ -8,9 +8,9 @@ AM_CPPFLAGS = \
 
 if WITH_ANN
 bin_PROGRAMS = mingle
+man_MANS = mingle.1
 endif
 
-man_MANS = mingle.1
 if ENABLE_MAN_PDFS
 pdf_DATA = mingle.1.pdf
 
@@ -47,6 +47,6 @@ mingle.1.ps: $(srcdir)/mingle.1
 endif
 endif
 
-EXTRA_DIST = $(man_MANS) $(pdf) mingle.vcxproj*
+EXTRA_DIST = mingle.1 $(pdf) mingle.vcxproj*
 
 DISTCLEANFILES = $(pdf) mingle.1.ps
