@@ -259,7 +259,7 @@ endif()
 
 if(use_coverage)
   add_compile_options("-coverage")
-  if(${CMAKE_VERSION} VERSION_LESS "3.16.0")
+  if(${CMAKE_VERSION} VERSION_LESS "3.13.0")
     link_libraries("-coverage")
   else()
     add_link_options("-coverage")
