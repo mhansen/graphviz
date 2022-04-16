@@ -72,7 +72,6 @@ typedef struct {
 
 static int verbose = 0;
 static char **myFiles = 0;
-static size_t nGraphs = 0; // Guess as to no. of graphs
 static FILE *outfp;		/* output; stdout by default */
 static Agdesc_t kind;		/* type of graph */
 static std::vector<attr_t> G_args; // Storage for -G arguments
@@ -240,9 +239,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
 
     if (argc > 0) {
 	myFiles = argv;
-	nGraphs = (size_t)argc; // guess one graph per file
-    } else
-	nGraphs = 10;		/* initial guess as to no. of graphs */
+    }
     if (!outfp)
 	outfp = stdout;		/* stdout the default */
     if (verbose)
@@ -462,8 +459,7 @@ fillGraph(Agraph_t * g, Dt_t * d,
  * Initialize the attributes of root as the union of the
  * attributes in the graphs gs.
  */
-static void initAttrs(Agraph_t *root, Agraph_t **gs, size_t cnt) {
-    Agraph_t *g;
+static void initAttrs(Agraph_t *root, std::vector<Agraph_t*> &gs) {
     Dt_t *n_attrs;
     Dt_t *e_attrs;
     Dt_t *g_attrs;
@@ -472,16 +468,15 @@ static void initAttrs(Agraph_t *root, Agraph_t **gs, size_t cnt) {
     e_attrs = dtopen(&attrdisc, Dtoset);
     g_attrs = dtopen(&attrdisc, Dtoset);
 
-    for (size_t i = 0; i < cnt; i++) {
-	g = gs[i];
+    for (Agraph_t *g : gs) {
 	fillDict(g_attrs, g, AGRAPH);
 	fillDict(n_attrs, g, AGNODE);
 	fillDict(e_attrs, g, AGEDGE);
     }
 
-    fillGraph(root, g_attrs, agraphattr, cnt);
-    fillGraph(root, n_attrs, agnodeattr, cnt);
-    fillGraph(root, e_attrs, agedgeattr, cnt);
+    fillGraph(root, g_attrs, agraphattr, gs.size());
+    fillGraph(root, n_attrs, agnodeattr, gs.size());
+    fillGraph(root, e_attrs, agedgeattr, gs.size());
 
     dtclose(n_attrs);
     dtclose(e_attrs);
@@ -618,9 +613,8 @@ static Dtdisc_t pairdisc = {
  * Create and return a new graph which is the logical union
  * of the graphs gs. 
  */
-static Agraph_t *cloneGraph(Agraph_t **gs, size_t cnt, GVC_t *gvc) {
+static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
     Agraph_t *root;
-    Agraph_t *g;
     Agraph_t *subg;
     Agnode_t *n;
     Agnode_t *np;
@@ -633,7 +627,7 @@ static Agraph_t *cloneGraph(Agraph_t **gs, size_t cnt, GVC_t *gvc) {
     if (verbose)
 	std::cerr << "Creating clone graph\n";
     root = agopen(gname, kind, &AgDefaultDisc);
-    initAttrs(root, gs, cnt);
+    initAttrs(root, gs);
     G_bb = agfindgraphattr(root, (char*)"bb");
     if (doPack) assert(G_bb);
 
@@ -652,8 +646,8 @@ static Agraph_t *cloneGraph(Agraph_t **gs, size_t cnt, GVC_t *gvc) {
 
     gnames = dtopen(&pairdisc, Dtoset);
     nnames = dtopen(&pairdisc, Dtoset);
-    for (size_t i = 0; i < cnt; i++) {
-	g = gs[i];
+    for (size_t i = 0; i < gs.size(); i++) {
+	Agraph_t *g = gs[i];
 	if (verbose)
 	    std::cerr << "Cloning graph " << agnameof(g) << '\n';
 	GD_n_cluster(root) += GD_n_cluster(g);
@@ -689,8 +683,7 @@ static Agraph_t *cloneGraph(Agraph_t **gs, size_t cnt, GVC_t *gvc) {
 	GD_clust(root) = N_NEW(1 + GD_n_cluster(root), graph_t *);
 
 	idx = 1;
-	for (size_t i = 0; i < cnt; i++) {
-	    g = gs[i];
+	for (Agraph_t *g : gs) {
 	    for (j = 1; j <= GD_n_cluster(g); j++) {
 		Agraph_t *c = GETCLUST(GD_clust(g)[j]);
 		GD_clust(root)[idx++] = c;
@@ -717,13 +710,10 @@ static Agraph_t *gread(FILE * fp)
  * combined graph will be strict; other, the combined graph will
  * be non-strict.
  */
-static Agraph_t **readGraphs(size_t *cp, GVC_t* gvc)
-{
+static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
     Agraph_t *g;
-    Agraph_t **gs = 0;
+    std::vector<Agraph_t*> gs;
     ingraph_state ig;
-    size_t cnt = 0;
-    size_t sz = 0;
     int kindUnset = 1;
 
     /* set various state values */
@@ -738,10 +728,6 @@ static Agraph_t **readGraphs(size_t *cp, GVC_t* gvc)
 	    std::cerr << "Graph " << agnameof(g) << " is empty - ignoring\n";
 	    continue;
 	}
-	if (cnt >= sz) {
-	    sz += nGraphs;
-	    gs = ALLOC(sz, gs, Agraph_t *);
-	}
 	if (kindUnset) {
 	    kindUnset = 0;
 	    kind = g->desc;
@@ -752,11 +738,9 @@ static Agraph_t **readGraphs(size_t *cp, GVC_t* gvc)
 	} else if (!agisstrict(g))
 	    kind = g->desc;
 	init_graph(g, doPack, gvc);
-	gs[cnt++] = g;
+	gs.push_back(g);
     }
 
-    gs = RALLOC(cnt, gs, Agraph_t *);
-    *cp = cnt;
     return gs;
 }
 
@@ -764,12 +748,12 @@ static Agraph_t **readGraphs(size_t *cp, GVC_t* gvc)
  * Compute the bounding box containing the graphs.
  * We can just use the bounding boxes of the graphs.
  */
-static boxf compBB(Agraph_t **gs, size_t cnt) {
+static boxf compBB(std::vector<Agraph_t*> &gs) {
     boxf bb, bb2;
 
     bb = GD_bb(gs[0]);
 
-    for (size_t i = 1; i < cnt; i++) {
+    for (size_t i = 1; i < gs.size(); i++) {
 	bb2 = GD_bb(gs[i]);
 	bb.LL.x = MIN(bb.LL.x, bb2.LL.x);
 	bb.LL.y = MIN(bb.LL.y, bb2.LL.y);
@@ -808,9 +792,7 @@ void dumps(Agraph_t * g)
 
 int main(int argc, char *argv[])
 {
-    Agraph_t **gs;
     Agraph_t *g;
-    size_t cnt;
     pack_info pinfo;
     GVC_t * gvc;
 
@@ -822,25 +804,25 @@ int main(int argc, char *argv[])
     lt_preloaded_symbols[0].address = &gvplugin_neato_layout_LTX_library;
 #endif
     gvc = gvContextPlugins(lt_preloaded_symbols, DEMAND_LOADING);
-    gs = readGraphs(&cnt, gvc);
-    if (cnt == 0)
+    std::vector<Agraph_t*> gs = readGraphs(gvc);
+    if (gs.empty())
 	graphviz_exit(0);
 
     /* pack graphs */
     if (doPack) {
-	assert(cnt <= INT_MAX);
-	if (packGraphs((int)cnt, gs, 0, &pinfo)) {
+	assert(gs.size() <= INT_MAX);
+	if (packGraphs((int)gs.size(), gs.data(), 0, &pinfo)) {
 	    std::cerr << "gvpack: packing of graphs failed.\n";
 	    graphviz_exit(1);
 	}
     }
 
     /* create union graph and copy attributes */
-    g = cloneGraph(gs, cnt, gvc);
+    g = cloneGraph(gs, gvc);
 
     /* compute new top-level bb and set */
     if (doPack) {
-	GD_bb(g) = compBB(gs, cnt);
+	GD_bb(g) = compBB(gs);
 	dotneato_postprocess(g);
 	attach_attrs(g);
     }
