@@ -54,5 +54,20 @@ curl --retry 3 --location --no-progress-meter -O \
 sudo installer -package MacPorts-2.7.2-12-Monterey.pkg -target /
 export PATH=/opt/local/bin:${PATH}
 
+# `port install` with retry because packages sometimes transiently 404
+function port_install {
+  for i in 1 2 3; do
+    set +e
+    sudo port install "$@"
+    RET=$?
+    set -e
+    if [ ${RET} -eq 0 ]; then
+      return 0
+    fi
+    sleep $((10 * 2 ** (${i} - 1))) # exponential back off
+  done
+  return -1
+}
+
 # lib/mingle dependency
-sudo port install libANN
+port_install libANN
