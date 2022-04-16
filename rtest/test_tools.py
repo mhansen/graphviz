@@ -15,7 +15,8 @@ import sys
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import is_cmake, remove_xtype_warnings #pylint: disable=C0413
+from gvtest import is_cmake, remove_xtype_warnings \
+  #pylint: disable=wrong-import-position
 
 @pytest.mark.parametrize("tool", [
     "acyclic",

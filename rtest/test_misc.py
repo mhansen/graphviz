@@ -13,7 +13,7 @@ import tempfile
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import compile_c, dot, ROOT #pylint: disable=C0413
+from gvtest import compile_c, dot, ROOT #pylint: disable=wrong-import-position
 
 def test_json_node_order():
   """
