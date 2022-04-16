@@ -162,10 +162,6 @@
 #define SELFEDGE    8
 #define EDGETYPEMASK	 15	/* the OR of the above */
 
-/* for graph server */
-#define		SERVER_NN	200
-#define		SERVER_NE	500
-
 /* for neato */
 #define Spring_coeff    1.0
 #define MYHUGE          (1.0e+37)
@@ -257,7 +253,7 @@
 
 /* Flags stored in GD_flags 
  * Bit(s):  0     unused
- *          1-3   ET_ 
+ *          1-3   EDGETYPE_
  *          4     NEW_RANK
  */
 
