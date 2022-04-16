@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking**: The `mark` field of the `Agnodeinfo_t` struct is now a
   `size_t` instead of a `char`.
+- **Breaking**: The unused `shape_t` struct has been removed from the public
+  header `types.h`
 - the `mingle`, `diffimg`, and `edgepaint` binaries are now included in the
   CMake build system
 - the `vimdot` script is now installed by the CMake build system on operating
