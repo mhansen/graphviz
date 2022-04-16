@@ -3,7 +3,6 @@
 SUBDIRS = demo
 
 pkgtcldir = $(pkglibdir)/tcl
-pdfdir = $(pkgdatadir)/doc/pdf
 
 man = tkspline.3tk
 if ENABLE_MAN_PDFS

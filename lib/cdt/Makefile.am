@@ -2,7 +2,6 @@
 
 CDT_VERSION = "5:0:0"
 
-pdfdir = $(pkgdatadir)/doc/pdf
 pkgextraincludedir = $(pkgincludedir)
 pkgconfigdir = $(libdir)/pkgconfig
 

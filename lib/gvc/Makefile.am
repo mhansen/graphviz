@@ -2,7 +2,6 @@
 
 GVC_VERSION = "6:0:0"
 
-pdfdir = $(pkgdatadir)/doc/pdf
 pkgconfigdir = $(libdir)/pkgconfig
 
 AM_CPPFLAGS = \

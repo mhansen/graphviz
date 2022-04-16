@@ -2,8 +2,6 @@
 
 SUBDIRS = demo
 
-pdfdir = $(pkgdatadir)/doc/pdf
-
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/lib/gvc \

@@ -1,7 +1,5 @@
 ## Process this file with automake to produce Makefile.in
 
-pdfdir = $(pkgdatadir)/doc/pdf
-
 AM_CPPFLAGS = \
 	-DSMYRNA_PATH='"$(pkgdatadir)/smyrna"' \
 	-I$(top_srcdir)/lib \

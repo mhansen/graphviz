@@ -2,7 +2,6 @@
 
 SUBDIRS = ui images
 
-pdfdir = $(pkgdatadir)/doc/pdf
 gveditdir = $(pkgdatadir)/gvedit
 
 mans = gvedit.1
