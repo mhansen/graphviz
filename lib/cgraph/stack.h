@@ -76,12 +76,16 @@ static inline void stack_push_or_exit(gv_stack_t *stack, void *item) {
   }
 }
 
-static inline void *stack_pop(gv_stack_t *stack) {
+static inline void *stack_top(gv_stack_t *stack) {
 
   assert(stack != NULL);
-  assert(!stack_is_empty(stack) && "pop from an empty stack");
+  assert(!stack_is_empty(stack) && "access to top of an empty stack");
 
-  void *top = stack->base[stack->size - 1];
+  return stack->base[stack->size - 1];
+}
+
+static inline void *stack_pop(gv_stack_t *stack) {
+  void *top = stack_top(stack);
   --stack->size;
   return top;
 }

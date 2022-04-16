@@ -18,14 +18,12 @@
  */
 
 #include <cgraph/cgraph.h>
+#include <cgraph/stack.h>
 #include <cgraph/exit.h>
 #include <common/arith.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <stdlib.h>
-
-#define NEW(t)           malloc(sizeof(t))
-#define N_NEW(n,t)       calloc((n),sizeof(t))
 
 typedef struct {
     unsigned char on_stack;
@@ -45,89 +43,37 @@ static char *CmdName;
 static int Verbose;
 static int PrintRemovedEdges;
 
-typedef struct blk_t {
-    Agedge_t **data;
-    Agedge_t **endp;
-    struct blk_t *prev;
-    struct blk_t *next;
-} blk_t;
+static void push(gv_stack_t *sp, Agedge_t *ep, nodeinfo_t *ninfo) {
 
-typedef struct {
-    blk_t *fstblk;
-    blk_t *curblk;
-    Agedge_t **curp;
-} stk_t;
+  // mark this edge on the stack
+  ON_STACK(ninfo, aghead(ep)) = 1;
 
-#define SMALLBUF 1024
-#define BIGBUF 1000000
-
-typedef struct {
-    Agedge_t *base[SMALLBUF];
-    blk_t Blk;
-    stk_t Stk;
-} estack_t;
-
-
-static void initStk(estack_t* sp)
-{
-    sp->Blk.data = sp->base;
-    sp->Blk.endp = sp->Blk.data + SMALLBUF;
-    sp->Stk.curblk = sp->Stk.fstblk = &(sp->Blk);
-    sp->Stk.curp = sp->Stk.curblk->data;
+  // insert the new edge
+  stack_push_or_exit(sp, ep);
 }
 
-static void push(estack_t* sp, Agedge_t * ep, nodeinfo_t* ninfo)
-{
-    if (sp->Stk.curp == sp->Stk.curblk->endp) {
-	if (sp->Stk.curblk->next == NULL) {
-	    blk_t *bp = NEW(blk_t);
-	    if (bp == 0) {
-		fprintf(stderr, "%s: Out of memory\n", CmdName);
-		graphviz_exit(1);
-	    }
-	    bp->prev = sp->Stk.curblk;
-	    bp->next = NULL;
-	    bp->data = N_NEW(BIGBUF, Agedge_t *);
-	    if (bp->data == 0) {
-		fprintf(stderr, "%s: Out of memory\n", CmdName);
-		graphviz_exit(1);
-	    }
-	    bp->endp = bp->data + BIGBUF;
-	    sp->Stk.curblk->next = bp;
-	}
-	sp->Stk.curblk = sp->Stk.curblk->next;
-	sp->Stk.curp = sp->Stk.curblk->data;
-    }
-    ON_STACK(ninfo, aghead(ep)) = 1;
-    *sp->Stk.curp++ = ep;
+static Agedge_t *pop(gv_stack_t *sp, nodeinfo_t *ninfo) {
+
+  if (stack_is_empty(sp)) {
+    return NULL;
+  }
+
+  // remove the top
+  Agedge_t *e = stack_pop(sp);
+
+  // mark it as no longer on the stack
+  ON_STACK(ninfo, aghead(e)) = 0;
+
+  return e;
 }
 
-static Agedge_t *pop(estack_t* sp, nodeinfo_t* ninfo)
-{
-    Agedge_t* e;
-    if (sp->Stk.curp == sp->Stk.curblk->data) {
-	if (sp->Stk.curblk == sp->Stk.fstblk)
-	    return 0;
-	sp->Stk.curblk = sp->Stk.curblk->prev;
-	sp->Stk.curp = sp->Stk.curblk->endp;
-    }
-    sp->Stk.curp--;
-    e = *sp->Stk.curp;
-    ON_STACK(ninfo,aghead(e)) = 0;
-    return e;
-}
+static Agedge_t *top(gv_stack_t *sp) {
 
-static Agedge_t *top(estack_t* sp)
-{
-    Agedge_t** pp;
-    if (sp->Stk.curp == sp->Stk.curblk->data) {
-	if (sp->Stk.curblk == sp->Stk.fstblk)
-	    return 0;
-	pp = sp->Stk.curblk->prev->endp-1;
-    }
-    else
-	pp = sp->Stk.curp-1;
-    return *pp;
+  if (stack_is_empty(sp)) {
+    return NULL;
+  }
+
+  return stack_top(sp);
 }
 
 /* dfs:
@@ -147,8 +93,7 @@ static Agedge_t *top(estack_t* sp)
  * distance 2 we delete. We also delete all but one copy of any edges with the
  * same head.
  */
-static int dfs(Agnode_t * n, nodeinfo_t* ninfo, int warn, estack_t* sp)
-{
+static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp) {
     Agraph_t *g = agrootof(n);
     Agedgepair_t dummy;
     Agedge_t* link;
@@ -272,8 +217,7 @@ static void init(int argc, char *argv[])
  * Do a DFS for each vertex in graph g, so the time
  * complexity is O(|V||E|).
  */
-static void process(Agraph_t * g, estack_t* sp)
-{
+static void process(Agraph_t *g, gv_stack_t *sp) {
     Agnode_t *n;
     int cnt = 0;
     int warn = 0;
@@ -314,17 +258,18 @@ int main(int argc, char **argv)
 {
     Agraph_t *g;
     ingraph_state ig;
-    estack_t estk;
+    gv_stack_t estk = {0};
 
     init(argc, argv);
     newIngraph(&ig, Files, gread);
-    initStk(&estk);
 
     while ((g = nextGraph(&ig)) != 0) {
 	if (agisdirected(g))
 	    process(g, &estk);
 	agclose(g);
     }
+
+    stack_reset(&estk);
 
     graphviz_exit(0);
 }
