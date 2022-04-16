@@ -440,7 +440,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 
 	/* fast graph */
 	char node_type;
-	char mark;
+	size_t mark;
 	char onstack;
 	char ranktype;
 	char weight_class;
