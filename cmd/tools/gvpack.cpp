@@ -26,6 +26,7 @@
 #include <neatogen/neatoprocs.h>
 #include <ingraphs/ingraphs.h>
 #include <iostream>
+#include <limits>
 #include <pack/pack.h>
 #include <stddef.h>
 #include <string>
@@ -60,18 +61,18 @@ typedef struct {
     Dtlink_t link;
     char *name;
     char *value;
-    int cnt;
+    size_t cnt;
 } attr_t;
 
 typedef struct {
     Dtlink_t link;
     char *name;
-    int cnt;
+    size_t cnt;
 } pair_t;
 
 static int verbose = 0;
 static char **myFiles = 0;
-static int nGraphs = 0;		/* Guess as to no. of graphs */
+static size_t nGraphs = 0; // Guess as to no. of graphs
 static FILE *outfp;		/* output; stdout by default */
 static Agdesc_t kind;		/* type of graph */
 static std::vector<attr_t> G_args; // Storage for -G arguments
@@ -239,7 +240,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
 
     if (argc > 0) {
 	myFiles = argv;
-	nGraphs = argc;		/* guess one graph per file */
+	nGraphs = (size_t)argc; // guess one graph per file
     } else
 	nGraphs = 10;		/* initial guess as to no. of graphs */
     if (!outfp)
@@ -446,8 +447,7 @@ static void fillDict(Dt_t * newdict, Agraph_t* g, int kind)
  */
 static void
 fillGraph(Agraph_t * g, Dt_t * d,
-	  Agsym_t * (*setf) (Agraph_t *, char *, const char *), int cnt)
-{
+	  Agsym_t *(*setf)(Agraph_t*, char*, const char*), size_t cnt) {
     attr_t *av;
     for (av = (attr_t *) dtflatten(d); av;
 	 av = (attr_t *) dtlink(d, (Dtlink_t *) av)) {
@@ -462,19 +462,17 @@ fillGraph(Agraph_t * g, Dt_t * d,
  * Initialize the attributes of root as the union of the
  * attributes in the graphs gs.
  */
-static void initAttrs(Agraph_t * root, Agraph_t ** gs, int cnt)
-{
+static void initAttrs(Agraph_t *root, Agraph_t **gs, size_t cnt) {
     Agraph_t *g;
     Dt_t *n_attrs;
     Dt_t *e_attrs;
     Dt_t *g_attrs;
-    int i;
 
     n_attrs = dtopen(&attrdisc, Dtoset);
     e_attrs = dtopen(&attrdisc, Dtoset);
     g_attrs = dtopen(&attrdisc, Dtoset);
 
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
 	g = gs[i];
 	fillDict(g_attrs, g, AGRAPH);
 	fillDict(n_attrs, g, AGNODE);
@@ -620,14 +618,12 @@ static Dtdisc_t pairdisc = {
  * Create and return a new graph which is the logical union
  * of the graphs gs. 
  */
-static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
-{
+static Agraph_t *cloneGraph(Agraph_t **gs, size_t cnt, GVC_t *gvc) {
     Agraph_t *root;
     Agraph_t *g;
     Agraph_t *subg;
     Agnode_t *n;
     Agnode_t *np;
-    int i;
     Dt_t *gnames;		/* dict of used subgraph names */
     Dt_t *nnames;		/* dict of used node names */
     Agsym_t *G_bb;
@@ -656,7 +652,7 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
 
     gnames = dtopen(&pairdisc, Dtoset);
     nnames = dtopen(&pairdisc, Dtoset);
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
 	g = gs[i];
 	if (verbose)
 	    std::cerr << "Cloning graph " << agnameof(g) << '\n';
@@ -693,7 +689,7 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
 	GD_clust(root) = N_NEW(1 + GD_n_cluster(root), graph_t *);
 
 	idx = 1;
-	for (i = 0; i < cnt; i++) {
+	for (size_t i = 0; i < cnt; i++) {
 	    g = gs[i];
 	    for (j = 1; j <= GD_n_cluster(g); j++) {
 		Agraph_t *c = GETCLUST(GD_clust(g)[j]);
@@ -721,13 +717,13 @@ static Agraph_t *gread(FILE * fp)
  * combined graph will be strict; other, the combined graph will
  * be non-strict.
  */
-static Agraph_t **readGraphs(int *cp, GVC_t* gvc)
+static Agraph_t **readGraphs(size_t *cp, GVC_t* gvc)
 {
     Agraph_t *g;
     Agraph_t **gs = 0;
     ingraph_state ig;
-    int cnt = 0;
-    int sz = 0;
+    size_t cnt = 0;
+    size_t sz = 0;
     int kindUnset = 1;
 
     /* set various state values */
@@ -768,14 +764,12 @@ static Agraph_t **readGraphs(int *cp, GVC_t* gvc)
  * Compute the bounding box containing the graphs.
  * We can just use the bounding boxes of the graphs.
  */
-static boxf compBB(Agraph_t ** gs, int cnt)
-{
+static boxf compBB(Agraph_t **gs, size_t cnt) {
     boxf bb, bb2;
-    int i;
 
     bb = GD_bb(gs[0]);
 
-    for (i = 1; i < cnt; i++) {
+    for (size_t i = 1; i < cnt; i++) {
 	bb2 = GD_bb(gs[i]);
 	bb.LL.x = MIN(bb.LL.x, bb2.LL.x);
 	bb.LL.y = MIN(bb.LL.y, bb2.LL.y);
@@ -816,7 +810,7 @@ int main(int argc, char *argv[])
 {
     Agraph_t **gs;
     Agraph_t *g;
-    int cnt;
+    size_t cnt;
     pack_info pinfo;
     GVC_t * gvc;
 
@@ -834,7 +828,8 @@ int main(int argc, char *argv[])
 
     /* pack graphs */
     if (doPack) {
-	if (packGraphs(cnt, gs, 0, &pinfo)) {
+	assert(cnt <= INT_MAX);
+	if (packGraphs((int)cnt, gs, 0, &pinfo)) {
 	    std::cerr << "gvpack: packing of graphs failed.\n";
 	    graphviz_exit(1);
 	}
