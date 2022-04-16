@@ -18,14 +18,7 @@
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
 #include <stdbool.h>
-
-#ifdef _WIN32
-#define R_OK 4
-#endif
-
-#ifdef HAVE_UNISTD_H
-#   include <unistd.h>
-#endif // HAVE_UNISTD_H
+#include <unistd.h>
 
 #include <ctype.h>
 

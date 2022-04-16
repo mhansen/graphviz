@@ -133,6 +133,10 @@ if(WIN32)
                              PRIVATE ${WINDOWS_DEPENDENCY_DIR}/include)
 endif()
 
+if(WIN32 AND NOT MINGW)
+  target_include_directories(common_obj PRIVATE ../../windows/include/unistd)
+endif()
+
 # From https://gitlab.com/graphviz/graphviz/-/issues/1613 @mdwies 20093010
 if(APPLE)
   target_compile_options(common_obj PRIVATE "-fno-common")
