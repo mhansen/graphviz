@@ -764,8 +764,7 @@ static Agraph_t **readGraphs(int *cp, GVC_t* gvc)
     }
 
     gs = RALLOC(cnt, gs, Agraph_t *);
-    if (cp)
-	*cp = cnt;
+    *cp = cnt;
     return gs;
 }
 
