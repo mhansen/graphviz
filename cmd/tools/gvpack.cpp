@@ -27,6 +27,7 @@
 #include <ingraphs/ingraphs.h>
 #include <pack/pack.h>
 #include <stddef.h>
+#include <string>
 #include <vector>
 
 extern "C" {
@@ -507,32 +508,18 @@ static void cloneGraphAttr(Agraph_t * g, Agraph_t * ng)
  * create a new name using the old name and a number.
  * Note that returned string will immediately made into an agstring.
  */
-static char *xName(Dt_t * names, char *oldname)
-{
-    static char* name = NULL;
-    static size_t namelen = 0;
-    char *namep;
-    pair_t *p;
-    size_t len;
+static std::string xName(Dt_t *names, char *oldname) {
+  auto p = reinterpret_cast<pair_t *>(dtmatch(names, oldname));
+  if (p) {
+    p->cnt++;
+    return std::string(oldname) + "_gv" + std::to_string(p->cnt);
+  }
 
-    p = (pair_t*)dtmatch(names, oldname);
-    if (p) {
-	p->cnt++;
-	len = strlen(oldname) + 100; /* 100 for "_gv" and decimal no. */
-	if (namelen < len) {
-	    free (name);
-	    name = N_NEW(len, char);
-	    namelen = len;
-	}
-	sprintf(name, "%s_gv%d", oldname, p->cnt);
-	namep = name;
-    } else {
-	p = NEW(pair_t);
-	p->name = oldname;
-	dtinsert(names, p);
-	namep = oldname;
-    }
-    return namep;
+  p = NEW(pair_t);
+  p->name = oldname;
+  dtinsert(names, p);
+
+  return oldname;
 }
 
 #define MARK(e) (ED_alg(e) = e)
@@ -563,7 +550,8 @@ cloneSubg(Agraph_t * g, Agraph_t * ng, Agsym_t * G_bb, Dt_t * gnames)
 
     /* clone subgraphs */
     for (subg = agfstsubg (g); subg; subg = agnxtsubg (subg)) {
-	nsubg = agsubg(ng, xName(gnames, agnameof(subg)), 1);
+	nsubg = agsubg(ng, const_cast<char*>(xName(gnames, agnameof(subg)).c_str()),
+	               1);
 	agbindrec (nsubg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(subg, nsubg, G_bb, gnames);
 	/* if subgraphs are clusters, point to the new 
@@ -686,14 +674,16 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
 		fprintf(stderr, "Some nodes will be renamed.\n");
 		doWarn = false;
 	    }
-	    np = agnode(root, xName(nnames, agnameof(n)), 1);
+	    np = agnode(root, const_cast<char*>(xName(nnames, agnameof(n)).c_str()),
+	                1);
 	    agbindrec (np, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	    ND_alg(n) = np;
 	    cloneNode(n, np);
 	}
 
 	/* wrap the clone of g in a subgraph of root */
-	subg = agsubg(root, xName(gnames, agnameof(g)), 1);
+	subg = agsubg(root, const_cast<char*>(xName(gnames, agnameof(g)).c_str()),
+	              1);
 	agbindrec (subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(g, subg, G_bb, gnames);
     }
