@@ -1840,7 +1840,6 @@ static void poly_init(node_t * n)
 {
     pointf dimen, min_bb, bb;
     point imagesize;
-    pointf P, Q, R;
     pointf *vertices;
     char *p, *sfile, *fxd;
     double temp, alpha, beta, gamma;
@@ -2067,6 +2066,7 @@ static void poly_init(node_t * n)
     if (sides < 3) {		/* ellipses */
 	sides = 2;
 	vertices = N_NEW(outp * sides, pointf);
+	pointf P;
 	P.x = bb.x / 2.;
 	P.y = bb.y / 2.;
 	vertices[0].x = -P.x;
@@ -2115,6 +2115,7 @@ static void poly_init(node_t * n)
 	    gskew = skew / 2.;
 	    angle = (sectorangle - M_PI) / 2.;
 	    sincos(angle, &sinx, &cosx);
+	    pointf R;
 	    R.x = .5 * cosx;
 	    R.y = .5 * sinx;
 	    xmax = ymax = 0.;
@@ -2128,6 +2129,7 @@ static void poly_init(node_t * n)
 		R.y += sidelength * sinx;
 
 	    /*distort and skew */
+		pointf P;
 		P.x = R.x * (skewdist + R.y * gdistortion) + R.y * gskew;
 		P.y = R.y;
 
@@ -2169,20 +2171,19 @@ static void poly_init(node_t * n)
 	scaley = bb.y / ymax;
 
 	for (i = 0; i < sides; i++) {
-	    P = vertices[i];
+	    pointf P = vertices[i];
 	    P.x *= scalex;
 	    P.y *= scaley;
 	    vertices[i] = P;
 	}
 
 	if (peripheries > 1) {
-	    Q = vertices[(sides - 1)];
-	    R = vertices[0];
+	    pointf Q = vertices[(sides - 1)];
+	    pointf R = vertices[0];
 	    beta = atan2(R.y - Q.y, R.x - Q.x);
 	    for (i = 0; i < sides; i++) {
 
 		/*for each vertex find the bisector */
-		P = Q;
 		Q = R;
 		R = vertices[(i + 1) % sides];
 		alpha = beta;
@@ -2207,7 +2208,7 @@ static void poly_init(node_t * n)
 		}
 	    }
 	    for (i = 0; i < sides; i++) {
-		P = vertices[i + (peripheries - 1) * sides];
+		pointf P = vertices[i + (peripheries - 1) * sides];
 		bb.x = MAX(2. * fabs(P.x), bb.x);
 		bb.y = MAX(2. * fabs(P.y), bb.y);
 	    }
