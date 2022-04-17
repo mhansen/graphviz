@@ -5,10 +5,10 @@
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
 
-TEST_CASE("Edge node overlap for normal and inv arrow",
-          "[!shouldfail] An edge connected to a node shall touch that node and "
-          "not overlap it too much, regardless of if the arrow shape is "
-          "'normal' or 'inv'") {
+TEST_CASE(
+    "Edge node overlap for normal and inv arrow",
+    "An edge connected to a node shall touch that node and not overlap it too "
+    "much, regardless of if the arrow shape is 'normal' or 'inv'") {
 
   std::string filename_base = AUTO_NAME();
 
