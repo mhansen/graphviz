@@ -108,6 +108,7 @@ typedef struct arrowtype_t {
     int type;
     double lenfact;		/* ratio of length of this arrow type to standard arrow */
     pointf (*gen) (GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);	/* generator function for type */
+    double (*len) (double lenfact, double arrowsize, double penwidth, int flag);	/* penwidth dependent length */
 } arrowtype_t;
 
 /* forward declaration of functions used in Arrowtypes[] */
@@ -120,15 +121,17 @@ static pointf arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 static pointf arrow_type_curve(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
 static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
 
+static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, int flag);
+
 static const arrowtype_t Arrowtypes[] = {
-    {ARR_TYPE_NORM, 1.0, arrow_type_normal},
-    {ARR_TYPE_CROW, 1.0, arrow_type_crow},
-    {ARR_TYPE_TEE, 0.5, arrow_type_tee},
-    {ARR_TYPE_BOX, 1.0, arrow_type_box},
-    {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond},
-    {ARR_TYPE_DOT, 0.8, arrow_type_dot},
-    {ARR_TYPE_CURVE, 1.0, arrow_type_curve},
-    {ARR_TYPE_GAP, 0.5, arrow_type_gap},
+    {ARR_TYPE_NORM, 1.0, arrow_type_normal, arrow_length_generic},
+    {ARR_TYPE_CROW, 1.0, arrow_type_crow, arrow_length_generic},
+    {ARR_TYPE_TEE, 0.5, arrow_type_tee, arrow_length_generic},
+    {ARR_TYPE_BOX, 1.0, arrow_type_box, arrow_length_generic},
+    {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond, arrow_length_generic},
+    {ARR_TYPE_DOT, 0.8, arrow_type_dot, arrow_length_generic},
+    {ARR_TYPE_CURVE, 1.0, arrow_type_curve, arrow_length_generic},
+    {ARR_TYPE_GAP, 0.5, arrow_type_gap, arrow_length_generic},
 };
 
 static const size_t Arrowtypes_size =
@@ -238,8 +241,11 @@ void arrow_flags(Agedge_t * e, int *sflag, int *eflag)
 
 static double arrow_length(edge_t * e, int flag)
 {
-    double lenfact = 0.0;
+    double length = 0.0;
     int f, i;
+
+    const double penwidth = late_double(e, E_penwidth, 1.0, 0.0);
+    const double arrowsize = late_double(e, E_arrowsz, 1.0, 0.0);
 
     for (i = 0; i < NUMB_OF_ARROW_HEADS; i++) {
         /* we don't simply index with flag because arrowtypes are not necessarily sorted */
@@ -247,14 +253,13 @@ static double arrow_length(edge_t * e, int flag)
         for (size_t j = 0; j < Arrowtypes_size; ++j) {
 	    const arrowtype_t *arrowtype = &Arrowtypes[j];
 	    if (f == arrowtype->type) {
-	        lenfact += arrowtype->lenfact;
+		const int arrow_flag = (flag >> (i * BITS_PER_ARROW)) & ((1 << BITS_PER_ARROW) - 1);
+		length += (arrowtype->len)(arrowtype->lenfact, arrowsize, penwidth, arrow_flag);
 	        break;
 	    }
         }
     }
-    /* The original was missing the factor E_arrowsz, but I believe it
-       should be here for correct arrow clipping */
-    return ARROW_LENGTH * lenfact * late_double(e, E_arrowsz, 1.0, 0.0);
+    return length;
 }
 
 /* inside function for calls to bezier_clip */
@@ -879,4 +884,12 @@ void arrow_gen(GVJ_t * job, emit_state_t emit_state, pointf p, pointf u, double 
     }
 
     obj->emit_state = old_emit_state;
+}
+
+static double arrow_length_generic(double lenfact, double arrowsize,
+                                   double penwidth, int flag) {
+  (void)penwidth;
+  (void)flag;
+
+  return lenfact * arrowsize * ARROW_LENGTH;
 }
