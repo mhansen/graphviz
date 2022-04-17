@@ -267,12 +267,12 @@ dnl checks for various programs
 AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_AWK
+AC_PROG_SED
 AC_PROG_INSTALL
 AC_PROG_LN_S
 LT_INIT
 
 # prefer GNU variants over, say, Oracle's or Apples
-AC_CHECK_PROGS(SED,gsed sed,false)
 AC_CHECK_PROGS(SORT,gsort sort,false)
 
 AC_CHECK_PROG(EGREP,egrep,egrep,false)
