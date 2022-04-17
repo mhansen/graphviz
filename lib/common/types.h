@@ -160,13 +160,6 @@ extern "C" {
 #define STROKE_PENDOWN (1 << 2)
 #define STROKE_VERTICES_ALLOCATED (1 << 3)
 
-    typedef struct shape_t {	/* mutable shape information for a node */
-	int nstrokes;		/* number of strokes in array */
-	stroke_t *strokes;	/* array of strokes */
-	/* The last stroke must always be closed, but can be pen_up.
-	 * It is used as the clipping path */
-    } shape_t;
-
     typedef struct shape_functions {	/* read-only shape functions */
 	void (*initfn) (node_t *);	/* initializes shape from node u.shape_info structure */
 	void (*freefn) (node_t *);	/* frees  shape from node u.shape_info structure */
