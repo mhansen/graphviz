@@ -5,15 +5,6 @@ SUBDIRS = ui images
 gveditdir = $(pkgdatadir)/gvedit
 
 mans = gvedit.1
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdfs = gvedit.1.pdf
-else
-pdfs = ERROR_NO_PS2PDF
-endif
-else
-pdfs =
-endif
 
 if WITH_QT
 bin_PROGRAMS = gvedit
@@ -66,20 +57,16 @@ qMakefile: gvedit.pro
 attrs.txt: $(top_srcdir)/doc/infosrc/attrs
 	cp $(top_srcdir)/doc/infosrc/attrs attrs.txt
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-gvedit.1.pdf: gvedit.1.ps
-	$(PS2PDF) $<
+.1.1.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .1 .1.pdf
 
-gvedit.1.ps: $(srcdir)/gvedit.1
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
-
-EXTRA_DIST = gvedit.vcxproj* gvedit.pro.in mdi.qrc $(mans) $(pdfs)
+EXTRA_DIST = gvedit.vcxproj* gvedit.pro.in mdi.qrc $(mans)
 
 CLEANFILES = moc_csettings.cpp moc_imageviewer.cpp moc_mainwindow.cpp moc_mdichild.cpp qrc_mdi.cpp
-DISTCLEANFILES = attrs.txt $(pdf) qMakefile gvedit.1.ps
+DISTCLEANFILES = attrs.txt qMakefile $(pdf_DATA)
 
 clean-local:
 	-$(MAKE) -f qMakefile clean

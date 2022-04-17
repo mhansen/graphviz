@@ -276,15 +276,21 @@ LT_INIT
 # prefer GNU variants over, say, Oracle's or Apples
 AC_CHECK_PROGS(SORT,gsort sort,false)
 
-AC_CHECK_PROG(GROFF,groff,groff,false)
-AC_CHECK_PROGS(PS2PDF,ps2pdf pstopdf,false)
-AM_CONDITIONAL(HAVE_PS2PDF,[test "x$PS2PDF" != xfalse])
-
 AC_ARG_ENABLE([man-pdfs],
-  AS_HELP_STRING([--enable-man-pdfs],[Generate PDFs of man pages (default: auto)]),
-  [enable_man_pdfs=$enableval],
-  [enable_man_pdfs=$HAVE_PS2PDF])
-AM_CONDITIONAL(ENABLE_MAN_PDFS,[test "x$enable_man_pdfs" = "xyes"])
+  [AS_HELP_STRING([--enable-man-pdfs], [Generate PDFs of man pages (default: auto)])])
+
+AS_IF([test "x$enable_man_pdfs" != "xno"], [
+  AC_CHECK_PROGS([GROFF], [groff])
+  AS_IF([test "x$enable_man_pdfs" = "xyes" && test -z "$GROFF"], [
+    AC_MSG_ERROR([You requested PDF generation from man pages, but 'groff' could not be found])
+  ])
+
+  AC_CHECK_PROGS([PS2PDF], [ps2pdf pstopdf])
+  AS_IF([test "x$enable_man_pdfs" = "xyes" && test -z "$PS2PDF"], [
+    AC_MSG_ERROR([You requested PDF generation from man pages, but neither 'ps2pdf' nor 'pstopdf' could be found])
+  ])
+])
+AM_CONDITIONAL([ENABLE_MAN_PDFS], [test "x$enable_man_pdfs" != "xno" && test -n "$GROFF" && test -n "$PS2PDF"])
 
 PKG_INSTALLDIR
 PKG_PROG_PKG_CONFIG

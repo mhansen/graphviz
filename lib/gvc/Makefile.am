@@ -29,16 +29,6 @@ if ENABLE_MAN_PDFS
 pdf_DATA = gvc.3.pdf
 endif
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
-endif
-
 libgvc_C_la_SOURCES = gvrender.c gvlayout.c gvdevice.c gvloadimage.c \
 	gvcontext.c gvjobs.c gvevent.c gvplugin.c gvconfig.c \
 	gvtool_tred.c gvtextlayout.c gvusershape.c gvc.c
@@ -68,16 +58,12 @@ libgvc_la_LIBADD = $(libgvc_C_la_LIBADD) \
 	$(EXPAT_LIBS) $(Z_LIBS) $(MATH_LIBS)
 libgvc_la_DEPENDENCIES = $(libgvc_C_la_DEPENDENCIES)
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-gvc.3.pdf: gvc.3.ps
-	$(PS2PDF) $<
+.3.3.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3 .3.pdf
 
-gvc.3.ps: $(srcdir)/gvc.3
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
+EXTRA_DIST = $(man_MANS)
 
-EXTRA_DIST = $(man_MANS) $(pdf)
-
-DISTCLEANFILES = $(pdf) gvc.3.ps
+DISTCLEANFILES = $(pdf_DATA)

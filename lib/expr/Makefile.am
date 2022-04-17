@@ -13,14 +13,6 @@ noinst_LTLIBRARIES = libexpr_C.la
 man_MANS = expr.3
 if ENABLE_MAN_PDFS
 pdf_DATA = expr.3.pdf
-
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
 endif
 
 libexpr_C_la_SOURCES = excc.c excontext.c exdata.c exerror.c \
@@ -45,18 +37,14 @@ y.tab.c y.tab.h: y.output
 y.output: $(top_srcdir)/lib/expr/exparse.y
 	$(YACC) -Wno-yacc -dtv $(top_srcdir)/lib/expr/exparse.y -o y.tab.c
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-expr.3.pdf: expr.3.ps
-	$(PS2PDF) $<
+.3.3.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3 .3.pdf
 
-expr.3.ps: $(srcdir)/expr.3
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
-
-EXTRA_DIST = $(man_MANS) $(pdf) \
+EXTRA_DIST = $(man_MANS) \
 	exparse.c \
 	y.tab.c y.tab.h y.output expr.vcxproj*
 
-DISTCLEANFILES = $(pdf) exparse.c y.tab.[ch] y.output expr.3.ps
+DISTCLEANFILES = exparse.c y.tab.[ch] y.output $(pdf_DATA)

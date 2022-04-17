@@ -24,15 +24,6 @@ LIBS = -lc $(TCL_STUB_LIB_SPEC)
 AM_CFLAGS = $(TCL_CFLAGS)
 
 man = tcldot.3tcl
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdf = tcldot.3tcl.pdf
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
-endif
 html = tcldot.html
 
 if WITH_TCL
@@ -118,17 +109,13 @@ pkgIndex.tcl: libtcldot.la
 	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libtcldot.la Tcldot $(VERSION)
 endif
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-tcldot.3tcl.pdf: tcldot.3tcl.ps
-	$(PS2PDF) $<
+.3tcl.3tcl.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3tcl .3tcl.pdf
 
-tcldot.3tcl.ps: $(srcdir)/tcldot.3tcl
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
-
-EXTRA_DIST = $(man) $(pdf) $(html) README README.Tkspline
+EXTRA_DIST = $(man) $(html) README README.Tkspline
 
 CLEANFILES = pkgIndex.tcl
-DISTCLEANFILES = $(pdf) tcldot.3tcl.ps
+DISTCLEANFILES = $(pdf_DATA)

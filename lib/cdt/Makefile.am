@@ -20,16 +20,6 @@ pdf_DATA = cdt.3.pdf
 endif
 pkgconfig_DATA = libcdt.pc
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
-endif
-
 libcdt_C_la_SOURCES = dtclose.c dtdisc.c dtextract.c dtflatten.c \
 	dthash.c dtlist.c dtmethod.c dtopen.c dtrenew.c dtrestore.c dtsize.c \
 	dtstat.c dtstrhash.c dttree.c dtview.c dtwalk.c
@@ -37,16 +27,12 @@ libcdt_C_la_SOURCES = dtclose.c dtdisc.c dtextract.c dtflatten.c \
 libcdt_la_LDFLAGS = -version-info $(CDT_VERSION) -no-undefined
 libcdt_la_SOURCES = $(libcdt_C_la_SOURCES)
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-cdt.3.pdf: cdt.3.ps
-	$(PS2PDF) $<
+.3.3.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3 .3.pdf
 
-cdt.3.ps: $(srcdir)/cdt.3
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
+EXTRA_DIST = $(man_MANS) cdt.vcxproj*
 
-EXTRA_DIST = $(man_MANS) $(pdf) cdt.vcxproj*
-
-DISTCLEANFILES = $(pdf) cdt.3.ps
+DISTCLEANFILES = $(pdf_DATA)

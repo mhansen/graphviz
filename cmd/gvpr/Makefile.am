@@ -17,14 +17,6 @@ endif
 man_MANS = gvpr.1
 if ENABLE_MAN_PDFS
 pdf_DATA = gvpr.1.pdf
-
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
 endif
 
 gvpr_SOURCES = gvprmain.c
@@ -33,15 +25,12 @@ gvpr_LDADD = $(top_builddir)/lib/gvpr/libgvpr.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-gvpr.1.pdf: gvpr.1.ps
-	$(PS2PDF) $<
+.1.1.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .1 .1.pdf
 
-gvpr.1.ps: $(srcdir)/gvpr.1
-	$(GROFF) -Tps -man -t $< >$@
-endif
-endif
 gvpr_static_SOURCES = gvprmain.c
 gvpr_static_CPPFLAGS = $(AM_CPPFLAGS)
 gvpr_static_LDADD = \
@@ -55,6 +44,6 @@ gvpr_static_LDADD = \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
 	$(MATH_LIBS)
 
-EXTRA_DIST = $(man_MANS) $(pdf) lib gvpr.vcxproj*
+EXTRA_DIST = $(man_MANS) lib gvpr.vcxproj*
 
-DISTCLEANFILES = $(pdf) gvpr.1.ps
+DISTCLEANFILES = $(pdf_DATA)

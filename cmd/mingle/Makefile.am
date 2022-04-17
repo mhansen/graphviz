@@ -9,18 +9,9 @@ AM_CPPFLAGS = \
 if WITH_ANN
 bin_PROGRAMS = mingle
 man_MANS = mingle.1
-endif
-
 if ENABLE_MAN_PDFS
 pdf_DATA = mingle.1.pdf
-
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
 endif
-else
-pdf =
 endif
 
 mingle_SOURCES = minglemain.cpp
@@ -37,16 +28,12 @@ mingle_LDADD = \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(ANN_LIBS) -lm
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-mingle.1.pdf: mingle.1.ps
-	$(PS2PDF) $<
+.1.1.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .1 .1.pdf
 
-mingle.1.ps: $(srcdir)/mingle.1
-	$(GROFF) -e -Tps -man -t $< >$@
-endif
-endif
+EXTRA_DIST = mingle.1 mingle.vcxproj*
 
-EXTRA_DIST = mingle.1 $(pdf) mingle.vcxproj*
-
-DISTCLEANFILES = $(pdf) mingle.1.ps
+DISTCLEANFILES = $(pdf_DATA)
