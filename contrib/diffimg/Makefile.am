@@ -6,7 +6,6 @@ AM_CPPFLAGS = \
 	$(GDLIB_CFLAGS) \
 	-I$(top_srcdir)/lib
 
-man_MANS = diffimg.1
 if ENABLE_MAN_PDFS
 pdf_DATA = diffimg.1.pdf
 
@@ -21,6 +20,7 @@ endif
 
 if WITH_LIBGD
 bin_PROGRAMS = diffimg
+man_MANS = diffimg.1
 endif
 
 diffimg_SOURCES = diffimg.c
