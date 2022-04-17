@@ -466,11 +466,9 @@ static pointf miter_point(pointf base_left, pointf P, pointf base_right,
   return P3;
 }
 
-static pointf arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_normal0(pointf p, pointf u, double penwidth, int flag, pointf* a)
 {
-    (void)arrowsize;
-
-    pointf q, v, a[5];
+    pointf q, v;
     double arrowwidth;
 
     arrowwidth = 0.35;
@@ -529,6 +527,18 @@ static pointf arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsiz
 	q.x -= delta_base.x;
 	q.y -= delta_base.y;
     }
+
+    return q;
+}
+
+static pointf arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+{
+    (void)arrowsize;
+
+    pointf a[5];
+
+    pointf q = arrow_type_normal0(p, u, penwidth, flag, a);
+
     if (flag & ARR_MOD_LEFT)
 	gvrender_polygon(job, a, 3, !(flag & ARR_MOD_OPEN));
     else if (flag & ARR_MOD_RIGHT)
