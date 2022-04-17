@@ -302,7 +302,8 @@ int arrowStartClip(edge_t* e, pointf * ps, int startp,
 
     slen = arrow_length(e, sflag);
     slen2 = slen * slen;
-    spl->sflag = sflag, spl->sp = ps[startp];
+    spl->sflag = sflag;
+    spl->sp = ps[startp];
     if (endp > startp && DIST2(ps[startp], ps[startp + 3]) < slen2) {
 	startp += 3;
     }
