@@ -165,8 +165,6 @@ static Agsym_t *agedgeattr(Agraph_t *g, char *name, const char *value) {
 static void init(int argc, char *argv[], pack_info* pinfo)
 {
     int c;
-    char buf[BUFSIZ];
-    char* bp;
 
     agnodeattr(NULL, (char*)"label", NODENAME_ESC);
     pinfo->mode = l_clust;
@@ -179,15 +177,8 @@ static void init(int argc, char *argv[], pack_info* pinfo)
     while ((c = getopt(argc, argv, ":na:gvum:s:o:G:?")) != -1) {
 	switch (c) {
 	case 'a': {
-	    size_t len = strlen(optarg) + 2;
-	    if (len > BUFSIZ)
-		bp = N_GNEW(len, char);
-	    else
-		bp = buf;
-	    sprintf (bp, "a%s\n", optarg);
-	    parsePackModeInfo (bp, pinfo->mode, pinfo);
-	    if (bp != buf)
-		free (bp);
+	    auto buf = std::string("a") + optarg + "\n";
+	    parsePackModeInfo(buf.c_str(), pinfo->mode, pinfo);
 	    break;
 	}
 	case 'n':
