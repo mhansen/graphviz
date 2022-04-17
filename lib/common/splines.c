@@ -305,7 +305,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
     for (; end > 0; end -= 3)
 	if (! APPROXEQPT(ps[end], ps[end + 3], MILLIPOINT))
 	    break;
-   arrow_clip(fe, hn, ps, &start, &end, newspl, info);
+    arrow_clip(fe, hn, ps, &start, &end, newspl, info);
     for (i = start; i < end + 4; ) {
 	pointf cp[4];
 	newspl->list[i - start] = ps[i];
