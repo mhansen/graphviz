@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/stack.h>
 
 typedef struct {
     Agrec_t h;
@@ -33,7 +34,6 @@ typedef struct {
 
 typedef struct {
     Agrec_t h;
-    Agedge_t *next;
 } Agedgeinfo_t;
 
 typedef struct {
@@ -46,7 +46,6 @@ typedef struct {
 #define Low(n)  (((Agnodeinfo_t*)(n->base.data))->low)
 #define Cut(n)  (((Agnodeinfo_t*)(n->base.data))->isCut)
 #define N(n)  (((Agnodeinfo_t*)(n->base.data))->val)
-#define NEXT(e)  (((Agedgeinfo_t*)(e->base.data))->next)
 #define NEXTBLK(g)  (((Agraphinfo_t*)(g->base.data))->next)
 
 #include <ingraphs/ingraphs.h>
@@ -62,27 +61,10 @@ char *suffix = 0;
 int external;			/* emit blocks as root graphs */
 int doTree;			/* emit block-cutpoint tree */
 
-static void push(Agedge_t ** sp, Agedge_t * e)
-{
-    NEXT(e) = *sp;
-    *sp = e;
-}
-
-static Agedge_t *pop(Agedge_t ** sp)
-{
-    Agedge_t *top = *sp;
-
-    assert(top);
-    *sp = NEXT(top);
-    return top;
-}
-
-#define top(sp) (sp)
-
 typedef struct {
     int count;
     int nComp;
-    Agedge_t *stk;
+    gv_stack_t stk;
     Agraph_t *blks;
 } bcstate;
 
@@ -189,14 +171,14 @@ dfs(Agraph_t * g, Agnode_t * u, bcstate * stp, Agnode_t * parent)
 	if (v == u)
 	    continue;
 	if (N(v) == 0) {
-	    push(&stp->stk, e);
+	    stack_push_or_exit(&stp->stk, e);
 	    dfs(g, v, stp, u);
 	    Low(u) = min(Low(u), Low(v));
 	    if (Low(v) >= N(u)) {	/* u is an articulation point */
 		Cut(u) = 1;
 		sg = mkBlock(g, stp);
 		do {
-		    ep = pop(&stp->stk);
+		    ep = stack_pop(&stp->stk);
 		    agsubnode(sg, aghead(ep), 1);
 		    agsubnode(sg, agtail(ep), 1);
 		} while (ep != e);
@@ -204,7 +186,7 @@ dfs(Agraph_t * g, Agnode_t * u, bcstate * stp, Agnode_t * parent)
 	} else if (parent != v) {
 	    Low(u) = min(Low(u), N(v));
 	    if (N(v) < N(u))
-		push(&stp->stk, e);
+		stack_push_or_exit(&stp->stk, e);
 	}
     }
 }
@@ -252,7 +234,7 @@ static int process(Agraph_t * g, int gcnt)
 
     state.count = 0;
     state.nComp = 0;
-    state.stk = 0;
+    state.stk = (gv_stack_t){0};
     state.blks = 0;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -287,6 +269,7 @@ static int process(Agraph_t * g, int gcnt)
 	fprintf(stderr, "%s: %d blocks %d cutpoints\n", agnameof(g), bcnt,
 		cuts);
     }
+    stack_reset(&state.stk);
     if (state.blks && NEXTBLK(state.blks))
 	return 1;		/* >= 2 blocks */
     else
