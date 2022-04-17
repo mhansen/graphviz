@@ -25,6 +25,7 @@
 #include <common/render.h>
 #include <neatogen/neatoprocs.h>
 #include <ingraphs/ingraphs.h>
+#include <iostream>
 #include <pack/pack.h>
 #include <stddef.h>
 #include <string>
@@ -95,7 +96,7 @@ If no files are specified, stdin is used\n";
 
 static void usage(int v)
 {
-    printf("%s",useString);
+    std::cout << useString;
     graphviz_exit(v);
 }
 
@@ -105,7 +106,7 @@ static FILE *openFile(const char *name)
 
     fp = fopen(name, "w");
     if (!fp) {
-	fprintf(stderr, "gvpack: could not open file %s for writing\n", name);
+	std::cerr << "gvpack: could not open file " << name << " for writing\n";
 	graphviz_exit(1);
     }
     return (fp);
@@ -140,8 +141,7 @@ static int setUInt(unsigned int *v, char *arg)
 
     i = (unsigned int) strtol(arg, &p, 10);
     if (p == arg) {
-	fprintf(stderr, "Error: bad value in flag -%s - ignored\n",
-		arg - 1);
+	std::cerr << "Error: bad value in flag -" << (arg - 1) << " - ignored\n";
 	return 1;
     }
     *v = i;
@@ -214,22 +214,21 @@ static void init(int argc, char *argv[], pack_info* pinfo)
 	    if (*optarg)
 		setNameValue(optarg);
 	    else
-		fprintf(stderr,
-			"gvpack: option -G missing argument - ignored\n");
+		std::cerr << "gvpack: option -G missing argument - ignored\n";
 	    break;
 	case 'v':
 	    verbose = 1;
 	    Verbose = 1;
 	    break;
 	case ':':
-	    fprintf(stderr, "gvpack: option -%c missing argument - ignored\n", optopt);
+	    std::cerr << "gvpack: option -" << (char)optopt
+	              << " missing argument - ignored\n";
 	    break;
 	case '?':
 	    if (optopt == '\0' || optopt == '?')
 		usage(0);
 	    else {
-		fprintf(stderr,
-			"gvpack: option -%c unrecognized\n", optopt);
+		std::cerr << "gvpack: option -" << (char)optopt << " unrecognized\n";
 		usage(1);
 	    }
 	    break;
@@ -246,7 +245,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
     if (!outfp)
 	outfp = stdout;		/* stdout the default */
     if (verbose)
-	fprintf (stderr, "  margin %d\n", pinfo->margin);
+	std::cerr << "  margin " << pinfo->margin << '\n';
 }
 
 /* init_node_edge:
@@ -287,8 +286,8 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
     graph_init(g, false);
     d = late_int(g, agfindgraphattr(g, (char*)"dim"), 2, 2);
     if (d != 2) {
-	fprintf(stderr, "Error: graph %s has dim = %d (!= 2)\n", agnameof(g),
-		d);
+	std::cerr << "Error: graph " << agnameof(g) << " has dim = " << d
+	          << " (!= 2)\n";
 	graphviz_exit(1);
     }
     Ndim = GD_ndim(g) = 2;
@@ -297,11 +296,10 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
 	int ret = init_nop(g,0);
 	if (ret) {
 	    if (ret < 0)
-		fprintf(stderr, "Error loading layout info from graph %s\n",
-		    agnameof(g));
+		std::cerr << "Error loading layout info from graph " << agnameof(g) << '\n';
 	    else if (ret > 0)
-		fprintf(stderr, "gvpack does not support backgrounds as found in graph %s\n",
-		    agnameof(g));
+		std::cerr << "gvpack does not support backgrounds as found in graph "
+		          << agnameof(g) << '\n';
 	    graphviz_exit(1);
 	}
 	if (Concentrate) { /* check for edges without pos info */
@@ -637,7 +635,7 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
     bool doWarn = true;
 
     if (verbose)
-	fprintf(stderr, "Creating clone graph\n");
+	std::cerr << "Creating clone graph\n";
     root = agopen(gname, kind, &AgDefaultDisc);
     initAttrs(root, gs, cnt);
     G_bb = agfindgraphattr(root, (char*)"bb");
@@ -661,17 +659,16 @@ static Agraph_t *cloneGraph(Agraph_t ** gs, int cnt, GVC_t * gvc)
     for (i = 0; i < cnt; i++) {
 	g = gs[i];
 	if (verbose)
-	    fprintf(stderr, "Cloning graph %s\n", agnameof(g));
+	    std::cerr << "Cloning graph " << agnameof(g) << '\n';
 	GD_n_cluster(root) += GD_n_cluster(g);
 	GD_has_labels(root) |= GD_has_labels(g);
 
 	/* Clone nodes, checking for node name conflicts */
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    if (doWarn && agfindnode(root, agnameof(n))) {
-		fprintf(stderr,
-			"Warning: node %s in graph[%d] %s already defined\n",
-			agnameof(n), i, agnameof(g));
-		fprintf(stderr, "Some nodes will be renamed.\n");
+		std::cerr << "Warning: node " << agnameof(n) << " in graph[" << i << "] "
+		          << agnameof(g) << " already defined\n"
+		          << "Some nodes will be renamed.\n";
 		doWarn = false;
 	    }
 	    np = agnode(root, const_cast<char*>(xName(nnames, agnameof(n)).c_str()),
@@ -740,9 +737,9 @@ static Agraph_t **readGraphs(int *cp, GVC_t* gvc)
     newIngraph(&ig, myFiles, gread);
     while ((g = nextGraph(&ig)) != 0) {
 	if (verbose)
-	    fprintf(stderr, "Reading graph %s\n", agnameof(g));
+	    std::cerr << "Reading graph " << agnameof(g) << '\n';
 	if (agnnodes(g) == 0) {
-	    fprintf(stderr, "Graph %s is empty - ignoring\n", agnameof(g));
+	    std::cerr << "Graph " << agnameof(g) << " is empty - ignoring\n";
 	    continue;
 	}
 	if (cnt >= sz) {
@@ -754,8 +751,7 @@ static Agraph_t **readGraphs(int *cp, GVC_t* gvc)
 	    kind = g->desc;
 	}
 	else if (kind.directed != g->desc.directed) {
-	    fprintf(stderr,
-		    "Error: all graphs must be directed or undirected\n");
+	    std::cerr << "Error: all graphs must be directed or undirected\n";
 	    graphviz_exit(1);
 	} else if (!agisstrict(g))
 	    kind = g->desc;
@@ -797,9 +793,10 @@ void dump(Agraph_t * g)
     edge_t *e;
 
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
-	fprintf(stderr, "%s\n", agnameof(v));
+	std::cerr << agnameof(v) << '\n';
 	for (e = agfstout(g, v); e; e = agnxtout(g, e)) {
-	    fprintf(stderr, "  %s -- %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
+	    std::cerr << "  " << agnameof(agtail(e)) << " -- " << agnameof(aghead(e))
+	              << '\n';
 	}
     }
 }
@@ -810,7 +807,7 @@ void dumps(Agraph_t * g)
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	dump(subg);
-	fprintf(stderr, "====\n");
+	std::cerr << "====\n";
     }
 }
 #endif
@@ -838,7 +835,7 @@ int main(int argc, char *argv[])
     /* pack graphs */
     if (doPack) {
 	if (packGraphs(cnt, gs, 0, &pinfo)) {
-	    fprintf(stderr, "gvpack: packing of graphs failed.\n");
+	    std::cerr << "gvpack: packing of graphs failed.\n";
 	    graphviz_exit(1);
 	}
     }
