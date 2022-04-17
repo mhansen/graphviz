@@ -272,7 +272,8 @@ int arrowEndClip(edge_t* e, pointf * ps, int startp,
 
     elen = arrow_length(e, eflag);
     elen2 = elen * elen;
-    spl->eflag = eflag, spl->ep = ps[endp + 3];
+    spl->eflag = eflag;
+    spl->ep = ps[endp + 3];
     if (endp > startp && DIST2(ps[endp], ps[endp + 3]) < elen2) {
 	endp -= 3;
     }
