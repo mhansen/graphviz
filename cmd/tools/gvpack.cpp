@@ -76,7 +76,7 @@ static FILE *outfp;		/* output; stdout by default */
 static Agdesc_t kind;		/* type of graph */
 static std::vector<attr_t> G_args; // Storage for -G arguments
 static bool doPack;              /* Do packing if true */
-static char* gname = (char*)"root";
+static char* gname = const_cast<char*>("root");
 
 #define NEWNODE(n) ((node_t*)ND_alg(n))
 
@@ -119,7 +119,7 @@ static FILE *openFile(const char *name)
 static int setNameValue(char *arg)
 {
     char *p;
-    char *rhs = (char*)"true";
+    char *rhs = const_cast<char*>("true");
 
     if ((p = strchr(arg, '='))) {
 	*p++ = '\0';
@@ -166,7 +166,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
 {
     int c;
 
-    agnodeattr(nullptr, (char*)"label", NODENAME_ESC);
+    agnodeattr(nullptr, const_cast<char*>("label"), NODENAME_ESC);
     pinfo->mode = l_clust;
     pinfo->margin = CL_OFFSET;
     pinfo->doSplines = TRUE; /* Use edges in packing */
@@ -245,8 +245,8 @@ static void init_node_edge(Agraph_t * g)
     node_t *n;
     edge_t *e;
     int nG = agnnodes(g);
-    attrsym_t *N_pos = agfindnodeattr(g, (char*)"pos");
-    attrsym_t *N_pin = agfindnodeattr(g, (char*)"pin");
+    attrsym_t *N_pos = agfindnodeattr(g, const_cast<char*>("pos"));
+    attrsym_t *N_pin = agfindnodeattr(g, const_cast<char*>("pin"));
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	neato_init_node(n);
@@ -273,7 +273,7 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
     aginit (g, AGEDGE, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
     GD_gvc(g) = gvc;
     graph_init(g, false);
-    d = late_int(g, agfindgraphattr(g, (char*)"dim"), 2, 2);
+    d = late_int(g, agfindgraphattr(g, const_cast<char*>("dim")), 2, 2);
     if (d != 2) {
 	std::cerr << "Error: graph " << agnameof(g) << " has dim = " << d
 	          << " (!= 2)\n";
@@ -619,7 +619,7 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 	std::cerr << "Creating clone graph\n";
     root = agopen(gname, kind, &AgDefaultDisc);
     initAttrs(root, gs);
-    G_bb = agfindgraphattr(root, (char*)"bb");
+    G_bb = agfindgraphattr(root, const_cast<char*>("bb"));
     if (doPack) assert(G_bb);
 
     /* add command-line attributes */
