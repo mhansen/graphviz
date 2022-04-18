@@ -20,13 +20,7 @@ extern "C" {
 #include <sys/types.h>
 #endif
 #include <stdbool.h>
-#if !defined(_WIN32) && !defined(DARWIN)
-#define __USE_GNU
 #include <stdlib.h>
-#undef __USE_GNU
-#else
-#include <stdlib.h>
-#endif
 #include <stddef.h>
 #include <string.h>
 
