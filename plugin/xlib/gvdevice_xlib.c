@@ -151,7 +151,7 @@ static Visual *find_argb_visual(Display * dpy, int scr)
 
 static void browser_show(GVJ_t *job)
 {
-#if defined HAVE_SYS_TYPES_H && defined HAVE_UNISTD_H
+#ifdef HAVE_SYS_TYPES_H
    char *exec_argv[3] = {BROWSER, NULL, NULL};
    pid_t pid;
 

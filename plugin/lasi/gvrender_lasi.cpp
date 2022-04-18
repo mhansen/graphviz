@@ -19,9 +19,6 @@
 #ifdef HAVE_FCNTL_H
 #undef HAVE_FCNTL_H
 #endif
-#ifdef HAVE_UNISTD_H
-#undef HAVE_UNISTD_H
-#endif
 #include "config.h"
 
 #include <gvc/gvplugin_render.h>
