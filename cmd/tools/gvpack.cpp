@@ -166,11 +166,11 @@ static void init(int argc, char *argv[], pack_info* pinfo)
 {
     int c;
 
-    agnodeattr(NULL, (char*)"label", NODENAME_ESC);
+    agnodeattr(nullptr, (char*)"label", NODENAME_ESC);
     pinfo->mode = l_clust;
     pinfo->margin = CL_OFFSET;
     pinfo->doSplines = TRUE; /* Use edges in packing */
-    pinfo->fixed = NULL;
+    pinfo->fixed = nullptr;
     pinfo->sz = 0;
 
     opterr = 0;
@@ -194,7 +194,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
 	    setUInt(&pinfo->margin, optarg);
 	    break;
 	case 'o':
-	    if (outfp != NULL)
+	    if (outfp != nullptr)
 		fclose(outfp);
 	    outfp = openFile(optarg);
 	    break;
@@ -294,7 +294,7 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
 	if (Concentrate) { /* check for edges without pos info */
 	    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 		for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-		    if (ED_spl(e) == NULL) ED_edge_type(e) = IGNORED;
+		    if (ED_spl(e) == nullptr) ED_edge_type(e) = IGNORED;
 		}
 	    }
 	}
@@ -558,7 +558,7 @@ cloneSubg(Agraph_t * g, Agraph_t * ng, Agsym_t * G_bb, Dt_t * gnames)
 		continue;
 	    nt = NEWNODE(agtail(e));
 	    nh = NEWNODE(aghead(e));
-	    ne = agedge(ng, nt, nh, NULL, 1);
+	    ne = agedge(ng, nt, nh, nullptr, 1);
 	    agbindrec (ne, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
 	    cloneEdge(e, ne);
 	    MARK(e);
@@ -688,13 +688,13 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 
 static Agraph_t *gread(FILE * fp)
 {
-    return agread(fp, NULL);
+    return agread(fp, nullptr);
 }
 
 /* readGraphs:
  * Read input, parse the graphs, use init_nop (neato -n) to
  * read in all attributes need for layout.
- * Return the list of graphs. If cp != NULL, set it to the number
+ * Return the list of graphs. If cp != nullptr, set it to the number
  * of graphs read.
  * We keep track of the types of graphs read. They all must be
  * either directed or undirected. If all graphs are strict, the
