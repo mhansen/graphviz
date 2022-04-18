@@ -22,7 +22,7 @@ import pytest
 
 sys.path.append(os.path.dirname(__file__))
 from gvtest import dot, gvpr, is_mingw, ROOT, remove_xtype_warnings, run_c \
-  #pylint: disable=C0413
+  #pylint: disable=wrong-import-position
 
 def is_ndebug_defined() -> bool:
   """

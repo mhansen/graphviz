@@ -9,7 +9,7 @@ import sys
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import run_c #pylint: disable=C0413
+from gvtest import run_c #pylint: disable=wrong-import-position
 
 @pytest.mark.parametrize("src", ["demo.c", "dot.c", "example.c", "neatopack.c",
   "simple.c"])

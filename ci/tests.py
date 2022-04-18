@@ -14,7 +14,8 @@ from typing import Dict
 import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
-from gvtest import dot, is_cmake, is_mingw #pylint: disable=C0413
+from gvtest import dot, is_cmake, is_mingw \
+  #pylint: disable=wrong-import-position
 
 def _freedesktop_os_release() -> Dict[str, str]:
   """
