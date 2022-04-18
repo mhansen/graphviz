@@ -252,7 +252,7 @@ typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
  *  - linejoin = 0 or 1 
  *  - linecap = 0 or 1 or 2 
  *
- * Calling function needs to free the allocated stoke_t.
+ * Calling function needs to free the allocated stroke_t.
  */
 stroke_t* taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, int linecap)
 {
