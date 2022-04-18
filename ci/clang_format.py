@@ -233,7 +233,6 @@ EXCLUDE = (
   "lib/ast/ast.h",
   "lib/ast/chresc.c",
   "lib/ast/chrtoi.c",
-  "lib/ast/compat_unistd.h",
   "lib/ast/error.c",
   "lib/ast/error.h",
   "lib/ast/fmtbuf.c",

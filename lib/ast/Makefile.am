@@ -10,4 +10,4 @@ libast_C_la_SOURCES = pathpath.c sfstr.h chresc.c chrtoi.c error.c \
 	pathfind.c \
 	strcopy.c stresc.c strmatch.c
 
-EXTRA_DIST = compat_unistd.h ast.vcxproj*
+EXTRA_DIST = ast.vcxproj*
