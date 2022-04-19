@@ -4,6 +4,8 @@
 #include <stdlib.h>
 
 #ifdef __cplusplus
+#include <iostream>
+
 extern "C" {
 #endif
 
@@ -21,6 +23,10 @@ static inline NORETURN void graphviz_exit(int status) {
   // workaround for https://gitlab.com/graphviz/graphviz/-/issues/2178
   fflush(stdout);
   fflush(stderr);
+#ifdef __cplusplus
+  std::cout.flush();
+  std::cerr.flush();
+#endif
 #endif
   exit(status);
 }
