@@ -10,7 +10,10 @@
 
 #include "config.h"
 
+#include <cgraph/exit.h>
+#include <cgraph/stack.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -623,46 +626,24 @@ treeDup (tree_t* tp, int J)
 
 /*****************/
 
-typedef struct {
-    int top;
-    pair* v;
-} stack;
+static void push(gv_stack_t *sp, int j, int d) {
 
-static stack*
-mkStack (int sz)
-{
-    stack* sp = NEW(stack);
-    sp->top = 0;
-    sp->v = N_NEW(sz,pair);
-    return sp;
+  // convert the ints to pointers to store them in a generic stack
+  void *j_ptr = (void*)(intptr_t)j;
+  void *d_ptr = (void*)(intptr_t)d;
+
+  // push them onto the stack
+  stack_push_or_exit(sp, j_ptr);
+  stack_push_or_exit(sp, d_ptr);
 }
 
-static void
-freeStack (stack* sp)
-{
-    free (sp->v);
-    free (sp);
-}
+static pair pop(gv_stack_t *sp) {
 
-static void
-resetStack (stack* sp)
-{
-    sp->top = 0;
-}
+  // extract ints in the opposite order in which they were pushed
+  int d = (int)(intptr_t)stack_pop(sp);
+  int j = (int)(intptr_t)stack_pop(sp);
 
-static void
-push(stack* sp, int j, int d)
-{
-    sp->top++;
-    sp->v[sp->top].j = j;
-    sp->v[sp->top].d = d;
-}
-
-static pair
-pop (stack* sp)
-{
-    sp->top--;
-    return sp->v[sp->top+1];
+  return (pair){j, d};
 }
 
 /*****************/
@@ -701,9 +682,7 @@ drand(void)
     return d;
 }
 
-static void
-genTree (int NN, int* T, stack* stack, tree_t* TREE)
-{
+static void genTree(int NN, int *T, gv_stack_t *stack, tree_t *TREE) {
     double v;
     pair p;
     int Z, D, N, J, TD, M, more;
@@ -761,7 +740,7 @@ writeTree (tree_t* tp, edgefn ef)
 struct treegen_s {
     int N;
     int* T;
-    stack* sp;
+    gv_stack_t sp;
     tree_t* tp;
 };
 
@@ -772,7 +751,7 @@ makeTreeGen (int N)
 
     tg->N = N;
     tg->T = genCnt(N);
-    tg->sp = mkStack(N+1);
+    tg->sp = (gv_stack_t){0};
     tg->tp = mkTree(N+1);
     srand((unsigned)time(0));
 
@@ -781,9 +760,9 @@ makeTreeGen (int N)
 
 void makeRandomTree (treegen_t* tg, edgefn ef)
 {
-    resetStack(tg->sp);
+    stack_reset(&tg->sp);
     resetTree(tg->tp);
-    genTree (tg->N, tg->T, tg->sp, tg->tp);
+    genTree(tg->N, tg->T, &tg->sp, tg->tp);
     writeTree (tg->tp, ef);
 }
 
@@ -791,7 +770,7 @@ void
 freeTreeGen(treegen_t* tg)
 {
     free (tg->T);
-    freeStack (tg->sp);
+    stack_reset(&tg->sp);
     freeTree (tg->tp);
     free (tg);
 }
