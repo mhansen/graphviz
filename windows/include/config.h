@@ -126,9 +126,6 @@
 /* Define if you have the PNG library */
 #define HAVE_LIBPNG 1
 
-/* Define if you have the XPM library */
-/* #undef HAVE_LIBXPMFORLEFTY */
-
 /* Define if you have the Z library */
 #define HAVE_LIBZ 1
 
