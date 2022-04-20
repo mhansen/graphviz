@@ -38,12 +38,6 @@ static void agputc (int c, FILE* fp)
 }
 
 
-static void printstring(FILE * f, char *prefix, char *s)
-{
-    if (prefix) agputs(prefix, f);
-    agputs(s, f);
-}
-
 static void printint(FILE * f, char *prefix, int i)
 {
     char buf[BUFSIZ];
@@ -100,9 +94,9 @@ static void writenodeandport(FILE * f, node_t * node, char *port)
 	name = canon (agraphof(node), strchr(agnameof(node), ':') + 1);
     else
 	name = agcanonStr (agnameof(node));
-    printstring(f, " ", name);
+    print(f, " %s", name);
     if (port && *port)
-	printstring(f, ":", agcanonStr(port));
+	print(f, ":%s", agcanonStr(port));
 }
 
 /* _write_plain:
@@ -128,7 +122,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (IS_CLUST_NODE(n))
 	    continue;
-	printstring(f, "node ", agcanonStr(agnameof(n)));
+	print(f, "node %s", agcanonStr(agnameof(n)));
 	printpoint(f, ND_coord(n));
 	if (ND_label(n)->html)   /* if html, get original text */
 	    lbl = agcanonStr (agxget(n, N_label));
@@ -136,14 +130,14 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 	    lbl = canon(agraphof(n),ND_label(n)->text);
         printdouble(f, " ", ND_width(n));
         printdouble(f, " ", ND_height(n));
-        printstring(f, " ", lbl);
-	printstring(f, " ", late_nnstring(n, N_style, "solid"));
-	printstring(f, " ", ND_shape(n)->name);
-	printstring(f, " ", late_nnstring(n, N_color, DEFAULT_COLOR));
+        print(f, " %s", lbl);
+	print(f, " %s", late_nnstring(n, N_style, "solid"));
+	print(f, " %s", ND_shape(n)->name);
+	print(f, " %s", late_nnstring(n, N_color, DEFAULT_COLOR));
 	fillcolor = late_nnstring(n, N_fillcolor, "");
         if (fillcolor[0] == '\0')
 	    fillcolor = late_nnstring(n, N_color, DEFAULT_FILL);
-	printstring(f, " ", fillcolor);
+	print(f, " %s", fillcolor);
 	agputc('\n', f);
     }
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -163,7 +157,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		    bz = ED_spl(e)->list[i];
 		    splinePoints += bz.size;
 		}
-		printstring(f, NULL, "edge");
+		print(f, "edge");
 		writenodeandport(f, agtail(e), tport);
 		writenodeandport(f, aghead(e), hport);
 		printint(f, " ", splinePoints);
@@ -174,11 +168,11 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		}
 	    }
 	    if (ED_label(e)) {
-		printstring(f, " ", canon(agraphof(agtail(e)),ED_label(e)->text));
+		print(f, " %s", canon(agraphof(agtail(e)),ED_label(e)->text));
 		printpoint(f, ED_label(e)->pos);
 	    }
-	    printstring(f, " ", late_nnstring(e, E_style, "solid"));
-	    printstring(f, " ", late_nnstring(e, E_color, DEFAULT_COLOR));
+	    print(f, " %s", late_nnstring(e, E_style, "solid"));
+	    print(f, " %s", late_nnstring(e, E_color, DEFAULT_COLOR));
 	    agputc('\n', f);
 	}
     }
