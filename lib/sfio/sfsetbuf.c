@@ -12,13 +12,7 @@
 #include	<sfio/sfhdr.h>
 
 #ifdef HAVE_GETPAGESIZE
-#ifdef __cplusplus
-extern "C" {
-#endif
 	extern int getpagesize(void);
-#ifdef __cplusplus
-}
-#endif
 #endif
 /*	Set a (new) buffer for a stream.
 **	If size < 0, it is assigned a suitable value depending on the
