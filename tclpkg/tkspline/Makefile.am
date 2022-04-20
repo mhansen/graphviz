@@ -5,15 +5,6 @@ SUBDIRS = demo
 pkgtcldir = $(pkglibdir)/tcl
 
 man = tkspline.3tk
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdf = tkspline.3tk.pdf
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
-endif
 
 # If all else fails there is a local copy of tkInt.h in tkstubs/
 AM_CPPFLAGS = \
@@ -47,17 +38,13 @@ pkgIndex.tcl: libtkspline.la
 	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libtkspline.la Tkspline $(VERSION)
 endif
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-tkspline.3tk.pdf: tkspline.3tk.ps
-	$(PS2PDF) $<
+.3tk.3tk.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3tk .3tk.pdf
 
-tkspline.3tk.ps: $(srcdir)/tkspline.3tk
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
-
-EXTRA_DIST = $(man) $(pdf) dllEntry.c
+EXTRA_DIST = $(man) dllEntry.c
 
 CLEANFILES = pkgIndex.tcl
-DISTCLEANFILES = $(pdf) tkspline.3tk.ps
+DISTCLEANFILES = $(pdf_DATA)

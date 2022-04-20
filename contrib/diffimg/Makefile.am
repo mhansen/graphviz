@@ -6,36 +6,23 @@ AM_CPPFLAGS = \
 	$(GDLIB_CFLAGS) \
 	-I$(top_srcdir)/lib
 
-if ENABLE_MAN_PDFS
-pdf_DATA = diffimg.1.pdf
-
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
-endif
-
 if WITH_LIBGD
 bin_PROGRAMS = diffimg
 man_MANS = diffimg.1
+if ENABLE_MAN_PDFS
+pdf_DATA = diffimg.1.pdf
+endif
 endif
 
 diffimg_SOURCES = diffimg.c
 
 diffimg_LDADD = $(GDLIB_LIBS) $(MATH_LIBS)
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-diffimg.1.pdf: diffimg.1.ps
-	$(PS2PDF) $<
-
-diffimg.1.ps: $(srcdir)/diffimg.1
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
+.1.1.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .1 .1.pdf
 
 GRAPH = "digraph G { hello -> world }"
 
@@ -47,5 +34,5 @@ test: diffimg
 	if `./diffimg hello1.png hello2.png >test2.png`;then echo same;else echo different;fi
 
 CLEANFILES = *.png
-EXTRA_DIST = diffimg.vcxproj* diffimg.1 $(pdf)
-DISTCLEANFILES = $(pdf) diffimg.1.ps
+EXTRA_DIST = diffimg.vcxproj* diffimg.1
+DISTCLEANFILES = $(pdf_DATA)

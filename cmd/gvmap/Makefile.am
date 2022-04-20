@@ -10,18 +10,9 @@ if WITH_SFDP
 bin_PROGRAMS = gvmap cluster
 dist_bin_SCRIPTS = gvmap.sh
 man_MANS = gvmap.1 cluster.1 gvmap.sh.1
-endif
-
 if ENABLE_MAN_PDFS
 pdf_DATA = gvmap.1.pdf cluster.1.pdf gvmap.sh.1.pdf
-
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
 endif
-else
-pdf =
 endif
 
 noinst_HEADERS = make_map.h power.h country_graph_coloring.h
@@ -60,28 +51,12 @@ cluster_LDADD = \
 
 gvmap.sh :
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-gvmap.1.pdf: gvmap.1.ps
-	$(PS2PDF) $<
+.1.1.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .1 .1.pdf
 
-gvmap.1.ps: $(srcdir)/gvmap.1
-	$(GROFF) -Tps -man $< >$@
+EXTRA_DIST = gvmap.1 cluster.1 gvmap.sh.1 gvmap.vcxproj*
 
-cluster.1.pdf: cluster.1.ps
-	$(PS2PDF) $<
-
-cluster.1.ps: $(srcdir)/cluster.1
-	$(GROFF) -Tps -man $< >$@
-
-gvmap.sh.1.pdf: gvmap.sh.1.ps
-	$(PS2PDF) $<
-
-gvmap.sh.1.ps: $(srcdir)/gvmap.sh.1
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
-
-EXTRA_DIST = gvmap.1 cluster.1 gvmap.sh.1 $(pdf) gvmap.vcxproj*
-
-DISTCLEANFILES = $(pdf) gvmap.1.ps cluster.1.ps gvmap.sh.1.ps
+DISTCLEANFILES = $(pdf_DATA)

@@ -19,16 +19,6 @@ if ENABLE_MAN_PDFS
 pdf_DATA = cgraph.3.pdf
 endif
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
-endif
-
 libcgraph_C_la_SOURCES = agerror.c agxbuf.c apply.c attr.c edge.c \
 	flatten.c graph.c grammar.y id.c imap.c io.c mem.c node.c \
 	obj.c pend.c rec.c refstr.c scan.l subg.c utils.c write.c
@@ -45,18 +35,14 @@ scan.c: $(top_srcdir)/lib/cgraph/scan.l
 grammar.c grammar.h: $(top_srcdir)/lib/cgraph/grammar.y
 	$(YACC) -Wno-yacc -dv --output=grammar.c $(top_srcdir)/lib/cgraph/grammar.y
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-cgraph.3.pdf: cgraph.3.ps
-	$(PS2PDF) $<
+.3.3.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3 .3.pdf
 
-cgraph.3.ps: $(srcdir)/cgraph.3
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
-
-EXTRA_DIST = $(man_MANS) $(pdf) cmpnd.c \
+EXTRA_DIST = $(man_MANS) cmpnd.c \
 	grammar.c grammar.h scan.c \
 	cgraph.vcxproj*
 
-DISTCLEANFILES = $(pdf) grammar.[ch] scan.c cgraph.3.ps
+DISTCLEANFILES = grammar.[ch] scan.c $(pdf_DATA)

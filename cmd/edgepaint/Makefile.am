@@ -11,14 +11,6 @@ bin_PROGRAMS = edgepaint
 man_MANS = edgepaint.1
 if ENABLE_MAN_PDFS
 pdf_DATA = edgepaint.1.pdf
-
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
 endif
 
 edgepaint_SOURCES = edgepaintmain.c
@@ -40,16 +32,12 @@ edgepaint_LDADD = \
 # linking, so the C++ standard library is included for our C++ dependencies
 nodist_EXTRA_edgepaint_SOURCES = fake.cxx
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-edgepaint.1.pdf: edgepaint.1.ps
-	$(PS2PDF) $<
+.1.1.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .1 .1.pdf
 
-edgepaint.1.ps: $(srcdir)/edgepaint.1
-	$(GROFF) -e -Tps -man -t $< >$@
-endif
-endif
+EXTRA_DIST = $(man_MANS) edgepaint.vcxproj*
 
-EXTRA_DIST = $(man_MANS) $(pdf) edgepaint.vcxproj*
-
-DISTCLEANFILES = $(pdf) edgepaint.1.ps
+DISTCLEANFILES = $(pdf_DATA)

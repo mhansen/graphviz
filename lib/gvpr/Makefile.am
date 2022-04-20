@@ -34,31 +34,17 @@ if ENABLE_MAN_PDFS
 pdf_DATA = gvpr.3.pdf
 endif
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
-endif
-
 libgvpr_C_la_SOURCES = actions.c compile.c gvpr.c gprstate.c parse.c queue.c
 libgvpr_C_la_DEPENDENCIES = \
 	$(top_builddir)/lib/expr/libexpr_C.la \
 	$(top_builddir)/lib/common/libcommon_C.la \
 	$(top_builddir)/lib/ingraphs/libingraphs_C.la
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-gvpr.3.pdf: gvpr.3.ps
-	$(PS2PDF) $<
-
-gvpr.3.ps: $(srcdir)/gvpr.3
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
+.3.3.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3 .3.pdf
 
 libgvpr_la_LDFLAGS = -version-info $(GVPR_VERSION) -no-undefined
 libgvpr_la_SOURCES = $(libgvpr_C_la_SOURCES)
@@ -74,6 +60,6 @@ if WITH_WIN32
 libgvpr_la_LDFLAGS += -export-symbols-regex gvpr
 endif
 
-EXTRA_DIST = $(man_MANS) $(pdf) trie.c gvprlib.vcxproj*
+EXTRA_DIST = $(man_MANS) trie.c gvprlib.vcxproj*
 
-DISTCLEANFILES = $(pdf) gvpr.3.ps
+DISTCLEANFILES = $(pdf_DATA)

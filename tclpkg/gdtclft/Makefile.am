@@ -13,15 +13,6 @@ LIBS = @LIBS@ -lc
 AM_CFLAGS = $(TCL_CFLAGS)
 
 man = gdtclft.3tcl
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdf = gdtclft.3tcl.pdf
-else
-pdf = ERROR_NOPS2PDF
-endif
-else
-pdf =
-endif
 
 if WITH_LIBGD
 if WITH_TCL
@@ -55,17 +46,13 @@ test:
 endif
 endif
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-gdtclft.3tcl.pdf: gdtclft.3tcl.ps
-	$(PS2PDF) $<
+.3tcl.3tcl.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3tcl .3tcl.pdf
 
-gdtclft.3tcl.ps: $(srcdir)/gdtclft.3tcl
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
-
-EXTRA_DIST = $(man) $(pdf)
+EXTRA_DIST = $(man)
 
 CLEANFILES = pkgIndex.tcl
-DISTCLEANFILES = $(pdf) gdtclft.3tcl.ps
+DISTCLEANFILES = $(pdf_DATA)

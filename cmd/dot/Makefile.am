@@ -50,16 +50,6 @@ if ENABLE_MAN_PDFS
 pdf_DATA = dot.1.pdf osage.1.pdf patchwork.1.pdf
 endif
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
-endif
-
 dot_SOURCES = dot.c no_builtins.c
 dot_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=1
 dot_LDADD = \
@@ -82,27 +72,11 @@ uninstall-hook:
 	(cd $(DESTDIR)$(bindir); for i in $(linkedprogram); do rm -f $$i; done;)
 	(cd $(DESTDIR)$(libdir); rm -f config;)
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-dot.1.pdf: dot.1.ps
-	$(PS2PDF) $<
-
-dot.1.ps: $(srcdir)/dot.1
-	$(GROFF) -Tps -man $< >$@
-
-osage.1.pdf: osage.1.ps
-	$(PS2PDF) $<
-
-osage.1.ps: $(srcdir)/osage.1
-	$(GROFF) -Tps -man $< >$@
-
-patchwork.1.pdf: patchwork.1.ps
-	$(PS2PDF) $<
-
-patchwork.1.ps: $(srcdir)/patchwork.1
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
+.1.1.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .1 .1.pdf
 
 dot_static_SOURCES = dot.c dot_builtins.c
 dot_static_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=0
@@ -154,6 +128,6 @@ endif
 nodist_EXTRA_dot_static_SOURCES = fake.cxx
 nodist_EXTRA_dot_builtins_SOURCES = fake.cxx
 
-EXTRA_DIST = dot.1 osage.1 patchwork.1 $(pdf) dot.vcxproj*
+EXTRA_DIST = dot.1 osage.1 patchwork.1 dot.vcxproj*
 
-DISTCLEANFILES = $(pdf) dot.1.ps osage.1.ps patchwork.1.ps
+DISTCLEANFILES = $(pdf_DATA)

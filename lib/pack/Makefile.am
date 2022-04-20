@@ -17,28 +17,16 @@ noinst_LTLIBRARIES = libpack_C.la
 man_MANS = pack.3
 if ENABLE_MAN_PDFS
 pdf_DATA = pack.3.pdf
-
-if HAVE_PS2PDF
-pdf = $(pdf_DATA)
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
 endif
 
 libpack_C_la_SOURCES = ccomps.c pack.c
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pack.3.pdf: pack.3.ps
-	$(PS2PDF) $<
+.3.3.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3 .3.pdf
 
-pack.3.ps: $(srcdir)/pack.3
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
+EXTRA_DIST = $(man_MANS)
 
-EXTRA_DIST = $(man_MANS) $(pdf)
-
-DISTCLEANFILES = $(pdf) pack.3.ps
+DISTCLEANFILES = $(pdf_DATA)

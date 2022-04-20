@@ -148,7 +148,7 @@ gv.ml gv.mli: gv_ocaml.cpp
 gv_ocaml.cpp: gv.i
 	$(SWIG) -c++ -ocaml -o $@ $(srcdir)/gv.i
 	mv $@ $@.orig
-	sed '/int caml_array_length/d' $@.orig > $@
+	$(SED) '/int caml_array_length/d' $@.orig > $@
 	rm $@.orig
 swig.mli:
 	$(SWIG) -ocaml -co $@
@@ -404,17 +404,6 @@ endif
 man = gv.3sharp gv.3go gv.3guile gv.3io gv.3java gv.3lua gv.3ocaml \
 	gv.3perl gv.3php gv.3python gv.3r gv.3ruby gv.3tcl
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-pdf = gv.3sharp.pdf gv.3go.pdf gv.3guile.pdf gv.3io.pdf gv.3java.pdf gv.3lua.pdf \
-	gv.3ocaml.pdf gv.3perl.pdf gv.3php.pdf gv.3python.pdf gv.3r.pdf gv.3ruby.pdf gv.3tcl.pdf
-else
-pdf = ERROR_NO_PS2PDF
-endif
-else
-pdf =
-endif
-
 # this rule has a trailing semi-colon for the Make cache to work correctly
 # https://stackoverflow.com/questions/37873522/unreliable-parallel-builds-in-a-makefile-with-intermediate
 $(man): gv_doc_writer.intermediate ;
@@ -423,87 +412,60 @@ $(man): gv_doc_writer.intermediate ;
 gv_doc_writer.intermediate: gv.i gv_doc_writer.tcl gv_doc_template.tcl gv_doc_langs.tcl
 	$(TCLSH) $(srcdir)/gv_doc_writer.tcl "$(srcdir)"
 
-if ENABLE_MAN_PDFS
-if HAVE_PS2PDF
-gv.3sharp.pdf: gv.3sharp.ps
-	$(PS2PDF) $<
+.3sharp.3sharp.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3go.3go.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3guile.3guile.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3io.3io.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3java.3java.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3lua.3lua.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3ocaml.3ocaml.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3perl.3perl.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3php.3php.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3python.3python.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3r.3r.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3ruby.3ruby.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+.3tcl.3tcl.pdf:
+	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
+	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
+	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
+SUFFIXES = .3sharp .3sharp.pdf .3go .3go.pdf .3guile .3guile.pdf .3io .3io.pdf .3java .3java.pdf .3lua .3lua.pdf .3ocaml .3ocaml.pdf .3perl .3perl.pdf .3php .3php.pdf .3python .3python.pdf .3r .3r.pdf .3ruby .3ruby.pdf .3tcl .3tcl.pdf
 
-gv.3sharp.ps: gv.3sharp
-	$(GROFF) -Tps -man $< >$@
-
-gv.3go.pdf: gv.3go.ps
-	$(PS2PDF) $<
-
-gv.3go.ps: gv.3go
-	$(GROFF) -Tps -man $< >$@
-
-gv.3guile.pdf: gv.3guile.ps
-	$(PS2PDF) $<
-
-gv.3guile.ps: gv.3guile
-	$(GROFF) -Tps -man $< >$@
-
-gv.3io.pdf: gv.3io.ps
-	$(PS2PDF) $<
-
-gv.3io.ps: gv.3io
-	$(GROFF) -Tps -man $< >$@
-
-gv.3java.pdf: gv.3java.ps
-	$(PS2PDF) $<
-
-gv.3java.ps: gv.3java
-	$(GROFF) -Tps -man $< >$@
-
-gv.3lua.pdf: gv.3lua.ps
-	$(PS2PDF) $<
-
-gv.3lua.ps: gv.3lua
-	$(GROFF) -Tps -man $< >$@
-
-gv.3ocaml.pdf: gv.3ocaml.ps
-	$(PS2PDF) $<
-
-gv.3ocaml.ps: gv.3ocaml
-	$(GROFF) -Tps -man $< >$@
-
-gv.3perl.pdf: gv.3perl.ps
-	$(PS2PDF) $<
-
-gv.3perl.ps: gv.3perl
-	$(GROFF) -Tps -man $< >$@
-
-gv.3php.pdf: gv.3php.ps
-	$(PS2PDF) $<
-
-gv.3php.ps: gv.3php
-	$(GROFF) -Tps -man $< >$@
-
-gv.3python.pdf: gv.3python.ps
-	$(PS2PDF) $<
-
-gv.3python.ps: gv.3python
-	$(GROFF) -Tps -man $< >$@
-
-gv.3r.pdf: gv.3r.ps
-	$(PS2PDF) $<
-
-gv.3r.ps: gv.3r
-	$(GROFF) -Tps -man $< >$@
-
-gv.3ruby.pdf: gv.3ruby.ps
-	$(PS2PDF) $<
-
-gv.3ruby.ps: gv.3ruby
-	$(GROFF) -Tps -man $< >$@
-
-gv.3tcl.pdf: gv.3tcl.ps
-	$(PS2PDF) $<
-
-gv.3tcl.ps: gv.3tcl
-	$(GROFF) -Tps -man $< >$@
-endif
-endif
 install-data-hook:
 if WITH_JAVA
 	(cd $(DESTDIR)$(pkgjavadir); $(LN_S) -f org/graphviz/libgv_java.$(JSHEXT) ../../libgv.$(JSHEXT); javac -classpath $(DESTDIR)$(libjavadir) gv.java;)
@@ -638,7 +600,7 @@ test_tcl: libgv_tcl.la
 		ln -fs ../$(srcdir)/*.gv ../$(srcdir)/*.tcl .; \
 		$(TCLSH) ./test.tcl)
 
-EXTRA_DIST = $(man) $(pdf) gv_doc_*.tcl
+EXTRA_DIST = $(man) gv_doc_*.tcl
 
 CLEANFILES = test_*/* pkgIndex.tcl \
 	gv_sharp.cpp $(SHARP_data) \
@@ -656,6 +618,4 @@ CLEANFILES = test_*/* pkgIndex.tcl \
 	gv_R.cpp $(R_data) \
 	gv_ruby.cpp $(RUBY_data) \
 	gv_tcl.cpp $(TCL_data) pkgIndex.tcl
-DISTCLEANFILES = gv_*.n gv_*.pdf gv.3sharp.ps gv.3go.ps gv.3guile.ps \
-	gv.3io.ps gv.3java.ps gv.3lua.ps gv.3ocaml.ps gv.3perl.ps gv.3php.ps \
-	gv.3python.ps gv.3r.ps gv.3ruby.ps gv.3tcl.ps
+DISTCLEANFILES = $(pdf_DATA)
