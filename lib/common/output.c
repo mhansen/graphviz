@@ -37,20 +37,9 @@ static void agputc (int c, FILE* fp)
   print(fp, "%c", (char)c);
 }
 
-
-static void printdouble(FILE * f, char *prefix, double v)
-{
-    char buf[BUFSIZ];
-    
-    if (prefix) agputs(prefix, f);
-    snprintf(buf, sizeof(buf), "%.5g", v);
-    agputs(buf, f);
-}
-
 static void printpoint(FILE * f, pointf p)
 {
-    printdouble(f, " ", PS2INCH(p.x));
-    printdouble(f, " ", PS2INCH(YDIR(p.y)));
+  print(f, " %.5g %.5g", PS2INCH(p.x), PS2INCH(YDIR(p.y)));
 }
 
 /* setYInvert:
@@ -106,9 +95,9 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 //    setup_graph(job, g);
     setYInvert(g);
     pt = GD_bb(g).UR;
-    printdouble(f, "graph ", job->zoom);
-    printdouble(f, " ", PS2INCH(pt.x));
-    printdouble(f, " ", PS2INCH(pt.y));
+    print(f, "graph %.5g", job->zoom);
+    print(f, " %.5g", PS2INCH(pt.x));
+    print(f, " %.5g", PS2INCH(pt.y));
     agputc('\n', f);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (IS_CLUST_NODE(n))
@@ -119,8 +108,8 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 	    lbl = agcanonStr (agxget(n, N_label));
 	else
 	    lbl = canon(agraphof(n),ND_label(n)->text);
-        printdouble(f, " ", ND_width(n));
-        printdouble(f, " ", ND_height(n));
+        print(f, " %.5g", ND_width(n));
+        print(f, " %.5g", ND_height(n));
         print(f, " %s", lbl);
 	print(f, " %s", late_nnstring(n, N_style, "solid"));
 	print(f, " %s", ND_shape(n)->name);
