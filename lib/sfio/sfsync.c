@@ -136,8 +136,7 @@ int sfsync(Sfio_t * f)
 	SFOPEN(f, local);
 
 	if ((f->flags & SF_IOCHECK) && f->disc && f->disc->exceptf)
-	    (void) (*f->disc->exceptf) (f, SF_SYNC, (void *) ((int) 0),
-					f->disc);
+	    (void) (*f->disc->exceptf) (f, SF_SYNC, NULL, f->disc);
     }
 
   done:
