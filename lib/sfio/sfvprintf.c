@@ -997,7 +997,7 @@ int sfvprintf(Sfio_t * f, const char *form, va_list args)
 
     if ((((flags = f->flags) & SF_SHARE) && !(flags & SF_PUBLIC)) ||
 	(n > 0 && (d == (uchar *) data || (flags & SF_LINE))))
-	(void) SFWRITE(f, (void *) d, n);
+	(void) SFWRITE(f, d, n);
     else
 	f->next += n;
 

@@ -73,7 +73,7 @@ Sfoff_t sfseek(Sfio_t * f, Sfoff_t p, int type)
     }
 
     if (f->extent < 0) {	/* let system call set errno */
-	(void) SFSK(f, (Sfoff_t) 0, SEEK_CUR, f->disc);
+	(void) SFSK(f, 0, SEEK_CUR, f->disc);
 	SFMTXRETURN(f, (Sfoff_t) (-1));
     }
 
@@ -102,8 +102,7 @@ Sfoff_t sfseek(Sfio_t * f, Sfoff_t p, int type)
 	    f->next = f->data + p;
 	    f->here = p;
 	    if (p > f->extent)
-		memclear((char *) (f->data + f->extent),
-			 (int) (p - f->extent));
+		memclear(f->data + f->extent, (int)(p - f->extent));
 	    goto done;
 	}
 
@@ -152,7 +151,7 @@ Sfoff_t sfseek(Sfio_t * f, Sfoff_t p, int type)
     r = p + (type == SEEK_CUR ? s : 0);
     if (r <= f->here && r >= (f->here - (f->endb - f->data))) {
 	if ((hardseek || (type == SEEK_CUR && p == 0))) {
-	    if ((s = SFSK(f, (Sfoff_t) 0, SEEK_CUR, f->disc)) == f->here ||
+	    if ((s = SFSK(f, 0, SEEK_CUR, f->disc)) == f->here ||
 		(s >= 0 && !(hardseek & SF_PUBLIC) &&
 		 (s = SFSK(f, f->here, SEEK_SET, f->disc)) == f->here))
 		goto near_done;

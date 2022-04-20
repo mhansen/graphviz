@@ -533,7 +533,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 
 	    if (value) {
 		*val = '\0';
-		    argv.d = (double) strtod(accept, NULL);
+		    argv.d = strtod(accept, NULL);
 	    }
 
 	    if (value) {

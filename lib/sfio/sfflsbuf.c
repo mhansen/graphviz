@@ -77,7 +77,7 @@ int _sfflsbuf(Sfio_t * f, int c)
 	isall = SFISALL(f, isall);
 	if ((w = SFWR(f, data, n, f->disc)) > 0) {
 	    if ((n -= w) > 0)	/* save unwritten data, then resume */
-		memcpy(f->data, (char *) data + w, n);
+		memcpy(f->data, data + w, n);
 	    f->next = f->data + n;
 	    if (c < 0 && (!isall || n == 0))
 		break;

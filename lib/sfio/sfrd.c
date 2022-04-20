@@ -136,7 +136,7 @@ ssize_t sfrd(Sfio_t * f, void * buf, size_t n,
 	} else if (SFISNULL(f))
 	    r = 0;
 	else if (f->extent < 0 && (f->flags & SF_SHARE) && rcrv) {	/* try peek read */
-	    r = sfpkrd(f->file, (char *) buf, n,
+	    r = sfpkrd(f->file, buf, n,
 		       (rcrv & SF_RC) ? (int) f->getr : -1,
 		       -1L, (rcrv & SF_RV) ? 1 : 0);
 	    if (r > 0) {

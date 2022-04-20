@@ -87,7 +87,7 @@ int sfclose(Sfio_t * f)
 
     if (f->data && (!local || (f->flags & SF_STRING) || (f->bits & SF_MMAP))) {	/* free buffer */
 	if (f->flags & SF_MALLOC)
-	    data = (void *) f->data;
+	    data = f->data;
 
 	f->data = NULL;
 	f->size = -1;

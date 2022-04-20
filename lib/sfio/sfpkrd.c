@@ -43,7 +43,7 @@ ssize_t sfpkrd(int fd, void * argbuf, size_t n, int rc, long tm,
 {
     ssize_t r;
     int ntry, t;
-    char *buf = (char *) argbuf, *endbuf;
+    char *buf = argbuf, *endbuf;
 
     if (rc < 0 && tm < 0 && action <= 0)
 	return read(fd, buf, n);
@@ -164,7 +164,7 @@ ssize_t sfpkrd(int fd, void * argbuf, size_t n, int rc, long tm,
 
 #ifdef MSG_PEEK
 	if (t & SOCKET_PEEK) {
-	    while ((r = recv(fd, (char *) buf, n, MSG_PEEK)) < 0) {
+	    while ((r = recv(fd, buf, n, MSG_PEEK)) < 0) {
 		if (errno == EINTR)
 		    return -1;
 		else if (errno == EAGAIN) {
