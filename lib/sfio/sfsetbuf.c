@@ -9,20 +9,7 @@
  *************************************************************************/
 
 #include <stddef.h>
-
-#if defined(__STDPP__directive) && defined(__STDPP__hide)
-__STDPP__directive pragma pp:hide getpagesize
-#else
-#define getpagesize	______getpagesize
-#endif
-
 #include	<sfio/sfhdr.h>
-
-#if defined(__STDPP__directive) && defined(__STDPP__hide)
-__STDPP__directive pragma pp:nohide getpagesize
-#else
-#undef	getpagesize
-#endif
 
 #ifdef HAVE_GETPAGESIZE
 #ifdef __cplusplus
