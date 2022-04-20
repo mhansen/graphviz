@@ -213,7 +213,6 @@ extern "C" {
     extern int sfsscanf(const char *, const char *, ...);
     extern int sfvsscanf(const char *, const char *, va_list);
     extern int sfvscanf(Sfio_t *, const char *, va_list);
-    extern int sfresize(Sfio_t *, Sfoff_t);
 
 /* io functions with discipline continuation */
     extern ssize_t sfrd(Sfio_t *, void *, size_t, Sfdisc_t *);
