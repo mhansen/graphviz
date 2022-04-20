@@ -487,14 +487,14 @@ The I/O discipline provides an abstraction for the reading and writing of graphs
 .P0
 struct Agiodisc_s {
     int        (*fread)(void *chan, char *buf, int bufsize);
-    int        (*putstr)(void *chan, char *str);
+    int        (*printf)(void *chan, const char *format, ...);
     int        (*flush)(void *chan);    /* sync */
 } ;
 .P1
 Normally, the \fBFILE\fP structure and its related functions are used for I/O. At times, though,
 an application may need to use a totally different type of character source. The associated
 state or stream information is provided by the \fIchan\fP argument to \fBagread\fP or \fBagwrite\fP.
-The discipline function \fIfread\fP and \fIputstr\fP provide the corresponding functions for
+The discipline function \fIfread\fP and \fIprintf\fP provide the corresponding functions for
 read and writing.
 
 .SH "MEMORY DISCIPLINE"

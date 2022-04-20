@@ -169,7 +169,7 @@ struct Agiddisc_s {		/* object ID allocator */
 
 struct Agiodisc_s {
     int (*afread) (void *chan, char *buf, int bufsize);
-    int (*putstr) (void *chan, const char *str);
+    int (*printf)(void *chan, const char *format, ...);
     int (*flush) (void *chan);	/* sync */
     /* error messages? */
 };

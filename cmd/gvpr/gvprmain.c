@@ -47,17 +47,14 @@ static int iofread(void *chan, char *buf, int bufsize)
   return (int)fread(buf, 1, (size_t)bufsize, chan);
 }
 
-static int ioputstr(void *chan, const char *str)
-{
-  return fputs(str, chan);
-}
-
 static int ioflush(void *chan)
 {
   return fflush(chan);
 }
 
-static Agiodisc_t gprIoDisc = { iofread, ioputstr, ioflush };
+typedef int (*printfn)(void *chan, const char *format, ...);
+
+static Agiodisc_t gprIoDisc = { iofread, (printfn)fprintf, ioflush };
 
 static Agdisc_t gprDisc = { &AgMemDisc, &AgIdDisc, &gprIoDisc };
 

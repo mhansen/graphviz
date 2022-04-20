@@ -163,7 +163,7 @@ int Tcldot_Init(Tcl_Interp * interp)
     /* build disciplines dynamically so we can selectively replace functions */
 
     ictx->myioDisc.afread = NULL;            /* set in dotread() or dotstring() according to need */
-    ictx->myioDisc.putstr = AgIoDisc.putstr; /* no change */
+    ictx->myioDisc.printf = AgIoDisc.printf; /* no change */
     ictx->myioDisc.flush = AgIoDisc.flush;   /* no change */
 
     ictx->mydisc.mem = &AgMemDisc;           /* no change */

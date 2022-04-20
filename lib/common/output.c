@@ -26,17 +26,15 @@ double yDir (double y)
     return YDIR(y);
 }
 
-static int (*putstr) (void *chan, const char *str);
+static int (*print)(void *chan, const char *format, ...);
 
 static void agputs (const char* s, FILE* fp)
 {
-    putstr ((void*)fp, s);
+  print(fp, "%s", s);
 }
 static void agputc (int c, FILE* fp)
 {
-    static char buf[2] = {'\0','\0'};
-    buf[0] = c;
-    putstr ((void*)fp, buf);
+  print(fp, "%c", (char)c);
 }
 
 
@@ -119,7 +117,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     char *lbl;
     char* fillcolor;
 
-    putstr = g->clos->disc.io->putstr;
+    print = g->clos->disc.io->printf;
 //    setup_graph(job, g);
     setYInvert(g);
     pt = GD_bb(g).UR;
