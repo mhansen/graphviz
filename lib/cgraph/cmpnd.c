@@ -30,28 +30,28 @@
 
 static char Descriptor_id[] = "AG_cmpnd";
 
-typedef struct Agcmpnode_s {
+typedef struct {
     Agrec_t hdr;
     Agraph_t *subg;
     int collapsed;
 } Agcmpnode_t;
 
-typedef struct Agcmpgraph_s {
+typedef struct {
     Agrec_t hdr;
     Agnode_t *node;		/* its associated node */
     Dict_t *hidden_node_set;
 } Agcmpgraph_t;
 
-typedef struct save_e_s {
+typedef struct {
     Agnode_t *from, *to;
 } save_e_t;
 
-typedef struct save_stack_s {
+typedef struct {
     save_e_t *mem;
     int stacksize;
 } save_stack_t;
 
-typedef struct Agcmpedge_s {
+typedef struct {
     Agrec_t hdr;
     save_stack_t stack[2];	/* IN and OUT save stacks */
 } Agcmpedge_t;
