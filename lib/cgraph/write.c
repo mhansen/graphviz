@@ -98,7 +98,7 @@ static char *_agstrcanon(char *arg, char *buf)
 		needs_quotes = true;
 	    }
 	}
-	else if (!ISALNUM(uc))
+	else if (!(isalnum(uc) || uc == '_' || !isascii(uc)))
 	    needs_quotes = true;
 	*p++ = uc;
 	uc = *s++;

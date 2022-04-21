@@ -47,8 +47,6 @@ static inline bool streq(const char *a, const char *b) {
 #define AGCLOS(g,d)			((g)->clos->state.d)
 #define AGNEW(g,t)			((t*)(agalloc(g,sizeof(t))))
 
-#define ISALNUM(c) ((isalnum(c)) || ((c) == '_') || (!isascii(c)))
-
 	/* functional definitions */
 typedef Agobj_t *(*agobjsearchfn_t) (Agraph_t * g, Agobj_t * obj);
 CGHDR_API int agapply(Agraph_t * g, Agobj_t * obj, agobjfn_t fn, void *arg,
