@@ -292,7 +292,7 @@ int _sfmode(Sfio_t * f, int wanted, int local)
 	}
 
 	for (;;) {
-	    if ((rv = (*f->disc->exceptf) (f, SF_LOCKED, 0, f->disc)) < 0)
+	    if ((rv = f->disc->exceptf(f, SF_LOCKED, 0, f->disc)) < 0)
 		return rv;
 	    if ((!local && SFFROZEN(f)) ||
 		(!(f->flags & SF_STRING) && f->file < 0)) {
@@ -324,7 +324,7 @@ int _sfmode(Sfio_t * f, int wanted, int local)
     }
 
     if (f->mode & SF_POOL) {	/* move to head of pool */
-	if (f == f->pool->sf[0] || (*_Sfpmove) (f, 0) < 0) {
+	if (f == f->pool->sf[0] || _Sfpmove(f, 0) < 0) {
 	    local = 1;
 	    goto err_notify;
 	}
@@ -465,7 +465,7 @@ int _sfmode(Sfio_t * f, int wanted, int local)
 	    errno = EBADF;
 
 	if (_Sfnotify)		/* notify application of the error */
-	    (*_Sfnotify) (f, wanted, f->file);
+	    _Sfnotify(f, wanted, f->file);
 
 	rv = -1;
 	break;

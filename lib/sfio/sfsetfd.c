@@ -92,7 +92,7 @@ int sfsetfd(Sfio_t * f, int newfd)
 
     /* notify changes */
     if (_Sfnotify)
-	(*_Sfnotify) (f, SF_SETFD, newfd);
+	_Sfnotify(f, SF_SETFD, newfd);
 
     f->file = newfd;
 

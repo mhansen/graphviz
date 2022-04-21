@@ -47,14 +47,14 @@ Sfio_t *sfstack(Sfio_t * f1, Sfio_t * f2)
 	    for (n = 1; n < f1->pool->n_sf; ++n) {
 		if (SFFROZEN(f1->pool->sf[n]))
 		    continue;
-		(*_Sfpmove) (f1->pool->sf[n], 0);
+		_Sfpmove(f1->pool->sf[n], 0);
 		break;
 	    }
 	}
     }
 
     if (f2->pool && f2->pool != &_Sfpool && f2 != f2->pool->sf[0])
-	(*_Sfpmove) (f2, 0);
+	_Sfpmove(f2, 0);
 
     /* swap streams */
     sfswap(f1, f2);

@@ -80,7 +80,7 @@ int sfsync(Sfio_t * f)
     GETLOCAL(origf, local);
 
     if (origf->disc == _Sfudisc)	/* throw away ungetc */
-	(void) sfclose((*_Sfstack) (origf, NULL));
+	(void) sfclose(_Sfstack(origf, NULL));
 
     rv = 0;
 
@@ -92,8 +92,7 @@ int sfsync(Sfio_t * f)
 
     for (; f; f = f->push) {
 	if ((f->flags & SF_IOCHECK) && f->disc && f->disc->exceptf)
-	    (void) (*f->disc->exceptf) (f, SF_SYNC, (void *) ((int) 1),
-					f->disc);
+	    (void)f->disc->exceptf(f, SF_SYNC, (void *) ((int) 1), f->disc);
 
 	SFLOCK(f, local);
 
@@ -136,7 +135,7 @@ int sfsync(Sfio_t * f)
 	SFOPEN(f, local);
 
 	if ((f->flags & SF_IOCHECK) && f->disc && f->disc->exceptf)
-	    (void) (*f->disc->exceptf) (f, SF_SYNC, NULL, f->disc);
+	    (void)f->disc->exceptf(f, SF_SYNC, NULL, f->disc);
     }
 
   done:

@@ -36,10 +36,10 @@ int sfclose(Sfio_t * f)
     while (f->push) {
 	Sfio_t *pop;
 
-	if (!(pop = (*_Sfstack) (f, NULL)))
+	if (!(pop = _Sfstack(f, NULL)))
 	    SFMTXRETURN(f, -1);
 	if (sfclose(pop) < 0) {
-	    (*_Sfstack) (f, pop);
+	    _Sfstack(f, pop);
 	    SFMTXRETURN(f, -1);
 	}
     }
@@ -76,7 +76,7 @@ int sfclose(Sfio_t * f)
 	} else {
 	    f->mode &= ~SF_LOCK;
 	    assert(_Sfpmove);
-	    if ((*_Sfpmove) (f, -1) < 0) {
+	    if (_Sfpmove(f, -1) < 0) {
 		SFOPEN(f, 0);
 		SFMTXRETURN(f, -1);
 	    }

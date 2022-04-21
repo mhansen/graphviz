@@ -41,7 +41,7 @@ int sfraise(Sfio_t * f, int type, void * data)
 
 	if (disc->exceptf) {
 	    SFOPEN(f, 0);
-	    if ((rv = (*disc->exceptf) (f, type, data, disc)) != 0)
+	    if ((rv = disc->exceptf(f, type, data, disc)) != 0)
 		SFMTXRETURN(f, rv);
 	    SFLOCK(f, 0);
 	}

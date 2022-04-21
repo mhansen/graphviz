@@ -41,7 +41,7 @@ int _sfexcept(Sfio_t * f, int type, ssize_t io, Sfdisc_t * disc)
 
 	/* so that exception handler knows what we are asking for */
 	_Sfi = f->val = io;
-	ev = (*(disc->exceptf)) (f, type, &io, disc);
+	ev = disc->exceptf(f, type, &io, disc);
 
 	/* relock if necessary */
 	if (local && lock)
@@ -101,9 +101,9 @@ int _sfexcept(Sfio_t * f, int type, ssize_t io, Sfdisc_t * disc)
 	    SFOPEN(f, 0);
 
 	/* pop and close */
-	pf = (*_Sfstack) (f, NULL);
+	pf = _Sfstack(f, NULL);
 	if ((ev = sfclose(pf)) < 0)	/* can't close, restack */
-	    (*_Sfstack) (f, pf);
+	    _Sfstack(f, pf);
 
 	if (lock)
 	    SFLOCK(f, 0);
