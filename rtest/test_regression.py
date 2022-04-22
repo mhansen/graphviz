@@ -1228,7 +1228,6 @@ def test_2089_2():
 
 @pytest.mark.skipif(shutil.which("dot2gxl") is None,
                     reason="dot2gxl not available")
-@pytest.mark.xfail() # FIXME
 def test_2092():
   """
   an empty node ID should not cause a dot2gxl NULL pointer dereference
