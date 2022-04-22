@@ -17,6 +17,7 @@
  * component.
  */
 
+#include <cgraph/stack.h>
 #include <dotgen/dot.h>
 
 static node_t *Last_node;
@@ -54,71 +55,18 @@ end_component(graph_t* g)
     GD_comp(g).list[i] = GD_nlist(g);
 }
 
-typedef struct blk_t {
-    Agnode_t **data;
-    Agnode_t **endp;
-    struct blk_t *prev;
-    struct blk_t *next;
-} blk_t;
-
-typedef struct {
-    blk_t *fstblk;
-    blk_t *curblk;
-    Agnode_t **curp;
-} stk_t;
-
-#define BIGBUF 1000000
-
-static void initStk(stk_t* sp, blk_t* bp, node_t** base, int size)
-{
-    bp->data = base;
-    bp->endp = bp->data + size;
-    bp->next = NULL;
-    bp->prev = NULL;
-    sp->curblk = sp->fstblk = bp;
-    sp->curp = sp->curblk->data;
+static void push(gv_stack_t *sp, node_t *np) {
+  ND_mark(np) = Cmark + 1;
+  stack_push_or_exit(sp, np);
 }
 
-static void freeStk(stk_t* sp)
-{
-    blk_t* bp = sp->fstblk->next;
-    blk_t* nbp;
-    while (bp) {
-	nbp = bp->next;
-	free (bp->data);
-	free (bp);
-	bp = nbp;
-    }
-}
+static node_t *pop(gv_stack_t *sp) {
 
-static void push(stk_t* sp, node_t * np)
-{
-    if (sp->curp == sp->curblk->endp) {
-        if (sp->curblk->next == NULL) {
-            blk_t *bp = NEW(blk_t);
-            bp->prev = sp->curblk;
-            bp->next = NULL;
-            bp->data = N_NEW(BIGBUF, Agnode_t *);
-            bp->endp = bp->data + BIGBUF;
-            sp->curblk->next = bp;
-        }
-        sp->curblk = sp->curblk->next;
-        sp->curp = sp->curblk->data;
-    }
-    ND_mark(np) = Cmark+1;
-    *sp->curp++ = np;
-}
+  if (stack_is_empty(sp)) {
+    return NULL;
+  }
 
-static node_t *pop(stk_t* sp)
-{
-    if (sp->curp == sp->curblk->data) {
-        if (sp->curblk == sp->fstblk)
-            return 0;
-        sp->curblk = sp->curblk->prev;
-        sp->curp = sp->curblk->endp;
-    }
-    sp->curp--;
-    return *sp->curp;
+  return stack_pop(sp);
 }
 
 /* search_component:
@@ -129,9 +77,7 @@ static node_t *pop(stk_t* sp)
  * in this call to decompose will have mark < Cmark; processed nodes will have mark=Cmark;
  * so we use mark = Cmark+1 to indicate nodes on the stack.
  */
-static void
-search_component(stk_t* stk, graph_t * g, node_t * n)
-{
+static void search_component(gv_stack_t *stk, graph_t *g, node_t *n) {
     int c, i;
     elist vec[4];
     node_t *other;
@@ -165,11 +111,8 @@ void decompose(graph_t * g, int pass)
 {
     graph_t *subg;
     node_t *n, *v;
-    stk_t stk;
-    blk_t blk;
-    Agnode_t *base[SMALLBUF];
+    gv_stack_t stk = {0};
 
-    initStk (&stk, &blk, base, SMALLBUF);
     if (++Cmark == 0)
 	Cmark = 1;
     GD_n_nodes(g) = GD_comp(g).size = 0;
@@ -185,5 +128,5 @@ void decompose(graph_t * g, int pass)
 	    end_component(g);
 	}
     }
-    freeStk (&stk);
+    stack_reset(&stk);
 }
