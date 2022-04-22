@@ -9,7 +9,7 @@ import subprocess
 import sys
 import pytest
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "../../../rtest"))
 from gvtest import dot #pylint: disable=wrong-import-position
 
 @pytest.mark.skipif(platform.system() == "Windows" and
