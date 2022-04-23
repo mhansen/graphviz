@@ -1228,14 +1228,17 @@ def test_2089_2():
 
 @pytest.mark.skipif(shutil.which("dot2gxl") is None,
                     reason="dot2gxl not available")
-@pytest.mark.xfail(strict=True) # FIXME
 def test_2092():
   """
   an empty node ID should not cause a dot2gxl NULL pointer dereference
   https://gitlab.com/graphviz/graphviz/-/issues/2092
   """
-  subprocess.run(["dot2gxl", "-d"], input='<node id="">', check=True,
-                 universal_newlines=True)
+  p = subprocess.run(["dot2gxl", "-d"], input='<node id="">',
+                     universal_newlines=True)
+
+  assert p.returncode != 0, "dot2gxl accepted invalid input"
+
+  assert p.returncode == 1, "dot2gxl crashed"
 
 @pytest.mark.skipif(os.environ.get("build_system") == "msbuild" and
                     os.environ.get("configuration") == "Debug",

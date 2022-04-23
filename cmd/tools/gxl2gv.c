@@ -485,9 +485,11 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    const char *attrname;
 	    attrname = atts[pos];
 
-	    bind_node(attrname);
+	    if (attrname != NULL && strcmp(attrname, "") != 0) {
+		bind_node(attrname);
 
-	    pushString(&ud->elements, attrname);
+		pushString(&ud->elements, attrname);
+	    }
 	}
 
     } else if (strcmp(name, "edge") == 0) {
