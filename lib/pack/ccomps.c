@@ -13,6 +13,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <cgraph/prisize_t.h>
+#include <cgraph/stack.h>
 #include <common/render.h>
 #include <pack/pack.h>
 #include <stdbool.h>
@@ -21,90 +22,38 @@
 #define MARK(stk,n)   ((stk)->markfn(n,1))
 #define UNMARK(stk,n) ((stk)->markfn(n,0))
 
-typedef struct blk_t {
-    Agnode_t **data;
-    Agnode_t **endp;
-    struct blk_t *prev;
-    struct blk_t *next;
-} blk_t;
-
 typedef struct {
-    blk_t *fstblk;
-    blk_t *curblk;
-    Agnode_t **curp;
+    gv_stack_t data;
     void (*actionfn) (Agnode_t *, void *);
     int (*markfn) (Agnode_t *, int);
 } stk_t;
 
-#define INITBUF 1024
-#define BIGBUF 1000000
-
-static void initStk(stk_t* sp, blk_t* bp, Agnode_t** base, void (*actionfn) (Agnode_t *, void *),
+static void initStk(stk_t *sp, void (*actionfn)(Agnode_t*, void*),
      int (*markfn) (Agnode_t *, int))
 {
-    bp->data = base;
-    bp->endp = bp->data + INITBUF;
-    bp->prev = bp->next = NULL;
-    sp->curblk = sp->fstblk = bp;
-    sp->curp = sp->curblk->data;
+    sp->data = (gv_stack_t){0};
     sp->actionfn = actionfn;
     sp->markfn = markfn;
 }
 
-static void freeBlk (blk_t* bp)
-{
-    free (bp->data);
-    free (bp);
-}
-
 static void freeStk (stk_t* sp)
 {
-    blk_t* bp;
-    blk_t* nxtbp;
-
-    for (bp = sp->fstblk->next; bp; bp = nxtbp) {
-	nxtbp = bp->next;
-	freeBlk (bp);
-    }
+  stack_reset(&sp->data);
 }
 
 static int push(stk_t* sp, Agnode_t * np)
 {
-    if (sp->curp == sp->curblk->endp) {
-	if (sp->curblk->next == NULL) {
-	    blk_t *bp = malloc(sizeof(blk_t));
-	    if (bp == 0) {
-		return -1;
-	    }
-	    bp->prev = sp->curblk;
-	    bp->next = NULL;
-	    bp->data = calloc(BIGBUF, sizeof(Agnode_t *));
-	    if (bp->data == 0) {
-		free(bp);
-		return -1;
-	    }
-	    bp->endp = bp->data + BIGBUF;
-	    sp->curblk->next = bp;
-	}
-	sp->curblk = sp->curblk->next;
-	sp->curp = sp->curblk->data;
-    }
-    MARK(sp,np);
-    *sp->curp++ = np;
-
-    return 0;
+  MARK(sp, np);
+  return stack_push(&sp->data, np);
 }
 
 static Agnode_t *pop(stk_t* sp)
 {
-    if (sp->curp == sp->curblk->data) {
-	if (sp->curblk == sp->fstblk)
-	    return 0;
-	sp->curblk = sp->curblk->prev;
-	sp->curp = sp->curblk->endp;
-    }
-    sp->curp--;
-    return *sp->curp;
+  if (stack_is_empty(&sp->data)) {
+    return NULL;
+  }
+
+  return stack_pop(&sp->data);
 }
 
 
@@ -208,8 +157,6 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
     size_t bnd = 10;
     bool pin = false;
     stk_t stk;
-    blk_t blk;
-    Agnode_t* base[INITBUF];
     int error = 0;
 
     if (agnnodes(g) == 0) {
@@ -220,7 +167,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 
     ccs = N_GNEW(bnd, Agraph_t *);
 
-    initStk (&stk, &blk, base, insertFn, markFn);
+    initStk(&stk, insertFn, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
 	UNMARK(&stk,n);
 
@@ -300,8 +247,6 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
     size_t len;
     size_t bnd = 10;
     stk_t stk;
-    blk_t blk;
-    Agnode_t* base[INITBUF];
 
     if (agnnodes(g) == 0) {
 	*ncc = 0;
@@ -310,7 +255,7 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
     name = setPrefix (pfx, &len, buffer, SMALLBUF);
 
     ccs = N_GNEW(bnd, Agraph_t *);
-    initStk (&stk, &blk, base, insertFn, markFn);
+    initStk(&stk, insertFn, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
 	UNMARK(&stk,n);
 
@@ -619,8 +564,6 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
     char buffer[SMALLBUF];
     Agraph_t **ccs;
     stk_t stk;
-    blk_t blk;
-    Agnode_t* base[INITBUF];
     size_t len;
     int sz = (int) sizeof(ccgraphinfo_t);
 
@@ -640,7 +583,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
     dg = deriveGraph(g);
 
     ccs = N_GNEW((size_t) agnnodes(dg), Agraph_t *);
-    initStk (&stk, &blk, base, insertFn, clMarkFn);
+    initStk(&stk, insertFn, clMarkFn);
 
     c_cnt = 0;
     for (dn = agfstnode(dg); dn; dn = agnxtnode(dg, dn)) {
@@ -700,13 +643,11 @@ int isConnected(Agraph_t * g)
     int ret = 1;
     size_t cnt = 0;
     stk_t stk;
-    blk_t blk;
-    Agnode_t* base[INITBUF];
 
     if (agnnodes(g) == 0)
 	return 1;
 
-    initStk (&stk, &blk, base, NULL, markFn);
+    initStk(&stk, NULL, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
 	UNMARK(&stk,n);
 
