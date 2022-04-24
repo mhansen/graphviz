@@ -573,7 +573,6 @@ extern "C" {
     extern Sfrsrv_t *_sfrsrv(Sfio_t *, ssize_t);
     extern int _sfsetpool(Sfio_t *);
     extern char *_sfcvt(void *, int, int *, int *, int);
-    extern char **_sfgetpath(char *);
 
 #ifdef _WIN32
 #undef SF_ERROR

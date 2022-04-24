@@ -14,9 +14,9 @@ libsfio_C_la_SOURCES = sfclose.c sfcvt.c sfdisc.c \
 	sfnputc.c sfopen.c sfpkrd.c \
 	sfprintf.c \
 	sfputr.c sfraise.c sfrd.c sfread.c \
-	sfresize.c sfscanf.c sfseek.c sfsetbuf.c sfsetfd.c \
+	sfscanf.c sfseek.c sfsetbuf.c sfsetfd.c \
 	sfsk.c sfstack.c sfswap.c sfsync.c \
-	sftable.c sftmp.c sfungetc.c sfvprintf.c \
+	sftable.c sfungetc.c sfvprintf.c \
 	sfvscanf.c sfwr.c sfwrite.c
 
 libsfio_C_la_DEPENDENCIES = \

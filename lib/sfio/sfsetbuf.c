@@ -9,29 +9,10 @@
  *************************************************************************/
 
 #include <stddef.h>
-
-#if defined(__STDPP__directive) && defined(__STDPP__hide)
-__STDPP__directive pragma pp:hide getpagesize
-#else
-#define getpagesize	______getpagesize
-#endif
-
 #include	<sfio/sfhdr.h>
 
-#if defined(__STDPP__directive) && defined(__STDPP__hide)
-__STDPP__directive pragma pp:nohide getpagesize
-#else
-#undef	getpagesize
-#endif
-
 #ifdef HAVE_GETPAGESIZE
-#ifdef __cplusplus
-extern "C" {
-#endif
 	extern int getpagesize(void);
-#ifdef __cplusplus
-}
-#endif
 #endif
 /*	Set a (new) buffer for a stream.
 **	If size < 0, it is assigned a suitable value depending on the
@@ -69,7 +50,7 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
     if (size == 0 && buf) {	/* special case to get buffer info */
 	_Sfi = f->val =
 	    (f->bits & SF_MMAP) ? (f->endb - f->data) : f->size;
-	SFMTXRETURN(f, (void *) f->data);
+	SFMTXRETURN(f, f->data);
     }
 
     /* cleanup actions already done, don't allow write buffering any more */
@@ -136,11 +117,11 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
 
 	/* if has discipline, set size by discipline if possible */
 	if (!HAVE_SYS_STAT_H || disc) {
-	    if ((f->here = SFSK(f, (Sfoff_t) 0, SEEK_CUR, disc)) < 0)
+	    if ((f->here = SFSK(f, 0, SEEK_CUR, disc)) < 0)
 		goto unseekable;
 	    else {
 		Sfoff_t e;
-		if ((e = SFSK(f, (Sfoff_t) 0, SEEK_END, disc)) >= 0)
+		if ((e = SFSK(f, 0, SEEK_END, disc)) >= 0)
 		    f->extent = e > f->here ? e : f->here;
 		(void) SFSK(f, f->here, SEEK_SET, disc);
 		goto setbuf;
@@ -152,7 +133,7 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
 	    f->here = -1;
 	else {
 	    if (S_ISREG(st.st_mode) || S_ISDIR(st.st_mode))
-		f->here = SFSK(f, (Sfoff_t) 0, SEEK_CUR, f->disc);
+		f->here = SFSK(f, 0, SEEK_CUR, f->disc);
 	    else
 		f->here = -1;
 	}
@@ -229,7 +210,7 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
     sf_malloc = 0;
     if (size > 0 && !buf && !(f->bits & SF_MMAP)) {	/* try to allocate a buffer */
 	if (obuf && size == (size_t) osize && init) {
-	    buf = (void *) obuf;
+	    buf = obuf;
 	    obuf = NULL;
 	    sf_malloc = (oflags & SF_MALLOC);
 	}
@@ -247,7 +228,7 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
 
     if (size == 0 && !(f->flags & SF_STRING) && !(f->bits & SF_MMAP) && (f->mode & SF_READ)) {	/* use the internal buffer */
 	size = sizeof(f->tiny);
-	buf = (void *) f->tiny;
+	buf = f->tiny;
     }
 
     /* set up new buffer */
@@ -276,5 +257,5 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
 
     SFOPEN(f, local);
 
-    SFMTXRETURN(f, (void *) obuf);
+    SFMTXRETURN(f, obuf);
 }

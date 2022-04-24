@@ -181,7 +181,7 @@ ssize_t sfwr(Sfio_t * f, const void * buf, size_t n,
 	    if (w > 0) {
 		if (!(f->bits & SF_DCDOWN)) {
 		    if (f->flags & (SF_APPENDWR | SF_PUBLIC))
-			f->here = SFSK(f, (Sfoff_t) 0, SEEK_CUR, dc);
+			f->here = SFSK(f, 0, SEEK_CUR, dc);
 		    else
 			f->here += w;
 		    if (f->extent >= 0 && f->here > f->extent)

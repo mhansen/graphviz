@@ -74,7 +74,7 @@ ssize_t sfputr(Sfio_t * f, const char *s, int rc)
 	    w += 1;
 	    break;
 	}
-	if ((ps = (uchar *) memccpy(ps, s, '\0', p)) != NULL)
+	if ((ps = memccpy(ps, s, '\0', p)) != NULL)
 	    ps -= 1;
 	else
 	    ps = f->next + p;
@@ -93,7 +93,7 @@ ssize_t sfputr(Sfio_t * f, const char *s, int rc)
 	if (n > w)
 	    n = w;
 	f->next -= n;
-	(void) SFWRITE(f, (void *) f->next, n);
+	(void) SFWRITE(f, f->next, n);
     }
 
     SFOPEN(f, 0);

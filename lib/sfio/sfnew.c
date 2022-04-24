@@ -95,7 +95,7 @@ Sfio_t *sfnew(Sfio_t * oldf, void * buf, size_t size, int file,
     f->endb = f->endr = f->endw = f->next = f->data;
 
     if (_Sfnotify)
-	(*_Sfnotify) (f, SF_NEW, f->file);
+	_Sfnotify(f, SF_NEW, f->file);
 
     if (f->flags & SF_STRING)
 	(void) _sfmode(f, f->mode & SF_RDWR, 0);

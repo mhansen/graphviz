@@ -26,7 +26,7 @@ static int _uexcept(Sfio_t * f, int type, void * val,
 
     /* close the unget stream */
     if (type != SF_CLOSING)
-	(void) sfclose((*_Sfstack) (f, NULL));
+	(void) sfclose(_Sfstack(f, NULL));
 
     return 1;
 }

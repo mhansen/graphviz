@@ -101,7 +101,6 @@
     <ClCompile Include="sfraise.c" />
     <ClCompile Include="sfrd.c" />
     <ClCompile Include="sfread.c" />
-    <ClCompile Include="sfresize.c" />
     <ClCompile Include="sfscanf.c" />
     <ClCompile Include="sfseek.c" />
     <ClCompile Include="sfsetbuf.c" />
@@ -111,7 +110,6 @@
     <ClCompile Include="sfswap.c" />
     <ClCompile Include="sfsync.c" />
     <ClCompile Include="sftable.c" />
-    <ClCompile Include="sftmp.c" />
     <ClCompile Include="sfungetc.c" />
     <ClCompile Include="sfvprintf.c" />
     <ClCompile Include="sfvscanf.c" />

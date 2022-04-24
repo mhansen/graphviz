@@ -202,10 +202,9 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 		    if (*t_str != '*')
 			n_str = (form - 1) - t_str;
 		    else {
-			t_str = (*_Sffmtintf) (t_str + 1, &n);
+			t_str = _Sffmtintf(t_str + 1, &n);
 			if (*t_str == '$') {
-			    if (!fp && !(fp = (*_Sffmtposf)
-					 (f, oform, oargs, 1)))
+			    if (!fp && !(fp = _Sffmtposf(f, oform, oargs, 1)))
 				goto pop_fmt;
 			    n = FP_SET(n, argn);
 			} else
@@ -217,7 +216,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 			} else if (ft && ft->extf) {
 			    FMTSET(ft, form, args,
 				   LEFTP, 0, 0, 0, 0, 0, NULL, 0);
-			    n = (*ft->extf)(&argv, ft);
+			    n = ft->extf(&argv, ft);
 			    if (n < 0)
 				goto pop_fmt;
 			    if (!(ft->flags & SFFMT_VALUE))
@@ -245,10 +244,10 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 		fmt = *form++;
 		goto dot_size;
 	    } else if (*form == '*') {
-		form = (*_Sffmtintf) (form + 1, &n);
+		form = _Sffmtintf(form + 1, &n);
 		if (*form == '$') {
 		    form += 1;
-		    if (!fp && !(fp = (*_Sffmtposf) (f, oform, oargs, 1)))
+		    if (!fp && !(fp = _Sffmtposf(f, oform, oargs, 1)))
 			goto pop_fmt;
 		    n = FP_SET(n, argn);
 		} else
@@ -259,7 +258,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 		else if (ft && ft->extf) {
 		    FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0,
 			   NULL, 0);
-		    if ((*ft->extf)(&argv, ft) < 0)
+		    if (ft->extf(&argv, ft) < 0)
 			goto pop_fmt;
 		    if (ft->flags & SFFMT_VALUE)
 			v = argv.i;
@@ -289,7 +288,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 
 	    if (*form == '$') {
 		form += 1;
-		if (!fp && !(fp = (*_Sffmtposf) (f, oform, oargs, 1)))
+		if (!fp && !(fp = _Sffmtposf(f, oform, oargs, 1)))
 		    goto pop_fmt;
 		argp = v - 1;
 		goto loop_flags;
@@ -309,10 +308,10 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 		for (n = *form; isdigit(n); n = *++form)
 		    size = size * 10 + (n - '0');
 	    } else if (*form == '*') {
-		form = (*_Sffmtintf) (form + 1, &n);
+		form = _Sffmtintf(form + 1, &n);
 		if (*form == '$') {
 		    form += 1;
-		    if (!fp && !(fp = (*_Sffmtposf) (f, oform, oargs, 1)))
+		    if (!fp && !(fp = _Sffmtposf(f, oform, oargs, 1)))
 			goto pop_fmt;
 		    n = FP_SET(n, argn);
 		} else
@@ -323,7 +322,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 		else if (ft && ft->extf) {
 		    FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0,
 			   NULL, 0);
-		    if ((*ft->extf)(&argv, ft) < 0)
+		    if (ft->extf(&argv, ft) < 0)
 			goto pop_fmt;
 		    if (ft->flags & SFFMT_VALUE)
 			size = argv.i;
@@ -402,7 +401,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 		   n_str);
 	    SFEND(f);
 	    SFOPEN(f, 0);
-	    v = (*ft->extf)(&argv, ft);
+	    v = ft->extf(&argv, ft);
 	    SFLOCK(f, 0);
 	    SFBUF(f);
 
@@ -425,15 +424,14 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 
 	if (fmt == '!') {
 	    if (!fp)
-		fp = (*_Sffmtposf) (f, oform, oargs, 1);
+		fp = _Sffmtposf(f, oform, oargs, 1);
 	    else
 		goto pop_fmt;
 
 	    if (!(argv.ft = va_arg(args, Sffmt_t *)))
 		continue;
 	    if (!argv.ft->form && ft) {	/* change extension functions */
-		if (ft->eventf &&
-		    (*ft->eventf) (f, SF_DPOP, (void *) form, ft) < 0)
+		if (ft->eventf && ft->eventf(f, SF_DPOP, (void *) form, ft) < 0)
 		    continue;
 		fmstk->ft = ft = argv.ft;
 	    } else {		/* stack a new environment */
@@ -533,7 +531,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 
 	    if (value) {
 		*val = '\0';
-		    argv.d = (double) strtod(accept, NULL);
+		    argv.d = strtod(accept, NULL);
 	    }
 
 	    if (value) {
@@ -731,8 +729,8 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
     while ((fm = fmstk)) {	/* pop the format stack and continue */
 	if (fm->eventf) {
 	    if (!form || !form[0])
-		(*fm->eventf) (f, SF_FINAL, NULL, ft);
-	    else if ((*fm->eventf) (f, SF_DPOP, (void *) form, ft) < 0)
+		fm->eventf(f, SF_FINAL, NULL, ft);
+	    else if (fm->eventf(f, SF_DPOP, (void *) form, ft) < 0)
 		goto loop_fmt;
 	}
 
@@ -754,7 +752,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
     free(fp);
     while ((fm = fmstk)) {
 	if (fm->eventf)
-	    (*fm->eventf) (f, SF_FINAL, NULL, fm->ft);
+	    fm->eventf(f, SF_FINAL, NULL, fm->ft);
 	fmstk = fm->next;
 	free(fm);
     }

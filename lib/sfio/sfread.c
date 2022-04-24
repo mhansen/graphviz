@@ -47,7 +47,7 @@ ssize_t sfread(Sfio_t * f, void * buf, size_t n)
 	    f->mode &= ~SF_PEEK;
 	    SFMTXRETURN(f, 0);
 	} else {
-	    if ((uchar *) buf != f->next)
+	    if (buf != f->next)
 		SFMTXRETURN(f, (ssize_t) (-1));
 	    f->mode &= ~SF_PEEK;
 	    if (f->mode & SF_PKRD) {	/* actually read the data now */
