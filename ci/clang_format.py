@@ -233,7 +233,6 @@ EXCLUDE = (
   "lib/ast/ast.h",
   "lib/ast/chresc.c",
   "lib/ast/chrtoi.c",
-  "lib/ast/compat_unistd.h",
   "lib/ast/error.c",
   "lib/ast/error.h",
   "lib/ast/fmtbuf.c",
@@ -885,7 +884,7 @@ EXCLUDE = (
   "windows/gvedit/USettings.h",
   "windows/gvedit/Umain.cpp",
   "windows/gvedit/Umain.h",
-  "windows/include/unistd.h",
+  "windows/include/unistd/unistd.h",
 )
 
 root = Path(__file__).parents[1]

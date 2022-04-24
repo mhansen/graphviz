@@ -10,6 +10,7 @@
 #include <process.h> /* for getpid() and the exec..() family */
 #include <direct.h> /* for _getcwd() and _chdir() */
 #include <BaseTsd.h>
+#include <sys/stat.h>
 
 #define srandom srand
 #define random rand
@@ -18,8 +19,10 @@
    These may be OR'd together.  */
 #define R_OK    4       /* Test for read permission.  */
 #define W_OK    2       /* Test for write permission.  */
-//#define   X_OK    1   /* execute permission - unsupported in windows*/
+#define X_OK    R_OK    /* execute permission - unsupported in windows*/
 #define F_OK    0       /* Test for existence.  */
+
+#define S_ISDIR(mode) (((mode) & _S_IFDIR) == _S_IFDIR)
 
 #define access _access
 #define dup2 _dup2
