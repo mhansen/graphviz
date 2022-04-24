@@ -1,5 +1,6 @@
+
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +28,7 @@ struct snode {
     /* edges incident on this node 
      * -- stored as indices of the edges array in the graph
      */
-  int* adj_edge_list;  
+  int* adj_edge_list;
   int index;
   bool isVert;  /* true if node corresponds to vertical segment */
 };
@@ -38,7 +39,7 @@ struct sedge {
       /* end-points of the edge 
        * -- stored as indices of the nodes vector in the graph
        */
-  int v1, v2;      
+  int v1, v2;
 };
 
 typedef struct {
