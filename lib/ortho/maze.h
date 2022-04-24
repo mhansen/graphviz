@@ -34,7 +34,15 @@ enum {M_RIGHT=0, M_TOP, M_LEFT, M_BOTTOM};
 typedef struct cell {
   int flags;
   int nedges;
-  sedge* edges[6];
+  sedge* edges[6]; /**< @brief up to six links (@ref sedge) between
+                        four @ref sides (@ref snode) of the cell
+                            1. ┘ left — top
+                            2. └ top — right
+                            3. ┐ left — bottom
+                            4. ┌ bottom — right
+                            5. │ top — bottom
+                            6. ─ left — right
+                    */
   int nsides;
   snode** sides;
   boxf  bb;
