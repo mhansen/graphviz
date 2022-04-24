@@ -17,15 +17,21 @@
 typedef struct snode snode;
 typedef struct sedge sedge;
 
+/** @brief a node of search graph @ref sgraph,
+ * is created as a border segment between two adjusted cells of type @ref cell.
+ *
+ * Nodes and a search graph are created by functions @ref mkMazeGraph, @ref findSVert and @ref createSNode.
+ */
+
 struct snode {
   int n_val, n_idx;
   snode* n_dad;
   sedge* n_edge;
   short   n_adj;
   short   save_n_adj;
-  struct cell* cells[2];
+  struct cell* cells[2]; ///< [0] - left or botom, [1] - top or right adjusted cell
 
-    /* edges incident on this node 
+    /** @brief edges incident on this node
      * -- stored as indices of the edges array in the graph
      */
   int* adj_edge_list;
