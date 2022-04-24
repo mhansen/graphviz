@@ -48,13 +48,6 @@ extern "C" {
 
 #ifdef HAVE_SYS_STAT_H
 #	include	<sys/stat.h>
-#	undef HAVE_SYS_STAT_H
-#	define HAVE_SYS_STAT_H 1
-#else
-#	ifdef HAVE_STAT_H
-#		include	<stat.h>
-#		define	HAVE_SYS_STAT_H	1
-#	endif
 #endif /*HAVE_SYS_STAT_H*/
 
 #include	<fcntl.h>
