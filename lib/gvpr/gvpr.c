@@ -21,6 +21,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/stack.h>
 #include <common/globals.h>
 #include <ingraphs/ingraphs.h>
 #include <gvpr/compile.h>
@@ -583,7 +584,7 @@ static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * fns)
 {
     Agnode_t *n;
-    queue *stk;
+    gv_stack_t stk = {0};
     Agnode_t *curn;
     Agedge_t *cure;
     Agedge_t *entry;
@@ -592,7 +593,6 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
     nodestream nodes;
     Agedgepair_t seed;
 
-    stk = mkStack();
     nodes.oldroot = 0;
     nodes.prev = 0;
     while ((n = nextNode(state, &nodes))) {
@@ -630,7 +630,7 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
 			evalEdge(state, prog, xprog, cure);
 		} else {
 		    evalEdge(state, prog, xprog, cure);
-		    push(stk, entry);
+		    stack_push_or_exit(&stk, entry);
 		    state->tvedge = entry = cure;
 		    curn = cure->node;
 		    cure = 0;
@@ -645,7 +645,7 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
 		nd = nData(curn);
 		POP(nd);
 		cure = entry;
-		entry = (Agedge_t *) pull(stk);
+		entry = stack_is_empty(&stk) ? NULL : stack_pop(&stk);
 		if (entry == &(seed.out))
 		    state->tvedge = 0;
 		else
@@ -658,7 +658,7 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
 	}
     }
     state->tvedge = 0;
-    freeQ(stk);
+    stack_reset(&stk);
 }
 
 static void travNodes(Gpr_t * state, Expr_t* prog, comp_block * xprog)
