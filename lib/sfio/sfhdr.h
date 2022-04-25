@@ -57,9 +57,6 @@ extern "C" {
 #include	<errno.h>
 #include	<ctype.h>
 
-#undef SF_MTSAFE		/* no need to worry about thread-safety */
-#define SF_MTSAFE		0
-
 #define SFMTXSTART(f,v)		{ if(!f) return(v); }
 #define SFMTXRETURN(f,v)	{ return(v); }
 
@@ -360,8 +357,8 @@ extern "C" {
 /* lock/open a stream */
 #define SFMODE(f,l)	((f)->mode & ~(SF_RV|SF_RC|((l) ? SF_LOCK : 0)) )
 #define SFLOCK(f,l)	(void)((f)->mode |= SF_LOCK, (f)->endr = (f)->endw = (f)->data)
-#define _SFOPENRD(f)	((f)->endr = ((f)->flags&SF_MTSAFE) ? (f)->data : (f)->endb)
-#define _SFOPENWR(f)	((f)->endw = ((f)->flags&(SF_MTSAFE|SF_LINE)) ? (f)->data : (f)->endb)
+#define _SFOPENRD(f)	((f)->endr = (f)->endb)
+#define _SFOPENWR(f)	((f)->endw = ((f)->flags&SF_LINE) ? (f)->data : (f)->endb)
 #define _SFOPEN(f)	((f)->mode == SF_READ  ? _SFOPENRD(f) : \
 			 (f)->mode == SF_WRITE ? _SFOPENWR(f) : \
 			 ((f)->endw = (f)->endr = (f)->data) )

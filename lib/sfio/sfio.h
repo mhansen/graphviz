@@ -136,7 +136,6 @@ extern "C" {
 #define SF_STATIC	0001000	/* a stream that cannot be freed        */
 #define SF_IOCHECK	0002000	/* call exceptf before doing IO         */
 #define SF_PUBLIC	0004000	/* SF_SHARE and follow physical seek    */
-#define SF_MTSAFE	0010000	/* need thread safety                   */
 #define SF_WHOLE	0020000	/* preserve wholeness of sfwrite/sfputr */
 
 #define SF_FLAGS	0077177	/* PUBLIC FLAGS PASSABLE TO SFNEW()     */
