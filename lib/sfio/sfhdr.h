@@ -572,10 +572,6 @@ extern "C" {
 #else
 #endif /* _WIN32 */
 
-#ifdef HAVE_SYS_STAT_H
-    extern int fstat(int, Stat_t *);
-#endif
-
 #ifdef __cplusplus
 }
 #endif
