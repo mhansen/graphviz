@@ -139,7 +139,7 @@ gc_LDADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 
-gvpack_SOURCES = gvpack.c
+gvpack_SOURCES = gvpack.cpp
 gvpack_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=0
 
 gvpack_LDADD = \
@@ -149,12 +149,8 @@ gvpack_LDADD = \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout.la
 
-# add a non-existent C++ source to force the C++ compiler to be used for
-# linking, so the C++ standard library is included for our C++ dependencies
-nodist_EXTRA_gvpack_SOURCES = fake.cxx
-
 if ENABLE_STATIC
-gvpack_static_SOURCES = gvpack.c
+gvpack_static_SOURCES = gvpack.cpp
 gvpack_static_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=0
 gvpack_static_LDADD = \
 	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout_C.la \
@@ -164,10 +160,6 @@ gvpack_static_LDADD = \
 	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
 	$(EXPAT_LIBS) $(Z_LIBS) $(GTS_LIBS) $(SOCKET_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
-
-# add a non-existent C++ source to force the C++ compiler to be used for
-# linking, so the C++ standard library is included for our C++ dependencies
-nodist_EXTRA_gvpack_static_SOURCES = fake.cxx
 endif
 
 

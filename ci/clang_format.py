@@ -212,7 +212,7 @@ EXCLUDE = (
   "cmd/tools/gv2gxl.c",
   "cmd/tools/gvcolor.c",
   "cmd/tools/gvgen.c",
-  "cmd/tools/gvpack.c",
+  "cmd/tools/gvpack.cpp",
   "cmd/tools/gxl2gv.c",
   "cmd/tools/matrix_market.c",
   "cmd/tools/matrix_market.h",
