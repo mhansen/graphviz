@@ -132,9 +132,6 @@ extern "C" {
 #ifndef S_IFCHR
 #define S_IFCHR	0
 #endif
-#ifndef S_IFIFO
-#define S_IFIFO	0
-#endif
 
 #ifndef S_ISDIR
 #define S_ISDIR(m)	(((m)&S_IFMT) == S_IFDIR)
@@ -144,14 +141,6 @@ extern "C" {
 #endif
 #ifndef S_ISCHR
 #define S_ISCHR(m)	(((m)&S_IFMT) == S_IFCHR)
-#endif
-
-#ifndef S_ISFIFO
-#	ifdef S_IFIFO
-#		define S_ISFIFO(m)	(((m)&S_IFMT) == S_IFIFO)
-#	else
-#		define S_ISFIFO(m)	(0)
-#	endif
 #endif
 
 #if defined(S_IRUSR) && defined(S_IWUSR) && defined(S_IRGRP) && defined(S_IWGRP) && defined(S_IROTH) && defined(S_IWOTH)
