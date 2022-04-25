@@ -39,6 +39,7 @@
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define DEFAULT_BORDER    1
 #define DEFAULT_CELLPADDING  2
@@ -1379,10 +1380,12 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
     node_t *lastn;
     node_t *h;
     int i;
+    char value_buffer[CHARS_FOR_NUL_TERM_INT];
 
     lastn = NULL;
     for (i = 0; i <= tbl->cc; i++) {
-	t = agnode(colg, itos(i).str, 1);
+	snprintf(value_buffer, sizeof(value_buffer), "%d", i);
+	t = agnode(colg, value_buffer, 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	alloc_elist(tbl->rc, ND_in(t));
 	alloc_elist(tbl->rc, ND_out(t));
@@ -1395,7 +1398,8 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
     }
     lastn = NULL;
     for (i = 0; i <= tbl->rc; i++) {
-	t = agnode(rowg, itos(i).str, 1);
+	snprintf(value_buffer, sizeof(value_buffer), "%d", i);
+	t = agnode(rowg, value_buffer, 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	alloc_elist(tbl->cc, ND_in(t));
 	alloc_elist(tbl->cc, ND_out(t));
@@ -1409,12 +1413,16 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
-	t = agfindnode(colg, itos(cp->col).str);
-	h = agfindnode(colg, itos(cp->col + cp->cspan).str);
+	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->col);
+	t = agfindnode(colg, value_buffer);
+	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->col + cp->cspan);
+	h = agfindnode(colg, value_buffer);
 	checkEdge (colg, t, h, cp->data.box.UR.x);
 
-	t = agfindnode(rowg, itos(cp->row).str);
-	h = agfindnode(rowg, itos(cp->row + cp->rspan).str);
+	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->row);
+	t = agfindnode(rowg, value_buffer);
+	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->row + cp->rspan);
+	h = agfindnode(rowg, value_buffer);
 	checkEdge (rowg, t, h, cp->data.box.UR.y);
     }
 
