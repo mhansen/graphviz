@@ -339,8 +339,7 @@ doFlags(char* arg, int argi, int argc, char** argv, options* opts)
 	    opts->verbose = 1;
 	    break;
 	case 'V':
-	    sfprintf(sfstderr, "%s version %s (%s)\n",
-		    Info[0], Info[1], Info[2]);
+	    fprintf(stderr, "%s version %s (%s)\n", Info[0], Info[1], Info[2]);
 	    return 0;
 	    break;
 	case '?':
@@ -1001,7 +1000,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	incoreGraphs = 0;
 
     if (opts->verbose)
-	sfprintf (sfstderr, "Parse/compile/init: %.2f secs.\n", gvelapsed_sec());
+	fprintf(stderr, "Parse/compile/init: %.2f secs.\n", gvelapsed_sec());
     /* do begin */
     if (xprog->begin_stmt)
 	exeval(xprog->prog, xprog->begin_stmt, state);
@@ -1015,7 +1014,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	
 	if (opts->verbose) gvstart_timer ();
 	for (state->curgraph = nextGraph(ing); state->curgraph; state->curgraph = nextg) {
-	    if (opts->verbose) sfprintf (sfstderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
+	    if (opts->verbose) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
 	    state->infname = fileName(ing);
 	    if (opts->readAhead)
 		nextg = state->nextgraph = nextGraph(ing);
@@ -1042,7 +1041,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	    state->curobj = (Agobj_t *) state->curgraph;
 	    if (xprog->endg_stmt)
 		exeval(xprog->prog, xprog->endg_stmt, state);
-	    if (opts->verbose) sfprintf (sfstderr, "Finish graph: %.2f secs.\n", gvelapsed_sec());
+	    if (opts->verbose) fprintf(stderr, "Finish graph: %.2f secs.\n", gvelapsed_sec());
 
 	    /* if $O == $G and $T is empty, delete $T */
 	    if ((state->outgraph == state->curgraph) &&
@@ -1069,7 +1068,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	    if (opts->verbose) gvstart_timer ();
 	    if (!opts->readAhead)
 		nextg = nextGraph(ing);
-	    if (opts->verbose && nextg) sfprintf (sfstderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
+	    if (opts->verbose && nextg) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
 	}
     }
 

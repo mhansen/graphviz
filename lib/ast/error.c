@@ -24,6 +24,7 @@
 #include <ast/error.h>
 #include <cgraph/exit.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <string.h>
 #include <errno.h>
 
@@ -53,36 +54,36 @@ void errorv(const char *id, int level, const char *s, va_list ap)
     const char *prefix;
     if (level && ((prefix = error_info.id) || (prefix = id))) {
 	if (flags & ERROR_USAGE)
-	    sfprintf(sfstderr, "Usage: %s ", prefix);
+	    fprintf(stderr, "Usage: %s ", prefix);
 	else
-	    sfprintf(sfstderr, "%s: ", prefix);
+	    fprintf(stderr, "%s: ", prefix);
     }
     if (flags & ERROR_USAGE)
 	/*nop */ ;
     else if (level < 0) {
 	int i;
 	for (i = 0; i < error_info.indent; i++)
-	    sfprintf(sfstderr, "  ");
-	sfprintf(sfstderr, "debug%d: ", level);
+	    fprintf(stderr, "  ");
+	fprintf(stderr, "debug%d: ", level);
     } else if (level) {
 	if (level == ERROR_WARNING) {
-	    sfprintf(sfstderr, "warning: ");
+	    fprintf(stderr, "warning: ");
 	    error_info.warnings++;
 	} else {
 	    error_info.errors++;
 	    if (level == ERROR_PANIC)
-		sfprintf(sfstderr, "panic: ");
+		fprintf(stderr, "panic: ");
 	}
 	if (error_info.line) {
 	    if (error_info.file && *error_info.file)
-		sfprintf(sfstderr, "\"%s\", ", error_info.file);
-	    sfprintf(sfstderr, "line %d: ", error_info.line);
+		fprintf(stderr, "\"%s\", ", error_info.file);
+	    fprintf(stderr, "line %d: ", error_info.line);
 	}
     }
-    sfvprintf(sfstderr, s, ap);
+    vfprintf(stderr, s, ap);
     if (flags & ERROR_SYSTEM)
-	sfprintf(sfstderr, "\n%s", strerror(errno));
-    sfprintf(sfstderr, "\n");
+	fprintf(stderr, "\n%s", strerror(errno));
+    fprintf(stderr, "\n");
     if (level >= ERROR_FATAL)
 	graphviz_exit(level - ERROR_FATAL + 1);
 }
