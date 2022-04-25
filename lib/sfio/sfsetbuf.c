@@ -116,7 +116,12 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
 	st.st_mode = 0;
 
 	/* if has discipline, set size by discipline if possible */
-	if (!HAVE_SYS_STAT_H || disc) {
+#ifdef HAVE_SYS_STAT_H
+  enum { have_sys_stat_h = 1 };
+#else
+  enum { have_sys_stat_h = 0 };
+#endif
+	if (!have_sys_stat_h || disc) {
 	    if ((f->here = SFSK(f, 0, SEEK_CUR, disc)) < 0)
 		goto unseekable;
 	    else {
