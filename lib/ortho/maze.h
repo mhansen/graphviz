@@ -55,6 +55,13 @@ typedef struct cell {
   boxf  bb;
 } cell;
 
+/**
+ * @struct maze
+ * @brief available channels for orthogonal edges around nodes of @ref graph_t
+ *
+ * A maze is the result of partitioning free space around a graph's nodes by @ref mkMaze.
+ */
+
 typedef struct {
   int ncells, ngcells;
   cell* cells;     /* cells not corresponding to graph nodes */
