@@ -66,9 +66,9 @@ typedef struct {
   int ncells, ngcells;
   cell* cells;     ///< @brief cells not corresponding to graph nodes
   cell* gcells;    ///< @brief cells corresponding to graph nodes
-  sgraph* sg;
-  Dt_t* hchans;
-  Dt_t* vchans;
+  sgraph* sg;      ///< @brief search graph
+  Dt_t* hchans;    ///< @brief set of horizontal @ref channel "channels", created by @ref extractHChans.
+  Dt_t* vchans;    ///< @brief set of vertical @ref channel "channels", created by @ref extractVChans
 } maze;
 
 extern maze* mkMaze(graph_t*);
