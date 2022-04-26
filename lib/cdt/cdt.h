@@ -167,14 +167,14 @@ struct _dtstat_s
 #define DT_ENDCLOSE	6	/* dtclose() is done			*/
 #define DT_HASHSIZE	7	/* setting hash table size		*/
 
-CDT_API extern Dtmethod_t* 	Dtset;
-CDT_API extern Dtmethod_t* 	Dtbag;
-CDT_API extern Dtmethod_t* 	Dtoset;
-CDT_API extern Dtmethod_t* 	Dtobag;
-CDT_API extern Dtmethod_t*	Dtlist;
-CDT_API extern Dtmethod_t*	Dtstack;
-CDT_API extern Dtmethod_t*	Dtqueue;
-CDT_API extern Dtmethod_t*	Dtdeque;
+CDT_API extern Dtmethod_t* 	Dtset; ///< set with unique elements
+CDT_API extern Dtmethod_t* 	Dtbag; ///< multiset
+CDT_API extern Dtmethod_t* 	Dtoset; ///< ordered set (self-adjusting tree)
+CDT_API extern Dtmethod_t* 	Dtobag; ///< ordered multiset
+CDT_API extern Dtmethod_t*	Dtlist; ///< linked list
+CDT_API extern Dtmethod_t*	Dtstack; ///< stack: insert/delete at top
+CDT_API extern Dtmethod_t*	Dtqueue; ///< queue: insert at top, delete at tail
+CDT_API extern Dtmethod_t*	Dtdeque; ///< deque: insert at top, append at tail
 
 CDT_API extern Dtmethod_t*	Dtorder;
 CDT_API extern Dtmethod_t*	Dttree;
