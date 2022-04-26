@@ -36,6 +36,8 @@ enum {M_RIGHT=0, M_TOP, M_LEFT, M_BOTTOM};
   /// @brief cell has small width corresponding to a small width node
 #define IsSmallH(cp) (cp->flags & MZ_SMALLH)
 
+/// @brief result of partitioning available space, part of @ref maze
+
 typedef struct cell {
   int flags;
   int nedges;
