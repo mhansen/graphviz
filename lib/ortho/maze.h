@@ -51,7 +51,7 @@ typedef struct cell {
                             6. ─ left — right
                     */
   int nsides;
-  snode** sides;
+  snode** sides; ///< @brief up to four sides: @ref M_RIGHT, @ref M_TOP, @ref M_LEFT, @ref M_BOTTOM
   boxf  bb;
 } cell;
 
