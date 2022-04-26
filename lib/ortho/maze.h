@@ -25,15 +25,15 @@ enum {M_RIGHT=0, M_TOP, M_LEFT, M_BOTTOM};
 #define MZ_SMALLV   8
 #define MZ_SMALLH  16
 
-  /* cell corresponds to node */
+  /// @brief cell corresponds to node
 #define IsNode(cp) (cp->flags & MZ_ISNODE)  
-  /* cell already inserted in vertical channel */
+  /// @brief cell already inserted in vertical channel
 #define IsVScan(cp) (cp->flags & MZ_VSCAN)  
-  /* cell already inserted in horizontal channel */
+  /// @brief cell already inserted in horizontal channel
 #define IsHScan(cp) (cp->flags & MZ_HSCAN)
-  /* cell has small height corresponding to a small height node */
+  /// @brief cell has small height corresponding to a small height node
 #define IsSmallV(cp) (cp->flags & MZ_SMALLV)
-  /* cell has small width corresponding to a small width node */
+  /// @brief cell has small width corresponding to a small width node
 #define IsSmallH(cp) (cp->flags & MZ_SMALLH)
 
 typedef struct cell {
