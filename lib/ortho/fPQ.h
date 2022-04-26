@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief @ref snode priority queue for @ref shortPath in @ref sgraph
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -7,8 +12,6 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
-
-/* Priority Queue Code for shortest path in graph */
 
 #include <ortho/sgraph.h>
 
