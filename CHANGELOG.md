@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Graphviz 2.47.0.
 - Error on more than 128 cluster subgraphs #2080
 - `dot2gxl` no longer crashes on input `<node id="">` #2092
+- remove itos #2229
 
 ### Removed
 
