@@ -60,7 +60,7 @@ static char *_agstrcanon(char *arg, char *buf)
     char uc;
     int cnt = 0, dotcnt = 0;
     bool needs_quotes = false;
-    int maybe_num;
+    bool maybe_num;
     bool backslash_pending = false;
     static const char *tokenlist[]	/* must agree with scan.l */
 	= { "node", "edge", "strict", "graph", "digraph", "subgraph",
@@ -74,7 +74,7 @@ static char *_agstrcanon(char *arg, char *buf)
     p = buf;
     *p++ = '\"';
     uc = *s++;
-    maybe_num = isdigit(uc) || uc == '.' || uc == '-';
+    maybe_num = isdigit(uc) != 0 || uc == '.' || uc == '-';
     while (uc) {
 	if (uc == '\"') {
 	    *p++ = '\\';
@@ -83,22 +83,22 @@ static char *_agstrcanon(char *arg, char *buf)
 	else if (maybe_num) {
 	    if (uc == '-') {
 		if (cnt) {
-		    maybe_num = FALSE;
+		    maybe_num = false;
 		    needs_quotes = true;
 		}
 	    }
 	    else if (uc == '.') {
 		if (dotcnt++) {
-		    maybe_num = FALSE;
+		    maybe_num = false;
 		    needs_quotes = true;
 		}
 	    }
 	    else if (!isdigit(uc)) {
-		maybe_num = FALSE;
+		maybe_num = false;
 		needs_quotes = true;
 	    }
 	}
-	else if (!ISALNUM(uc))
+	else if (!(isalnum(uc) || uc == '_' || !isascii(uc)))
 	    needs_quotes = true;
 	*p++ = uc;
 	uc = *s++;

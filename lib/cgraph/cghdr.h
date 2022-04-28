@@ -47,8 +47,6 @@ static inline bool streq(const char *a, const char *b) {
 #define AGCLOS(g,d)			((g)->clos->state.d)
 #define AGNEW(g,t)			((t*)(agalloc(g,sizeof(t))))
 
-#define ISALNUM(c) ((isalnum(c)) || ((c) == '_') || (!isascii(c)))
-
 	/* functional definitions */
 typedef Agobj_t *(*agobjsearchfn_t) (Agraph_t * g, Agobj_t * obj);
 CGHDR_API int agapply(Agraph_t * g, Agobj_t * obj, agobjfn_t fn, void *arg,
@@ -107,7 +105,7 @@ void aglexbad(void);
 
 	/* ID management */
 int agmapnametoid(Agraph_t * g, int objtype, char *str,
-          IDTYPE *result, int allocflag);
+          IDTYPE *result, int createflag);
 int agallocid(Agraph_t * g, int objtype, IDTYPE request);
 void agfreeid(Agraph_t * g, int objtype, IDTYPE id);
 char *agprintid(Agobj_t * obj);
