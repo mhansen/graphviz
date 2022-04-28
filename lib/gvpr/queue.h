@@ -24,13 +24,11 @@ extern "C" {
     extern void freeQ(queue *);
 
 /* pseudo-functions:
-extern queue* mkStack();
 extern queue* mkQueue();
 extern void* pull(queue*);
 extern void* head(queue*);
  */
 
-#define mkStack()  mkQ(Dtstack)
 #define mkQueue()  mkQ(Dtqueue)
 #define pull(q)  (pop(q,1))
 #define head(q)  (pop(q,0))
