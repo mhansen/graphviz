@@ -37,13 +37,13 @@ class CMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    CMainWindow(char*** Files=NULL);
+    CMainWindow(char*** Files = nullptr);
     QMdiArea *mdiArea;
     void addFile (QString fileName);
     std::vector <QString> initFiles;
 private slots:
     void slotSettings();
-    void slotRun(MdiChild * m=NULL);
+    void slotRun(MdiChild* m = nullptr);
     void slotNew();
     void slotOpen();
     void slotSave();

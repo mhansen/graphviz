@@ -198,7 +198,7 @@ void ImageViewer::adjustScrollBar(QScrollBar * scrollBar, double factor)
 
 void ImageViewer::closeEvent(QCloseEvent * event)
 {
-    this->graphWindow->previewFrm = NULL;
+    this->graphWindow->previewFrm = nullptr;
     event->accept();
 
 }

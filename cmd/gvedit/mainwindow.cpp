@@ -36,13 +36,13 @@ static int LoadPlugins(QComboBox * cb, GVC_t * gvc, const char *kind,
 		       const char *more[], const char *prefer)
 {
     int count;
-    char **lp = gvPluginList(gvc, kind, &count, NULL);
+    char **lp = gvPluginList(gvc, kind, &count, nullptr);
     int idx = -1;
 
     cb->clear();
     for (int id = 0; id < count; id++) {
 	cb->addItem(QString(lp[id]));
-	if (prefer && (idx < 0) && !strcmp(prefer, lp[id]))
+	if (prefer && idx < 0 && !strcmp(prefer, lp[id]))
 	    idx = id;
     };
     freeList(lp, count);
@@ -66,7 +66,7 @@ static int LoadPlugins(QComboBox * cb, GVC_t * gvc, const char *kind,
 
 void CMainWindow::createConsole()
 {
-    QDockWidget *dock = new QDockWidget(tr("Output Console"), NULL);
+    QDockWidget *dock = new QDockWidget(tr("Output Console"), nullptr);
     QTextEdit *textEdit = new QTextEdit(dock);
 
     dock->
@@ -111,7 +111,7 @@ void CMainWindow::createConsole()
 
 static const char *xtra[] = {
     "NONE",
-    (const char *) NULL
+    nullptr
 };
 
 CMainWindow::CMainWindow(char*** Files)
@@ -131,7 +131,7 @@ CMainWindow::CMainWindow(char*** Files)
     verticalLayout_2->addLayout(verticalLayout);
     setCentralWidget(centralwidget);
     centralwidget->layout()->setContentsMargins(1, 1, 1, 1);
-    prevChild = NULL;
+    prevChild = nullptr;
 
     createConsole();
 
@@ -157,7 +157,7 @@ CMainWindow::CMainWindow(char*** Files)
     setUnifiedTitleAndToolBarOnMac(true);
     QComboBox *cb =
 	(QComboBox *) frmSettings->findChild < QComboBox * >("cbLayout");
-    dfltLayoutIdx = LoadPlugins(cb, frmSettings->gvc, "layout", NULL, "dot");
+    dfltLayoutIdx = LoadPlugins(cb, frmSettings->gvc, "layout", nullptr, "dot");
     cb = (QComboBox *) frmSettings->findChild <
 	QComboBox * >("cbExtension");
     dfltRenderIdx =
@@ -270,7 +270,7 @@ void CMainWindow::setChild ()
 	msg.append("working on ");
 	msg.append(activeMdiChild()->currentFile());
 	msg.append("\n");
-	errorPipe((char *) msg.toLatin1().constData());
+	errorPipe(msg.toLatin1().data());
 	prevChild = activeMdiChild();
     }
 }

@@ -45,7 +45,7 @@ QString findAttrFile ()
 	return path;
     }
     r = GetModuleFileNameA((HMODULE)mbi.AllocationBase, line, BSZ);
-    if (!r || (r == BSZ)) {
+    if (!r || r == BSZ) {
 	errout << "failed to get path for executable.\n";
 	return path;
     }
@@ -113,8 +113,8 @@ CFrmSettings::CFrmSettings()
     this->gvc = gvContext();
     Ui_Dialog tempDia;
     tempDia.setupUi(this);
-    graph = NULL;
-    activeWindow = NULL;
+    graph = nullptr;
+    activeWindow = nullptr;
     QString path;
 #ifndef _WIN32
     char *s = getenv("GVEDIT_PATH");
@@ -301,7 +301,7 @@ bool CFrmSettings::loadGraph(MdiChild * m)
 {
     if (graph) {
 	agclose(graph);
-	graph = NULL;
+	graph = nullptr;
     }
     graphData.clear();
     graphData.append(m->toPlainText());
@@ -332,7 +332,7 @@ bool CFrmSettings::createLayout()
 	return false;
     if (agerrors()) {
 	agclose(graph);
-	graph = NULL;
+	graph = nullptr;
 	return false;
     }
     Agraph_t *G = this->graph;
@@ -341,7 +341,7 @@ bool CFrmSettings::createLayout()
     layout=WIDGET(QComboBox, cbLayout)->currentText();
 
 
-    gvLayout(gvc, G, (char *)layout.toUtf8().constData());	/* library function */
+    gvLayout(gvc, G, layout.toUtf8().constData());	/* library function */
     return true;
 }
 
@@ -357,17 +357,15 @@ static QString buildTempFile()
 
 void CFrmSettings::doPreview(QString fileName)
 {
-    if (getActiveWindow()->previewFrm) {
+    if (getActiveWindow()->previewFrm != nullptr) {
 	getActiveWindow()->parentFrm->mdiArea->
 	    removeSubWindow(getActiveWindow()->previewFrm->subWindowRef);
-	delete getActiveWindow()->previewFrm;
-	getActiveWindow()->previewFrm = NULL;
+	getActiveWindow()->previewFrm = nullptr;
     }
 
     if ((fileName.isNull()) || !(getActiveWindow()->loadPreview(fileName))) {	//create preview
 	QString prevFile(buildTempFile());
-	gvRenderFilename(gvc, graph, "png",
-			 (char *) prevFile.toUtf8().constData());
+	gvRenderFilename(gvc, graph, "png", prevFile.toUtf8().constData());
 	getActiveWindow()->loadPreview(prevFile);
     }
 }
@@ -379,7 +377,7 @@ bool CFrmSettings::renderLayout()
     QString sfx = WIDGET(QComboBox, cbExtension)->currentText();
     QString fileName(WIDGET(QLineEdit, leOutput)->text());
 
-    if ((fileName == QString("")) || (sfx == QString("NONE")))
+    if (fileName == "" || sfx == "NONE")
 	doPreview(QString());
     else {
 	fileName = stripFileExtension(fileName);
@@ -388,7 +386,7 @@ bool CFrmSettings::renderLayout()
 	    activeWindow->outputFile = fileName;
 
 #ifdef _WIN32
-	if ((!fileName.contains('/')) && (!fileName.contains('\\'))) 
+	if (!fileName.contains('/') && !fileName.contains('\\'))
 #else
 	if (!fileName.contains('/'))
 #endif
@@ -403,13 +401,12 @@ bool CFrmSettings::renderLayout()
 		QString msg ("Output written to ");
 		msg.append(fileName);
 		msg.append("\n");
-		errorPipe((char *) msg.toLatin1().constData());
+		errorPipe(msg.toLatin1().data());
 	    }
 	}
 
-	if (gvRenderFilename
-	    (gvc, graph, (char *) sfx.toUtf8().constData(),
-	     (char *) fileName.toUtf8().constData()))
+	if (gvRenderFilename(gvc, graph, sfx.toUtf8().constData(),
+	                     fileName.toUtf8().constData()))
 	    return false;
 
 	doPreview(fileName);
@@ -479,7 +476,7 @@ int CFrmSettings::runSettings(MdiChild * m)
 	    return drawGraph();
 
 
-    if ((m) && (m == getActiveWindow())) {
+    if (m && m == getActiveWindow()) {
 	if (this->loadGraph(m))
 	    return drawGraph();
 	else

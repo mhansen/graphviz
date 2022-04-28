@@ -77,7 +77,7 @@ static char **parseArgs(int argc, char *argv[])
     if (argc)
 	return argv;
     else
-	return NULL;
+	return nullptr;
 }
 
 int main(int argc, char *argv[])
