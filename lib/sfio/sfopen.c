@@ -161,11 +161,9 @@ int _sftype(const char *mode, int *oflagsp, int *uflagp)
 		sflags |= SF_READ | SF_WRITE;
 	    continue;
 	case 'm':
-	    sflags |= SF_MTSAFE;
 	    uflag = 0;
 	    continue;
 	case 'u':
-	    sflags &= (unsigned short)~SF_MTSAFE;
 	    uflag = 1;
 	    continue;
 	default:

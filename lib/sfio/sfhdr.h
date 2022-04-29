@@ -48,13 +48,6 @@ extern "C" {
 
 #ifdef HAVE_SYS_STAT_H
 #	include	<sys/stat.h>
-#	undef HAVE_SYS_STAT_H
-#	define HAVE_SYS_STAT_H 1
-#else
-#	ifdef HAVE_STAT_H
-#		include	<stat.h>
-#		define	HAVE_SYS_STAT_H	1
-#	endif
 #endif /*HAVE_SYS_STAT_H*/
 
 #include	<fcntl.h>
@@ -63,9 +56,6 @@ extern "C" {
 
 #include	<errno.h>
 #include	<ctype.h>
-
-#undef SF_MTSAFE		/* no need to worry about thread-safety */
-#define SF_MTSAFE		0
 
 #define SFMTXSTART(f,v)		{ if(!f) return(v); }
 #define SFMTXRETURN(f,v)	{ return(v); }
@@ -139,9 +129,6 @@ extern "C" {
 #ifndef S_IFCHR
 #define S_IFCHR	0
 #endif
-#ifndef S_IFIFO
-#define S_IFIFO	0
-#endif
 
 #ifndef S_ISDIR
 #define S_ISDIR(m)	(((m)&S_IFMT) == S_IFDIR)
@@ -151,14 +138,6 @@ extern "C" {
 #endif
 #ifndef S_ISCHR
 #define S_ISCHR(m)	(((m)&S_IFMT) == S_IFCHR)
-#endif
-
-#ifndef S_ISFIFO
-#	ifdef S_IFIFO
-#		define S_ISFIFO(m)	(((m)&S_IFMT) == S_IFIFO)
-#	else
-#		define S_ISFIFO(m)	(0)
-#	endif
 #endif
 
 #if defined(S_IRUSR) && defined(S_IWUSR) && defined(S_IRGRP) && defined(S_IWGRP) && defined(S_IROTH) && defined(S_IWOTH)
@@ -378,8 +357,8 @@ extern "C" {
 /* lock/open a stream */
 #define SFMODE(f,l)	((f)->mode & ~(SF_RV|SF_RC|((l) ? SF_LOCK : 0)) )
 #define SFLOCK(f,l)	(void)((f)->mode |= SF_LOCK, (f)->endr = (f)->endw = (f)->data)
-#define _SFOPENRD(f)	((f)->endr = ((f)->flags&SF_MTSAFE) ? (f)->data : (f)->endb)
-#define _SFOPENWR(f)	((f)->endw = ((f)->flags&(SF_MTSAFE|SF_LINE)) ? (f)->data : (f)->endb)
+#define _SFOPENRD(f)	((f)->endr = (f)->endb)
+#define _SFOPENWR(f)	((f)->endw = ((f)->flags&SF_LINE) ? (f)->data : (f)->endb)
 #define _SFOPEN(f)	((f)->mode == SF_READ  ? _SFOPENRD(f) : \
 			 (f)->mode == SF_WRITE ? _SFOPENWR(f) : \
 			 ((f)->endw = (f)->endr = (f)->data) )
@@ -578,10 +557,6 @@ extern "C" {
 #define SF_ERROR	0000400	/* an error happened                    */
 #else
 #endif /* _WIN32 */
-
-#ifdef HAVE_SYS_STAT_H
-    extern int fstat(int, Stat_t *);
-#endif
 
 #ifdef __cplusplus
 }
