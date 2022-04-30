@@ -122,7 +122,6 @@ void agregister(Agraph_t * g, int objtype, void *obj);
 void agedgesetop(Agraph_t * g, Agedge_t * e, int insertion);
 void agdelnodeimage(Agraph_t * g, Agnode_t * node, void *ignored);
 void agdeledgeimage(Agraph_t * g, Agedge_t * edge, void *ignored);
-void *agrebind0(Agraph_t * g, void *obj);	/* unsafe */
 CGHDR_API int agrename(Agobj_t * obj, char *newname);
 void agrecclose(Agobj_t * obj);
 
