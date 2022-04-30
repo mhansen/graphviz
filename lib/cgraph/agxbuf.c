@@ -150,25 +150,20 @@ int agxbpop(agxbuf * xb)
 
 char *agxbdisown(agxbuf * xb) {
 
-  size_t size;
   char *buf;
 
   /* terminate the existing string */
   agxbputc(xb, '\0');
-
-  size = (size_t)(xb->ptr - xb->buf);
 
   if (!xb->dyna) {
     /* the buffer is not dynamically allocated, so we need to copy its contents
      * to heap memory
      */
 
-    buf = malloc(size);
+    buf = strdup((char*)xb->buf);
     if (buf == NULL) {
       return NULL;
     }
-
-    memcpy(buf, xb->buf, size);
 
   } else {
     /* the buffer is already dynamically allocated, so take it as-is */
