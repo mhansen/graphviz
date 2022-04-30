@@ -200,7 +200,7 @@ void glCompEmptyCommon(glCompCommon * c)
 glCompSet *glCompSetNew(int w, int h)
 {
     glCompSet *s = NEW(glCompSet);
-    glCompInitCommon((glCompObj *) s, NULL, (GLfloat) 0, (GLfloat) 0);
+    glCompInitCommon((glCompObj *) s, NULL, 0.0f, 0.0f);
     s->common.width = (GLfloat) w;
     s->common.height = (GLfloat) h;
     s->groupCount = 0;
