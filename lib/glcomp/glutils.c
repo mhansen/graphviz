@@ -373,15 +373,6 @@ void glCompDrawRectPrism(glCompPoint * p, GLfloat w, GLfloat h, GLfloat b,
 
 }
 
-void copy_glcomp_color(glCompColor * source, glCompColor * target)
-{
-    target->R = source->R;
-    target->G = source->G;
-    target->B = source->B;
-    target->A = source->A;
-
-}
-
 GLfloat distBetweenPts(glCompPoint A,glCompPoint B,float R)
 {
     GLfloat rv=0;	

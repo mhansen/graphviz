@@ -257,8 +257,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
     glCompButtonAddPngGlyph(b, smyrnaPath("details.png"));
     b->common.callbacks.click = attrList;
-    copy_glcomp_color(&c, &b->common.color);
-
+    b->common.color = c;
 	
     y = y + off;
 	
@@ -266,14 +265,14 @@ glCompSet *glcreate_gl_topview_menu(void)
     glCompButtonAddPngGlyph(b, smyrnaPath("zoomin.png"));
     b->groupid = 0;
     b->common.callbacks.click = menu_click_zoom_plus;
-    copy_glcomp_color(&c, &b->common.color);
+    b->common.color = c;
     y = y + off;
 
 
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
     glCompButtonAddPngGlyph(b, smyrnaPath("zoomout.png"));
     b->common.callbacks.click = menu_click_zoom_minus;
-    copy_glcomp_color(&c, &b->common.color);
+    b->common.color = c;
 
     y = y + off;
 
@@ -281,18 +280,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
     glCompButtonAddPngGlyph(b, smyrnaPath("center.png"));
     b->common.callbacks.click = menu_click_center;
-    copy_glcomp_color(&c, &b->common.color);
-
-
-
-	
-	
-
-
-
-
-
-
+    b->common.color = c;
 
     p = glCompPanelNew((glCompObj *) s, -250, 550, 150, 175);
     p->common.borderWidth = 0;

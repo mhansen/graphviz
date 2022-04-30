@@ -176,7 +176,7 @@ void glCompInitCommon(glCompObj * childObj, glCompObj * parentObj,
     if (parentObj) {
 	c->parent = &parentObj->common;
 	parent = &parentObj->common;
-	copy_glcomp_color(&parent->color, &c->color);
+	c->color = parent->color;
 	c->layer = parent->layer + 1;
 	c->pos.z = parent->pos.z;
 	glCompSetAddObj((glCompSet *) parent->compset, childObj);
