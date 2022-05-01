@@ -15,10 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `Agiodisc_t` struct member `putstr` that was previously an
   `fputs` analog is replaced by `printf` that is required to behave similar to
   `fprintf`.
-- the `mingle`, `diffimg`, and `edgepaint` binaries are now included in the
-  CMake build system
-- the `vimdot` script is now installed by the CMake build system on operating
-  systems other than Windows
+- the `mingle`, `diffimg`, `gvmap`, and `edgepaint` binaries are now included in
+  the CMake build system
+- the `gvmap.sh` and `vimdot` scripts are now installed by the CMake build
+  system on operating systems other than Windows
 - a brief note about the (previously undocumented) behavior of Graphviz when
   sent `SIGUSR1` is now mentioned in the man page
 - build system support for `dotty`, `lefty`, and `lneato` has been removed
