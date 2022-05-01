@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include "power.h"
 #include <sparse/SparseMatrix.h>
 
@@ -63,11 +64,11 @@ void power_method(void *A, int n, int K, int random_seed,
   K = MAX(0, MIN(n, K));
   assert(K <= n && K > 0);
 
-  if (!(*eigv)) *eigv = MALLOC(sizeof(double)*n*K);
-  v = MALLOC(sizeof(double*)*K);
+  if (!(*eigv)) *eigv = gv_calloc(n * K, sizeof(double));
+  v = gv_calloc(K, sizeof(double*));
 
-  vv = MALLOC(sizeof(double)*n);
-  u = MALLOC(sizeof(double)*n);
+  vv = gv_calloc(n, sizeof(double));
+  u = gv_calloc(n, sizeof(double));
 
   srand(random_seed);
 
