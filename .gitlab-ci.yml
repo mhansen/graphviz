@@ -343,6 +343,18 @@ ubuntu21-10-build:
     variables:
       IMAGE: ubuntu-21.10
 
+ubuntu22-04-build:
+    <<: *deb_build_definition
+    needs:
+        - job: docker_build_ubuntu-22.04
+          artifacts: false
+        - job: portable-source
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-22.04
+
 ubuntu21-10-static-build:
     <<: *deb_build_definition
     before_script:
@@ -691,6 +703,23 @@ ubuntu21-10-cmake-build:
     variables:
       IMAGE: ubuntu-21.10
 
+ubuntu22-04-cmake-build:
+    <<: *deb_build_definition
+    needs:
+        - job: docker_build_ubuntu-22.04
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS=-Werror
+        - export CXXFLAGS=-Werror
+        - export CMAKE_OPTIONS="-Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-22.04
+
 ubuntu21-10-cmake-minimal-build:
     <<: *deb_build_definition
     needs:
@@ -962,6 +991,18 @@ ubuntu21-10-test:
     variables:
       IMAGE: ubuntu-21.10
 
+ubuntu22-04-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="autotools"
+    needs:
+        - job: "ubuntu22-04-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-22.04
+
 centos7-test:
     <<: *linux_test_definition
     before_script:
@@ -1043,6 +1084,19 @@ ubuntu21-10-cmake-test:
         - linux
     variables:
       IMAGE: ubuntu-21.10
+
+ubuntu22-04-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
+    needs:
+        - job: "ubuntu22-04-cmake-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-22.04
 
 ubuntu21.10-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
@@ -1239,6 +1293,11 @@ docker_build_ubuntu-21.10:
   variables:
     IMAGE: ubuntu-21.10
 
+docker_build_ubuntu-22.04:
+  <<: *docker_build_definition
+  variables:
+    IMAGE: ubuntu-22.04
+
 docker_push_centos7:
   <<: *docker_push_definition
   variables:
@@ -1280,6 +1339,13 @@ docker_push_ubuntu-21.10:
     IMAGE: ubuntu-21.10
   needs:
     - docker_build_ubuntu-21.10
+
+docker_push_ubuntu-22.04:
+  <<: *docker_push_definition
+  variables:
+    IMAGE: ubuntu-22.04
+  needs:
+    - docker_build_ubuntu-22.04
 
 lint_clang_format:
   image: "$CI_REGISTRY_IMAGE/ubuntu-21.10:$CI_COMMIT_SHA"

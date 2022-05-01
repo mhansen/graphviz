@@ -1022,8 +1022,11 @@ else
         use_ocaml="No (ocaml not available)"
       else
         AC_CHECK_PROG(OCAML_OPT,ocamlopt,ocamlopt)
-        OCAML_INCLUDES=-I/usr/lib$LIBPOSTFIX/ocaml
-        OCAML_LIBS=-L/usr/lib$LIBPOSTFIX/ocaml
+        AC_CHECK_PROG(OCAML_C,ocamlc,ocamlc)
+        if test "x$OCAML_C" != "x"; then
+          OCAML_INCLUDES=-I`$OCAML_C -where`
+          OCAML_LIBS=-L`$OCAML_C -where`
+        fi
         save_CPPFLAGS=$CPPFLAGS
         CPPFLAGS="$CPPFLAGS $OCAML_INCLUDES"
         AC_CHECK_HEADER(caml/mlvalues.h,[
@@ -1040,7 +1043,7 @@ else
   fi
 fi
 AM_CONDITIONAL(WITH_OCAML, [test "x$use_ocaml" = "xYes"])
-AM_CONDITIONAL(WITH_OCAMLOPT, [test "x$OCAML_OPT" != "x"])
+AM_CONDITIONAL(WITH_OCAMLOPT, [test "x$OCAML_OPT" != "x" -a "x$OCAML_C" != "x"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for PERL
