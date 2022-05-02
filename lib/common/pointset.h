@@ -45,7 +45,6 @@ extern "C" {
     POINTSET_API void clearPM(PointMap *);
     POINTSET_API void freePM(PointMap *);
     POINTSET_API int insertPM(PointMap *, int, int, int);
-    POINTSET_API int updatePM(PointMap * pm, int x, int y, int v);
 
 #undef POINTSET_API
 #ifdef __cplusplus
