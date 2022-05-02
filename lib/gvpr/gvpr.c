@@ -1093,3 +1093,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
     return rv;
 }
 
+/**
+ * @dir lib/gvpr
+ * @brief graph pattern scanning and processing language, API gvpr.h
+ */
