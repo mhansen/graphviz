@@ -4,10 +4,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 export TAR_OPTIONS = --owner=0 --group=0 --exclude=windows/dependencies/*/*
 
-html =
-
 dist_doc_DATA = AUTHORS COPYING CHANGELOG.md NEWS cpl1.0.txt
-html_DATA = $(html)
 
 pkginclude_HEADERS = $(top_builddir)/graphviz_version.h
 
@@ -29,7 +26,7 @@ $(top_builddir)/graphviz_version.h: config.h
 	printf '#pragma once\n' > $(top_builddir)/graphviz_version.h
 	$(EGREP) 'PACKAGE|VERSION|GVPLUGIN' config.h >> $(top_builddir)/graphviz_version.h
 
-EXTRA_DIST = $(html) graphviz.spec \
+EXTRA_DIST = graphviz.spec \
 	autogen.sh config/depcomp config/config.rpath \
 	builddate.h \
 	m4/README m4/lib-ld.m4 m4/lib-link.m4 m4/lib-prefix.m4 \

@@ -24,7 +24,6 @@ LIBS = -lc $(TCL_STUB_LIB_SPEC)
 AM_CFLAGS = $(TCL_CFLAGS)
 
 man = tcldot.3tcl
-html = tcldot.html
 
 if WITH_TCL
 noinst_HEADERS = tcldot.h
@@ -34,7 +33,7 @@ man_MANS = $(man)
 if ENABLE_MAN_PDFS
 pdf_DATA = tcldot.3tcl.pdf
 endif
-html_DATA = $(html)
+dist_html_DATA = tcldot.html
 endif
 
 libtcldot_la_SOURCES = \
@@ -115,7 +114,7 @@ endif
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3tcl .3tcl.pdf
 
-EXTRA_DIST = $(man) $(html) README README.Tkspline
+EXTRA_DIST = $(man) README README.Tkspline
 
 CLEANFILES = pkgIndex.tcl
 DISTCLEANFILES = $(pdf_DATA)
