@@ -40,8 +40,6 @@ extern "C" {
     extern void glCompDrawRectPrism(glCompPoint * p, GLfloat w, GLfloat h,
 				    GLfloat b, GLfloat d, glCompColor * c,
 				    int bumped);
-    extern void copy_glcomp_color(glCompColor * source,
-				  glCompColor * target);
     extern void glCompSetColor(glCompColor * c);
 
     extern GLfloat distBetweenPts(glCompPoint A,glCompPoint B,float R);

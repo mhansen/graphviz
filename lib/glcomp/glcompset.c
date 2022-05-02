@@ -176,7 +176,7 @@ void glCompInitCommon(glCompObj * childObj, glCompObj * parentObj,
     if (parentObj) {
 	c->parent = &parentObj->common;
 	parent = &parentObj->common;
-	copy_glcomp_color(&parent->color, &c->color);
+	c->color = parent->color;
 	c->layer = parent->layer + 1;
 	c->pos.z = parent->pos.z;
 	glCompSetAddObj((glCompSet *) parent->compset, childObj);
@@ -200,7 +200,7 @@ void glCompEmptyCommon(glCompCommon * c)
 glCompSet *glCompSetNew(int w, int h)
 {
     glCompSet *s = NEW(glCompSet);
-    glCompInitCommon((glCompObj *) s, NULL, (GLfloat) 0, (GLfloat) 0);
+    glCompInitCommon((glCompObj *) s, NULL, 0.0f, 0.0f);
     s->common.width = (GLfloat) w;
     s->common.height = (GLfloat) h;
     s->groupCount = 0;

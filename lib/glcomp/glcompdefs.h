@@ -176,8 +176,6 @@ extern "C" {
 	GLfloat G;
 	GLfloat B;
 	GLfloat A;		//Alpha
-	int tag;
-	int test;
     } glCompColor;
 
 
