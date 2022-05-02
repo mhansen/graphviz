@@ -1528,7 +1528,7 @@ emitSearchGraph (FILE* fp, sgraph* sg)
     }
     for (i = 0; i < sg->nedges; i++) {
 	ep = sg->edges+i;
-	fprintf (fp, "  %d -- %d[len=\"%f\"]\n", ep->v1, ep->v2, ep->weight);
+	fprintf (fp, "  %d -- %d[label=\"%f\"]\n", ep->v1, ep->v2, ep->weight);
     }
     fputs ("}\n", fp);
 }
