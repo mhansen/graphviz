@@ -45,7 +45,7 @@ bin_PROGRAMS = dot_static
 endif
 endif
 
-man_MANS = dot.1 osage.1 patchwork.1
+dist_man_MANS = dot.1 osage.1 patchwork.1
 if ENABLE_MAN_PDFS
 pdf_DATA = dot.1.pdf osage.1.pdf patchwork.1.pdf
 endif
@@ -128,6 +128,6 @@ endif
 nodist_EXTRA_dot_static_SOURCES = fake.cxx
 nodist_EXTRA_dot_builtins_SOURCES = fake.cxx
 
-EXTRA_DIST = dot.1 osage.1 patchwork.1 dot.vcxproj*
+EXTRA_DIST = dot.vcxproj*
 
 DISTCLEANFILES = $(pdf_DATA)

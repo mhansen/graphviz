@@ -14,7 +14,7 @@ else
 bin_PROGRAMS = gvpr
 endif
 
-man_MANS = gvpr.1
+dist_man_MANS = gvpr.1
 if ENABLE_MAN_PDFS
 pdf_DATA = gvpr.1.pdf
 endif
@@ -44,6 +44,6 @@ gvpr_static_LDADD = \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
 	$(MATH_LIBS)
 
-EXTRA_DIST = $(man_MANS) lib gvpr.vcxproj*
+EXTRA_DIST = lib gvpr.vcxproj*
 
 DISTCLEANFILES = $(pdf_DATA)

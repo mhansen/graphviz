@@ -29,7 +29,7 @@ noinst_HEADERS = actions.h compile.h gdefs.h gprdata.inc gprstate.h parse.h \
 noinst_LTLIBRARIES = libgvpr_C.la
 lib_LTLIBRARIES = libgvpr.la
 pkgconfig_DATA = libgvpr.pc
-man_MANS = gvpr.3
+dist_man_MANS = gvpr.3
 if ENABLE_MAN_PDFS
 pdf_DATA = gvpr.3.pdf
 endif
@@ -60,6 +60,6 @@ if WITH_WIN32
 libgvpr_la_LDFLAGS += -export-symbols-regex gvpr
 endif
 
-EXTRA_DIST = $(man_MANS) trie.c gvprlib.vcxproj*
+EXTRA_DIST = trie.c gvprlib.vcxproj*
 
 DISTCLEANFILES = $(pdf_DATA)

@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 
 bin_PROGRAMS = prune
 noinst_HEADERS = generic_list.h
-man_MANS = prune.1
+dist_man_MANS = prune.1
 if ENABLE_MAN_PDFS
 pdf_DATA = prune.1.pdf
 endif
@@ -25,6 +25,6 @@ prune_LDADD = $(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .1 .1.pdf
 
-EXTRA_DIST = $(man_MANS) README test.gv prune.vcxproj*
+EXTRA_DIST = README test.gv prune.vcxproj*
 
 DISTCLEANFILES = $(pdf_DATA)

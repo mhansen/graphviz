@@ -14,7 +14,7 @@ endif
 
 pkginclude_HEADERS = pack.h
 noinst_LTLIBRARIES = libpack_C.la
-man_MANS = pack.3
+dist_man_MANS = pack.3
 if ENABLE_MAN_PDFS
 pdf_DATA = pack.3.pdf
 endif
@@ -26,7 +26,5 @@ libpack_C_la_SOURCES = ccomps.c pack.c
 	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
-
-EXTRA_DIST = $(man_MANS)
 
 DISTCLEANFILES = $(pdf_DATA)

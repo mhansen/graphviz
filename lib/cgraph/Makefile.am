@@ -14,7 +14,7 @@ noinst_HEADERS = agxbuf.h alloc.h bitarray.h cghdr.h exit.h itos.h likely.h \
 noinst_LTLIBRARIES = libcgraph_C.la
 lib_LTLIBRARIES = libcgraph.la
 pkgconfig_DATA = libcgraph.pc
-man_MANS = cgraph.3
+dist_man_MANS = cgraph.3
 if ENABLE_MAN_PDFS
 pdf_DATA = cgraph.3.pdf
 endif
@@ -41,7 +41,7 @@ grammar.c grammar.h: $(top_srcdir)/lib/cgraph/grammar.y
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
 
-EXTRA_DIST = $(man_MANS) cmpnd.c \
+EXTRA_DIST = cmpnd.c \
 	grammar.c grammar.h scan.c \
 	cgraph.vcxproj*
 

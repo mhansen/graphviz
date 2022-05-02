@@ -10,7 +10,7 @@ noinst_LTLIBRARIES = libxdot_C.la
 lib_LTLIBRARIES = libxdot.la
 pkgconfig_DATA = libxdot.pc
 
-man_MANS = xdot.3
+dist_man_MANS = xdot.3
 if ENABLE_MAN_PDFS
 pdf_DATA = xdot.3.pdf
 endif
@@ -25,6 +25,6 @@ libxdot_la_SOURCES = $(libxdot_C_la_SOURCES)
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
 
-EXTRA_DIST = $(man_MANS) xdot.vcxproj*
+EXTRA_DIST = xdot.vcxproj*
 
 DISTCLEANFILES = $(pdf_DATA)

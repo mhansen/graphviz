@@ -15,7 +15,7 @@ noinst_HEADERS = pathutil.h solvers.h tri.h vis.h vispath.h
 noinst_LTLIBRARIES = libpathplan_C.la
 lib_LTLIBRARIES = libpathplan.la
 pkgconfig_DATA = libpathplan.pc
-man_MANS = pathplan.3
+dist_man_MANS = pathplan.3
 if ENABLE_MAN_PDFS
 pdf_DATA = pathplan.3.pdf
 endif
@@ -33,6 +33,6 @@ libpathplan_la_LIBADD = $(MATH_LIBS)
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
 
-EXTRA_DIST = $(man_MANS) Pathplan.vcxproj*
+EXTRA_DIST = Pathplan.vcxproj*
 
 DISTCLEANFILES = $(pdf_DATA)
