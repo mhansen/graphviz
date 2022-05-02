@@ -1511,6 +1511,7 @@ emitSearchGraph (FILE* fp, sgraph* sg)
     int i;
     fputs ("graph G {\n", fp);
     fputs (" node[shape=point]\n", fp);
+    fputs (" layout=neato\n", fp);
     for (i = 0; i < sg->nnodes; i++) {
 	np = sg->nodes+i;
 	cp = np->cells[0];
@@ -1523,7 +1524,7 @@ emitSearchGraph (FILE* fp, sgraph* sg)
 	    if (IsNode(cp)) cp = np->cells[1];
 	    p = coordOf (cp, np);
 	}
-	fprintf (fp, "  %d [pos=\"%d,%d\"]\n", i, p.x, p.y);
+	fprintf (fp, "  %d [pos=\"%d,%d!\"]\n", i, p.x, p.y);
     }
     for (i = 0; i < sg->nedges; i++) {
 	ep = sg->edges+i;
