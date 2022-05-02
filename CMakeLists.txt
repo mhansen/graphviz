@@ -48,7 +48,6 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # ============================= Build dependencies =============================
-find_package(AWK REQUIRED)
 find_package(BISON 3.0 REQUIRED)
 find_package(FLEX REQUIRED)
 find_program(GIT git)

@@ -3,53 +3,38 @@ BISON_TARGET(HTMLparse ${CMAKE_CURRENT_SOURCE_DIR}/htmlparse.y
 
 add_definitions(-DGVC_EXPORTS)
 
-if(CYGWIN)
-  set(AWK_OPTIONS, -v RS="\\r*\\n")
-endif()
-
 # Generate colortbl.h from sources
 add_custom_command(
   OUTPUT svgcolor_lib
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
-          ${CMAKE_SOURCE_DIR}/awk/svgcolor.awk
-  COMMAND ${AWK_EXECUTABLE} ${AWK_OPTIONS} -f
-          ${CMAKE_SOURCE_DIR}/awk/svgcolor.awk
+  MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/make_svgcolor_lib.py
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/make_svgcolor_lib.py
           ${CMAKE_CURRENT_SOURCE_DIR}/svgcolor_names
-          >${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
+          ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
   COMMENT "generate SVG color library"
 )
 add_custom_command(
   OUTPUT brewer_lib
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
-          ${CMAKE_SOURCE_DIR}/awk/brewer.awk
-  COMMAND ${AWK_EXECUTABLE} -f ${CMAKE_SOURCE_DIR}/awk/brewer.awk
+  MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/make_brewer_lib.py
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/make_brewer_lib.py
           ${CMAKE_CURRENT_SOURCE_DIR}/brewer_colors
-          >${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
-  COMMENT "generate Brewer color library"
-)
-configure_file(
-  "${CMAKE_SOURCE_DIR}/cmake/generate_color_lib.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/generate_color_lib.cmake"
-  @ONLY
-)
-add_custom_command(
-  OUTPUT color_lib
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
           ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
-          ${CMAKE_CURRENT_SOURCE_DIR}/color_names
-  COMMAND ${CMAKE_COMMAND} -P
-          ${CMAKE_CURRENT_BINARY_DIR}/generate_color_lib.cmake
-  COMMENT "generate amalgamated color library"
+  COMMENT "generate Brewer color library"
 )
 add_custom_command(
   OUTPUT common/colortbl.h
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/color_lib
-          ${CMAKE_SOURCE_DIR}/awk/colortbl.awk
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
+          ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
+          ${CMAKE_CURRENT_SOURCE_DIR}/color_names
+          ${CMAKE_CURRENT_SOURCE_DIR}/make_colortbl.py
   COMMAND ${CMAKE_COMMAND} -E make_directory
           "${CMAKE_CURRENT_BINARY_DIR}/common"
-  COMMAND ${AWK_EXECUTABLE} -f ${CMAKE_SOURCE_DIR}/awk/colortbl.awk
-          ${CMAKE_CURRENT_BINARY_DIR}/color_lib
-          >${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/make_colortbl.py
+          ${CMAKE_CURRENT_BINARY_DIR}/brewer_lib
+          ${CMAKE_CURRENT_BINARY_DIR}/svgcolor_lib
+          ${CMAKE_CURRENT_SOURCE_DIR}/color_names
+          ${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h
   COMMENT "generate color table"
 )
 
