@@ -99,3 +99,7 @@ main (int argc, char* argv[])
 
 #endif
 
+/**
+ * @dir cmd/gvpr
+ * @brief graph pattern scanning and processing language
+ */
