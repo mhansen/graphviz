@@ -14,7 +14,7 @@ pkginclude_HEADERS = cdt.h
 noinst_HEADERS = dthdr.h
 noinst_LTLIBRARIES = libcdt_C.la
 lib_LTLIBRARIES = libcdt.la
-man_MANS = cdt.3
+dist_man_MANS = cdt.3
 if ENABLE_MAN_PDFS
 pdf_DATA = cdt.3.pdf
 endif
@@ -33,6 +33,6 @@ libcdt_la_SOURCES = $(libcdt_C_la_SOURCES)
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
 
-EXTRA_DIST = $(man_MANS) cdt.vcxproj*
+EXTRA_DIST = cdt.vcxproj*
 
 DISTCLEANFILES = $(pdf_DATA)

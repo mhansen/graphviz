@@ -10,7 +10,7 @@ AM_CPPFLAGS = \
 noinst_HEADERS = exgram.h exlib.h exop.h exparse.h expr.h
 noinst_LTLIBRARIES = libexpr_C.la
 
-man_MANS = expr.3
+dist_man_MANS = expr.3
 if ENABLE_MAN_PDFS
 pdf_DATA = expr.3.pdf
 endif
@@ -43,7 +43,7 @@ y.output: $(top_srcdir)/lib/expr/exparse.y
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
 
-EXTRA_DIST = $(man_MANS) \
+EXTRA_DIST = \
 	exparse.c \
 	y.tab.c y.tab.h y.output expr.vcxproj*
 

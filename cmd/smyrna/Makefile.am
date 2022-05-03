@@ -15,14 +15,14 @@ AM_CPPFLAGS = \
 	$(GLUT_CFLAGS) $(GTKGLEXT_CFLAGS) $(GLADE_CFLAGS) $(FREETYPE2_CFLAGS) $(FONTCONFIG_CFLAGS) $(GTS_CFLAGS) $(XRENDER_CFLAGS)
 
 bin_PROGRAMS =
-man_MANS =
 if ENABLE_SHARED
 bin_PROGRAMS += smyrna
 endif
 if ENABLE_STATIC
 bin_PROGRAMS += smyrna_static
 endif
-man_MANS += smyrna.1
+
+dist_man_MANS = smyrna.1
 if ENABLE_MAN_PDFS
 pdf_DATA = smyrna.1.pdf
 endif
@@ -82,6 +82,6 @@ smyrna_static_LDADD = $(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .1 .1.pdf
 
-EXTRA_DIST = smyrna.vcxproj* $(man_MANS) smyrna.1
+EXTRA_DIST = smyrna.vcxproj*
 
 DISTCLEANFILES = $(pdf_DATA)

@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 
 bin_PROGRAMS = edgepaint
 
-man_MANS = edgepaint.1
+dist_man_MANS = edgepaint.1
 if ENABLE_MAN_PDFS
 pdf_DATA = edgepaint.1.pdf
 endif
@@ -38,6 +38,6 @@ nodist_EXTRA_edgepaint_SOURCES = fake.cxx
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .1 .1.pdf
 
-EXTRA_DIST = $(man_MANS) edgepaint.vcxproj*
+EXTRA_DIST = edgepaint.vcxproj*
 
 DISTCLEANFILES = $(pdf_DATA)

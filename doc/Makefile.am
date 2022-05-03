@@ -2,15 +2,13 @@
 
 SUBDIRS = info schema
 
-pdf = dotguide.pdf neatoguide.pdf libgraph/Agraph.pdf libguide/libguide.pdf
-html = build.html FAQ.html index.html winbuild.html pspdf.png char.html gdtclft.entities.example.png todo.html internal_todo.html
+dist_pdf_DATA = dotguide.pdf neatoguide.pdf libgraph/Agraph.pdf libguide/libguide.pdf
 
 if WITH_SMYRNA
-pdf += smyrna/smyrna.pdf
+dist_pdf_DATA += smyrna/smyrna.pdf
 endif
 
-pdf_DATA = $(pdf)
-html_DATA = $(html)
+dist_html_DATA = build.html FAQ.html index.html winbuild.html pspdf.png char.html gdtclft.entities.example.png todo.html internal_todo.html
 dist_doc_DATA = Dot.ref latex_suggestions.txt fontfaq.txt addingLayout.txt
 
-EXTRA_DIST = $(pdf) $(html) schema/*.xml schema/*.xslt infosrc/*
+EXTRA_DIST = schema/*.xml schema/*.xslt infosrc/*

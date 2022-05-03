@@ -24,7 +24,7 @@ noinst_HEADERS = gvcint.h gvcproc.h gvio.h
 noinst_LTLIBRARIES = libgvc_C.la
 lib_LTLIBRARIES = libgvc.la
 pkgconfig_DATA = libgvc.pc
-man_MANS = gvc.3
+dist_man_MANS = gvc.3
 if ENABLE_MAN_PDFS
 pdf_DATA = gvc.3.pdf
 endif
@@ -63,7 +63,5 @@ libgvc_la_DEPENDENCIES = $(libgvc_C_la_DEPENDENCIES)
 	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
-
-EXTRA_DIST = $(man_MANS)
 
 DISTCLEANFILES = $(pdf_DATA)
