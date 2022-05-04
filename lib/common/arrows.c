@@ -424,6 +424,43 @@ void arrowOrthoClip(edge_t* e, pointf* ps, int startp, int endp, bezier* spl, in
     }
 }
 
+// See https://www.w3.org/TR/SVG2/painting.html#TermLineJoinShape for the
+// terminology
+
+static pointf miter_point(pointf base_left, pointf P, pointf base_right,
+                          double penwidth) {
+  const pointf A[] = {base_left, P};
+  const double dxA = A[1].x - A[0].x;
+  const double dyA = A[1].y - A[0].y;
+  const double hypotA = hypot(dxA, dyA);
+  const double cosAlpha = dxA / hypotA;
+  const double sinAlpha = dyA / hypotA;
+  const double alpha = dyA > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+
+  const pointf P1 = {P.x - penwidth / 2.0 * sinAlpha,
+                     P.y + penwidth / 2.0 * cosAlpha};
+
+  const pointf B[] = {P, base_right};
+  const double dxB = B[1].x - B[0].x;
+  const double dyB = B[1].y - B[0].y;
+  const double hypotB = hypot(dxB, dyB);
+  const double cosBeta = dxB / hypotB;
+  const double beta = dyB > 0 ? acos(cosBeta) : -acos(cosBeta);
+
+  // angle between the A segment and the B segment in the reverse direction
+  const double beta_rev = beta - M_PI;
+  const double theta = beta_rev - alpha + (beta_rev - alpha <= -M_PI ? 2 * M_PI : 0);
+  assert(theta >= 0 && theta <= M_PI && "theta out of range");
+
+  // length between P1 and P3 (and between P2 and P3)
+  const double l = penwidth / 2.0 / tan(theta / 2.0);
+
+  const pointf P3 = {P1.x + l * cosAlpha,
+                     P1.y + l * sinAlpha};
+
+  return P3;
+}
+
 static pointf arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     (void)arrowsize;
@@ -439,20 +476,53 @@ static pointf arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsiz
     v.y = u.x * arrowwidth;
     q.x = p.x + u.x;
     q.y = p.y + u.y;
+
+    // FIXME: handle this correctly for ARR_MOD_LEFT and ARR_MOD_RIGHT when the
+    // angle of the arrow tip is half of the normal arrow
+
+    const pointf normal_left = {-v.x, -v.y};
+    const pointf normal_right = v;
+    const pointf base_left = flag & ARR_MOD_INV ? normal_right : normal_left;
+    const pointf base_right = flag & ARR_MOD_INV ? normal_left : normal_right;
+    const pointf normal_tip = {-u.x, -u.y};
+    const pointf inv_tip = u;
+    const pointf P = flag & ARR_MOD_INV ? inv_tip : normal_tip ;
+
+    const pointf P3 = miter_point(base_left, P, base_right, penwidth);
+
+    const pointf delta_tip = {P3.x - P.x, P3.y - P.y};
+
+    // phi = angle of arrow
+    const double cosPhi = P.x / hypot(P.x, P.y);
+    const double sinPhi = P.y / hypot(P.x, P.y);
+    const pointf delta_base = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+
     if (flag & ARR_MOD_INV) {
+	p.x += delta_base.x;
+	p.y += delta_base.y;
+	q.x += delta_base.x;
+	q.y += delta_base.y;
 	a[0] = a[4] = p;
 	a[1].x = p.x - v.x;
 	a[1].y = p.y - v.y;
 	a[2] = q;
 	a[3].x = p.x + v.x;
 	a[3].y = p.y + v.y;
+	q.x += delta_tip.x;
+	q.y += delta_tip.y;
     } else {
+	p.x -= delta_tip.x;
+	p.y -= delta_tip.y;
+	q.x -= delta_tip.x;
+	q.y -= delta_tip.y;
 	a[0] = a[4] = q;
 	a[1].x = q.x - v.x;
 	a[1].y = q.y - v.y;
 	a[2] = p;
 	a[3].x = q.x + v.x;
 	a[3].y = q.y + v.y;
+	q.x -= delta_base.x;
+	q.y -= delta_base.y;
     }
     if (flag & ARR_MOD_LEFT)
 	gvrender_polygon(job, a, 3, !(flag & ARR_MOD_OPEN));
