@@ -62,8 +62,8 @@ int glCompPanelDraw(glCompObj * o)
     if (!p->common.visible)
 	return 0;
     /*draw shadow */
-    glColor4f((GLfloat) p->shadowcolor.R, (GLfloat) p->shadowcolor.G,
-	      (GLfloat) p->shadowcolor.B, (GLfloat) p->shadowcolor.A);
+    glColor4f(p->shadowcolor.R, p->shadowcolor.G, p->shadowcolor.B,
+              p->shadowcolor.A);
     r.h = p->shadowwidth;
     r.w = ref.width;
     r.pos.x = ref.pos.x + p->shadowwidth;
