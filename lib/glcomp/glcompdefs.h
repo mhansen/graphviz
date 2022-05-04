@@ -320,14 +320,6 @@ extern "C" {
 
     } glCompTrackBar;
 
-/*glCompFont container class*/
-    typedef struct {
-	glCompFont **fonts;
-	int count;
-	int activefont;
-	char *font_directory;	//location where the glfont files are stored
-    } fontset_t;
-
 /*object prototype*/
     struct _glCompObj {
 	glObjType objType;
