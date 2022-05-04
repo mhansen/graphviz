@@ -162,9 +162,6 @@ extern "C" {
 	GLfloat x, y, z;
     } glCompPoint;
 
-    typedef struct _glCompPointI {
-	int x, y;
-    } glCompPointI;
     typedef struct {
 	int cnt;
 	int hotKey;
