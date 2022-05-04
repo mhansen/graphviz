@@ -164,7 +164,6 @@ extern "C" {
 
     typedef struct {
 	int cnt;
-	int hotKey;
 	glCompPoint* pts;
     }glCompPoly;
 
