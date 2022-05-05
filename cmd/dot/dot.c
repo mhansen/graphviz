@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief main rendering program for various layouts of graphs and output formats
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -92,3 +97,8 @@ int main(int argc, char **argv)
     r = gvFreeContext(Gvc);
     graphviz_exit(MAX(rc,r));
 }
+
+/**
+ * @dir .
+ * @brief main rendering program for various layouts of graphs and output formats
+ */
