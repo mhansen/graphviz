@@ -1,3 +1,7 @@
+/**
+ * @dir .
+ * @brief %edge coloring to disambiguate crossing edges
+ */
 
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
