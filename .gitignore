@@ -189,7 +189,6 @@ contrib/prune/prune
 tests/ndata
 tests/nhtml
 tests/tmp*
-tests/tmp*
 tests/**/*.log
 tests/**/*.trs
 tests/**/output/**
