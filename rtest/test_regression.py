@@ -1740,3 +1740,25 @@ def test_gvpr_usage():
   # the stderr output should have contained full usage instructions
   assert "-o <ofile> - write output to <ofile>; stdout by default" in stderr, \
     "truncated or malformed GVPR usage information"
+
+def test_2225():
+  """
+  sfdp should not segfault with curved splines
+  https://gitlab.com/graphviz/graphviz/-/issues/2225
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "2225.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # run this through sfdp
+  p = subprocess.run(["sfdp", "-Gsplines=curved", "-o", os.devnull, input],
+                     stderr=subprocess.PIPE, universal_newlines=True)
+
+  # if sfdp was built without libgts, it will not handle anything non-trivial
+  no_gts_error = "remove_overlap: Graphviz not built with triangulation library"
+  if no_gts_error in p.stderr:
+    assert p.returncode != 0, "sfdp returned success after an error message"
+    return
+
+  p.check_returncode()
