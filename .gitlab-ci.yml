@@ -173,7 +173,7 @@ portable-source:
               # The following is per https://gitlab.com/graphviz/graphviz/-/merge_requests/1345
               $env:Path = $env:CI_PROJECT_DIR + "\" + $env:configuration + "\Graphviz\bin" + ";" + $env:Path;
             }
-        - python -m pytest --verbose --junitxml=report.xml ci/tests.py tests rtest
+        - python -m pytest --verbose --junitxml=report.xml ci/tests.py tests
         # Create artifacts to archive
         - $ID = "windows"
         - $VERSION_ID = "10"
@@ -204,7 +204,7 @@ portable-source:
     script:
         - ci/install-packages.sh
         - export GV_VERSION=$( cat GRAPHVIZ_VERSION )
-        - python3 -m pytest --verbose --junitxml=report.xml ci/tests.py tests rtest
+        - python3 -m pytest --verbose --junitxml=report.xml ci/tests.py tests
     artifacts:
         reports:
             junit: report.xml
@@ -231,7 +231,7 @@ portable-source:
         # Many of the tests run by pytest currently trigger ASan
         # memory leak detections. Disable those for now.
         - export ASAN_OPTIONS=detect_leaks=0
-        - python3 -m pytest --verbose --junitxml=report.xml ci/tests.py tests rtest
+        - python3 -m pytest --verbose --junitxml=report.xml ci/tests.py tests
         - ci/test_coverage.py --analyze
     # enable test coverage visualization in MR diff view
     coverage: '/  lines\.{6}: \d+\.\d+%/'

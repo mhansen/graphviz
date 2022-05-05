@@ -38,4 +38,4 @@ export PATH="${PATH}:$DIR_LABS/bin"
 python gen_version.py --output GRAPHVIZ_VERSION
 export GV_VERSION=$( cat GRAPHVIZ_VERSION )
 
-python3 -m pytest --verbose ci/tests.py tests rtest
+python3 -m pytest --verbose ci/tests.py tests

@@ -56,7 +56,7 @@ def test_regression_failure():
   """
   Secondly, run all tests but ignore differences and fail the test
   only if there is a crash. This will leave the differences for png
-  output in rtest/nhtml/index.html for review.
+  output in tests/nhtml/index.html for review.
   """
 
   os.chdir(Path(__file__).resolve().parent)

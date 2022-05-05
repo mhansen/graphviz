@@ -186,10 +186,10 @@ contrib/diffimg/diffimg
 contrib/prune/prune
 
 # Files generated during make check
-rtest/ndata
-rtest/nhtml
-rtest/tmp*
-rtest/tmp*
+tests/ndata
+tests/nhtml
+tests/tmp*
+tests/tmp*
 tests/**/*.log
 tests/**/*.trs
 tests/**/output/**

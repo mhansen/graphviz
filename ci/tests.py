@@ -13,7 +13,7 @@ import sys
 from typing import Dict
 import pytest
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
+sys.path.append(os.path.join(os.path.dirname(__file__), "../tests"))
 from gvtest import dot, is_cmake, is_mingw \
   #pylint: disable=wrong-import-position
 
