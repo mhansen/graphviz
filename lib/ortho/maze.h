@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief makes @ref maze with @ref mkMaze for routing orthogonal edges
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -20,16 +25,18 @@ enum {M_RIGHT=0, M_TOP, M_LEFT, M_BOTTOM};
 #define MZ_SMALLV   8
 #define MZ_SMALLH  16
 
-  /* cell corresponds to node */
+  /// @brief cell corresponds to node
 #define IsNode(cp) (cp->flags & MZ_ISNODE)  
-  /* cell already inserted in vertical channel */
+  /// @brief cell already inserted in vertical channel
 #define IsVScan(cp) (cp->flags & MZ_VSCAN)  
-  /* cell already inserted in horizontal channel */
+  /// @brief cell already inserted in horizontal channel
 #define IsHScan(cp) (cp->flags & MZ_HSCAN)
-  /* cell has small height corresponding to a small height node */
+  /// @brief cell has small height corresponding to a small height node
 #define IsSmallV(cp) (cp->flags & MZ_SMALLV)
-  /* cell has small width corresponding to a small width node */
+  /// @brief cell has small width corresponding to a small width node
 #define IsSmallH(cp) (cp->flags & MZ_SMALLH)
+
+/// @brief result of partitioning available space, part of @ref maze
 
 typedef struct cell {
   int flags;
@@ -44,17 +51,24 @@ typedef struct cell {
                             6. ─ left — right
                     */
   int nsides;
-  snode** sides;
+  snode** sides; ///< @brief up to four sides: @ref M_RIGHT, @ref M_TOP, @ref M_LEFT, @ref M_BOTTOM
   boxf  bb;
 } cell;
 
+/**
+ * @struct maze
+ * @brief available channels for orthogonal edges around nodes of @ref graph_t
+ *
+ * A maze is the result of partitioning free space around a graph's nodes by @ref mkMaze.
+ */
+
 typedef struct {
   int ncells, ngcells;
-  cell* cells;     /* cells not corresponding to graph nodes */
-  cell* gcells;    /* cells corresponding to graph nodes */
-  sgraph* sg;
-  Dt_t* hchans;
-  Dt_t* vchans;
+  cell* cells;     ///< @brief cells not corresponding to graph nodes
+  cell* gcells;    ///< @brief cells corresponding to graph nodes
+  sgraph* sg;      ///< @brief search graph
+  Dt_t* hchans;    ///< @brief set of horizontal @ref channel "channels", created by @ref extractHChans.
+  Dt_t* vchans;    ///< @brief set of vertical @ref channel "channels", created by @ref extractVChans
 } maze;
 
 extern maze* mkMaze(graph_t*);
