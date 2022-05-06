@@ -223,21 +223,11 @@ static int cb_game_mode(char* optArg)
 	graphviz_exit(-1);
 
     }
-
-}
-static int cb_windowed_mode(int w,int h)
-{
-  glutInitWindowSize(w, h);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_ACCUM | GLUT_DOUBLE);
-  glutCreateWindow("smyrna");
-  return 1;
-    
 }
 
-int cb_glutinit(int w, int h, int fullscreen, int *argcp, char *argv[], char *optArg) {
+int cb_glutinit(int w, int h, int *argcp, char *argv[], char *optArg) {
     /*
     w,h: width and height of the window in pixels
-    fullscreen: if it will be a fullscreen window,
     argcp argv: main function's parameters, required for glutinit
     */
 
@@ -254,13 +244,7 @@ int cb_glutinit(int w, int h, int fullscreen, int *argcp, char *argv[], char *op
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
 
 
-    if (fullscreen)
-	cb_game_mode(optArg);
-    else    //well, use gtk then
-    {	
-	cb_windowed_mode(w,h);
-
-    }
+    cb_game_mode(optArg);
 
     /*register callbacks here*/
     glutDisplayFunc(cb_display);
