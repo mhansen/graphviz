@@ -91,9 +91,6 @@ rk_seed(unsigned long seed, rk_state *state)
         seed = (1812433253UL * (seed ^ (seed >> 30)) + pos + 1) & 0xffffffffUL;
     }
     state->pos = RK_STATE_LEN;
-    state->gauss = 0;
-    state->has_gauss = 0;
-    state->has_binomial = 0;
 }
 
 /* Magic Mersenne Twister constants */
