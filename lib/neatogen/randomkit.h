@@ -94,15 +94,6 @@ typedef struct rk_state_
 }
 rk_state;
 
-typedef enum {
-    RK_NOERR = 0, /* no error */
-    RK_ENODEV = 1, /* no RK_DEV_RANDOM device */
-    RK_ERR_MAX = 2
-} rk_error;
-
-/* error strings */
-extern char *rk_strerror[RK_ERR_MAX];
-
 /* Maximum generated random value */
 #define RK_MAX 0xFFFFFFFFUL
 

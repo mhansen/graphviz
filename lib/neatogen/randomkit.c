@@ -79,12 +79,6 @@
 #define RK_DEV_RANDOM "/dev/random"
 #endif
 
-char *rk_strerror[RK_ERR_MAX] =
-{
-    "no error",
-    "random device unvavailable"
-};
-
 void
 rk_seed(unsigned long seed, rk_state *state)
 {
