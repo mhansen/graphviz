@@ -167,8 +167,7 @@ static int tclGd_GetColor(Tcl_Interp * interp, Tcl_Obj * obj, int *color)
 	return TCL_OK;
     else {
 	Tcl_ResetResult(interp);
-	if (Tcl_ListObjGetElements(interp, obj, &nlist, &theList) !=
-	    TCL_OK)
+	if (Tcl_ListObjGetElements(interp, obj, &nlist, &theList) != TCL_OK)
 	    return TCL_ERROR;
 	if (nlist < 1 || nlist > 2)
 	    retval = TCL_ERROR;
@@ -345,15 +344,12 @@ static int gdCmd(ClientData clientData, Tcl_Interp *interp, int argc,
     size_t subi;
     /* Check for subcommand. */
     if (argc < 2) {
-	Tcl_SetResult(interp,
-		      "wrong # args: should be \"gd option ...\"",
-		      TCL_STATIC);
+	Tcl_SetResult(interp, "wrong # args: should be \"gd option ...\"", TCL_STATIC);
 	return TCL_ERROR;
     }
 
     /* Find the subcommand. */
-    for (subi = 0; subi < (sizeof subcmdVec) / (sizeof subcmdVec[0]);
-	 subi++) {
+    for (subi = 0; subi < sizeof(subcmdVec) / sizeof(subcmdVec[0]); subi++) {
 	if (strcmp(subcmdVec[subi].cmd, Tcl_GetString(objv[1])) == 0) {
 
 	    /* Check arg count. */
@@ -667,14 +663,11 @@ tclGdColorCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 		 * 1st 4 are gd color <opt> <handle>
 		 */
 		for (i = 0; i < argc - 4; i++) {
-		    if (Tcl_GetIntFromObj(interp, objv[i + 4], &args[i]) !=
-			TCL_OK) {
+		    if (Tcl_GetIntFromObj(interp, objv[i + 4], &args[i]) != TCL_OK) {
 
 /* gd text uses -ve colors to turn off anti-aliasing */
 			if (args[i] < -255 || args[i] > 255) {
-			    Tcl_SetResult(interp,
-					  "argument out of range 0-255",
-					  TCL_STATIC);
+			    Tcl_SetResult(interp, "argument out of range 0-255", TCL_STATIC);
 			    return TCL_ERROR;
 			}
 		    }
@@ -695,8 +688,7 @@ tclGdColorCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
     }
     Tcl_AppendResult(interp, "should be ", 0);
     for (subi = 0; subi < nsub; subi++)
-	Tcl_AppendResult(interp, (subi > 0 ? ", " : ""),
-			 colorCmdVec[subi].cmd, 0);
+	Tcl_AppendResult(interp, subi > 0 ? ", " : "", colorCmdVec[subi].cmd, 0);
 
     return TCL_ERROR;
 }
@@ -863,8 +855,7 @@ tclGdStyleCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
     ncolor = argc - 3;
     /* If only one argument, treat it as a list. */
     if (ncolor == 1)
-	if (Tcl_ListObjGetElements(interp, objv[3],
-				   &ncolor, &colorObjv) != TCL_OK)
+	if (Tcl_ListObjGetElements(interp, objv[3], &ncolor, &colorObjv) != TCL_OK)
 	    return TCL_ERROR;
 
     colors = (int *) Tcl_Alloc(ncolor * sizeof(int));
@@ -1061,8 +1052,7 @@ tclGdPolygonCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 
     /* Error check size of point list. */
     if (npoints % 2 != 0) {
-	Tcl_SetResult(interp, "Number of coordinates must be even",
-		      TCL_STATIC);
+	Tcl_SetResult(interp, "Number of coordinates must be even", TCL_STATIC);
 	retval = TCL_ERROR;
 	goto out;
     }
@@ -1070,8 +1060,7 @@ tclGdPolygonCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
     /* Divide by 2 to get number of points, and final error check. */
     npoints /= 2;
     if (npoints < 3) {
-	Tcl_SetResult(interp, "Must specify at least 3 points.",
-		      TCL_STATIC);
+	Tcl_SetResult(interp, "Must specify at least 3 points.", TCL_STATIC);
 	retval = TCL_ERROR;
 	goto out;
     }
@@ -1085,8 +1074,7 @@ tclGdPolygonCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 
     /* Get the point values. */
     for (i = 0; i < npoints; i++)
-	if (Tcl_GetIntFromObj(interp, pointObjv[i * 2], &points[i].x) !=
-	    TCL_OK
+	if (Tcl_GetIntFromObj(interp, pointObjv[i * 2], &points[i].x) != TCL_OK
 	    || Tcl_GetIntFromObj(interp, pointObjv[i * 2 + 1],
 				 &points[i].y) != TCL_OK) {
 	    retval = TCL_ERROR;
