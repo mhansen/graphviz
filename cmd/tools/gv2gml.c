@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief DOT-GML converter
+ */
+
 /**********************************************************
 *      This software is part of the graphviz package      *
 *                  https://graphviz.org                   *
