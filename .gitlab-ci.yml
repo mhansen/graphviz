@@ -240,7 +240,9 @@ portable-source:
             - coverage/**
         reports:
             junit: [./report.xml, build/tests/test_*.xml]
-            cobertura: coverage.xml
+            coverage_report:
+              coverage_format: cobertura
+              path: coverage.xml
     except:
         - tags
 
