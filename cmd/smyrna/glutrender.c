@@ -151,6 +151,9 @@ static void cb_drag(int X, int Y)
 
 static void cb_keyboard(unsigned char key, int x, int y)
 {
+    (void)x;
+    (void)y;
+
     if (key==27)    /*ESC*/
 	graphviz_exit(1);
     if(key=='3')
@@ -172,12 +175,17 @@ static void cb_keyboard(unsigned char key, int x, int y)
 static void cb_keyboard_up(unsigned char key, int x, int y)
 {
     (void)key;
+    (void)x;
+    (void)y;
 
     appmouse_key_release(view);
 }
 
 static void cb_special_key(int key, int x, int y)
 {
+    (void)x;
+    (void)y;
+
     if(key==GLUT_KEY_F1)
     {
 	printf("Currently help is not available\n");
@@ -188,6 +196,9 @@ static void cb_special_key(int key, int x, int y)
 
 static void cb_special_key_up(int key, int x, int y)
 {
+    (void)x;
+    (void)y;
+
     if(key==GLUT_KEY_F1)
     {
 	printf("Currently help is not available\n");
