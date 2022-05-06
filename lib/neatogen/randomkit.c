@@ -142,12 +142,6 @@ rk_random(rk_state *state)
     return y;
 }
 
-long
-rk_long(rk_state *state)
-{
-    return rk_ulong(state) >> 1;
-}
-
 unsigned long
 rk_ulong(rk_state *state)
 {

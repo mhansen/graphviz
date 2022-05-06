@@ -121,11 +121,6 @@ extern void rk_seed(unsigned long seed, rk_state *state);
 extern unsigned long rk_random(rk_state *state);
 
 /*
- * Returns a random long between 0 and LONG_MAX inclusive
- */
-extern long rk_long(rk_state *state);
-
-/*
  * Returns a random unsigned long between 0 and ULONG_MAX inclusive
  */
 extern unsigned long rk_ulong(rk_state *state);
