@@ -1384,6 +1384,9 @@ if test "x$use_tcl" = "x"; then
 
   if test -f ${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}/tcl.h; then
     TCL_INCLUDES="-I${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND} -I${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}/generic"
+    if test -d ${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}/generic; then
+      TCL_INCLUDES="${TCL_INCLUDES} -I${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}/generic"
+    fi
   else
     if test "x${TCLSH_EXEC_PREFIX}" != "x/usr" -a -f ${TCLSH_EXEC_PREFIX}/include/tcl.h; then
       TCL_INCLUDES=-I${TCLSH_EXEC_PREFIX}/include
