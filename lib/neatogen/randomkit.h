@@ -135,11 +135,6 @@ extern unsigned long rk_ulong(rk_state *state);
  */
 extern unsigned long rk_interval(unsigned long max, rk_state *state);
 
-/*
- * Returns a random double between 0.0 and 1.0, 1.0 excluded.
- */
-extern double rk_double(rk_state *state);
-
 #ifdef __cplusplus
 }
 #endif
