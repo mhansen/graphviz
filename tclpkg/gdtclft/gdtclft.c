@@ -674,7 +674,7 @@ tclGdColorCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 		}
 
 		/* Call the subcommand function. */
-		return (*colorCmdVec[subi].f) (interp, im, argc - 4, args);
+		return colorCmdVec[subi].f(interp, im, argc - 4, args);
 	    }
 	}
     }
