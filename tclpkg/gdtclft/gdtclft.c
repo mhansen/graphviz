@@ -339,10 +339,8 @@ static int tclGd_GetColor(Tcl_Interp * interp, Tcl_Obj * obj, int *color)
  * 		in copying from srcw x srch to destw x desth.
  * 
  */
-int
-gdCmd(ClientData clientData, Tcl_Interp * interp,
-      int argc, Tcl_Obj * CONST objv[])
-{
+static int gdCmd(ClientData clientData, Tcl_Interp *interp, int argc,
+                 Tcl_Obj *CONST objv[]) {
     unsigned int argi;
     size_t subi;
     /* Check for subcommand. */
