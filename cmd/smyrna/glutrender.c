@@ -207,15 +207,13 @@ static void cb_special_key_up(int key, int x, int y)
 
 }
 
-static int cb_game_mode(char* optArg)
+static void cb_game_mode(char* optArg)
 {
     
     glutGameModeString(optArg);
     if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) 
     {
     	glutEnterGameMode();
-	return 1;
-
     }
     else 
     {
