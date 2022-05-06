@@ -234,13 +234,9 @@ static int cb_windowed_mode(int w,int h)
     
 }
 
-int cb_glutinit(int x,int y,int w,int h, int bits,int s_rate,int fullscreen,int* argcp, char *argv[],char* optArg)
-{
+int cb_glutinit(int w, int h, int fullscreen, int *argcp, char *argv[], char *optArg) {
     /*
-    x,y:window position , unless in full screen mode
     w,h: width and height of the window in pixels
-    bits: display color bit count
-    s_rate: for full screen mode this value represents refresh rate in hertz
     fullscreen: if it will be a fullscreen window,
     argcp argv: main function's parameters, required for glutinit
     */
