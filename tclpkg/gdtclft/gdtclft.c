@@ -509,6 +509,9 @@ tclGdCreateCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static int
 tclGdDestroyCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)interp;
+    (void)argc;
+
     gdImagePtr im;
 
     /* Get the image pointer and destroy it */
@@ -701,6 +704,8 @@ tclGdColorCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static int
 tclGdColorNewCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int args[])
 {
+    (void)argc;
+
     int color;
 
     color = gdImageColorAllocate(im, args[0], args[1], args[2]);
@@ -711,6 +716,8 @@ tclGdColorNewCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int args[])
 static int
 tclGdColorExactCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int args[])
 {
+    (void)argc;
+
     int color;
 
     color = gdImageColorExact(im, args[0], args[1], args[2]);
@@ -721,6 +728,8 @@ tclGdColorExactCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int args[
 static int
 tclGdColorClosestCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int args[])
 {
+    (void)argc;
+
     int color;
 
     color = gdImageColorClosest(im, args[0], args[1], args[2]);
@@ -731,6 +740,8 @@ tclGdColorClosestCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int arg
 static int
 tclGdColorResolveCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int args[])
 {
+    (void)argc;
+
     int color;
 
     color = gdImageColorResolve(im, args[0], args[1], args[2]);
@@ -741,6 +752,9 @@ tclGdColorResolveCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int arg
 static int
 tclGdColorFreeCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int args[])
 {
+    (void)interp;
+    (void)argc;
+
     gdImageColorDeallocate(im, args[0]);
     return TCL_OK;
 }
@@ -800,6 +814,9 @@ tclGdColorGetCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int args[])
 static int
 tclGdBrushCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)interp;
+    (void)argc;
+
     gdImagePtr im, imbrush;
 
     /* Get the image pointers. */
@@ -815,6 +832,9 @@ tclGdBrushCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static int
 tclGdTileCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)interp;
+    (void)argc;
+
     gdImagePtr im, tile;
 
     /* Get the image pointers. */
@@ -875,6 +895,8 @@ tclGdStyleCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static int
 tclGdSetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)argc;
+
     gdImagePtr im;
     int color, x, y;
 
@@ -898,6 +920,8 @@ tclGdSetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static int
 tclGdLineCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)argc;
+
     gdImagePtr im;
     int color, x1, y1, x2, y2;
 
@@ -925,6 +949,8 @@ tclGdLineCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static int
 tclGdRectCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)argc;
+
     gdImagePtr im;
     int color, x1, y1, x2, y2;
     const char *cmd;
@@ -957,6 +983,8 @@ tclGdRectCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static int
 tclGdArcCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)argc;
+
     gdImagePtr im;
     int color, cx, cy, width, height, start, end;
     const char *cmd;
@@ -1152,6 +1180,8 @@ tclGdCopyCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static int
 tclGdGetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)argc;
+
     gdImagePtr im;
     int color, x, y;
 
@@ -1343,6 +1373,8 @@ static int BufferSinkFunc(void *context, const char *buffer, int len)
 static int
 tclGdWriteBufCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)argc;
+
     gdImagePtr im;
     Tcl_Obj *output;
     /* char *cmd; */
