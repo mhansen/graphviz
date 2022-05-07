@@ -62,9 +62,6 @@ typedef struct LeafList {
     Leaf_t *leaf;
 } LeafList_t;
 
-#ifndef METHODS
-#define METHODS 1
-#endif /*METHODS*/
     struct RTree {
     Node_t *root;
 
