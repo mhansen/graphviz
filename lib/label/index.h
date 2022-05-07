@@ -115,7 +115,6 @@ int RTreeClose(RTree_t * rtp);
 Node_t *RTreeNewIndex(RTree_t * rtp);
 LeafList_t *RTreeSearch(RTree_t *, Node_t *, Rect_t *);
 int RTreeInsert(RTree_t *, Rect_t *, void *, Node_t **, int);
-int RTreeDelete(RTree_t *, Rect_t *, void *, Node_t **);
 
 LeafList_t *RTreeNewLeafList(Leaf_t * lp);
 LeafList_t *RTreeLeafListAdd(LeafList_t * llp, Leaf_t * lp);
