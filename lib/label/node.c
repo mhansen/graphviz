@@ -27,16 +27,6 @@ Node_t *RTreeNewNode(RTree_t * rtp)
     return n;
 }
 
-void RTreeFreeNode(RTree_t * rtp, Node_t * p)
-{
-    rtp->NodeCount--;
-    if (p->level == 0)
-	rtp->LeafCount--;
-    else
-	rtp->NonLeafCount--;
-    free(p);
-}
-
 /* Initialize a Node structure.
 */
 void InitNode(Node_t * n)

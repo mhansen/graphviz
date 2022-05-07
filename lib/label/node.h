@@ -27,7 +27,6 @@ typedef struct Node {
     struct Branch branch[NODECARD];
 } Node_t;
 
-void RTreeFreeNode(RTree_t *, Node_t *);
 void InitNode(Node_t *);
 void InitBranch(Branch_t *);
 Rect_t NodeCover(Node_t *);
