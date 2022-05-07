@@ -63,7 +63,6 @@ Node_t *RTreeNewIndex(RTree_t * rtp)
 {
     Node_t *x = RTreeNewNode(rtp);
     x->level = 0;		/* leaf */
-    rtp->LeafCount++;
     return x;
 }
 
@@ -224,7 +223,6 @@ int RTreeInsert(RTree_t * rtp, Rect_t * r, void *data, Node_t ** n, int level)
 	}
 
 	Node_t *newroot = RTreeNewNode(rtp);	/* grow a new root, make tree taller */
-	rtp->NonLeafCount++;
 	newroot->level = (*n)->level + 1;
 	b.rect = NodeCover(*n);
 	b.child = *n;

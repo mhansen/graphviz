@@ -98,7 +98,6 @@ typedef struct LeafList {
     /* counters used even when StatFlag not set */
     int RectCount;
     int NodeCount;
-    int LeafCount, NonLeafCount;
     int EntryCount;
     int SearchCount;
     int HitCount;

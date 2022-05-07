@@ -170,10 +170,6 @@ int AddBranch(RTree_t * rtp, Branch_t * b, Node_t * n, Node_t ** new)
 	}
 	assert(new);
 	SplitNode(rtp, n, b, new);
-	if (n->level == 0)
-	    rtp->LeafCount++;
-	else
-	    rtp->NonLeafCount++;
 	return 1;
     }
 }
