@@ -75,9 +75,6 @@ static int RTreeClose2(RTree_t * rtp, Node_t * n)
 	    if (!RTreeClose2(rtp, n->branch[i].child)) {
 		free(n->branch[i].child);
 		DisconBranch(n, i);
-		rtp->EntryCount--;
-		if (rtp->StatFlag)
-		    rtp->ElimCount++;
 	    }
 	}
     } else {
@@ -85,9 +82,6 @@ static int RTreeClose2(RTree_t * rtp, Node_t * n)
 	    if (!n->branch[i].child)
 		continue;
 	    DisconBranch(n, i);
-	    rtp->EntryCount--;
-	    if (rtp->StatFlag)
-	        rtp->ElimCount++;
 	}
     }
     return 0;
@@ -153,8 +147,6 @@ LeafList_t *RTreeSearch(RTree_t * rtp, Node_t * n, Rect_t * r)
     assert(n->level >= 0);
     assert(r);
 
-    rtp->SeTouchCount++;
-
     if (n->level > 0) {		/* this is an internal node in the tree */
 	for (size_t i = 0; i < NODECARD; i++)
 	    if (n->branch[i].child && Overlap(r, &n->branch[i].rect)) {
@@ -205,15 +197,7 @@ int RTreeInsert(RTree_t * rtp, Rect_t * r, void *data, Node_t ** n, int level)
     fprintf(stderr, "RTreeInsert  level=%d\n", level);
 #	endif
 
-    if (rtp->StatFlag) {
-	rtp->InsertCount++;
-    }
-    rtp->RectCount++;
-
     if (RTreeInsert2(rtp, r, data, *n, &newnode, level)) {	/* root was split */
-	if (rtp->StatFlag) {
-	    rtp->InTouchCount++;
-	}
 
 	Node_t *newroot = RTreeNewNode(rtp);	/* grow a new root, make tree taller */
 	newroot->level = (*n)->level + 1;
@@ -224,7 +208,6 @@ int RTreeInsert(RTree_t * rtp, Rect_t * r, void *data, Node_t ** n, int level)
 	b.child = newnode;
 	AddBranch(rtp, &b, newroot, NULL);
 	*n = newroot;
-	rtp->EntryCount += 2;
 	result = 1;
     }
 
@@ -249,10 +232,6 @@ RTreeInsert2(RTree_t * rtp, Rect_t * r, void *data,
     assert(r && n && new);
     assert(level >= 0 && level <= n->level);
 
-    if (rtp->StatFlag) {
-	rtp->InTouchCount++;
-    }
-
     /* Still above level for insertion, go down tree recursively */
     if (n->level > level) {
 	int i = PickBranch(r, n);
@@ -263,14 +242,12 @@ RTreeInsert2(RTree_t * rtp, Rect_t * r, void *data,
 	    n->branch[i].rect = NodeCover(n->branch[i].child);
 	    b.child = n2;
 	    b.rect = NodeCover(n2);
-	    rtp->EntryCount++;
 	    return AddBranch(rtp, &b, n, new);
 	}
     } else if (n->level == level) {	/* at level for insertion. */
 	/*Add rect, split if necessary */
 	b.rect = *r;
 	b.child = (Node_t *) data;
-	rtp->EntryCount++;
 	return AddBranch(rtp, &b, n, new);
     } else {			/* Not supposed to happen */
 	assert(FALSE);

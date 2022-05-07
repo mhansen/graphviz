@@ -21,7 +21,6 @@
 */
 Node_t *RTreeNewNode(RTree_t * rtp)
 {
-    rtp->NodeCount++;
     Node_t *n = malloc(sizeof(Node_t));
     InitNode(n);
     return n;
@@ -162,9 +161,6 @@ int AddBranch(RTree_t * rtp, Branch_t * b, Node_t * n, Node_t ** new)
 	assert(i < NODECARD);
 	return 0;
     } else {
-	if (rtp->StatFlag) {
-	    rtp->InTouchCount++;
-	}
 	assert(new);
 	SplitNode(rtp, n, b, new);
 	return 1;

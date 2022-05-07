@@ -76,30 +76,6 @@ typedef struct LeafList {
     /* times */
     long ElapsedTime;
     float UserTime, SystemTime;
-
-    /* variables for statistics */
-    int StatFlag;		/* tells if we are counting or not */
-    /* counters affected only when StatFlag set */
-    int InsertCount;
-    int DeleteCount;
-    int ReInsertCount;
-    int InSplitCount;
-    int DeSplitCount;
-    int ElimCount;
-    int EvalCount;
-    int InTouchCount;
-    int DeTouchCount;
-    int SeTouchCount;
-    int CallCount;
-    float SplitMeritSum;
-
-    /* counters used even when StatFlag not set */
-    int RectCount;
-    int NodeCount;
-    int EntryCount;
-    int SearchCount;
-    int HitCount;
-
 };
 
 typedef struct ListNode {
