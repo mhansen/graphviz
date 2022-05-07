@@ -72,10 +72,6 @@ typedef struct LeafList {
 
     /* balance criterion for node splitting */
     int MinFill;
-
-    /* times */
-    long ElapsedTime;
-    float UserTime, SystemTime;
 };
 
 typedef struct ListNode {
