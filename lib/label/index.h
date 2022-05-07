@@ -74,11 +74,6 @@ typedef struct LeafList {
     int MinFill;
 };
 
-typedef struct ListNode {
-    struct ListNode *next;
-    struct Node *node;
-} ListNode_t;
-
 RTree_t *RTreeOpen(void);
 int RTreeClose(RTree_t * rtp);
 Node_t *RTreeNewIndex(void);
