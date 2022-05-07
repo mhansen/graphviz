@@ -163,10 +163,7 @@ int AddBranch(RTree_t * rtp, Branch_t * b, Node_t * n, Node_t ** new)
 	return 0;
     } else {
 	if (rtp->StatFlag) {
-	    if (rtp->Deleting)
-		rtp->DeTouchCount++;
-	    else
-		rtp->InTouchCount++;
+	    rtp->InTouchCount++;
 	}
 	assert(new);
 	SplitNode(rtp, n, b, new);

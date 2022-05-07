@@ -77,8 +77,6 @@ typedef struct LeafList {
     long ElapsedTime;
     float UserTime, SystemTime;
 
-    int Deleting;
-
     /* variables for statistics */
     int StatFlag;		/* tells if we are counting or not */
     /* counters affected only when StatFlag set */

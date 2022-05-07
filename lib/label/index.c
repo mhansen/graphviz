@@ -206,20 +206,13 @@ int RTreeInsert(RTree_t * rtp, Rect_t * r, void *data, Node_t ** n, int level)
 #	endif
 
     if (rtp->StatFlag) {
-	if (rtp->Deleting)
-	    rtp->ReInsertCount++;
-	else
-	    rtp->InsertCount++;
+	rtp->InsertCount++;
     }
-    if (!rtp->Deleting)
-	rtp->RectCount++;
+    rtp->RectCount++;
 
     if (RTreeInsert2(rtp, r, data, *n, &newnode, level)) {	/* root was split */
 	if (rtp->StatFlag) {
-	    if (rtp->Deleting)
-		rtp->DeTouchCount++;
-	    else
-		rtp->InTouchCount++;
+	    rtp->InTouchCount++;
 	}
 
 	Node_t *newroot = RTreeNewNode(rtp);	/* grow a new root, make tree taller */
@@ -257,10 +250,7 @@ RTreeInsert2(RTree_t * rtp, Rect_t * r, void *data,
     assert(level >= 0 && level <= n->level);
 
     if (rtp->StatFlag) {
-	if (rtp->Deleting)
-	    rtp->DeTouchCount++;
-	else
-	    rtp->InTouchCount++;
+	rtp->InTouchCount++;
     }
 
     /* Still above level for insertion, go down tree recursively */

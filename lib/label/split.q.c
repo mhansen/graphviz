@@ -43,10 +43,7 @@ void SplitNode(RTree_t * rtp, Node_t * n, Branch_t * b, Node_t ** nn)
 #endif
 
     if (rtp->StatFlag) {
-	if (rtp->Deleting)
-	    rtp->DeSplitCount++;
-	else
-	    rtp->InSplitCount++;
+	rtp->InSplitCount++;
     }
 
     /* load all the branches into a buffer, initialize old node */
@@ -70,7 +67,7 @@ void SplitNode(RTree_t * rtp, Node_t * n, Branch_t * b, Node_t ** nn)
     int area = RectArea(&p->cover[0]) + RectArea(&p->cover[1]);
 
     /* record how good the split was for statistics */
-    if (rtp->StatFlag && !rtp->Deleting && area)
+    if (rtp->StatFlag && area)
 	rtp->SplitMeritSum += (float) rtp->split.CoverSplitArea / area;
 
     /* put branches from buffer into 2 nodes according to chosen partition */
