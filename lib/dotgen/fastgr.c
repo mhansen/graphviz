@@ -188,8 +188,12 @@ edge_t *new_virtual_edge(node_t * u, node_t * v, edge_t * orig)
 	if (ED_to_virt(orig) == NULL)
 	    ED_to_virt(orig) = e;
 	ED_to_orig(e) = orig;
-    } else
-	ED_minlen(e) = ED_count(e) = ED_xpenalty(e) = ED_weight(e) = 1;
+    } else {
+	ED_weight(e) = 1;
+	ED_xpenalty(e) = 1;
+	ED_count(e) = 1;
+	ED_minlen(e) = 1;
+    }
     return e;
 }
 
