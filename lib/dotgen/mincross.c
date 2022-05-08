@@ -1401,12 +1401,11 @@ void build_ranks(graph_t * g, int pass)
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++) {
 	GD_rank(Root)[i].valid = false;
 	if (GD_flip(g) && GD_rank(g)[i].n > 0) {
-	    int n, ndiv2;
 	    node_t **vlist = GD_rank(g)[i].v;
-	    n = GD_rank(g)[i].n - 1;
-	    ndiv2 = n / 2;
-	    for (j = 0; j <= ndiv2; j++)
-		exchange(vlist[j], vlist[n - j]);
+	    int num_nodes_1 = GD_rank(g)[i].n - 1;
+	    int half_num_nodes_1 = num_nodes_1 / 2;
+	    for (j = 0; j <= half_num_nodes_1; j++)
+		exchange(vlist[j], vlist[num_nodes_1 - j]);
 	}
     }
 
