@@ -1769,7 +1769,7 @@ static bool flat_mval(node_t * n)
 
 static bool medians(graph_t * g, int r0, int r1)
 {
-    int i, j, j0, lm, rm, lspan, rspan, *list;
+    int i, j0, lspan, rspan, *list;
     node_t *n, **v;
     edge_t *e;
     bool hasfixed = false;
@@ -1778,7 +1778,7 @@ static bool medians(graph_t * g, int r0, int r1)
     v = GD_rank(g)[r0].v;
     for (i = 0; i < GD_rank(g)[r0].n; i++) {
 	n = v[i];
-	j = 0;
+	size_t j = 0;
 	if (r1 > r0)
 	    for (j0 = 0; (e = ND_out(n).list[j0]); j0++) {
 		if (ED_xpenalty(e) > 0)
@@ -1804,8 +1804,8 @@ static bool medians(graph_t * g, int r0, int r1)
 		ND_mval(n) = list[j / 2];
 	    else {
 		/* weighted median */
-		rm = j / 2;
-		lm = rm - 1;
+		size_t rm = j / 2;
+		size_t lm = rm - 1;
 		rspan = list[j - 1] - list[rm];
 		lspan = list[lm] - list[0];
 		if (lspan == rspan)
