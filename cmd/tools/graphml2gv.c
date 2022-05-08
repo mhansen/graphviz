@@ -16,6 +16,7 @@
 #include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
 #include    <getopt.h>
+#include    <string.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <ctype.h>
@@ -553,8 +554,7 @@ static void endElementHandler(void *userData, const char *name)
 		name = dynbuf = N_NEW(len, char);
 		strcpy(name, GRAPHML_COMP);
 	    }
-	    strcpy(name + sizeof(GRAPHML_COMP) - 1,
-		   agxbuse(&ud->xml_attr_name));
+	    strcat(name, agxbuse(&ud->xml_attr_name));
 	    value = agxbuse(&ud->composite_buffer);
 	    agxbclear(&ud->xml_attr_value);
 	    ud->compositeReadState = FALSE;
