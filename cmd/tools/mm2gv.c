@@ -25,7 +25,6 @@
 #include "matrix_market.h"
 #include <getopt.h>
 
-#define MALLOC malloc
 #define test_flag(a, flag) ((a)&(flag))
 #define BUFS         1024
 
