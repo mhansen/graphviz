@@ -539,19 +539,13 @@ static void endElementHandler(void *userData, const char *name)
     } else if (strcmp(name, "attr") == 0) {
 	char *name;
 	char *value;
-	char buf[SMALLBUF] = GRAPHML_COMP;
 	char *dynbuf = 0;
 
 	ud->closedElementType = TAG_NONE;
 	if (ud->compositeReadState) {
-	    int len = sizeof(GRAPHML_COMP) + agxblen(&ud->xml_attr_name);
-	    if (len <= SMALLBUF) {
-		name = buf;
-	    } else {
-		name = dynbuf = gv_calloc(len, sizeof(char));
-		strcpy(name, GRAPHML_COMP);
-	    }
-	    strcat(name, agxbuse(&ud->xml_attr_name));
+	    size_t len = sizeof(GRAPHML_COMP) + agxblen(&ud->xml_attr_name);
+	    name = dynbuf = gv_calloc(len, sizeof(char));
+	    (void)snprintf(name, len, "%s%s", GRAPHML_COMP, agxbuse(&ud->xml_attr_name));
 	    value = agxbuse(&ud->composite_buffer);
 	    agxbclear(&ud->xml_attr_value);
 	    ud->compositeReadState = FALSE;
