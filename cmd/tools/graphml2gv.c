@@ -51,7 +51,6 @@ static int Verbose;
 static char* gname = "";
 
 #define NEW(t)      malloc(sizeof(t))
-#define N_NEW(n,t)  calloc((n),sizeof(t))
 
 static void pushString(gv_stack_t *stk, const char *s) {
 
@@ -551,7 +550,7 @@ static void endElementHandler(void *userData, const char *name)
 	    if (len <= SMALLBUF) {
 		name = buf;
 	    } else {
-		name = dynbuf = N_NEW(len, char);
+		name = dynbuf = gv_calloc(len, sizeof(char));
 		strcpy(name, GRAPHML_COMP);
 	    }
 	    strcat(name, agxbuse(&ud->xml_attr_name));
@@ -744,7 +743,7 @@ nameOf (char* name, int cnt)
 	return name;
     if (cnt) {
 	if (!buf)
-	    buf = N_NEW (strlen(name)+32,char);  /* 32 to handle any integer plus null byte */
+	    buf = gv_calloc(strlen(name) + 32, sizeof(char)); // 32 to handle any integer plus null byte
 	sprintf (buf, "%s%d", name, cnt);
 	return buf;
     }
