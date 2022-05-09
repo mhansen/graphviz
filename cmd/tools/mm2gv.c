@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
+#include <cgraph/unreachable.h>
 
 #define STANDALONE
 #include <cgraph/cgraph.h>
@@ -282,6 +283,8 @@ static void init(int argc, char **argv, parms_t * p)
 		usage(1);
 	    }
 	    break;
+ 	default:
+	    UNREACHABLE();
 	}
     }
     argv += optind;
