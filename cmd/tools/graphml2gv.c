@@ -50,8 +50,6 @@ static char **Files;
 static int Verbose;
 static char* gname = "";
 
-#define NEW(t)      malloc(sizeof(t))
-
 static void pushString(gv_stack_t *stk, const char *s) {
 
   // duplicate the string we will push
@@ -120,7 +118,7 @@ typedef struct {
 
 static namev_t *make_nitem(Dt_t * d, namev_t * objp, Dtdisc_t * disc)
 {
-    namev_t *np = NEW(namev_t);
+    namev_t *np = gv_alloc(sizeof(*np));
     np->name = objp->name;
     np->unique_name = 0;
     return np;
@@ -142,7 +140,7 @@ static Dtdisc_t nameDisc = {
 
 static userdata_t *genUserdata(char* dfltname)
 {
-    userdata_t *user = NEW(userdata_t);
+    userdata_t *user = gv_alloc(sizeof(*user));
     agxbinit(&(user->xml_attr_name), NAMEBUF, 0);
     agxbinit(&(user->xml_attr_value), SMALLBUF, 0);
     agxbinit(&(user->composite_buffer), SMALLBUF, 0);
