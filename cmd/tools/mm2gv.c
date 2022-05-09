@@ -25,7 +25,6 @@
 #include "matrix_market.h"
 #include <getopt.h>
 
-#define test_flag(a, flag) ((a)&(flag))
 #define BUFS         1024
 
 typedef struct {
