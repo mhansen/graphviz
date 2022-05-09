@@ -16,6 +16,7 @@
 #include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
 #include    <getopt.h>
+#include    <stdio.h>
 #include    <string.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
@@ -25,7 +26,6 @@
 #define XML_STATUS_ERROR 0
 #endif
 
-#define BUFSIZE		20000
 #define SMALLBUF	1000
 #define NAMEBUF		100
 
@@ -590,7 +590,7 @@ static void characterDataHandler(void *userData, const char *s, int length)
 
 static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
 {
-    char buf[BUFSIZE];
+    char buf[BUFSIZ];
     int done;
     userdata_t *udata = genUserdata(gname);
     XML_Parser parser = XML_ParserCreate(NULL);
