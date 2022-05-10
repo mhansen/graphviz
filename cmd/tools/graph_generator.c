@@ -189,21 +189,21 @@ makeSquareGrid(int dim1, int dim2, int connect_corners, int partial, edgefn ef)
 	    if (connect_corners == 1) {
 		if (i == 0 && j == 0) {	// upper left
 		    OUTE((dim1 - 1) * dim2 + dim2);
-		} else if (i == (dim1 - 1) && j == 0) {	// lower left
+		} else if (i == dim1 - 1 && j == 0) {	// lower left
 		    OUTE(dim2);
-		} else if (i == 0 && j == (dim2 - 1)) {	// upper right
+		} else if (i == 0 && j == dim2 - 1) {	// upper right
 		    OUTE((dim1 - 1) * dim2 + 1);
-		} else if (i == (dim1 - 1) && j == (dim2 - 1)) {	// lower right
+		} else if (i == dim1 - 1 && j == dim2 - 1) {	// lower right
 		    OUTE(1);
 		}
 	    } else if (connect_corners == 2) {
 		if (i == 0 && j == 0) {	// upper left
 		    OUTE(dim2);
-		} else if (i == (dim1 - 1) && j == 0) {	// lower left
+		} else if (i == dim1 - 1 && j == 0) {	// lower left
 		    OUTE((dim1 - 1) * dim2 + dim2);
-		} else if (i == 0 && j == (dim2 - 1)) {	// upper right
+		} else if (i == 0 && j == dim2 - 1) {	// upper right
 		    OUTE(1);
-		} else if (i == (dim1 - 1) && j == (dim2 - 1)) {	// lower right
+		} else if (i == dim1 - 1 && j == dim2 - 1) {	// lower right
 		    OUTE((dim1 - 1) * dim2 + 1);
 		}
 	    }
@@ -496,7 +496,7 @@ void makeRandom(int h, int w, edgefn ef)
     for (i=3; i<=size; i++) {
 	for (j=1; j<i-1; j++) {
 	    int th = rand()%(size*size);
-	    if (((th<=(w*w))&&((i<5)||((i>h-4)&&(j>h-4)))) || (th<=w))
+	    if ((th <= w * w && (i < 5 || (i > h - 4 && j > h - 4))) || th <= w)
 		ef(j,i);
 	}
     }
@@ -583,13 +583,13 @@ prevRoot (tree_t* tp)
 static int
 treeSize (tree_t* tp)
 {
-    return (tp->top - tp->root + 1);
+    return tp->top - tp->root + 1;
 }
 
 static int
 treeTop (tree_t* tp)
 {
-    return (tp->top);
+    return tp->top;
 }
 
 static void
