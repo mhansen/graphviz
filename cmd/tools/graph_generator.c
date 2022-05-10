@@ -475,10 +475,7 @@ void makeRandom(int h, int w, edgefn ef)
     int i, j, type, size, depth;
 
     srand((unsigned)time(0));
-    if (rand()%2==1)
-	type = 1;
-    else
-	type = 0;
+    type = rand() % 2;
 
     size = depth = 0;
     while (size <= h) {
