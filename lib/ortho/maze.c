@@ -52,6 +52,8 @@ char* pre = "%!PS-Adobe-2.0\n\
 
 char* post = "showpage\n";
 
+/// @brief dumps @ref maze::gcells and @ref maze::cells via rects to PostScript
+
 static void
 psdump (cell* gcells, int n_gcells, boxf BB, boxf* rects, int nrect)
 {
