@@ -479,12 +479,12 @@ void makeRandom(int h, int w, edgefn ef)
 
     size = depth = 0;
     while (size <= h) {
-	size += ipow(2,depth);
+	size += 1 << depth;
 	depth++;
     }
     depth--;
     if (size > h) {
-	size -= ipow(2,depth);
+	size -= 1 << depth;
 	depth--;
     }
 
