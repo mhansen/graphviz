@@ -202,10 +202,11 @@ updateWts (sgraph* g, cell* cp, sedge* ep)
     }
 }
 
-/* markSmall:
+/**
  * cp corresponds to a real node. If it is small, its associated cells should
  * be marked as usable.
  */
+
 static void
 markSmall (cell* cp)
 {
