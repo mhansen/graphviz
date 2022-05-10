@@ -100,19 +100,20 @@ static void errexit(int opt) {
 }
 
 /* readPos:
- * Read and return a single int from s, guaranteed to be >= min.
+ * Read and return a single int from s, guaranteed to be >= 1.
  * A pointer to the next available character from s is stored in e.
  * Return -1 on error.
  */
-static int readPos(char *s, char **e, int min)
-{
+static int readPos(char *s, char **e) {
+    static const int MIN = 1;
+
     long d = strtol(s, e, 10);
     if (s == *e || d > INT_MAX) {
 	fprintf(stderr, "ill-formed integer \"%s\" ", s);
 	return -1;
     }
-    if (d < min) {
-	fprintf(stderr, "integer \"%s\" less than %d", s, min);
+    if (d < MIN) {
+	fprintf(stderr, "integer \"%s\" less than %d", s, MIN);
 	return -1;
     }
     return (int)d;
@@ -126,7 +127,7 @@ static int readOne(char *s, int* ip)
     int d;
     char *next;
 
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d > 0) {
 	*ip = d;
 	return 0;
@@ -142,7 +143,7 @@ static int setOne(char *s, opts_t* opts)
     int d;
     char *next;
 
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d > 0) {
 	opts->graphSize1 = d;
 	return 0;
@@ -158,7 +159,7 @@ static int setTwo(char *s, opts_t* opts)
     int d;
     char *next;
 
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d < 0)
 	return d;
     opts->graphSize1 = d;
@@ -169,7 +170,7 @@ static int setTwo(char *s, opts_t* opts)
     }
 
     s = next + 1;
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d > 1) {
 	opts->graphSize2 = d;
 	return 0;
@@ -187,7 +188,7 @@ static int setTwoTwoOpt(char *s, opts_t* opts, int dflt)
     int d;
     char *next;
 
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d < 0)
 	return d;
     opts->graphSize1 = d;
@@ -198,7 +199,7 @@ static int setTwoTwoOpt(char *s, opts_t* opts, int dflt)
     }
 
     s = next + 1;
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d < 1) {
 	return 0;
     }
@@ -210,7 +211,7 @@ static int setTwoTwoOpt(char *s, opts_t* opts, int dflt)
     }
 
     s = next + 1;
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d < 0)
 	return d;
     opts->parm1 = d;
@@ -221,7 +222,7 @@ static int setTwoTwoOpt(char *s, opts_t* opts, int dflt)
     }
 
     s = next + 1;
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d < 0) {
 	return d;
     }
@@ -237,7 +238,7 @@ static int setTwoOpt(char *s, opts_t* opts, int dflt)
     int d;
     char *next;
 
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d < 0)
 	return d;
     opts->graphSize1 = d;
@@ -248,7 +249,7 @@ static int setTwoOpt(char *s, opts_t* opts, int dflt)
     }
 
     s = next + 1;
-    d = readPos(s, &next, 1);
+    d = readPos(s, &next);
     if (d > 1) {
 	opts->graphSize2 = d;
 	return 0;
