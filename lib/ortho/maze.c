@@ -297,6 +297,8 @@ createSEdges (cell* cp, sgraph* g)
 	cp->edges[cp->nedges++] = createSEdge (g, cp->sides[M_LEFT], cp->sides[M_RIGHT], hwt);
 }
 
+/// finds a @ref snode by point or creates it
+
 static snode*
 findSVert (sgraph* g, Dt_t* cdt, pointf p, snodeitem* ditems, bool isVert)
 {
