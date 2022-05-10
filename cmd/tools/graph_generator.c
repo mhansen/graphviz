@@ -237,8 +237,8 @@ void makeTree(int depth, int nary, edgefn ef)
 
 void makeBinaryTree(int depth, edgefn ef)
 {
-    unsigned int i;
-    unsigned int n = (1 << depth) - 1;
+    int i;
+    int n = (1 << depth) - 1;
 
     for (i = 1; i <= n; i++) {
 	ef( i, 2 * i);
