@@ -261,6 +261,8 @@ markSmall (cell* cp)
     }
 }
 
+/// fills @ref cell::sides and @ref sgraph::edges
+
 static void
 createSEdges (cell* cp, sgraph* g)
 {
