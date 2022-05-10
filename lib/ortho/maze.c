@@ -333,8 +333,13 @@ chkSgraph (sgraph* g)
     
 }
 
-/* mkMazeGraph:
+/**
+ * @brief creates and fills @ref sgraph for @ref maze
+ *
+ * Subroutines: @ref createSGraph, @ref findSVert with @ref createSNode,
+ * @ref initSEdges and @ref chkSgraph
  */
+
 static sgraph*
 mkMazeGraph (maze* mp, boxf bb)
 {
