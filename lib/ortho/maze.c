@@ -463,8 +463,8 @@ chkSgraph (g);
     return g;
 }
 
-/* mkMaze:
- */
+/// creates @ref maze and fills @ref maze::gcells and @ref maze::cells. A subroutine of @ref orthoEdges.
+
 maze *mkMaze(graph_t *g) {
     node_t* n;
     maze* mp = NEW(maze);
