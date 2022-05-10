@@ -152,11 +152,14 @@ static Dtdisc_t hdictDisc = {
 #define CHANSZ(w) (((w)-3)/2)
 #define IS_SMALL(v) (CHANSZ(v) < 2)
 
-/* updateWt:
+/**
+ * @brief updates single @ref sedge::weight
+ *
  * At present, we use a step function. When a bound is reached, the weight
  * becomes huge. We might consider bumping up the weight more gradually, the
  * thinner the channel, the faster the weight rises.
  */
+
 static void
 updateWt (sedge* ep, int sz)
 {
@@ -167,12 +170,15 @@ updateWt (sedge* ep, int sz)
     }
 }
 
-/* updateWts:
+/**
+ * @brief updates @ref sedge::weight of cell edges
+ *
  * Iterate over edges in a cell, adjust weights as necessary.
  * It always updates the bent edges belonging to a cell.
  * A horizontal/vertical edge is updated only if the edge traversed
  * is bent, or if it is the traversed edge.
  */
+
 void
 updateWts (sgraph* g, cell* cp, sedge* ep)
 {
