@@ -86,6 +86,8 @@ psdump (cell* gcells, int n_gcells, boxf BB, boxf* rects, int nrect)
 }
 #endif
 
+/// compares points by X and then by Y
+
 static int
 vcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
 {
@@ -97,6 +99,8 @@ vcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
   else if (key1->y < key2->y) return -1;
   else return 0;
 }   
+
+/// compares points by Y and then by X
 
 static int
 hcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
