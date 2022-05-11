@@ -22,6 +22,8 @@
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
+#include <float.h>
+#include <math.h>
 
 static xdot *parseXdotwithattrs(void *e)
 {
@@ -52,28 +54,16 @@ static void set_boundaries(Agraph_t * g)
     Agnode_t *v;
     Agsym_t* pos_attr = GN_pos(g);
     glCompPoint pos;
-    float left, right, top, bottom;
-    int id=0;
+    float left = FLT_MAX, right = -FLT_MAX, top = FLT_MAX, bottom = -FLT_MAX;
 
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) 
     {
 	pos=getPointFromStr(agxget(v, pos_attr));
-	if(id==0)
-	{
-	    left=pos.x;
-	    right=pos.x;
-	    top=pos.y;
-	    bottom=pos.y;
-	}
-	if (left > pos.x)
-	    left = pos.x;
-	if (right < pos.x)
-	    right = pos.x;
-	if (bottom > pos.y)
-	    bottom = pos.y;
-	if (top < pos.y)
-	    top = pos.y;
-	id++;
+
+	left = fminf(left, pos.x);
+	right = fmaxf(right, pos.x);
+	top = fmaxf(top, pos.y);
+	bottom = fminf(bottom, pos.y);
     }
     view->bdxLeft = left;
     view->bdyTop = top;
