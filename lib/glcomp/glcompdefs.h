@@ -162,12 +162,8 @@ extern "C" {
 	GLfloat x, y, z;
     } glCompPoint;
 
-    typedef struct _glCompPointI {
-	int x, y;
-    } glCompPointI;
     typedef struct {
 	int cnt;
-	int hotKey;
 	glCompPoint* pts;
     }glCompPoly;
 
@@ -323,14 +319,6 @@ extern "C" {
 	glCompOrientation orientation;
 
     } glCompTrackBar;
-
-/*glCompFont container class*/
-    typedef struct {
-	glCompFont **fonts;
-	int count;
-	int activefont;
-	char *font_directory;	//location where the glfont files are stored
-    } fontset_t;
 
 /*object prototype*/
     struct _glCompObj {
