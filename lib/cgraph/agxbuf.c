@@ -14,8 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cgraph/agxbuf.h>
-
-#define N_GNEW(n,t)	 calloc((n),sizeof(t))
+#include <cgraph/alloc.h>
 
 /* agxbinit:
  * Assume if init is non-null, hint = sizeof(init[])
@@ -29,7 +28,7 @@ void agxbinit(agxbuf * xb, unsigned int hint, unsigned char *init)
 	if (hint == 0)
 	    hint = BUFSIZ;
 	xb->dyna = 1;
-	xb->buf = N_GNEW(hint, unsigned char);
+	xb->buf = gv_calloc(hint, sizeof(unsigned char));
     }
     xb->eptr = xb->buf + hint;
     xb->ptr = xb->buf;
@@ -52,9 +51,9 @@ void agxbmore(agxbuf * xb, size_t ssz)
 	nsize = size + ssz;
     cnt = (size_t) (xb->ptr - xb->buf);
     if (xb->dyna) {
-	nbuf = realloc(xb->buf, nsize);
+	nbuf = gv_recalloc(xb->buf, size, nsize, sizeof(unsigned char));
     } else {
-	nbuf = N_GNEW(nsize, unsigned char);
+	nbuf = gv_calloc(nsize, sizeof(unsigned char));
 	memcpy(nbuf, xb->buf, cnt);
 	xb->dyna = 1;
     }
@@ -151,25 +150,20 @@ int agxbpop(agxbuf * xb)
 
 char *agxbdisown(agxbuf * xb) {
 
-  size_t size;
   char *buf;
 
   /* terminate the existing string */
   agxbputc(xb, '\0');
-
-  size = (size_t)(xb->ptr - xb->buf);
 
   if (!xb->dyna) {
     /* the buffer is not dynamically allocated, so we need to copy its contents
      * to heap memory
      */
 
-    buf = malloc(size);
+    buf = strdup((char*)xb->buf);
     if (buf == NULL) {
       return NULL;
     }
-
-    memcpy(buf, xb->buf, size);
 
   } else {
     /* the buffer is already dynamically allocated, so take it as-is */

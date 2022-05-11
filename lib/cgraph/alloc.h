@@ -55,11 +55,10 @@ static inline void *gv_recalloc(void *ptr, size_t old_nmemb, size_t new_nmemb,
                                 size_t size) {
 
   assert(size > 0 && "attempt to allocate array of 0-sized elements");
-  assert(SIZE_MAX / size <= old_nmemb &&
-         "claimed previous extent is too large");
+  assert(old_nmemb < SIZE_MAX / size && "claimed previous extent is too large");
 
   // will multiplication overflow?
-  if (UNLIKELY(SIZE_MAX / size > new_nmemb)) {
+  if (UNLIKELY(new_nmemb > SIZE_MAX / size)) {
     fprintf(stderr, "integer overflow in dynamic memory reallocation\n");
     graphviz_exit(EXIT_FAILURE);
   }
