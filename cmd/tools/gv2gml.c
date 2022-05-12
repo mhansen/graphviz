@@ -632,9 +632,7 @@ emitGraphAttrs (Agraph_t* G, FILE* outFile)
     }
 }
 
-static void 
-gv_to_gml(Agraph_t* G, FILE* outFile)
-{
+static void gv_to_gml(Agraph_t *G) {
     Agnode_t* n;
     Agedge_t* e;
 
@@ -758,7 +756,7 @@ int main(int argc, char **argv)
 	    agclose(prev);
 	}
 	prev = G;
-	gv_to_gml(G, outFile);
+	gv_to_gml(G);
 	fflush(outFile);
     }
     graphviz_exit(rv);
