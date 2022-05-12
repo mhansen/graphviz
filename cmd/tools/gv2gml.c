@@ -428,9 +428,7 @@ emitNodeAttrs (Agraph_t* G, Agnode_t* np, FILE* outFile, int ix)
  * set node id
  * label, width height, x, y, type fillcolor
  */
-static void 
-emitNode (Agraph_t* G, Agnode_t* n, FILE* outFile)
-{
+static void emitNode(Agraph_t *G, Agnode_t *n) {
     agbindrec(n, "nodeinfo", sizeof(Local_Agnodeinfo_t), true);
     fprintf(outFile, "  node [\n    id %" PRIu64 "\n    name \"%s\"\n", id,
             agnameof(n));
@@ -639,7 +637,7 @@ static void gv_to_gml(Agraph_t *G) {
     /* FIX: Not sure how to handle default attributes or subgraphs */
 
     for (n = agfstnode(G); n; n = agnxtnode (G, n)) {
-	emitNode (G, n, outFile);
+	emitNode(G, n);
     } 
     
     for (n = agfstnode(G); n; n = agnxtnode (G, n)) {
