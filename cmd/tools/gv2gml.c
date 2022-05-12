@@ -244,9 +244,7 @@ emitAttr (char* name, char* value, FILE* outFile, int ix)
  * graphics
  * LabelGraphics
  */
-static void 
-emitNodeAttrs (Agraph_t* G, Agnode_t* np, FILE* outFile, int ix)
-{
+static void  emitNodeAttrs(Agraph_t *G, Agnode_t *np, int ix) {
     Agsym_t*  s;
     char* v;
     node_attrs attrs;
@@ -433,7 +431,7 @@ static void emitNode(Agraph_t *G, Agnode_t *n) {
     fprintf(outFile, "  node [\n    id %" PRIu64 "\n    name \"%s\"\n", id,
             agnameof(n));
     ID(n) = id++;
-    emitNodeAttrs (G, n, outFile, 2);
+    emitNodeAttrs(G, n, 2);
     fprintf (outFile, "  ]\n");
 
 }
