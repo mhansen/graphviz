@@ -79,12 +79,6 @@
 #define RK_DEV_RANDOM "/dev/random"
 #endif
 
-char *rk_strerror[RK_ERR_MAX] =
-{
-    "no error",
-    "random device unvavailable"
-};
-
 void
 rk_seed(unsigned long seed, rk_state *state)
 {
@@ -97,9 +91,6 @@ rk_seed(unsigned long seed, rk_state *state)
         seed = (1812433253UL * (seed ^ (seed >> 30)) + pos + 1) & 0xffffffffUL;
     }
     state->pos = RK_STATE_LEN;
-    state->gauss = 0;
-    state->has_gauss = 0;
-    state->has_binomial = 0;
 }
 
 /* Magic Mersenne Twister constants */
@@ -142,12 +133,6 @@ rk_random(rk_state *state)
     return y;
 }
 
-long
-rk_long(rk_state *state)
-{
-    return rk_ulong(state) >> 1;
-}
-
 unsigned long
 rk_ulong(rk_state *state)
 {
@@ -188,12 +173,4 @@ rk_interval(unsigned long max, rk_state *state)
     while ((value = (rk_ulong(state) & mask)) > max);
 #endif
     return value;
-}
-
-double
-rk_double(rk_state *state)
-{
-    /* shifts : 67108864 = 0x4000000, 9007199254740992 = 0x20000000000000 */
-    long a = rk_random(state) >> 5, b = rk_random(state) >> 6;
-    return (a * 67108864.0 + b) / 9007199254740992.0;
 }

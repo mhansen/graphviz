@@ -64,44 +64,9 @@ typedef struct rk_state_
 {
     unsigned long key[RK_STATE_LEN];
     int pos;
-    int has_gauss; /* !=0: gauss contains a gaussian deviate */
-    double gauss;
-
-    /* The rk_state structure has been extended to store the following
-     * information for the binomial generator. If the input values of n or p
-     * are different than nsave and psave, then the other parameters will be
-     * recomputed. RTK 2005-09-02 */
-
-    int has_binomial; /* !=0: following parameters initialized for
-                              binomial */
-    double psave;
-    long nsave;
-    double r;
-    double q;
-    double fm;
-    long m;
-    double p1;
-    double xm;
-    double xl;
-    double xr;
-    double c;
-    double laml;
-    double lamr;
-    double p2;
-    double p3;
-    double p4;
 
 }
 rk_state;
-
-typedef enum {
-    RK_NOERR = 0, /* no error */
-    RK_ENODEV = 1, /* no RK_DEV_RANDOM device */
-    RK_ERR_MAX = 2
-} rk_error;
-
-/* error strings */
-extern char *rk_strerror[RK_ERR_MAX];
 
 /* Maximum generated random value */
 #define RK_MAX 0xFFFFFFFFUL
@@ -121,11 +86,6 @@ extern void rk_seed(unsigned long seed, rk_state *state);
 extern unsigned long rk_random(rk_state *state);
 
 /*
- * Returns a random long between 0 and LONG_MAX inclusive
- */
-extern long rk_long(rk_state *state);
-
-/*
  * Returns a random unsigned long between 0 and ULONG_MAX inclusive
  */
 extern unsigned long rk_ulong(rk_state *state);
@@ -134,11 +94,6 @@ extern unsigned long rk_ulong(rk_state *state);
  * Returns a random unsigned long between 0 and max inclusive.
  */
 extern unsigned long rk_interval(unsigned long max, rk_state *state);
-
-/*
- * Returns a random double between 0.0 and 1.0, 1.0 excluded.
- */
-extern double rk_double(rk_state *state);
 
 #ifdef __cplusplus
 }
