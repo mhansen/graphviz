@@ -120,6 +120,7 @@ static void initargs(int argc, char **argv)
 			optopt);
 		usage(1);
 	    }
+	    break;
 	default:
 	    UNREACHABLE();
 	}
