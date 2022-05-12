@@ -445,9 +445,7 @@ emitNode (Agraph_t* G, Agnode_t* n, FILE* outFile)
  * graphics
  * LabelGraphics
  */
-static void 
-emitEdgeAttrs (Agraph_t* G, Agedge_t* ep, FILE* outFile, int ix)
-{
+static void emitEdgeAttrs(Agraph_t *G, Agedge_t *ep, int ix) {
     Agsym_t*  s;
     char* v;
     edge_attrs attrs;
@@ -611,7 +609,7 @@ static void emitEdge(Agraph_t *G, Agedge_t *e) {
     fprintf(outFile, "  edge [\n    id %" PRIu64 "\n", (uint64_t)AGSEQ(e));
     fprintf(outFile, "    source %" PRIu64 "\n", ID(agtail(e)));
     fprintf(outFile, "    target %" PRIu64 "\n", ID(aghead(e)));
-    emitEdgeAttrs (G, e, outFile, 2);
+    emitEdgeAttrs(G, e, 2);
     fprintf (outFile, "  ]\n");
 }
 
