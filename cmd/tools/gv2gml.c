@@ -138,9 +138,7 @@ emitInt (char* name, int value, FILE* outFile, int ix)
     fprintf (outFile, "%s %d\n", name, value);
 }
 
-static void 
-emitReal (char* name, double value, FILE* outFile, int ix)
-{
+static void emitReal(char *name, double value, int ix) {
     indent (ix, outFile);
     fprintf (outFile, "%s %g\n", name, value);
 }
@@ -364,14 +362,14 @@ static void  emitNodeAttrs(Agraph_t *G, Agnode_t *np, int ix) {
     if (doGraphics) {
 	fprintf (outFile, "    graphics [\n");
 	if (attrs.flags & POS_SET) {
-	    emitReal ("x", attrs.x, outFile, ix+1);
-	    emitReal ("y", attrs.y, outFile, ix+1);
+	    emitReal("x", attrs.x, ix+1);
+	    emitReal("y", attrs.y, ix+1);
 	}
 	if (attrs.flags & W_SET) {
-	    emitReal ("w", attrs.w, outFile, ix+1);
+	    emitReal("w", attrs.w, ix+1);
 	}
 	if (attrs.flags & H_SET) {
-	    emitReal ("H", attrs.h, outFile, ix+1);
+	    emitReal("H", attrs.h, ix+1);
 	}
 	if (attrs.flags & INVIS) {
 	    emitInt ("visible", 0, outFile, ix+1);
