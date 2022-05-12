@@ -84,8 +84,7 @@ typedef struct {
 
 #define ID(n)  (((Local_Agnodeinfo_t*)(n->base.data))->id)
 
-static void indent (int ix, FILE* outFile)
-{
+static void indent(int ix) {
     while (ix--)
 	fprintf (outFile, "  ");
 }
@@ -132,17 +131,17 @@ parseStyle (char* s)
 }
 
 static void emitInt(char *name, int value, int ix) {
-    indent (ix, outFile);
+    indent(ix);
     fprintf (outFile, "%s %d\n", name, value);
 }
 
 static void emitReal(char *name, double value, int ix) {
-    indent (ix, outFile);
+    indent(ix);
     fprintf (outFile, "%s %g\n", name, value);
 }
 
 static void emitPoint(double x, double y, int ix) {
-    indent (ix, outFile);
+    indent(ix);
     fprintf (outFile, "point [ x %g y %g ]\n", x, y);
 }
 
@@ -193,7 +192,7 @@ static void emitSpline(char *s, int ix) {
 
     s = arrowEnd (s, "e,", &earrow, &ex, &ey); 
     s = arrowEnd (s, "s,", &sarrow, &sx, &sy); 
-    indent (ix, outFile);
+    indent(ix);
     fprintf (outFile, "Line [\n");
     if (sarrow)
 	emitPoint(sx, sy, ix+1);
@@ -201,7 +200,7 @@ static void emitSpline(char *s, int ix) {
 	emitPoint(sx, sy, ix+1);
     if (earrow)
 	emitPoint(ex, ey, ix+1);
-    indent (ix, outFile);
+    indent(ix);
     fprintf (outFile, "]\n");
 
 }
@@ -219,7 +218,7 @@ static inline int xml_puts(FILE *stream, const char *s) {
 }
 
 static void emitAttr(char *name, char *value, int ix) {
-    indent (ix, outFile);
+    indent(ix);
     if (isNumber (value))
 	fprintf (outFile, "%s %s\n", name, value);
     else {
