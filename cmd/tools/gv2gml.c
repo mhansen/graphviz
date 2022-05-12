@@ -145,9 +145,7 @@ emitReal (char* name, double value, FILE* outFile, int ix)
     fprintf (outFile, "%s %g\n", name, value);
 }
 
-static void
-emitPoint (double x, double y, FILE* outFile, int ix)
-{
+static void emitPoint(double x, double y, int ix) {
     indent (ix, outFile);
     fprintf (outFile, "point [ x %g y %g ]\n", x, y);
 }
@@ -202,11 +200,11 @@ static void emitSpline(char *s, int ix) {
     indent (ix, outFile);
     fprintf (outFile, "Line [\n");
     if (sarrow)
-	emitPoint (sx, sy, outFile, ix+1);
+	emitPoint(sx, sy, ix+1);
     while ((s = readPoint (s, &sx, &sy)))
-	emitPoint (sx, sy, outFile, ix+1);
+	emitPoint(sx, sy, ix+1);
     if (earrow)
-	emitPoint (ex, ey, outFile, ix+1);
+	emitPoint(ex, ey, ix+1);
     indent (ix, outFile);
     fprintf (outFile, "]\n");
 
