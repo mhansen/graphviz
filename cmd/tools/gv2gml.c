@@ -192,9 +192,7 @@ arrowEnd (char* s0, char* pfx, int* fp, double* xp, double* yp)
     return s;
 }
 
-static void
-emitSpline (char* s, FILE* outFile, int ix)
-{
+static void emitSpline(char *s, int ix) {
     double sx, sy, ex, ey;
     int sarrow = 0;
     int earrow = 0;
@@ -544,7 +542,7 @@ static void emitEdgeAttrs(Agraph_t *G, Agedge_t *ep, int ix) {
     if (doGraphics) {
 	fprintf (outFile, "    graphics [\n");
 	if (attrs.pos) {
-	    emitSpline (attrs.pos, outFile, ix+1);
+	    emitSpline(attrs.pos, ix+1);
 	}
 	if (attrs.flags & INVIS) {
 	    emitInt ("visible", 0, outFile, ix+1);
