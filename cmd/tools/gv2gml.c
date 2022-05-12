@@ -131,9 +131,7 @@ parseStyle (char* s)
     return flags;
 }
 
-static void 
-emitInt (char* name, int value, FILE* outFile, int ix)
-{
+static void emitInt(char *name, int value, int ix) {
     indent (ix, outFile);
     fprintf (outFile, "%s %d\n", name, value);
 }
@@ -372,10 +370,10 @@ static void  emitNodeAttrs(Agraph_t *G, Agnode_t *np, int ix) {
 	    emitReal("H", attrs.h, ix+1);
 	}
 	if (attrs.flags & INVIS) {
-	    emitInt ("visible", 0, outFile, ix+1);
+	    emitInt("visible", 0, ix+1);
 	}
 	if (attrs.flags & FILL) {
-	    emitInt ("hasFill", 1, outFile, ix+1);
+	    emitInt("hasFill", 1, ix+1);
 	}
 	if (attrs.type) {
 	    emitAttr("type", attrs.type, ix+1);
@@ -541,7 +539,7 @@ static void emitEdgeAttrs(Agraph_t *G, Agedge_t *ep, int ix) {
 	    emitSpline(attrs.pos, ix+1);
 	}
 	if (attrs.flags & INVIS) {
-	    emitInt ("visible", 0, outFile, ix+1);
+	    emitInt("visible", 0, ix+1);
 	}
 	if (attrs.fill) {
 	    emitAttr("fill", attrs.fill, ix+1);
