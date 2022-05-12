@@ -607,11 +607,7 @@ emitEdgeAttrs (Agraph_t* G, Agedge_t* ep, FILE* outFile, int ix)
     }
 }
 
-/* emitEdge:
- */
-static void 
-emitEdge (Agraph_t* G, Agedge_t* e, FILE* outFile)
-{
+static void emitEdge(Agraph_t *G, Agedge_t *e) {
     fprintf(outFile, "  edge [\n    id %" PRIu64 "\n", (uint64_t)AGSEQ(e));
     fprintf(outFile, "    source %" PRIu64 "\n", ID(agtail(e)));
     fprintf(outFile, "    target %" PRIu64 "\n", ID(aghead(e)));
@@ -650,7 +646,7 @@ static void gv_to_gml(Agraph_t *G) {
     
     for (n = agfstnode(G); n; n = agnxtnode (G, n)) {
 	for (e = agfstout(G, n); e; e = agnxtout (G, e)) {
-	    emitEdge (G, e, outFile);
+	    emitEdge(G, e);
 	}
     }
     fprintf (outFile, "]\n");
