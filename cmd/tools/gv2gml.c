@@ -619,9 +619,7 @@ emitEdge (Agraph_t* G, Agedge_t* e, FILE* outFile)
     fprintf (outFile, "  ]\n");
 }
 
-static void 
-emitGraphAttrs (Agraph_t* G, FILE* outFile)
-{
+static void emitGraphAttrs(Agraph_t *G) {
     Agsym_t*  s;
     char* v;
 
@@ -642,7 +640,7 @@ static void gv_to_gml(Agraph_t *G) {
     else
 	fprintf (outFile, "  directed 0\n");
 	
-    emitGraphAttrs (G, outFile);
+    emitGraphAttrs(G);
 
     /* FIX: Not sure how to handle default attributes or subgraphs */
 
