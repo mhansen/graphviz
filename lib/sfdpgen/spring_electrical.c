@@ -1418,6 +1418,8 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
     if (Verbose) {
       fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nsuper = %d nz = %d stress = %f                                  ",iter, step, Fnorm, (int) nsuper_avg,A->nz, stress);
     }
+#else
+    (void)nsuper_avg;
 #endif
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
@@ -1604,6 +1606,8 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
         fprintf(stderr, "energy = %f\n",spring_electrical_energy(dim, A, x, p, CRK, KP));
 #endif
     }
+#else
+    (void)nsuper_avg;
 #endif
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
