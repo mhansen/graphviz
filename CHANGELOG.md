@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `dot2gxl` no longer crashes on input `<node id="">` #2092
 - remove itos #2229
 - `sfdp` no longer crashes on certain graphs with cycles. #2225
+- `gml2gv` does not handle integer penwidth correctly #1871
 
 ### Removed
 

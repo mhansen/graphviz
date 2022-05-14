@@ -728,8 +728,7 @@ def test_1865():
                     reason="gv2gml not available")
 @pytest.mark.skipif(shutil.which("gml2gv") is None,
                     reason="gml2gv not available")
-@pytest.mark.parametrize("penwidth", ("1.0", pytest.param("1",
-                                        marks=pytest.mark.xfail(strict=True))))
+@pytest.mark.parametrize("penwidth", ("1.0", "1"))
 def test_1871(penwidth: str):
   """
   round tripping something with either an integer or real `penwidth` through
