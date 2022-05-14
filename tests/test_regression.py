@@ -724,6 +724,33 @@ def test_1865():
   # fdp should not crash when processing this file
   subprocess.check_call(["fdp", "-o", os.devnull, input])
 
+@pytest.mark.skipif(shutil.which("gv2gml") is None,
+                    reason="gv2gml not available")
+@pytest.mark.skipif(shutil.which("gml2gv") is None,
+                    reason="gml2gv not available")
+@pytest.mark.parametrize("penwidth", ("1.0", pytest.param("1",
+                                        marks=pytest.mark.xfail(strict=True))))
+def test_1871(penwidth: str):
+  """
+  round tripping something with either an integer or real `penwidth` through
+  gv2gml→gml2gv should return the correct `penwidth`
+  """
+
+  # a trivial graph
+  input = f"graph {{ a [penwidth={penwidth}] }}"
+
+  # pass it through gv2gml
+  gv = subprocess.check_output(["gv2gml"], input=input, universal_newlines=True)
+
+  # pass this through gml2gv
+  gml = subprocess.check_output(["gml2gv"], input=gv, universal_newlines=True)
+
+  # the result should have a `penwidth` of 1
+  has_1 = re.search(r"\bpenwidth\s*=\s*1[^\.]", gml) is not None
+  has_1_0 = re.search(r"\bpenwidth\s*=\s*1\.0\b", gml) is not None
+  assert has_1 or has_1_0, \
+    f"incorrect penwidth from round tripping through GML (output {gml})"
+
 @pytest.mark.skipif(shutil.which("fdp") is None, reason="fdp not available")
 def test_1876():
   """
