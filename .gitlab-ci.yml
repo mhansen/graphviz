@@ -1100,7 +1100,7 @@ ubuntu22-04-cmake-test:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu21.10-cmake-ASan-test-including-ctest:
+ubuntu22.04-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
     before_script:
         - export build_system="cmake"
@@ -1109,12 +1109,12 @@ ubuntu21.10-cmake-ASan-test-including-ctest:
         - export LDFLAGS=" -g -fsanitize=address,undefined"
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
-        - job: "ubuntu21-10-cmake-ASan-build-for-ctest"
+        - job: "ubuntu22-04-cmake-ASan-build-for-ctest"
           artifacts: true
     tags:
         - linux
     variables:
-      IMAGE: ubuntu-21.10
+      IMAGE: ubuntu-22.04
 
 centos7-cmake-test:
     <<: *linux_test_definition
