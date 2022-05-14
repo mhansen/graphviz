@@ -2069,32 +2069,34 @@ AM_CONDITIONAL(WITH_GLADE, [test "x$use_glade" = "xYes"])
 dnl -----------------------------------
 dnl INCLUDES and LIBS for QT
 
-AC_ARG_WITH(qt,
-  [AS_HELP_STRING([--with-qt=yes],[Qt features])],
-  [], [with_qt=yes])
+AC_ARG_WITH([qt],
+  [AS_HELP_STRING([--with-qt=yes], [Qt features])])
 
-if test "x$with_qt" != "xyes"; then
-  use_qt="No (disabled)"
-else
-
+AS_IF([test "x$with_qt" != "xno"], [
   # required for linking with QT5
   CXXFLAGS="${CXXFLAGS} -fPIE -fPIC"
-  AC_CHECK_PROGS(QMAKE,qmake-qt5 qmake,false)
-  if test "$QMAKE" != "false"; then
-    PKG_CHECK_MODULES(QTCORE, [Qt5Core],[
-      PKG_CHECK_MODULES(QTGUI, [Qt5Widgets Qt5PrintSupport],[
-	use_qt="Yes"
-      ],[
+  AC_CHECK_PROGS([QMAKE], [qmake-qt5 qmake5 qmake], [false])
+  AS_IF([test "$QMAKE" != "false"], [
+    PKG_CHECK_MODULES([QTCORE], [Qt5Core], [
+      PKG_CHECK_MODULES([QTGUI], [Qt5Widgets Qt5PrintSupport], [
+        use_qt="Yes"
+      ], [
         use_qt="No (QtGui not available)"
       ])
-    ],[
+    ], [
       use_qt="No (QtCore not available)"
     ])
-  else
+  ], [
     use_qt="No (qmake not found)"
-  fi
-fi
-AM_CONDITIONAL(WITH_QT, [test "x$use_qt" = "xYes"])
+  ])
+
+  AS_IF([test "x$with_qt" = "xyes" && test "x$use_qt" != "xYes"], [
+    AC_MSG_ERROR([You requested Qt, but dependencies could not be found: ${use_qt}])
+  ])
+], [
+  use_qt="No (disabled)"
+])
+AM_CONDITIONAL([WITH_QT], [test "x$use_qt" = "xYes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for QUARTZ
