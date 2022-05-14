@@ -397,7 +397,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
     pedge *mid_edges, midedge;/* middle section of edges that will be bundled again */
     int ne, npp, l;
     SparseMatrix A_mid;
-    double eps = 0., wgt, total_wgt = 0;
+    double eps = 0., wgt;
 
    /* make new edges using meet1 and meet2.
        
@@ -417,7 +417,6 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
       pick = &(ja[ia[i]]);
       wgt = 0.;
       for (j = ia[i]; j < ia[i+1]; j++) wgt += edges[j]->wgt;
-      total_wgt += wgt;
       if (DEBUG) if (Verbose) fprintf(stderr,"calling ink3...\n");
       ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
       if (DEBUG) if (Verbose) fprintf(stderr,"done calling ink3...\n");

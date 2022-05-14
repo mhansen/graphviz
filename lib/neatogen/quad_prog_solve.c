@@ -599,7 +599,7 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
     int level = -1, max_in_level = 0;
     int counter;
     float *gap;
-    float total_gap, target_place;
+    float target_place;
 
     if (max_iterations <= 0) {
 	return 0;
@@ -651,14 +651,12 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 	     * nodes connected with active constraints
 	     */
 	    cur_place = place[ordering[left]];
-	    total_gap = 0;
 	    target_place = cur_place;
 	    gap[ordering[left]] = 0;
 	    for (right = left + 1; right < n; right++) {
 		if (lev[right] > lev[right - 1]) {
 		    /* we are entering a new level */
 		    target_place += levels_gap;	/* note that 'levels_gap' may be negative */
-		    total_gap += levels_gap;
 		}
 		node = ordering[right];
 		    /* not sure if this is better than 'place[node]!=target_place' */

@@ -205,7 +205,7 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
   pedge edge;
   double *x, t;
   int i, j, k, kk, dim, sta, sto;
-  double maxwgt = 0, len, len_total, len_total0;
+  double maxwgt = 0, len, len_total0;
   int r, g, b;
   double tt1[3]={0.15,0.5,0.85};
   double tt2[4]={0.15,0.4,0.6,0.85};
@@ -289,7 +289,6 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
 	fprintf(fp, "%f", edge->wgts[j]);
       }
 
-      len_total = 0;
       len_total0 = 0;
       fprintf(fp, "\", color=\"");
       for (j = 0; j < edge->npoints - 1; j++){
@@ -306,7 +305,6 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
 	  len += (edge->x[dim*j+k] - edge->x[dim*(j+1)+k])*(edge->x[dim*j+k] - edge->x[dim*(j+1)+k]);
 	}
 	len = sqrt(len/k);
-	len_total += len;
 	t = edge->wgts[j]/maxwgt;
 	/* interpotate between red (t = 1) to blue (t = 0) */
 	r = 255*t; g = 0; b = 255*(1-t); b = 255*(1-t);
