@@ -357,12 +357,12 @@ ubuntu22-04-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu21-10-static-build:
+ubuntu22-04-static-build:
     <<: *deb_build_definition
     before_script:
         - export CONFIGURE_OPTIONS="--disable-shared --enable-static"
     needs:
-        - job: docker_build_ubuntu-21.10
+        - job: docker_build_ubuntu-22.04
           artifacts: false
         - job: portable-source
           artifacts: true
@@ -377,7 +377,7 @@ ubuntu21-10-static-build:
     tags:
         - linux
     variables:
-      IMAGE: ubuntu-21.10
+      IMAGE: ubuntu-22.04
 
 out-of-source-build:
     <<: *deb_build_definition
