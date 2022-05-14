@@ -291,6 +291,18 @@ AS_IF([test "x$enable_man_pdfs" != "xno"], [
 ])
 AM_CONDITIONAL([ENABLE_MAN_PDFS], [test "x$enable_man_pdfs" != "xno" && test -n "$GROFF" && test -n "$PS2PDF"])
 
+# allow disabling of demos installation
+AC_ARG_WITH([demos],
+  [AS_HELP_STRING([--with-demos=DIR], [Install demos (default: $(pkgdatadir)/demo)])])
+
+demodir='$(pkgdatadir)/demo'
+AS_IF([test "$with_demos" != "xyes" && test -n "$with_demos"], [
+  dnl user provided --with-demos=/my/demo/dir
+  demodir="$with_demos"
+])
+AM_CONDITIONAL([INSTALL_DEMOS], [test "x$with_demos" != "xno"])
+AC_SUBST([demodir])
+
 PKG_INSTALLDIR
 PKG_PROG_PKG_CONFIG
 
