@@ -722,10 +722,10 @@ ubuntu22-04-cmake-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu21-10-cmake-minimal-build:
+ubuntu22-04-cmake-minimal-build:
     <<: *deb_build_definition
     needs:
-        - job: docker_build_ubuntu-21.10
+        - job: docker_build_ubuntu-22.04
           artifacts: false
     before_script:
         - export build_system="cmake"
@@ -744,7 +744,7 @@ ubuntu21-10-cmake-minimal-build:
     tags:
         - linux
     variables:
-      IMAGE: ubuntu-21.10
+      IMAGE: ubuntu-22.04
 
 ubuntu21-10-cmake-ASan-build-for-ctest:
     <<: *deb_build_definition
