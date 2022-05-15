@@ -2,11 +2,11 @@
 
 SUBDIRS = pathplan_data
 
-demodir = $(pkgdatadir)/demo
-
+if INSTALL_DEMOS
 if WITH_TCL
 demo_SCRIPTS = pathplan.tcl
 demo_DATA = pathplan.tcl.README
+endif
 endif
 
 EXTRA_DIST = pathplan.tcl pathplan.tcl.README

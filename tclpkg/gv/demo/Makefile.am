@@ -1,19 +1,20 @@
 ## Process this file with automake to produce Makefile.in
 
-demosharpdir = $(pkgdatadir)/demo
-demoguiledir = $(pkgdatadir)/demo
-demoiodir = $(pkgdatadir)/demo
-demojavadir = $(pkgdatadir)/demo
-demoluadir = $(pkgdatadir)/demo
-demoocamldir = $(pkgdatadir)/demo
-demoperldir = $(pkgdatadir)/demo
-demophpdir = $(pkgdatadir)/demo
-demopythondir = $(pkgdatadir)/demo
-demopython3dir = $(pkgdatadir)/demo
-demoRdir = $(pkgdatadir)/demo
-demorubydir = $(pkgdatadir)/demo
-demotcldir = $(pkgdatadir)/demo
+demosharpdir = $(demodir)
+demoguiledir = $(demodir)
+demoiodir = $(demodir)
+demojavadir = $(demodir)
+demoluadir = $(demodir)
+demoocamldir = $(demodir)
+demoperldir = $(demodir)
+demophpdir = $(demodir)
+demopythondir = $(demodir)
+demopython3dir = $(demodir)
+demoRdir = $(demodir)
+demorubydir = $(demodir)
+demotcldir = $(demodir)
 
+if INSTALL_DEMOS
 if WITH_SHARP
 demosharp_SCRIPTS =
 endif
@@ -52,6 +53,7 @@ demoruby_SCRIPTS = modgraph.rb
 endif
 if WITH_TCL
 demotcl_SCRIPTS = modgraph.tcl
+endif
 endif
 
 EXTRA_DIST = modgraph.*
