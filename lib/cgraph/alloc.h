@@ -86,7 +86,7 @@ static inline char *gv_strndup(const char *original, size_t length) {
 
   // does the string end before the given length?
   {
-    const char *end = memchr(original, '\0', length);
+    const char *end = (const char *)memchr(original, '\0', length);
     if (end != NULL) {
       length = (size_t)(end - original);
     }
@@ -98,7 +98,7 @@ static inline char *gv_strndup(const char *original, size_t length) {
     graphviz_exit(EXIT_FAILURE);
   }
 
-  copy = gv_alloc(length + 1);
+  copy = (char *)gv_alloc(length + 1);
   memcpy(copy, original, length);
 
   // `gv_alloc` has already zeroed the backing memory, so no need to manually
