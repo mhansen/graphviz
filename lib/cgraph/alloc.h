@@ -66,6 +66,16 @@ static inline void *gv_recalloc(void *ptr, size_t old_nmemb, size_t new_nmemb,
   return gv_realloc(ptr, old_nmemb * size, new_nmemb * size);
 }
 
+// when including this header in a C++ source, G++ under Cygwin chooses to be
+// pedantic and hide the prototypes of `strdup` and `strndup` when not
+// compiling with a GNU extension standard, so re-prototype them
+#if defined(__cplusplus) && defined(__CYGWIN__)
+extern "C" {
+extern char *strdup(const char *s1);
+extern char *strndup(const char *s1, size_t n);
+}
+#endif
+
 static inline char *gv_strdup(const char *original) {
 
   char *copy = strdup(original);
