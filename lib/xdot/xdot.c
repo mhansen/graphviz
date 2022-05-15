@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
@@ -16,84 +17,6 @@
 
 #define NEW(t)           calloc(1, sizeof(t))
 #define N_NEW(n,t)       calloc((n), sizeof(t))
-
-typedef struct {
-    unsigned char *buf;		/* start of buffer */
-    unsigned char *ptr;		/* next place to write */
-    unsigned char *eptr;	/* end of buffer */
-    int dyna;			/* true if buffer is malloc'ed */
-} agxbuf;
-
-#define agxbuse(X) (agxbputc(X,'\0'),(char*)((X)->ptr = (X)->buf))
-
-static void agxbinit(agxbuf * xb, unsigned int hint, unsigned char *init)
-{
-    if (init) {
-	xb->buf = init;
-	xb->dyna = 0;
-    } else {
-	if (hint == 0)
-	    hint = BUFSIZ;
-	xb->dyna = 1;
-	xb->buf = N_NEW(hint, unsigned char);
-    }
-    xb->eptr = xb->buf + hint;
-    xb->ptr = xb->buf;
-    *xb->ptr = '\0';
-}
-static int agxbmore(agxbuf * xb, unsigned int ssz)
-{
-    int cnt;			/* current no. of characters in buffer */
-    int size;			/* current buffer size */
-    int nsize;			/* new buffer size */
-    unsigned char *nbuf;	/* new buffer */
-
-    size = xb->eptr - xb->buf;
-    nsize = 2 * size;
-    if (size + ssz > nsize)
-	nsize = size + ssz;
-    cnt = xb->ptr - xb->buf;
-    if (xb->dyna) {
-	nbuf = realloc(xb->buf, nsize);
-    } else {
-	nbuf = N_NEW(nsize, unsigned char);
-	memcpy(nbuf, xb->buf, cnt);
-	xb->dyna = 1;
-    }
-    xb->buf = nbuf;
-    xb->ptr = xb->buf + cnt;
-    xb->eptr = xb->buf + nsize;
-    return 0;
-}
-
-static int agxbput(char *s, agxbuf * xb)
-{
-    unsigned int ssz = strlen(s);
-    if (xb->ptr + ssz > xb->eptr)
-	agxbmore(xb, ssz);
-    memcpy(xb->ptr, s, ssz);
-    xb->ptr += ssz;
-    return ssz;
-}
-
-static int agxbputc(agxbuf * xb, char c) {
-  if (xb->ptr >= xb->eptr) {
-    if (agxbmore(xb, 1) != 0) {
-      return -1;
-    }
-  }
-  *xb->ptr++ = (unsigned char)c;
-  return 0;
-}
-
-/* agxbfree:
- * Free any malloced resources.
- */
-static void agxbfree(agxbuf * xb)
-{
-    if (xb->dyna)
-	free(xb->buf);
-}
 
 /* the parse functions should return NULL on error */
 static char *parseReal(char *s, double *fp)
@@ -585,7 +508,7 @@ static void printAlign(xdot_align a, pf print, void *info)
 static void
 gradprint (char* s, void* v)
 {
-    agxbput(s, (agxbuf*)v);
+    agxbput(v, s);
 }
 
 static void
@@ -860,13 +783,19 @@ static void _printXDot(xdot * x, pf print, void *info, print_op ofn)
     }
 }
 
+// an alternate version of `agxbput` to handle differences in calling
+// conventions
+static void agxbput_(char *s, void *xb) {
+  (void)agxbput(xb, s);
+}
+
 char *sprintXDot(xdot * x)
 {
     char *s;
     unsigned char buf[BUFSIZ];
     agxbuf xb;
     agxbinit(&xb, BUFSIZ, buf);
-    _printXDot(x, (pf) agxbput, &xb, printXDot_Op);
+    _printXDot(x, agxbput_, &xb, printXDot_Op);
     s = strdup(agxbuse(&xb));
     agxbfree(&xb);
 
