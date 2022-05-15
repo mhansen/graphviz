@@ -78,9 +78,9 @@ extern "C" {
 #undef PRINTF_LIKE
 
 /* agxbput_n:
- * Append string s of length n into xb
+ * Append string s of length ssz into xb
  */
-    AGXBUF_API size_t agxbput_n(agxbuf * xb, const char *s, size_t n);
+    AGXBUF_API size_t agxbput_n(agxbuf * xb, const char *s, size_t ssz);
 
 /* agxbput:
  * Append string s into xb
