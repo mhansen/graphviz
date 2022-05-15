@@ -47,6 +47,21 @@ extern "C" {
     AGXBUF_API void agxbinit(agxbuf * xb, unsigned int hint,
 			 unsigned char *init);
 
+/* agxbfree:
+ * Free any malloced resources.
+ */
+    AGXBUF_API void agxbfree(agxbuf * xb);
+
+/* agxbpop:
+ * Removes last character added, if any.
+ */
+    AGXBUF_API int agxbpop(agxbuf * xb);
+
+/* agxbmore:
+ * Expand buffer to hold at least ssz more bytes.
+ */
+    AGXBUF_API void agxbmore(agxbuf * xb, size_t ssz);
+
 /* support for extra API misuse warnings if available */
 #ifdef __GNUC__
   #define PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
@@ -71,21 +86,6 @@ extern "C" {
  * Append string s into xb
  */
     AGXBUF_API size_t agxbput(agxbuf * xb, const char *s);
-
-/* agxbfree:
- * Free any malloced resources.
- */
-    AGXBUF_API void agxbfree(agxbuf * xb);
-
-/* agxbpop:
- * Removes last character added, if any.
- */
-    AGXBUF_API int agxbpop(agxbuf * xb);
-
-/* agxbmore:
- * Expand buffer to hold at least ssz more bytes.
- */
-    AGXBUF_API void agxbmore(agxbuf * xb, size_t ssz);
 
 /* agxbputc:
  * Add character to buffer.
