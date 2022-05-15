@@ -4,7 +4,7 @@ FLEX_TARGET(Scan ${CMAKE_CURRENT_SOURCE_DIR}/scan.l
                  ${CMAKE_CURRENT_BINARY_DIR}/scan.c)
 ADD_FLEX_BISON_DEPENDENCY(Scan Grammar)
 
-add_definitions(-DEXPORT_CGRAPH -DEXPORT_AGXBUF -DEXPORT_CGHDR)
+add_definitions(-DEXPORT_CGRAPH -DEXPORT_CGHDR)
 if(WIN32 AND NOT MINGW)
   add_definitions(-DYY_NO_UNISTD_H)
 endif()
@@ -26,7 +26,6 @@ add_library(cgraph SHARED
 
   # Source files
   agerror.c
-  agxbuf.c
   apply.c
   attr.c
   edge.c

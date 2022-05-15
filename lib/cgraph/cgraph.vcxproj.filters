@@ -56,9 +56,6 @@
     <ClCompile Include="agerror.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="agxbuf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="apply.c">
       <Filter>Source Files</Filter>
     </ClCompile>

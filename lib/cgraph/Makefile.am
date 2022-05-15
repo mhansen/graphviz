@@ -5,7 +5,7 @@ CGRAPH_VERSION = "6:0:0"
 AM_CPPFLAGS = -I$(top_srcdir)/lib -I$(top_srcdir)/lib/cdt
 
 if WITH_WIN32
-AM_CFLAGS = -DEXPORT_CGRAPH -DEXPORT_AGXBUF -DEXPORT_CGHDR
+AM_CFLAGS = -DEXPORT_CGRAPH -DEXPORT_CGHDR
 endif
 
 pkginclude_HEADERS = cgraph.h
@@ -19,7 +19,7 @@ if ENABLE_MAN_PDFS
 pdf_DATA = cgraph.3.pdf
 endif
 
-libcgraph_C_la_SOURCES = agerror.c agxbuf.c apply.c attr.c edge.c \
+libcgraph_C_la_SOURCES = agerror.c apply.c attr.c edge.c \
 	flatten.c graph.c grammar.y id.c imap.c io.c mem.c node.c \
 	obj.c pend.c rec.c refstr.c scan.l subg.c utils.c write.c
 
