@@ -9,14 +9,12 @@
  *************************************************************************/
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/prisize_t.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-#define NEW(t)           calloc(1, sizeof(t))
-#define N_NEW(n,t)       calloc((n), sizeof(t))
 
 /* the parse functions should return NULL on error */
 static char *parseReal(char *s, double *fp)
@@ -94,7 +92,7 @@ static char *parsePolyline(char *s, xdot_polyline * pp)
 
     s = parseInt(s, &i);
     if (!s) return s;
-    pts = ps = N_NEW(i, xdot_point);
+    pts = ps = gv_calloc(i, sizeof(ps[0]));
     pp->cnt = i;
     for (i = 0; i < pp->cnt; i++) {
 	ps->x = strtod (s, &endp);
@@ -121,8 +119,6 @@ static char *parsePolyline(char *s, xdot_polyline * pp)
 static char *parseString(char *s, char **sp)
 {
     int i;
-    char *c;
-    char *p;
     s = parseInt(s, &i);
     if (!s || i <= 0) return 0;
     while (*s && *s != '-') s++;
@@ -130,20 +126,15 @@ static char *parseString(char *s, char **sp)
     else {
 	return 0;
     }
-    c = N_NEW(i + 1, char);
-    p = c;
-    while (i > 0 && *s) {
-	*p++ = *s++;
-	i--;
-    }
-    if (i > 0) {
+
+    char *c = gv_strndup(s, i);
+    if (strlen(c) != i) {
 	free (c);
 	return 0;
     }
 
-    *p = '\0';
     *sp = c;
-    return s;
+    return s + i;
 }
 
 static char *parseAlign(char *s, xdot_align * ap)
@@ -348,11 +339,11 @@ xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
 	return x;
 
     if (!x) {
-	x = NEW(xdot);
+	x = gv_alloc(sizeof(*x));
 	if (sz <= sizeof(xdot_op))
 	    sz = sizeof(xdot_op);
 
-	/* cnt, freefunc, ops, flags zeroed by NEW */
+	/* cnt, freefunc, ops, flags zeroed by gv_alloc */
 	x->sz = sz;
     }
     initcnt = x->cnt;
@@ -360,21 +351,19 @@ xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
 
     if (initcnt == 0) {
 	bufsz = XDBSIZE;
-	ops = calloc(XDBSIZE, sz);
+	ops = gv_calloc(XDBSIZE, sz);
     }
     else {
 	ops = (char*)(x->ops);
 	bufsz = initcnt + XDBSIZE;
-	ops = realloc(ops, bufsz * sz);
-	memset(ops + initcnt*sz, '\0', (bufsz - initcnt)*sz);
+	ops = gv_recalloc(ops, initcnt, bufsz, sz);
     }
 
     while ((s = parseOp(&op, s, fns, &error))) {
 	if (x->cnt == bufsz) {
 	    oldsz = bufsz;
 	    bufsz *= 2;
-	    ops = realloc(ops, bufsz * sz);
-	    memset(ops + oldsz*sz, '\0', (bufsz - oldsz)*sz);
+	    ops = gv_recalloc(ops, oldsz, bufsz, sz);
 	}
 	*(xdot_op *) (ops + x->cnt * sz) = op;
 	x->cnt++;
@@ -382,7 +371,7 @@ xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
     if (error)
 	x->flags |= XDOT_PARSE_ERROR;
     if (x->cnt) {
-	x->ops = realloc(ops, x->cnt * sz);
+	x->ops = gv_recalloc(ops, bufsz, x->cnt, sz);
     }
     else {
 	free (ops);
@@ -963,7 +952,7 @@ radGradient (char* cp, xdot_color* clr)
     s = parseInt(s, &clr->u.ring.n_stops);
     CHK1(s);
 
-    stops = N_NEW(clr->u.ring.n_stops,xdot_color_stop);
+    stops = gv_calloc(clr->u.ring.n_stops, sizeof(stops[0]));
     for (i = 0; i < clr->u.ring.n_stops; i++) {
 	s = parseReal(s, &d);
 	CHK1(s);
@@ -1000,7 +989,7 @@ linGradient (char* cp, xdot_color* clr)
     s = parseInt(s, &clr->u.ling.n_stops);
     CHK1(s);
 
-    stops = N_NEW(clr->u.ling.n_stops,xdot_color_stop);
+    stops = gv_calloc(clr->u.ling.n_stops, sizeof(stops[0]));
     for (i = 0; i < clr->u.ling.n_stops; i++) {
 	s = parseReal(s, &d);
 	CHK1(s);
