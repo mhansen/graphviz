@@ -622,7 +622,7 @@ static void endElementHandler(void *userData, const char *name)
 
 	ud->closedElementType = TAG_NONE;
 	if (ud->compositeReadState) {
-	    size_t len = sizeof(GXL_COMP) + (size_t)agxblen(&ud->xml_attr_name);
+	    size_t len = sizeof(GXL_COMP) + agxblen(&ud->xml_attr_name);
 	    if (len <= SMALLBUF) {
 		new_name = buf;
 	    } else {

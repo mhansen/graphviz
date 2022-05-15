@@ -104,33 +104,34 @@ static inline int agxbputc(agxbuf * xb, char c) {
  * still associated with the agxbuf and will be overwritten on the next, e.g.,
  * agxbput. If you want to retrieve and disassociate the buffer, use agxbdisown
  * instead.
- *  char* agxbuse(agxbuf* xb)
  */
-#define agxbuse(X) ((void)agxbputc(X,'\0'),(char*)((X)->ptr = (X)->buf))
+static inline char *agxbuse(agxbuf *xb) {
+  (void)agxbputc(xb, '\0');
+  xb->ptr = xb->buf;
+  return (char *)xb->ptr;
+}
 
 /* agxbstart:
  * Return pointer to beginning of buffer.
- *  char* agxbstart(agxbuf* xb)
  */
-#define agxbstart(X) ((char*)((X)->buf))
+static inline char *agxbstart(agxbuf *xb) { return (char *)xb->buf; }
 
 /* agxblen:
  * Return number of characters currently stored.
- *  int agxblen(agxbuf* xb)
  */
-#define agxblen(X) (((X)->ptr)-((X)->buf))
+static inline size_t agxblen(const agxbuf *xb) {
+  return (size_t)(xb->ptr - xb->buf);
+}
 
 /* agxbclear:
  * Resets pointer to data;
- *  void agxbclear(agxbuf* xb)
  */
-#define agxbclear(X) ((void)((X)->ptr = (X)->buf))
+static inline void agxbclear(agxbuf *xb) { xb->ptr = xb->buf; }
 
 /* agxbnext:
  * Next position for writing.
- *  char* agxbnext(agxbuf* xb)
  */
-#define agxbnext(X) ((char*)((X)->ptr))
+static inline char *agxbnext(agxbuf *xb) { return (char *)xb->ptr; }
 
 /* agxbdisown:
  * Disassociate the backing buffer from this agxbuf and return it. The buffer is
