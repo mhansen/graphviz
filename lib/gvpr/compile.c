@@ -1867,6 +1867,9 @@ static int
 binary(Expr_t * pg, Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg,
        Exdisc_t * disc)
 {
+    (void)pg;
+    (void)disc;
+
     Agobj_t *lobjp;
     Agobj_t *robjp;
     int ret = -1;
