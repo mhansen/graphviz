@@ -2206,6 +2206,9 @@ convert(Expr_t * prog, Exnode_t * x, int type,
  */
 static Extype_t keyval(Expr_t * pgm, Extype_t v, int type, Exdisc_t * disc)
 {
+    (void)pgm;
+    (void)disc;
+
     if (type <= T_obj) {
 	v.integer = AGID(int2ptr(v.integer));
     }
