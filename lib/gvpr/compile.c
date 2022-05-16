@@ -1593,6 +1593,9 @@ static int
 setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
        void *env, int elt, Extype_t v, Exdisc_t * disc)
 {
+    (void)elt;
+    (void)disc;
+
     Gpr_t *state;
     Agobj_t *objp;
     Agnode_t *np;
