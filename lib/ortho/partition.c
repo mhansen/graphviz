@@ -329,8 +329,8 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
 
   visited[trnum] = TRUE;
   
-  if (t->hi.y > t->lo.y && seg[t->lseg].v0.x == seg[t->lseg].v1.x &&
-      seg[t->rseg].v0.x == seg[t->rseg].v1.x) {
+  if (t->hi.y > t->lo.y + C_EPS && FP_EQUAL(seg[t->lseg].v0.x, seg[t->lseg].v1.x) &&
+      FP_EQUAL(seg[t->rseg].v0.x, seg[t->rseg].v1.x)) {
       if (flip) {
           decomp[size].LL.x = t->lo.y;
           decomp[size].LL.y = -seg[t->rseg].v0.x;

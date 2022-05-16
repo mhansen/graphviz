@@ -21,7 +21,7 @@ import xml.etree.ElementTree as ET
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import dot, gvpr, is_mingw, ROOT, remove_xtype_warnings, run_c \
+from gvtest import dot, gvpr, ROOT, remove_xtype_warnings, run_c \
   #pylint: disable=wrong-import-position
 
 def is_ndebug_defined() -> bool:
@@ -396,7 +396,6 @@ def test_1314():
   # the execution did not fail as expected
   pytest.fail("dot incorrectly exited with success")
 
-@pytest.mark.xfail(strict=not is_ndebug_defined() and not is_mingw()) # FIXME
 def test_1408():
   """
   parsing particular ortho layouts should not cause an assertion failure
@@ -521,7 +520,6 @@ def test_1594():
   assert "line 3:" in stderr, \
     "GVPR did not identify correct line of syntax error"
 
-@pytest.mark.xfail() # FIXME
 def test_1658():
   """
   the graph associated with this test case should not crash Graphviz
@@ -1124,7 +1122,9 @@ def test_1971():
 
     assert p.returncode != 0, "edgepaint incorrectly accepted '-rabbit'"
 
-@pytest.mark.xfail(strict=not is_ndebug_defined()) # FIXME
+@pytest.mark.xfail(platform.system() == "Windows",
+        reason="#56",
+        strict=not is_ndebug_defined()) # FIXME
 def test_1990():
   """
   using ortho and circo in combination should not cause an assertion failure
