@@ -2222,6 +2222,12 @@ static int
 matchval(Expr_t * pgm, Exnode_t * xstr, const char *str, Exnode_t * xpat,
 	 const char *pat, void *env, Exdisc_t * disc)
 {
+    (void)pgm;
+    (void)xstr;
+    (void)xpat;
+    (void)env;
+    (void)disc;
+
     return strgrpmatch(str, pat, NULL, 0,
 		       STR_MAXIMAL | STR_LEFT | STR_RIGHT);
 }
