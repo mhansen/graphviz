@@ -2124,6 +2124,10 @@ static int
 convert(Expr_t * prog, Exnode_t * x, int type,
 	Exid_t * xref, int arg, Exdisc_t * disc)
 {
+    (void)prog;
+    (void)xref;
+    (void)disc;
+
     Agobj_t *objp;
     int ret = -1;
 
