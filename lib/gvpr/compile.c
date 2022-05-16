@@ -1793,6 +1793,9 @@ static Extype_t
 refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
        char *str, int elt, Exdisc_t * disc)
 {
+    (void)str;
+    (void)elt;
+
     Extype_t v;
     if (sym->lex == CONSTANT) {
 	switch (sym->index) {
