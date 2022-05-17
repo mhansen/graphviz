@@ -22,6 +22,7 @@
  * transitive reduction on stdout
  */
 
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/stack.h>
 #include <cgraph/exit.h>
@@ -232,7 +233,7 @@ static void process(Agraph_t *g, gv_stack_t *sp) {
     size_t infosize;
 
     infosize = (agnnodes(g)+1)*sizeof(nodeinfo_t);
-    ninfo = malloc(infosize);
+    ninfo = gv_alloc(infosize);
 
     if (Verbose)
 	fprintf(stderr, "Processing graph %s\n", agnameof(g));
