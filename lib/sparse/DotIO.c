@@ -76,20 +76,20 @@ void attach_edge_colors(Agraph_t* g, int dim, double *colors){
  * Assumes g is connected and simple, i.e., we can have a->b and b->a
  * but not a->b and a->b
  */
-SparseMatrix 
-SparseMatrix_import_dot (Agraph_t* g, int dim, double **label_sizes, double **x, int *n_edge_label_nodes, int **edge_label_nodes, int format, SparseMatrix *D)
-{
+SparseMatrix SparseMatrix_import_dot(Agraph_t *g, int dim, double **label_sizes,
+                                     double **x, int *n_edge_label_nodes,
+                                     int **edge_label_nodes, int format) {
   SparseMatrix A = 0;
   Agnode_t* n;
   Agedge_t* e;
-  Agsym_t *sym, *symD = NULL;
+  Agsym_t *sym;
   Agsym_t *psym;
   int nnodes;
   int nedges;
   int i, row;
   int* I;
   int* J;
-  double *val, *valD = NULL;
+  double *val;
   double v;
   int type = MATRIX_TYPE_REAL;
   double padding = 10;
@@ -123,10 +123,6 @@ SparseMatrix_import_dot (Agraph_t* g, int dim, double **label_sizes, double **x,
   }
 
   sym = agattr(g, AGEDGE, "weight", NULL);
-  if (D) {
-    symD = agattr(g, AGEDGE, "len", NULL);
-    valD = N_NEW(nedges, double);
-  }
   i = 0;
   for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
     if (edge_label_nodes && strncmp(agnameof(n), "|edgelabel|",11)==0) nedge_nodes++;
@@ -142,18 +138,6 @@ SparseMatrix_import_dot (Agraph_t* g, int dim, double **label_sizes, double **x,
         v = 1;
       }
       val[i] = v;
-
-      /* edge length */
-      if (symD) {
-        if (sscanf (agxget (e, symD), "%lf", &v) != 1) {
-          v = 72;
-        } else {
-          v *= 72;/* len is specified in inch. Convert to points */
-        }
-	valD[i] = v;
-      } else if (valD) {
-        valD[i] = 72;
-      }
 
       i++;
     }
@@ -251,15 +235,12 @@ SparseMatrix_import_dot (Agraph_t* g, int dim, double **label_sizes, double **x,
   if (format == FORMAT_CSR) A = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J, val, type, sz);
   if (edge_label_nodes) *n_edge_label_nodes = nedge_nodes;
 
-  if (D) *D = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J, valD, type, sz);
-
 done:
   if (format != FORMAT_COORD){
     free(I);
     free(J);
     free(val);
   }
-  free(valD);
 
   return A;
 }

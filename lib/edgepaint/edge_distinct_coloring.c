@@ -166,7 +166,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
   char **xsplines = NULL;
   int cdim;
 
-  A = SparseMatrix_import_dot(g, dim, NULL, &x, NULL, NULL, FORMAT_COORD, NULL);
+  A = SparseMatrix_import_dot(g, dim, NULL, &x, NULL, NULL, FORMAT_COORD);
   if (!x){
     fprintf(stderr,"The gv file contains no or improper 2D coordinates\n");
     return NULL;
