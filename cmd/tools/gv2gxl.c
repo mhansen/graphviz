@@ -242,19 +242,14 @@ static char *nodeID(gxlstate_t * stp, Agnode_t * n)
 static char *createEdgeId(gxlstate_t * stp, Agedge_t * e)
 {
     int edgeIdCounter = 1;
-    char buf[BUFSIZ];
     char *hname = nodeID(stp, AGHEAD(e));
     char *tname = nodeID(stp, AGTAIL(e));
     size_t baselen = strlen(hname) + strlen(tname) + sizeof(EDGEOP);
     size_t len = baselen + EXTRA;
-    char *bp;
     char *endp;			/* where to append ':' and number */
     char *rv;
 
-    if (len <= BUFSIZ)
-	bp = buf;
-    else
-	bp = N_NEW(len, char);
+    char *bp = N_NEW(len, char);
     endp = bp + (baselen - 1);
 
     sprintf(bp, "%s%s%s", tname, EDGEOP, hname);
@@ -263,8 +258,7 @@ static char *createEdgeId(gxlstate_t * stp, Agedge_t * e)
     }
 
     rv = addid(stp->idList, bp);
-    if (bp != buf)
-	free(bp);
+    free(bp);
     return rv;
 }
 
