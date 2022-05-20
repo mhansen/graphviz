@@ -16,6 +16,8 @@
 #include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
 #include    <getopt.h>
+#include    <stdio.h>
+#include    <string.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <ctype.h>
@@ -24,7 +26,6 @@
 #define XML_STATUS_ERROR 0
 #endif
 
-#define BUFSIZE		20000
 #define SMALLBUF	1000
 #define NAMEBUF		100
 
@@ -48,9 +49,6 @@ static char *CmdName;
 static char **Files;
 static int Verbose;
 static char* gname = "";
-
-#define NEW(t)      malloc(sizeof(t))
-#define N_NEW(n,t)  calloc((n),sizeof(t))
 
 static void pushString(gv_stack_t *stk, const char *s) {
 
@@ -120,7 +118,7 @@ typedef struct {
 
 static namev_t *make_nitem(Dt_t * d, namev_t * objp, Dtdisc_t * disc)
 {
-    namev_t *np = NEW(namev_t);
+    namev_t *np = gv_alloc(sizeof(*np));
     np->name = objp->name;
     np->unique_name = 0;
     return np;
@@ -142,7 +140,7 @@ static Dtdisc_t nameDisc = {
 
 static userdata_t *genUserdata(char* dfltname)
 {
-    userdata_t *user = NEW(userdata_t);
+    userdata_t *user = gv_alloc(sizeof(*user));
     agxbinit(&(user->xml_attr_name), NAMEBUF, 0);
     agxbinit(&(user->xml_attr_value), SMALLBUF, 0);
     agxbinit(&(user->composite_buffer), SMALLBUF, 0);
@@ -541,20 +539,13 @@ static void endElementHandler(void *userData, const char *name)
     } else if (strcmp(name, "attr") == 0) {
 	char *name;
 	char *value;
-	char buf[SMALLBUF] = GRAPHML_COMP;
 	char *dynbuf = 0;
 
 	ud->closedElementType = TAG_NONE;
 	if (ud->compositeReadState) {
-	    int len = sizeof(GRAPHML_COMP) + agxblen(&ud->xml_attr_name);
-	    if (len <= SMALLBUF) {
-		name = buf;
-	    } else {
-		name = dynbuf = N_NEW(len, char);
-		strcpy(name, GRAPHML_COMP);
-	    }
-	    strcpy(name + sizeof(GRAPHML_COMP) - 1,
-		   agxbuse(&ud->xml_attr_name));
+	    size_t len = sizeof(GRAPHML_COMP) + agxblen(&ud->xml_attr_name);
+	    name = dynbuf = gv_calloc(len, sizeof(char));
+	    (void)snprintf(name, len, "%s%s", GRAPHML_COMP, agxbuse(&ud->xml_attr_name));
 	    value = agxbuse(&ud->composite_buffer);
 	    agxbclear(&ud->xml_attr_value);
 	    ud->compositeReadState = FALSE;
@@ -599,7 +590,7 @@ static void characterDataHandler(void *userData, const char *s, int length)
 
 static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
 {
-    char buf[BUFSIZE];
+    char buf[BUFSIZ];
     int done;
     userdata_t *udata = genUserdata(gname);
     XML_Parser parser = XML_ParserCreate(NULL);
@@ -744,7 +735,7 @@ nameOf (char* name, int cnt)
 	return name;
     if (cnt) {
 	if (!buf)
-	    buf = N_NEW (strlen(name)+32,char);  /* 32 to handle any integer plus null byte */
+	    buf = gv_calloc(strlen(name) + 32, sizeof(char)); // 32 to handle any integer plus null byte
 	sprintf (buf, "%s%d", name, cnt);
 	return buf;
     }
