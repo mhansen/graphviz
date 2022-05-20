@@ -440,9 +440,6 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
     char *name;
     char *kind;
     char *uniqueName;
-    char buf[BUFSIZ];
-    char *bp;
-    char *dynbuf = 0;
     size_t len;
 
     Level++;
@@ -457,11 +454,7 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
 	/* this must be anonymous graph */
 
 	len = strlen(name) + sizeof("N_");
-	if (len <= BUFSIZ)
-	    bp = buf;
-	else {
-	    bp = dynbuf = N_NEW(len, char);
-	}
+	char *bp = N_NEW(len, char);
 	sprintf(bp, "N_%s", name);
 	if (idexists(stp->idList, bp) || !legalGXLName(bp)) {
 	    bp = createNodeId(stp->idList);
@@ -472,7 +465,7 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
 
 	tabover(gxlFile);
 	fprintf(gxlFile, "<node id=\"%s\">\n", bp);
-	free(dynbuf);
+	free(bp);
 	Level++;
     } else {
 	Tailport = agattr(g, AGEDGE, "tailport", NULL);
