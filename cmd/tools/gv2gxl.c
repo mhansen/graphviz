@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include "convert.h"
@@ -17,8 +18,6 @@
 
 #define SMALLBUF    128
 
-#define NEW(t)      malloc(sizeof(t))
-#define N_NEW(n,t)  calloc((n),sizeof(t))
 #define EMPTY(s)	((s == 0) || (*s == '\0'))
 #define SLEN(s)     (sizeof(s)-1)
 
@@ -59,7 +58,7 @@ static namev_t *make_nitem(Dt_t * d, namev_t * objp, Dtdisc_t * disc)
     (void)d;
     (void)disc;
 
-    namev_t *np = NEW(namev_t);
+    namev_t *np = gv_alloc(sizeof(*np));
     np->name = objp->name;
     np->unique_name = 0;
     return np;
@@ -188,9 +187,9 @@ static void *idexists(Dt_t * ids, char *id)
  */
 static char *addid(Dt_t * ids, char *id)
 {
-    idv_t *idp = NEW(idv_t);
+    idv_t *idp = gv_alloc(sizeof(*idp));
 
-    idp->name = strdup(id);
+    idp->name = gv_strdup(id);
     dtinsert(ids, idp);
     return idp->name;
 }
@@ -249,7 +248,7 @@ static char *createEdgeId(gxlstate_t * stp, Agedge_t * e)
     char *endp;			/* where to append ':' and number */
     char *rv;
 
-    char *bp = N_NEW(len, char);
+    char *bp = gv_calloc(len, sizeof(bp[0]));
     endp = bp + (baselen - 1);
 
     sprintf(bp, "%s%s%s", tname, EDGEOP, hname);
@@ -454,7 +453,7 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
 	/* this must be anonymous graph */
 
 	len = strlen(name) + sizeof("N_");
-	char *bp = N_NEW(len, char);
+	char *bp = gv_calloc(len, sizeof(bp[0]));
 	sprintf(bp, "N_%s", name);
 	if (idexists(stp->idList, bp) || !legalGXLName(bp)) {
 	    bp = createNodeId(stp->idList);
@@ -832,7 +831,7 @@ static void iterateBody(gxlstate_t * stp, Agraph_t * g)
 
 static gxlstate_t *initState(Agraph_t * g)
 {
-    gxlstate_t *stp = NEW(gxlstate_t);
+    gxlstate_t *stp = gv_alloc(sizeof(*stp));
     stp->nodeMap = dtopen(&nameDisc, Dtoset);
     stp->graphMap = dtopen(&nameDisc, Dtoset);
     stp->synNodeMap = dtopen(&nameDisc, Dtoset);
