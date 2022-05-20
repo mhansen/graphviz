@@ -16,6 +16,7 @@
 #include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
 #include    <common/memory.h>
+#include    <stdio.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <ctype.h>
@@ -27,7 +28,6 @@
 #define XML_STATUS_ERROR 0
 #endif
 
-#define BUFSIZE		20000
 #define SMALLBUF	1000
 #define NAMEBUF		100
 
@@ -693,7 +693,7 @@ static void characterDataHandler(void *userData, const char *s, int length)
 
 Agraph_t *gxl_to_gv(FILE * gxlFile)
 {
-    char buf[BUFSIZE];
+    char buf[BUFSIZ];
     int done;
     userdata_t *udata = genUserdata();
     XML_Parser parser = XML_ParserCreate(NULL);
