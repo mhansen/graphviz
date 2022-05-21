@@ -4155,6 +4155,8 @@ static char *closestSide(node_t * n, node_t * other, port * oldport)
 	    p.x = b.LL.x;
 	    p.y = (b.LL.y + b.UR.y) / 2;
 	    break;
+	default:
+	    UNREACHABLE();
 	}
 	p.x += pt.x;
 	p.y += pt.y;
