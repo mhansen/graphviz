@@ -38,7 +38,6 @@ static usershape_t *user_init(const char *str)
     FILE *fp;
     struct stat statbuf;
     bool must_inline;
-    int rc;
     int lx, ly, ux, uy;
     usershape_t *us;
 
@@ -76,7 +75,7 @@ static usershape_t *user_init(const char *str)
 	fstat(fileno(fp), &statbuf);
 	contents = us->data = N_GNEW((size_t)statbuf.st_size + 1, char);
 	fseek(fp, 0, SEEK_SET);
-	rc = fread(contents, (size_t)statbuf.st_size, 1, fp);
+	size_t rc = fread(contents, (size_t)statbuf.st_size, 1, fp);
 	if (rc == 1) {
             contents[statbuf.st_size] = '\0';
             dtinsert(EPSF_contents, us);
