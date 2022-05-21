@@ -8,92 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/prisize_t.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-#define NEW(t)           calloc(1, sizeof(t))
-#define N_NEW(n,t)       calloc((n), sizeof(t))
-
-typedef struct {
-    unsigned char *buf;		/* start of buffer */
-    unsigned char *ptr;		/* next place to write */
-    unsigned char *eptr;	/* end of buffer */
-    int dyna;			/* true if buffer is malloc'ed */
-} agxbuf;
-
-#define agxbuse(X) (agxbputc(X,'\0'),(char*)((X)->ptr = (X)->buf))
-
-static void agxbinit(agxbuf * xb, unsigned int hint, unsigned char *init)
-{
-    if (init) {
-	xb->buf = init;
-	xb->dyna = 0;
-    } else {
-	if (hint == 0)
-	    hint = BUFSIZ;
-	xb->dyna = 1;
-	xb->buf = N_NEW(hint, unsigned char);
-    }
-    xb->eptr = xb->buf + hint;
-    xb->ptr = xb->buf;
-    *xb->ptr = '\0';
-}
-static int agxbmore(agxbuf * xb, unsigned int ssz)
-{
-    int cnt;			/* current no. of characters in buffer */
-    int size;			/* current buffer size */
-    int nsize;			/* new buffer size */
-    unsigned char *nbuf;	/* new buffer */
-
-    size = xb->eptr - xb->buf;
-    nsize = 2 * size;
-    if (size + ssz > nsize)
-	nsize = size + ssz;
-    cnt = xb->ptr - xb->buf;
-    if (xb->dyna) {
-	nbuf = realloc(xb->buf, nsize);
-    } else {
-	nbuf = N_NEW(nsize, unsigned char);
-	memcpy(nbuf, xb->buf, cnt);
-	xb->dyna = 1;
-    }
-    xb->buf = nbuf;
-    xb->ptr = xb->buf + cnt;
-    xb->eptr = xb->buf + nsize;
-    return 0;
-}
-
-static int agxbput(char *s, agxbuf * xb)
-{
-    unsigned int ssz = strlen(s);
-    if (xb->ptr + ssz > xb->eptr)
-	agxbmore(xb, ssz);
-    memcpy(xb->ptr, s, ssz);
-    xb->ptr += ssz;
-    return ssz;
-}
-
-static int agxbputc(agxbuf * xb, char c) {
-  if (xb->ptr >= xb->eptr) {
-    if (agxbmore(xb, 1) != 0) {
-      return -1;
-    }
-  }
-  *xb->ptr++ = (unsigned char)c;
-  return 0;
-}
-
-/* agxbfree:
- * Free any malloced resources.
- */
-static void agxbfree(agxbuf * xb)
-{
-    if (xb->dyna)
-	free(xb->buf);
-}
 
 /* the parse functions should return NULL on error */
 static char *parseReal(char *s, double *fp)
@@ -171,7 +92,7 @@ static char *parsePolyline(char *s, xdot_polyline * pp)
 
     s = parseInt(s, &i);
     if (!s) return s;
-    pts = ps = N_NEW(i, xdot_point);
+    pts = ps = gv_calloc(i, sizeof(ps[0]));
     pp->cnt = i;
     for (i = 0; i < pp->cnt; i++) {
 	ps->x = strtod (s, &endp);
@@ -198,8 +119,6 @@ static char *parsePolyline(char *s, xdot_polyline * pp)
 static char *parseString(char *s, char **sp)
 {
     int i;
-    char *c;
-    char *p;
     s = parseInt(s, &i);
     if (!s || i <= 0) return 0;
     while (*s && *s != '-') s++;
@@ -207,20 +126,15 @@ static char *parseString(char *s, char **sp)
     else {
 	return 0;
     }
-    c = N_NEW(i + 1, char);
-    p = c;
-    while (i > 0 && *s) {
-	*p++ = *s++;
-	i--;
-    }
-    if (i > 0) {
+
+    char *c = gv_strndup(s, i);
+    if (strlen(c) != i) {
 	free (c);
 	return 0;
     }
 
-    *p = '\0';
     *sp = c;
-    return s;
+    return s + i;
 }
 
 static char *parseAlign(char *s, xdot_align * ap)
@@ -425,11 +339,11 @@ xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
 	return x;
 
     if (!x) {
-	x = NEW(xdot);
+	x = gv_alloc(sizeof(*x));
 	if (sz <= sizeof(xdot_op))
 	    sz = sizeof(xdot_op);
 
-	/* cnt, freefunc, ops, flags zeroed by NEW */
+	/* cnt, freefunc, ops, flags zeroed by gv_alloc */
 	x->sz = sz;
     }
     initcnt = x->cnt;
@@ -437,21 +351,19 @@ xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
 
     if (initcnt == 0) {
 	bufsz = XDBSIZE;
-	ops = calloc(XDBSIZE, sz);
+	ops = gv_calloc(XDBSIZE, sz);
     }
     else {
 	ops = (char*)(x->ops);
 	bufsz = initcnt + XDBSIZE;
-	ops = realloc(ops, bufsz * sz);
-	memset(ops + initcnt*sz, '\0', (bufsz - initcnt)*sz);
+	ops = gv_recalloc(ops, initcnt, bufsz, sz);
     }
 
     while ((s = parseOp(&op, s, fns, &error))) {
 	if (x->cnt == bufsz) {
 	    oldsz = bufsz;
 	    bufsz *= 2;
-	    ops = realloc(ops, bufsz * sz);
-	    memset(ops + oldsz*sz, '\0', (bufsz - oldsz)*sz);
+	    ops = gv_recalloc(ops, oldsz, bufsz, sz);
 	}
 	*(xdot_op *) (ops + x->cnt * sz) = op;
 	x->cnt++;
@@ -459,7 +371,7 @@ xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
     if (error)
 	x->flags |= XDOT_PARSE_ERROR;
     if (x->cnt) {
-	x->ops = realloc(ops, x->cnt * sz);
+	x->ops = gv_recalloc(ops, bufsz, x->cnt, sz);
     }
     else {
 	free (ops);
@@ -585,7 +497,7 @@ static void printAlign(xdot_align a, pf print, void *info)
 static void
 gradprint (char* s, void* v)
 {
-    agxbput(s, (agxbuf*)v);
+    agxbput(v, s);
 }
 
 static void
@@ -860,13 +772,19 @@ static void _printXDot(xdot * x, pf print, void *info, print_op ofn)
     }
 }
 
+// an alternate version of `agxbput` to handle differences in calling
+// conventions
+static void agxbput_(char *s, void *xb) {
+  (void)agxbput(xb, s);
+}
+
 char *sprintXDot(xdot * x)
 {
     char *s;
     unsigned char buf[BUFSIZ];
     agxbuf xb;
     agxbinit(&xb, BUFSIZ, buf);
-    _printXDot(x, (pf) agxbput, &xb, printXDot_Op);
+    _printXDot(x, agxbput_, &xb, printXDot_Op);
     s = strdup(agxbuse(&xb));
     agxbfree(&xb);
 
@@ -1034,7 +952,7 @@ radGradient (char* cp, xdot_color* clr)
     s = parseInt(s, &clr->u.ring.n_stops);
     CHK1(s);
 
-    stops = N_NEW(clr->u.ring.n_stops,xdot_color_stop);
+    stops = gv_calloc(clr->u.ring.n_stops, sizeof(stops[0]));
     for (i = 0; i < clr->u.ring.n_stops; i++) {
 	s = parseReal(s, &d);
 	CHK1(s);
@@ -1071,7 +989,7 @@ linGradient (char* cp, xdot_color* clr)
     s = parseInt(s, &clr->u.ling.n_stops);
     CHK1(s);
 
-    stops = N_NEW(clr->u.ling.n_stops,xdot_color_stop);
+    stops = gv_calloc(clr->u.ling.n_stops, sizeof(stops[0]));
     for (i = 0; i < clr->u.ling.n_stops; i++) {
 	s = parseReal(s, &d);
 	CHK1(s);

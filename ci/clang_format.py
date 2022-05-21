@@ -266,7 +266,6 @@ EXCLUDE = (
   "lib/cdt/dtview.c",
   "lib/cdt/dtwalk.c",
   "lib/cgraph/agerror.c",
-  "lib/cgraph/agxbuf.c",
   "lib/cgraph/agxbuf.h",
   "lib/cgraph/apply.c",
   "lib/cgraph/attr.c",

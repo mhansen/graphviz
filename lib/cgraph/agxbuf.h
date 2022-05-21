@@ -10,25 +10,11 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+#include <cgraph/alloc.h>
+#include <stdarg.h>
 #include <stddef.h>
-
-#include "config.h"
-
-#ifdef GVDLL
-#ifdef EXPORT_AGXBUF
-#define AGXBUF_API __declspec(dllexport)
-#else
-#define AGXBUF_API __declspec(dllimport)
-#endif
-#endif
-
-#ifndef AGXBUF_API
-#define AGXBUF_API /* nothing */
-#endif
+#include <stdio.h>
+#include <string.h>
 
 /* Extensible buffer:
  *  Malloc'ed memory is never released until agxbfree is called.
@@ -44,8 +30,69 @@ extern "C" {
  * Initializes new agxbuf; caller provides memory.
  * Assume if init is non-null, hint = sizeof(init[])
  */
-    AGXBUF_API void agxbinit(agxbuf * xb, unsigned int hint,
-			 unsigned char *init);
+static inline void agxbinit(agxbuf *xb, unsigned int hint,
+                            unsigned char *init) {
+  if (init != NULL) {
+    xb->buf = init;
+    xb->dyna = 0;
+  } else {
+    if (hint == 0) {
+      hint = BUFSIZ;
+    }
+    xb->dyna = 1;
+    xb->buf = (unsigned char *)gv_calloc(hint, sizeof(unsigned char));
+  }
+  xb->eptr = xb->buf + hint;
+  xb->ptr = xb->buf;
+  *xb->ptr = '\0';
+}
+
+/* agxbfree:
+ * Free any malloced resources.
+ */
+static inline void agxbfree(agxbuf *xb) {
+  if (xb->dyna)
+    free(xb->buf);
+}
+
+/* agxbpop:
+ * Removes last character added, if any.
+ */
+static inline int agxbpop(agxbuf *xb) {
+  int c;
+  if (xb->ptr > xb->buf) {
+    c = *xb->ptr--;
+    return c;
+  } else
+    return -1;
+}
+
+/* agxbmore:
+ * Expand buffer to hold at least ssz more bytes.
+ */
+static inline void agxbmore(agxbuf *xb, size_t ssz) {
+  size_t cnt = 0;      // current no. of characters in buffer
+  size_t size = 0;     // current buffer size
+  size_t nsize = 0;    // new buffer size
+  unsigned char *nbuf; // new buffer
+
+  size = (size_t)(xb->eptr - xb->buf);
+  nsize = 2 * size;
+  if (size + ssz > nsize)
+    nsize = size + ssz;
+  cnt = (size_t)(xb->ptr - xb->buf);
+  if (xb->dyna) {
+    nbuf = (unsigned char *)gv_recalloc(xb->buf, size, nsize,
+                                        sizeof(unsigned char));
+  } else {
+    nbuf = (unsigned char *)gv_calloc(nsize, sizeof(unsigned char));
+    memcpy(nbuf, xb->buf, cnt);
+    xb->dyna = 1;
+  }
+  xb->buf = nbuf;
+  xb->ptr = xb->buf + cnt;
+  xb->eptr = xb->buf + nsize;
+}
 
 /* support for extra API misuse warnings if available */
 #ifdef __GNUC__
@@ -57,35 +104,69 @@ extern "C" {
 /* agxbprint:
  * Printf-style output to an agxbuf
  */
-    AGXBUF_API int agxbprint(agxbuf * xb, const char *fmt, ...)
-       PRINTF_LIKE(2, 3);
+static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
+                                              ...) {
+  va_list ap;
+  size_t size;
+  int result;
+
+  va_start(ap, fmt);
+
+  // determine how many bytes we need to print
+  {
+    va_list ap2;
+    int rc;
+    va_copy(ap2, ap);
+    rc = vsnprintf(NULL, 0, fmt, ap2);
+    va_end(ap2);
+    if (rc < 0) {
+      va_end(ap);
+      return rc;
+    }
+    size = (size_t)rc + 1; // account for NUL terminator
+  }
+
+  // do we need to expand the buffer?
+  {
+    size_t unused_space = (size_t)(xb->eptr - xb->ptr);
+    if (unused_space < size) {
+      size_t extra = size - unused_space;
+      agxbmore(xb, extra);
+    }
+  }
+
+  // we can now safely print into the buffer
+  result = vsnprintf((char *)xb->ptr, size, fmt, ap);
+  assert(result == (int)(size - 1) || result < 0);
+  if (result > 0) {
+    xb->ptr += (size_t)result;
+  }
+
+  va_end(ap);
+  return result;
+}
 
 #undef PRINTF_LIKE
 
 /* agxbput_n:
- * Append string s of length n into xb
+ * Append string s of length ssz into xb
  */
-    AGXBUF_API size_t agxbput_n(agxbuf * xb, const char *s, size_t n);
+static inline size_t agxbput_n(agxbuf *xb, const char *s, size_t ssz) {
+  if (xb->ptr + ssz > xb->eptr)
+    agxbmore(xb, ssz);
+  memcpy(xb->ptr, s, ssz);
+  xb->ptr += ssz;
+  return ssz;
+}
 
 /* agxbput:
  * Append string s into xb
  */
-    AGXBUF_API size_t agxbput(agxbuf * xb, const char *s);
+static inline size_t agxbput(agxbuf *xb, const char *s) {
+  size_t ssz = strlen(s);
 
-/* agxbfree:
- * Free any malloced resources.
- */
-    AGXBUF_API void agxbfree(agxbuf * xb);
-
-/* agxbpop:
- * Removes last character added, if any.
- */
-    AGXBUF_API int agxbpop(agxbuf * xb);
-
-/* agxbmore:
- * Expand buffer to hold at least ssz more bytes.
- */
-    AGXBUF_API void agxbmore(agxbuf * xb, size_t ssz);
+  return agxbput_n(xb, s, ssz);
+}
 
 /* agxbputc:
  * Add character to buffer.
@@ -104,33 +185,34 @@ static inline int agxbputc(agxbuf * xb, char c) {
  * still associated with the agxbuf and will be overwritten on the next, e.g.,
  * agxbput. If you want to retrieve and disassociate the buffer, use agxbdisown
  * instead.
- *  char* agxbuse(agxbuf* xb)
  */
-#define agxbuse(X) ((void)agxbputc(X,'\0'),(char*)((X)->ptr = (X)->buf))
+static inline char *agxbuse(agxbuf *xb) {
+  (void)agxbputc(xb, '\0');
+  xb->ptr = xb->buf;
+  return (char *)xb->ptr;
+}
 
 /* agxbstart:
  * Return pointer to beginning of buffer.
- *  char* agxbstart(agxbuf* xb)
  */
-#define agxbstart(X) ((char*)((X)->buf))
+static inline char *agxbstart(agxbuf *xb) { return (char *)xb->buf; }
 
 /* agxblen:
  * Return number of characters currently stored.
- *  int agxblen(agxbuf* xb)
  */
-#define agxblen(X) (((X)->ptr)-((X)->buf))
+static inline size_t agxblen(const agxbuf *xb) {
+  return (size_t)(xb->ptr - xb->buf);
+}
 
 /* agxbclear:
  * Resets pointer to data;
- *  void agxbclear(agxbuf* xb)
  */
-#define agxbclear(X) ((void)((X)->ptr = (X)->buf))
+static inline void agxbclear(agxbuf *xb) { xb->ptr = xb->buf; }
 
 /* agxbnext:
  * Next position for writing.
- *  char* agxbnext(agxbuf* xb)
  */
-#define agxbnext(X) ((char*)((X)->ptr))
+static inline char *agxbnext(agxbuf *xb) { return (char *)xb->ptr; }
 
 /* agxbdisown:
  * Disassociate the backing buffer from this agxbuf and return it. The buffer is
@@ -140,8 +222,29 @@ static inline int agxbputc(agxbuf * xb, char c) {
  * buffer, but have it overwritten and reused the next time, e.g., agxbput is
  * called, use agxbuse instead of agxbdisown.
  */
-    AGXBUF_API char *agxbdisown(agxbuf * xb);
+static inline char *agxbdisown(agxbuf *xb) {
+  char *buf;
 
-#ifdef __cplusplus
+  // terminate the existing string
+  agxbputc(xb, '\0');
+
+  if (!xb->dyna) {
+    // the buffer is not dynamically allocated, so we need to copy its contents
+    // to heap memory
+
+    buf = strdup((char *)xb->buf);
+    if (buf == NULL) {
+      return NULL;
+    }
+
+  } else {
+    // the buffer is already dynamically allocated, so take it as-is
+    buf = (char *)xb->buf;
+  }
+
+  // reset xb to a state where it is usable
+  xb->buf = xb->ptr = xb->eptr = NULL;
+  xb->dyna = 1;
+
+  return buf;
 }
-#endif
