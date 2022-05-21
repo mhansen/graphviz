@@ -3208,8 +3208,7 @@ static field_t *parse_error(field_t * rv, char *port)
     return NULL;
 }
 
-static field_t *parse_reclbl(node_t * n, int LR, int flag, char *text)
-{
+static field_t *parse_reclbl(node_t *n, bool LR, int flag, char *text) {
     field_t *fp, *rv = NEW(field_t);
     char *tsp, *psp=NULL, *hstsp, *hspsp=NULL, *sp;
     char *tmpport = NULL;
@@ -3537,10 +3536,10 @@ static void record_init(node_t * n)
      */
     len = MAX(MAX(len, 1), strlen("\\N"));
     textbuf = N_NEW(len + 1, char);
-    if (!(info = parse_reclbl(n, flip, TRUE, textbuf))) {
+    if (!(info = parse_reclbl(n, flip, true, textbuf))) {
 	agerr(AGERR, "bad label format %s\n", ND_label(n)->text);
 	reclblp = "\\N";
-	info = parse_reclbl(n, flip, TRUE, textbuf);
+	info = parse_reclbl(n, flip, true, textbuf);
     }
     free(textbuf);
     size_reclbl(n, info);
