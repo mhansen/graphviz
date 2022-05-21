@@ -138,7 +138,7 @@ void epsf_free(node_t * n)
 void cat_libfile(GVJ_t * job, const char **arglib, const char **stdlib)
 {
     FILE *fp;
-    const char **s, *bp, *p, *path;
+    const char **s, *bp, *p;
     int i;
     bool use_stdlib = true;
 
@@ -158,17 +158,17 @@ void cat_libfile(GVJ_t * job, const char **arglib, const char **stdlib)
         for (i = 0; (p = arglib[i]) != 0; i++) {
             if (*p == '\0')
                 continue;       /* ignore empty string */
-            path = safefile(p);    /* make sure filename is okay */
-	    if (!path) {
+            const char *safepath = safefile(p);    /* make sure filename is okay */
+	    if (!safepath) {
 		agerr(AGWARN, "can't find library file %s\n", p);
 	    }
-            else if ((fp = fopen(path, "r"))) {
+            else if ((fp = fopen(safepath, "r"))) {
                 while ((bp = Fgets(fp)))
                     gvputs(job, bp);
                 gvputs(job, "\n"); /* append a newline just in case */
 		fclose (fp);
             } else
-                agerr(AGWARN, "can't open library file %s\n", path);
+                agerr(AGWARN, "can't open library file %s\n", safepath);
         }
     }
 }
