@@ -543,7 +543,7 @@ typedef void (*print_op)(xdot_op * op, pf print, void *info, int more);
 static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 {
     agxbuf xb;
-    unsigned char buf[BUFSIZ];
+    char buf[BUFSIZ];
 
     agxbinit (&xb, BUFSIZ, buf);
     switch (op->kind) {
@@ -667,7 +667,7 @@ static void jsonString(char *p, pf print, void *info)
 static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 {
     agxbuf xb;
-    unsigned char buf[BUFSIZ];
+    char buf[BUFSIZ];
 
     agxbinit (&xb, BUFSIZ, buf);
     switch (op->kind) {
@@ -781,7 +781,7 @@ static void agxbput_(char *s, void *xb) {
 char *sprintXDot(xdot * x)
 {
     char *s;
-    unsigned char buf[BUFSIZ];
+    char buf[BUFSIZ];
     agxbuf xb;
     agxbinit(&xb, BUFSIZ, buf);
     _printXDot(x, agxbput_, &xb, printXDot_Op);

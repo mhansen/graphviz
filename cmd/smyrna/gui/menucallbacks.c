@@ -336,7 +336,7 @@ void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
     GtkTextBuffer *gtkbuf;	/*GTK buffer from glade GUI */
 
     char buf[BUFSIZ];
-    unsigned char xbuffer[BUFSIZ];
+    char xbuffer[BUFSIZ];
 
     agxbinit(&xbuf, SMALLBUF, xbuffer);
 

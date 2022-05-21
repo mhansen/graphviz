@@ -78,7 +78,7 @@ typedef struct {
     attrsym_t *e_l_draw;
     attrsym_t *hl_draw;
     attrsym_t *tl_draw;
-    unsigned char buf[NUMXBUFS][BUFSIZ];
+    char buf[NUMXBUFS][BUFSIZ];
     unsigned short version;
     char* version_s;
 } xdot_state_t;
@@ -190,7 +190,7 @@ static void xdot_fillcolor (GVJ_t *job)
 
 static void xdot_style (GVJ_t *job)
 {
-    unsigned char buf0[BUFSIZ];
+    char buf0[BUFSIZ];
     char buf [128]; /* enough to hold a double */
     agxbuf xb;
     char* p, **s;
@@ -612,7 +612,7 @@ static void xdot_color_stop (agxbuf* xb, float v, gvcolor_t* clr)
 
 static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
 {
-    unsigned char buf0[BUFSIZ];
+    char buf0[BUFSIZ];
     agxbuf xb;
     obj_state_t* obj = job->obj;
     double angle = obj->gradient_angle * M_PI / 180;

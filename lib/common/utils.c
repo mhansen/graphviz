@@ -1160,7 +1160,7 @@ void processClusterEdges(graph_t * g)
     agxbuf xb;
     Dt_t *map;
     Dt_t *cmap = mkClustMap (g);
-    unsigned char buf[SMALLBUF];
+    char buf[SMALLBUF];
 
     map = dtopen(&mapDisc, Dtoset);
     clg = agsubg(g, "__clusternodes",1);

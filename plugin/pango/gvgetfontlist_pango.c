@@ -500,8 +500,8 @@ gv_font_map* get_font_mapping(PangoFontMap * fontmap)
     gv_font_map* gv_fmap = N_NEW(ps_fontnames_sz, gv_font_map);
     agxbuf xb;
     agxbuf xb2;
-    unsigned char buf[BUFSIZ];
-    unsigned char buf2[BUFSIZ];
+    char buf[BUFSIZ];
+    char buf2[BUFSIZ];
 
     agxbinit(&xb, BUFSIZ, buf);
     agxbinit(&xb2, BUFSIZ, buf2);

@@ -312,7 +312,7 @@ initObjMapData (GVJ_t* job, textlabel_t *lab, void* gobj)
     char* tooltip = agget(gobj, "tooltip");
     char* target = agget(gobj, "target");
     char* id;
-    unsigned char buf[SMALLBUF];
+    char buf[SMALLBUF];
     agxbuf xb;
 
     agxbinit(&xb, SMALLBUF, buf);
@@ -1036,7 +1036,7 @@ static int layer_index(GVC_t *gvc, char *str, int all)
 static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 {
     int n0, n1;
-    unsigned char buf[SMALLBUF];
+    char buf[SMALLBUF];
     char *w0, *w1;
     char *buf_part_p = NULL, *buf_p = NULL, *cur, *part_in_p;
     agxbuf xb;
@@ -2536,7 +2536,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 
     if (flags & GVRENDER_DOES_MAPS) {
 	agxbuf xb;
-	unsigned char xbuf[SMALLBUF];
+	char xbuf[SMALLBUF];
 
 	agxbinit(&xb, SMALLBUF, xbuf);
 	s = getObjId (job, e, &xb);
@@ -3395,7 +3395,7 @@ static void emit_page(GVJ_t * job, graph_t * g)
     textlabel_t *lab;
     pointf *p = NULL;
     char* saveid;
-    unsigned char buf[SMALLBUF];
+    char buf[SMALLBUF];
     agxbuf xb;
 
     /* For the first page, we can use the values generated in emit_begin_graph. 
@@ -3782,7 +3782,7 @@ static int style_token(char **s, agxbuf * xb)
 }
 
 #define FUNLIMIT 64
-static unsigned char outbuf[SMALLBUF];
+static char outbuf[SMALLBUF];
 static agxbuf ps_xb;
 
 /* parse_style:
@@ -3799,7 +3799,7 @@ char **parse_style(char *s)
     static bool is_first = true;
     int fun = 0;
     bool in_parens = false;
-    unsigned char buf[SMALLBUF];
+    char buf[SMALLBUF];
     char *p;
     int c;
     agxbuf xb;

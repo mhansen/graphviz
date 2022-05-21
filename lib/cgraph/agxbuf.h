@@ -30,10 +30,9 @@
  * Initializes new agxbuf; caller provides memory.
  * Assume if init is non-null, hint = sizeof(init[])
  */
-static inline void agxbinit(agxbuf *xb, unsigned int hint,
-                            unsigned char *init) {
+static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
   if (init != NULL) {
-    xb->buf = (char *)init;
+    xb->buf = init;
     xb->dyna = 0;
   } else {
     if (hint == 0) {
