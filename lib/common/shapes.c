@@ -4087,6 +4087,8 @@ static point cvtPt(pointf p, int rankdir)
 	q.y = p.x;
 	q.x = p.y;
 	break;
+    default:
+	UNREACHABLE();
     }
     PF2P(q, Q);
     return Q;
