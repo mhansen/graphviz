@@ -36,9 +36,8 @@ static void CALLBACK combineCallback(GLdouble coords[3], GLdouble *vertex_data[4
 
 static void CALLBACK vertexCallback(GLvoid *vertex)
 {
-    GLdouble *ptr;
-    ptr = (GLdouble *) vertex;
-    glVertex3dv((GLdouble *) ptr);
+    GLdouble *ptr = vertex;
+    glVertex3dv(ptr);
 
 }
 
