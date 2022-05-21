@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <limits.h>
@@ -2433,6 +2434,8 @@ static int invflip_side(int side, int rankdir)
 	    break;
 	}
 	break;
+    default:
+	UNREACHABLE();
     }
     return side;
 }
