@@ -272,9 +272,6 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 LT_INIT
 
-# prefer GNU variants over, say, Oracle's or Apples
-AC_CHECK_PROGS(SORT,gsort sort,false)
-
 AC_ARG_ENABLE([man-pdfs],
   [AS_HELP_STRING([--enable-man-pdfs], [Generate PDFs of man pages (default: auto)])])
 
