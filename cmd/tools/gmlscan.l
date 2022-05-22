@@ -10,7 +10,10 @@
 %option noinput
 
 %{
+#include <assert.h>
+#include <cgraph/alloc.h>
 #include <stdlib.h>
+#include <string.h>
 #include <gml2gv.h>
 #include <gmlparse.h>
 #include "config.h"
@@ -37,36 +40,32 @@ void initgmlscan(FILE *ifile)
 #endif
 
 /* buffer for arbitrary length strings (longer than BUFSIZ) */
-static char     *Sbuf,*Sptr,*Send;
-static void beginstr(void) 
-{
-    if (Sbuf == NULL) {
-	Sbuf = malloc(BUFSIZ);
-	Send = Sbuf + BUFSIZ;
-    }
-    Sptr = Sbuf;
-    *Sptr = 0;
+static char *Sbuf;
+
+static void beginstr(void) {
+  assert(Sbuf == NULL && "leaking memory");
+  Sbuf = gv_strdup("");
 }
 
-static void addstr(char *src) 
-{
-    char    c;
-    if (Sptr > Sbuf) Sptr--;
-    do {
-	do {c = *Sptr++ = *src++;} while (c && (Sptr < Send));
-	if (c) {
-	    long    sz = Send - Sbuf;
-	    long    off = Sptr - Sbuf;
-	    sz *= 2;
-	    Sbuf = realloc(Sbuf,sz);
-	    Send = Sbuf + sz;
-	    Sptr = Sbuf + off;
-	}
-    } while (c);
+static void addstr(const char *src) {
+  assert(Sbuf != NULL && "missing beginstr()");
+
+  // enlarge the buffer to make room for the suffix
+  {
+    size_t old_size = strlen(Sbuf) + 1;
+    size_t new_size = old_size + strlen(src);
+    Sbuf = gv_realloc(Sbuf, old_size, new_size);
+  }
+
+  strcat(Sbuf, src);
 }
 
 static void endstr(void) {
-    gmllval.str = strdup(Sbuf);
+  assert(Sbuf != NULL && "missing beginstr()");
+
+  // take ownership of the Sbuf backing memory
+  gmllval.str = Sbuf;
+  Sbuf = NULL;
 }
 
 %}
