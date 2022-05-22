@@ -702,13 +702,10 @@ segCmp (segment* S1, segment* S2, bend T1, bend T2)
 	else if (S1->l2 == T2) return 1;
 	else return -1;
     }
-    else { /* S1->p.p1==S2->p.p2 */
-	if (S1->l1 == S2->l2) return 0;
-	else if (S1->l1 == T2) return 1;
-	else return -1;
-    }
-    assert(0);
-    return 0;
+    /* S1->p.p1==S2->p.p2 */
+    if (S1->l1 == S2->l2) return 0;
+    else if (S1->l1 == T2) return 1;
+    return -1;
 }
 
 /* Function seg_cmp returns
