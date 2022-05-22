@@ -78,7 +78,7 @@ static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id)
     for (i = 0; i < n_same; i++)
 	if (streq(same[i].id, id)) {
 	    elist_append(e, same[i].l);
-	    goto set_arrow;
+	    return n_same;
 	}
     if (++n_same > MAXSAME) {
 	n_same--;
@@ -89,7 +89,6 @@ static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id)
     alloc_elist(1, same[i].l);
     elist_fastapp(e, same[i].l);
     same[i].id = id;
-  set_arrow:
     return n_same;
 }
 
