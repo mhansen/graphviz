@@ -24,7 +24,6 @@ typedef struct same_t {
     char *id;			/* group id */
     elist l;			/* edges in the group */
     int n_arr;			/* number of edges with arrows */
-    double arr_len;		/* arrow length of an edge in the group */
 } same_t;
 
 static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id);
@@ -75,7 +74,7 @@ void dot_sameports(graph_t * g)
 static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id)
 /* register E in the SAME structure of N under ID. Uses static int N_SAME */
 {
-    int i, sflag, eflag, flag;
+    int i, sflag, eflag;
 
     for (i = 0; i < n_same; i++)
 	if (streq(same[i].id, id)) {
@@ -92,13 +91,10 @@ static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id)
     elist_fastapp(e, same[i].l);
     same[i].id = id;
     same[i].n_arr = 0;
-    same[i].arr_len = 0;
   set_arrow:
     arrow_flags(e, &sflag, &eflag);
-    if ((flag = aghead(e) == n ? eflag : sflag))
-	same[i].arr_len =
-	    /* only consider arrows if there's exactly one arrow */
-	    (++same[i].n_arr == 1) ? arrow_length(e, flag) : 0;
+    if (aghead(e) == n ? eflag : sflag)
+        ++same[i].n_arr;
     return n_same;
 }
 
