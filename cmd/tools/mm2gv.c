@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
+#include <cgraph/unreachable.h>
 
 #define STANDALONE
 #include <cgraph/cgraph.h>
@@ -24,8 +25,6 @@
 #include "matrix_market.h"
 #include <getopt.h>
 
-#define MALLOC malloc
-#define test_flag(a, flag) ((a)&(flag))
 #define BUFS         1024
 
 typedef struct {
@@ -282,6 +281,8 @@ static void init(int argc, char **argv, parms_t * p)
 		usage(1);
 	    }
 	    break;
+ 	default:
+	    UNREACHABLE();
 	}
     }
     argv += optind;
