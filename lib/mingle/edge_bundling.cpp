@@ -535,7 +535,7 @@ static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* ed
   
   for (i = 0; i < ne; i++){
     jj = assignment[i];
-    SparseMatrix_coordinate_form_add_entries(C, 1, &jj, &i, NULL);
+    SparseMatrix_coordinate_form_add_entries(C, &jj, &i, NULL);
   }
   
   D = SparseMatrix_from_coordinate_format(C);
@@ -590,8 +590,8 @@ static SparseMatrix check_compatibility(SparseMatrix A, int ne, pedge *edges, in
       } 
 
       if (fabs(dist) > tol){
-	B = SparseMatrix_coordinate_form_add_entries(B, 1, &i, &jj, &dist);
-	B = SparseMatrix_coordinate_form_add_entries(B, 1, &jj, &i, &dist);
+	B = SparseMatrix_coordinate_form_add_entries(B, &i, &jj, &dist);
+	B = SparseMatrix_coordinate_form_add_entries(B, &jj, &i, &dist);
       }
     }
   }

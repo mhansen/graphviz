@@ -127,10 +127,10 @@ static void country_graph_coloring_internal(int seed, SparseMatrix A, int **p){
       jj = ja[j];
       if (jj != i){
 	nrow ++;
-	L = SparseMatrix_coordinate_form_add_entries(L, 1, &i, &jj, &a);
+	L = SparseMatrix_coordinate_form_add_entries(L, &i, &jj, &a);
       }
     }
-    L = SparseMatrix_coordinate_form_add_entries(L, 1, &i, &i, &nrow);
+    L = SparseMatrix_coordinate_form_add_entries(L, &i, &i, &nrow);
   }
   L = SparseMatrix_from_coordinate_format(L);
 
