@@ -62,7 +62,6 @@ extern "C" {
     RENDER_API boxf arrow_bb(pointf p, pointf u, double arrowsize);
     RENDER_API void arrow_gen(GVJ_t * job, emit_state_t emit_state, pointf p, pointf u,
 			  double arrowsize, double penwidth, int flag);
-    RENDER_API double arrow_length(edge_t * e, int flag);
     RENDER_API int arrowEndClip(edge_t*, pointf*, int, int , bezier*, int eflag);
     RENDER_API int arrowStartClip(edge_t*, pointf* ps, int, int, bezier*, int sflag);
     RENDER_API void arrowOrthoClip(edge_t*, pointf* ps, int, int, bezier*, int sflag, int eflag);
