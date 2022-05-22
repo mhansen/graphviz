@@ -103,8 +103,6 @@ def test_existence(binary: str):
     "dot_builtins",
     "gv2gxl",
     "gvedit",
-    "gvmap",
-    "gvmap.sh",
     "gxl2dot",
     "prune",
   ]
@@ -175,9 +173,9 @@ def test_existence(binary: str):
     check_that_tool_does_not_exist(binary, os_id)
     pytest.skip("smyrna is not built on non-Linux due to lacking dependencies")
 
-  if binary == "vimdot" and platform.system() == "Windows":
+  if binary in ("gvmap.sh", "vimdot") and platform.system() == "Windows":
     check_that_tool_does_not_exist(binary, os_id)
-    pytest.skip("vimdot is not installed on Windows")
+    pytest.skip(f"{binary} is not installed on Windows")
 
   assert shutil.which(binary) is not None
 

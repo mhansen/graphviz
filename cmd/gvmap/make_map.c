@@ -1297,7 +1297,7 @@ static void add_point(int *n, int igrp, double **x, int *nmax, double point[], i
     int old_nmax = *nmax;
     *nmax = MAX((int) 0.2*(*n), 20) + *n;
     *x = gv_recalloc(*x, 2 * old_nmax, 2 * *nmax, sizeof(double));
-    *groups = gv_recalloc(*groups, old_nmax, nmax, sizeof(int));
+    *groups = gv_recalloc(*groups, old_nmax, *nmax, sizeof(int));
   }
 
   (*x)[(*n)*2] = point[0];
