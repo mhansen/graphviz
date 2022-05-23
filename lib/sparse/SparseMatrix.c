@@ -406,8 +406,6 @@ SparseMatrix SparseMatrix_general_new(int m, int n, int nz, int type, size_t sz,
 }
 
 void SparseMatrix_delete(SparseMatrix A){
-  /* return a sparse matrix skeleton with row dimension m and storage nz. If nz == 0, 
-     only row pointers are allocated */
   if (!A) return;
   free(A->ia);
   free(A->ja);
