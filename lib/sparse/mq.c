@@ -461,7 +461,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
     R0 = SparseMatrix_new(nc, n, 1, MATRIX_TYPE_REAL, FORMAT_COORD);
     for (i = 0; i < n; i++){
       jj = matching[i];
-      SparseMatrix_coordinate_form_add_entries(R0, &jj, &i, &one);
+      SparseMatrix_coordinate_form_add_entry(R0, &jj, &i, &one);
     }
     R = SparseMatrix_from_coordinate_format(R0);
     SparseMatrix_delete(R0);

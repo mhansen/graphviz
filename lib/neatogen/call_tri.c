@@ -41,15 +41,15 @@ SparseMatrix call_tri(int n, int dim, double * x)
     for (i = 0; i < numberofedges; i++) {
 	ii = edgelist[i * 2];
 	jj = edgelist[i * 2 + 1];
-	SparseMatrix_coordinate_form_add_entries(A, &(ii), &(jj), &one);
+	SparseMatrix_coordinate_form_add_entry(A, &(ii), &(jj), &one);
     }
     if (n == 2) {		/* if two points, add edge i->j */
 	ii = 0;
 	jj = 1;
-	SparseMatrix_coordinate_form_add_entries(A, &(ii), &(jj), &one);
+	SparseMatrix_coordinate_form_add_entry(A, &(ii), &(jj), &one);
     }
     for (i = 0; i < n; i++) {
-	SparseMatrix_coordinate_form_add_entries(A, &i, &i, &one);
+	SparseMatrix_coordinate_form_add_entry(A, &i, &i, &one);
     }
     B = SparseMatrix_from_coordinate_format(A);
     SparseMatrix_delete(A);
@@ -85,13 +85,13 @@ SparseMatrix call_tri2(int n, int dim, double * xx)
 
     for (i = 0; i < n; i++) {
 	for (j = 1; j < delaunay[i].nedges; j++) {
-	    SparseMatrix_coordinate_form_add_entries(A, &i,
+	    SparseMatrix_coordinate_form_add_entry(A, &i,
 						     &(delaunay[i].
 						       edges[j]), &one);
 	}
     }
     for (i = 0; i < n; i++) {
-	SparseMatrix_coordinate_form_add_entries(A, &i, &i, &one);
+	SparseMatrix_coordinate_form_add_entry(A, &i, &i, &one);
     }
     B = SparseMatrix_from_coordinate_format(A);
     B = SparseMatrix_symmetrize(B, false);

@@ -200,7 +200,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
       for (j = i+1; j < nz2; j++){
 	u2 = irn[j]; v2 = jcn[j];
 	if (splines_intersect(dim, u1, v1, u2, v2, cos_critical, check_edges_with_same_endpoint, xsplines[i], xsplines[j])){
-	  B = SparseMatrix_coordinate_form_add_entries(B, &i, &j, &cos_a);
+	  B = SparseMatrix_coordinate_form_add_entry(B, &i, &j, &cos_a);
 	}
       }
     }
@@ -222,7 +222,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
 	cos_a = intersection_angle(&(x[dim*u1]), &(x[dim*v1]), &(x[dim*u2]), &(x[dim*v2]));
 	if (!check_edges_with_same_endpoint && cos_a >= -1) cos_a = fabs(cos_a);
 	if (cos_a > cos_critical) {
-	  B = SparseMatrix_coordinate_form_add_entries(B, &i, &j, &cos_a);
+	  B = SparseMatrix_coordinate_form_add_entry(B, &i, &j, &cos_a);
 	}
       }
     }

@@ -68,8 +68,8 @@ SparseMatrix SparseMatrix_multiply3(SparseMatrix A, SparseMatrix B, SparseMatrix
 
 enum {SUM_REPEATED_NONE = 0, SUM_REPEATED_ALL, };
 SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum);
-SparseMatrix SparseMatrix_coordinate_form_add_entries(SparseMatrix A, int *irn,
-                                                      int *jcn, void *val);
+SparseMatrix SparseMatrix_coordinate_form_add_entry(SparseMatrix A, int *irn,
+                                                    int *jcn, void *val);
 int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only);
 SparseMatrix SparseMatrix_transpose(SparseMatrix A);
 SparseMatrix SparseMatrix_symmetrize(SparseMatrix A,

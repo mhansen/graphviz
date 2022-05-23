@@ -1595,8 +1595,8 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum){
   return A;
 }
 
-SparseMatrix SparseMatrix_coordinate_form_add_entries(SparseMatrix A, int *irn,
-                                                      int *jcn, void *val) {
+SparseMatrix SparseMatrix_coordinate_form_add_entry(SparseMatrix A, int *irn,
+                                                    int *jcn, void *val) {
   int nz, nzmax;
 
   static const int nentries = 1;
@@ -2594,7 +2594,7 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
       for (i = 0; i < nlevel; i++) {
 	for (j = levelset_ptr[i]; j < levelset_ptr[i+1]; j++){
 	  itmp = levelset[j]; dtmp = i;
-	  if (k != itmp) B = SparseMatrix_coordinate_form_add_entries(B, &k, &itmp, &dtmp);
+	  if (k != itmp) B = SparseMatrix_coordinate_form_add_entry(B, &k, &itmp, &dtmp);
 	}
       }
      }
@@ -2629,7 +2629,7 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
       }
       for (j = 0; j < nlist; j++){
 	itmp = list[j]; dtmp = dist[itmp];
-	if (k != itmp) B = SparseMatrix_coordinate_form_add_entries(B, &k, &itmp, &dtmp);
+	if (k != itmp) B = SparseMatrix_coordinate_form_add_entry(B, &k, &itmp, &dtmp);
       }
    }
   }
