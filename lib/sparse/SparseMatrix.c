@@ -1609,8 +1609,8 @@ SparseMatrix SparseMatrix_coordinate_form_add_entries(SparseMatrix A, int *irn,
      nzmax = MAX(10, (int) 0.2*nzmax) + nzmax;
     A = SparseMatrix_realloc(A, nzmax);
   }
-  memcpy((char*) A->ia + ((size_t)nz)*sizeof(int)/sizeof(char), irn, sizeof(int)*((size_t)nentries));
-  memcpy((char*) A->ja + ((size_t)nz)*sizeof(int)/sizeof(char), jcn, sizeof(int)*((size_t)nentries));
+  A->ia[nz] = *irn;
+  A->ja[nz] = *jcn;
   if (A->size) memcpy((char*) A->a + ((size_t)nz)*A->size/sizeof(char), val, A->size*((size_t)nentries));
   if (irn[0] >= A->m) A->m = irn[0] + 1;
   if (jcn[0] >= A->n) A->n = jcn[0] + 1;
