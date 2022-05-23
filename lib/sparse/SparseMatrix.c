@@ -851,7 +851,7 @@ static SparseMatrix SparseMatrix_from_coordinate_arrays_internal(int nz, int m, 
 
 
 
-  if(sum_repeated) A = SparseMatrix_sum_repeat_entries(A, sum_repeated);
+  if(sum_repeated) A = SparseMatrix_sum_repeat_entries(A);
  
   return A;
 }
@@ -1349,12 +1349,10 @@ SparseMatrix SparseMatrix_multiply3(SparseMatrix A, SparseMatrix B, SparseMatrix
   return D;
 }
 
-SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum){
+SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A){
   /* sum repeated entries in the same row, i.e., {1,1}->1, {1,1}->2 becomes {1,1}->3 */
   int *ia = A->ia, *ja = A->ja, type = A->type, n = A->n;
   int *mask = NULL, nz = 0, i, j, sta;
-
-  if (what_to_sum == SUM_REPEATED_NONE) return A;
 
   mask = MALLOC(sizeof(int)*((size_t)n));
   for (i = 0; i < n; i++) mask[i] = -1;
