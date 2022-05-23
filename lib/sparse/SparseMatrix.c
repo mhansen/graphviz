@@ -1595,7 +1595,7 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum){
   return A;
 }
 
-SparseMatrix SparseMatrix_coordinate_form_add_entry(SparseMatrix A, int *irn,
+SparseMatrix SparseMatrix_coordinate_form_add_entry(SparseMatrix A, int irn,
                                                     int *jcn, void *val) {
   int nz, nzmax;
 
@@ -1609,10 +1609,10 @@ SparseMatrix SparseMatrix_coordinate_form_add_entry(SparseMatrix A, int *irn,
      nzmax = MAX(10, (int) 0.2*nzmax) + nzmax;
     A = SparseMatrix_realloc(A, nzmax);
   }
-  A->ia[nz] = *irn;
+  A->ia[nz] = irn;
   A->ja[nz] = *jcn;
   if (A->size) memcpy((char*) A->a + ((size_t)nz)*A->size/sizeof(char), val, A->size*((size_t)nentries));
-  if (irn[0] >= A->m) A->m = irn[0] + 1;
+  if (irn >= A->m) A->m = irn + 1;
   if (jcn[0] >= A->n) A->n = jcn[0] + 1;
   A->nz += nentries;
   return A;
@@ -2594,7 +2594,7 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
       for (i = 0; i < nlevel; i++) {
 	for (j = levelset_ptr[i]; j < levelset_ptr[i+1]; j++){
 	  itmp = levelset[j]; dtmp = i;
-	  if (k != itmp) B = SparseMatrix_coordinate_form_add_entry(B, &k, &itmp, &dtmp);
+	  if (k != itmp) B = SparseMatrix_coordinate_form_add_entry(B, k, &itmp, &dtmp);
 	}
       }
      }
@@ -2629,7 +2629,7 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
       }
       for (j = 0; j < nlist; j++){
 	itmp = list[j]; dtmp = dist[itmp];
-	if (k != itmp) B = SparseMatrix_coordinate_form_add_entry(B, &k, &itmp, &dtmp);
+	if (k != itmp) B = SparseMatrix_coordinate_form_add_entry(B, k, &itmp, &dtmp);
       }
    }
   }

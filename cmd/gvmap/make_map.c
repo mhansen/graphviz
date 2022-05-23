@@ -207,8 +207,8 @@ static SparseMatrix matrix_add_entry(SparseMatrix A, int i, int j, int val){
   if (i < j) {
     i1 = j; j1 = i;
   }
-  A = SparseMatrix_coordinate_form_add_entry(A, &j1, &i1, &val);
-  return SparseMatrix_coordinate_form_add_entry(A, &i1, &j1, &val);
+  A = SparseMatrix_coordinate_form_add_entry(A, j1, &i1, &val);
+  return SparseMatrix_coordinate_form_add_entry(A, i1, &j1, &val);
 }
 
 static void plot_dot_edges(FILE *f, SparseMatrix A){
@@ -428,12 +428,12 @@ static SparseMatrix get_country_graph(int n, SparseMatrix A, int *groups, int GR
   ja = A->ja;
   for (i = 0; i < n; i++){
     ig1 = groups[i]-1;/* add a diagonal entry */
-    SparseMatrix_coordinate_form_add_entry(B, &ig1, &ig1, &one);
+    SparseMatrix_coordinate_form_add_entry(B, ig1, &ig1, &one);
     for (j = ia[i]; j < ia[i+1]; j++){
       jj = ja[j];
       if (i != jj && groups[i] != groups[jj] && groups[jj] != GRP_RANDOM && groups[jj] != GRP_BBOX){
 	ig1 = groups[i]-1; ig2 = groups[jj]-1;
-	SparseMatrix_coordinate_form_add_entry(B, &ig1, &ig2, &one);
+	SparseMatrix_coordinate_form_add_entry(B, ig1, &ig2, &one);
       }
     }
   }
@@ -456,7 +456,7 @@ static void conn_comp(int n, SparseMatrix A, int *groups, SparseMatrix *poly_poi
     for (j = ia[i]; j < ia[i+1]; j++){
       jj = ja[j];
       if (i != jj && groups[i] == groups[jj]){
-	SparseMatrix_coordinate_form_add_entry(B, &i, &jj, &one);
+	SparseMatrix_coordinate_form_add_entry(B, i, &jj, &one);
       }
     }
   }
@@ -591,7 +591,7 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
 	} else {
 	  ipoly2 = ipoly;
 	}
-	SparseMatrix_coordinate_form_add_entry(*poly_lines, &i, &cur, &ipoly2);
+	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, &cur, &ipoly2);
 	while (next != sta){
 	  mask[next] = i;
 	  
@@ -600,7 +600,7 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
 	  } else {
 	    ipoly2 = ipoly;
 	  }
-	  SparseMatrix_coordinate_form_add_entry(*poly_lines, &i, &next, &ipoly2);
+	  SparseMatrix_coordinate_form_add_entry(*poly_lines, i, &next, &ipoly2);
 
 	  nn = neighbor(next, 0, edim, elist);
 	  nlink = 0;
@@ -619,7 +619,7 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
 	} else {
 	  ipoly2 = ipoly;
 	}
-	SparseMatrix_coordinate_form_add_entry(*poly_lines, &i, &sta, &ipoly2);/* complete a cycle by adding starting point */
+	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, &sta, &ipoly2);/* complete a cycle by adding starting point */
 
 	ipoly++;
       }
@@ -732,14 +732,14 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 	assert(jj < n);
 	edge_table[ne*2] = t1;/*t1->t2*/
 	edge_table[ne*2+1] = t2;
-	half_edges = SparseMatrix_coordinate_form_add_entry(half_edges, &i, &jj, &ne);
-	half_edges = SparseMatrix_coordinate_form_add_entry(half_edges, &jj, &i, &ne);
+	half_edges = SparseMatrix_coordinate_form_add_entry(half_edges, i, &jj, &ne);
+	half_edges = SparseMatrix_coordinate_form_add_entry(half_edges, jj, &i, &ne);
 	ne++;
 
 	edge_table[ne*2] = t2;/*t2->t1*/
 	edge_table[ne*2+1] = t1;
-	half_edges = SparseMatrix_coordinate_form_add_entry(half_edges, &i, &jj, &ne);
-	half_edges = SparseMatrix_coordinate_form_add_entry(half_edges, &jj, &i, &ne);	
+	half_edges = SparseMatrix_coordinate_form_add_entry(half_edges, i, &jj, &ne);
+	half_edges = SparseMatrix_coordinate_form_add_entry(half_edges, jj, &i, &ne);	
 
 
 	ne++;
@@ -918,13 +918,13 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
     while ((enext = cycle_next(ecur)) != cycle_head){
       edge_cycle_map[ecur] = NOT_ON_CYCLE;
       head = edge_head(ecur);
-      SparseMatrix_coordinate_form_add_entry(*polys, &i, &head, &i);
+      SparseMatrix_coordinate_form_add_entry(*polys, i, &head, &i);
       ecur = enext;
     }
     edge_cycle_map[ecur] = NOT_ON_CYCLE;
     head = edge_head(ecur); tail = edge_tail(ecur);
-    SparseMatrix_coordinate_form_add_entry(*polys, &i, &head, &i);
-    SparseMatrix_coordinate_form_add_entry(*polys, &i, &tail, &i);
+    SparseMatrix_coordinate_form_add_entry(*polys, i, &head, &i);
+    SparseMatrix_coordinate_form_add_entry(*polys, i, &tail, &i);
 
 
     /* unset edge_map */
