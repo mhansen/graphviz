@@ -233,7 +233,7 @@ ID		({NAME}|{NUMBER})
 
 void aagerror(const char *str)
 {
-	unsigned char	xbuf[BUFSIZ];
+	char	xbuf[BUFSIZ];
 	agxbuf  xb;
 
 	agxbinit(&xb, BUFSIZ, xbuf);

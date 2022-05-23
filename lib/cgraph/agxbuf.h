@@ -20,9 +20,9 @@
  *  Malloc'ed memory is never released until agxbfree is called.
  */
     typedef struct {
-	unsigned char *buf;	/* start of buffer */
-	unsigned char *ptr;	/* next place to write */
-	unsigned char *eptr;	/* end of buffer */
+	char *buf;	/* start of buffer */
+	char *ptr;	/* next place to write */
+	char *eptr;	/* end of buffer */
 	int dyna;		/* true if buffer is malloc'ed */
     } agxbuf;
 
@@ -30,8 +30,7 @@
  * Initializes new agxbuf; caller provides memory.
  * Assume if init is non-null, hint = sizeof(init[])
  */
-static inline void agxbinit(agxbuf *xb, unsigned int hint,
-                            unsigned char *init) {
+static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
   if (init != NULL) {
     xb->buf = init;
     xb->dyna = 0;
@@ -40,7 +39,7 @@ static inline void agxbinit(agxbuf *xb, unsigned int hint,
       hint = BUFSIZ;
     }
     xb->dyna = 1;
-    xb->buf = (unsigned char *)gv_calloc(hint, sizeof(unsigned char));
+    xb->buf = (char *)gv_calloc(hint, sizeof(char));
   }
   xb->eptr = xb->buf + hint;
   xb->ptr = xb->buf;
@@ -71,10 +70,10 @@ static inline int agxbpop(agxbuf *xb) {
  * Expand buffer to hold at least ssz more bytes.
  */
 static inline void agxbmore(agxbuf *xb, size_t ssz) {
-  size_t cnt = 0;      // current no. of characters in buffer
-  size_t size = 0;     // current buffer size
-  size_t nsize = 0;    // new buffer size
-  unsigned char *nbuf; // new buffer
+  size_t cnt = 0;   // current no. of characters in buffer
+  size_t size = 0;  // current buffer size
+  size_t nsize = 0; // new buffer size
+  char *nbuf;       // new buffer
 
   size = (size_t)(xb->eptr - xb->buf);
   nsize = 2 * size;
@@ -82,10 +81,9 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
     nsize = size + ssz;
   cnt = (size_t)(xb->ptr - xb->buf);
   if (xb->dyna) {
-    nbuf = (unsigned char *)gv_recalloc(xb->buf, size, nsize,
-                                        sizeof(unsigned char));
+    nbuf = (char *)gv_recalloc(xb->buf, size, nsize, sizeof(char));
   } else {
-    nbuf = (unsigned char *)gv_calloc(nsize, sizeof(unsigned char));
+    nbuf = (char *)gv_calloc(nsize, sizeof(char));
     memcpy(nbuf, xb->buf, cnt);
     xb->dyna = 1;
   }
@@ -136,7 +134,7 @@ static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
   }
 
   // we can now safely print into the buffer
-  result = vsnprintf((char *)xb->ptr, size, fmt, ap);
+  result = vsnprintf(xb->ptr, size, fmt, ap);
   assert(result == (int)(size - 1) || result < 0);
   if (result > 0) {
     xb->ptr += (size_t)result;
@@ -176,7 +174,7 @@ static inline int agxbputc(agxbuf * xb, char c) {
   if (xb->ptr >= xb->eptr) {
     agxbmore(xb, 1);
   }
-  *xb->ptr++ = (unsigned char)c;
+  *xb->ptr++ = c;
   return 0;
 }
 
@@ -189,13 +187,13 @@ static inline int agxbputc(agxbuf * xb, char c) {
 static inline char *agxbuse(agxbuf *xb) {
   (void)agxbputc(xb, '\0');
   xb->ptr = xb->buf;
-  return (char *)xb->ptr;
+  return xb->ptr;
 }
 
 /* agxbstart:
  * Return pointer to beginning of buffer.
  */
-static inline char *agxbstart(agxbuf *xb) { return (char *)xb->buf; }
+static inline char *agxbstart(agxbuf *xb) { return xb->buf; }
 
 /* agxblen:
  * Return number of characters currently stored.
@@ -212,7 +210,7 @@ static inline void agxbclear(agxbuf *xb) { xb->ptr = xb->buf; }
 /* agxbnext:
  * Next position for writing.
  */
-static inline char *agxbnext(agxbuf *xb) { return (char *)xb->ptr; }
+static inline char *agxbnext(agxbuf *xb) { return xb->ptr; }
 
 /* agxbdisown:
  * Disassociate the backing buffer from this agxbuf and return it. The buffer is
@@ -232,14 +230,14 @@ static inline char *agxbdisown(agxbuf *xb) {
     // the buffer is not dynamically allocated, so we need to copy its contents
     // to heap memory
 
-    buf = strdup((char *)xb->buf);
+    buf = strdup(xb->buf);
     if (buf == NULL) {
       return NULL;
     }
 
   } else {
     // the buffer is already dynamically allocated, so take it as-is
-    buf = (char *)xb->buf;
+    buf = xb->buf;
   }
 
   // reset xb to a state where it is usable

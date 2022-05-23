@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <limits.h>
@@ -2433,6 +2434,8 @@ static int invflip_side(int side, int rankdir)
 	    break;
 	}
 	break;
+    default:
+	UNREACHABLE();
     }
     return side;
 }
@@ -3205,8 +3208,7 @@ static field_t *parse_error(field_t * rv, char *port)
     return NULL;
 }
 
-static field_t *parse_reclbl(node_t * n, int LR, int flag, char *text)
-{
+static field_t *parse_reclbl(node_t *n, bool LR, int flag, char *text) {
     field_t *fp, *rv = NEW(field_t);
     char *tsp, *psp=NULL, *hstsp, *hspsp=NULL, *sp;
     char *tmpport = NULL;
@@ -3534,10 +3536,10 @@ static void record_init(node_t * n)
      */
     len = MAX(MAX(len, 1), strlen("\\N"));
     textbuf = N_NEW(len + 1, char);
-    if (!(info = parse_reclbl(n, flip, TRUE, textbuf))) {
+    if (!(info = parse_reclbl(n, flip, true, textbuf))) {
 	agerr(AGERR, "bad label format %s\n", ND_label(n)->text);
 	reclblp = "\\N";
-	info = parse_reclbl(n, flip, TRUE, textbuf);
+	info = parse_reclbl(n, flip, true, textbuf);
     }
     free(textbuf);
     size_reclbl(n, info);
@@ -4085,6 +4087,8 @@ static point cvtPt(pointf p, int rankdir)
 	q.y = p.x;
 	q.x = p.y;
 	break;
+    default:
+	UNREACHABLE();
     }
     PF2P(q, Q);
     return Q;
@@ -4151,6 +4155,8 @@ static char *closestSide(node_t * n, node_t * other, port * oldport)
 	    p.x = b.LL.x;
 	    p.y = (b.LL.y + b.UR.y) / 2;
 	    break;
+	default:
+	    UNREACHABLE();
 	}
 	p.x += pt.x;
 	p.y += pt.y;

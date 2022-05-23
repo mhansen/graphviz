@@ -188,7 +188,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
     int s_arrows;		/* graph has edges with start arrows */
     int i, j, sides;
     char buf[BUFSIZ];		/* Used only for small strings */
-    unsigned char xbuffer[BUFSIZ];	/* Initial buffer for xb */
+    char xbuffer[BUFSIZ];	/* Initial buffer for xb */
     agxbuf xb;
     node_t *n;
     edge_t *e;

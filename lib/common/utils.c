@@ -1160,7 +1160,7 @@ void processClusterEdges(graph_t * g)
     agxbuf xb;
     Dt_t *map;
     Dt_t *cmap = mkClustMap (g);
-    unsigned char buf[SMALLBUF];
+    char buf[SMALLBUF];
 
     map = dtopen(&mapDisc, Dtoset);
     clg = agsubg(g, "__clusternodes",1);
@@ -1362,14 +1362,14 @@ htmlEntity (char** s)
                     byte = byte - '0';
 		else
                     break;
-		n = (n * 16) + byte;
+		n = (n * 16) + (int)byte;
 	    }
 	}
 	else {
 	    for (i = 1; i < 8; i++) {
 		byte = *(str + i);
 		if (byte >= '0' && byte <= '9')
-		    n = (n * 10) + (byte - '0');
+		    n = (n * 10) + ((int)byte - '0');
 		else
 		    break;
 	    }
@@ -1396,7 +1396,7 @@ htmlEntity (char** s)
 		}
 		break;
 	    }
-	    *p++ = byte;
+	    *p++ = (char)byte;
 	}
     }
     *s = (char*)str;

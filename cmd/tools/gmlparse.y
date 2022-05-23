@@ -752,9 +752,9 @@ gml_to_gv (char* name, FILE* fp, int cnt, int* errors)
 {
     Agraph_t* g;
     agxbuf xb;
-    unsigned char buf[BUFSIZ];
+    char buf[BUFSIZ];
     agxbuf unk;
-    unsigned char unknownb[BUFSIZ];
+    char unknownb[BUFSIZ];
     int error;
 
     if (cnt == 0)

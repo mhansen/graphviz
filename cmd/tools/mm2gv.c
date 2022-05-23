@@ -80,7 +80,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     int i, j;
     agxbuf xb;
     char buf[BUFS];
-    unsigned char string[BUFS];
+    char string[BUFS];
     Agsym_t *sym = NULL, *sym2 = NULL, *sym3 = NULL;
     int *ia = A->ia;
     int *ja = A->ja;

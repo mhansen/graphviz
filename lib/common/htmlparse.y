@@ -590,7 +590,7 @@ VR  : T_vr T_end_vr
 htmllabel_t*
 parseHTML (char* txt, int* warn, htmlenv_t *env)
 {
-  unsigned char buf[SMALLBUF];
+  char buf[SMALLBUF];
   agxbuf        str;
   htmllabel_t*  l;
   sfont_t       dfltf;

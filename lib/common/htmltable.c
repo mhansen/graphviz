@@ -380,7 +380,7 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
     static int anchorId;
     int internalId = 0;
     agxbuf xb;
-    unsigned char buf[SMALLBUF];
+    char buf[SMALLBUF];
 
     save->url = obj->url;
     save->tooltip = obj->tooltip;
@@ -2012,7 +2012,7 @@ int make_html_label(void *obj, textlabel_t * lp)
     if (!lbl) {
 	/* Parse of label failed; revert to simple text label */
 	agxbuf xb;
-	unsigned char buf[SMALLBUF];
+	char buf[SMALLBUF];
 	agxbinit(&xb, SMALLBUF, buf);
 	lp->html = false;
 	lp->text = strdup(nameOf(obj, &xb));

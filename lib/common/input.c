@@ -227,7 +227,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     char c, *rest, *layout;
     const char *val;
     int i, v, nfiles;
-    unsigned char buf[SMALLBUF];
+    char buf[SMALLBUF];
     agxbuf xb;
     int Kflag = 0;
 
