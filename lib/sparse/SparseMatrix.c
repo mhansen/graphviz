@@ -1384,25 +1384,23 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum){
   case MATRIX_TYPE_COMPLEX:
     {
       double *a = (double*) A->a;
-      if (what_to_sum == SUM_REPEATED_ALL){
-	nz = 0;
-	sta = ia[0];
-	for (i = 0; i < A->m; i++){
-	  for (j = sta; j < ia[i+1]; j++){
-	    if (mask[ja[j]] < ia[i]){
-	      ja[nz] = ja[j];
-	      a[2*nz] = a[2*j];
-	      a[2*nz+1] = a[2*j+1];
-	      mask[ja[j]] = nz++;
-	    } else {
-	      assert(ja[mask[ja[j]]] == ja[j]);
-	      a[2*mask[ja[j]]] += a[2*j];
-	      a[2*mask[ja[j]]+1] += a[2*j+1];
-	    }
-	  }
-	  sta = ia[i+1];
-	  ia[i+1] = nz;
-	}
+      nz = 0;
+      sta = ia[0];
+      for (i = 0; i < A->m; i++) {
+        for (j = sta; j < ia[i+1]; j++) {
+          if (mask[ja[j]] < ia[i]) {
+            ja[nz] = ja[j];
+            a[2 * nz] = a[2 * j];
+            a[2 * nz + 1] = a[2 * j + 1];
+            mask[ja[j]] = nz++;
+          } else {
+            assert(ja[mask[ja[j]]] == ja[j]);
+            a[2 * mask[ja[j]]] += a[2 * j];
+            a[2 * mask[ja[j]]+1] += a[2 * j + 1];
+          }
+        }
+        sta = ia[i + 1];
+        ia[i + 1] = nz;
       }
     }
     break;
