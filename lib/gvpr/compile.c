@@ -349,7 +349,7 @@ static void assignable (Agobj_t *objp, unsigned char* name) {
 
     TFA_Init();
     while (TFA_State >= 0 && (ch = *p)) {
-        TFA_Advance(ch & ~127 ? 127 : ch);
+        TFA_Advance(ch > 127 ? 127 : ch);
         p++;
     }
     rv = TFA_Definition();
