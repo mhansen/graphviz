@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief trapezoid elements and utilities for partition.c
+ *
+ * See [Fast polygon triangulation based on Seidel's algorithm](http://gamma.cs.unc.edu/SEIDEL/)
+ *
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
