@@ -999,7 +999,7 @@ void SpringSmoother_smooth(SpringSmoother sm, SparseMatrix A, double *node_weigh
 
 /*=============================== end of spring and spring-electrical based smoother =========== */
 
-void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control ctrl, double *node_weights, double *x, int *flag){
+void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control ctrl, double *x, int *flag){
 #ifdef TIME
   clock_t  cpu;
 #endif
@@ -1053,7 +1053,7 @@ void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control c
 
     for (k = 0; k < 1; k++){
       sm = SpringSmoother_new(A, dim, ctrl, x);
-      SpringSmoother_smooth(sm, A, node_weights, dim, x);
+      SpringSmoother_smooth(sm, A, NULL, dim, x);
       SpringSmoother_delete(sm);
     }
 

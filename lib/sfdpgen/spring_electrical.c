@@ -2083,7 +2083,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
   cpu = clock();
 #endif
 
-  post_process_smoothing(dim, A, ctrl, NULL, x, flag);
+  post_process_smoothing(dim, A, ctrl, x, flag);
 
   if (Verbose) fprintf(stderr, "ctrl->overlap=%d\n",ctrl->overlap);
 
