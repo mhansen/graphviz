@@ -1593,6 +1593,9 @@ static int
 setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
        void *env, int elt, Extype_t v, Exdisc_t * disc)
 {
+    (void)elt;
+    (void)disc;
+
     Gpr_t *state;
     Agobj_t *objp;
     Agnode_t *np;
@@ -1790,6 +1793,9 @@ static Extype_t
 refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
        char *str, int elt, Exdisc_t * disc)
 {
+    (void)str;
+    (void)elt;
+
     Extype_t v;
     if (sym->lex == CONSTANT) {
 	switch (sym->index) {
@@ -1861,6 +1867,9 @@ static int
 binary(Expr_t * pg, Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg,
        Exdisc_t * disc)
 {
+    (void)pg;
+    (void)disc;
+
     Agobj_t *lobjp;
     Agobj_t *robjp;
     int ret = -1;
@@ -2115,6 +2124,10 @@ static int
 convert(Expr_t * prog, Exnode_t * x, int type,
 	Exid_t * xref, int arg, Exdisc_t * disc)
 {
+    (void)prog;
+    (void)xref;
+    (void)disc;
+
     Agobj_t *objp;
     int ret = -1;
 
@@ -2193,6 +2206,9 @@ convert(Expr_t * prog, Exnode_t * x, int type,
  */
 static Extype_t keyval(Expr_t * pgm, Extype_t v, int type, Exdisc_t * disc)
 {
+    (void)pgm;
+    (void)disc;
+
     if (type <= T_obj) {
 	v.integer = AGID(int2ptr(v.integer));
     }
@@ -2206,6 +2222,12 @@ static int
 matchval(Expr_t * pgm, Exnode_t * xstr, const char *str, Exnode_t * xpat,
 	 const char *pat, void *env, Exdisc_t * disc)
 {
+    (void)pgm;
+    (void)xstr;
+    (void)xpat;
+    (void)env;
+    (void)disc;
+
     return strgrpmatch(str, pat, NULL, 0,
 		       STR_MAXIMAL | STR_LEFT | STR_RIGHT);
 }

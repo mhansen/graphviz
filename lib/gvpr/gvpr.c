@@ -379,8 +379,7 @@ freeOpts (options* opts)
 /* scanArgs:
  * Parse command line options.
  */
-static options* scanArgs(int argc, char **argv, gvpropts* uopts)
-{
+static options* scanArgs(int argc, char **argv) {
     int i, nfiles;
     char** input_filenames;
     char* arg;
@@ -942,7 +941,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	if (uopts->err) setDisc (sfstderr, &errdisc, uopts->err);
     }
 
-    opts = scanArgs(argc, argv, uopts);
+    opts = scanArgs(argc, argv);
     if (opts->state <= 0) {
 	rv = opts->state;
 	goto finish;
