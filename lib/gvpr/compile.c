@@ -63,7 +63,7 @@ static Sflong_t ptr2int(const void *p) {
 
 static int iofread(void *chan, char *buf, int bufsize)
 {
-    return read(sffileno(chan), buf, bufsize);
+    return (int)read(sffileno(chan), buf, bufsize);
 }
 
 static int ioflush(void *chan)
