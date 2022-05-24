@@ -1164,7 +1164,7 @@ static double dmean_get(int n, int *id, double* d){
   return dmean/((double) id[n]);
 }
 
-static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *node_weights, double *x, double rho, int *flag){
+static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *x, double rho, int *flag){
   /* x is a point to a 1D array, x[i*dim+j] gives the coordinate of the i-th node at dimension j.
 
      Minimize \Sum_{(i,j)\in E} w_ij (||x_i-x_j||-d_ij)^2 - \rho \Sum_{(i,j)\NotIn E} Log ||x_i-x_j||
@@ -1969,15 +1969,15 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
       }
 
       if (Multilevel_is_finest(grid)) {/* gradually reduce influence of entropy */
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, grid->node_weights, xc, rho, flag);
+	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho, flag);
 	ctrl->random_start = FALSE;
 	ctrl->step = .05;
 	ctrl->adaptive_cooling = FALSE;
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, grid->node_weights, xc, rho/2, flag);
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, grid->node_weights, xc, rho/8, flag);
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, grid->node_weights, xc, rho/32, flag);
+	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho/2, flag);
+	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho/8, flag);
+	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho/32, flag);
       } else {
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, grid->node_weights, xc, rho, flag);
+	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho, flag);
       }
     } else {
       assert(0);
