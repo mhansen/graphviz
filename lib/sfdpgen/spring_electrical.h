@@ -44,7 +44,6 @@ struct spring_electrical_control_struct {
   int adaptive_cooling;
   int random_seed;
   int beautify_leaves;
-  int use_node_weights;
   int smoothing;
   int overlap;
   int do_shrinking;

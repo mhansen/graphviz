@@ -235,9 +235,6 @@ late_quadtree_scheme (graph_t* g, Agsym_t* sym, int dflt)
 
 /* tuneControl:
  * Use user values to reset control
- * 
- * Possible parameters:
- *   ctrl->use_node_weights
  */
 static void
 tuneControl (graph_t* g, spring_electrical_control ctrl)

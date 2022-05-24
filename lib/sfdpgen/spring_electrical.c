@@ -57,7 +57,6 @@ spring_electrical_control spring_electrical_control_new(){
   ctrl->adaptive_cooling = TRUE;
   ctrl->random_seed = 123;
   ctrl->beautify_leaves = FALSE;
-  ctrl->use_node_weights = FALSE;
   ctrl->smoothing = SMOOTHING_NONE;
   ctrl->overlap = 0;
   ctrl->do_shrinking = 1;
@@ -96,7 +95,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
   fprintf (stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool, ctrl->step, ctrl->adaptive_cooling);
   fprintf (stderr, "  beautify_leaves %d node weights %d rotation %.03f\n",
-    ctrl->beautify_leaves, ctrl->use_node_weights, ctrl->rotation);
+    ctrl->beautify_leaves, 0, ctrl->rotation);
   fprintf (stderr, "  smoothing %s overlap %d initial_scaling %.03f do_shrinking %d\n",
     smoothings[ctrl->smoothing], ctrl->overlap, ctrl->initial_scaling, ctrl->do_shrinking);
   fprintf (stderr, "  octree scheme %s method %s\n", tschemes[ctrl->tscheme], methods[ctrl->method]);
@@ -551,11 +550,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
 #ifdef TIME
     start = clock();
 #endif
-    if (ctrl->use_node_weights){
-      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, node_weights);
-    } else {
-      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
-    }
+    qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
 
 #ifdef TIME
     qtree_new_cpu += ((double) (clock() - start))/CLOCKS_PER_SEC;
@@ -752,11 +747,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
     if (USE_QT) {
       max_qtree_level = oned_optimizer_get(qtree_level_optimizer);
-      if (ctrl->use_node_weights){
-	qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, node_weights);
-      } else {
-	qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
-      }
+      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
     }
 #ifdef TIME
     start2 = clock();
@@ -786,21 +777,11 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 	  }
 	}
       } else {
-	if (ctrl->use_node_weights && node_weights){
-	  for (j = 0; j < n; j++){
-	    if (j == i) continue;
-	    dist = distance_cropped(x, dim, i, j);
-	    for (k = 0; k < dim; k++){
-	      f[k] += node_weights[j]*KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	    }
-	  }
-	} else {
-	  for (j = 0; j < n; j++){
-	    if (j == i) continue;
-	    dist = distance_cropped(x, dim, i, j);
-	    for (k = 0; k < dim; k++){
-	      f[k] += KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	    }
+	for (j = 0; j < n; j++){
+	  if (j == i) continue;
+	  dist = distance_cropped(x, dim, i, j);
+	  for (k = 0; k < dim; k++){
+	    f[k] += KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
 	  }
 	}
       }
@@ -1010,11 +991,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
     if (USE_QT) {
 
       max_qtree_level = oned_optimizer_get(qtree_level_optimizer);
-      if (ctrl->use_node_weights){
-	qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, node_weights);
-      } else {
-	qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
-      }
+      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
 
 	
     }
@@ -1055,21 +1032,11 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
 	  }
 	}
       } else {
-	if (ctrl->use_node_weights && node_weights){
-	  for (j = 0; j < n; j++){
-	    if (j == i) continue;
-	    dist = distance_cropped(x, dim, i, j);
-	    for (k = 0; k < dim; k++){
-	      f[k] += node_weights[j]*KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	    }
-	  }
-	} else {
-	  for (j = 0; j < n; j++){
-	    if (j == i) continue;
-	    dist = distance_cropped(x, dim, i, j);
-	    for (k = 0; k < dim; k++){
-	      f[k] += KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	    }
+	for (j = 0; j < n; j++){
+	  if (j == i) continue;
+	  dist = distance_cropped(x, dim, i, j);
+	  for (k = 0; k < dim; k++){
+	    f[k] += KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
 	  }
 	}
       }
@@ -1315,11 +1282,7 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
 #endif
 
     if (USE_QT) {
-      if (ctrl->use_node_weights){
-	qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, node_weights);
-      } else {
-	qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
-      }
+      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
     }
 
     /*
@@ -1354,15 +1317,8 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
 
 	/* discount repulsive force between neighboring vertices which will be applied next, that way there is no
 	   repulsive forces between neighboring vertices */
-	if (ctrl->use_node_weights && node_weights){
-	  for (k = 0; k < dim; k++){
-	    f[k] -= rho*node_weights[j]*(x[i*dim+k] - x[jd[j]*dim+k])/pow(dist, 1.- p);
-	  }
-	} else {
-	  for (k = 0; k < dim; k++){
-	    f[k] -= rho*(x[i*dim+k] - x[jd[j]*dim+k])/pow(dist, 1.- p);
-	  }
-
+	for (k = 0; k < dim; k++){
+	  f[k] -= rho*(x[i*dim+k] - x[jd[j]*dim+k])/pow(dist, 1.- p);
 	}
 
       }
@@ -1380,21 +1336,11 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
 	  }
 	}
       } else {
-	if (ctrl->use_node_weights && node_weights){
-	  for (j = 0; j < n; j++){
-	    if (j == i) continue;
-	    dist = distance_cropped(x, dim, i, j);
-	    for (k = 0; k < dim; k++){
-	      f[k] += rho*node_weights[j]*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	    }
-	  }
-	} else {
-	  for (j = 0; j < n; j++){
-	    if (j == i) continue;
-	    dist = distance_cropped(x, dim, i, j);
-	    for (k = 0; k < dim; k++){
-	      f[k] += rho*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	    }
+	for (j = 0; j < n; j++){
+	  if (j == i) continue;
+	  dist = distance_cropped(x, dim, i, j);
+	  for (k = 0; k < dim; k++){
+	    f[k] += rho*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
 	  }
 	}
       }
