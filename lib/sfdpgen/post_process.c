@@ -992,7 +992,7 @@ void SpringSmoother_delete(SpringSmoother sm){
 void SpringSmoother_smooth(SpringSmoother sm, SparseMatrix A, int dim, double *x){
   int flag = 0;
 
-  spring_electrical_spring_embedding(dim, A, sm->D, sm->ctrl, NULL, x, &flag);
+  spring_electrical_spring_embedding(dim, A, sm->D, sm->ctrl, x, &flag);
   assert(!flag);
 
 }

@@ -1443,7 +1443,7 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
 
 
 
-void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *node_weights, double *x, int *flag){
+void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *x, int *flag){
   /* x is a point to a 1D array, x[i*dim+j] gives the coordinate of the i-th node at dimension j. Same as the spring-electrical except we also
      introduce force due to spring length
    */
@@ -1521,11 +1521,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
     nsuper_avg = 0;
 
     if (USE_QT) {
-      if (ctrl->use_node_weights){
-	qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, node_weights);
-      } else {
-	qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
-      }
+      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
     }
 
     for (i = 0; i < n; i++){
@@ -1566,21 +1562,11 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
 	  }
 	}
       } else {
-	if (ctrl->use_node_weights && node_weights){
-	  for (j = 0; j < n; j++){
-	    if (j == i) continue;
-	    dist = distance_cropped(x, dim, i, j);
-	    for (k = 0; k < dim; k++){
-	      f[k] += node_weights[j]*KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	    }
-	  }
-	} else {
-	  for (j = 0; j < n; j++){
-	    if (j == i) continue;
-	    dist = distance_cropped(x, dim, i, j);
-	    for (k = 0; k < dim; k++){
-	      f[k] += KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	    }
+	for (j = 0; j < n; j++){
+	  if (j == i) continue;
+	  dist = distance_cropped(x, dim, i, j);
+	  for (k = 0; k < dim; k++){
+	    f[k] += KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
 	  }
 	}
       }

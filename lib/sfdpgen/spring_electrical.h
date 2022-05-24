@@ -78,7 +78,7 @@ void print_matrix(double *x, int n, int dim);
 
 double average_edge_length(SparseMatrix A, int dim, double *coord);
 
-void spring_electrical_spring_embedding(int dim, SparseMatrix A, SparseMatrix D, spring_electrical_control ctrl, double *node_weights, double *x, int *flag);
+void spring_electrical_spring_embedding(int dim, SparseMatrix A, SparseMatrix D, spring_electrical_control ctrl, double *x, int *flag);
 void force_print(FILE *fp, int n, int dim, double *x, double *force);
 
 enum {MAX_I = 20, OPT_UP = 1, OPT_DOWN = -1, OPT_INIT = 0};
