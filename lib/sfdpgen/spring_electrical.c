@@ -659,7 +659,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   free(force);
 }
 
-static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *node_weights, double *x, int *flag){
+static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *x, int *flag){
   /* a version that does vertex moves in one go, instead of one at a time, use for debugging the fast version. Quadtree is not used. */
   /* x is a point to a 1D array, x[i*dim+j] gives the coordinate of the i-th node at dimension j.  */
   SparseMatrix A = A0;
@@ -1947,7 +1947,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
 #endif
     if (ctrl->method == METHOD_SPRING_ELECTRICAL){
       if (ctrl->tscheme == QUAD_TREE_NONE){
-	spring_electrical_embedding_slow(dim, grid->A, ctrl, grid->node_weights, xc, flag);
+	spring_electrical_embedding_slow(dim, grid->A, ctrl, xc, flag);
       } else if (ctrl->tscheme == QUAD_TREE_FAST || (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > QUAD_TREE_HYBRID_SIZE)){
 	if (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > 10 && Verbose){
 	  fprintf(stderr, "QUAD_TREE_HYBRID, size larger than %d, switch to fast quadtree", QUAD_TREE_HYBRID_SIZE);
