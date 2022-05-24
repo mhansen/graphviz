@@ -52,6 +52,8 @@ char* pre = "%!PS-Adobe-2.0\n\
 
 char* post = "showpage\n";
 
+/// @brief dumps @ref maze::gcells and @ref maze::cells via rects to PostScript
+
 static void
 psdump (cell* gcells, int n_gcells, boxf BB, boxf* rects, int nrect)
 {
@@ -84,6 +86,8 @@ psdump (cell* gcells, int n_gcells, boxf BB, boxf* rects, int nrect)
 }
 #endif
 
+/// compares points by X and then by Y
+
 static int
 vcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
 {
@@ -95,6 +99,8 @@ vcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
   else if (key1->y < key2->y) return -1;
   else return 0;
 }   
+
+/// compares points by Y and then by X
 
 static int
 hcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
@@ -146,11 +152,14 @@ static Dtdisc_t hdictDisc = {
 #define CHANSZ(w) (((w)-3)/2)
 #define IS_SMALL(v) (CHANSZ(v) < 2)
 
-/* updateWt:
+/**
+ * @brief updates single @ref sedge::weight
+ *
  * At present, we use a step function. When a bound is reached, the weight
  * becomes huge. We might consider bumping up the weight more gradually, the
  * thinner the channel, the faster the weight rises.
  */
+
 static void
 updateWt (sedge* ep, int sz)
 {
@@ -161,12 +170,15 @@ updateWt (sedge* ep, int sz)
     }
 }
 
-/* updateWts:
+/**
+ * @brief updates @ref sedge::weight of cell edges
+ *
  * Iterate over edges in a cell, adjust weights as necessary.
  * It always updates the bent edges belonging to a cell.
  * A horizontal/vertical edge is updated only if the edge traversed
  * is bent, or if it is the traversed edge.
  */
+
 void
 updateWts (sgraph* g, cell* cp, sedge* ep)
 {
@@ -190,10 +202,11 @@ updateWts (sgraph* g, cell* cp, sedge* ep)
     }
 }
 
-/* markSmall:
+/**
  * cp corresponds to a real node. If it is small, its associated cells should
  * be marked as usable.
  */
+
 static void
 markSmall (cell* cp)
 {
@@ -248,6 +261,8 @@ markSmall (cell* cp)
     }
 }
 
+/// fills @ref cell::sides and @ref sgraph::edges
+
 static void
 createSEdges (cell* cp, sgraph* g)
 {
@@ -281,6 +296,8 @@ createSEdges (cell* cp, sgraph* g)
     if (cp->sides[M_LEFT] && cp->sides[M_RIGHT])
 	cp->edges[cp->nedges++] = createSEdge (g, cp->sides[M_LEFT], cp->sides[M_RIGHT], hwt);
 }
+
+/// finds a @ref snode by point or creates it
 
 static snode*
 findSVert (sgraph* g, Dt_t* cdt, pointf p, snodeitem* ditems, bool isVert)
@@ -316,8 +333,13 @@ chkSgraph (sgraph* g)
     
 }
 
-/* mkMazeGraph:
+/**
+ * @brief creates and fills @ref sgraph for @ref maze
+ *
+ * Subroutines: @ref createSGraph, @ref findSVert with @ref createSNode,
+ * @ref initSEdges and @ref chkSgraph
  */
+
 static sgraph*
 mkMazeGraph (maze* mp, boxf bb)
 {
@@ -441,8 +463,8 @@ chkSgraph (g);
     return g;
 }
 
-/* mkMaze:
- */
+/// creates @ref maze and fills @ref maze::gcells and @ref maze::cells. A subroutine of @ref orthoEdges.
+
 maze *mkMaze(graph_t *g) {
     node_t* n;
     maze* mp = NEW(maze);
