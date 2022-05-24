@@ -19,7 +19,7 @@ libedit-devel \
 ksh \
 cmake3 \
 # Git version 2 needed to get the option --date=format-local:... used in gen_version.py
-https://repo.ius.io/7/x86_64/packages/g/git224-2.24.3-1.el7.ius.x86_64.rpm \
+https://repo.ius.io/7/x86_64/packages/g/git236-2.36.1-2.el7.ius.x86_64.rpm \
 # Option glut
 freeglut-devel \
 # Option ann
