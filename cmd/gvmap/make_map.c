@@ -1115,9 +1115,9 @@ static int make_map_internal(int exclude_random, int include_OK_points,
       fprintf(stderr, "after adding edge points, n:%d->%d\n",n, nz);
       n = nz;
       x = y;
-      qt = QuadTree_new_from_point_list(dim, nz, max_qtree_level, y, NULL);
+      qt = QuadTree_new_from_point_list(dim, nz, max_qtree_level, y);
     } else {
-      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
+      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
     }
   }
   graph = NULL;

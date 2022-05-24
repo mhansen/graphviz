@@ -550,7 +550,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
 #ifdef TIME
     start = clock();
 #endif
-    qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
+    qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
 
 #ifdef TIME
     qtree_new_cpu += ((double) (clock() - start))/CLOCKS_PER_SEC;
@@ -747,7 +747,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
     if (USE_QT) {
       max_qtree_level = oned_optimizer_get(qtree_level_optimizer);
-      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
+      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
     }
 #ifdef TIME
     start2 = clock();
@@ -991,7 +991,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
     if (USE_QT) {
 
       max_qtree_level = oned_optimizer_get(qtree_level_optimizer);
-      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
+      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
 
 	
     }
@@ -1282,7 +1282,7 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
 #endif
 
     if (USE_QT) {
-      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
+      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
     }
 
     /*
@@ -1467,7 +1467,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
     nsuper_avg = 0;
 
     if (USE_QT) {
-      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
+      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
     }
 
     for (i = 0; i < n; i++){

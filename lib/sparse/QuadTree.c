@@ -341,10 +341,9 @@ void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double 
   for (i = 0; i < 4; i++) counts[i] /= n;
 
 }
-QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coord, double *weight){
+QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coord){
   /* form a new QuadTree data structure from a list of coordinates of n points
      coord: of length n*dim, point i sits at [i*dim, i*dim+dim - 1]
-     weight: node weight of lentgth n. If NULL, unit weight assumed.
    */
   double *xmin, *xmax, *center, width;
   QuadTree qt = NULL;
@@ -379,14 +378,8 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
   width *= 0.52;
   qt = QuadTree_new(dim, center, width, max_level);
 
-  if (weight){
-    for (i = 0; i < n; i++){
-      qt = QuadTree_add(qt, &(coord[i*dim]), weight[i], i);
-    }
-  } else {
-    for (i = 0; i < n; i++){
-      qt = QuadTree_add(qt, &(coord[i*dim]), 1, i);
-    }
+  for (i = 0; i < n; i++){
+    qt = QuadTree_add(qt, &(coord[i*dim]), 1, i);
   }
 
 

@@ -46,7 +46,7 @@ QuadTree QuadTree_add(QuadTree q, double *coord, double weight, int id);/* coord
 
 void QuadTree_print(FILE *fp, QuadTree q);
 
-QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coord, double *weight);
+QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coord);
 
 double point_distance(double *p1, double *p2, int dim);
 
