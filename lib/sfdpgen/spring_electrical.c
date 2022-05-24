@@ -481,7 +481,7 @@ void force_print(FILE *fp, int n, int dim, double *x, double *force){
 }
 
 
-void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *node_weights, double *x, int *flag){
+void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *x, int *flag){
   /* x is a point to a 1D array, x[i*dim+j] gives the coordinate of the i-th node at dimension j.  */
   SparseMatrix A = A0;
   int m, n;
@@ -1952,7 +1952,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
 	if (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > 10 && Verbose){
 	  fprintf(stderr, "QUAD_TREE_HYBRID, size larger than %d, switch to fast quadtree", QUAD_TREE_HYBRID_SIZE);
 	}
-	spring_electrical_embedding_fast(dim, grid->A, ctrl, grid->node_weights, xc, flag);
+	spring_electrical_embedding_fast(dim, grid->A, ctrl, xc, flag);
       } else {
 	spring_electrical_embedding(dim, grid->A, ctrl, grid->node_weights, xc, flag);
       }
