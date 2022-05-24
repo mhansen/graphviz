@@ -108,7 +108,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
     switch (ctrl->method) {
     case METHOD_SPRING_ELECTRICAL:
     case METHOD_SPRING_MAXENT:
-	multilevel_spring_electrical_embedding(Ndim, A, D, ctrl, NULL, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
+	multilevel_spring_electrical_embedding(Ndim, A, D, ctrl, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
 	break;
     case METHOD_UNIFORM_STRESS:
 	uniform_stress(Ndim, A, pos, &flag);

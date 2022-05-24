@@ -69,7 +69,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl);
 void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *node_weights, double *x, int *flag);
 void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *node_weights, double *x, int *flag);
 
-void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *node_weights, double *label_sizes, 
+void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *label_sizes, 
 					    double *x, int n_edge_label_nodes, int *edge_label_nodes, int *flag);
 
 void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *width);
