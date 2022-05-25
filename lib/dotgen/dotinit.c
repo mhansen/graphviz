@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <assert.h>
 #include <time.h>
 #include <dotgen/dot.h>
 #include <pack/pack.h>
@@ -451,7 +451,8 @@ static void doDot (Agraph_t* g)
 	    pinfo.mode = l_graph;
 	else if (Pack < 0)
 	    Pack = CL_OFFSET;
-	pinfo.margin = Pack;
+	assert(Pack >= 0);
+	pinfo.margin = (unsigned)Pack;
 	pinfo.fixed = NULL;
 
           /* components using clusters */
