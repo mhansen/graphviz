@@ -236,7 +236,7 @@ void arrow_flags(Agedge_t * e, int *sflag, int *eflag)
     }
 }
 
-double arrow_length(edge_t * e, int flag)
+static double arrow_length(edge_t * e, int flag)
 {
     double lenfact = 0.0;
     int f, i;
