@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief merge and pack disjoint graphs
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials

@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief <a href=https://en.wikipedia.org/wiki/Graph_Modelling_Language>GML</a>-DOT converter
+ */
+
 #include <stdio.h>
 #include <cgraph/cgraph.h>
 
