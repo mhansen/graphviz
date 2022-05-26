@@ -52,7 +52,6 @@ void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMat
 
   SparseMatrix A;
   bool weightedQ = true;
-  int iter_max = 100;
 
   {double *dist = NULL;
     A = SparseMatrix_symmetrize(A0, false);
@@ -64,7 +63,8 @@ void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMat
     SparseMatrix_export(stdout, A);
   }
 
-  node_distinct_coloring(color_scheme, lightness, weightedQ, A, accuracy, iter_max, seed, &cdim, &colors);
+  node_distinct_coloring(color_scheme, lightness, weightedQ, A, accuracy, seed,
+                         &cdim, &colors);
 
   if (A != A0){
     SparseMatrix_delete(A);
