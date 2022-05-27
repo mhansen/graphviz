@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief creates a geographical map highlighting clusters
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -458,3 +463,8 @@ int main(int argc, char *argv[])
 
   graphviz_exit(0);
 }
+
+/**
+ * @dir .
+ * @brief creates a geographical map highlighting clusters
+ */

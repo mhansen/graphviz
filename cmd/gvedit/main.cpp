@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief gvedit - simple graph editor and viewer
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
@@ -92,3 +97,8 @@ int main(int argc, char *argv[])
     ret = app.exec();
     graphviz_exit(ret);
 }
+
+/**
+ * @dir .
+ * @brief simple graph editor and viewer
+ */

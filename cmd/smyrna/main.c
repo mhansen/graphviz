@@ -253,3 +253,8 @@ int main(int argc, char *argv[])
     g_free(package_locale_dir);
     graphviz_exit(0);
 }
+
+/**
+ * @dir .
+ * @brief interactive graph viewer
+ */

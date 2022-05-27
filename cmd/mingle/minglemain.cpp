@@ -507,3 +507,8 @@ int main(int argc, char *argv[])
 
 	graphviz_exit(rv);
 }
+
+/**
+ * @dir .
+ * @brief fast edge bundling
+ */

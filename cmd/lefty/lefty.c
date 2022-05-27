@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief main of lefty
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -519,3 +524,17 @@ static void printusage (void) {
     fflush (stdout);
 #endif
 }
+
+/**
+ * @dir .
+ * @brief a programmable graphics editor
+ *
+ * @dir ../lneato
+ * @brief lefty + neato
+ *
+ * @dir ../dotty
+ * @brief dot + lefty
+ *
+ * @dir ../../cmd
+ * @brief Graph programs
+ */
