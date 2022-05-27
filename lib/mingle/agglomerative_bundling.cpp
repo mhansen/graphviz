@@ -240,7 +240,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
     R1 = SparseMatrix_new(nc, n, 1, MATRIX_TYPE_REAL, FORMAT_COORD);
     for (i = 0; i < n; i++){
       jj = matching[i];
-      SparseMatrix_coordinate_form_add_entries(R1, 1, &jj, &i, &one);
+      SparseMatrix_coordinate_form_add_entry(R1, jj, i, &one);
     }
     R = SparseMatrix_from_coordinate_format(R1);
     SparseMatrix_delete(R1);

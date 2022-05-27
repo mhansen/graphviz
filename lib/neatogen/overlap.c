@@ -204,7 +204,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
 #endif
 	if (neighbor != k){
 	  if (fabs(0.5*(bsta+bsto) - 0.5*(bbsta+bbsto)) < 0.5*(bsto-bsta) + 0.5*(bbsto-bbsta)){/* if the distance of the centers of the interval is less than sum of width, we have overlap */
-	    A = SparseMatrix_coordinate_form_add_entries(A, 1, &neighbor, &k, &one);
+	    A = SparseMatrix_coordinate_form_add_entry(A, neighbor, k, &one);
 #ifdef DEBUG_RBTREE
 	    fprintf(stderr,"======================================  %d %d\n",k,neighbor);
 #endif

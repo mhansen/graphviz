@@ -406,8 +406,6 @@ SparseMatrix SparseMatrix_general_new(int m, int n, int nz, int type, size_t sz,
 }
 
 void SparseMatrix_delete(SparseMatrix A){
-  /* return a sparse matrix skeleton with row dimension m and storage nz. If nz == 0, 
-     only row pointers are allocated */
   if (!A) return;
   free(A->ia);
   free(A->ja);
@@ -1595,11 +1593,13 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum){
   return A;
 }
 
-SparseMatrix SparseMatrix_coordinate_form_add_entries(SparseMatrix A, int nentries, int *irn, int *jcn, void *val){
-  int nz, nzmax, i;
+SparseMatrix SparseMatrix_coordinate_form_add_entry(SparseMatrix A, int irn,
+                                                    int jcn, void *val) {
+  int nz, nzmax;
+
+  static const int nentries = 1;
   
   assert(A->format == FORMAT_COORD);
-  if (nentries <= 0) return A;
   nz = A->nz;
 
   if (nz + nentries >= A->nzmax){
@@ -1607,13 +1607,11 @@ SparseMatrix SparseMatrix_coordinate_form_add_entries(SparseMatrix A, int nentri
      nzmax = MAX(10, (int) 0.2*nzmax) + nzmax;
     A = SparseMatrix_realloc(A, nzmax);
   }
-  memcpy((char*) A->ia + ((size_t)nz)*sizeof(int)/sizeof(char), irn, sizeof(int)*((size_t)nentries));
-  memcpy((char*) A->ja + ((size_t)nz)*sizeof(int)/sizeof(char), jcn, sizeof(int)*((size_t)nentries));
+  A->ia[nz] = irn;
+  A->ja[nz] = jcn;
   if (A->size) memcpy((char*) A->a + ((size_t)nz)*A->size/sizeof(char), val, A->size*((size_t)nentries));
-  for (i = 0; i < nentries; i++) {
-    if (irn[i] >= A->m) A->m = irn[i]+1;
-    if (jcn[i] >= A->n) A->n = jcn[i]+1;
-  }
+  if (irn >= A->m) A->m = irn + 1;
+  if (jcn >= A->n) A->n = jcn + 1;
   A->nz += nentries;
   return A;
 }
@@ -2594,7 +2592,7 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
       for (i = 0; i < nlevel; i++) {
 	for (j = levelset_ptr[i]; j < levelset_ptr[i+1]; j++){
 	  itmp = levelset[j]; dtmp = i;
-	  if (k != itmp) B = SparseMatrix_coordinate_form_add_entries(B, 1, &k, &itmp, &dtmp);
+	  if (k != itmp) B = SparseMatrix_coordinate_form_add_entry(B, k, itmp, &dtmp);
 	}
       }
      }
@@ -2629,7 +2627,7 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
       }
       for (j = 0; j < nlist; j++){
 	itmp = list[j]; dtmp = dist[itmp];
-	if (k != itmp) B = SparseMatrix_coordinate_form_add_entries(B, 1, &k, &itmp, &dtmp);
+	if (k != itmp) B = SparseMatrix_coordinate_form_add_entry(B, k, itmp, &dtmp);
       }
    }
   }
