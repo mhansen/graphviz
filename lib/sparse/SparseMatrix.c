@@ -1321,7 +1321,9 @@ SparseMatrix SparseMatrix_multiply3(SparseMatrix A, SparseMatrix B, SparseMatrix
     return NULL;
   }
   type = A->type;
-  
+
+  assert(type == MATRIX_TYPE_REAL);
+
   mask = MALLOC(sizeof(int)*((size_t)(C->n)));
   if (!mask) return NULL;
 
@@ -1356,126 +1358,30 @@ SparseMatrix SparseMatrix_multiply3(SparseMatrix A, SparseMatrix B, SparseMatrix
   
   nz = 0;
 
-  switch (type){
-  case MATRIX_TYPE_REAL:
-    {
-      double *a = (double*) A->a;
-      double *b = (double*) B->a;
-      double *c = (double*) C->a;
-      double *d = (double*) D->a;
-      id[0] = 0;
-      for (i = 0; i < m; i++){
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  jj = ja[j];
-	  for (l = ib[jj]; l < ib[jj+1]; l++){
-	    ll = jb[l];
-	    for (k = ic[ll]; k < ic[ll+1]; k++){
-	      if (mask[jc[k]] < id[i]){
-		mask[jc[k]] = nz;
-		jd[nz] = jc[k];
-		d[nz] = a[j]*b[l]*c[k];
-		nz++;
-	      } else {
-		assert(jd[mask[jc[k]]] == jc[k]);
-		d[mask[jc[k]]] += a[j]*b[l]*c[k];
-	      }
-	    }
-	  }
-	}
-	id[i+1] = nz;
+  double *a = (double*) A->a;
+  double *b = (double*) B->a;
+  double *c = (double*) C->a;
+  double *d = (double*) D->a;
+  id[0] = 0;
+  for (i = 0; i < m; i++){
+    for (j = ia[i]; j < ia[i+1]; j++){
+      jj = ja[j];
+      for (l = ib[jj]; l < ib[jj+1]; l++){
+        ll = jb[l];
+        for (k = ic[ll]; k < ic[ll+1]; k++){
+          if (mask[jc[k]] < id[i]){
+            mask[jc[k]] = nz;
+            jd[nz] = jc[k];
+            d[nz] = a[j]*b[l]*c[k];
+            nz++;
+          } else {
+            assert(jd[mask[jc[k]]] == jc[k]);
+            d[mask[jc[k]]] += a[j]*b[l]*c[k];
+          }
+        }
       }
     }
-    break;
-  case MATRIX_TYPE_COMPLEX:
-    {
-      double *a = (double*) A->a;
-      double *b = (double*) B->a;
-      double *c = (double*) C->a;
-      double *d = (double*) D->a;
-      id[0] = 0;
-      for (i = 0; i < m; i++){
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  jj = ja[j];
-	  for (l = ib[jj]; l < ib[jj+1]; l++){
-	    ll = jb[l];
-	    for (k = ic[ll]; k < ic[ll+1]; k++){
-	      if (mask[jc[k]] < id[i]){
-		mask[jc[k]] = nz;
-		jd[nz] = jc[k];
-		d[2*nz] = (a[2*j]*b[2*l] - a[2*j+1]*b[2*l+1])*c[2*k] 
-		  - (a[2*j]*b[2*l+1] + a[2*j+1]*b[2*l])*c[2*k+1];/*real part */
-		d[2*nz+1] = (a[2*j]*b[2*l+1] + a[2*j+1]*b[2*l])*c[2*k]
-		  + (a[2*j]*b[2*l] - a[2*j+1]*b[2*l+1])*c[2*k+1];/*img part */
-		nz++;
-	      } else {
-		assert(jd[mask[jc[k]]] == jc[k]);
-		d[2*mask[jc[k]]] += (a[2*j]*b[2*l] - a[2*j+1]*b[2*l+1])*c[2*k] 
-		  - (a[2*j]*b[2*l+1] + a[2*j+1]*b[2*l])*c[2*k+1];/*real part */
-		d[2*mask[jc[k]]+1] += (a[2*j]*b[2*l+1] + a[2*j+1]*b[2*l])*c[2*k]
-		  + (a[2*j]*b[2*l] - a[2*j+1]*b[2*l+1])*c[2*k+1];/*img part */
-	      }
-	    }
-	  }
-	}
-	id[i+1] = nz;
-      }
-    }
-    break;
-  case MATRIX_TYPE_INTEGER:
-    {
-      int *a = (int*) A->a;
-      int *b = (int*) B->a;
-      int *c = (int*) C->a;
-      int *d = (int*) D->a;
-      id[0] = 0;
-      for (i = 0; i < m; i++){
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  jj = ja[j];
-	  for (l = ib[jj]; l < ib[jj+1]; l++){
-	    ll = jb[l];
-	    for (k = ic[ll]; k < ic[ll+1]; k++){
-	      if (mask[jc[k]] < id[i]){
-		mask[jc[k]] = nz;
-		jd[nz] = jc[k];
-		d[nz] += a[j]*b[l]*c[k];
-		nz++;
-	      } else {
-		assert(jd[mask[jc[k]]] == jc[k]);
-		d[mask[jc[k]]] += a[j]*b[l]*c[k];
-	      }
-	    }
-	  }
-	}
-	id[i+1] = nz;
-      }
-    }
-    break;
-  case MATRIX_TYPE_PATTERN:
-    id[0] = 0;
-    for (i = 0; i < m; i++){
-      for (j = ia[i]; j < ia[i+1]; j++){
-	jj = ja[j];
-	for (l = ib[jj]; l < ib[jj+1]; l++){
-	  ll = jb[l];
-	  for (k = ic[ll]; k < ic[ll+1]; k++){
-	    if (mask[jc[k]] < id[i]){
-	      mask[jc[k]] = nz;
-	      jd[nz] = jc[k];
-	      nz++;
-	    } else {
-	      assert(jd[mask[jc[k]]] == jc[k]);
-	    }
-	  }
-	}
-      }
-      id[i+1] = nz;
-    }
-    break;
-  case MATRIX_TYPE_UNKNOWN:
-  default:
-    SparseMatrix_delete(D);
-    D = NULL; goto RETURN;
-    break;
+    id[i+1] = nz;
   }
   
   D->nz = nz;
