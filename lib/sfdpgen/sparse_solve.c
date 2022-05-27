@@ -33,7 +33,7 @@ static double *Operator_uniform_stress_matmul_apply(Operator o, double *x, doubl
   double xsum = 0.;
   int m = A->m, i;
 
-  SparseMatrix_multiply_vector(A, x, &y, FALSE);
+  SparseMatrix_multiply_vector(A, x, &y);
 
   /* alpha*V*x */
   for (i = 0; i < m; i++) xsum += x[i];
@@ -60,7 +60,7 @@ Operator Operator_uniform_stress_matmul(SparseMatrix A, double alpha){
 
 static double *Operator_matmul_apply(Operator o, double *x, double *y){
   SparseMatrix A = (SparseMatrix) o->data;
-  SparseMatrix_multiply_vector(A, x, &y, FALSE);
+  SparseMatrix_multiply_vector(A, x, &y);
   return y;
 }
 
