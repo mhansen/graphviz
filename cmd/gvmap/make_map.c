@@ -28,7 +28,7 @@
 #include <edgepaint/lab.h>
 #include <edgepaint/node_distinct_coloring.h>
 
-void map_palette_optimal_coloring(char *color_scheme, SparseMatrix A0, int seed, 
+void map_palette_optimal_coloring(char *color_scheme, SparseMatrix A0,
 				  float **rgb_r, float **rgb_g, float **rgb_b){
   /*
     for a graph A, get a distinctive color of its nodes so that the color distanmce among all nodes are maximized. Here
@@ -36,7 +36,6 @@ void map_palette_optimal_coloring(char *color_scheme, SparseMatrix A0, int seed,
     color_scheme: rgb, gray, lab, or one of the color palettes in color_palettes.h, or a list of hex rgb colors separaterd by comma like "#ff0000,#00ff00"
     A: the graph of n nodes
     cdim: dimension of the color space
-    seed: random_seed. If negative, consider -seed as the number of random start iterations
     rgb_r, rgb_g, rgb_b: float array of length A->m + 1, which contains color for each country. 1-based
   */
  
@@ -65,6 +64,10 @@ void map_palette_optimal_coloring(char *color_scheme, SparseMatrix A0, int seed,
   // accuracy is the threshold given so that when finding the coloring for each
   // node, the optimal is with in "accuracy" of the true global optimal.
   const double accuracy = 0.01;
+
+  // seed: random_seed. If negative, consider -seed as the number of random
+  // start iterations
+  const int seed = -10;
 
   node_distinct_coloring(color_scheme, lightness, weightedQ, A, accuracy, seed,
                          &cdim, &colors);
