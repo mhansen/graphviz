@@ -61,7 +61,7 @@ void SplitNode(RTree_t * rtp, Node_t * n, Branch_t * b, Node_t ** nn)
     MethodZero(rtp);
 
     /* put branches from buffer into 2 nodes according to chosen partition */
-    *nn = RTreeNewNode(rtp);
+    *nn = RTreeNewNode();
     (*nn)->level = n->level = level;
     LoadNodes(rtp, n, *nn, p);
     assert(n->count + (*nn)->count == NODECARD + 1);

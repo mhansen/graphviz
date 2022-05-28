@@ -19,8 +19,7 @@
 
 /* Make a new node and initialize to have all branch cells empty.
 */
-Node_t *RTreeNewNode(RTree_t * rtp)
-{
+Node_t *RTreeNewNode(void) {
     Node_t *n = malloc(sizeof(Node_t));
     InitNode(n);
     return n;

@@ -61,7 +61,7 @@ RTree_t *RTreeOpen()
 /* Make a new index, empty.  Consists of a single node. */
 Node_t *RTreeNewIndex(RTree_t * rtp)
 {
-    Node_t *x = RTreeNewNode(rtp);
+    Node_t *x = RTreeNewNode();
     x->level = 0;		/* leaf */
     return x;
 }
@@ -199,7 +199,7 @@ int RTreeInsert(RTree_t * rtp, Rect_t * r, void *data, Node_t ** n, int level)
 
     if (RTreeInsert2(rtp, r, data, *n, &newnode, level)) {	/* root was split */
 
-	Node_t *newroot = RTreeNewNode(rtp);	/* grow a new root, make tree taller */
+	Node_t *newroot = RTreeNewNode();	/* grow a new root, make tree taller */
 	newroot->level = (*n)->level + 1;
 	b.rect = NodeCover(*n);
 	b.child = *n;
