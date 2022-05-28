@@ -370,7 +370,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   if (pm->color_optimize && country_graph && rgb_r && rgb_g && rgb_b) 
     map_optimal_coloring(pm->seed, country_graph, rgb_r,  rgb_g, rgb_b);
   else if (pm->color_scheme_str){
-    map_palette_optimal_coloring(pm->color_scheme_str, "0,100", country_graph, 0.01, -10,
+    map_palette_optimal_coloring(pm->color_scheme_str, country_graph, 0.01, -10,
                &rgb_r, &rgb_g, &rgb_b);
   }
 

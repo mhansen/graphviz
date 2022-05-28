@@ -28,7 +28,7 @@
 #include <edgepaint/lab.h>
 #include <edgepaint/node_distinct_coloring.h>
 
-void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMatrix A0, double accuracy, int seed, 
+void map_palette_optimal_coloring(char *color_scheme, SparseMatrix A0, double accuracy, int seed, 
 				  float **rgb_r, float **rgb_g, float **rgb_b){
   /*
     for a graph A, get a distinctive color of its nodes so that the color distanmce among all nodes are maximized. Here
@@ -36,8 +36,6 @@ void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMat
     accuracy is the threshold given so that when finding the coloring for each node, the optimal is
     with in "accuracy" of the true global optimal.
     color_scheme: rgb, gray, lab, or one of the color palettes in color_palettes.h, or a list of hex rgb colors separaterd by comma like "#ff0000,#00ff00"
-    lightness: of the form 0,70, specifying the range of lightness of LAB color. Ignored if scheme is not COLOR_LAB.
-    .          if NULL, 0,70 is assumed
     A: the graph of n nodes
     accuracy: how accurate to find the optimal
     cdim: dimension of the color space
@@ -62,6 +60,10 @@ void map_palette_optimal_coloring(char *color_scheme, char *lightness, SparseMat
     A = SparseMatrix_remove_diagonal(A);
     SparseMatrix_export(stdout, A);
   }
+
+  // lightness: of the form 0,70, specifying the range of lightness of LAB
+  // color. Ignored if scheme is not COLOR_LAB.
+  char *lightness = "0,100";
 
   node_distinct_coloring(color_scheme, lightness, weightedQ, A, accuracy, seed,
                          &cdim, &colors);
