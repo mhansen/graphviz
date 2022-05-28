@@ -28,7 +28,7 @@ void plot_dot_map(Agraph_t* gr, int n, int dim, double *x, SparseMatrix polys,
                   const char* opacity, SparseMatrix A, FILE*);
 
 void map_optimal_coloring(int seed, SparseMatrix A, float *rgb_r,  float *rgb_g, float *rgb_b);
-void map_palette_optimal_coloring(char *color_scheme, SparseMatrix A, double accuracy, int seed, float **rgb_r, float **rgb_g, float **rgb_b);
+void map_palette_optimal_coloring(char *color_scheme, SparseMatrix A, int seed, float **rgb_r, float **rgb_g, float **rgb_b);
 
 enum {POLY_LINE_REAL_EDGE, POLY_LINE_NOT_REAL_EDGE};
 #define neighbor(t, i, edim, elist) elist[(edim)*(t)+i]
