@@ -194,7 +194,7 @@ QuadTree lab_gamut_quadtree(const char *lightness, int max_qtree_level){
   int dim = 3;
 
   if (!x) return NULL;
-  qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x, NULL);
+  qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
 
 
   free(x);

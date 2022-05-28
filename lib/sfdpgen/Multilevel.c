@@ -1170,7 +1170,7 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   
 }
 
-Multilevel Multilevel_new(SparseMatrix A0, SparseMatrix D0, double *node_weights, Multilevel_control ctrl){
+Multilevel Multilevel_new(SparseMatrix A0, SparseMatrix D0, Multilevel_control ctrl){
   /* A: the weighting matrix. D: the distance matrix, could be NULL. If not null, the two matrices must have the same sparsity pattern */
   Multilevel grid;
   SparseMatrix A = A0, D = D0;
@@ -1181,7 +1181,7 @@ Multilevel Multilevel_new(SparseMatrix A0, SparseMatrix D0, double *node_weights
   if (D && (!SparseMatrix_is_symmetric(D, false) || D->type != MATRIX_TYPE_REAL)){
     D = SparseMatrix_symmetrize_nodiag(D);
   }
-  grid = Multilevel_init(A, D, node_weights);
+  grid = Multilevel_init(A, D, NULL);
   grid = Multilevel_establish(grid, ctrl);
   if (A != A0) grid->delete_top_level_A = TRUE;/* be sure to clean up later */
   return grid;

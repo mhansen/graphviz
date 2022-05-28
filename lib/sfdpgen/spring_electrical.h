@@ -44,7 +44,6 @@ struct spring_electrical_control_struct {
   int adaptive_cooling;
   int random_seed;
   int beautify_leaves;
-  int use_node_weights;
   int smoothing;
   int overlap;
   int do_shrinking;
@@ -66,10 +65,10 @@ typedef struct  spring_electrical_control_struct  *spring_electrical_control;
 spring_electrical_control spring_electrical_control_new(void);
 void spring_electrical_control_print(spring_electrical_control ctrl);
 
-void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *node_weights, double *x, int *flag);
-void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *node_weights, double *x, int *flag);
+void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *x, int *flag);
+void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *x, int *flag);
 
-void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *node_weights, double *label_sizes, 
+void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *label_sizes, 
 					    double *x, int n_edge_label_nodes, int *edge_label_nodes, int *flag);
 
 void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *width);
@@ -78,7 +77,7 @@ void print_matrix(double *x, int n, int dim);
 
 double average_edge_length(SparseMatrix A, int dim, double *coord);
 
-void spring_electrical_spring_embedding(int dim, SparseMatrix A, SparseMatrix D, spring_electrical_control ctrl, double *node_weights, double *x, int *flag);
+void spring_electrical_spring_embedding(int dim, SparseMatrix A, SparseMatrix D, spring_electrical_control ctrl, double *x, int *flag);
 void force_print(FILE *fp, int n, int dim, double *x, double *force);
 
 enum {MAX_I = 20, OPT_UP = 1, OPT_DOWN = -1, OPT_INIT = 0};

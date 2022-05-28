@@ -63,10 +63,10 @@ SpringSmoother SpringSmoother_new(SparseMatrix A, int dim, spring_electrical_con
 
 void SpringSmoother_delete(SpringSmoother sm);
 
-void SpringSmoother_smooth(SpringSmoother sm, SparseMatrix A, double *node_weights, int dim, double *x);
+void SpringSmoother_smooth(SpringSmoother sm, SparseMatrix A, int dim, double *x);
 /*------------------------------------------------------------------*/
 
-void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control ctrl, double *node_weights, double *x, int *flag);
+void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control ctrl, double *x, int *flag);
 
 /*-------------------- sparse stress majorizationp ------------------- */
 typedef  StressMajorizationSmoother SparseStressMajorizationSmoother;
