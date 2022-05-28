@@ -18,7 +18,7 @@ add_library(test_common STATIC
             svg_analyzer.cpp
             svg_analyzer.h
             svg_analyzer_interface.h
-            ../cmd/dot/dot_builtins.c
+            ../cmd/dot/dot_builtins.cpp
 )
 set_target_properties(test_common PROPERTIES CXX_STANDARD 20)
 set_target_properties(test_common PROPERTIES CXX_STANDARD_REQUIRED ON)

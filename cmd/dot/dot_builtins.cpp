@@ -18,6 +18,8 @@
 #define IMPORT /* nothing */
 #endif
 
+extern "C" {
+
 IMPORT extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
 IMPORT extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
 #ifdef HAVE_LIBGD
@@ -47,3 +49,5 @@ lt_symlist_t lt_preloaded_symbols[] = {
 	{ "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
 	{ 0, 0 }
 };
+
+}

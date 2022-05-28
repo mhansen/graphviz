@@ -78,7 +78,7 @@ uninstall-hook:
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .1 .1.pdf
 
-dot_static_SOURCES = dot.c dot_builtins.c
+dot_static_SOURCES = dot.c dot_builtins.cpp
 dot_static_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=0
 dot_static_LDADD = \
 	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout_C.la \
@@ -91,7 +91,7 @@ dot_static_LDADD = \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
 	$(PANGOCAIRO_LIBS) $(PANGOFT2_LIBS) $(GTS_LIBS) $(EXPAT_LIBS) $(Z_LIBS) $(SOCKET_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
 
-dot_builtins_SOURCES = dot.c dot_builtins.c
+dot_builtins_SOURCES = dot.c dot_builtins.cpp
 dot_builtins_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=1
 dot_builtins_LDADD = \
 	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout.la \
@@ -122,11 +122,6 @@ if WITH_LASI
 dot_static_LDADD += $(top_builddir)/plugin/lasi/.libs/libgvplugin_lasi_C.a $(LASI_LIBS)
 dot_builtins_LDADD += $(top_builddir)/plugin/lasi/libgvplugin_lasi.la $(LASI_LIBS)
 endif
-
-# add a non-existent C++ source to force the C++ compiler to be used for
-# linking, so the C++ standard library is included for our C++ dependencies
-nodist_EXTRA_dot_static_SOURCES = fake.cxx
-nodist_EXTRA_dot_builtins_SOURCES = fake.cxx
 
 EXTRA_DIST = dot.vcxproj*
 
