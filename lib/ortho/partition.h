@@ -12,4 +12,4 @@
 
 #include <ortho/maze.h>
 
-extern boxf* partition (cell*, int, int*, boxf);
+boxf* partition(cell* cells, int ncells, int* nrects, boxf bb);
