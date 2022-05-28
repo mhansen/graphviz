@@ -85,7 +85,7 @@ typedef struct ListNode {
 
 RTree_t *RTreeOpen(void);
 int RTreeClose(RTree_t * rtp);
-Node_t *RTreeNewIndex(RTree_t * rtp);
+Node_t *RTreeNewIndex(void);
 LeafList_t *RTreeSearch(RTree_t *, Node_t *, Rect_t *);
 int RTreeInsert(RTree_t *, Rect_t *, void *, Node_t **, int);
 

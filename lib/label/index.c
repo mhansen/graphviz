@@ -54,13 +54,12 @@ RTree_t *RTreeOpen()
     RTree_t *rtp;
 
     if ((rtp = calloc(1, sizeof(RTree_t))))
-	rtp->root = RTreeNewIndex(rtp);
+	rtp->root = RTreeNewIndex();
     return rtp;
 }
 
 /* Make a new index, empty.  Consists of a single node. */
-Node_t *RTreeNewIndex(RTree_t * rtp)
-{
+Node_t *RTreeNewIndex(void ) {
     Node_t *x = RTreeNewNode();
     x->level = 0;		/* leaf */
     return x;
