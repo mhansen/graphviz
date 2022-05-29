@@ -184,8 +184,8 @@ is green
 
 1. Create a local branch
 
-1. Update the download pages, download.md and download/source/index.md, with
-   details of the new release
+1. Download and unpack the artifacts from the `main` pipeline `deploy`
+   job and copy the `graphviz-<version>.json` file to `data/releases/`.
 
 1. Commit this to your local branch
 
