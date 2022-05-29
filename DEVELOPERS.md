@@ -130,11 +130,14 @@ is green
    `gen_version.py` to ensure it is operating correctly. The “deployment” CI
    task will also create a Git tag for the version, e.g. `2.44.1`.
 
-#### Returning to the development series
+#### Starting development of the next version
 
-1. Create a new local branch and name it e.g. `return-to-<version>-dev`
+1. Decide the tentative next release version. This is normally the latest
+   stable release version with the patch number incremented.
 
-   Example: `return-to-2.44-dev`
+1. Create a new local branch and name it e.g. `start-<version>-dev`
+
+   Example: `start-2.44.2-dev`
 
 1. Add a new `[Unreleased (…)]` heading to `CHANGELOG.md`. At the bottom of
    the file, add a new entry for the next release.
@@ -159,17 +162,11 @@ is green
 
     `git add -p`
 
-    If patch version was incremented:
-
-    Example: `git commit -m "Move back to 2.44 development series"`
-
-    else (if major or minor version was incremented):
-
-    Example: `git commit -m "Start 2.45 development series"`
+    Example: `git commit -m "Start 2.44.2 development"`
 
 1. Push:
 
-   Example: `git push origin return-to-2.44-dev`
+   Example: `git push origin start-2.44.2-dev`
 
 1. Wait until the pipeline has run for your new branch and check that it's green
 
