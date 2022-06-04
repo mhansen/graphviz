@@ -28,6 +28,11 @@ double yDir (double y)
 
 static int (*print)(void *chan, const char *format, ...);
 
+static void agputs (const char* s, FILE* fp)
+{
+  print(fp, "%s", s);
+}
+
 static void printpoint(FILE * f, pointf p)
 {
   print(f, " %.5g %.5g", PS2INCH(p.x), PS2INCH(YDIR(p.y)));
@@ -139,7 +144,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 	          late_nnstring(e, E_color, DEFAULT_COLOR));
 	}
     }
-    print(f, "stop\n");
+    agputs("stop\n", f);
 }
 
 static void set_record_rects(node_t * n, field_t * f, agxbuf * xb)
