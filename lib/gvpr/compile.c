@@ -66,14 +66,17 @@ static int iofread(void *chan, char *buf, int bufsize)
     return (int)read(sffileno(chan), buf, bufsize);
 }
 
+static int ioputstr(void *chan, const char *str)
+{
+    return sfputr(chan, str, -1);
+}
+
 static int ioflush(void *chan)
 {
     return sfsync(chan);
 }
 
-typedef int (*printfn)(void *chan, const char *format, ...);
-
-static Agiodisc_t gprIoDisc = { iofread, (printfn)sfprintf, ioflush };
+static Agiodisc_t gprIoDisc = { iofread, ioputstr, ioflush };
 
 #ifdef GVDLL
 static Agdisc_t gprDisc = { 0, 0, &gprIoDisc };

@@ -24,15 +24,17 @@ static int iofread(void *chan, char *buf, int bufsize)
 }
 
 /* default IO methods */
+static int ioputstr(void *chan, const char *str)
+{
+    return fputs(str, chan);
+}
 
 static int ioflush(void *chan)
 {
     return fflush(chan);
 }
 
-typedef int (*printfn)(void *chan, const char *format, ...);
-
-Agiodisc_t AgIoDisc = { iofread, (printfn)fprintf, ioflush };
+Agiodisc_t AgIoDisc = { iofread, ioputstr, ioflush };
 
 typedef struct {
     const char *data;
@@ -78,7 +80,7 @@ static Agraph_t *agmemread0(Agraph_t *arg_g, const char *cp)
     rdr_t rdr;
     Agdisc_t disc;
 
-    memIoDisc.printf = AgIoDisc.printf;
+    memIoDisc.putstr = AgIoDisc.putstr;
     memIoDisc.flush = AgIoDisc.flush;
     rdr.data = cp;
     rdr.len = strlen(cp);
