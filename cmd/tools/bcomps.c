@@ -28,6 +28,7 @@
 #include <getopt.h>
 
 #include <stdlib.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
@@ -81,7 +82,7 @@ static char *blockName(char *gname, int d)
     size_t sz = strlen(gname) + 128;
     if (sz > bufsz) {
 	free(buf);
-	buf = malloc(sz);
+	buf = gv_alloc(sz);
     }
 
     if (*gname == '%') /* anonymous graph */
@@ -107,7 +108,7 @@ static char *getName(int ng, int nb)
     else {
 	if (!buf) {
 	    size_t sz = strlen(outfile) + 100; // enough to handle '_<g>_<b>'
-	    buf = malloc(sz);
+	    buf = gv_alloc(sz);
 	}
 	if (suffix) {
 	    if (nb < 0)
@@ -306,9 +307,7 @@ static void split(char *name)
     if (sfx) {
 	size = sfx - name;
 	suffix = sfx + 1;
-	path = malloc(size + 1);
-	strncpy(path, name, size);
-	*(path + size) = '\0';
+	path = gv_strndup(name, size);
     } else {
 	path = name;
     }
