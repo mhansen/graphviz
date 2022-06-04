@@ -38,6 +38,15 @@ static void agputc (int c, FILE* fp)
 }
 
 
+static void printint(FILE * f, char *prefix, int i)
+{
+    char buf[BUFSIZ];
+    
+    if (prefix) agputs(prefix, f);
+    snprintf(buf, sizeof(buf), "%d", i);
+    agputs(buf, f);
+}
+
 static void printdouble(FILE * f, char *prefix, double v)
 {
     char buf[BUFSIZ];
@@ -151,7 +160,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		print(f, "edge");
 		writenodeandport(f, agtail(e), tport);
 		writenodeandport(f, aghead(e), hport);
-		print(f, " %d", splinePoints);
+		printint(f, " ", splinePoints);
 		for (i = 0; i < ED_spl(e)->size; i++) {
 		    bz = ED_spl(e)->list[i];
 		    for (j = 0; j < bz.size; j++)
