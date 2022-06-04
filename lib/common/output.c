@@ -32,6 +32,10 @@ static void agputs (const char* s, FILE* fp)
 {
   print(fp, "%s", s);
 }
+static void agputc (int c, FILE* fp)
+{
+  print(fp, "%c", (char)c);
+}
 
 static void printpoint(FILE * f, pointf p)
 {
@@ -91,7 +95,10 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 //    setup_graph(job, g);
     setYInvert(g);
     pt = GD_bb(g).UR;
-    print(f, "graph %.5g %.5g %.5g\n", job->zoom, PS2INCH(pt.x), PS2INCH(pt.y));
+    print(f, "graph %.5g", job->zoom);
+    print(f, " %.5g", PS2INCH(pt.x));
+    print(f, " %.5g", PS2INCH(pt.y));
+    agputc('\n', f);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (IS_CLUST_NODE(n))
 	    continue;
@@ -101,13 +108,17 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 	    lbl = agcanonStr (agxget(n, N_label));
 	else
 	    lbl = canon(agraphof(n),ND_label(n)->text);
-        print(f, " %.5g %.5g %s %s %s %s", ND_width(n), ND_height(n), lbl,
-              late_nnstring(n, N_style, "solid"), ND_shape(n)->name,
-              late_nnstring(n, N_color, DEFAULT_COLOR));
+        print(f, " %.5g", ND_width(n));
+        print(f, " %.5g", ND_height(n));
+        print(f, " %s", lbl);
+	print(f, " %s", late_nnstring(n, N_style, "solid"));
+	print(f, " %s", ND_shape(n)->name);
+	print(f, " %s", late_nnstring(n, N_color, DEFAULT_COLOR));
 	fillcolor = late_nnstring(n, N_fillcolor, "");
         if (fillcolor[0] == '\0')
 	    fillcolor = late_nnstring(n, N_color, DEFAULT_FILL);
-	print(f, " %s\n", fillcolor);
+	print(f, " %s", fillcolor);
+	agputc('\n', f);
     }
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
@@ -140,8 +151,9 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		print(f, " %s", canon(agraphof(agtail(e)),ED_label(e)->text));
 		printpoint(f, ED_label(e)->pos);
 	    }
-	    print(f, " %s %s\n", late_nnstring(e, E_style, "solid"),
-	          late_nnstring(e, E_color, DEFAULT_COLOR));
+	    print(f, " %s", late_nnstring(e, E_style, "solid"));
+	    print(f, " %s", late_nnstring(e, E_color, DEFAULT_COLOR));
+	    agputc('\n', f);
 	}
     }
     agputs("stop\n", f);
