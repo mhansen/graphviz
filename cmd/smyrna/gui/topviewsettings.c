@@ -45,7 +45,7 @@ void on_settingsCancelBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
     gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
 }
-void copy_attr(Agraph_t* destG,char* attr,Agraph_t* g)
+static void copy_attr(Agraph_t* destG,char* attr,Agraph_t* g)
 {
     agattr(g,AGRAPH,attr,agget(destG,attr));
 }

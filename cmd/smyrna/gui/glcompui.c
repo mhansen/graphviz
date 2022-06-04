@@ -246,10 +246,10 @@ glCompSet *glcreate_gl_topview_menu(void)
     p->common.borderWidth = 1;
     p->shadowwidth = 0;
 
-    c.R = 0.80;
-    c.G = 0.6;
-    c.B = 0.6;
-    c.A = 1.6;
+    c.R = 0.80f;
+    c.G = 0.6f;
+    c.B = 0.6f;
+    c.A = 1.6f;
 
     y = 1;
 

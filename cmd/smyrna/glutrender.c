@@ -151,6 +151,9 @@ static void cb_drag(int X, int Y)
 
 static void cb_keyboard(unsigned char key, int x, int y)
 {
+    (void)x;
+    (void)y;
+
     if (key==27)    /*ESC*/
 	graphviz_exit(1);
     if(key=='3')
@@ -172,12 +175,17 @@ static void cb_keyboard(unsigned char key, int x, int y)
 static void cb_keyboard_up(unsigned char key, int x, int y)
 {
     (void)key;
+    (void)x;
+    (void)y;
 
     appmouse_key_release(view);
 }
 
 static void cb_special_key(int key, int x, int y)
 {
+    (void)x;
+    (void)y;
+
     if(key==GLUT_KEY_F1)
     {
 	printf("Currently help is not available\n");
@@ -188,6 +196,9 @@ static void cb_special_key(int key, int x, int y)
 
 static void cb_special_key_up(int key, int x, int y)
 {
+    (void)x;
+    (void)y;
+
     if(key==GLUT_KEY_F1)
     {
 	printf("Currently help is not available\n");
@@ -196,15 +207,13 @@ static void cb_special_key_up(int key, int x, int y)
 
 }
 
-static int cb_game_mode(char* optArg)
+static void cb_game_mode(char* optArg)
 {
     
     glutGameModeString(optArg);
     if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) 
     {
     	glutEnterGameMode();
-	return 1;
-
     }
     else 
     {
@@ -212,25 +221,11 @@ static int cb_game_mode(char* optArg)
 	graphviz_exit(-1);
 
     }
-
-}
-static int cb_windowed_mode(int w,int h)
-{
-  glutInitWindowSize(w, h);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_ACCUM | GLUT_DOUBLE);
-  glutCreateWindow("smyrna");
-  return 1;
-    
 }
 
-int cb_glutinit(int x,int y,int w,int h, int bits,int s_rate,int fullscreen,int* argcp, char *argv[],char* optArg)
-{
+int cb_glutinit(int w, int h, int *argcp, char *argv[], char *optArg) {
     /*
-    x,y:window position , unless in full screen mode
     w,h: width and height of the window in pixels
-    bits: display color bit count
-    s_rate: for full screen mode this value represents refresh rate in hertz
-    fullscreen: if it will be a fullscreen window,
     argcp argv: main function's parameters, required for glutinit
     */
 
@@ -247,13 +242,7 @@ int cb_glutinit(int x,int y,int w,int h, int bits,int s_rate,int fullscreen,int*
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
 
 
-    if (fullscreen)
-	cb_game_mode(optArg);
-    else    //well, use gtk then
-    {	
-	cb_windowed_mode(w,h);
-
-    }
+    cb_game_mode(optArg);
 
     /*register callbacks here*/
     glutDisplayFunc(cb_display);

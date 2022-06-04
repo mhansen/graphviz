@@ -150,7 +150,6 @@ EXCLUDE = (
   "cmd/smyrna/gltemplate.c",
   "cmd/smyrna/gltemplate.h",
   "cmd/smyrna/glutrender.c",
-  "cmd/smyrna/glutrender.h",
   "cmd/smyrna/gui/appmouse.c",
   "cmd/smyrna/gui/appmouse.h",
   "cmd/smyrna/gui/callbacks.c",

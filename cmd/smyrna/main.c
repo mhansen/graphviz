@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
 	view->initFile=1;
 
     if(view->guiMode==GUI_FULLSCREEN)
-	cb_glutinit(0,0,800,600,32,75,1,&argc,argv,view->optArg);
+	cb_glutinit(800, 600, &argc, argv, view->optArg);
     else
 	windowedMode(argc, argv);
 #ifdef G_OS_WIN32
