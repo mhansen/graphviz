@@ -935,7 +935,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
       */
     if (!*cA) goto RETURN;
 
-    SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt, FALSE);
+    SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt);
     *R = SparseMatrix_divide_row_by_degree(*R);
     SparseMatrix_set_symmetric(*cA);
     SparseMatrix_set_pattern_symmetric(*cA);
@@ -995,7 +995,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
       *cA = SparseMatrix_multiply(B, *P); 
       */
     if (!*cA) goto RETURN;
-    SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt, FALSE);
+    SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt);
     *R = SparseMatrix_divide_row_by_degree(*R);
     SparseMatrix_set_symmetric(*cA);
     SparseMatrix_set_pattern_symmetric(*cA);
@@ -1055,7 +1055,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
     *R = SparseMatrix_transpose(*P);
     *cA = SparseMatrix_multiply3(*R, A, *P); 
     if (!*cA) goto RETURN;
-    SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt, FALSE);
+    SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt);
     SparseMatrix_set_symmetric(*cA);
     SparseMatrix_set_pattern_symmetric(*cA);
     *cA = SparseMatrix_remove_diagonal(*cA);

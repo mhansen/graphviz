@@ -571,7 +571,7 @@ static void hierachical_mq_clustering(SparseMatrix A, int maxcluster,
   while (cgrid->prev){
     double *v = NULL;
     P = cgrid->prev->P;
-    SparseMatrix_multiply_vector(P, u, &v, FALSE);
+    SparseMatrix_multiply_vector(P, u, &v);
     free(u);
     u = v;
     cgrid = cgrid->prev;

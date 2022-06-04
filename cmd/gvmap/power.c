@@ -92,7 +92,7 @@ void power_method(void *A, int n, int K, int random_seed,
 	  u[i] = u[i] - uij *v[j][i];
 	}
       }
-      SparseMatrix_multiply_vector(A, u, &vv, FALSE);
+      SparseMatrix_multiply_vector(A, u, &vv);
 
       unorm = vector_product(n, vv, vv);/* ||u||^2 */    
       unorm = sqrt(unorm);

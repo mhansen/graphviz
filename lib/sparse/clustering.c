@@ -329,7 +329,7 @@ static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_targe
   while (cgrid->prev){
     double *v = NULL;
     P = cgrid->prev->P;
-    SparseMatrix_multiply_vector(P, u, &v, FALSE);
+    SparseMatrix_multiply_vector(P, u, &v);
     free(u);
     u = v;
     cgrid = cgrid->prev;

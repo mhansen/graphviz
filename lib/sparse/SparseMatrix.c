@@ -1031,9 +1031,9 @@ void SparseMatrix_multiply_dense(SparseMatrix A, double *v, double **res, int di
   SparseMatrix_multiply_dense1(A, v, res, dim);
 }
 
-void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res, int transposed){
+void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res) {
   /* A v or A^T v. Real only for now. */
-  int i, j, *ia, *ja, n, m;
+  int i, j, *ia, *ja, m;
   double *a, *u = NULL;
   int *ai;
   assert(A->format == FORMAT_CSR);
@@ -1042,47 +1042,26 @@ void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res, int t
   ia = A->ia;
   ja = A->ja;
   m = A->m;
-  n = A->n;
   u = *res;
 
   switch (A->type){
   case MATRIX_TYPE_REAL:
     a = (double*) A->a;
     if (v){
-      if (!transposed){
-	if (!u) u = MALLOC(sizeof(double)*((size_t)m));
-	for (i = 0; i < m; i++){
-	  u[i] = 0.;
-	  for (j = ia[i]; j < ia[i+1]; j++){
-	    u[i] += a[j]*v[ja[j]];
-	  }
-	}
-      } else {
-	if (!u) u = MALLOC(sizeof(double)*((size_t)n));
-	for (i = 0; i < n; i++) u[i] = 0.;
-	for (i = 0; i < m; i++){
-	  for (j = ia[i]; j < ia[i+1]; j++){
-	    u[ja[j]] += a[j]*v[i];
-	  }
+      if (!u) u = MALLOC(sizeof(double)*((size_t)m));
+      for (i = 0; i < m; i++){
+	u[i] = 0.;
+	for (j = ia[i]; j < ia[i+1]; j++){
+	  u[i] += a[j]*v[ja[j]];
 	}
       }
     } else {
       /* v is assumed to be all 1's */
-      if (!transposed){
-	if (!u) u = MALLOC(sizeof(double)*((size_t)m));
-	for (i = 0; i < m; i++){
-	  u[i] = 0.;
-	  for (j = ia[i]; j < ia[i+1]; j++){
-	    u[i] += a[j];
-	  }
-	}
-      } else {
-	if (!u) u = MALLOC(sizeof(double)*((size_t)n));
-	for (i = 0; i < n; i++) u[i] = 0.;
-	for (i = 0; i < m; i++){
-	  for (j = ia[i]; j < ia[i+1]; j++){
-	    u[ja[j]] += a[j];
-	  }
+      if (!u) u = MALLOC(sizeof(double)*((size_t)m));
+      for (i = 0; i < m; i++){
+	u[i] = 0.;
+	for (j = ia[i]; j < ia[i+1]; j++){
+	  u[i] += a[j];
 	}
       }
     }
@@ -1090,40 +1069,20 @@ void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res, int t
   case MATRIX_TYPE_INTEGER:
     ai = (int*) A->a;
     if (v){
-      if (!transposed){
-	if (!u) u = MALLOC(sizeof(double)*((size_t)m));
-	for (i = 0; i < m; i++){
-	  u[i] = 0.;
-	  for (j = ia[i]; j < ia[i+1]; j++){
-	    u[i] += ai[j]*v[ja[j]];
-	  }
-	}
-      } else {
-	if (!u) u = MALLOC(sizeof(double)*((size_t)n));
-	for (i = 0; i < n; i++) u[i] = 0.;
-	for (i = 0; i < m; i++){
-	  for (j = ia[i]; j < ia[i+1]; j++){
-	    u[ja[j]] += ai[j]*v[i];
-	  }
+      if (!u) u = MALLOC(sizeof(double)*((size_t)m));
+      for (i = 0; i < m; i++){
+	u[i] = 0.;
+	for (j = ia[i]; j < ia[i+1]; j++){
+	  u[i] += ai[j]*v[ja[j]];
 	}
       }
     } else {
       /* v is assumed to be all 1's */
-      if (!transposed){
-	if (!u) u = MALLOC(sizeof(double)*((size_t)m));
-	for (i = 0; i < m; i++){
-	  u[i] = 0.;
-	  for (j = ia[i]; j < ia[i+1]; j++){
-	    u[i] += ai[j];
-	  }
-	}
-      } else {
-	if (!u) u = MALLOC(sizeof(double)*((size_t)n));
-	for (i = 0; i < n; i++) u[i] = 0.;
-	for (i = 0; i < m; i++){
-	  for (j = ia[i]; j < ia[i+1]; j++){
-	    u[ja[j]] += ai[j];
-	  }
+      if (!u) u = MALLOC(sizeof(double)*((size_t)m));
+      for (i = 0; i < m; i++){
+	u[i] = 0.;
+	for (j = ia[i]; j < ia[i+1]; j++){
+	  u[i] += ai[j];
 	}
       }
     }
