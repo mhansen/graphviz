@@ -693,7 +693,7 @@ static void write_graph(Agraph_t * g, GVJ_t * job, int top, state_t* sp)
 	gvputs(job, "}");
 }
 
-typedef int (*printfn)(void *chan, const char *format, ...);
+typedef int (*putstrfn) (void *chan, const char *str);
 typedef int (*flushfn) (void *chan);
 
 static void json_end_graph(GVJ_t *job)
@@ -704,7 +704,7 @@ static void json_end_graph(GVJ_t *job)
 
     if (io.afread == NULL) {
 	io.afread = AgIoDisc.afread;
-	io.printf = (printfn)gvprintf;
+	io.putstr = (putstrfn)gvputs;
 	io.flush = (flushfn)gvflush;
     }
 

@@ -26,11 +26,48 @@ double yDir (double y)
     return YDIR(y);
 }
 
-static int (*print)(void *chan, const char *format, ...);
+static int (*putstr) (void *chan, const char *str);
+
+static void agputs (const char* s, FILE* fp)
+{
+    putstr ((void*)fp, s);
+}
+static void agputc (int c, FILE* fp)
+{
+    static char buf[2] = {'\0','\0'};
+    buf[0] = c;
+    putstr ((void*)fp, buf);
+}
+
+
+static void printstring(FILE * f, char *prefix, char *s)
+{
+    if (prefix) agputs(prefix, f);
+    agputs(s, f);
+}
+
+static void printint(FILE * f, char *prefix, int i)
+{
+    char buf[BUFSIZ];
+    
+    if (prefix) agputs(prefix, f);
+    snprintf(buf, sizeof(buf), "%d", i);
+    agputs(buf, f);
+}
+
+static void printdouble(FILE * f, char *prefix, double v)
+{
+    char buf[BUFSIZ];
+    
+    if (prefix) agputs(prefix, f);
+    snprintf(buf, sizeof(buf), "%.5g", v);
+    agputs(buf, f);
+}
 
 static void printpoint(FILE * f, pointf p)
 {
-  print(f, " %.5g %.5g", PS2INCH(p.x), PS2INCH(YDIR(p.y)));
+    printdouble(f, " ", PS2INCH(p.x));
+    printdouble(f, " ", PS2INCH(YDIR(p.y)));
 }
 
 /* setYInvert:
@@ -65,9 +102,9 @@ static void writenodeandport(FILE * f, node_t * node, char *port)
 	name = canon (agraphof(node), strchr(agnameof(node), ':') + 1);
     else
 	name = agcanonStr (agnameof(node));
-    print(f, " %s", name);
+    printstring(f, " ", name); /* slimey i know */
     if (port && *port)
-	print(f, ":%s", agcanonStr(port));
+	printstring(f, ":", agcanonStr(port));
 }
 
 /* _write_plain:
@@ -82,27 +119,34 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     char *lbl;
     char* fillcolor;
 
-    print = g->clos->disc.io->printf;
+    putstr = g->clos->disc.io->putstr;
 //    setup_graph(job, g);
     setYInvert(g);
     pt = GD_bb(g).UR;
-    print(f, "graph %.5g %.5g %.5g\n", job->zoom, PS2INCH(pt.x), PS2INCH(pt.y));
+    printdouble(f, "graph ", job->zoom);
+    printdouble(f, " ", PS2INCH(pt.x));
+    printdouble(f, " ", PS2INCH(pt.y));
+    agputc('\n', f);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (IS_CLUST_NODE(n))
 	    continue;
-	print(f, "node %s", agcanonStr(agnameof(n)));
+	printstring(f, "node ", agcanonStr(agnameof(n)));
 	printpoint(f, ND_coord(n));
 	if (ND_label(n)->html)   /* if html, get original text */
 	    lbl = agcanonStr (agxget(n, N_label));
 	else
 	    lbl = canon(agraphof(n),ND_label(n)->text);
-        print(f, " %.5g %.5g %s %s %s %s", ND_width(n), ND_height(n), lbl,
-              late_nnstring(n, N_style, "solid"), ND_shape(n)->name,
-              late_nnstring(n, N_color, DEFAULT_COLOR));
+        printdouble(f, " ", ND_width(n));
+        printdouble(f, " ", ND_height(n));
+        printstring(f, " ", lbl);
+	printstring(f, " ", late_nnstring(n, N_style, "solid"));
+	printstring(f, " ", ND_shape(n)->name);
+	printstring(f, " ", late_nnstring(n, N_color, DEFAULT_COLOR));
 	fillcolor = late_nnstring(n, N_fillcolor, "");
         if (fillcolor[0] == '\0')
 	    fillcolor = late_nnstring(n, N_color, DEFAULT_FILL);
-	print(f, " %s\n", fillcolor);
+	printstring(f, " ", fillcolor);
+	agputc('\n', f);
     }
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
@@ -121,10 +165,10 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		    bz = ED_spl(e)->list[i];
 		    splinePoints += bz.size;
 		}
-		print(f, "edge");
+		printstring(f, NULL, "edge");
 		writenodeandport(f, agtail(e), tport);
 		writenodeandport(f, aghead(e), hport);
-		print(f, " %d", splinePoints);
+		printint(f, " ", splinePoints);
 		for (i = 0; i < ED_spl(e)->size; i++) {
 		    bz = ED_spl(e)->list[i];
 		    for (j = 0; j < bz.size; j++)
@@ -132,14 +176,15 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		}
 	    }
 	    if (ED_label(e)) {
-		print(f, " %s", canon(agraphof(agtail(e)),ED_label(e)->text));
+		printstring(f, " ", canon(agraphof(agtail(e)),ED_label(e)->text));
 		printpoint(f, ED_label(e)->pos);
 	    }
-	    print(f, " %s %s\n", late_nnstring(e, E_style, "solid"),
-	          late_nnstring(e, E_color, DEFAULT_COLOR));
+	    printstring(f, " ", late_nnstring(e, E_style, "solid"));
+	    printstring(f, " ", late_nnstring(e, E_color, DEFAULT_COLOR));
+	    agputc('\n', f);
 	}
     }
-    print(f, "stop\n");
+    agputs("stop\n", f);
 }
 
 static void set_record_rects(node_t * n, field_t * f, agxbuf * xb)
