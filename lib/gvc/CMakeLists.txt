@@ -64,10 +64,6 @@ target_link_libraries(gvc PRIVATE
   pack
 )
 
-target_link_libraries(gvc PUBLIC
-  ${MATH_LIB}
-)
-
 if(LTDL_FOUND)
   target_include_directories(gvc SYSTEM PRIVATE ${LTDL_INCLUDE_DIRS})
   if(NOT WIN32 OR MINGW)

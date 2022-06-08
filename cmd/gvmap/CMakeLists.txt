@@ -30,7 +30,6 @@ if(with_sfdp)
     rbtree
     sfdpgen
     sparse
-    ${MATH_LIB}
   )
 
   if(NOT HAVE_GETOPT_H)

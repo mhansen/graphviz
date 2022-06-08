@@ -231,7 +231,6 @@ target_include_directories(gvcolor SYSTEM PRIVATE
 target_link_libraries(gvcolor
   cgraph
   ingraphs
-  ${MATH_LIB}
 )
 
 tool_defaults(gvcolor)
@@ -260,11 +259,6 @@ target_include_directories(gvgen SYSTEM PRIVATE
 )
 
 target_link_libraries(gvgen cgraph)
-
-# Link to math library
-if(UNIX)
-  target_link_libraries(gvgen ${MATH_LIB})
-endif()
 
 tool_defaults(gvgen)
 

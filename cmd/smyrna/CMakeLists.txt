@@ -116,7 +116,6 @@ if(with_smyrna)
     ${GTK2_LIBRARIES}
     ${GTKGLEXT_LIBRARIES}
     ${GTS_LIBRARIES}
-    ${MATH_LIB}
     ${XRENDER_LIBRARIES}
   )
 

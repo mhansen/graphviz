@@ -129,6 +129,7 @@ endif()
 
 if(UNIX)
   find_library(MATH_LIB m)
+  link_libraries(${MATH_LIB})
 endif()
 
 if(WIN32)
