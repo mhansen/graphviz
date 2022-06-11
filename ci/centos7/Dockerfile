@@ -42,15 +42,11 @@ ghostscript-devel \
 # Plugin library gtk
 gtk2-devel \
 # Plugin library lasi
-# Plugin library pangocairo
 # Plugin library poppler
 poppler-glib-devel \
 poppler-qt \
 # Plugin library rsvg
 librsvg2-devel \
-# Plugin library webp
-# Language extension gv_sharp & gv_ruby
-# Language extension gv_go
 # Language extension gv_guile
 guile-devel \
 # Language extension gv_java
