@@ -53,6 +53,23 @@ typedef struct {
                 /* spaced very close together */
 #define FP_EQUAL(s, t) (fabs(s - t) <= C_EPS)
 
+/**
+ * @brief double floating point three-way comparison
+ *
+ * Returns -1, 0, or 1 if f1 respectively, less than,
+ * almost equal with tolerance C_EPS, or greater than f2.
+ * The purpose of the function is workaround precision issues.
+ */
+
+static inline int dfp_cmp(double f1, double f2) {
+  double d = f1 - f2;
+  if (d < -C_EPS)
+    return -1;
+  if (d > C_EPS)
+    return 1;
+  return 0;
+}
+
 #define _equal_to(v0,v1) \
   (FP_EQUAL((v0)->y, (v1)->y) && FP_EQUAL((v0)->x, (v1)->x))
 

@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `putstr` by `printf` has been reverted
 - graphviz-4.0.0: build error: cmd/tools/gvcolor.c:159: undefined reference to
   `fmax` #2246
+- Failed assertion in `chkSgraph` for twopi layout and ortho splines. #14
+- Failed assertion in `chkSgraph` for dot layout and ortho splines. #1408
+- Failed assertion in `chkSgraph` for circo layout and ortho splines. #1990
+- Segmentation Fault with splines="ortho". #1658
 
 ## [4.0.0] – 2022-05-29
 
