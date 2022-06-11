@@ -52,7 +52,6 @@ if(with_smyrna)
     ${Freetype_LIBRARIES}
     ${GLUT_LIBRARIES}
     ${GTK2_LIBRARIES}
-    ${MATH_LIB}
     ${PANGOCAIRO_LIBRARIES}
     ${XRENDER_LIBRARIES}
   )

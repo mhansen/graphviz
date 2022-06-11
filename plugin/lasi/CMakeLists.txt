@@ -31,7 +31,6 @@ if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
   target_link_libraries(gvplugin_lasi
     ${Freetype_LIBRARIES}
     ${LASI_LIBRARIES}
-    ${MATH_LIB}
     ${PANGOCAIRO_LIBRARIES}
   )
 

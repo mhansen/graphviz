@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking**: The 4.0.0 change replacing the `Agiodisc_t` struct member
   `putstr` by `printf` has been reverted
+- graphviz-4.0.0: build error: cmd/tools/gvcolor.c:159: undefined reference to
+  `fmax` #2246
 
 ## [4.0.0] – 2022-05-29
 

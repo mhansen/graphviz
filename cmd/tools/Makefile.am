@@ -122,8 +122,8 @@ gvcolor_SOURCES = gvcolor.c colxlate.c colortbl.h
 
 gvcolor_LDADD = \
 	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
-	$(top_builddir)/lib/cgraph/libcgraph.la
-
+	$(top_builddir)/lib/cgraph/libcgraph.la \
+	$(MATH_LIBS)
 
 bcomps_SOURCES = bcomps.c
 

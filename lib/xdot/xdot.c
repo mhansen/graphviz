@@ -467,8 +467,7 @@ static void printInt(int i, pf print, void *info)
     print(buf, info);
 }
 
-static void printFloat(float f, pf print, void *info, int space)
-{
+static void printFloat(double f, pf print, void *info, int space) {
     char buf[128];
 
     if (space)
