@@ -37,14 +37,11 @@ ghostscript ghostscript-devel \
 gtkglext-devel \
 # Plugin library lasi
 lasi-devel \
-# Plugin library pangocairo
 # Plugin library poppler
 poppler-glib-devel \
 poppler-qt5 \
 # Plugin library rsvg
 librsvg2-devel \
-# Plugin library webp
-# Language extension gv_sharp & gv_ruby
 # Language extension gv_go
 golang \
 gcc-go \

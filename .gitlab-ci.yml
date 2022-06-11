@@ -290,6 +290,18 @@ fedora35-build:
     variables:
       IMAGE: fedora35
 
+fedora36-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_fedora36
+          artifacts: false
+        - job: portable-source
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora36
+
 ubuntu18-04-build:
     <<: *deb_build_definition
     needs:
@@ -1041,6 +1053,18 @@ fedora35-test:
     variables:
       IMAGE: fedora35
 
+fedora36-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="autotools"
+    needs:
+        - job: "fedora36-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora36
+
 macos-autotools-test:
     <<: *test_definition
     before_script:
@@ -1280,6 +1304,11 @@ docker_build_fedora35:
   variables:
     IMAGE: fedora35
 
+docker_build_fedora36:
+  <<: *docker_build_definition
+  variables:
+    IMAGE: fedora36
+
 docker_build_ubuntu-18.04:
   <<: *docker_build_definition
   variables:
@@ -1320,6 +1349,13 @@ docker_push_fedora35:
     IMAGE: fedora35
   needs:
     - docker_build_fedora35
+
+docker_push_fedora36:
+  <<: *docker_push_definition
+  variables:
+    IMAGE: fedora36
+  needs:
+    - docker_build_fedora36
 
 docker_push_ubuntu-18.04:
   <<: *docker_push_definition
