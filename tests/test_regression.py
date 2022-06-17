@@ -173,6 +173,29 @@ def test_144(testcase: str):
   # this should be consistent with the direction the edge is drawn
   assert routed_up == head_is_top, "heap/tail confusion"
 
+@pytest.mark.xfail(strict=True)
+def test_146():
+  """
+  dot should respect an alpha channel value of 0 when writing SVG
+  https://gitlab.com/graphviz/graphviz/-/issues/146
+  """
+
+  # a graph using white text but with 0 alpha
+  source = 'graph {\n'                                                         \
+           '  n[style="filled", fontcolor="#FFFFFF00", label="hello world"];\n'\
+           '}'
+
+  # ask Graphviz to process this
+  svg = dot("svg", source=source)
+
+  # the SVG should be setting opacity
+  opacity = re.search(r'\bfill-opacity="(\d+(\.\d+)?)"', svg)
+  assert opacity is not None, "transparency not set for alpha=0 color"
+
+  # it should be zeroed
+  assert float(opacity.group(1)) == 0, \
+    "alpha=0 color set to something non-transparent"
+
 def test_165():
   """
   dot should be able to produce properly escaped xdot output
