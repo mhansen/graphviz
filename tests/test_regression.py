@@ -173,7 +173,6 @@ def test_144(testcase: str):
   # this should be consistent with the direction the edge is drawn
   assert routed_up == head_is_top, "heap/tail confusion"
 
-@pytest.mark.xfail(strict=True)
 def test_146():
   """
   dot should respect an alpha channel value of 0 when writing SVG
