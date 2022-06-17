@@ -6,3 +6,4 @@ noinst_LTLIBRARIES = libtclhandle_C.la
 endif
 
 libtclhandle_C_la_SOURCES = tclhandle.c
+libtclhandle_C_la_LDFLAGS = -module -avoid-version

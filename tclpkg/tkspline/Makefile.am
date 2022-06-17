@@ -25,7 +25,7 @@ pdf_DATA = tkspline.3tk.pdf
 endif
 endif
 
-libtkspline_la_LDFLAGS = -no-undefined
+libtkspline_la_LDFLAGS = -no-undefined -module -avoid-version
 libtkspline_la_SOURCES = tkspline.c
 libtkspline_la_LIBADD = \
 	$(top_builddir)/tclpkg/tkstubs/libtkstubs_C.la \
