@@ -363,7 +363,6 @@ def test_797():
   # the escape sequences should have been preserved
   assert "&amp; &amp;" in output
 
-@pytest.mark.xfail()
 def test_827():
   """
   Graphviz should not crash when processing the b15.gv example

@@ -476,7 +476,8 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    endp->boxn = 1;
 	    ++P->start.p.x;
 	}
-	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
+	for (orig = e; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
+	     orig = ED_to_orig(orig));
 	if (n == agtail(orig))
 	    ED_tail_port(orig).clip = false;
 	else
@@ -541,7 +542,8 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    endp->boxn = 1;
 	    ++P->start.p.x;
 	}
-	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
+	for (orig = e; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
+	     orig = ED_to_orig(orig));
 	if (n == agtail(orig))
 	    ED_tail_port(orig).clip = false;
 	else
@@ -670,7 +672,8 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    endp->boxn = 1;
 	    ++P->end.p.x;
 	}
-	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
+	for (orig = e; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
+	     orig = ED_to_orig(orig));
 	if (n == aghead(orig))
 	    ED_head_port(orig).clip = false;
 	else
@@ -737,7 +740,8 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    endp->boxn = 1;
 	    ++P->end.p.x;
 	}
-	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
+	for (orig = e; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
+	     orig = ED_to_orig(orig));
 	if (n == aghead(orig))
 	    ED_head_port(orig).clip = false;
 	else
