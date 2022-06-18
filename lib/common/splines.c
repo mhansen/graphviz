@@ -553,7 +553,7 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
     if (et == REGULAREDGE) side = BOTTOM;
     else side = endp->sidemask;  /* for flat edges */
     if (pboxfn
-	&& (mask = (*pboxfn) (n, &ED_tail_port(e), side, &endp->boxes[0], &endp->boxn)))
+	&& (mask = pboxfn(n, &ED_tail_port(e), side, &endp->boxes[0], &endp->boxn)))
 	endp->sidemask = mask;
     else {
 	endp->boxes[0] = endp->nb;
