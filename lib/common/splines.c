@@ -415,7 +415,7 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    P->start.constrained = false;
     }
     P->nbox = 0;
-    P->data = (void *) e;
+    P->data = e;
     endp->np = P->start.p;
     if (et == REGULAREDGE && ND_node_type(n) == NORMAL && (side = ED_tail_port(e).side)) {
 	edge_t* orig;
