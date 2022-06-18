@@ -363,6 +363,20 @@ def test_797():
   # the escape sequences should have been preserved
   assert "&amp; &amp;" in output
 
+@pytest.mark.xfail()
+def test_827():
+  """
+  Graphviz should not crash when processing the b15.gv example
+  https://gitlab.com/graphviz/graphviz/-/issues/827
+  """
+
+  b15gv = Path(__file__).parent / "graphs/b15.gv"
+  assert b15gv.exists(), "missing test case file"
+
+  ret = subprocess.call(["dot", "-Tsvg", "-o", os.devnull, b15gv])
+
+  assert ret == 1, "Graphviz crashed when processing b15.gv"
+
 def test_1221():
   """
   assigning a node to two clusters with newrank should not cause a crash
