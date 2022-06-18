@@ -62,9 +62,6 @@ typedef struct LeafList {
     Leaf_t *leaf;
 } LeafList_t;
 
-#ifndef METHODS
-#define METHODS 1
-#endif /*METHODS*/
     struct RTree {
     Node_t *root;
 
@@ -72,50 +69,13 @@ typedef struct LeafList {
 
     /* balance criterion for node splitting */
     int MinFill;
-
-    /* times */
-    long ElapsedTime;
-    float UserTime, SystemTime;
-
-    int Deleting;
-
-    /* variables for statistics */
-    int StatFlag;		/* tells if we are counting or not */
-    /* counters affected only when StatFlag set */
-    int InsertCount;
-    int DeleteCount;
-    int ReInsertCount;
-    int InSplitCount;
-    int DeSplitCount;
-    int ElimCount;
-    int EvalCount;
-    int InTouchCount;
-    int DeTouchCount;
-    int SeTouchCount;
-    int CallCount;
-    float SplitMeritSum;
-
-    /* counters used even when StatFlag not set */
-    int RectCount;
-    int NodeCount;
-    int LeafCount, NonLeafCount;
-    int EntryCount;
-    int SearchCount;
-    int HitCount;
-
 };
-
-typedef struct ListNode {
-    struct ListNode *next;
-    struct Node *node;
-} ListNode_t;
 
 RTree_t *RTreeOpen(void);
 int RTreeClose(RTree_t * rtp);
-Node_t *RTreeNewIndex(RTree_t * rtp);
+Node_t *RTreeNewIndex(void);
 LeafList_t *RTreeSearch(RTree_t *, Node_t *, Rect_t *);
 int RTreeInsert(RTree_t *, Rect_t *, void *, Node_t **, int);
-int RTreeDelete(RTree_t *, Rect_t *, void *, Node_t **);
 
 LeafList_t *RTreeNewLeafList(Leaf_t * lp);
 LeafList_t *RTreeLeafListAdd(LeafList_t * llp, Leaf_t * lp);

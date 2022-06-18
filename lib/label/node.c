@@ -19,22 +19,10 @@
 
 /* Make a new node and initialize to have all branch cells empty.
 */
-Node_t *RTreeNewNode(RTree_t * rtp)
-{
-    rtp->NodeCount++;
+Node_t *RTreeNewNode(void) {
     Node_t *n = malloc(sizeof(Node_t));
     InitNode(n);
     return n;
-}
-
-void RTreeFreeNode(RTree_t * rtp, Node_t * p)
-{
-    rtp->NodeCount--;
-    if (p->level == 0)
-	rtp->LeafCount--;
-    else
-	rtp->NonLeafCount--;
-    free(p);
 }
 
 /* Initialize a Node structure.
@@ -172,18 +160,8 @@ int AddBranch(RTree_t * rtp, Branch_t * b, Node_t * n, Node_t ** new)
 	assert(i < NODECARD);
 	return 0;
     } else {
-	if (rtp->StatFlag) {
-	    if (rtp->Deleting)
-		rtp->DeTouchCount++;
-	    else
-		rtp->InTouchCount++;
-	}
 	assert(new);
 	SplitNode(rtp, n, b, new);
-	if (n->level == 0)
-	    rtp->LeafCount++;
-	else
-	    rtp->NonLeafCount++;
 	return 1;
     }
 }

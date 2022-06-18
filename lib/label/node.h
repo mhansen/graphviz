@@ -27,7 +27,6 @@ typedef struct Node {
     struct Branch branch[NODECARD];
 } Node_t;
 
-void RTreeFreeNode(RTree_t *, Node_t *);
 void InitNode(Node_t *);
 void InitBranch(Branch_t *);
 Rect_t NodeCover(Node_t *);
@@ -35,7 +34,7 @@ int PickBranch(Rect_t *, Node_t *);
 int AddBranch(RTree_t *, Branch_t *, Node_t *, Node_t **);
 void DisconBranch(Node_t *, int);
 void PrintBranch(int, Branch_t *);
-Node_t *RTreeNewNode(RTree_t *);
+Node_t *RTreeNewNode(void);
 #ifdef RTDEBUG
 void PrintNode(Node_t * n);
 void PrintBranch(int i, Branch_t * b);

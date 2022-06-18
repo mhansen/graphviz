@@ -49,44 +49,19 @@ void RTreeLeafListFree(LeafList_t * llp)
     return;
 }
 
-/* Allocate space for a node in the list used in DeletRect to
- * store Nodes that are too empty.
- */
-static struct ListNode *RTreeNewListNode(void)
-{
-    return calloc(1, sizeof(struct ListNode));
-}
-
-/* Add a node to the reinsertion list.  All its branches will later
- * be reinserted into the index structure.
- */
-static int RTreeReInsert(Node_t * n, struct ListNode **ee)
-{
-    struct ListNode *l;
-
-    if (!(l = RTreeNewListNode()))
-	return -1;
-    l->node = n;
-    l->next = *ee;
-    *ee = l;
-    return 0;
-}
-
 RTree_t *RTreeOpen()
 {
     RTree_t *rtp;
 
     if ((rtp = calloc(1, sizeof(RTree_t))))
-	rtp->root = RTreeNewIndex(rtp);
+	rtp->root = RTreeNewIndex();
     return rtp;
 }
 
 /* Make a new index, empty.  Consists of a single node. */
-Node_t *RTreeNewIndex(RTree_t * rtp)
-{
-    Node_t *x = RTreeNewNode(rtp);
+Node_t *RTreeNewIndex(void ) {
+    Node_t *x = RTreeNewNode();
     x->level = 0;		/* leaf */
-    rtp->LeafCount++;
     return x;
 }
 
@@ -99,9 +74,6 @@ static int RTreeClose2(RTree_t * rtp, Node_t * n)
 	    if (!RTreeClose2(rtp, n->branch[i].child)) {
 		free(n->branch[i].child);
 		DisconBranch(n, i);
-		rtp->EntryCount--;
-		if (rtp->StatFlag)
-		    rtp->ElimCount++;
 	    }
 	}
     } else {
@@ -109,9 +81,6 @@ static int RTreeClose2(RTree_t * rtp, Node_t * n)
 	    if (!n->branch[i].child)
 		continue;
 	    DisconBranch(n, i);
-	    rtp->EntryCount--;
-	    if (rtp->StatFlag)
-	        rtp->ElimCount++;
 	}
     }
     return 0;
@@ -177,8 +146,6 @@ LeafList_t *RTreeSearch(RTree_t * rtp, Node_t * n, Rect_t * r)
     assert(n->level >= 0);
     assert(r);
 
-    rtp->SeTouchCount++;
-
     if (n->level > 0) {		/* this is an internal node in the tree */
 	for (size_t i = 0; i < NODECARD; i++)
 	    if (n->branch[i].child && Overlap(r, &n->branch[i].rect)) {
@@ -229,25 +196,9 @@ int RTreeInsert(RTree_t * rtp, Rect_t * r, void *data, Node_t ** n, int level)
     fprintf(stderr, "RTreeInsert  level=%d\n", level);
 #	endif
 
-    if (rtp->StatFlag) {
-	if (rtp->Deleting)
-	    rtp->ReInsertCount++;
-	else
-	    rtp->InsertCount++;
-    }
-    if (!rtp->Deleting)
-	rtp->RectCount++;
-
     if (RTreeInsert2(rtp, r, data, *n, &newnode, level)) {	/* root was split */
-	if (rtp->StatFlag) {
-	    if (rtp->Deleting)
-		rtp->DeTouchCount++;
-	    else
-		rtp->InTouchCount++;
-	}
 
-	Node_t *newroot = RTreeNewNode(rtp);	/* grow a new root, make tree taller */
-	rtp->NonLeafCount++;
+	Node_t *newroot = RTreeNewNode();	/* grow a new root, make tree taller */
 	newroot->level = (*n)->level + 1;
 	b.rect = NodeCover(*n);
 	b.child = *n;
@@ -256,7 +207,6 @@ int RTreeInsert(RTree_t * rtp, Rect_t * r, void *data, Node_t ** n, int level)
 	b.child = newnode;
 	AddBranch(rtp, &b, newroot, NULL);
 	*n = newroot;
-	rtp->EntryCount += 2;
 	result = 1;
     }
 
@@ -281,13 +231,6 @@ RTreeInsert2(RTree_t * rtp, Rect_t * r, void *data,
     assert(r && n && new);
     assert(level >= 0 && level <= n->level);
 
-    if (rtp->StatFlag) {
-	if (rtp->Deleting)
-	    rtp->DeTouchCount++;
-	else
-	    rtp->InTouchCount++;
-    }
-
     /* Still above level for insertion, go down tree recursively */
     if (n->level > level) {
 	int i = PickBranch(r, n);
@@ -298,133 +241,15 @@ RTreeInsert2(RTree_t * rtp, Rect_t * r, void *data,
 	    n->branch[i].rect = NodeCover(n->branch[i].child);
 	    b.child = n2;
 	    b.rect = NodeCover(n2);
-	    rtp->EntryCount++;
 	    return AddBranch(rtp, &b, n, new);
 	}
     } else if (n->level == level) {	/* at level for insertion. */
 	/*Add rect, split if necessary */
 	b.rect = *r;
 	b.child = (Node_t *) data;
-	rtp->EntryCount++;
 	return AddBranch(rtp, &b, n, new);
     } else {			/* Not supposed to happen */
 	assert(FALSE);
 	return 0;
-    }
-}
-
-static void FreeListNode(struct ListNode *p)
-{
-    free(p);
-}
-
-/* Delete a data rectangle from an index structure.
-** Pass in a pointer to a Rect, the data of the record, ptr to ptr to root node.
-** Returns 1 if record not found, 0 if success.
-** RTreeDelete provides for eliminating the root.
-*/
-static int RTreeDelete2(RTree_t *, Rect_t *, void *, Node_t *,
-			ListNode_t **);
-
-int RTreeDelete(RTree_t * rtp, Rect_t * r, void *data, Node_t ** nn)
-{
-    Node_t *t;
-    struct ListNode *reInsertList = NULL;
-
-    assert(r && nn);
-    assert(*nn);
-    assert(data);
-
-    rtp->Deleting = TRUE;
-
-#	ifdef RTDEBUG
-    fprintf(stderr, "RTreeDelete\n");
-#	endif
-
-    if (!RTreeDelete2(rtp, r, data, *nn, &reInsertList)) {
-	/* found and deleted a data item */
-	if (rtp->StatFlag)
-	    rtp->DeleteCount++;
-	rtp->RectCount--;
-
-	/* reinsert any branches from eliminated nodes */
-	while (reInsertList) {
-	    t = reInsertList->node;
-	    for (size_t i = 0; i < NODECARD; i++) {
-		if (t->branch[i].child) {
-		    RTreeInsert(rtp, &(t->branch[i].rect),
-				t->branch[i].child, nn, t->level);
-		    rtp->EntryCount--;
-		}
-	    }
-	    struct ListNode *e = reInsertList;
-	    reInsertList = reInsertList->next;
-	    RTreeFreeNode(rtp, e->node);
-	    FreeListNode(e);
-	}
-
-	/* check for redundant root (not leaf, 1 child) and eliminate */
-	if ((*nn)->count == 1 && (*nn)->level > 0) {
-	    if (rtp->StatFlag)
-		rtp->ElimCount++;
-	    rtp->EntryCount--;
-	    for (size_t i = 0; i < NODECARD; i++) {
-		if ((t = (*nn)->branch[i].child))
-		    break;
-	    }
-	    RTreeFreeNode(rtp, *nn);
-	    *nn = t;
-	}
-	rtp->Deleting = FALSE;
-	return 0;
-    } else {
-	rtp->Deleting = FALSE;
-	return 1;
-    }
-}
-
-/* Delete a rectangle from non-root part of an index structure.
-** Called by RTreeDelete.  Descends tree recursively,
-** merges branches on the way back up.
-*/
-static int
-RTreeDelete2(RTree_t * rtp, Rect_t * r, void *data, Node_t * n,
-	     ListNode_t ** ee)
-{
-    assert(r && n && ee);
-    assert(data);
-    assert(n->level >= 0);
-
-    if (rtp->StatFlag)
-	rtp->DeTouchCount++;
-
-    if (n->level > 0) {		/* not a leaf node */
-	for (int i = 0; i < NODECARD; i++) {
-	    if (n->branch[i].child && Overlap(r, &(n->branch[i].rect))) {
-		if (!RTreeDelete2(rtp, r, data, n->branch[i].child, ee)) {	/*recurse */
-		    if (n->branch[i].child->count >= rtp->MinFill)
-			n->branch[i].rect = NodeCover(n->branch[i].child);
-		    else {	/* not enough entries in child, eliminate child node */
-			RTreeReInsert(n->branch[i].child, ee);
-			DisconBranch(n, i);
-			rtp->EntryCount--;
-			if (rtp->StatFlag)
-			    rtp->ElimCount++;
-		    }
-		    return 0;
-		}
-	    }
-	}
-	return 1;
-    } else {			/* a leaf node */
-	for (int i = 0; i < NODECARD; i++) {
-	    if (n->branch[i].child
-		&& n->branch[i].child == (Node_t *) data) {
-		DisconBranch(n, i);
-		rtp->EntryCount--;
-		return 0;
-	    }
-	}
-	return 1;
     }
 }
