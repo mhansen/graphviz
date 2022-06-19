@@ -199,7 +199,7 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
       mode = path.stat().st_mode
 
       # fixup permissions, o-rwx g-wx
-      os.chmod(path, mode & ~stat.S_IRWXO & ~stat.S_IWGRP & ~stat.S_IXGRP)
+      path.chmod(mode & ~stat.S_IRWXO & ~stat.S_IWGRP & ~stat.S_IXGRP)
 
       url = upload(package_version, path, str(path)[len("Packages/"):])
       assets.append(url)
