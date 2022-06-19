@@ -755,8 +755,8 @@ ubuntu22-04-cmake-ASan-build-for-ctest:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-fsanitize=address,undefined -g -Werror"
-        - export CXXFLAGS="-fsanitize=address,undefined -g -Werror"
+        - export CFLAGS="-fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
+        - export CXXFLAGS="-fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
         - export CMAKE_OPTIONS="-Duse_coverage=ON -Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
     # override the deb_build_definition artifacts since we need more
