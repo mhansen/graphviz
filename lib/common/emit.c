@@ -21,6 +21,7 @@
 #include <math.h>
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
 #include <cdt/cdt.h>
@@ -1576,6 +1577,8 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 	        image_warn = 0;
 	    }
 	    break;
+	default:
+	    UNREACHABLE();
 	}
 	op++;
     }
