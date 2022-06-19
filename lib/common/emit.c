@@ -13,7 +13,7 @@
  */
 
 #include "config.h"
-
+#include <assert.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
@@ -3754,14 +3754,23 @@ static bool is_style_delim(int c)
 
 #define SID 1
 
-static int style_token(char **s, agxbuf * xb)
-{
+/// Recognized token, returned from `style_token`
+///
+/// The token content fields, `.start` and `.size` are only populated with
+/// useful values when `.type` is `SID`, an identifier.
+typedef struct {
+  int type; ///< Token category
+  const char *start; ///< Beginning of the token content
+  size_t size; ///< Number of bytes in the token content
+} token_t;
+
+static token_t style_token(char **s) {
     char *p = *s;
     int token;
-    char c;
 
     while (*p && (isspace((int)*p) || *p == ','))
 	p++;
+    const char *start = p;
     switch (*p) {
     case '\0':
 	token = 0;
@@ -3772,13 +3781,14 @@ static int style_token(char **s, agxbuf * xb)
 	break;
     default:
 	token = SID;
-	while (!is_style_delim(c = *p)) {
-	    agxbputc(xb, c);
+	while (!is_style_delim(*p)) {
 	    p++;
 	}
     }
     *s = p;
-    return token;
+    assert(start <= p);
+    size_t size = (size_t)(p - start);
+    return (token_t){.type = token, .start = start, .size = size};
 }
 
 #define FUNLIMIT 64
@@ -3799,25 +3809,24 @@ char **parse_style(char *s)
     static bool is_first = true;
     int fun = 0;
     bool in_parens = false;
-    char buf[SMALLBUF];
     char *p;
-    int c;
-    agxbuf xb;
 
     if (is_first) {
 	agxbinit(&ps_xb, SMALLBUF, outbuf);
 	is_first = false;
     }
 
-    agxbinit(&xb, SMALLBUF, buf);
     p = s;
-    while ((c = style_token(&p, &xb)) != 0) {
-	switch (c) {
+    while (true) {
+	token_t c = style_token(&p);
+	if (c.type == 0) {
+	    break;
+	}
+	switch (c.type) {
 	case '(':
 	    if (in_parens) {
 		agerr(AGERR, "nesting not allowed in style: %s\n", s);
 		parse[0] = NULL;
-		agxbfree(&xb);
 		return parse;
 	    }
 	    in_parens = true;
@@ -3827,7 +3836,6 @@ char **parse_style(char *s)
 	    if (!in_parens) {
 		agerr(AGERR, "unmatched ')' in style: %s\n", s);
 		parse[0] = NULL;
-		agxbfree(&xb);
 		return parse;
 	    }
 	    in_parens = false;
@@ -3838,13 +3846,12 @@ char **parse_style(char *s)
 		if (fun == FUNLIMIT - 1) {
 		    agerr(AGWARN, "truncating style '%s'\n", s);
 		    parse[fun] = NULL;
-		    agxbfree(&xb);
 		    return parse;
 		}
 		agxbputc(&ps_xb, '\0');	/* terminate previous */
 		parse[fun++] = agxbnext(&ps_xb);
 	    }
-	    agxbput(&ps_xb, agxbuse(&xb));
+	    agxbput_n(&ps_xb, c.start, c.size);
 	    agxbputc(&ps_xb, '\0');
 	}
     }
@@ -3852,11 +3859,9 @@ char **parse_style(char *s)
     if (in_parens) {
 	agerr(AGERR, "unmatched '(' in style: %s\n", s);
 	parse[0] = NULL;
-	agxbfree(&xb);
 	return parse;
     }
     parse[fun] = NULL;
-    agxbfree(&xb);
     (void)agxbuse(&ps_xb);		/* adds final '\0' to buffer */
     return parse;
 }
