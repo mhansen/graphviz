@@ -817,7 +817,7 @@ void update_bb_bz(boxf *bb, pointf *cp)
     }
 }
 
-#if (DEBUG==2)
+#if defined(DEBUG) && DEBUG == 2
 static void psmapOutput (pointf* ps, int n)
 {
    int i;
@@ -865,7 +865,7 @@ static void map_bspline_poly(pointf **pbs_p, int **pbs_n, int *pbs_poly_n, int n
         (*pbs_p)[nump+i] = p1[i];
         (*pbs_p)[nump+last-i] = p2[i];
     }
-#if (DEBUG==2)
+#if defined(DEBUG) && DEBUG == 2
     psmapOutput (*pbs_p + nump, last+1);
 #endif
 }
