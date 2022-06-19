@@ -1051,15 +1051,7 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 	w1 = w0 = strtok_r (cur, gvc->layerDelims, &buf_p);
 	if (w0)
 	    w1 = strtok_r (NULL, gvc->layerDelims, &buf_p);
-	switch ((w0 != NULL) + (w1 != NULL)) {
-	case 0:
-	    rval = false;
-	    break;
-	case 1:
-	    n0 = layer_index(gvc, w0, layerNum);
-	    rval = (n0 == layerNum);
-	    break;
-	case 2:
+	if (w0 != NULL && w1 != NULL) {
 	    n0 = layer_index(gvc, w0, 0);
 	    n1 = layer_index(gvc, w1, numLayers);
 	    if (n0 >= 0 || n1 >= 0) {
@@ -1070,7 +1062,11 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 		}
 		rval = BETWEEN(n0, layerNum, n1);
 	    }
-	    break;
+	} else if (w0 != NULL || w1 != NULL) {
+	    n0 = layer_index(gvc, w0, layerNum);
+	    rval = (n0 == layerNum);
+	} else {
+	    rval = false;
 	}
 	part_in_p = NULL;
     }
