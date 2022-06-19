@@ -2016,9 +2016,9 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
 static char* default_pencolor(char *pencolor, char *deflt)
 {
     static char *buf;
-    static int bufsz;
+    static size_t bufsz;
     char *p;
-    int len, ncol;
+    size_t len, ncol;
 
     ncol = 1;
     for (p = pencolor; *p; p++) {
