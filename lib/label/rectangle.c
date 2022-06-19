@@ -11,14 +11,15 @@
 #include "config.h"
 
 #include <label/index.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <assert.h>
 #include <limits.h>
+#include <stdlib.h>
 #include <common/logic.h>
 #include <common/arith.h>
 #include <label/rectangle.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
 
 #define Undefined(x) ((x)->boundary[0] > (x)->boundary[NUMDIMS])
 
@@ -75,7 +76,7 @@ unsigned int RectArea(Rect_t * r)
       if (dim == 0) return 0;
       if (UINT_MAX / dim < area) {
 	agerr (AGERR, "label: area too large for rtree\n");
-	return UINT_MAX;
+	graphviz_exit(EXIT_FAILURE);
       }
       area *= dim;
     }
