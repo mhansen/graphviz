@@ -104,7 +104,6 @@ def test_56():
   # process it with Graphviz
   dot("svg", input)
 
-@pytest.mark.xfail()
 def test_121():
   """
   test a graph that previously caused an assertion failure in `merge_chain`
