@@ -183,7 +183,7 @@ static void global_def(agxbuf* xb, char *dcl, int kind) {
 
     attrsym_t *sym;
     if ((p = strchr(dcl, '='))) {
-	agxbput_n (xb, dcl, p-dcl);
+        agxbput_n(xb, dcl, (size_t)(p - dcl));
         rhs = p+1;
     }
     else
