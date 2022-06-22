@@ -15,7 +15,7 @@ libtclplan_la_CPPFLAGS = \
 	-I$(top_srcdir)/tclpkg/tclhandle \
 	-I$(top_srcdir)/lib/pathplan $(TCL_INCLUDES)
 libtclplan_la_CFLAGS = $(TCL_CFLAGS)
-libtclplan_la_LDFLAGS = -no-undefined
+libtclplan_la_LDFLAGS = -no-undefined -module -avoid-version
 libtclplan_la_LIBADD = \
 	$(top_builddir)/tclpkg/tclhandle/libtclhandle_C.la \
 	$(top_builddir)/tclpkg/tclstubs/libtclstubs_C.la \

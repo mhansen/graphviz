@@ -9,3 +9,4 @@ endif
 libtclstubs_C_la_SOURCES = tclStubLib.c
 libtclstubs_C_la_CPPFLAGS = $(TCL_CFLAGS) $(TCL_INCLUDES)
 libtclstubs_C_la_LIBADD = $(TCL_STUB_LIB_SPEC)
+libtclstubs_C_la_LDFLAGS = -module -avoid-version

@@ -28,7 +28,7 @@ endif
 libgdtclft_la_SOURCES = gdtclft.c
 libgdtclft_C_la_SOURCES = gdtclft.c
 
-libgdtclft_la_LDFLAGS = -no-undefined
+libgdtclft_la_LDFLAGS = -no-undefined -module -avoid-version
 
 if WITH_LIBGD
 libgdtclft_la_LIBADD = \
