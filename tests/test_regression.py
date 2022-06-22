@@ -555,6 +555,20 @@ def test_1594():
   assert "line 3:" in stderr, \
     "GVPR did not identify correct line of syntax error"
 
+@pytest.mark.xfail(strict=True)
+def test_1624():
+  """
+  record shapes should be usable
+  https://gitlab.com/graphviz/graphviz/-/issues/1624
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "1624.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # process it with Graphviz
+  dot("svg", input)
+
 def test_1658():
   """
   the graph associated with this test case should not crash Graphviz
