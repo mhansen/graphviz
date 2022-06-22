@@ -13,7 +13,7 @@
  */
 
 #include "config.h"
-
+#include <assert.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
@@ -21,6 +21,7 @@
 #include <math.h>
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
 #include <cdt/cdt.h>
@@ -817,7 +818,7 @@ void update_bb_bz(boxf *bb, pointf *cp)
     }
 }
 
-#if (DEBUG==2)
+#if defined(DEBUG) && DEBUG == 2
 static void psmapOutput (pointf* ps, int n)
 {
    int i;
@@ -865,7 +866,7 @@ static void map_bspline_poly(pointf **pbs_p, int **pbs_n, int *pbs_poly_n, int n
         (*pbs_p)[nump+i] = p1[i];
         (*pbs_p)[nump+last-i] = p2[i];
     }
-#if (DEBUG==2)
+#if defined(DEBUG) && DEBUG == 2
     psmapOutput (*pbs_p + nump, last+1);
 #endif
 }
@@ -1051,15 +1052,7 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 	w1 = w0 = strtok_r (cur, gvc->layerDelims, &buf_p);
 	if (w0)
 	    w1 = strtok_r (NULL, gvc->layerDelims, &buf_p);
-	switch ((w0 != NULL) + (w1 != NULL)) {
-	case 0:
-	    rval = false;
-	    break;
-	case 1:
-	    n0 = layer_index(gvc, w0, layerNum);
-	    rval = (n0 == layerNum);
-	    break;
-	case 2:
+	if (w0 != NULL && w1 != NULL) {
 	    n0 = layer_index(gvc, w0, 0);
 	    n1 = layer_index(gvc, w1, numLayers);
 	    if (n0 >= 0 || n1 >= 0) {
@@ -1070,7 +1063,11 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 		}
 		rval = BETWEEN(n0, layerNum, n1);
 	    }
-	    break;
+	} else if (w0 != NULL || w1 != NULL) {
+	    n0 = layer_index(gvc, w0, layerNum);
+	    rval = (n0 == layerNum);
+	} else {
+	    rval = false;
 	}
 	part_in_p = NULL;
     }
@@ -1580,6 +1577,8 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 	        image_warn = 0;
 	    }
 	    break;
+	default:
+	    UNREACHABLE();
 	}
 	op++;
     }
@@ -2012,14 +2011,14 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
     gvrender_polyline(job, AF, 3);
 }
 
-/* edges colors can be mutiple colors separated by ":"
+/* edges colors can be multiple colors separated by ":"
  * so we commpute a default pencolor with the same number of colors. */
 static char* default_pencolor(char *pencolor, char *deflt)
 {
     static char *buf;
-    static int bufsz;
+    static size_t bufsz;
     char *p;
-    int len, ncol;
+    size_t len, ncol;
 
     ncol = 1;
     for (p = pencolor; *p; p++) {
@@ -3754,14 +3753,23 @@ static bool is_style_delim(int c)
 
 #define SID 1
 
-static int style_token(char **s, agxbuf * xb)
-{
+/// Recognized token, returned from `style_token`
+///
+/// The token content fields, `.start` and `.size` are only populated with
+/// useful values when `.type` is `SID`, an identifier.
+typedef struct {
+  int type; ///< Token category
+  const char *start; ///< Beginning of the token content
+  size_t size; ///< Number of bytes in the token content
+} token_t;
+
+static token_t style_token(char **s) {
     char *p = *s;
     int token;
-    char c;
 
     while (*p && (isspace((int)*p) || *p == ','))
 	p++;
+    const char *start = p;
     switch (*p) {
     case '\0':
 	token = 0;
@@ -3772,13 +3780,14 @@ static int style_token(char **s, agxbuf * xb)
 	break;
     default:
 	token = SID;
-	while (!is_style_delim(c = *p)) {
-	    agxbputc(xb, c);
+	while (!is_style_delim(*p)) {
 	    p++;
 	}
     }
     *s = p;
-    return token;
+    assert(start <= p);
+    size_t size = (size_t)(p - start);
+    return (token_t){.type = token, .start = start, .size = size};
 }
 
 #define FUNLIMIT 64
@@ -3799,25 +3808,24 @@ char **parse_style(char *s)
     static bool is_first = true;
     int fun = 0;
     bool in_parens = false;
-    char buf[SMALLBUF];
     char *p;
-    int c;
-    agxbuf xb;
 
     if (is_first) {
 	agxbinit(&ps_xb, SMALLBUF, outbuf);
 	is_first = false;
     }
 
-    agxbinit(&xb, SMALLBUF, buf);
     p = s;
-    while ((c = style_token(&p, &xb)) != 0) {
-	switch (c) {
+    while (true) {
+	token_t c = style_token(&p);
+	if (c.type == 0) {
+	    break;
+	}
+	switch (c.type) {
 	case '(':
 	    if (in_parens) {
 		agerr(AGERR, "nesting not allowed in style: %s\n", s);
 		parse[0] = NULL;
-		agxbfree(&xb);
 		return parse;
 	    }
 	    in_parens = true;
@@ -3827,7 +3835,6 @@ char **parse_style(char *s)
 	    if (!in_parens) {
 		agerr(AGERR, "unmatched ')' in style: %s\n", s);
 		parse[0] = NULL;
-		agxbfree(&xb);
 		return parse;
 	    }
 	    in_parens = false;
@@ -3838,13 +3845,12 @@ char **parse_style(char *s)
 		if (fun == FUNLIMIT - 1) {
 		    agerr(AGWARN, "truncating style '%s'\n", s);
 		    parse[fun] = NULL;
-		    agxbfree(&xb);
 		    return parse;
 		}
 		agxbputc(&ps_xb, '\0');	/* terminate previous */
 		parse[fun++] = agxbnext(&ps_xb);
 	    }
-	    agxbput(&ps_xb, agxbuse(&xb));
+	    agxbput_n(&ps_xb, c.start, c.size);
 	    agxbputc(&ps_xb, '\0');
 	}
     }
@@ -3852,11 +3858,9 @@ char **parse_style(char *s)
     if (in_parens) {
 	agerr(AGERR, "unmatched '(' in style: %s\n", s);
 	parse[0] = NULL;
-	agxbfree(&xb);
 	return parse;
     }
     parse[fun] = NULL;
-    agxbfree(&xb);
     (void)agxbuse(&ps_xb);		/* adds final '\0' to buffer */
     return parse;
 }
