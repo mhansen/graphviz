@@ -1831,7 +1831,7 @@ static char *nameOf(void *obj, agxbuf * xb)
 	agxbput(xb, agnameof(obj));
 	break;
     case AGEDGE:
-	ep = (Agedge_t *) obj;
+	ep = obj;
 	agxbput(xb, agnameof(agtail(ep)));
 	agxbput(xb, agnameof(aghead(ep)));
 	if (agisdirected(agraphof(aghead(ep))))
