@@ -168,7 +168,7 @@ static char* dotneato_basename (char* path)
 
 static void use_library(GVC_t *gvc, const char *name)
 {
-    static int cnt = 0;
+    static size_t cnt = 0;
     if (name) {
 	Lib = ALLOC(cnt + 2, Lib, const char *);
 	Lib[cnt++] = name;
