@@ -1218,12 +1218,12 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	while (cp) {
 	    cellp = cp->u.cp;
 	    cnt++;
-	    cp = (pitem *) dtlink(cdict, (Dtlink_t *) cp);
+	    cp = (pitem *)dtlink(cdict, cp);
 	}
 	if (rp->ruled) {
 	    addIntSet(is, r + 1);
 	}
-	rp = (pitem *) dtlink(rows, (Dtlink_t *) rp);
+	rp = (pitem *)dtlink(rows, rp);
 	r++;
     }
 
@@ -1246,9 +1246,9 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    n_rows = MAX(r + cellp->rspan, n_rows);
 	    if (inIntSet(is, r + cellp->rspan))
 		cellp->ruled |= HTML_HRULE;
-	    cp = (pitem *) dtlink(cdict, (Dtlink_t *) cp);
+	    cp = (pitem *)dtlink(cdict, cp);
 	}
-	rp = (pitem *) dtlink(rows, (Dtlink_t *) rp);
+	rp = (pitem *)dtlink(rows, rp);
 	r++;
     }
     tbl->rc = n_rows;

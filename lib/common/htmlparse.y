@@ -196,7 +196,7 @@ appendFLineList (int v)
 	ln->lp.items = N_NEW(cnt, textspan_t);
 
 	fi = (fitem*)dtflatten(ilist);
-	for (; fi; fi = (fitem*)dtlink(fitemList,(Dtlink_t*)fi)) {
+	for (; fi; fi = (fitem*)dtlink(fitemList, fi)) {
 		/* NOTE: When fitemList is closed, it uses free_item, which only frees the container,
 		 * not the contents, so this copy is safe.
 		 */
