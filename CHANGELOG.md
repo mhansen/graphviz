@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Failed assertion in `chkSgraph` for dot layout and ortho splines. #1408
 - Failed assertion in `chkSgraph` for circo layout and ortho splines. #1990
 - Segmentation Fault with splines="ortho". #1658
+- Transparent Label appear in SVG output #146
 
 ## [4.0.0] – 2022-05-29
 
