@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Segmentation Fault with splines="ortho". #1658
 - Transparent Label appear in SVG output #146
 - Binary tcl modules should compile with -module #1285
+- b15.gv crashes dot #827
 
 ## [4.0.0] – 2022-05-29
 

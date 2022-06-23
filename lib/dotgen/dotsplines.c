@@ -1862,7 +1862,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 
     /* compute the spline points for the edge */
 
-    if ((et == EDGETYPE_LINE) && (pointn = makeLineEdge (g, fe, pointfs, &hn))) {
+    if (et == EDGETYPE_LINE && (pointn = makeLineEdge (g, fe, pointfs, &hn))) {
     }
     else {
 	bool is_spline = et == EDGETYPE_SPLINE;
@@ -1913,7 +1913,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    if (is_spline) ps = routesplines(P, &pn);
 	    else {
 		ps = routepolylines (P, &pn);
-		if ((et == EDGETYPE_LINE) && (pn > 4)) {
+		if (et == EDGETYPE_LINE && pn > 4) {
 		    ps[1] = ps[0];
 		    ps[3] = ps[2] = ps[pn-1];
 		    pn = 4;

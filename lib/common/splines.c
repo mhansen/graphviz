@@ -415,7 +415,7 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    P->start.constrained = false;
     }
     P->nbox = 0;
-    P->data = (void *) e;
+    P->data = e;
     endp->np = P->start.p;
     if (et == REGULAREDGE && ND_node_type(n) == NORMAL && (side = ED_tail_port(e).side)) {
 	edge_t* orig;
@@ -476,7 +476,8 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    endp->boxn = 1;
 	    ++P->start.p.x;
 	}
-	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
+	for (orig = e; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
+	     orig = ED_to_orig(orig));
 	if (n == agtail(orig))
 	    ED_tail_port(orig).clip = false;
 	else
@@ -541,7 +542,8 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    endp->boxn = 1;
 	    ++P->start.p.x;
 	}
-	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
+	for (orig = e; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
+	     orig = ED_to_orig(orig));
 	if (n == agtail(orig))
 	    ED_tail_port(orig).clip = false;
 	else
@@ -553,7 +555,7 @@ beginpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
     if (et == REGULAREDGE) side = BOTTOM;
     else side = endp->sidemask;  /* for flat edges */
     if (pboxfn
-	&& (mask = (*pboxfn) (n, &ED_tail_port(e), side, &endp->boxes[0], &endp->boxn)))
+	&& (mask = pboxfn(n, &ED_tail_port(e), side, &endp->boxes[0], &endp->boxn)))
 	endp->sidemask = mask;
     else {
 	endp->boxes[0] = endp->nb;
@@ -670,7 +672,8 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    endp->boxn = 1;
 	    ++P->end.p.x;
 	}
-	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
+	for (orig = e; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
+	     orig = ED_to_orig(orig));
 	if (n == aghead(orig))
 	    ED_head_port(orig).clip = false;
 	else
@@ -737,7 +740,8 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
 	    endp->boxn = 1;
 	    ++P->end.p.x;
 	}
-	for (orig = e; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
+	for (orig = e; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
+	     orig = ED_to_orig(orig));
 	if (n == aghead(orig))
 	    ED_head_port(orig).clip = false;
 	else
@@ -749,7 +753,7 @@ void endpath(path * P, edge_t * e, int et, pathend_t * endp, bool merge)
     if (et == REGULAREDGE) side = TOP;
     else side = endp->sidemask;  /* for flat edges */
     if (pboxfn
-	&& (mask = (*pboxfn) (n, &ED_head_port(e), side, &endp->boxes[0], &endp->boxn)))
+	&& (mask = pboxfn(n, &ED_head_port(e), side, &endp->boxes[0], &endp->boxn)))
 	endp->sidemask = mask;
     else {
 	endp->boxes[0] = endp->nb;
