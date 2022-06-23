@@ -433,7 +433,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	/* do nothing */
     } else if (strcmp(name, "graph") == 0) {
 	const char *edgeMode = "";
-	const char *id;
 	char buf[NAMEBUF];	/* holds % + number */
 
 	Current_class = TAG_GRAPH;
@@ -441,7 +440,12 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    fprintf(stderr,
 		    "Warning: Node contains more than one graph.\n");
 	}
-	id = atts[get_xml_attr("id", atts)];
+	pos = get_xml_attr("id", atts);
+	if (pos <= 0) {
+	    fprintf(stderr, "Error: Graph has no ID attribute.\n");
+	    graphviz_exit(EXIT_FAILURE);
+	}
+	const char *id = atts[pos];
 	pos = get_xml_attr("edgemode", atts);
 	if (pos > 0) {
 	    edgeMode = atts[pos];

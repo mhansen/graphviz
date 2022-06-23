@@ -1319,7 +1319,6 @@ def test_2092():
 
 @pytest.mark.skipif(shutil.which("dot2gxl") is None,
                     reason="dot2gxl not available")
-@pytest.mark.xfail()
 def test_2093():
   """
   dot2gxl should handle elements with no ID
