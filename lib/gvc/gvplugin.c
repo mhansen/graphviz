@@ -364,7 +364,7 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     static int first = 1;
     const gvplugin_available_t *pnext, *plugin;
     char *bp;
-    char *s, *p, *q, *typestr_last;
+    char *p, *q, *typestr_last;
     bool new = true;
     static agxbuf xb;
 
@@ -378,22 +378,26 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     }
 
     /* does str have a :path modifier? */
-    s = strdup(str);
-    p = strchr(s, ':');
-    if (p)
-        *p++ = '\0';
+    size_t str_size = strlen(str);
+    {
+        const char *end = strchr(str, ':');
+        if (end != NULL) {
+            str_size = (size_t)(end - str);
+        }
+    }
 
     /* point to the beginning of the linked list of plugins for this api */
     plugin = gvc->apis[api];
 
-    if (p) {                    /* if str contains a ':', and if we find a match for the type,
+    if (str[str_size] == ':') { /* if str contains a ':', and if we find a match for the type,
                                    then just list the alternative paths for the plugin */
         for (pnext = plugin; pnext; pnext = pnext->next) {
             q = strdup(pnext->typestr);
             if ((p = strchr(q, ':')))
                 *p++ = '\0';
             /* list only the matching type, or all types if s is an empty string */
-            if (!s[0] || strcasecmp(s, q) == 0) {
+            if (!str[0] ||
+                (strlen(q) == str_size && strncasecmp(str, q, str_size) == 0)) {
                 /* list each member of the matching type as "type:path" */
                 agxbprint(&xb, " %s:%s", pnext->typestr, pnext->package->name);
                 new = false;
@@ -401,7 +405,6 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
             free(q);
         }
     }
-    free(s);
     if (new) {                  /* if the type was not found, or if str without ':',
                                    then just list available types */
         typestr_last = NULL;
