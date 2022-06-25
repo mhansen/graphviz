@@ -392,17 +392,21 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     if (str[str_size] == ':') { /* if str contains a ':', and if we find a match for the type,
                                    then just list the alternative paths for the plugin */
         for (pnext = plugin; pnext; pnext = pnext->next) {
-            q = strdup(pnext->typestr);
-            if ((p = strchr(q, ':')))
-                *p++ = '\0';
+            const char *type = pnext->typestr;
+            size_t type_size = strlen(type);
+            {
+                const char *type_end = strchr(type, ':');
+                if (type_end != NULL) {
+                    type_size = (size_t)(type_end - type);
+                }
+            }
             /* list only the matching type, or all types if s is an empty string */
             if (!str[0] ||
-                (strlen(q) == str_size && strncasecmp(str, q, str_size) == 0)) {
+                (type_size == str_size && strncasecmp(str, type, str_size) == 0)) {
                 /* list each member of the matching type as "type:path" */
                 agxbprint(&xb, " %s:%s", pnext->typestr, pnext->package->name);
                 new = false;
             }
-            free(q);
         }
     }
     if (new) {                  /* if the type was not found, or if str without ':',
