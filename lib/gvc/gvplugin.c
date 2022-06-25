@@ -364,7 +364,6 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     static int first = 1;
     const gvplugin_available_t *pnext, *plugin;
     char *bp;
-    char *p, *q, *typestr_last;
     bool new = true;
     static agxbuf xb;
 
@@ -411,21 +410,27 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     }
     if (new) {                  /* if the type was not found, or if str without ':',
                                    then just list available types */
-        typestr_last = NULL;
+        const char *type_last = NULL;
+        size_t type_last_size = 0;
         for (pnext = plugin; pnext; pnext = pnext->next) {
             /* list only one instance of type */
-            q = strdup(pnext->typestr);
-            if ((p = strchr(q, ':')))
-                *p++ = '\0';
-            if (!typestr_last || strcasecmp(typestr_last, q) != 0) {
+            const char *type = pnext->typestr;
+            size_t type_size = strlen(type);
+            {
+                const char *type_end = strchr(type, ':');
+                if (type_end != NULL) {
+                    type_size = (size_t)(type_end - type);
+                }
+            }
+            if (!type_last || type_last_size != type_size ||
+                strncasecmp(type_last, type, type_size) != 0) {
                 /* list it as "type"  i.e. w/o ":path" */
-                agxbprint(&xb, " %s", q);
+                agxbprint(&xb, " %.*s", (int)type_size, type);
                 new = false;
             }
-            free(typestr_last);
-            typestr_last = q;
+            type_last = type;
+            type_last_size = type_size;
         }
-        free(typestr_last);
     }
     if (new)
         bp = "";
