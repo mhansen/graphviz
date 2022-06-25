@@ -122,7 +122,7 @@ point *pointsOf(PointSet * ps)
     point *pp = pts;
 
     for (p = (pair *) dtflatten(ps); p;
-	 p = (pair *) dtlink(ps, (Dtlink_t *) p)) {
+	 p = (pair *)dtlink(ps, p)) {
 	*pp++ = p->id;
     }
 

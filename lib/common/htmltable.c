@@ -143,7 +143,7 @@ emit_htextspans(GVJ_t * job, int nspans, htextspan_t * spans, pointf p,
 
 	ti = spans[i].items;
 	for (j = 0; j < spans[i].nitems; j++) {
-	    if (ti->font && (ti->font->size > 0))
+	    if (ti->font && ti->font->size > 0)
 		tf.size = ti->font->size;
 	    else
 		tf.size = finfo.size;
@@ -223,7 +223,7 @@ static pointf *mkPts(pointf * AF, boxf b, int border)
     AF[0] = b.LL;
     AF[2] = b.UR;
     if (border > 1) {
-	double delta = ((double) border) / 2.0;
+	double delta = (double)border / 2.0;
 	AF[0].x += delta;
 	AF[0].y += delta;
 	AF[2].x -= delta;
@@ -247,11 +247,11 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
 {
     pointf AF[7];
     char *sptr[2];
-    char *color = (dp->pencolor ? dp->pencolor : DEFAULT_COLOR);
+    char *color = dp->pencolor ? dp->pencolor : DEFAULT_COLOR;
     unsigned short sides;
 
     gvrender_set_pencolor(job, color);
-    if ((dp->style & (DASHED | DOTTED))) {
+    if (dp->style & (DASHED | DOTTED)) {
 	sptr[0] = sptr[1] = NULL;
 	if (dp->style & DASHED)
 	    sptr[0] = "dashed";
@@ -322,7 +322,7 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
 	}
     } else {
 	if (dp->border > 1) {
-	    double delta = ((double) dp->border) / 2.0;
+	    double delta = (double)dp->border / 2.0;
 	    b.LL.x += delta;
 	    b.LL.y += delta;
 	    b.UR.x -= delta;
@@ -470,7 +470,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
     pts.UR.y += pos.y;
 
     //Determine vertical line coordinate and length
-    if ((cp->ruled & HTML_VRULE) && (cp->col + cp->cspan < cp->parent->cc)) {
+    if ((cp->ruled & HTML_VRULE) && cp->col + cp->cspan < cp->parent->cc) {
 	if (cp->row == 0) {	// first row
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
@@ -488,7 +488,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 	doSide(job, rule_pt, 0, rule_length);
     }
     //Determine the horizontal coordinate and length
-    if ((cp->ruled & HTML_HRULE) && (cp->row + cp->rspan < cp->parent->rc)) {
+    if ((cp->ruled & HTML_HRULE) && cp->row + cp->rspan < cp->parent->rc) {
 	if (cp->col == 0) {	// first column 
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
@@ -496,8 +496,8 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 	    if (cp->col + cp->cspan == cp->parent->cc)	// also last column
 		base *= 2;
 	    /* incomplete row of cells; extend line to end */
-	    else if (nextc && (nextc->row != cp->row)) {
-		base += (cp->parent->data.box.UR.x + pos.x) - (pts.UR.x + cp->parent->data.space / 2);
+	    else if (nextc && nextc->row != cp->row) {
+		base += cp->parent->data.box.UR.x + pos.x - (pts.UR.x + cp->parent->data.space / 2);
 	    }
 	} else if (cp->col + cp->cspan == cp->parent->cc) {	// last column
 	    // extend to center of table border and add half cell spacing
@@ -507,8 +507,8 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 	    base = 0;
 	    rule_pt.x = pts.LL.x - cp->parent->data.space / 2;
 	    /* incomplete row of cells; extend line to end */
-	    if (nextc && (nextc->row != cp->row)) {
-		base += (cp->parent->data.box.UR.x + pos.x) - (pts.UR.x + cp->parent->data.space / 2);
+	    if (nextc && nextc->row != cp->row) {
+		base += cp->parent->data.box.UR.x + pos.x - (pts.UR.x + cp->parent->data.space / 2);
 	    }
 	}
 	rule_pt.y = pts.LL.y - cp->parent->data.space / 2;
@@ -769,7 +769,7 @@ void emit_html_label(GVJ_t * job, htmllabel_t * lp, textlabel_t * tp)
     env.imgscale = agget(job->obj->u.n, "imagescale");
     env.objid = job->obj->id;
     env.objid_set = false;
-    if ((env.imgscale == NULL) || (env.imgscale[0] == '\0'))
+    if (env.imgscale == NULL || env.imgscale[0] == '\0')
 	env.imgscale = "false";
     if (lp->kind == HTML_TBL) {
 	htmltbl_t *tbl = lp->u.tbl;
@@ -882,7 +882,7 @@ static htmldata_t *portToCell(htmlcell_t * cp, char *id)
 {
     htmldata_t *rv;
 
-    if (cp->data.port && (strcasecmp(cp->data.port, id) == 0))
+    if (cp->data.port && strcasecmp(cp->data.port, id) == 0)
 	rv = &cp->data;
     else if (cp->child.kind == HTML_TBL)
 	rv = portToTbl(cp->child.u.tbl, id);
@@ -902,7 +902,7 @@ static htmldata_t *portToTbl(htmltbl_t * tp, char *id)
     htmlcell_t **cells;
     htmlcell_t *cp;
 
-    if (tp->data.port && (strcasecmp(tp->data.port, id) == 0))
+    if (tp->data.port && strcasecmp(tp->data.port, id) == 0)
 	rv = &tp->data;
     else {
 	rv = NULL;
@@ -1090,7 +1090,7 @@ static int size_html_img(htmlimg_t * img, htmlenv_t * env)
 
     b.LL.x = b.LL.y = 0;
     b.UR = gvusershape_size(env->g, img->src);
-    if ((b.UR.x == -1) && (b.UR.y == -1)) {
+    if (b.UR.x == -1 && b.UR.y == -1) {
 	rv = 1;
 	b.UR.x = b.UR.y = 0;
 	agerr(AGERR, "No or improper image file=\"%s\"\n", img->src);
@@ -1146,7 +1146,7 @@ size_html_cell(graph_t * g, htmlcell_t * cp, htmltbl_t * parent,
 
     if (cp->data.flags & FIXED_FLAG) {
 	if (cp->data.width && cp->data.height) {
-	    if (((cp->data.width < sz.x) || (cp->data.height < sz.y)) && (cp->child.kind != HTML_IMAGE)) {
+	    if ((cp->data.width < sz.x || cp->data.height < sz.y) && cp->child.kind != HTML_IMAGE) {
 		agerr(AGWARN, "cell size too small for content\n");
 		rv = 1;
 	    }
@@ -1218,12 +1218,12 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	while (cp) {
 	    cellp = cp->u.cp;
 	    cnt++;
-	    cp = (pitem *) dtlink(cdict, (Dtlink_t *) cp);
+	    cp = (pitem *)dtlink(cdict, cp);
 	}
 	if (rp->ruled) {
 	    addIntSet(is, r + 1);
 	}
-	rp = (pitem *) dtlink(rows, (Dtlink_t *) rp);
+	rp = (pitem *)dtlink(rows, rp);
 	r++;
     }
 
@@ -1246,9 +1246,9 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    n_rows = MAX(r + cellp->rspan, n_rows);
 	    if (inIntSet(is, r + cellp->rspan))
 		cellp->ruled |= HTML_HRULE;
-	    cp = (pitem *) dtlink(cdict, (Dtlink_t *) cp);
+	    cp = (pitem *)dtlink(cdict, cp);
 	}
-	rp = (pitem *) dtlink(rows, (Dtlink_t *) rp);
+	rp = (pitem *)dtlink(rows, rp);
 	r++;
     }
     tbl->rc = n_rows;
@@ -1475,7 +1475,7 @@ static void sizeArray(htmltbl_t * tbl)
 #endif
 
     /* Do the 1D cases by hand */
-    if ((tbl->rc == 1) || (tbl->cc == 1)) {
+    if (tbl->rc == 1 || tbl->cc == 1) {
 	sizeLinearArray(tbl);
 	return;
     }
@@ -1534,7 +1534,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
     /* If fixed, align cell */
     if (cp->data.flags & FIXED_FLAG) {
 	oldsz = cp->data.box.UR;
-	delx = (pos.UR.x - pos.LL.x) - oldsz.x;
+	delx = pos.UR.x - pos.LL.x - oldsz.x;
 	if (delx > 0) {
 	    switch (cp->data.flags & HALIGN_MASK) {
 	    case HALIGN_LEFT:
@@ -1550,7 +1550,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
 		break;
 	    }
 	}
-	dely = (pos.UR.y - pos.LL.y) - oldsz.y;
+	dely = pos.UR.y - pos.LL.y - oldsz.y;
 	if (dely > 0) {
 	    switch (cp->data.flags & VALIGN_MASK) {
 	    case VALIGN_BOTTOM:
@@ -1581,7 +1581,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
     } else if (cp->child.kind == HTML_IMAGE) {
 	/* Note that alignment trumps scaling */
 	oldsz = cp->child.u.img->box.UR;
-	delx = (cbox.UR.x - cbox.LL.x) - oldsz.x;
+	delx = cbox.UR.x - cbox.LL.x - oldsz.x;
 	if (delx > 0) {
 	    switch (cp->data.flags & HALIGN_MASK) {
 	    case HALIGN_LEFT:
@@ -1593,7 +1593,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
 	    }
 	}
 
-	dely = (cbox.UR.y - cbox.LL.y) - oldsz.y;
+	dely = cbox.UR.y - cbox.LL.y - oldsz.y;
 	if (dely > 0) {
 	    switch (cp->data.flags & VALIGN_MASK) {
 	    case VALIGN_BOTTOM:
@@ -1610,12 +1610,11 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
 	int af;
 
 	oldsz = cp->child.u.txt->box.UR;
-	delx = (cbox.UR.x - cbox.LL.x) - oldsz.x;
+	delx = cbox.UR.x - cbox.LL.x - oldsz.x;
 	/* If the cell is larger than the text block and alignment is 
 	 * done at textblock level, the text box is shrunk accordingly. 
 	 */
-	if ((delx > 0)
-	    && ((af = (cp->data.flags & HALIGN_MASK)) != HALIGN_TEXT)) {
+	if (delx > 0 && (af = (cp->data.flags & HALIGN_MASK)) != HALIGN_TEXT) {
 	    switch (af) {
 	    case HALIGN_LEFT:
 		cbox.UR.x -= delx;
@@ -1630,7 +1629,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
 	    }
 	}
 
-	dely = (cbox.UR.y - cbox.LL.y) - oldsz.y;
+	dely = cbox.UR.y - cbox.LL.y - oldsz.y;
 	if (dely > 0) {
 	    switch (cp->data.flags & VALIGN_MASK) {
 	    case VALIGN_BOTTOM:
@@ -1683,10 +1682,10 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 	tbl->data.pencolor = strdup(tbl->u.n.parent->data.pencolor);
 
     oldsz = tbl->data.box.UR.x;
-    delx = (pos.UR.x - pos.LL.x) - oldsz;
+    delx = pos.UR.x - pos.LL.x - oldsz;
     assert(delx >= 0);
     oldsz = tbl->data.box.UR.y;
-    dely = (pos.UR.y - pos.LL.y) - oldsz;
+    dely = pos.UR.y - pos.LL.y - oldsz;
     assert(dely >= 0);
 
     /* If fixed, align box */
@@ -1727,16 +1726,16 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 
     /* change sizes to start positions and distribute extra space */
     x = pos.LL.x + tbl->data.border + tbl->data.space;
-    extra = delx / (tbl->cc);
-    plus = ROUND(delx - extra * (tbl->cc));
+    extra = delx / tbl->cc;
+    plus = ROUND(delx - extra * tbl->cc);
     for (i = 0; i <= tbl->cc; i++) {
 	delx = tbl->widths[i] + extra + (i < plus ? 1 : 0);
 	tbl->widths[i] = x;
 	x += delx + tbl->data.space;
     }
     y = pos.UR.y - tbl->data.border - tbl->data.space;
-    extra = dely / (tbl->rc);
-    plus = ROUND(dely - extra * (tbl->rc));
+    extra = dely / tbl->rc;
+    plus = ROUND(dely - extra * tbl->rc);
     for (i = 0; i <= tbl->rc; i++) {
 	dely = tbl->heights[i] + extra + (i < plus ? 1 : 0);
 	tbl->heights[i] = y;
@@ -1802,7 +1801,7 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 
     if (tbl->data.flags & FIXED_FLAG) {
 	if (tbl->data.width && tbl->data.height) {
-	    if ((tbl->data.width < wd) || (tbl->data.height < ht)) {
+	    if (tbl->data.width < wd || tbl->data.height < ht) {
 		agerr(AGWARN, "table size too small for content\n");
 		rv = 1;
 	    }
@@ -1832,7 +1831,7 @@ static char *nameOf(void *obj, agxbuf * xb)
 	agxbput(xb, agnameof(obj));
 	break;
     case AGEDGE:
-	ep = (Agedge_t *) obj;
+	ep = obj;
 	agxbput(xb, agnameof(agtail(ep)));
 	agxbput(xb, agnameof(aghead(ep)));
 	if (agisdirected(agraphof(aghead(ep))))
@@ -1969,9 +1968,9 @@ static char *getPenColor(void *obj)
 {
     char *str;
 
-    if (((str = agget(obj, "pencolor")) != 0) && str[0])
+    if ((str = agget(obj, "pencolor")) != 0 && str[0])
 	return str;
-    else if (((str = agget(obj, "color")) != 0) && str[0])
+    else if ((str = agget(obj, "color")) != 0 && str[0])
 	return str;
     else
 	return NULL;
@@ -2035,8 +2034,8 @@ int make_html_label(void *obj, textlabel_t * lp)
 	if (!lbl->u.tbl->data.pencolor && getPenColor(obj))
 	    lbl->u.tbl->data.pencolor = strdup(getPenColor(obj));
 	rv |= size_html_tbl(g, lbl->u.tbl, NULL, &env);
-	wd2 = (lbl->u.tbl->data.box.UR.x) / 2;
-	ht2 = (lbl->u.tbl->data.box.UR.y) / 2;
+	wd2 = lbl->u.tbl->data.box.UR.x / 2;
+	ht2 = lbl->u.tbl->data.box.UR.y / 2;
 	box = boxfof(-wd2, -ht2, wd2, ht2);
 	pos_html_tbl(lbl->u.tbl, box, BOTTOM | RIGHT | TOP | LEFT);
 	lp->dimen.x = box.UR.x - box.LL.x;

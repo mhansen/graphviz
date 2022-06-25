@@ -216,8 +216,7 @@ static graph_t *mkNConstraintG(graph_t * g, Dt_t * list,
     graph_t *cg = agopen("cg", Agstrictdirected, NULL);
     agbindrec(cg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);  // graph custom data
 
-    for (p = (nitem *) dtflatten(list); p;
-	 p = (nitem *) dtlink(list, (Dtlink_t *) p)) {
+    for (p = (nitem *)dtflatten(list); p; p = (nitem *)dtlink(list, p)) {
 	n = agnode(cg, agnameof(p->np), 1);      /* FIX */
 	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true); //node custom data
 	ND_alg(n) = p;
@@ -231,10 +230,8 @@ static graph_t *mkNConstraintG(graph_t * g, Dt_t * list,
 	    lastn = GD_nlist(cg) = n;
 	}
     }
-    for (p = (nitem *) dtflatten(list); p;
-	 p = (nitem *) dtlink(list, (Dtlink_t *) p)) {
-	for (nxp = (nitem *) dtlink(link, (Dtlink_t *) p); nxp;
-	     nxp = (nitem *) dtlink(list, (Dtlink_t *) nxp)) {
+    for (p = (nitem *)dtflatten(list); p; p = (nitem *)dtlink(list, p)) {
+	for (nxp = (nitem *)dtlink(link, p); nxp; nxp = (nitem *)dtlink(list, nxp)) {
 	    e = NULL;
 	    if (intersect(p, nxp)) {
 	        double delta = dist(&p->bb, &nxp->bb);
@@ -250,8 +247,7 @@ static graph_t *mkNConstraintG(graph_t * g, Dt_t * list,
 	}
     }
    
-    for (p = (nitem *) dtflatten(list); p;
-	 p = (nitem *) dtlink(list, (Dtlink_t *) p)) {
+    for (p = (nitem *)dtflatten(list); p; p = (nitem *)dtlink(list, p)) {
 	n = p->cnode;
 	for (e = agfstout(cg,n); e; e = agnxtout(cg,e)) {
 	    elist_append(e, ND_out(n));
@@ -287,8 +283,7 @@ static graph_t *mkConstraintG(graph_t * g, Dt_t * list,
 
     /* count distinct nodes */
     cnt = 0;
-    for (p = (nitem *) dtflatten(list); p;
-	 p = (nitem *) dtlink(list, (Dtlink_t *) p)) {
+    for (p = (nitem *)dtflatten(list); p; p = (nitem *)dtlink(list, p)) {
 	if (oldval != p->val) {
 	    oldval = p->val;
 	    cnt++;
@@ -298,8 +293,7 @@ static graph_t *mkConstraintG(graph_t * g, Dt_t * list,
     /* construct basic chain to enforce left to right order */
     oldval = -INT_MAX;
     lcnt = 0;
-    for (p = (nitem *) dtflatten(list); p;
-	 p = (nitem *) dtlink(list, (Dtlink_t *) p)) {
+    for (p = (nitem *)dtflatten(list); p; p = (nitem *)dtlink(list, p)) {
 	if (oldval != p->val) {
 	    oldval = p->val;
 	    /* n = newNode (cg); */
@@ -339,28 +333,25 @@ static graph_t *mkConstraintG(graph_t * g, Dt_t * list,
      * FIX: Incremental algorithm to construct trans. reduction?
      */
     vg = agopen("vg", Agstrictdirected, NULL);
-    for (p = (nitem *) dtflatten(list); p;
-	 p = (nitem *) dtlink(list, (Dtlink_t *) p)) {
+    for (p = (nitem *)dtflatten(list); p; p = (nitem *)dtlink(list, p)) {
 	n = agnode(vg, agnameof(p->np), 1);  /* FIX */
 	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);  //node custom data
 	p->vnode = n;
 	ND_alg(n) = p;
     }
     oldval = -INT_MAX;
-    for (p = (nitem *) dtflatten(list); p;
-	 p = (nitem *) dtlink(list, (Dtlink_t *) p)) {
+    for (p = (nitem *)dtflatten(list); p; p = (nitem *)dtlink(list, p)) {
 	if (oldval != p->val) {	/* new pos: reset nxt */
 	    oldval = p->val;
-	    for (nxt = (nitem *) dtlink(link, (Dtlink_t *) p); nxt;
-		 nxt = (nitem *) dtlink(list, (Dtlink_t *) nxt)) {
+	    for (nxt = (nitem *)dtlink(link, p); nxt;
+		 nxt = (nitem *)dtlink(list, nxt)) {
 		if (nxt->val != oldval)
 		    break;
 	    }
 	    if (!nxt)
 		break;
 	}
-	for (nxp = nxt; nxp;
-	     nxp = (nitem *) dtlink(list, (Dtlink_t *) nxp)) {
+	for (nxp = nxt; nxp; nxp = (nitem *)dtlink(list, nxp)) {
 	    if (intersect(p, nxp))
 		agedge(vg, p->vnode, nxp->vnode, NULL, 1);
 	}

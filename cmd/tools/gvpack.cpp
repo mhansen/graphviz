@@ -439,7 +439,7 @@ fillGraph(Agraph_t * g, Dt_t * d,
 	  Agsym_t *(*setf)(Agraph_t*, char*, const char*), size_t cnt) {
     attr_t *av;
     for (av = (attr_t *) dtflatten(d); av;
-	 av = (attr_t *) dtlink(d, (Dtlink_t *) av)) {
+	 av = (attr_t *)dtlink(d, av)) {
 	if (cnt == av->cnt)
 	    setf(g, av->name, av->value);
 	else
