@@ -32,7 +32,13 @@ static int icompare(Dt_t * dt, void * v1, void * v2, Dtdisc_t * disc)
     (void)dt;
     (void)disc;
     int k1 = *((int *) v1), k2 = *((int *) v2);
-    return k1 - k2;
+    if (k1 < k2) {
+      return -1;
+    }
+    if (k1 > k2) {
+      return 1;
+    }
+    return 0;
 }
 
 static XLabels_t *xlnew(object_t * objs, int n_objs, xlabel_t * lbls,
