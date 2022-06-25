@@ -26,6 +26,7 @@ extern void makeRandom(int, int, edgefn);
 extern void makeSquareGrid(int, int, int, int, edgefn);
 extern void makeBinaryTree(int, edgefn);
 extern void makeSierpinski(int, edgefn);
+extern void makeTetrix(int, edgefn);
 extern void makeHypercube(int, edgefn);
 extern void makeTree(int, int, edgefn);
 extern void makeTriMesh(int, edgefn);
