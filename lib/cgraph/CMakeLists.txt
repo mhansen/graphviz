@@ -23,6 +23,7 @@ add_library(cgraph SHARED
   stack.h
   strcasecmp.h
   unreachable.h
+  unused.h
 
   # Source files
   agerror.c

@@ -29,6 +29,7 @@
 #include <ortho/fPQ.h>
 #include <ortho/ortho.h>
 #include <cgraph/exit.h>
+#include <cgraph/unused.h>
 #include <common/memory.h>
 #include <common/geomprocs.h>
 #include <common/globals.h>
@@ -40,8 +41,15 @@ typedef struct {
 } epair_t;
 
 #ifdef DEBUG
-static void emitSearchGraph (FILE* fp, sgraph* sg);
-static void emitGraph (FILE* fp, maze* mp, size_t n_edges, route* route_list, epair_t[]);
+#define DEBUG_FN /* nothing */
+#else
+#define DEBUG_FN UNUSED
+#endif
+
+static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg);
+static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
+                               route *route_list, epair_t[]);
+#ifdef DEBUG
 int odb_flags;
 #endif
 
@@ -501,8 +509,6 @@ addNodeEdges (sgraph* sg, cell* cp, snode* np)
 #endif
 }
 
-#ifdef DEBUG
-
 #include <common/intset.h>
 static char* bendToStr (bend b)
 {
@@ -538,9 +544,7 @@ static void putSeg (FILE* fp, segment* seg)
       seg->p.p2, seg->comm_coord, bendToStr (seg->l1), bendToStr (seg->l2));
 }
 
-static void
-dumpChanG (channel* cp, int v)
-{
+static DEBUG_FN void dumpChanG(channel *cp, int v) {
   int k;
   intitem* ip;
   Dt_t* adj;
@@ -559,7 +563,6 @@ dumpChanG (channel* cp, int v)
     }
   }
 }
-#endif
 
 static void
 assignTrackNo (Dt_t* chans)
@@ -1370,7 +1373,6 @@ orthofinish:
     free (es);
 }
 
-#ifdef DEBUG
 #include <common/arith.h>
 #define TRANS 10
 
@@ -1501,9 +1503,7 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
  * specified graph layout engine.
  */
 
-static void
-emitSearchGraph (FILE* fp, sgraph* sg)
-{
+static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
     cell* cp;
     snode* np;
     sedge* ep;
@@ -1533,9 +1533,8 @@ emitSearchGraph (FILE* fp, sgraph* sg)
     fputs ("}\n", fp);
 }
 
-static void
-emitGraph (FILE* fp, maze* mp, size_t n_edges, route* route_list, epair_t es[])
-{
+static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
+                               route *route_list, epair_t es[]) {
     boxf bb, absbb;
     box bbox;
 
@@ -1571,4 +1570,3 @@ emitGraph (FILE* fp, maze* mp, size_t n_edges, route* route_list, epair_t es[])
     bbox.UR.y = absbb.UR.y + TRANS;
     fprintf (fp, epilog2, bbox.LL.x, bbox.LL.y,  bbox.UR.x, bbox.UR.y);
 }
-#endif
