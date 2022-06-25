@@ -1317,6 +1317,19 @@ def test_2092():
 
   assert p.returncode == 1, "dot2gxl crashed"
 
+@pytest.mark.skipif(shutil.which("dot2gxl") is None,
+                    reason="dot2gxl not available")
+def test_2093():
+  """
+  dot2gxl should handle elements with no ID
+  https://gitlab.com/graphviz/graphviz/-/issues/2093
+  """
+  with subprocess.Popen(["dot2gxl", "-d"], stdin=subprocess.PIPE,
+                        universal_newlines=True) as p:
+    p.communicate('<graph x="">')
+
+    assert p.returncode == 1, "dot2gxl did not reject missing ID"
+
 @pytest.mark.skipif(os.environ.get("build_system") == "msbuild" and
                     os.environ.get("configuration") == "Debug",
                     reason="Graphviz built with MSBuild in Debug mode has an "
