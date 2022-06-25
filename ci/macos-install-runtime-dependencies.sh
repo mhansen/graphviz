@@ -28,6 +28,7 @@ export LDFLAGS="-L/usr/local/opt/qt@5/lib"
 export CPPFLAGS="-I/usr/local/opt/qt@5/include"
 export PKG_CONFIG_PATH="/usr/local/opt/qt@5/lib/pkgconfig"
 
+brew install librsvg || brew upgrade librsvg
 brew install libxaw || brew upgrade libxaw
 
 # install MacPorts for libANN
