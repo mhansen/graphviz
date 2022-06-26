@@ -366,17 +366,10 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     if (str[str_size] == ':') { /* if str contains a ':', and if we find a match for the type,
                                    then just list the alternative paths for the plugin */
         for (pnext = plugin; pnext; pnext = pnext->next) {
-            const char *type = pnext->typestr;
-            size_t type_size = strlen(type);
-            {
-                const char *type_end = strchr(type, ':');
-                if (type_end != NULL) {
-                    type_size = (size_t)(type_end - type);
-                }
-            }
+            const strview_t type = strview(pnext->typestr, ':');
             /* list only the matching type, or all types if s is an empty string */
             if (!str[0] ||
-                (type_size == str_size && strncasecmp(str, type, str_size) == 0)) {
+                (type.size == str_size && strncasecmp(str, type.data, str_size) == 0)) {
                 /* list each member of the matching type as "type:path" */
                 agxbprint(&xb, " %s:%s", pnext->typestr, pnext->package->name);
                 new = false;
