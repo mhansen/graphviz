@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Binary tcl modules should compile with -module #1285
 - b15.gv crashes dot #827
 - heap overflow in function startElementHandler in gxl2gv.c #2093
+- Crash on assertion #121
 
 ## [4.0.0] – 2022-05-29
 

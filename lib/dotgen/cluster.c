@@ -184,6 +184,7 @@ static void interclexp(graph_t * subg)
 		    ED_to_virt(e) = NULL;
 		if (ED_to_virt(prev) == NULL)
 		    continue;	/* internal edge */
+		ED_to_virt(e) = NULL;
 		merge_chain(subg, e, ED_to_virt(prev), FALSE);
 		safe_other_edge(e);
 		continue;

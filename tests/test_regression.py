@@ -104,6 +104,19 @@ def test_56():
   # process it with Graphviz
   dot("svg", input)
 
+def test_121():
+  """
+  test a graph that previously caused an assertion failure in `merge_chain`
+  https://gitlab.com/graphviz/graphviz/-/issues/121
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "121.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # process it with Graphviz
+  dot("pdf", input)
+
 def test_131():
   """
   PIC back end should produce valid output
