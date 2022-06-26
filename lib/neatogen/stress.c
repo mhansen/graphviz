@@ -242,7 +242,6 @@ float *circuitModel(vtx_data * graph, int nG)
  */
 static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input graph in sparse representation */
 						  int n,	/* Number of nodes */
-						  int nedges_graph,	/* Number of edges */
 						  double **coords,	/* coordinates of nodes (output layout)  */
 						  int dim,	/* dimemsionality of layout */
 						  int smart_ini,	/* smart initialization */
@@ -959,7 +958,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	/* optimize layout quickly within subspace */
 	/* perform at most 50 iterations within 30-D subspace to 
 	   get an estimate */
-	if (sparse_stress_subspace_majorization_kD(graph, n, nedges_graph,
+	if (sparse_stress_subspace_majorization_kD(graph, n,
 					       d_coords, dim, smart_ini, exp,
 					       model == MODEL_SUBSET, 50,
 					       neighborhood_radius_subspace,
