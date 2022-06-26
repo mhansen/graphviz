@@ -1242,7 +1242,7 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
     }
     else
 #endif
-	rv = stress_majorization_kD_mkernel(gp, nv, ne, coords, nodes, Ndim, opts, model, MaxIter);
+	rv = stress_majorization_kD_mkernel(gp, nv, coords, nodes, Ndim, opts, model, MaxIter);
 
     if (rv < 0) {
 	agerr(AGPREV, "layout aborted\n");

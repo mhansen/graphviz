@@ -862,7 +862,6 @@ static void dumpMatrix(float *Dij, int n)
  */
 int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse representation */
 				   int n,	/* Number of nodes */
-				   int nedges_graph,	/* Number of edges */
 				   double **d_coords,	/* coordinates of nodes (output layout) */
 				   node_t ** nodes,	/* original nodes */
 				   int dim,	/* dimemsionality of layout */
