@@ -409,6 +409,8 @@ char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, const char *str)
     char **list = NULL;
     char *p, *q, *typestr_last;
 
+    (void)str;
+
     if (!kind)
         return NULL;
     for (api = 0; api < ARRAY_SIZE(api_names); api++) {
