@@ -14,6 +14,7 @@
 #define _GNU_SOURCE 1
 #endif
 
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <gvc/gvconfig.h>
 
@@ -94,8 +95,8 @@ static gvplugin_package_t * gvplugin_package_record(GVC_t * gvc,
                                                     const char *package_path,
                                                     const char *name) {
     gvplugin_package_t *package = gmalloc(sizeof(gvplugin_package_t));
-    package->path = package_path ? strdup(package_path) : NULL;
-    package->name = strdup(name);
+    package->path = package_path ? gv_strdup(package_path) : NULL;
+    package->name = gv_strdup(name);
     package->next = gvc->packages;
     gvc->packages = package;
     return package;

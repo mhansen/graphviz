@@ -28,7 +28,7 @@
 
 static void pango_free_layout (void *layout)
 {
-    g_object_unref((PangoLayout*)layout);
+    g_object_unref(layout);
 }
 
 static char* pango_psfontResolve (PostscriptAlias* pa)
