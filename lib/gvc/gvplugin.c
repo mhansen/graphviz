@@ -268,20 +268,14 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
     size_t reqtyp_len =
       reqtyp_end == NULL ? strlen(reqtyp) : (size_t)(reqtyp_end - reqtyp);
 
-    const char *reqdep = NULL;
-    const char *reqdep_end = NULL;
-    size_t reqdep_len = 0;
+    strview_t reqdep = {NULL};
 
     strview_t reqpkg = {NULL};
 
     if (reqtyp_end != NULL) {
-        reqdep = reqtyp_end + strlen(":");
-        reqdep_end = strchr(reqdep, ':');
-        if (reqdep_end != NULL) {
-            reqdep_len = (size_t)(reqdep_end - reqdep);
-            reqpkg = strview(reqdep_end + strlen(":"), '\0');
-        } else {
-            reqdep_len = strlen(reqdep);
+        reqdep = strview(reqtyp_end + strlen(":"), ':');
+        if (reqdep.data[reqdep.size] == ':') {
+            reqpkg = strview(reqdep.data + reqdep.size + strlen(":"), '\0');
         }
     }
 
@@ -299,8 +293,8 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
 
         if (typ_len != reqtyp_len || strncmp(typ, reqtyp, reqtyp_len))
             continue;           /* types empty or mismatched */
-        if (dep.data && reqdep) {
-            if (dep.size != reqdep_len || strncmp(dep.data, reqdep, reqdep_len)) {
+        if (dep.data && reqdep.data) {
+            if (!strview_eq(dep, reqdep)) {
                 continue;           /* dependencies not empty, but mismatched */
             }
         }
