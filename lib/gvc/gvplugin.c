@@ -292,20 +292,23 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
         size_t typ_len =
           typ_end == NULL ? strlen(typ) : (size_t)(typ_end - typ);
 
-        const char *dep = typ_end == NULL ? NULL : (typ_end + strlen(":"));
+        strview_t dep = {NULL};
+        if (typ_end != NULL) {
+            dep = strview(typ_end + strlen(":"), '\0');
+        }
 
         if (typ_len != reqtyp_len || strncmp(typ, reqtyp, reqtyp_len))
             continue;           /* types empty or mismatched */
-        if (dep && reqdep) {
-            if (strlen(dep) != reqdep_len || strncmp(dep, reqdep, reqdep_len)) {
+        if (dep.data && reqdep) {
+            if (dep.size != reqdep_len || strncmp(dep.data, reqdep, reqdep_len)) {
                 continue;           /* dependencies not empty, but mismatched */
             }
         }
         if (!reqpkg.data || strview_str_eq(reqpkg, pnext->package->name)) {
             // found with no packagename constraints, or with required matching packagename
 
-            if (dep && apidep != api) /* load dependency if needed, continue if can't find */
-                if (!gvplugin_load(gvc, apidep, dep))
+            if (dep.data && apidep != api) // load dependency if needed, continue if can't find
+                if (!gvplugin_load(gvc, apidep, dep.data))
                     continue;
             break;
         }
