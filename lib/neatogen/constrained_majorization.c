@@ -30,7 +30,6 @@
 
 int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in sparse representation  */
 				       int n,	/* Number of nodes */
-				       int nedges_graph,	/* Number of edges */
 				       double **d_coords,	/* Coordinates of nodes (output layout)  */
 				       node_t ** nodes,	/* Original nodes */
 				       int dim,	/* Dimemsionality of layout */
