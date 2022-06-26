@@ -22,6 +22,7 @@ add_library(cgraph SHARED
   prisize_t.h
   stack.h
   strcasecmp.h
+  strview.h
   unreachable.h
   unused.h
 
