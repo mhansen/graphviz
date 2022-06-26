@@ -272,14 +272,14 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
     const char *reqdep_end = NULL;
     size_t reqdep_len = 0;
 
-    const char *reqpkg = NULL;
+    strview_t reqpkg = {NULL};
 
     if (reqtyp_end != NULL) {
         reqdep = reqtyp_end + strlen(":");
         reqdep_end = strchr(reqdep, ':');
         if (reqdep_end != NULL) {
             reqdep_len = (size_t)(reqdep_end - reqdep);
-            reqpkg = reqdep_end + strlen(":");
+            reqpkg = strview(reqdep_end + strlen(":"), '\0');
         } else {
             reqdep_len = strlen(reqdep);
         }
@@ -301,7 +301,7 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
                 continue;           /* dependencies not empty, but mismatched */
             }
         }
-        if (!reqpkg || strcmp(reqpkg, pnext->package->name) == 0) {
+        if (!reqpkg.data || strview_str_eq(reqpkg, pnext->package->name)) {
             // found with no packagename constraints, or with required matching packagename
 
             if (dep && apidep != api) /* load dependency if needed, continue if can't find */
