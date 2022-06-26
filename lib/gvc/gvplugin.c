@@ -352,24 +352,17 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     }
 
     /* does str have a :path modifier? */
-    size_t str_size = strlen(str);
-    {
-        const char *end = strchr(str, ':');
-        if (end != NULL) {
-            str_size = (size_t)(end - str);
-        }
-    }
+    const strview_t strv = strview(str, ':');
 
     /* point to the beginning of the linked list of plugins for this api */
     plugin = gvc->apis[api];
 
-    if (str[str_size] == ':') { /* if str contains a ':', and if we find a match for the type,
-                                   then just list the alternative paths for the plugin */
+    if (strv.data[strv.size] == ':') { /* if str contains a ':', and if we find a match for the type,
+                                          then just list the alternative paths for the plugin */
         for (pnext = plugin; pnext; pnext = pnext->next) {
             const strview_t type = strview(pnext->typestr, ':');
             /* list only the matching type, or all types if s is an empty string */
-            if (!str[0] ||
-                (type.size == str_size && strncasecmp(str, type.data, str_size) == 0)) {
+            if (!str[0] || strview_case_eq(strv, type)) {
                 /* list each member of the matching type as "type:path" */
                 agxbprint(&xb, " %s:%s", pnext->typestr, pnext->package->name);
                 new = false;
