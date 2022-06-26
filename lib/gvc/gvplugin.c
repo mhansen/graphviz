@@ -374,21 +374,13 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
         strview_t type_last = {NULL};
         for (pnext = plugin; pnext; pnext = pnext->next) {
             /* list only one instance of type */
-            const char *type = pnext->typestr;
-            size_t type_size = strlen(type);
-            {
-                const char *type_end = strchr(type, ':');
-                if (type_end != NULL) {
-                    type_size = (size_t)(type_end - type);
-                }
-            }
-            if (!type_last.data || type_last.size != type_size ||
-                strncasecmp(type_last.data, type, type_size) != 0) {
+            const strview_t type = strview(pnext->typestr, ':');
+            if (!type_last.data || !strview_case_eq(type_last, type)) {
                 /* list it as "type"  i.e. w/o ":path" */
-                agxbprint(&xb, " %.*s", (int)type_size, type);
+                agxbprint(&xb, " %.*s", (int)type.size, type.data);
                 new = false;
             }
-            type_last = (strview_t){.data = type, .size = type_size};
+            type_last = type;
         }
     }
     if (new)
