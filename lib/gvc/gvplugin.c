@@ -31,6 +31,7 @@
 
 #include	<common/const.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/strview.h>
 
 /*
  * Define an apis array of name strings using an enumerated api_t as index.
@@ -77,11 +78,8 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
     if (t == NULL)
         return false;
 
-    // find the end of the current plugin
-    const char *end = strchr(typestr, ':');
-    if (end == NULL)
-        end = typestr + strlen(typestr);
-    size_t length = end - typestr;
+    // find the current plugin
+    const strview_t type = strview(typestr, ':');
 
     /* point to the beginning of the linked list of plugins for this api */
     pnext = &gvc->apis[api];
@@ -97,10 +95,10 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
             next_end = next_typestr + strlen(next_typestr);
         size_t next_length = next_end - next_typestr;
 
-        size_t limit = next_length < length ? next_length : length;
+        size_t limit = next_length < type.size ? next_length : type.size;
         if (strncmp(typestr, next_typestr, limit) < 0 ||
             (strncmp(typestr, next_typestr, limit) == 0 &&
-             length <= next_length))
+             type.size <= next_length))
             break;
         pnext = &(*pnext)->next;
     }
@@ -116,8 +114,8 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
             next_end = next_typestr + strlen(next_typestr);
         size_t next_length = next_end - next_typestr;
 
-        size_t limit = next_length < length ? next_length : length;
-        if (strncmp(typestr, next_typestr, limit) != 0 || length != next_length)
+        size_t limit = next_length < type.size ? next_length : type.size;
+        if (strncmp(typestr, next_typestr, limit) != 0 || type.size != next_length)
             break;
         if (quality >= (*pnext)->quality)
             break;
