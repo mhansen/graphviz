@@ -408,7 +408,6 @@ char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, const char *str)
     const gvplugin_available_t *pnext, *plugin;
     int cnt = 0;
     char **list = NULL;
-    char *p, *q;
 
     (void)str;
 
@@ -428,14 +427,12 @@ char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, const char *str)
     strview_t typestr_last = {NULL};
     for (pnext = plugin; pnext; pnext = pnext->next) {
         /* list only one instance of type */
-        q = gv_strdup(pnext->typestr);
-        if ((p = strchr(q, ':')))
-            *p++ = '\0';
-        if (!typestr_last.data || strcasecmp(typestr_last.data, q) != 0) {
+        strview_t q = strview(pnext->typestr, ':');
+        if (!typestr_last.data || !strview_case_eq(typestr_last, q)) {
             list = RALLOC(cnt + 1, list, char *);
-            list[cnt++] = q;
+            list[cnt++] = gv_strndup(q.data, q.size);
         }
-        typestr_last = strview(q, '\0');
+        typestr_last = q;
     }
 
     *sz = cnt;
