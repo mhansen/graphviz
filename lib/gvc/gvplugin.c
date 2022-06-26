@@ -263,17 +263,14 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
     else
         apidep = api;
 
-    const char *reqtyp = str;
-    const char *reqtyp_end = strchr(reqtyp, ':');
-    size_t reqtyp_len =
-      reqtyp_end == NULL ? strlen(reqtyp) : (size_t)(reqtyp_end - reqtyp);
+    const strview_t reqtyp = strview(str, ':');
 
     strview_t reqdep = {NULL};
 
     strview_t reqpkg = {NULL};
 
-    if (reqtyp_end != NULL) {
-        reqdep = strview(reqtyp_end + strlen(":"), ':');
+    if (reqtyp.data[reqtyp.size] == ':') {
+        reqdep = strview(reqtyp.data + reqtyp.size + strlen(":"), ':');
         if (reqdep.data[reqdep.size] == ':') {
             reqpkg = strview(reqdep.data + reqdep.size + strlen(":"), '\0');
         }
@@ -288,7 +285,7 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
             dep = strview(typ.data + typ.size + strlen(":"), '\0');
         }
 
-        if (typ.size != reqtyp_len || strncmp(typ.data, reqtyp, reqtyp_len))
+        if (!strview_eq(typ, reqtyp))
             continue;           /* types empty or mismatched */
         if (dep.data && reqdep.data) {
             if (!strview_eq(dep, reqdep)) {
