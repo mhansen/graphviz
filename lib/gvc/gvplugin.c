@@ -30,6 +30,7 @@
 #include        <gvc/gvio.h>
 
 #include	<common/const.h>
+#include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 
@@ -427,7 +428,7 @@ char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, const char *str)
     strview_t typestr_last = {NULL};
     for (pnext = plugin; pnext; pnext = pnext->next) {
         /* list only one instance of type */
-        q = strdup(pnext->typestr);
+        q = gv_strdup(pnext->typestr);
         if ((p = strchr(q, ':')))
             *p++ = '\0';
         if (!typestr_last.data || strcasecmp(typestr_last.data, q) != 0) {
