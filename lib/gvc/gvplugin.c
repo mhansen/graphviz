@@ -98,16 +98,10 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
     /* keep quality sorted within type and insert new duplicates ahead of old */
     while (*pnext) {
 
-        const char *next_typestr = (*pnext)->typestr;
+        // find the next plugin
+        const strview_t next_type = strview((*pnext)->typestr, ':');
 
-        // find the end of the next plugin
-        const char *next_end = strchr(next_typestr, ':');
-        if (next_end == NULL)
-            next_end = next_typestr + strlen(next_typestr);
-        size_t next_length = next_end - next_typestr;
-
-        size_t limit = next_length < type.size ? next_length : type.size;
-        if (strncmp(typestr, next_typestr, limit) != 0 || type.size != next_length)
+        if (!strview_eq(type, next_type))
             break;
         if (quality >= (*pnext)->quality)
             break;
