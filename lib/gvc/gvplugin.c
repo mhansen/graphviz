@@ -281,17 +281,14 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
 
     /* iterate the linked list of plugins for this api */
     for (pnext = gvc->apis[api]; pnext; pnext = pnext->next) {
-        const char *typ = pnext->typestr;
-        const char *typ_end = strchr(typ, ':');
-        size_t typ_len =
-          typ_end == NULL ? strlen(typ) : (size_t)(typ_end - typ);
+        const strview_t typ = strview(pnext->typestr, ':');
 
         strview_t dep = {NULL};
-        if (typ_end != NULL) {
-            dep = strview(typ_end + strlen(":"), '\0');
+        if (typ.data[typ.size] == ':') {
+            dep = strview(typ.data + typ.size + strlen(":"), '\0');
         }
 
-        if (typ_len != reqtyp_len || strncmp(typ, reqtyp, reqtyp_len))
+        if (typ.size != reqtyp_len || strncmp(typ.data, reqtyp, reqtyp_len))
             continue;           /* types empty or mismatched */
         if (dep.data && reqdep.data) {
             if (!strview_eq(dep, reqdep)) {
