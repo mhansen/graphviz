@@ -515,7 +515,7 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
             buf2 = bufa + strlen(bufa);
             for (pnext = gvc->apis[api]; pnext; pnext = pnext->next) {
                 if (pnext->package == package) {
-                    t = q = strdup(pnext->typestr);
+                    t = q = gv_strdup(pnext->typestr);
                     if ((p = strchr(q, ':')))
                         *p++ = '\0';
                     /* Now p = renderer, e.g. "gd"
@@ -691,7 +691,7 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
             buf2 = bufa + strlen(bufa);
             for (pnext = gvc->apis[api]; pnext; pnext = pnext->next) {
                 if (pnext->package == package) {
-                    t = q = strdup(pnext->typestr);
+                    t = q = gv_strdup(pnext->typestr);
                     if ((p = strchr(q, ':')))
                         *p++ = '\0';
                     /* Now p = renderer, e.g. "gd"
