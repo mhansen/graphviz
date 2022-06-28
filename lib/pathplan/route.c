@@ -142,9 +142,13 @@ static int reallyroutespline(Pedge_t * edges, int edgen,
     splitv1 = normv(sub(inps[spliti], inps[spliti - 1]));
     splitv2 = normv(sub(inps[spliti + 1], inps[spliti]));
     splitv = normv(add(splitv1, splitv2));
-    reallyroutespline(edges, edgen, inps, spliti + 1, ev0, splitv);
-    reallyroutespline(edges, edgen, &inps[spliti], inpn - spliti, splitv,
-		      ev1);
+    if (reallyroutespline(edges, edgen, inps, spliti + 1, ev0, splitv) < 0) {
+	return -1;
+    }
+    if (reallyroutespline(edges, edgen, &inps[spliti], inpn - spliti, splitv,
+                          ev1) < 0) {
+	return -1;
+    }
     return 0;
 }
 
