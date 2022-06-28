@@ -418,7 +418,7 @@ static int growops(int newopn)
 {
     if (newopn <= opn)
 	return 0;
-    if (!(ops = realloc(ops, POINTSIZE * newopn))) {
+    if (!(ops = realloc(ops, POINTSIZE * (size_t)newopn))) {
 	return -1;
     }
     opn = newopn;
