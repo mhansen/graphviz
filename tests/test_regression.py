@@ -307,6 +307,25 @@ def test_191():
 
     assert p.returncode != 0, "syntax error was only a warning, not an error"
 
+@pytest.mark.xfail(strict=True)
+def test_358():
+  """
+  setting xdot version to 1.7 should enable font characteristics
+  https://gitlab.com/graphviz/graphviz/-/issues/358
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent /  "358.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # process this with dot
+  xdot = dot("xdot", input)
+
+  for i in range(6):
+    m = re.search(f"\\bt {1 << i}\\b", xdot)
+    assert m is not None, \
+      f"font characteristic {1 << i} not enabled in xdot 1.7"
+
 @pytest.mark.skipif(shutil.which("gv2gxl") is None or
                     shutil.which("gxl2gv") is None,
                     reason="GXL tools not available")
