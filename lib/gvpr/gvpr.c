@@ -215,7 +215,7 @@ static char *resolve(char *arg, int Verbose)
     size_t sz;
 
     if (strchr(arg, PATHSEP))
-	return strdup(arg);
+	return gv_strdup(arg);
 
     path = getenv("GVPRPATH");
     if (!path)
@@ -252,7 +252,7 @@ static char *resolve(char *arg, int Verbose)
 	s = agxbuse(&fp);
 
 	if (access(s, R_OK) == 0) {
-	    fname = strdup(s);
+	    fname = gv_strdup(s);
 	}
     }
 
