@@ -30,7 +30,9 @@
 #include        <gvc/gvio.h>
 
 #include	<common/const.h>
+#include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/strview.h>
 
 /*
  * Define an apis array of name strings using an enumerated api_t as index.
@@ -77,11 +79,8 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
     if (t == NULL)
         return false;
 
-    // find the end of the current plugin
-    const char *end = strchr(typestr, ':');
-    if (end == NULL)
-        end = typestr + strlen(typestr);
-    size_t length = end - typestr;
+    // find the current plugin
+    const strview_t type = strview(typestr, ':');
 
     /* point to the beginning of the linked list of plugins for this api */
     pnext = &gvc->apis[api];
@@ -89,18 +88,10 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
     /* keep alpha-sorted and insert new duplicates ahead of old */
     while (*pnext) {
 
-        const char *next_typestr = (*pnext)->typestr;
+        // find the next plugin
+        const strview_t next_type = strview((*pnext)->typestr, ':');
 
-        // find the end of the next plugin
-        const char *next_end = strchr(next_typestr, ':');
-        if (next_end == NULL)
-            next_end = next_typestr + strlen(next_typestr);
-        size_t next_length = next_end - next_typestr;
-
-        size_t limit = next_length < length ? next_length : length;
-        if (strncmp(typestr, next_typestr, limit) < 0 ||
-            (strncmp(typestr, next_typestr, limit) == 0 &&
-             length <= next_length))
+        if (strview_cmp(type, next_type) <= 0)
             break;
         pnext = &(*pnext)->next;
     }
@@ -108,16 +99,10 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
     /* keep quality sorted within type and insert new duplicates ahead of old */
     while (*pnext) {
 
-        const char *next_typestr = (*pnext)->typestr;
+        // find the next plugin
+        const strview_t next_type = strview((*pnext)->typestr, ':');
 
-        // find the end of the next plugin
-        const char *next_end = strchr(next_typestr, ':');
-        if (next_end == NULL)
-            next_end = next_typestr + strlen(next_typestr);
-        size_t next_length = next_end - next_typestr;
-
-        size_t limit = next_length < length ? next_length : length;
-        if (strncmp(typestr, next_typestr, limit) != 0 || length != next_length)
+        if (!strview_eq(type, next_type))
             break;
         if (quality >= (*pnext)->quality)
             break;
@@ -279,49 +264,40 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
     else
         apidep = api;
 
-    const char *reqtyp = str;
-    const char *reqtyp_end = strchr(reqtyp, ':');
-    size_t reqtyp_len =
-      reqtyp_end == NULL ? strlen(reqtyp) : (size_t)(reqtyp_end - reqtyp);
+    const strview_t reqtyp = strview(str, ':');
 
-    const char *reqdep = NULL;
-    const char *reqdep_end = NULL;
-    size_t reqdep_len = 0;
+    strview_t reqdep = {NULL};
 
-    const char *reqpkg = NULL;
+    strview_t reqpkg = {NULL};
 
-    if (reqtyp_end != NULL) {
-        reqdep = reqtyp_end + strlen(":");
-        reqdep_end = strchr(reqdep, ':');
-        if (reqdep_end != NULL) {
-            reqdep_len = (size_t)(reqdep_end - reqdep);
-            reqpkg = reqdep_end + strlen(":");
-        } else {
-            reqdep_len = strlen(reqdep);
+    if (reqtyp.data[reqtyp.size] == ':') {
+        reqdep = strview(reqtyp.data + reqtyp.size + strlen(":"), ':');
+        if (reqdep.data[reqdep.size] == ':') {
+            reqpkg = strview(reqdep.data + reqdep.size + strlen(":"), '\0');
         }
     }
 
     /* iterate the linked list of plugins for this api */
     for (pnext = gvc->apis[api]; pnext; pnext = pnext->next) {
-        const char *typ = pnext->typestr;
-        const char *typ_end = strchr(typ, ':');
-        size_t typ_len =
-          typ_end == NULL ? strlen(typ) : (size_t)(typ_end - typ);
+        const strview_t typ = strview(pnext->typestr, ':');
 
-        const char *dep = typ_end == NULL ? NULL : (typ_end + strlen(":"));
+        strview_t dep = {NULL};
+        if (typ.data[typ.size] == ':') {
+            dep = strview(typ.data + typ.size + strlen(":"), '\0');
+        }
 
-        if (typ_len != reqtyp_len || strncmp(typ, reqtyp, reqtyp_len))
+        if (!strview_eq(typ, reqtyp))
             continue;           /* types empty or mismatched */
-        if (dep && reqdep) {
-            if (strlen(dep) != reqdep_len || strncmp(dep, reqdep, reqdep_len)) {
+        if (dep.data && reqdep.data) {
+            if (!strview_eq(dep, reqdep)) {
                 continue;           /* dependencies not empty, but mismatched */
             }
         }
-        if (!reqpkg || strcmp(reqpkg, pnext->package->name) == 0) {
+        if (!reqpkg.data || strview_str_eq(reqpkg, pnext->package->name)) {
             // found with no packagename constraints, or with required matching packagename
 
-            if (dep && apidep != api) /* load dependency if needed, continue if can't find */
-                if (!gvplugin_load(gvc, apidep, dep))
+            if (dep.data && apidep != api) // load dependency if needed, continue if can't find
+                if (!gvplugin_load(gvc, apidep, dep.data))
                     continue;
             break;
         }
@@ -377,31 +353,17 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     }
 
     /* does str have a :path modifier? */
-    size_t str_size = strlen(str);
-    {
-        const char *end = strchr(str, ':');
-        if (end != NULL) {
-            str_size = (size_t)(end - str);
-        }
-    }
+    const strview_t strv = strview(str, ':');
 
     /* point to the beginning of the linked list of plugins for this api */
     plugin = gvc->apis[api];
 
-    if (str[str_size] == ':') { /* if str contains a ':', and if we find a match for the type,
-                                   then just list the alternative paths for the plugin */
+    if (strv.data[strv.size] == ':') { /* if str contains a ':', and if we find a match for the type,
+                                          then just list the alternative paths for the plugin */
         for (pnext = plugin; pnext; pnext = pnext->next) {
-            const char *type = pnext->typestr;
-            size_t type_size = strlen(type);
-            {
-                const char *type_end = strchr(type, ':');
-                if (type_end != NULL) {
-                    type_size = (size_t)(type_end - type);
-                }
-            }
+            const strview_t type = strview(pnext->typestr, ':');
             /* list only the matching type, or all types if s is an empty string */
-            if (!str[0] ||
-                (type_size == str_size && strncasecmp(str, type, str_size) == 0)) {
+            if (!str[0] || strview_case_eq(strv, type)) {
                 /* list each member of the matching type as "type:path" */
                 agxbprint(&xb, " %s:%s", pnext->typestr, pnext->package->name);
                 new = false;
@@ -410,26 +372,16 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     }
     if (new) {                  /* if the type was not found, or if str without ':',
                                    then just list available types */
-        const char *type_last = NULL;
-        size_t type_last_size = 0;
+        strview_t type_last = {NULL};
         for (pnext = plugin; pnext; pnext = pnext->next) {
             /* list only one instance of type */
-            const char *type = pnext->typestr;
-            size_t type_size = strlen(type);
-            {
-                const char *type_end = strchr(type, ':');
-                if (type_end != NULL) {
-                    type_size = (size_t)(type_end - type);
-                }
-            }
-            if (!type_last || type_last_size != type_size ||
-                strncasecmp(type_last, type, type_size) != 0) {
+            const strview_t type = strview(pnext->typestr, ':');
+            if (!type_last.data || !strview_case_eq(type_last, type)) {
                 /* list it as "type"  i.e. w/o ":path" */
-                agxbprint(&xb, " %.*s", (int)type_size, type);
+                agxbprint(&xb, " %.*s", (int)type.size, type.data);
                 new = false;
             }
             type_last = type;
-            type_last_size = type_size;
         }
     }
     if (new)
@@ -456,7 +408,8 @@ char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, const char *str)
     const gvplugin_available_t *pnext, *plugin;
     int cnt = 0;
     char **list = NULL;
-    char *p, *q, *typestr_last;
+
+    (void)str;
 
     if (!kind)
         return NULL;
@@ -471,15 +424,13 @@ char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, const char *str)
 
     /* point to the beginning of the linked list of plugins for this api */
     plugin = gvc->apis[api];
-    typestr_last = NULL;
+    strview_t typestr_last = {NULL};
     for (pnext = plugin; pnext; pnext = pnext->next) {
         /* list only one instance of type */
-        q = strdup(pnext->typestr);
-        if ((p = strchr(q, ':')))
-            *p++ = '\0';
-        if (!typestr_last || strcasecmp(typestr_last, q) != 0) {
+        strview_t q = strview(pnext->typestr, ':');
+        if (!typestr_last.data || !strview_case_eq(typestr_last, q)) {
             list = RALLOC(cnt + 1, list, char *);
-            list[cnt++] = q;
+            list[cnt++] = gv_strndup(q.data, q.size);
         }
         typestr_last = q;
     }
@@ -564,7 +515,7 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
             buf2 = bufa + strlen(bufa);
             for (pnext = gvc->apis[api]; pnext; pnext = pnext->next) {
                 if (pnext->package == package) {
-                    t = q = strdup(pnext->typestr);
+                    t = q = gv_strdup(pnext->typestr);
                     if ((p = strchr(q, ':')))
                         *p++ = '\0';
                     /* Now p = renderer, e.g. "gd"
@@ -740,7 +691,7 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
             buf2 = bufa + strlen(bufa);
             for (pnext = gvc->apis[api]; pnext; pnext = pnext->next) {
                 if (pnext->package == package) {
-                    t = q = strdup(pnext->typestr);
+                    t = q = gv_strdup(pnext->typestr);
                     if ((p = strchr(q, ':')))
                         *p++ = '\0';
                     /* Now p = renderer, e.g. "gd"
