@@ -876,6 +876,9 @@ static jmp_buf jbuf;
 static void 
 gvexitf (Expr_t *handle, Exdisc_t *discipline, int v)
 {
+    (void)handle;
+    (void)discipline;
+
     longjmp (jbuf, v);
 }
 
