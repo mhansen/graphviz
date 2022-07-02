@@ -185,11 +185,7 @@ static int parseArgs(char *s, int argc, char ***argv)
 static char*
 concat (char* pfx, char* sfx)
 {
-    char *sp = malloc(strlen(pfx) + strlen(sfx) + 1);
-    if (sp == NULL) {
-	error(ERROR_ERROR, "Out of memory");
-	return 0;
-    }
+    char *sp = gv_alloc(strlen(pfx) + strlen(sfx) + 1);
     strcpy(sp, pfx);
     strcat(sp, sfx);
     return sp;
