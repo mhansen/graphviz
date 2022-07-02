@@ -464,15 +464,15 @@ static Agobj_t* evalNode(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agnode
 {
     int i;
     case_stmt *cs;
-    int okay;
+    bool okay;
 
     state->curobj = (Agobj_t *) n;
     for (i = 0; i < xprog->n_nstmts; i++) {
 	cs = xprog->node_stmts + i;
 	if (cs->guard)
-	    okay = (exeval(prog, cs->guard, state)).integer;
+	    okay = exeval(prog, cs->guard, state).integer != 0;
 	else
-	    okay = 1;
+	    okay = true;
 	if (okay) {
 	    if (cs->action)
 		exeval(prog, cs->action, state);
