@@ -25,14 +25,13 @@
 
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
+#include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
-
-#define GNEW(t)          malloc(sizeof(t))
 
 /* #define NEW_XDOT */
 
@@ -415,7 +414,7 @@ xdot_begin_graph (graph_t *g, int s_arrows, int e_arrows, format_type id)
     unsigned short us;
     char* s;
 
-    xd = GNEW(xdot_state_t);
+    xd = gv_alloc(sizeof(xdot_state_t));
 
     if (id == FORMAT_XDOT14) {
 	xd->version = 14;
