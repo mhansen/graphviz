@@ -31,6 +31,7 @@
 #include <gvpr/actions.h>
 #include <ast/sfstr.h>
 #include <ast/error.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include <setjmp.h>
@@ -440,15 +441,15 @@ static Agobj_t* evalEdge(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agedge
 {
     int i;
     case_stmt *cs;
-    int okay;
+    bool okay;
 
     state->curobj = (Agobj_t *) e;
     for (i = 0; i < xprog->n_estmts; i++) {
 	cs = xprog->edge_stmts + i;
 	if (cs->guard)
-	    okay = (exeval(prog, cs->guard, state)).integer;
+	    okay = exeval(prog, cs->guard, state).integer != 0;
 	else
-	    okay = 1;
+	    okay = true;
 	if (okay) {
 	    if (cs->action)
 		exeval(prog, cs->action, state);
