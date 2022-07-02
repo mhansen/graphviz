@@ -15,7 +15,6 @@
  * Written by Emden Gansner
  */
 
-#include <assert.h>
 #include <unistd.h>
 #include "builddate.h"
 #include <gvpr/gprstate.h>
@@ -359,21 +358,15 @@ doFlags(char* arg, int argi, int argc, char** argv, options* opts)
     return argi;
 }
 
-static void
-freeOpts (options* opts)
-{
-    int i;
-    assert(opts != NULL);
-    if (opts->outFile != sfstdout)
-	sfclose (opts->outFile);
-    free (opts->inFiles);
-    if (opts->useFile)
-	free (opts->program);
-    if (opts->argc) {
-	for (i = 0; i < opts->argc; i++)
-	    free (opts->argv[i]);
-	free (opts->argv);
-    }
+static void freeOpts(options opts) {
+    if (opts.outFile != sfstdout)
+	sfclose(opts.outFile);
+    free(opts.inFiles);
+    if (opts.useFile)
+	free(opts.program);
+    for (int i = 0; i < opts.argc; i++)
+	free(opts.argv[i]);
+    free(opts.argv);
 }
 
 /* scanArgs:
@@ -1082,7 +1075,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
     freeCompileProg (xprog);
     closeGPRState(state);
     if (ing) closeIngraph (ing);
-    freeOpts(&opts);
+    freeOpts(opts);
 
     if (uopts) {
 	if (uopts->out) sfdisc (sfstdout, 0);
