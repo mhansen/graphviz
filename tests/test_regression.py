@@ -307,7 +307,6 @@ def test_191():
 
     assert p.returncode != 0, "syntax error was only a warning, not an error"
 
-@pytest.mark.xfail(strict=True)
 def test_358():
   """
   setting xdot version to 1.7 should enable font characteristics
