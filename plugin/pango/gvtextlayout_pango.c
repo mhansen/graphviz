@@ -17,6 +17,7 @@
 #include <string.h>
 #include <gvc/gvplugin_render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <common/utils.h>
 #include <gvc/gvplugin_textlayout.h>
 
@@ -57,16 +58,6 @@ static char* pango_psfontResolve (PostscriptAlias* pa)
 #ifdef ENABLE_PANGO_MARKUP
 #define FULL_MARKUP "<span weight=\"bold\" style=\"italic\" underline=\"single\"><sup><sub></sub></sup></span>"
 #endif
-
-/* strdup, exiting on failure */
-static char *xstrdup(const char *str) {
-  char *s = strdup(str);
-  if (s == NULL) {
-    fprintf(stderr, "out of memory\n");
-    abort();
-  }
-  return s;
-}
 
 // wrapper to handle difference in calling conventions between `agxbput` and
 // `xml_escape`’s `cb`
@@ -122,7 +113,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	}
 
 	free(fontname);
-	fontname = xstrdup(span->font->name);
+	fontname = gv_strdup(span->font->name);
 	fontsize = span->font->size;
 	pango_font_description_free (desc);
 
