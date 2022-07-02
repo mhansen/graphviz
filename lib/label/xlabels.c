@@ -273,7 +273,7 @@ static int getintrsxi(object_t * op, object_t * cp)
 
 /* record the intersecting objects label */
 static double
-recordointrsx(XLabels_t * xlp, object_t * op, object_t * cp, Rect_t * rp,
+recordointrsx(object_t * op, object_t * cp, Rect_t * rp,
 	      double a, object_t * intrsx[XLNBR])
 {
     int i = getintrsxi(op, cp);
@@ -306,7 +306,7 @@ recordointrsx(XLabels_t * xlp, object_t * op, object_t * cp, Rect_t * rp,
 
 /* record the intersecting label */
 static double
-recordlintrsx(XLabels_t * xlp, object_t * op, object_t * cp, Rect_t * rp,
+recordlintrsx(object_t * op, object_t * cp, Rect_t * rp,
 	      double a, object_t * intrsx[XLNBR])
 {
     int i = getintrsxi(op, cp);
@@ -375,7 +375,7 @@ xlintersections(XLabels_t * xlp, object_t * objp, object_t * intrsx[XLNBR])
 	objp2rect(cp, &srect);
 	a = aabbaabb(&rect, &srect);
 	if (a > 0.0) {
-	  ra = recordointrsx(xlp, objp, cp, &rect, a, intrsx);
+	  ra = recordointrsx(objp, cp, &rect, a, intrsx);
 	  bp.n++;
 	  bp.area += ra;
 	}
@@ -385,7 +385,7 @@ xlintersections(XLabels_t * xlp, object_t * objp, object_t * intrsx[XLNBR])
 	objplp2rect(cp, &srect);
 	a = aabbaabb(&rect, &srect);
 	if (a > 0.0) {
-	  ra = recordlintrsx(xlp, objp, cp, &rect, a, intrsx);
+	  ra = recordlintrsx(objp, cp, &rect, a, intrsx);
 	  bp.n++;
 	  bp.area += ra;
 	}

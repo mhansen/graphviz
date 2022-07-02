@@ -1161,7 +1161,7 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
     if (mode != MODE_MAJOR) {
         double lgap = late_double(g, agfindgraphattr(g, "levelsgap"), 0.0, -MAXDOUBLE);
         if (mode == MODE_HIER) {
-            rv = stress_majorization_with_hierarchy(gp, nv, ne, coords, nodes, Ndim,
+            rv = stress_majorization_with_hierarchy(gp, nv, coords, nodes, Ndim,
                        opts, model, MaxIter, lgap);
         }
 #ifdef IPSEPCOLA
@@ -1242,7 +1242,7 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
     }
     else
 #endif
-	rv = stress_majorization_kD_mkernel(gp, nv, ne, coords, nodes, Ndim, opts, model, MaxIter);
+	rv = stress_majorization_kD_mkernel(gp, nv, coords, nodes, Ndim, opts, model, MaxIter);
 
     if (rv < 0) {
 	agerr(AGPREV, "layout aborted\n");

@@ -42,7 +42,6 @@ extern "C" {
     /* Slowest and most accurate optimization */
     extern int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse representation */
 					      int n,	/* Number of nodes */
-					      int nedges_graph,	/* Number of edges */
 					      double **coords,	/* coordinates of nodes (output layout)  */
 					      node_t **nodes,	/* original nodes  */
 					      int dim,	/* dimemsionality of layout */

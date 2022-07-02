@@ -30,7 +30,6 @@
 
 int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in sparse representation  */
 				       int n,	/* Number of nodes */
-				       int nedges_graph,	/* Number of edges */
 				       double **d_coords,	/* Coordinates of nodes (output layout)  */
 				       node_t ** nodes,	/* Original nodes */
 				       int dim,	/* Dimemsionality of layout */
@@ -91,7 +90,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	}
     }
     if (!directionalityExist) {
-	return stress_majorization_kD_mkernel(graph, n, nedges_graph,
+	return stress_majorization_kD_mkernel(graph, n,
 					      d_coords, nodes, dim, opts,
 					      model, maxi);
     }
@@ -105,7 +104,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	double *y;
 	if (dim > 2) {
 	    /* the dim==2 case is handled below                      */
-	    if (stress_majorization_kD_mkernel(graph, n, nedges_graph,
+	    if (stress_majorization_kD_mkernel(graph, n,
 					   d_coords + 1, nodes, dim - 1,
 					   opts, model, 15) < 0)
 		return -1;
@@ -128,7 +127,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	}
 	if (num_levels < 1) {
 	    /* no hierarchy found, use faster algorithm */
-	    return stress_majorization_kD_mkernel(graph, n, nedges_graph,
+	    return stress_majorization_kD_mkernel(graph, n,
 						  d_coords, nodes, dim,
 						  opts, model, maxi);
 	}
