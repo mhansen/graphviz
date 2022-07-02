@@ -19,6 +19,7 @@
 #include "builddate.h"
 #include <gvpr/gprstate.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
@@ -166,7 +167,7 @@ static int parseArgs(char *s, int argc, char ***argv)
 	argc = oldcnt + cnt;
 	av = oldof(*argv, char *, argc, 0);
 	for (i = 0; i < cnt; i++)
-	    av[oldcnt + i] = strdup(args[i]);
+	    av[oldcnt + i] = gv_strdup(args[i]);
 	*argv = av;
     }
     return argc;
