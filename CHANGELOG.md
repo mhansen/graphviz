@@ -1762,7 +1762,7 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[4.0.1]: https://gitlab.com/graphviz/graphviz/compare/4.0.0...main
+[Unreleased (4.0.1)]: https://gitlab.com/graphviz/graphviz/compare/4.0.0...main
 [4.0.0]: https://gitlab.com/graphviz/graphviz/compare/3.0.0...4.0.0
 [3.0.0]: https://gitlab.com/graphviz/graphviz/compare/2.50.0...3.0.0
 [2.50.0]: https://gitlab.com/graphviz/graphviz/compare/2.49.3...2.50.0
