@@ -11,7 +11,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <setjmp.h>
 #include <stdlib.h>
 #include <math.h>
 #include <pathplan/pathutil.h>
@@ -25,16 +24,11 @@ typedef struct tna_t {
     Ppoint_t a[2];
 } tna_t;
 
-#define prerror(msg) \
-        fprintf (stderr, "libpath/%s:%d: %s\n", __FILE__, __LINE__, (msg))
-
 #define DISTSQ(a, b) ( \
     (((a).x - (b).x) * ((a).x - (b).x)) + (((a).y - (b).y) * ((a).y - (b).y)) \
 )
 
 #define POINTSIZE sizeof (Ppoint_t)
-
-static jmp_buf jbuf;
 
 static Ppoint_t *ops;
 static int opn, opl;
@@ -52,7 +46,7 @@ static void addroot(double, double *, int *);
 
 static Pvector_t normv(Pvector_t);
 
-static void growops(int);
+static int growops(int);
 
 static Ppoint_t add(Ppoint_t, Ppoint_t);
 static Ppoint_t sub(Ppoint_t, Ppoint_t);
@@ -82,14 +76,13 @@ int Proutespline(Pedge_t * edges, int edgen, Ppolyline_t input,
     inps = input.ps;
     inpn = input.pn;
 
-    if (setjmp(jbuf))
-	return -1;
-
     /* generate the splines */
     evs[0] = normv(evs[0]);
     evs[1] = normv(evs[1]);
     opl = 0;
-    growops(4);
+    if (growops(4) < 0) {
+	return -1;
+    }
     ops[opl++] = inps[0];
     if (reallyroutespline(edges, edgen, inps, inpn, evs[0], evs[1]) == -1)
 	return -1;
@@ -112,7 +105,7 @@ static int reallyroutespline(Pedge_t * edges, int edgen,
     static int tnan;
 
     if (tnan < inpn) {
-	if (!(tnas = realloc(tnas, sizeof(tna_t) * inpn)))
+	if (!(tnas = realloc(tnas, sizeof(tna_t) * (size_t)inpn)))
 	    return -1;
 	tnan = inpn;
     }
@@ -127,8 +120,13 @@ static int reallyroutespline(Pedge_t * edges, int edgen,
     }
     if (mkspline(inps, inpn, tnas, ev0, ev1, &p1, &v1, &p2, &v2) == -1)
 	return -1;
-    if (splinefits(edges, edgen, p1, v1, p2, v2, inps, inpn))
+    int fit = splinefits(edges, edgen, p1, v1, p2, v2, inps, inpn);
+    if (fit > 0) {
 	return 0;
+    }
+    if (fit < 0) {
+	return -1;
+    }
     cp1 = add(p1, scale(v1, 1 / 3.0));
     cp2 = sub(p2, scale(v2, 1 / 3.0));
     for (maxd = -1, maxi = -1, i = 1; i < inpn - 1; i++) {
@@ -142,9 +140,13 @@ static int reallyroutespline(Pedge_t * edges, int edgen,
     splitv1 = normv(sub(inps[spliti], inps[spliti - 1]));
     splitv2 = normv(sub(inps[spliti + 1], inps[spliti]));
     splitv = normv(add(splitv1, splitv2));
-    reallyroutespline(edges, edgen, inps, spliti + 1, ev0, splitv);
-    reallyroutespline(edges, edgen, &inps[spliti], inpn - spliti, splitv,
-		      ev1);
+    if (reallyroutespline(edges, edgen, inps, spliti + 1, ev0, splitv) < 0) {
+	return -1;
+    }
+    if (reallyroutespline(edges, edgen, &inps[spliti], inpn - spliti, splitv,
+                          ev1) < 0) {
+	return -1;
+    }
     return 0;
 }
 
@@ -237,7 +239,9 @@ static int splinefits(Pedge_t * edges, int edgen, Ppoint_t pa,
 	first = 0;
 
 	if (splineisinside(edges, edgen, &sps[0])) {
-	    growops(opl + 4);
+	    if (growops(opl + 4) < 0) {
+		return -1;
+	    }
 	    for (pi = 1; pi < 4; pi++)
 		ops[opl].x = sps[pi].x, ops[opl++].y = sps[pi].y;
 #if defined(DEBUG) && DEBUG >= 1
@@ -247,7 +251,9 @@ static int splinefits(Pedge_t * edges, int edgen, Ppoint_t pa,
 	}
 	if (a == 0 && b == 0) {
 	    if (forceflag) {
-		growops(opl + 4);
+		if (growops(opl + 4) < 0) {
+		    return -1;
+		}
 		for (pi = 1; pi < 4; pi++)
 		    ops[opl].x = sps[pi].x, ops[opl++].y = sps[pi].y;
 #if defined(DEBUG) && DEBUG >= 1
@@ -408,15 +414,15 @@ static Pvector_t normv(Pvector_t v)
     return v;
 }
 
-static void growops(int newopn)
+static int growops(int newopn)
 {
     if (newopn <= opn)
-	return;
-    if (!(ops = realloc(ops, POINTSIZE * newopn))) {
-	prerror("cannot realloc ops");
-	longjmp(jbuf,1);
+	return 0;
+    if (!(ops = realloc(ops, POINTSIZE * (size_t)newopn))) {
+	return -1;
     }
     opn = newopn;
+    return 0;
 }
 
 static Ppoint_t add(Ppoint_t p1, Ppoint_t p2)
