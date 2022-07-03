@@ -73,8 +73,8 @@ See [`gen_version.py`](https://gitlab.com/graphviz/graphviz/-/blob/main/gen_vers
    these first.
 
 1. Check that the
-[main pipeline](https://gitlab.com/graphviz/graphviz/-/pipelines?ref=main)
-is green
+   [main pipeline](https://gitlab.com/graphviz/graphviz/-/pipelines?ref=main)
+   is green
 
 1. Create a local branch and name it e.g. `stable-release-<version>`
 
