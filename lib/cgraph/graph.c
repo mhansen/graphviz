@@ -259,3 +259,10 @@ Agdesc_t Agundirected = { .maingraph = 1 };
 Agdesc_t Agstrictundirected = { .strict = 1, .maingraph = 1 };
 
 Agdisc_t AgDefaultDisc = { &AgMemDisc, &AgIdDisc, &AgIoDisc };
+
+/**
+ * @dir lib/cgraph
+ * @brief abstract graph C library, API cgraph.h
+ *
+ * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
+ */

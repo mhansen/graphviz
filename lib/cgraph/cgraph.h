@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief abstract graph C library
+ *
+ * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
+ *
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
