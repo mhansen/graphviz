@@ -19,6 +19,7 @@
 #include "builddate.h"
 #include <gvpr/gprstate.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
@@ -30,6 +31,7 @@
 #include <gvpr/actions.h>
 #include <ast/sfstr.h>
 #include <ast/error.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include <setjmp.h>
@@ -166,7 +168,7 @@ static int parseArgs(char *s, int argc, char ***argv)
 	argc = oldcnt + cnt;
 	av = oldof(*argv, char *, argc, 0);
 	for (i = 0; i < cnt; i++)
-	    av[oldcnt + i] = strdup(args[i]);
+	    av[oldcnt + i] = gv_strdup(args[i]);
 	*argv = av;
     }
     return argc;
@@ -184,11 +186,7 @@ static int parseArgs(char *s, int argc, char ***argv)
 static char*
 concat (char* pfx, char* sfx)
 {
-    char *sp = malloc(strlen(pfx) + strlen(sfx) + 1);
-    if (sp == NULL) {
-	error(ERROR_ERROR, "Out of memory");
-	return 0;
-    }
+    char *sp = gv_alloc(strlen(pfx) + strlen(sfx) + 1);
     strcpy(sp, pfx);
     strcat(sp, sfx);
     return sp;
@@ -214,7 +212,7 @@ static char *resolve(char *arg, int Verbose)
     size_t sz;
 
     if (strchr(arg, PATHSEP))
-	return strdup(arg);
+	return gv_strdup(arg);
 
     path = getenv("GVPRPATH");
     if (!path)
@@ -251,7 +249,7 @@ static char *resolve(char *arg, int Verbose)
 	s = agxbuse(&fp);
 
 	if (access(s, R_OK) == 0) {
-	    fname = strdup(s);
+	    fname = gv_strdup(s);
 	}
     }
 
@@ -358,38 +356,31 @@ doFlags(char* arg, int argi, int argc, char** argv, options* opts)
     return argi;
 }
 
-static void
-freeOpts (options* opts)
-{
-    int i;
-    if (!opts) return;
-    if (opts->outFile != sfstdout)
-	sfclose (opts->outFile);
-    free (opts->inFiles);
-    if (opts->useFile)
-	free (opts->program);
-    if (opts->argc) {
-	for (i = 0; i < opts->argc; i++)
-	    free (opts->argv[i]);
-	free (opts->argv);
-    }
-    free (opts);
+static void freeOpts(options opts) {
+    if (opts.outFile != sfstdout)
+	sfclose(opts.outFile);
+    free(opts.inFiles);
+    if (opts.useFile)
+	free(opts.program);
+    for (int i = 0; i < opts.argc; i++)
+	free(opts.argv[i]);
+    free(opts.argv);
 }
 
 /* scanArgs:
  * Parse command line options.
  */
-static options* scanArgs(int argc, char **argv) {
+static options scanArgs(int argc, char **argv) {
     int i, nfiles;
     char** input_filenames;
     char* arg;
-    options* opts = newof(0,options,1,0);
+    options opts = {0};
 
-    opts->cmdName = argv[0];
-    opts->state = 1;
-    opts->readAhead = 1;
-    setErrorId (opts->cmdName);
-    opts->verbose = 0;
+    opts.cmdName = argv[0];
+    opts.state = 1;
+    opts.readAhead = 1;
+    setErrorId(opts.cmdName);
+    opts.verbose = 0;
 
     /* estimate number of file names */
     nfiles = 0;
@@ -403,9 +394,9 @@ static options* scanArgs(int argc, char **argv) {
     for (i = 1; i < argc; ) {
 	arg = argv[i++];
 	if (*arg == '-') {
-	    i = doFlags (arg+1, i, argc, argv, opts);
+	    i = doFlags(arg+1, i, argc, argv, &opts);
 	    if (i <= 0) {
-		opts->state = i;
+		opts.state = i;
 		goto opts_done;
 	    }
 	} else if (arg)
@@ -413,32 +404,32 @@ static options* scanArgs(int argc, char **argv) {
     }
 
     /* Handle additional semantics */
-    if (opts->useFile == 0) {
+    if (opts.useFile == 0) {
 	if (nfiles == 0) {
 	    error(ERROR_ERROR,
 		  "No program supplied via argument or -f option");
-	    opts->state = -1;
+	    opts.state = -1;
 	} else {
-	    opts->program = input_filenames[0];
+	    opts.program = input_filenames[0];
 	    for (i = 1; i <= nfiles; i++)
 		input_filenames[i-1] = input_filenames[i];
 	    nfiles--;
 	}
     }
     if (nfiles == 0) {
-	opts->inFiles = 0;
+	opts.inFiles = 0;
 	free (input_filenames);
 	input_filenames = 0;
     }
     else
-	opts->inFiles = input_filenames;
+	opts.inFiles = input_filenames;
 
-    if (!(opts->outFile))
-	opts->outFile = sfstdout;
+    if (!opts.outFile)
+	opts.outFile = sfstdout;
 
   opts_done:
-    if (opts->state <= 0) {
-	if (opts->state < 0)
+    if (opts.state <= 0) {
+	if (opts.state < 0)
 	    error(ERROR_USAGE|ERROR_ERROR, "%s", usage);
 	free (input_filenames);
     }
@@ -450,15 +441,15 @@ static Agobj_t* evalEdge(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agedge
 {
     int i;
     case_stmt *cs;
-    int okay;
+    bool okay;
 
     state->curobj = (Agobj_t *) e;
     for (i = 0; i < xprog->n_estmts; i++) {
 	cs = xprog->edge_stmts + i;
 	if (cs->guard)
-	    okay = (exeval(prog, cs->guard, state)).integer;
+	    okay = exeval(prog, cs->guard, state).integer != 0;
 	else
-	    okay = 1;
+	    okay = true;
 	if (okay) {
 	    if (cs->action)
 		exeval(prog, cs->action, state);
@@ -473,15 +464,15 @@ static Agobj_t* evalNode(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agnode
 {
     int i;
     case_stmt *cs;
-    int okay;
+    bool okay;
 
     state->curobj = (Agobj_t *) n;
     for (i = 0; i < xprog->n_nstmts; i++) {
 	cs = xprog->node_stmts + i;
 	if (cs->guard)
-	    okay = (exeval(prog, cs->guard, state)).integer;
+	    okay = exeval(prog, cs->guard, state).integer != 0;
 	else
-	    okay = 1;
+	    okay = true;
 	if (okay) {
 	    if (cs->action)
 		exeval(prog, cs->action, state);
@@ -885,6 +876,9 @@ static jmp_buf jbuf;
 static void 
 gvexitf (Expr_t *handle, Exdisc_t *discipline, int v)
 {
+    (void)handle;
+    (void)discipline;
+
     longjmp (jbuf, v);
 }
 
@@ -930,7 +924,6 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
     Gpr_t *state = 0;
     gpr_info info;
     int rv = 0;
-    options* opts = 0;
     int cleanup, i, incoreGraphs;
     Agraph_t* nextg = NULL;
 
@@ -941,22 +934,22 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	if (uopts->err) setDisc (sfstderr, &errdisc, uopts->err);
     }
 
-    opts = scanArgs(argc, argv);
-    if (opts->state <= 0) {
-	rv = opts->state;
+    options opts = scanArgs(argc, argv);
+    if (opts.state <= 0) {
+	rv = opts.state;
 	goto finish;
     }
 
-    if (opts->verbose)
+    if (opts.verbose)
 	gvstart_timer ();
-    prog = parseProg(opts->program, opts->useFile);
+    prog = parseProg(opts.program, opts.useFile);
     if (!prog) {
 	rv = 1;
 	goto finish;
     }
-    info.outFile = opts->outFile;
-    info.argc = opts->argc;
-    info.argv = opts->argv;
+    info.outFile = opts.outFile;
+    info.argc = opts.argc;
+    info.argv = opts.argv;
     info.errf = gverrorf;
     if (uopts) 
 	info.flags = uopts->flags; 
@@ -973,7 +966,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
     }
     if (uopts->bindings)
 	addBindings (state, uopts->bindings);
-    xprog = compileProg(prog, state, opts->compflags);
+    xprog = compileProg(prog, state, opts.compflags);
     if (!xprog) {
 	rv = 1;
 	goto finish;
@@ -998,7 +991,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
     else
 	incoreGraphs = 0;
 
-    if (opts->verbose)
+    if (opts.verbose)
 	fprintf(stderr, "Parse/compile/init: %.2f secs.\n", gvelapsed_sec());
     /* do begin */
     if (xprog->begin_stmt)
@@ -1009,13 +1002,13 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	if (uopts && uopts->ingraphs)
 	    ing = newIngGraphs(0, uopts->ingraphs, &ingDisc);
 	else
-	    ing = newIng(0, opts->inFiles, &ingDisc);
+	    ing = newIng(0, opts.inFiles, &ingDisc);
 	
-	if (opts->verbose) gvstart_timer ();
+	if (opts.verbose) gvstart_timer ();
 	for (state->curgraph = nextGraph(ing); state->curgraph; state->curgraph = nextg) {
-	    if (opts->verbose) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
+	    if (opts.verbose) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
 	    state->infname = fileName(ing);
-	    if (opts->readAhead)
+	    if (opts.readAhead)
 		nextg = state->nextgraph = nextGraph(ing);
 	    cleanup = 0;
 
@@ -1023,7 +1016,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 		comp_block* bp = xprog->blocks + i;
 
 		/* begin graph */
-		if (incoreGraphs && (opts->compflags & CLONE))
+		if (incoreGraphs && (opts.compflags & CLONE))
 		    state->curgraph = (Agraph_t*)clone (0, (Agobj_t*)(state->curgraph));
 		state->curobj = (Agobj_t *) state->curgraph;
 		state->tvroot = 0;
@@ -1040,7 +1033,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	    state->curobj = (Agobj_t *) state->curgraph;
 	    if (xprog->endg_stmt)
 		exeval(xprog->prog, xprog->endg_stmt, state);
-	    if (opts->verbose) fprintf(stderr, "Finish graph: %.2f secs.\n", gvelapsed_sec());
+	    if (opts.verbose) fprintf(stderr, "Finish graph: %.2f secs.\n", gvelapsed_sec());
 
 	    /* if $O == $G and $T is empty, delete $T */
 	    if ((state->outgraph == state->curgraph) &&
@@ -1052,11 +1045,11 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	     * be non-empty or the -c option was used.
 	     */
 	    if (state->outgraph && (agnnodes(state->outgraph)
-				    || (opts->compflags & SRCOUT))) {
+				    || (opts.compflags & SRCOUT))) {
 		if (uopts && (uopts->flags & GV_USE_OUTGRAPH))
 		    addOutputGraph (state, uopts);
 		else
-		    sfioWrite (state->outgraph, opts->outFile, state->dfltIO);
+		    sfioWrite (state->outgraph, opts.outFile, state->dfltIO);
 	    }
 
 	    if (!incoreGraphs)
@@ -1064,10 +1057,10 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	    state->target = 0;
 	    state->outgraph = 0;
 	
-	    if (opts->verbose) gvstart_timer ();
-	    if (!opts->readAhead)
+	    if (opts.verbose) gvstart_timer ();
+	    if (!opts.readAhead)
 		nextg = nextGraph(ing);
-	    if (opts->verbose && nextg) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
+	    if (opts.verbose && nextg) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
 	}
     }
 
@@ -1083,7 +1076,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
     freeCompileProg (xprog);
     closeGPRState(state);
     if (ing) closeIngraph (ing);
-    freeOpts (opts);
+    freeOpts(opts);
 
     if (uopts) {
 	if (uopts->out) sfdisc (sfstdout, 0);
