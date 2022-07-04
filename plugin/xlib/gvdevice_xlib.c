@@ -188,7 +188,7 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                 case ButtonPress:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    assert(xev.xbutton.button >= 1 && xev.xbutton.button <= 5 &&
+                    assert(xev.xbutton.button <= (unsigned)INT_MAX &&
                            "Xlib returned invalid button event");
                     job->callbacks->button_press(job, (int)xev.xbutton.button,
                                                  pointer);
@@ -205,7 +205,7 @@ static int handle_xlib_events (GVJ_t *firstjob, Display *dpy)
                 case ButtonRelease:
 		    pointer.x = (double)xev.xbutton.x;
 		    pointer.y = (double)xev.xbutton.y;
-                    assert(xev.xbutton.button >= 1 && xev.xbutton.button <= 5 &&
+                    assert(xev.xbutton.button <= (unsigned)INT_MAX &&
                            "Xlib returned invalid button event");
                     job->callbacks->button_release(job, (int)xev.xbutton.button,
                                                    pointer);

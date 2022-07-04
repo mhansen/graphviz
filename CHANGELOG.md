@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (5.0.1)]
 
+### Fixed
+
+- -Tx11: Assertion `xev.xbutton.button >= 1 && xev.xbutton.button <= 5 && "Xlib
+  returned invalid button event"` failed #2256
+
 ## [5.0.0] – 2022-07-07
 
 ### Changed
