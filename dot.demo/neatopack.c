@@ -23,6 +23,9 @@ int main(int argc, char *argv[]) {
     fp = stdin;
   graph_t *g = agread(fp, NULL);
 
+  aginit(g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+  aginit(g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
+
   int ncc;
   graph_t **cc = ccomps(g, &ncc, NULL);
 
