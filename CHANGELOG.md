@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - b15.gv crashes dot #827
 - heap overflow in function startElementHandler in gxl2gv.c #2093
 - Crash on assertion #121
+- `xdotversion` attribute is no longer misparsed. This was a regression in
+  Graphviz 2.47.2. #358
 
 ## [4.0.0] – 2022-05-29
 
