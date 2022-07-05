@@ -178,7 +178,7 @@ static void addToMap(Dt_t * map, char *name, char *uniqueName)
     obj.name = name;
     objp = dtinsert(map, &obj);
     assert(objp->unique_name == 0);
-    objp->unique_name = strdup(uniqueName);
+    objp->unique_name = gv_strdup(uniqueName);
 }
 
 static char *mapLookup(Dt_t *nm, const char *name) {

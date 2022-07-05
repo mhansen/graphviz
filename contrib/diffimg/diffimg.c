@@ -40,18 +40,10 @@
 #include <gd.h>
 #include <stdbool.h>
 
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 
 static char *pstopng="gs -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=- -q -";
-
-static void *xmalloc(size_t size) {
-  void *p = malloc(size);
-  if (size > 0 && p == NULL) {
-    fprintf(stderr, "Out of memory\n");
-    graphviz_exit(EX_OSERR);
-  }
-  return p;
-}
 
 static gdImagePtr imageLoad (char *filename)
 {
@@ -73,11 +65,11 @@ static gdImagePtr imageLoad (char *filename)
     }
     if (strcasecmp(ext, ".ps") == 0) {
 	ext = ".png";
-	tmp = xmalloc(strlen(filename) + strlen(ext) + 1);
+	tmp = gv_alloc(strlen(filename) + strlen(ext) + 1);
 	strcpy(tmp,filename);
 	strcat(tmp,ext);
 	
-	cmd = xmalloc(strlen(pstopng) + 2 + strlen(filename) + 2 + strlen(tmp) + 1);
+	cmd = gv_alloc(strlen(pstopng) + 2 + strlen(filename) + 2 + strlen(tmp) + 1);
 	strcpy(cmd,pstopng);
 	strcat(cmd," <");
 	strcat(cmd,filename);
