@@ -25,6 +25,8 @@
 extern "C" {
 #endif
 
+/// @cond
+
 #ifdef GVDLL
 #ifdef EXPORT_CGRAPH
 #define CGRAPH_API __declspec(dllexport)
@@ -43,6 +45,8 @@ extern "C" {
 #ifndef TRUE
 #define TRUE (!FALSE)
 #endif
+
+/// @endcond
 
 typedef uint64_t IDTYPE;
 
@@ -398,12 +402,16 @@ CGRAPH_API void aginternalmapclearlocalnames(Agraph_t * g);
 #define agnew(g,t)		((t*)agalloc(g,sizeof(t)))
 #define agnnew(g,n,t)	((t*)agalloc(g,(n)*sizeof(t)))
 
+/// @cond
+
 /* support for extra API misuse warnings if available */
 #ifdef __GNUC__
   #define PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
 #else
   #define PRINTF_LIKE(index, first) /* nothing */
 #endif
+
+/// @endcond
 
 /* error handling */
 typedef enum { AGWARN, AGERR, AGMAX, AGPREV } agerrlevel_t;
