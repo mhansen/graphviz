@@ -9,7 +9,9 @@
  *************************************************************************/
 
 #include <cgraph/cghdr.h>
+#include <cgraph/likely.h>
 #include <stddef.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 /*
@@ -94,8 +96,7 @@ char *agstrbind(Agraph_t * g, const char *s)
     return refstrbind(refdict(g), s);
 }
 
-char *agstrdup(Agraph_t * g, const char *s)
-{
+static char *agstrdup_internal(Agraph_t *g, const char *s, bool is_html) {
     refstr_t *r;
     Dict_t *strdict;
     size_t sz;
@@ -110,10 +111,14 @@ char *agstrdup(Agraph_t * g, const char *s)
 	sz = sizeof(refstr_t) + strlen(s);
 	if (g)
 	    r = agalloc(g, sz);
-	else
+	else {
 	    r = malloc(sz);
+	    if (UNLIKELY(sz > 0 && r == NULL)) {
+	        return NULL;
+	    }
+	}
 	r->refcnt = 1;
-	r->is_html = 0;
+	r->is_html = is_html;
 	strcpy(r->store, s);
 	r->s = r->store;
 	dtinsert(strdict, r);
@@ -121,31 +126,12 @@ char *agstrdup(Agraph_t * g, const char *s)
     return r->s;
 }
 
-char *agstrdup_html(Agraph_t * g, const char *s)
-{
-    refstr_t *r;
-    Dict_t *strdict;
-    size_t sz;
+char *agstrdup(Agraph_t *g, const char *s) {
+  return agstrdup_internal(g, s, false);
+}
 
-    if (s == NULL)
-	 return NULL;
-    strdict = refdict(g);
-    r = refsymbind(strdict, s);
-    if (r)
-	r->refcnt++;
-    else {
-	sz = sizeof(refstr_t) + strlen(s);
-	if (g)
-	    r = agalloc(g, sz);
-	else
-	    r = malloc(sz);
-	r->refcnt = 1;
-	r->is_html = 1;
-	strcpy(r->store, s);
-	r->s = r->store;
-	dtinsert(strdict, r);
-    }
-    return r->s;
+char *agstrdup_html(Agraph_t *g, const char *s) {
+  return agstrdup_internal(g, s, true);
 }
 
 int agstrfree(Agraph_t * g, const char *s)
