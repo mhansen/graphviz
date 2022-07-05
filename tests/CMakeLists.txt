@@ -67,6 +67,8 @@ macro(CREATE_TEST testname)
 endmacro()
 
 CREATE_TEST(AGraph_construction)
+CREATE_TEST(engines)
+set_tests_properties(test_engines PROPERTIES WILL_FAIL true)
 CREATE_TEST(GVContext_construction)
 CREATE_TEST(GVContext_render_svg)
 CREATE_TEST(GVLayout_construction)
