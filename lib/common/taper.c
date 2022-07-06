@@ -19,7 +19,6 @@
 #include <stdlib.h>
 #include <types.h>
 #include <common/memory.h>
-#include <common/logic.h>
 #include <cgraph/agxbuf.h>
 #include <common/utils.h>
 

@@ -12,7 +12,6 @@
 #include <cgraph/agxbuf.h>
 #include <common/htmltable.h>
 #include <common/entities.h>
-#include <common/logic.h>
 #include <math.h>
 #include <gvc/gvc.h>
 #include <cgraph/strcasecmp.h>

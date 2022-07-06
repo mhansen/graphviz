@@ -12,7 +12,6 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include <common/logic.h>
 #include <common/memory.h>
 #include <common/arith.h>
 #include <limits.h>

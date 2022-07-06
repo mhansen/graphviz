@@ -39,7 +39,6 @@ int placeLabels(object_t * objs, int n_objs,
 
 #ifdef XLABEL_INT
 #include <label/index.h>
-#include <logic.h>
 #include <cdt.h>
 
 #ifndef XLNDSCALE

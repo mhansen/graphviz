@@ -13,7 +13,6 @@
 #include <sfdpgen/sparse_solve.h>
 #include <sfdpgen/sfdpinternal.h>
 #include <common/memory.h>
-#include <common/logic.h>
 #include <math.h>
 #include <common/arith.h>
 #include <common/types.h>

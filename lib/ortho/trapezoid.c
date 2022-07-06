@@ -25,7 +25,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <common/geom.h>
-#include <common/logic.h>
 #include <common/memory.h>
 #include <common/types.h>
 #include <ortho/trap.h>

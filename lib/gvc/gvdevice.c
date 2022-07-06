@@ -51,7 +51,6 @@ static uint64_t crc;
 #include <gvc/gvcjob.h>
 #include <gvc/gvcint.h>
 #include <gvc/gvcproc.h>
-#include <common/logic.h>
 #include <common/utils.h>
 #include <gvc/gvio.h>
 
