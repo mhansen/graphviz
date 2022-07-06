@@ -102,7 +102,6 @@ bool gvLayoutDone(Agraph_t * g)
  * First, if the graph has a layout-specific cleanup function attached,
  * use it and reset.
  * Then, if the root graph has not been cleaned up, clean it up and reset.
- * Only the root graph has GD_drawing non-null.
  */
 int gvFreeLayout(GVC_t * gvc, Agraph_t * g)
 {
