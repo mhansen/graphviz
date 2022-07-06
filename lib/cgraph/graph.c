@@ -239,11 +239,15 @@ static int agraphidcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
 {
     (void)d; /* unused */
     (void)disc; /* unused */
-    ptrdiff_t	v;
     Agraph_t *sg0 = arg0;
     Agraph_t *sg1 = arg1;
-    v = (AGID(sg0) - AGID(sg1));
-    return ((v==0)?0:(v<0?-1:1));
+    if (AGID(sg0) < AGID(sg1)) {
+	return -1;
+    }
+    if (AGID(sg0) > AGID(sg1)) {
+	return 1;
+    }
+    return 0;
 }
 
 Dtdisc_t Ag_subgraph_id_disc = {
