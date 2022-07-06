@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/cghdr.h>
 #include <stddef.h>
 
@@ -74,7 +75,9 @@ Agraph_t *agopen1(Agraph_t * g)
 
     par = agparent(g);
     if (par) {
-	AGSEQ(g) = agnextseq(par, AGRAPH);
+	uint64_t seq = agnextseq(par, AGRAPH);
+	assert((seq & SEQ_MASK) == seq && "sequence ID overflow");
+	AGSEQ(g) = seq & SEQ_MASK;
 	dtinsert(par->g_dict, g);
     }
     if (!par || par->desc.has_attrs)

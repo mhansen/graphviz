@@ -72,6 +72,9 @@ int agstrclose(Agraph_t * g);
 	/* ref string management */
 void agmarkhtmlstr(char *s);
 
+/// Mask of `Agtag_s.seq` width
+enum { SEQ_MASK = (1 << (sizeof(unsigned) * 8 - 4)) - 1 };
+
 	/* object set management */
 Agnode_t *agfindnode_by_id(Agraph_t * g, IDTYPE id);
 uint64_t agnextseq(Agraph_t * g, int objtype);

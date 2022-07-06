@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/cghdr.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -70,10 +71,12 @@ static Agnode_t *newnode(Agraph_t * g, IDTYPE id, uint64_t seq)
 {
     Agnode_t *n;
 
+    assert((seq & SEQ_MASK) == seq && "sequence ID overflow");
+
     n = agalloc(g, sizeof(Agnode_t));
     AGTYPE(n) = AGNODE;
     AGID(n) = id;
-    AGSEQ(n) = seq;
+    AGSEQ(n) = seq & SEQ_MASK;
     n->root = agroot(g);
     if (agroot(g)->desc.has_attrs)
 	(void)agbindrec(n, AgDataRecName, sizeof(Agattr_t), false);
@@ -356,7 +359,11 @@ int agnodebefore(Agnode_t *fst, Agnode_t *snd)
 	/* move snd out of the way somewhere */
 	n = snd;
 	if (agapply (g, (Agobj_t *) n, (agobjfn_t) agnodesetfinger, n, FALSE) != SUCCESS) return FAILURE;
-	AGSEQ(snd) = (g->clos->seq[AGNODE] + 2);
+	{
+		uint64_t seq = g->clos->seq[AGNODE] + 2;
+		assert((seq & SEQ_MASK) == seq && "sequence ID overflow");
+		AGSEQ(snd) = seq & SEQ_MASK;
+	}
 	if (agapply (g, (Agobj_t *) n, (agobjfn_t) agnoderenew, n, FALSE) != SUCCESS) return FAILURE;
 	n = agprvnode(g,snd);
 	do {
