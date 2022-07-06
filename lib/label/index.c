@@ -14,7 +14,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <assert.h>
-#include <common/logic.h>
+#include <stdbool.h>
 #include <common/memory.h>
 
 LeafList_t *RTreeNewLeafList(Leaf_t * lp)
@@ -249,7 +249,7 @@ RTreeInsert2(RTree_t * rtp, Rect_t * r, void *data,
 	b.child = (Node_t *) data;
 	return AddBranch(rtp, &b, n, new);
     } else {			/* Not supposed to happen */
-	assert(FALSE);
+	assert(false);
 	return 0;
     }
 }
