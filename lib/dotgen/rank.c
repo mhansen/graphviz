@@ -271,9 +271,6 @@ collapse_sets(graph_t *rg, graph_t *g)
 {
     int c;
     graph_t  *subg;
-#ifdef OBSOLETE
-    node_t *n;
-#endif
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	c = rank_set_class(subg);
@@ -285,14 +282,6 @@ collapse_sets(graph_t *rg, graph_t *g)
 	}
 	else collapse_sets(rg, subg);
 
-#ifdef OBSOLETE
- Collapsing leaves is currently obsolete
-
-	/* mark nodes with ordered edges so their leaves are not collapsed */
-	if (agget(subg, "ordering"))
-	    for (n = agfstnode(subg); n; n = agnxtnode(subg, n))
-		ND_order(n) = 1;
-#endif
     }
 }
 
@@ -514,67 +503,6 @@ bool is_cluster(graph_t * g)
 {
     return is_a_cluster(g);   // from utils.c
 }
-
-#ifdef OBSOLETE
-static node_t*
-merge_leaves(graph_t * g, node_t * cur, node_t * new)
-{
-    node_t *rv;
-
-    if (cur == NULL)
-	rv = new;
-    else {
-	rv = UF_union(cur, new);
-	ND_ht(rv) = MAX(ND_ht(cur), ND_ht(new));
-	ND_lw(rv) = ND_lw(cur) + ND_lw(new) + GD_nodesep(g) / 2;
-	ND_rw(rv) = ND_rw(cur) + ND_rw(new) + GD_nodesep(g) / 2;
-    }
-    return rv;
-}
-
-static void 
-potential_leaf(graph_t * g, edge_t * e, node_t * leaf)
-{
-    node_t *par;
-
-    if ((ED_tail_port(e).p.x) || (ED_head_port(e).p.x))
-	return;
-    if ((ED_minlen(e) != 1) || (ND_order(agtail(e)) > 0))
-	return;
-    par = ((leaf != aghead(e)) ? aghead(e) : agtail(e));
-    ND_ranktype(leaf) = LEAFSET;
-    if (par == agtail(e))
-	GD_outleaf(par) = merge_leaves(g, GD_outleaf(par), leaf);
-    else
-	GD_inleaf(par) = merge_leaves(g, GD_inleaf(par), leaf);
-}
-
-static void 
-collapse_leaves(graph_t * g)
-{
-    node_t *n;
-    edge_t *e;
-
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-
-	/* consider n as a potential leaf of some other node. */
-	if ((ND_ranktype(n) != NOCMD) || (ND_order(n)))
-	    continue;
-	if (agfstout(g, n) == NULL) {
-	    if ((e = agfstin(g, n)) && (agnxtin(g, e) == NULL)) {
-		potential_leaf(g, AGMKOUT(e), n);
-		continue;
-	    }
-	}
-	if (agfstin(g, n) == NULL) {
-	    if ((e = agfstout(g, n)) && (agnxtout(g, e) == NULL)) {
-		potential_leaf(g, e, n);
-		continue;
-	    }
-	}
-    }
-}
-#endif
 
 /* new ranking code:
  * Allows more constraints
