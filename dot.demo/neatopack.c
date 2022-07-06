@@ -12,6 +12,7 @@
 #include <graphviz/pack.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char *argv[]) {
   GVC_t *gvc = gvContext();
@@ -43,6 +44,7 @@ int main(int argc, char *argv[]) {
     gvFreeLayout(gvc, sg);
     agdelete(g, sg);
   }
+  free(cc);
 
   agclose(g);
 
