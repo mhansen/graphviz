@@ -361,7 +361,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define GD_has_sinkrank(g)	(((Agraphinfo_t*)AGDATA(g))->has_sinkrank)
 #define GD_ht1(g) (((Agraphinfo_t*)AGDATA(g))->ht1)
 #define GD_ht2(g) (((Agraphinfo_t*)AGDATA(g))->ht2)
-#define GD_inleaf(g) (((Agraphinfo_t*)AGDATA(g))->inleaf)
 #define GD_installed(g) (((Agraphinfo_t*)AGDATA(g))->installed)
 #define GD_label(g) (((Agraphinfo_t*)AGDATA(g))->label)
 #define GD_leader(g) (((Agraphinfo_t*)AGDATA(g))->leader)
