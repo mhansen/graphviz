@@ -634,9 +634,9 @@ static int scomp(const void *s1, const void *s2){
   const double *ss1 = s1;
   const double *ss2 = s2;
 
-  if ((ss1)[1] > (ss2)[1]){
+  if (ss1[1] > ss2[1]){
     return -1;
-  } else if ((ss1)[1] < (ss2)[1]){
+  } else if (ss1[1] < ss2[1]){
     return 1;
   }
   return 0;
