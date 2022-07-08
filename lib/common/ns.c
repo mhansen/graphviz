@@ -679,7 +679,13 @@ static void LR_balance(void)
 }
 
 static int decreasingrankcmpf(node_t **n0, node_t **n1) {
-  return ND_rank(*n1) - ND_rank(*n0);
+  if (ND_rank(*n1) < ND_rank(*n0)) {
+    return -1;
+  }
+  if (ND_rank(*n1) > ND_rank(*n0)) {
+    return 1;
+  }
+  return 0;
 }
 
 static int increasingrankcmpf(node_t **n0, node_t **n1) {
