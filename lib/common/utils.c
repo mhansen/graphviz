@@ -10,6 +10,8 @@
 
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/strview.h>
+#include <cgraph/tokenize.h>
 #include <common/htmltable.h>
 #include <common/entities.h>
 #include <math.h>
@@ -319,28 +321,24 @@ char *Fgets(FILE * fp)
 #define PATHSEP ":"
 #endif
 
-static char** mkDirlist (const char* list, size_t* maxdirlen)
-{
+static strview_t *mkDirlist(const char *list, size_t *maxdirlen) {
     int cnt = 0;
-    char* s = strdup (list);
-    char* dir;
-    char** dirs = NULL;
+    strview_t *dirs = NULL;
     size_t maxlen = 0;
 
-    for (dir = strtok (s, PATHSEP); dir; dir = strtok (NULL, PATHSEP)) {
-	dirs = ALLOC (cnt+2,dirs,char*);
-	dirs[cnt++] = dir;
-	maxlen = MAX(maxlen, strlen (dir));
+    for (tok_t t = tok(list, PATHSEP); !tok_end(&t); tok_next(&t)) {
+        strview_t dir = tok_get(&t);
+        dirs = ALLOC(cnt + 2, dirs, strview_t);
+        dirs[cnt++] = dir;
+        maxlen = MAX(maxlen, dir.size);
     }
-    dirs[cnt] = NULL;
+    dirs[cnt] = (strview_t){0};
     *maxdirlen = maxlen;
     return dirs;
 }
 
-static char* findPath (char** dirs, size_t maxdirlen, const char* str)
-{
+static char *findPath(const strview_t *dirs, size_t maxdirlen, const char *str) {
     static char *safefilename = NULL;
-    char** dp;
 
 	/* allocate a buffer that we are sure is big enough
          * +1 for null character.
@@ -348,8 +346,8 @@ static char* findPath (char** dirs, size_t maxdirlen, const char* str)
          */
     safefilename = realloc(safefilename, maxdirlen + strlen(str) + 2);
 
-    for (dp = dirs; *dp; dp++) {
-	sprintf (safefilename, "%s%s%s", *dp, DIRSEP, str);
+    for (const strview_t *dp = dirs; dp != NULL && dp->data != NULL; dp++) {
+	sprintf(safefilename, "%.*s%s%s", (int)dp->size, dp->data, DIRSEP, str);
 	if (access (safefilename, R_OK) == 0)
 	    return safefilename;
     }
@@ -361,7 +359,7 @@ const char *safefile(const char *filename)
     static bool onetime = true;
     static char *pathlist = NULL;
     static size_t maxdirlen;
-    static char** dirs;
+    static strview_t *dirs;
     const char *str, *p;
 
     if (!filename || !filename[0])
@@ -407,11 +405,8 @@ const char *safefile(const char *filename)
     }
 
     if (pathlist != Gvimagepath) {
-	if (dirs) {
-	    free (dirs[0]);
-	    free (dirs);
-	    dirs = NULL;
-	}
+	free (dirs);
+	dirs = NULL;
 	pathlist = Gvimagepath;
 	if (pathlist && *pathlist)
 	    dirs = mkDirlist (pathlist, &maxdirlen);
