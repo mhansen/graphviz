@@ -97,7 +97,13 @@ static int cmpf(const void *X, const void *Y)
     const ginfo *x = *(ginfo *const *) X;
     const ginfo *y = *(ginfo *const *) Y;
     /* flip order to get descending array */
-    return y->perim - x->perim;
+    if (y->perim < x->perim) {
+        return -1;
+    }
+    if (y->perim > x->perim) {
+      return 1;
+    }
+    return 0;
 }
 
 /* fillLine:
