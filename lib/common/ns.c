@@ -689,7 +689,13 @@ static int decreasingrankcmpf(node_t **n0, node_t **n1) {
 }
 
 static int increasingrankcmpf(node_t **n0, node_t **n1) {
-  return ND_rank(*n0) - ND_rank(*n1);
+  if (ND_rank(*n0) < ND_rank(*n1)) {
+    return -1;
+  }
+  if (ND_rank(*n0) > ND_rank(*n1)) {
+    return 1;
+  }
+  return 0;
 }
 
 static void TB_balance(void)
