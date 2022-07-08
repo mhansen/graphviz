@@ -291,10 +291,9 @@ static int agsubnodeseqcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
 {
     (void)d; /* unused */
     (void)disc; /* unused */
-    Agsubnode_t *sn0, *sn1;
 
-    sn0 = (Agsubnode_t *) arg0;
-    sn1 = (Agsubnode_t *) arg1;
+    Agsubnode_t *sn0 = arg0;
+    Agsubnode_t *sn1 = arg1;
 
     if (AGSEQ(sn0->node) < AGSEQ(sn1->node)) return -1;
     if (AGSEQ(sn0->node) > AGSEQ(sn1->node)) return 1;
