@@ -1025,11 +1025,10 @@ transformf (pointf p, pointf del, int flip)
  */
 static int edgelblcmpfn(edge_t** ptr0, edge_t** ptr1)
 {
-    edge_t *e0, *e1;
     pointf sz0, sz1;
 
-    e0 = (edge_t *) * ptr0;
-    e1 = (edge_t *) * ptr1;
+    edge_t *e0 = *ptr0;
+    edge_t *e1 = *ptr1;
 
     if (ED_label(e0)) {
 	if (ED_label(e1)) {
