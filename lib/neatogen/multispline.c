@@ -170,7 +170,13 @@ static int cmpIpair(Dt_t * d, int *p1, int *p2, Dtdisc_t * disc)
     (void)d;
     (void)disc;
 
-    return (*p1 - *p2);
+    if (*p1 < *p2) {
+        return -1;
+    }
+    if (*p1 > *p2) {
+        return 1;
+    }
+    return 0;
 }
 
 static void *newIpair(Dt_t * d, Ipair * objp, Dtdisc_t * disc)
