@@ -658,8 +658,12 @@ static int edgecmp(edge_t** ptr0, edge_t** ptr1)
     e1 = *ptr1;
     et0 = ED_tree_index(e0) & EDGETYPEMASK;
     et1 = ED_tree_index(e1) & EDGETYPEMASK;
-    if (et0 != et1)
-	return (et1 - et0);
+    if (et0 < et1) {
+	return 1;
+    }
+    if (et0 > et1) {
+	return -1;
+    }
 
     le0 = getmainedge(e0);
     le1 = getmainedge(e1);
@@ -668,19 +672,31 @@ static int edgecmp(edge_t** ptr0, edge_t** ptr1)
     t1 = ND_rank(agtail(le1)) - ND_rank(aghead(le1));
     v0 = abs((int)t0);   /* ugly, but explicit as to how we avoid equality tests on fp numbers */
     v1 = abs((int)t1);
-    if (v0 != v1)
-	return (v0 - v1);
+    if (v0 < v1) {
+	return -1;
+    }
+    if (v0 > v1) {
+	return 1;
+    }
 
     t0 = ND_coord(agtail(le0)).x - ND_coord(aghead(le0)).x;
     t1 = ND_coord(agtail(le1)).x - ND_coord(aghead(le1)).x;
     v0 = abs((int)t0);
     v1 = abs((int)t1);
-    if (v0 != v1)
-	return (v0 - v1);
+    if (v0 < v1) {
+	return -1;
+    }
+    if (v0 > v1) {
+	return 1;
+    }
 
     /* This provides a cheap test for edges having the same set of endpoints.  */
-    if (AGSEQ(le0) != AGSEQ(le1))
-	return (AGSEQ(le0) - AGSEQ(le1));
+    if (AGSEQ(le0) < AGSEQ(le1)) {
+	return -1;
+    }
+    if (AGSEQ(le0) > AGSEQ(le1)) {
+	return 1;
+    }
 
     ea = (ED_tail_port(e0).defined || ED_head_port(e0).defined) ? e0 : le0;
     if (ED_tree_index(ea) & BWDEDGE) {
@@ -699,13 +715,29 @@ static int edgecmp(edge_t** ptr0, edge_t** ptr1)
 
     et0 = ED_tree_index(e0) & GRAPHTYPEMASK;
     et1 = ED_tree_index(e1) & GRAPHTYPEMASK;
-    if (et0 != et1)
-	return (et0 - et1);
+    if (et0 < et1) {
+	return -1;
+    }
+    if (et0 > et1) {
+	return 1;
+    }
 
-    if (et0 == FLATEDGE && ED_label(e0) != ED_label(e1))
-	return (int) (ED_label(e0) - ED_label(e1));
+    if (et0 == FLATEDGE) {
+	if (ED_label(e0) < ED_label(e1)) {
+	    return -1;
+	}
+	if (ED_label(e0) > ED_label(e1)) {
+	    return 1;
+	}
+    }
 
-    return (AGSEQ(e0) - AGSEQ(e1));
+    if (AGSEQ(e0) < AGSEQ(e1)) {
+	return -1;
+    }
+    if (AGSEQ(e0) > AGSEQ(e1)) {
+	return 1;
+    }
+    return 0;
 }
 
 /* cloneGraph:
