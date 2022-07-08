@@ -166,7 +166,6 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
   webdata = {
     "version": f"graphviz-{options.version}",
     "sources": [],
-    # TODO: fill in
     "windows": [],
   }
 
