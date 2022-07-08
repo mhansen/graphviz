@@ -654,8 +654,8 @@ static int edgecmp(edge_t** ptr0, edge_t** ptr1)
 
     fwdedgea.out.base.data = (Agrec_t*)&fwdedgeai;
     fwdedgeb.out.base.data = (Agrec_t*)&fwdedgebi;
-    e0 = (edge_t *) * ptr0;
-    e1 = (edge_t *) * ptr1;
+    e0 = *ptr0;
+    e1 = *ptr1;
     et0 = ED_tree_index(e0) & EDGETYPEMASK;
     et1 = ED_tree_index(e1) & EDGETYPEMASK;
     if (et0 != et1)
