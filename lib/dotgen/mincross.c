@@ -1832,7 +1832,13 @@ static bool medians(graph_t * g, int r0, int r1)
 
 static int nodeposcmpf(node_t ** n0, node_t ** n1)
 {
-    return (ND_order(*n0) - ND_order(*n1));
+  if (ND_order(*n0) < ND_order(*n1)) {
+    return -1;
+  }
+  if (ND_order(*n0) > ND_order(*n1)) {
+    return 1;
+  }
+  return 0;
 }
 
 static int edgeidcmpf(edge_t ** e0, edge_t ** e1)
