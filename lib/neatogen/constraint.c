@@ -38,7 +38,13 @@ static int cmpitem(Dt_t * d, int *p1, int *p2, Dtdisc_t * disc)
     (void)d;
     (void)disc;
 
-    return (*p1 - *p2);
+    if (*p1 < *p2) {
+        return -1;
+    }
+    if (*p1 > *p2) {
+        return 1;
+    }
+    return 0;
 }
 
 static Dtdisc_t constr = {
