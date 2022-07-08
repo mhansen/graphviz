@@ -51,9 +51,6 @@
     <ClInclude Include="common\htmltable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="common\logic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="common\macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>

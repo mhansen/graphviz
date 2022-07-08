@@ -15,7 +15,6 @@
 #include <assert.h>
 #include <limits.h>
 #include <stdlib.h>
-#include <common/logic.h>
 #include <common/arith.h>
 #include <label/rectangle.h>
 #include <cgraph/cgraph.h>

@@ -23,7 +23,6 @@
 #ifndef STANDALONE
 #include "cgraph.h"
 #include "globals.h"
-#include "logic.h"
 #include "arith.h"
 #include <common/memory.h>
 #endif  /* STANDALONE */

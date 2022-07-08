@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <label/split.q.h>
-#include <common/logic.h>
+#include <stdbool.h>
 
 /* Forward declarations */
 static void MethodZero(RTree_t * rtp);
@@ -222,7 +222,7 @@ static void Classify(RTree_t * rtp, int i, int group)
     assert(!rtp->split.Partitions[0].taken[i]);
 
     rtp->split.Partitions[0].partition[i] = group;
-    rtp->split.Partitions[0].taken[i] = TRUE;
+    rtp->split.Partitions[0].taken[i] = true;
 
     if (rtp->split.Partitions[0].count[group] == 0)
 	rtp->split.Partitions[0].cover[group] =
@@ -284,7 +284,7 @@ static void InitPVars(RTree_t * rtp)
     rtp->split.Partitions[0].area[0] = rtp->split.Partitions[0].area[1] =
 	0;
     for (size_t i = 0; i < NODECARD + 1; i++) {
-	rtp->split.Partitions[0].taken[i] = FALSE;
+	rtp->split.Partitions[0].taken[i] = false;
 	rtp->split.Partitions[0].partition[i] = -1;
     }
 }

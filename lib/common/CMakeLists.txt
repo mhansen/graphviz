@@ -52,7 +52,6 @@ add_library(common_obj OBJECT
   intset.h
   htmllex.h
   htmltable.h
-  logic.h
   macros.h
   memory.h
   pointset.h

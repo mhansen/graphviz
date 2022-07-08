@@ -11,7 +11,6 @@
 #include <sparse/LinkedList.h>
 #include <sfdpgen/PriorityQueue.h>
 #include <common/memory.h>
-#include <common/logic.h>
 #include <assert.h>
 #include <common/arith.h>
 #include <stddef.h>

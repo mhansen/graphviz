@@ -26,7 +26,6 @@
 #endif
 
 #include <common/types.h>
-#include <common/logic.h>
 #include <common/memory.h>
 #include <cgraph/agxbuf.h>
 

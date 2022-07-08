@@ -18,7 +18,6 @@
 #include <cgraph/cgraph.h>     /* for agerr() and friends */
 #include <neatogen/delaunay.h>
 #include <common/memory.h>
-#include <common/logic.h>
 
 #ifdef HAVE_GTS
 #include <gts.h>

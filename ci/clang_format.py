@@ -328,7 +328,6 @@ EXCLUDE = (
   "lib/common/intset.c",
   "lib/common/intset.h",
   "lib/common/labels.c",
-  "lib/common/logic.h",
   "lib/common/macros.h",
   "lib/common/memory.c",
   "lib/common/memory.h",

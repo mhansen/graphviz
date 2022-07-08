@@ -19,7 +19,6 @@
 #include <common/types.h>
 #include <common/memory.h>
 #include <common/arith.h>
-#include <common/logic.h>
 #include <math.h>
 #include <common/globals.h>
 #include <stdbool.h>
