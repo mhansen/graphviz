@@ -784,8 +784,7 @@ char *sprintXDot(xdot * x)
     agxbuf xb;
     agxbinit(&xb, BUFSIZ, buf);
     _printXDot(x, agxbput_, &xb, printXDot_Op);
-    s = strdup(agxbuse(&xb));
-    agxbfree(&xb);
+    s = agxbdisown(&xb);
 
     return s;
 }
