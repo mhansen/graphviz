@@ -354,7 +354,7 @@ Agraph_t *cloneG(Agraph_t * g, char* name)
     return ng;
 }
 
-/* clone:
+/* cloneO:
  * Create new object of type AGTYPE(obj) with all of its
  * attributes and substructure.
  * If obj is an edge, end nodes are cloned if necessary.
@@ -362,7 +362,7 @@ Agraph_t *cloneG(Agraph_t * g, char* name)
  * graph. Otherwise, create a clone subgraph of g.
  * Assume obj != NULL.
  */
-Agobj_t *clone(Agraph_t * g, Agobj_t * obj)
+Agobj_t *cloneO(Agraph_t * g, Agobj_t * obj)
 {
     Agobj_t *nobj = 0;
     Agedge_t *e;
@@ -397,8 +397,8 @@ Agobj_t *clone(Agraph_t * g, Agobj_t * obj)
     case AGINEDGE:
     case AGOUTEDGE:
 	e = (Agedge_t *) obj;
-	t = (Agnode_t *) clone(g, OBJ(agtail(e)));
-	h = (Agnode_t *) clone(g, OBJ(aghead(e)));
+	t = (Agnode_t *) cloneO(g, OBJ(agtail(e)));
+	h = (Agnode_t *) cloneO(g, OBJ(aghead(e)));
 	name = agnameof (AGMKOUT(e));
 	nobj = (Agobj_t *) openEdge(g, t, h, name);
 	if (nobj)

@@ -18,7 +18,7 @@ extern "C" {
 #include <expr/expr.h>
 
     extern void nodeInduce(Agraph_t * selected);
-    extern Agobj_t *clone(Agraph_t * g, Agobj_t * obj);
+    extern Agobj_t *cloneO(Agraph_t * g, Agobj_t * obj);
     extern Agraph_t *cloneG(Agraph_t * g, char* name);
     extern Agobj_t *copy(Agraph_t * g, Agobj_t * obj);
     extern int copyAttr(Agobj_t * obj, Agobj_t * obj1);
