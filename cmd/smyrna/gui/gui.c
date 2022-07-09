@@ -44,7 +44,6 @@ void load_attributes(void)
     char line[BUFSIZ];
     char *ss;
     char *pch;
-    int ind = 0;
     int attrcount = 0;
     static char *smyrna_attrs;
 
@@ -56,8 +55,7 @@ void load_attributes(void)
     if (file != NULL) {
 	while (fgets(line, sizeof line, file) != NULL) {
 	    pch = strtok(line, ",");
-	    ind = 0;
-	    while (pch != NULL) {
+	    for (int ind = 0; pch != NULL; ++ind) {
 		ss = strdup(pch);
 		pch = strtok(NULL, ",");
 		switch (ind) {
@@ -102,7 +100,6 @@ void load_attributes(void)
 		    attr[attrcount].ComboValuesCount++;
 		    break;
 		}
-		ind++;
 	    }
 	    attrcount++;
 	}
