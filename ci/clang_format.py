@@ -16,7 +16,7 @@ import sys
 # TODO: files that are not yet compliant
 EXCLUDE = (
   "cmd/dot/dot.c",
-  "cmd/dot/dot_builtins.c",
+  "cmd/dot/dot_builtins.cpp",
   "cmd/dot/no_builtins.c",
   "cmd/dotty/mswin32/dotty.c",
   "cmd/edgepaint/edgepaintmain.c",
