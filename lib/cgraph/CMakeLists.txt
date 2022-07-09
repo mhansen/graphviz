@@ -23,6 +23,7 @@ add_library(cgraph SHARED
   stack.h
   strcasecmp.h
   strview.h
+  tokenize.h
   unreachable.h
   unused.h
 

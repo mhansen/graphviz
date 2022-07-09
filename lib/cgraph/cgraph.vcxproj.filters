@@ -51,6 +51,9 @@
     <ClInclude Include="strview.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="tokenize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="unreachable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
