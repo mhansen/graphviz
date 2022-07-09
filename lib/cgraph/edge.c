@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/cghdr.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -199,18 +200,18 @@ static Agedge_t *newedge(Agraph_t * g, Agnode_t * t, Agnode_t * h,
 {
     Agedgepair_t *e2;
     Agedge_t *in, *out;
-    int seq;
 
     (void)agsubnode(g,t,TRUE);
     (void)agsubnode(g,h,TRUE);
     e2 = agalloc(g, sizeof(Agedgepair_t));
     in = &(e2->in);
     out = &(e2->out);
-    seq = agnextseq(g, AGEDGE);
+    uint64_t seq = agnextseq(g, AGEDGE);
+    assert((seq & SEQ_MASK) == seq && "sequence ID overflow");
     AGTYPE(in) = AGINEDGE;
     AGTYPE(out) = AGOUTEDGE;
     AGID(in) = AGID(out) = id;
-    AGSEQ(in) = AGSEQ(out) = seq;
+    AGSEQ(in) = AGSEQ(out) = seq & SEQ_MASK;
     in->node = t;
     out->node = h;
 

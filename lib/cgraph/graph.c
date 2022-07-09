@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/cghdr.h>
 #include <stddef.h>
 
@@ -74,7 +75,9 @@ Agraph_t *agopen1(Agraph_t * g)
 
     par = agparent(g);
     if (par) {
-	AGSEQ(g) = agnextseq(par, AGRAPH);
+	uint64_t seq = agnextseq(par, AGRAPH);
+	assert((seq & SEQ_MASK) == seq && "sequence ID overflow");
+	AGSEQ(g) = seq & SEQ_MASK;
 	dtinsert(par->g_dict, g);
     }
     if (!par || par->desc.has_attrs)
@@ -239,12 +242,15 @@ static int agraphidcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
 {
     (void)d; /* unused */
     (void)disc; /* unused */
-    ptrdiff_t	v;
-    Agraph_t *sg0, *sg1;
-    sg0 = (Agraph_t *) arg0;
-    sg1 = (Agraph_t *) arg1;
-    v = (AGID(sg0) - AGID(sg1));
-    return ((v==0)?0:(v<0?-1:1));
+    Agraph_t *sg0 = arg0;
+    Agraph_t *sg1 = arg1;
+    if (AGID(sg0) < AGID(sg1)) {
+	return -1;
+    }
+    if (AGID(sg0) > AGID(sg1)) {
+	return 1;
+    }
+    return 0;
 }
 
 Dtdisc_t Ag_subgraph_id_disc = {
