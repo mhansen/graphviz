@@ -88,7 +88,7 @@ def get_format(path: Path) -> str:
   if path.suffix[1:].lower() == "exe":
     return "EXE installer"
   if path.suffix[1:].lower() == "zip":
-    return "ZIP installer"
+    return "ZIP archive"
   return path.suffix[1:].lower()
 
 def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
@@ -166,7 +166,6 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
   webdata = {
     "version": f"graphviz-{options.version}",
     "sources": [],
-    # TODO: fill in
     "windows": [],
   }
 
