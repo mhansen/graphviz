@@ -44,7 +44,6 @@ void load_attributes(void)
     char line[BUFSIZ];
     char *ss;
     char *pch;
-    int attrcount = 0;
     static char *smyrna_attrs;
 
     if (!smyrna_attrs) {
@@ -53,7 +52,7 @@ void load_attributes(void)
     //loads attributes from a text file
     file = fopen(smyrna_attrs, "r");
     if (file != NULL) {
-	while (fgets(line, sizeof line, file) != NULL) {
+	for (int attrcount = 0; fgets(line, sizeof line, file) != NULL; ++attrcount) {
 	    pch = strtok(line, ",");
 	    for (int ind = 0; pch != NULL; ++ind) {
 		ss = strdup(pch);
@@ -101,7 +100,6 @@ void load_attributes(void)
 		    break;
 		}
 	    }
-	    attrcount++;
 	}
 	fclose (file);
     }
