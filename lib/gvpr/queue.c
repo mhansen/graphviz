@@ -14,6 +14,7 @@
  *
  */
 
+#include <cgraph/alloc.h>
 #include <gvpr/queue.h>
 #include <ast/ast.h>
 
@@ -24,9 +25,7 @@ typedef struct {
 
 static void *makef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
 {
-    nsitem *p;
-
-    p = oldof(0, nsitem, 1, 0);
+    nsitem *p = gv_alloc(sizeof(nsitem));
     p->np = obj->np;
     return p;
 }
