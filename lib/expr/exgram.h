@@ -843,7 +843,7 @@ expush(Expr_t* p, const char* name, int line, const char* sp, Sfio_t* fp)
 			}
 			else
 			{
-				name = (const char*)vmstrdup(p->vm, s);
+				name = vmstrdup(p->vm, s);
 				in->close = 1;
 			}
 		}
