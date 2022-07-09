@@ -286,8 +286,10 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     gtk_text_buffer_get_end_iter(gtkbuf, &endit);
     bf2 = gtk_text_buffer_get_text(gtkbuf, &startit, &endit, 0);
 
-    if (*args == '\0' && *bf2 == '\0')
+    if (*args == '\0' && *bf2 == '\0') {
+	g_free(bf2);
 	return;
+    }
 
     argc = 1;
     if (*args != '\0')
