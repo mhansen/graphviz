@@ -533,14 +533,13 @@ int main (int argc, char *argv[])
 #endif
 
 /* gv_trim_zeros
-* Trailing zeros are removed and decimal point, if possible.
+* Identify Trailing zeros and decimal point, if possible.
 * Assumes the input is the result of %.02f printing.
 */
-static void gv_trim_zeros(char* buf)
-{
+static size_t gv_trim_zeros(const char *buf) {
   char *dotp = strchr(buf, '.');
   if (dotp == NULL) {
-    return;
+    return strlen(buf);
   }
 
   // check this really is the result of %.02f printing
@@ -548,11 +547,13 @@ static void gv_trim_zeros(char* buf)
 
   if (dotp[2] == '0') {
     if (dotp[1] == '0') {
-      *dotp = '\0';
+      return (size_t)(dotp - buf);
     } else {
-      dotp[2] = '\0';
+      return (size_t)(dotp - buf) + 2;
     }
   }
+
+  return strlen(buf);
 }
 
 void gvprintdouble(GVJ_t * job, double num)
@@ -567,9 +568,9 @@ void gvprintdouble(GVJ_t * job, double num)
     char buf[50];
 
     snprintf(buf, 50, "%.02f", num);
-    gv_trim_zeros(buf);
+    size_t len = gv_trim_zeros(buf);
 
-    gvwrite(job, buf, strlen(buf));
+    gvwrite(job, buf, len);
 }
 
 void gvprintpointf(GVJ_t * job, pointf p)
