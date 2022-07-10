@@ -16,6 +16,8 @@
 #include <cdt/cdt.h>
 #include <ctype.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/strview.h>
+#include <cgraph/tokenize.h>
 #include <limits.h>
 #include <stddef.h>
 
@@ -170,21 +172,21 @@ static int portfn(htmldata_t * p, char *v)
 static int stylefn(htmldata_t * p, char *v)
 {
     int rv = 0;
-    char* tk;
-    char* buf = strdup (v);
-    for (tk = strtok (buf, DELIM); tk; tk = strtok (NULL, DELIM)) {
-	if (!strcasecmp(tk, "ROUNDED")) p->style |= ROUNDED;
-	else if (!strcasecmp(tk, "RADIAL")) p->style |= RADIAL;
-	else if(!strcasecmp(tk,"SOLID")) p->style &= (unsigned short)~(DOTTED|DASHED);
-	else if(!strcasecmp(tk,"INVISIBLE") || !strcasecmp(tk,"INVIS")) p->style |= INVISIBLE;
-	else if(!strcasecmp(tk,"DOTTED")) p->style |= DOTTED;
-	else if(!strcasecmp(tk,"DASHED")) p->style |= DASHED;
+    for (tok_t t = tok(v, DELIM); !tok_end(&t); tok_next(&t)) {
+	strview_t tk = tok_get(&t);
+	if (strview_case_str_eq(tk, "ROUNDED")) p->style |= ROUNDED;
+	else if (strview_case_str_eq(tk, "RADIAL")) p->style |= RADIAL;
+	else if (strview_case_str_eq(tk,"SOLID")) p->style &= (unsigned short)~(DOTTED|DASHED);
+	else if (strview_case_str_eq(tk,"INVISIBLE") ||
+	         strview_case_str_eq(tk,"INVIS")) p->style |= INVISIBLE;
+	else if (strview_case_str_eq(tk,"DOTTED")) p->style |= DOTTED;
+	else if (strview_case_str_eq(tk,"DASHED")) p->style |= DASHED;
 	else {
-	    agerr(AGWARN, "Illegal value %s for STYLE - ignored\n", tk);
+	    agerr(AGWARN, "Illegal value %.*s for STYLE - ignored\n", (int)tk.size,
+	          tk.data);
 	    rv = 1;
 	}
     }
-    free (buf);
     return rv;
 }
 
