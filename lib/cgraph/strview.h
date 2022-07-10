@@ -91,3 +91,41 @@ static inline bool strview_str_eq(strview_t a, const char *b) {
 
   return strview_eq(a, strview(b, '\0'));
 }
+
+/// does the given string appear as a substring of the string view?
+static inline bool strview_str_contains(strview_t haystack,
+                                        const char *needle) {
+
+  assert(haystack.data != NULL);
+  assert(needle != NULL);
+
+  // the empty string is a substring of everything
+  if (strcmp(needle, "") == 0) {
+    return true;
+  }
+
+  for (size_t offset = 0; offset < haystack.size;) {
+
+    // find the next possible starting point for the substring
+    const char *candidate = (const char *)memchr(
+        haystack.data + offset, needle[0], haystack.size - offset);
+    if (candidate == NULL) {
+      break;
+    }
+
+    // is it too close to the end of the containing string?
+    if ((size_t)(haystack.data + haystack.size - candidate) < strlen(needle)) {
+      return false;
+    }
+
+    // is it a match?
+    if (strncmp(candidate, needle, strlen(needle)) == 0) {
+      return true;
+    }
+
+    // advance to the position after this match for the next scan
+    offset = (size_t)(candidate - haystack.data) + 1;
+  }
+
+  return false;
+}
