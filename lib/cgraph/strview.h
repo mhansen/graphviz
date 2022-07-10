@@ -5,6 +5,8 @@
 /// should generally be passed around by value rather than pointer as they are
 /// small.
 
+#pragma once
+
 #include <assert.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
