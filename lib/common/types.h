@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief graphs, nodes and edges info: Agraphinfo_t, Agnodeinfo_t and Agedgeinfo_t
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
@@ -18,12 +23,16 @@
 #include <assert.h>
 #include <signal.h>
 
+/// @cond
+
 #ifndef FALSE
 #define FALSE 0
 #endif
 #ifndef TRUE
 #define TRUE (!FALSE)
 #endif
+
+/// @endcond
 
 #include "geom.h"
 #include "gvcext.h"
