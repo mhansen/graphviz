@@ -8,6 +8,7 @@
 #pragma once
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -32,6 +33,14 @@ static inline strview_t strview(const char *referent, char terminator) {
 
   // otherwise, span the entire string
   return (strview_t){.data = referent, .size = strlen(referent)};
+}
+
+/// make a heap-allocated string from this string view
+static inline char *strview_str(strview_t source) {
+
+  assert(source.data != NULL);
+
+  return gv_strndup(source.data, source.size);
 }
 
 /// compare two string references for case insensitive equality
