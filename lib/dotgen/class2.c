@@ -44,9 +44,7 @@ incr_width(graph_t * g, node_t * v)
     ND_rw(v) += width;
 }
 
-static node_t*
-plain_vnode(graph_t * g, edge_t * orig)
-{
+static node_t *plain_vnode(graph_t *g) {
     node_t *v;
     v = virtual_node(g);
     incr_width(g, v);
@@ -90,7 +88,7 @@ make_chain(graph_t * g, node_t * from, node_t * to, edge_t * orig)
 	    if (r == label_rank)
 		v = label_vnode(g, orig);
 	    else
-		v = plain_vnode(g, orig);
+		v = plain_vnode(g);
 	    ND_rank(v) = r;
 	} else
 	    v = to;
