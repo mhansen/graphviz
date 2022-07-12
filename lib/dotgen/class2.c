@@ -51,9 +51,7 @@ static node_t *plain_vnode(graph_t *g) {
     return v;
 }
 
-static node_t*
-leader_of(graph_t * g, node_t * v)
-{
+static node_t *leader_of(node_t * v) {
     graph_t *clust;
     node_t *rv;
 
@@ -105,8 +103,8 @@ interclrep(graph_t * g, edge_t * e)
     node_t *t, *h;
     edge_t *ve;
 
-    t = leader_of(g, agtail(e));
-    h = leader_of(g, aghead(e));
+    t = leader_of(agtail(e));
+    h = leader_of(aghead(e));
     if (ND_rank(t) > ND_rank(h)) {
 	node_t *t0 = t;
 	t = h;
