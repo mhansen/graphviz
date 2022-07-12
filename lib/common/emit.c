@@ -1488,7 +1488,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 		pts[0].y = op->op.u.ellipse.y - op->op.u.ellipse.h;
 		pts[1].x = op->op.u.ellipse.x + op->op.u.ellipse.w;
 		pts[1].y = op->op.u.ellipse.y + op->op.u.ellipse.h;
-		gvrender_ellipse(job, pts, 2, op->op.kind == xd_filled_ellipse ? filled : 0);
+		gvrender_ellipse(job, pts, op->op.kind == xd_filled_ellipse ? filled : 0);
 	    }
 	    break;
 	case xd_filled_polygon :

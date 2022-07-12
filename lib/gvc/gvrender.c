@@ -521,8 +521,7 @@ void gvrender_set_style(GVJ_t * job, char **s)
     }
 }
 
-void gvrender_ellipse(GVJ_t * job, pointf * pf, int n, int filled)
-{
+void gvrender_ellipse(GVJ_t *job, pointf *pf, int filled) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {

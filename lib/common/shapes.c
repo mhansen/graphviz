@@ -2882,7 +2882,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 		    agerr (AGPREV, "in node %s\n", agnameof(n));
 		filled = 0;
 	    }
-	    gvrender_ellipse(job, AF, sides, filled);
+	    gvrender_ellipse(job, AF, filled);
 	    if (style & DIAGONALS) {
 		Mcircle_hack(job, n);
 	    }
@@ -2934,7 +2934,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 			agerr (AGPREV, "in node %s\n", agnameof(n));
 		    filled = 0;
 		}
-		gvrender_ellipse(job, AF, sides, filled);
+		gvrender_ellipse(job, AF, filled);
 		if (style & DIAGONALS) {
 		    Mcircle_hack(job, n);
 		}
@@ -3157,7 +3157,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
 	    AF[i].x = P.x + ND_coord(n).x;
 	    AF[i].y = P.y + ND_coord(n).y;
 	}
-	gvrender_ellipse(job, AF, sides, filled);
+	gvrender_ellipse(job, AF, filled);
 	/* fill innermost periphery only */
 	filled = false;
     }
