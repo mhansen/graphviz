@@ -101,7 +101,7 @@ bool gvLayoutDone(Agraph_t * g)
  * Free layout resources.
  * First, if the graph has a layout-specific cleanup function attached,
  * use it and reset.
- * Then, if the graph has a drawing, do the general graph cleanup.
+ * Then do the general graph cleanup.
  */
 int gvFreeLayout(GVC_t * gvc, Agraph_t * g)
 {
@@ -116,8 +116,6 @@ int gvFreeLayout(GVC_t * gvc, Agraph_t * g)
 	GD_cleanup(g) = NULL;
     }
     
-    if (GD_drawing(g)) {
-	graph_cleanup(g);
-    }
+    graph_cleanup(g);
     return 0;
 }
