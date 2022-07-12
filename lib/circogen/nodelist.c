@@ -201,15 +201,6 @@ int sizeNodelist(nodelist_t * list)
     return list->sz;
 }
 
-/* node_position:
- * Returns index of node n in list, starting at 0.
- * Returns -1 if not in list.
- */
-int node_position(nodelist_t * list, Agnode_t * n)
-{
-    return POSITION(n);
-}
-
 /* concatNodelist:
  * attach l2 to l1.
  */
