@@ -355,8 +355,7 @@ void gvrender_end_node(GVJ_t * job)
     }
 }
 
-void gvrender_begin_edge(GVJ_t * job, edge_t * e)
-{
+void gvrender_begin_edge(GVJ_t *job) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {

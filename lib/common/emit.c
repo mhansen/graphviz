@@ -2659,7 +2659,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	}
     }
 
-    gvrender_begin_edge(job, e);
+    gvrender_begin_edge(job);
     if (obj->url || obj->explicit_tooltip)
 	gvrender_begin_anchor(job,
 		obj->url, obj->tooltip, obj->target, obj->id);

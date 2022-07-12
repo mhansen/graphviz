@@ -96,7 +96,7 @@
     void gvrender_end_edges(GVJ_t * job);
     void gvrender_begin_node(GVJ_t *job);
     void gvrender_end_node(GVJ_t * job);
-    void gvrender_begin_edge(GVJ_t * job, edge_t * e);
+    void gvrender_begin_edge(GVJ_t *job);
     void gvrender_end_edge(GVJ_t * job);
     void gvrender_begin_anchor(GVJ_t * job,
 		char *href, char *tooltip, char *target, char *id);
