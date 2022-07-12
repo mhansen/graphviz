@@ -218,9 +218,7 @@ static void gvrender_resolve_color(gvrender_features_t * features,
 
 void gvrender_begin_graph(GVJ_t * job, graph_t * g)
 {
-    /* GVC_t *gvc = job->gvc; */
     gvrender_engine_t *gvre = job->render.engine;
-    /* char *s; */
 
     if (gvre) {
 	/* render specific init */
