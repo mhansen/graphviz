@@ -48,7 +48,6 @@ getRotation(block_t * sn, Agraph_t * g, double x, double y, double theta)
 {
     double mindist2;
     Agraph_t *subg;
-    /* Agedge_t* e; */
     Agnode_t *n, *closest_node, *neighbor;
     nodelist_t *list;
     double len2, newX, newY;
@@ -92,7 +91,6 @@ getRotation(block_t * sn, Agraph_t * g, double x, double y, double theta)
 	}
     }
 
-    /* if((neighbor != closest_node) && !ISPARENT(neighbor)) { */
     if (neighbor != closest_node) {
 	double rho = sn->rad0;
 	double r = sn->radius - rho;
