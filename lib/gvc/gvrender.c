@@ -287,8 +287,7 @@ void gvrender_begin_cluster(GVJ_t *job) {
     }
 }
 
-void gvrender_end_cluster(GVJ_t * job, graph_t * g)
-{
+void gvrender_end_cluster(GVJ_t *job) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {

@@ -3562,9 +3562,8 @@ static void emit_begin_cluster(GVJ_t * job, Agraph_t * sg)
     gvrender_begin_cluster(job);
 }
 
-static void emit_end_cluster(GVJ_t * job, Agraph_t * g)
-{
-    gvrender_end_cluster(job, g);
+static void emit_end_cluster(GVJ_t *job) {
+    gvrender_end_cluster(job);
     pop_obj_state(job);
 }
 
@@ -3731,7 +3730,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 		    emit_edge(job, e);
 	    }
 	}
-	emit_end_cluster(job, g);
+	emit_end_cluster(job);
 	/* when drawing, lay down clusters before sub_clusters */
 	if (!(flags & EMIT_CLUSTERS_LAST))
 	    emit_clusters(job, sg, flags);
