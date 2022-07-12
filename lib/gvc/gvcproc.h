@@ -88,7 +88,7 @@
     void gvrender_end_page(GVJ_t * job);
     void gvrender_begin_layer(GVJ_t * job);
     void gvrender_end_layer(GVJ_t * job);
-    void gvrender_begin_cluster(GVJ_t * job, graph_t * sg);
+    void gvrender_begin_cluster(GVJ_t *job);
     void gvrender_end_cluster(GVJ_t * job, graph_t *g);
     void gvrender_begin_nodes(GVJ_t * job);
     void gvrender_end_nodes(GVJ_t * job);

@@ -3559,7 +3559,7 @@ static void emit_begin_cluster(GVJ_t * job, Agraph_t * sg)
 
     initObjMapData (job, GD_label(sg), sg);
     
-    gvrender_begin_cluster(job, sg);
+    gvrender_begin_cluster(job);
 }
 
 static void emit_end_cluster(GVJ_t * job, Agraph_t * g)
