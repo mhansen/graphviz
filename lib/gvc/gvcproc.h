@@ -82,7 +82,7 @@
     void gvrender_end_job(GVJ_t * job);
     int gvrender_select(GVJ_t * job, const char *lang);
     int gvrender_features(GVJ_t * job);
-    void gvrender_begin_graph(GVJ_t * job, graph_t * g);
+    void gvrender_begin_graph(GVJ_t *job);
     void gvrender_end_graph(GVJ_t * job);
     void gvrender_begin_page(GVJ_t * job);
     void gvrender_end_page(GVJ_t * job);

@@ -3376,7 +3376,7 @@ static void emit_begin_graph(GVJ_t * job, graph_t * g)
 
     initObjMapData (job, GD_label(g), g);
 
-    gvrender_begin_graph(job, g);
+    gvrender_begin_graph(job);
 }
 
 static void emit_end_graph(GVJ_t * job)
