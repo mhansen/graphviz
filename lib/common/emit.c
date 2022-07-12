@@ -1901,7 +1901,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
     }
 
     setColorScheme (agget (n, "colorscheme"));
-    gvrender_begin_node(job, n);
+    gvrender_begin_node(job);
 }
 
 static void emit_end_node(GVJ_t * job)

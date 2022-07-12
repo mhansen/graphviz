@@ -94,7 +94,7 @@
     void gvrender_end_nodes(GVJ_t * job);
     void gvrender_begin_edges(GVJ_t * job);
     void gvrender_end_edges(GVJ_t * job);
-    void gvrender_begin_node(GVJ_t * job, node_t * n);
+    void gvrender_begin_node(GVJ_t *job);
     void gvrender_end_node(GVJ_t * job);
     void gvrender_begin_edge(GVJ_t * job, edge_t * e);
     void gvrender_end_edge(GVJ_t * job);
