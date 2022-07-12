@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - smyrna: incorrect tokenization in frmobjectui.c:set_attr_object_type #2259
 - [Dot] Record shape+UTF+" | "=Eats spaces. #925
 - Memory leak in osage
+- Segmentation fault when running test example neatopack.c #1800
 
 ## [5.0.0] – 2022-07-07
 

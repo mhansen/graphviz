@@ -152,8 +152,6 @@ void patchwork_layout(Agraph_t *g)
 static void patchwork_cleanup_graph(graph_t * g)
 {
     free(GD_neato_nlist(g));
-    if (g != agroot(g))
-        agclean(g, AGRAPH , "Agraphinfo_t");
 }
 
 void patchwork_cleanup(graph_t * g)

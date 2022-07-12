@@ -170,8 +170,6 @@ void twopi_layout(Agraph_t * g)
 static void twopi_cleanup_graph(graph_t * g)
 {
     free(GD_neato_nlist(g));
-    if (g != agroot(g))
-	agclean(g,AGRAPH,"Agraphinfo_t");
 }
 
 /* twopi_cleanup:

@@ -273,6 +273,4 @@ void circo_cleanup(graph_t * g)
 	gv_cleanup_node(n);
     }
     free(GD_neato_nlist(g));
-    if (g != agroot(g)) 
-	agclean (g,AGRAPH,"Agraphinfo_t");
 }
