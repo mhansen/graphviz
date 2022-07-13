@@ -58,8 +58,10 @@ int gvLayoutJobs(GVC_t * gvc, Agraph_t * g)
 
     agbindrec(g, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     GD_gvc(g) = gvc;
-    if (g != agroot(g))
-	GD_gvc(agroot(g)) = gvc;
+    if (g != agroot(g)) {
+        agbindrec(agroot(g), "Agraphinfo_t", sizeof(Agraphinfo_t), true);
+        GD_gvc(agroot(g)) = gvc;
+    }
 
     if ((p = agget(g, "layout"))) {
         gvc->layout.engine = NULL;
