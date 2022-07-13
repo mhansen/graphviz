@@ -10,10 +10,9 @@
 
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <stdlib.h>
 #include <pathplan/pathutil.h>
-
-#define ALLOC(size,ptr,type) realloc(ptr,(size)*sizeof(type))
 
 void freePath(Ppolyline_t* p)
 {
@@ -63,7 +62,7 @@ make_polyline(Ppolyline_t line, Ppolyline_t* sline)
     int npts = 4 + 3*(line.pn-2);
 
     if (npts > isz) {
-	ispline = ALLOC((size_t)npts, ispline, Ppoint_t);
+	ispline = gv_recalloc(ispline, (size_t)isz, (size_t)npts, sizeof(Ppoint_t));
 	isz = npts;
     }
 
