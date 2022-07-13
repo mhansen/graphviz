@@ -63,7 +63,7 @@ make_polyline(Ppolyline_t line, Ppolyline_t* sline)
     int npts = 4 + 3*(line.pn-2);
 
     if (npts > isz) {
-	ispline = ALLOC(npts, ispline, Ppoint_t); 
+	ispline = ALLOC((size_t)npts, ispline, Ppoint_t);
 	isz = npts;
     }
 
