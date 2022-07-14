@@ -407,7 +407,6 @@ def test_827():
 
   assert ret == 1, "Graphviz crashed when processing b15.gv"
 
-@pytest.mark.xfail(strict=True)
 def test_925():
   """
   spaces should be handled correctly in UTF-8-containing labels in record shapes

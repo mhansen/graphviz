@@ -3342,7 +3342,7 @@ static field_t *parse_reclbl(node_t *n, bool LR, int flag, char *text) {
 		    hspsp = psp - 1;
 	    }
 	    reclblp++;
-	    while (*reclblp & 128)
+	    while ((*reclblp & 0xc0) == 0x80)
 		*tsp++ = *reclblp++;
 	    break;
 	}
