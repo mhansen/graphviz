@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <stdbool.h>
 #include <stdio.h>
 
 #include <stdlib.h>
@@ -23,6 +24,8 @@
 #include "gvprpipe.h"
 #include <cgraph/agxbuf.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/strview.h>
+#include <string.h>
 
 static int sel_node;
 static int sel_edge;
@@ -217,30 +220,39 @@ static attr_data_type get_attr_data_type(char c)
     return attr_alpha;
 }
 
-static void object_type_helper(char *a, int *t)
-{
-    if (strcmp(a, "GRAPH") == 0)
+static void object_type_helper(strview_t a, int *t) {
+    if (strview_str_eq(a, "GRAPH"))
 	t[0] = 1;
-    if (strcmp(a, "CLUSTER") == 0)
+    if (strview_str_eq(a, "CLUSTER"))
 	t[0] = 1;
-    if (strcmp(a, "NODE") == 0)
+    if (strview_str_eq(a, "NODE"))
 	t[1] = 1;
-    if (strcmp(a, "EDGE") == 0)
+    if (strview_str_eq(a, "EDGE"))
 	t[2] = 1;
-    if (strcmp(a, "ANY_ELEMENT") == 0) {
+    if (strview_str_eq(a, "ANY_ELEMENT")) {
 	t[0] = 1;
 	t[1] = 1;
 	t[2] = 1;
     }
 }
 
-static void set_attr_object_type(char *str, int *t)
-{
-    char *a;
-    a = strtok(str, " ");
+static void set_attr_object_type(const char *str, int *t) {
+  strview_t a = strview(str, ' ');
+  object_type_helper(a, t);
+  while (true) {
+    const char *start = a.data + a.size;
+    if (strncmp(start, " or ", strlen(" or ")) != 0) {
+      break;
+    }
+    start += strlen(" or ");
+    const char *end = strstr(start, " or ");
+    if (end == NULL) {
+      a = strview(start, '\0');
+    } else {
+      a = (strview_t){.data = start, .size = (size_t)(end - start)};
+    }
     object_type_helper(a, t);
-    while ((a = strtok(NULL, " or ")))
-	object_type_helper(a, t);
+  }
 }
 
 static attr_t *binarySearch(attr_list * l, char *searchKey)
