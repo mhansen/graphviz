@@ -46,6 +46,14 @@ static inline tok_t tok(const char *input, const char *separators) {
   assert(strcmp(separators, "") != 0 &&
          "at least one separator must be provided");
 
+#ifndef NDEBUG
+  for (const char *s1 = separators; *s1 != '\0'; ++s1) {
+    for (const char *s2 = s1 + 1; *s2 != '\0'; ++s2) {
+      assert(*s1 != *s2 && "duplicate separator characters");
+    }
+  }
+#endif
+
   tok_t t = {.start = input, .separators = separators};
 
   // find the end of the first token
