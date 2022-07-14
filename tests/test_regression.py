@@ -407,6 +407,25 @@ def test_827():
 
   assert ret == 1, "Graphviz crashed when processing b15.gv"
 
+@pytest.mark.xfail(strict=True)
+def test_925():
+  """
+  spaces should be handled correctly in UTF-8-containing labels in record shapes
+  https://gitlab.com/graphviz/graphviz/-/issues/925
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "925.dot"
+  assert input.exists(), "unexpectedly mising test case"
+
+  # process this with dot
+  svg = dot("svg", input)
+
+  # The output should include the correctly spaced UTF-8 label. Note that these
+  # are not ASCII capital As in this string, but rather UTF-8 Cyrillic Capital
+  # Letter As.
+  assert "ААА ААА ААА" in svg, "incorrect spacing in UTF-8 label"
+
 def test_1221():
   """
   assigning a node to two clusters with newrank should not cause a crash
