@@ -87,6 +87,7 @@ def dot(T: str, source_file: Optional[Path] = None, source: Optional[str] = None
 
   kwargs = {}
   if output_is_text:
+    kwargs["encoding"] = "utf-8"
     kwargs["universal_newlines"] = True
 
   args = ["dot", f"-T{T}"]
