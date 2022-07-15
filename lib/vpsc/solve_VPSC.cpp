@@ -1,4 +1,5 @@
 /**
+ * \file
  * \brief Solve an instance of the "Variable Placement with Separation
  * Constraints" problem.
  *
