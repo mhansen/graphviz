@@ -80,3 +80,7 @@ make_polyline(Ppolyline_t line, Ppolyline_t* sline)
     sline->ps = ispline;
 }
 
+/**
+ * @dir lib/pathplan
+ * @brief finds and smooths shortest paths, API pathplan.h
+ */
