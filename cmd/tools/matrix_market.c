@@ -11,6 +11,7 @@
 #include <sparse/SparseMatrix.h>
 #include "mmio.h"
 #include "matrix_market.h"
+#include <cgraph/unreachable.h>
 #include <common/memory.h>
 #include <assert.h>
 #define MALLOC gmalloc
@@ -58,12 +59,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
     /*  only supports a subset of the Matrix Market data types.      */
 
     if (!mm_is_matrix(matcode) || !mm_is_sparse(matcode)) {
-	assert(0);
-	/*
-	   printf("Sorry, this application does not support dense matrix");
-	   printf("Market Market type: [%s]\n", mm_typecode_to_str(matcode));
-	 */
-	return NULL;
+	UNREACHABLE();
     }
 
     /* find out size of sparse matrix .... */
