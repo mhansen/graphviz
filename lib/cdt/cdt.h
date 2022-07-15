@@ -275,7 +275,7 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 
 /**
  * @dir lib/cdt
- * @brief container data types
+ * @brief container data types, API cdt.h
  */
 
 #ifdef __cplusplus
