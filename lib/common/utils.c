@@ -322,7 +322,7 @@ char *Fgets(FILE * fp)
 #endif
 
 static strview_t *mkDirlist(const char *list, size_t *maxdirlen) {
-    int cnt = 0;
+    size_t cnt = 0;
     strview_t *dirs = NULL;
     size_t maxlen = 0;
 
