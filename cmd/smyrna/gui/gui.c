@@ -15,6 +15,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdk.h>
 #include "viewport.h"
+#include <cgraph/strview.h>
 #include <common/memory.h>
 
 GladeXML *xml;			//global libglade vars
@@ -42,10 +43,7 @@ void load_attributes(void)
 {
     FILE *file;
     char line[BUFSIZ];
-    char *ss;
     char *pch;
-    int ind = 0;
-    int attrcount = 0;
     static char *smyrna_attrs;
 
     if (!smyrna_attrs) {
@@ -54,26 +52,25 @@ void load_attributes(void)
     //loads attributes from a text file
     file = fopen(smyrna_attrs, "r");
     if (file != NULL) {
-	while (fgets(line, sizeof line, file) != NULL) {
+	for (int attrcount = 0; fgets(line, sizeof line, file) != NULL; ++attrcount) {
 	    pch = strtok(line, ",");
-	    ind = 0;
-	    while (pch != NULL) {
-		ss = strdup(pch);
+	    for (int ind = 0; pch != NULL; ++ind) {
+		strview_t ss = strview(pch, '\0');
 		pch = strtok(NULL, ",");
 		switch (ind) {
 		case 0:
-		    attr[attrcount].Type = ss[0];
+		    attr[attrcount].Type = ss.size > 0 ? ss.data[0] : '\0';
 		    break;
 		case 1:
-		    attr[attrcount].Name = strdup(ss);
+		    attr[attrcount].Name = strview_str(ss);
 		    break;
 		case 2:
-		    attr[attrcount].Default = strdup(ss);
+		    attr[attrcount].Default = strview_str(ss);
 		    break;
 		case 3:
 		    break;
 		case 4:
-		    if (strstr(ss, "ALL_ENGINES")) {
+		    if (strview_str_contains(ss, "ALL_ENGINES")) {
 			attr[attrcount].Engine[GVK_DOT] = 1;
 			attr[attrcount].Engine[GVK_NEATO] = 1;
 			attr[attrcount].Engine[GVK_TWOPI] = 1;
@@ -81,15 +78,15 @@ void load_attributes(void)
 			attr[attrcount].Engine[GVK_FDP] = 1;
 		    } else {
 			attr[attrcount].Engine[GVK_DOT] =
-			    strstr(ss, "DOT") ? 1 : 0;
+			    strview_str_contains(ss, "DOT") ? 1 : 0;
 			attr[attrcount].Engine[GVK_NEATO] =
-			    strstr(ss, "NEATO") ? 1 : 0;
+			    strview_str_contains(ss, "NEATO") ? 1 : 0;
 			attr[attrcount].Engine[GVK_TWOPI] =
-			    strstr(ss, "TWOPI") ? 1 : 0;
+			    strview_str_contains(ss, "TWOPI") ? 1 : 0;
 			attr[attrcount].Engine[GVK_CIRCO] =
-			    strstr(ss, "CIRCO") ? 1 : 0;
+			    strview_str_contains(ss, "CIRCO") ? 1 : 0;
 			attr[attrcount].Engine[GVK_FDP] =
-			    strstr(ss, "FDP") ? 1 : 0;
+			    strview_str_contains(ss, "FDP") ? 1 : 0;
 		    }
 		    break;
 		default:
@@ -97,14 +94,11 @@ void load_attributes(void)
 			RALLOC(attr[attrcount].ComboValuesCount,
 			       attr[attrcount].ComboValues, char *);
 		    attr[attrcount].ComboValues[attr[attrcount].
-						ComboValuesCount] =
-			strdup(ss);
+						ComboValuesCount] = strview_str(ss);
 		    attr[attrcount].ComboValuesCount++;
 		    break;
 		}
-		ind++;
 	    }
-	    attrcount++;
 	}
 	fclose (file);
     }

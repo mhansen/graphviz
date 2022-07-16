@@ -272,7 +272,7 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     GtkTextIter startit;
     GtkTextIter endit;
     const char *args;
-    int i, j, argc, cloneGraph;
+    int j, argc, cloneGraph;
     char **argv;
 
     args =
@@ -286,8 +286,10 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     gtk_text_buffer_get_end_iter(gtkbuf, &endit);
     bf2 = gtk_text_buffer_get_text(gtkbuf, &startit, &endit, 0);
 
-    if (*args == '\0' && *bf2 == '\0')
+    if (*args == '\0' && *bf2 == '\0') {
+	g_free(bf2);
 	return;
+    }
 
     argc = 1;
     if (*args != '\0')
@@ -304,21 +306,28 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     j = 0;
     argv[j++] = "smyrna";
     if (cloneGraph)
-	argv[j++] = strdup("-C");
+	argv[j++] = "-C";
     if (*args != '\0') {
-	argv[j++] = strdup("-a");
-	argv[j++] = strdup(args);
+	argv[j++] = "-a";
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as `run_gvpr` does not modify input arguments.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+	argv[j++] = (char*)args;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
     }
     if (*bf2 != '\0') {
-	argv[j++] = strdup(bf2);
-	g_free(bf2);
+	argv[j++] = bf2;
     }
     assert(j == argc);
 
     run_gvpr(view->g[view->activeGraph], argc, argv);
-    for (i = 1; i < argc; i++)
-	free(argv[i]);
     free(argv);
+    g_free(bf2);
 }
 
 /*

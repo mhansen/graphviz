@@ -102,7 +102,7 @@ static char *parseArgs(int argc, char *argv[], ViewInfo * view)
 	    break;
 	case 'f':
 	    view->guiMode=GUI_FULLSCREEN;
-	    view->optArg=strdup(optarg);
+	    view->optArg=optarg;
 	    break;
 
 	case 'V':

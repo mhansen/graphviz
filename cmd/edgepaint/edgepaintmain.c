@@ -233,8 +233,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy, int *c
         fprintf(stderr, "invalid --lightness=%s option.\n", arg);
         usage(cmd, EXIT_FAILURE);
       }
-      free(*lightness);
-      *lightness = gv_strdup(arg);
+      *lightness = optarg;
       break;
     }
 
@@ -312,8 +311,6 @@ int main(int argc, char *argv[])
 		    rv = EXIT_FAILURE;
 		}
 	}
-
-	free(lightness);
 
 	graphviz_exit(rv);
 }
