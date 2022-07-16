@@ -1,5 +1,5 @@
 CFLAGS=`pkg-config libgvc --cflags` -Wall -g -O2
-LDFLAGS=`pkg-config libgvc --libs`
+LDLIBS=`pkg-config libgvc --libs`
 
 .PHONY: all
 all: dot demo simple example neatopack
