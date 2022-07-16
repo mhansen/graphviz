@@ -15,6 +15,7 @@
  * Written by Emden Gansner
  */
 
+#include <assert.h>
 #include <unistd.h>
 #include "builddate.h"
 #include <gvpr/gprstate.h>
@@ -32,6 +33,7 @@
 #include <ast/sfstr.h>
 #include <ast/error.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
 #include <ctype.h>
 #include <setjmp.h>
@@ -153,6 +155,8 @@ static int parseArgs(char *s, int argc, char ***argv)
     char *t;
     char **av;
 
+    assert(argc >= 0);
+
     while ((t = gettok(&s))) {
 	if (cnt == NUM_ARGS) {
 	    error(ERROR_WARNING,
@@ -166,7 +170,7 @@ static int parseArgs(char *s, int argc, char ***argv)
     if (cnt) {
 	int oldcnt = argc;
 	argc = oldcnt + cnt;
-	av = oldof(*argv, char *, argc, 0);
+	av = gv_recalloc(*argv, (size_t)oldcnt, (size_t)argc, sizeof(char*));
 	for (i = 0; i < cnt; i++)
 	    av[oldcnt + i] = gv_strdup(args[i]);
 	*argv = av;
@@ -823,8 +827,10 @@ addOutputGraph (Gpr_t* state, gvpropts* uopts)
     if ((agroot(g) == state->curgraph) && !uopts->ingraphs)
 	g = (Agraph_t*)cloneO (0, (Agobj_t *)g);
 
+    uopts->outgraphs = gv_recalloc(uopts->outgraphs, (size_t)uopts->n_outgraphs,
+                                   (size_t)uopts->n_outgraphs + 1,
+                                   sizeof(Agraph_t*));
     uopts->n_outgraphs++;
-    uopts->outgraphs = oldof(uopts->outgraphs,Agraph_t*,uopts->n_outgraphs,0);
     uopts->outgraphs[uopts->n_outgraphs-1] = g;
 }
 
