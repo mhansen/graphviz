@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <common/render.h>
+#include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
@@ -323,16 +324,15 @@ char *Fgets(FILE * fp)
 
 static strview_t *mkDirlist(const char *list, size_t *maxdirlen) {
     size_t cnt = 0;
-    strview_t *dirs = NULL;
+    strview_t *dirs = gv_calloc(1, sizeof(strview_t));
     size_t maxlen = 0;
 
     for (tok_t t = tok(list, PATHSEP); !tok_end(&t); tok_next(&t)) {
         strview_t dir = tok_get(&t);
-        dirs = ALLOC(cnt + 2, dirs, strview_t);
+        dirs = gv_recalloc(dirs, cnt + 1, cnt + 2, sizeof(strview_t));
         dirs[cnt++] = dir;
         maxlen = MAX(maxlen, dir.size);
     }
-    dirs[cnt] = (strview_t){0};
     *maxdirlen = maxlen;
     return dirs;
 }
