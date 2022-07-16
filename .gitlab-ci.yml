@@ -1351,10 +1351,10 @@ docker_push_ubuntu-22.04:
     - docker_build_ubuntu-22.04
 
 lint_clang_format:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-21.10:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-21.10
+    - docker_build_ubuntu-22.04
   script:
     # output some info into the logs for debugging
     - clang-format --version
@@ -1366,30 +1366,30 @@ lint_clang_format:
     - tags
 
 lint_cmake_format:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-21.10:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-21.10
+    - docker_build_ubuntu-22.04
   script:
     - git ls-files -z -- '**/CMakeLists.txt' '**/*.cmake' '**/*.cmake.in' | xargs -0 -- python3 -m cmakelang.lint
   except:
     - tags
 
 lint_html:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-21.10:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-21.10
+    - docker_build_ubuntu-22.04
   script:
     - git ls-files -z -- '**/*.html' | xargs -0 -- xmllint --nonet --noout --html --valid
   except:
     - tags
 
 lint_pylint:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-21.10:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-21.10
+    - docker_build_ubuntu-22.04
   script:
     - python3 -m pylint --rcfile=.pylintrc --disable=fixme `find . -name '*.py' | xargs`
   except:
