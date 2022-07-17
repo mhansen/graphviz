@@ -86,12 +86,11 @@ static int inBoxf(pointf p, boxf * bb)
 }
 
 /* getCluster:
- * Returns subgraph of g with given name.
+ * Returns subgraph with given name.
  * Returns NULL if no name is given, or subgraph of
  * that name does not exist.
  */
-static graph_t *getCluster(graph_t * g, char *cluster_name, Dt_t* map)
-{
+static graph_t *getCluster(char *cluster_name, Dt_t *map) {
     Agraph_t* sg;
 
     if (!cluster_name || (*cluster_name == '\0'))
@@ -296,8 +295,7 @@ static int splineIntersectf(pointf * pts, boxf * bb)
  * with n control points where n >= 4 and n (mod 3) = 1.
  * If edge has arrowheads, reposition them.
  */
-static void makeCompoundEdge(graph_t * g, edge_t * e, Dt_t* clustMap)
-{
+static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
     graph_t *lh;		/* cluster containing head */
     graph_t *lt;		/* cluster containing tail */
     bezier *bez;		/* original Bezier for e */
@@ -313,8 +311,8 @@ static void makeCompoundEdge(graph_t * g, edge_t * e, Dt_t* clustMap)
     int fixed;
 
     /* find head and tail target clusters, if defined */
-    lh = getCluster(g, agget(e, "lhead"), clustMap);
-    lt = getCluster(g, agget(e, "ltail"), clustMap);
+    lh = getCluster(agget(e, "lhead"), clustMap);
+    lt = getCluster(agget(e, "ltail"), clustMap);
     if (!lt && !lh)
 	return;
     if (!ED_spl(e)) return;
@@ -485,7 +483,7 @@ void dot_compoundEdges(graph_t * g)
     Dt_t* clustMap = mkClustMap (g);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-	    makeCompoundEdge(g, e, clustMap);
+	    makeCompoundEdge(e, clustMap);
 	}
     }
     dtclose(clustMap);
