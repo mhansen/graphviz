@@ -1236,7 +1236,7 @@ makeSimpleFlat (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et
  * more straightforward and laborious fashion. 
  */
 static void
-make_flat_adj_edges(graph_t* g, path* P, edge_t** edges, int ind, int cnt, edge_t* e0,
+make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
                     int et)
 {
     node_t* n;
@@ -1614,7 +1614,7 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
      * so check them all.
      */
     if (isAdjacent) {
-	make_flat_adj_edges (g, P, edges, ind, cnt, e, et);
+	make_flat_adj_edges(g, edges, ind, cnt, e, et);
 	return;
     }
     if (ED_label(e)) {  /* edges with labels aren't multi-edges */
