@@ -545,11 +545,6 @@ static int toggle_fit_cb(GVJ_t * job)
     return 0;
 }
 
-static void gvevent_delete (GVJ_t * job)
-{
-    /* FIXME */
-}
-
 static void gvevent_read (GVJ_t * job, const char *filename, const char *layout)
 {
     FILE *f;
@@ -649,7 +644,7 @@ gvdevice_callbacks_t gvdevice_callbacks = {
     gvevent_button_release,
     gvevent_motion,
     NULL, // modify
-    gvevent_delete,
+    NULL, // del
     gvevent_read,
     gvevent_layout,
     gvevent_render,
