@@ -426,6 +426,9 @@ static void gvevent_button_press(GVJ_t * job, int button, pointf pointer)
 
 static void gvevent_button_release(GVJ_t *job, int button, pointf pointer)
 {
+    (void)button;
+    (void)pointer;
+
     job->click = false;
     job->button = false;
 }
@@ -465,6 +468,8 @@ static void gvevent_motion(GVJ_t * job, pointf pointer)
 
 static int quit_cb(GVJ_t * job)
 {
+    (void)job;
+
     return 1;
 }
 
