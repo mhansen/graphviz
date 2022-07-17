@@ -139,9 +139,7 @@ map_path(node_t * from, node_t * to, edge_t * orig, edge_t * ve, int type)
     }
 }
 
-static void 
-make_interclust_chain(graph_t * g, node_t * from, node_t * to, edge_t * orig)
-{
+static void make_interclust_chain(node_t * from, node_t * to, edge_t * orig) {
     int newtype;
     node_t *u, *v;
 
@@ -205,7 +203,7 @@ static void interclexp(graph_t * subg)
 
 	    /* forward edges */
 	    if (ND_rank(aghead(e)) > ND_rank(agtail(e))) {
-		make_interclust_chain(g, agtail(e), aghead(e), e);
+		make_interclust_chain(agtail(e), aghead(e), e);
 		prev = e;
 		continue;
 	    }
@@ -217,7 +215,7 @@ I think that make_interclust_chain should create call other_edge(e) anyway
 				if (agcontains(subg,agtail(e))
 					&& agfindedge(g,aghead(e),agtail(e))) other_edge(e);
 */
-		make_interclust_chain(g, aghead(e), agtail(e), e);
+		make_interclust_chain(aghead(e), agtail(e), e);
 		prev = e;
 	    }
 	}
