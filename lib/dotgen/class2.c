@@ -44,18 +44,14 @@ incr_width(graph_t * g, node_t * v)
     ND_rw(v) += width;
 }
 
-static node_t*
-plain_vnode(graph_t * g, edge_t * orig)
-{
+static node_t *plain_vnode(graph_t *g) {
     node_t *v;
     v = virtual_node(g);
     incr_width(g, v);
     return v;
 }
 
-static node_t*
-leader_of(graph_t * g, node_t * v)
-{
+static node_t *leader_of(node_t * v) {
     graph_t *clust;
     node_t *rv;
 
@@ -90,7 +86,7 @@ make_chain(graph_t * g, node_t * from, node_t * to, edge_t * orig)
 	    if (r == label_rank)
 		v = label_vnode(g, orig);
 	    else
-		v = plain_vnode(g, orig);
+		v = plain_vnode(g);
 	    ND_rank(v) = r;
 	} else
 	    v = to;
@@ -107,8 +103,8 @@ interclrep(graph_t * g, edge_t * e)
     node_t *t, *h;
     edge_t *ve;
 
-    t = leader_of(g, agtail(e));
-    h = leader_of(g, aghead(e));
+    t = leader_of(agtail(e));
+    h = leader_of(aghead(e));
     if (ND_rank(t) > ND_rank(h)) {
 	node_t *t0 = t;
 	t = h;

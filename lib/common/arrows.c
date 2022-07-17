@@ -647,7 +647,7 @@ static void arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, do
     AF[0].y = p.y + u.y / 2. - r;
     AF[1].x = p.x + u.x / 2. + r;
     AF[1].y = p.y + u.y / 2. + r;
-    gvrender_ellipse(job, AF, 2, !(flag & ARR_MOD_OPEN));
+    gvrender_ellipse(job, AF, !(flag & ARR_MOD_OPEN));
 }
 
 

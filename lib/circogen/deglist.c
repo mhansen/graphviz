@@ -22,6 +22,9 @@ typedef struct {
 
 static degitem *mkItem(Dt_t * d, degitem * obj, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     degitem *ap = GNEW(degitem);
 
     ap->np = NULL;
@@ -31,11 +34,17 @@ static degitem *mkItem(Dt_t * d, degitem * obj, Dtdisc_t * disc)
 
 static void freeItem(Dt_t * d, degitem * obj, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     free(obj);
 }
 
 static int cmpDegree(Dt_t * d, int *key1, int *key2, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     if (*key1 < *key2)
 	return -1;
     else if (*key1 > *key2)

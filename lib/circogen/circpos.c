@@ -43,12 +43,9 @@
  * Thus, 
  *    alpha = theta + M_PI/2 - phi - arcsin((l/R)*(cos phi))
  */
-static double
-getRotation(block_t * sn, Agraph_t * g, double x, double y, double theta)
-{
+static double getRotation(block_t *sn, double x, double y, double theta) {
     double mindist2;
     Agraph_t *subg;
-    /* Agedge_t* e; */
     Agnode_t *n, *closest_node, *neighbor;
     nodelist_t *list;
     double len2, newX, newY;
@@ -92,7 +89,6 @@ getRotation(block_t * sn, Agraph_t * g, double x, double y, double theta)
 	}
     }
 
-    /* if((neighbor != closest_node) && !ISPARENT(neighbor)) { */
     if (neighbor != closest_node) {
 	double rho = sn->rad0;
 	double r = sn->radius - rho;
@@ -237,7 +233,7 @@ setInfo (posinfo_t* p0, posinfo_t* p1, double delta)
 /* positionChildren:
  */
 static void
-positionChildren (Agraph_t* g, posinfo_t* pi, posstate * stp, int length, double min_dist)
+positionChildren(posinfo_t *pi, posstate *stp, int length, double min_dist)
 {
     block_t *child;
     double childAngle, childRadius, incidentAngle;
@@ -301,7 +297,7 @@ positionChildren (Agraph_t* g, posinfo_t* pi, posstate * stp, int length, double
 	 * should return the theta value if there was a rotation else zero
 	 */
 
-	rotateAngle = getRotation(child, g, deltaX, deltaY, childAngle);
+	rotateAngle = getRotation(child, deltaX, deltaY, childAngle);
 	applyDelta(child, deltaX, deltaY, rotateAngle);
 
 	if (length == 1) {
@@ -332,8 +328,7 @@ positionChildren (Agraph_t* g, posinfo_t* pi, posstate * stp, int length, double
  * Finally, positionChildren is called to do the actual positioning.
  * If length is 1, keeps track of minimum and maximum child angle.
  */
-static double
-position(Agraph_t * g, int childCount, int length, nodelist_t * path,
+static double position(int childCount, int length, nodelist_t *path,
 	 block_t * sn, double min_dist)
 {
     nodelistitem_t *item;
@@ -398,7 +393,7 @@ position(Agraph_t * g, int childCount, int length, nodelist_t * path,
     }
 
     for (i = 0; i < num_parents; i++) {
-	positionChildren (g, parents + i, &state, length, min_dist);
+	positionChildren(parents + i, &state, length, min_dist);
     }
 
     free (parents);
@@ -444,8 +439,7 @@ static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
 
     /* attach children */
     if (childCount > 0)
-	centerAngle =
-	    position(g, childCount, length, longest_path, sn, min_dist);
+	centerAngle = position(childCount, length, longest_path, sn, min_dist);
 
     if ((length == 1) && (BLK_PARENT(sn))) {
 	sn->parent_pos = centerAngle;

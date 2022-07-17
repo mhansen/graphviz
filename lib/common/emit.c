@@ -1488,7 +1488,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 		pts[0].y = op->op.u.ellipse.y - op->op.u.ellipse.h;
 		pts[1].x = op->op.u.ellipse.x + op->op.u.ellipse.w;
 		pts[1].y = op->op.u.ellipse.y + op->op.u.ellipse.h;
-		gvrender_ellipse(job, pts, 2, op->op.kind == xd_filled_ellipse ? filled : 0);
+		gvrender_ellipse(job, pts, op->op.kind == xd_filled_ellipse ? filled : 0);
 	    }
 	    break;
 	case xd_filled_polygon :
@@ -1901,7 +1901,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
     }
 
     setColorScheme (agget (n, "colorscheme"));
-    gvrender_begin_node(job, n);
+    gvrender_begin_node(job);
 }
 
 static void emit_end_node(GVJ_t * job)
@@ -2659,7 +2659,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	}
     }
 
-    gvrender_begin_edge(job, e);
+    gvrender_begin_edge(job);
     if (obj->url || obj->explicit_tooltip)
 	gvrender_begin_anchor(job,
 		obj->url, obj->tooltip, obj->target, obj->id);
@@ -3376,7 +3376,7 @@ static void emit_begin_graph(GVJ_t * job, graph_t * g)
 
     initObjMapData (job, GD_label(g), g);
 
-    gvrender_begin_graph(job, g);
+    gvrender_begin_graph(job);
 }
 
 static void emit_end_graph(GVJ_t * job)
@@ -3559,12 +3559,11 @@ static void emit_begin_cluster(GVJ_t * job, Agraph_t * sg)
 
     initObjMapData (job, GD_label(sg), sg);
     
-    gvrender_begin_cluster(job, sg);
+    gvrender_begin_cluster(job);
 }
 
-static void emit_end_cluster(GVJ_t * job, Agraph_t * g)
-{
-    gvrender_end_cluster(job, g);
+static void emit_end_cluster(GVJ_t *job) {
+    gvrender_end_cluster(job);
     pop_obj_state(job);
 }
 
@@ -3731,7 +3730,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 		    emit_edge(job, e);
 	    }
 	}
-	emit_end_cluster(job, g);
+	emit_end_cluster(job);
 	/* when drawing, lay down clusters before sub_clusters */
 	if (!(flags & EMIT_CLUSTERS_LAST))
 	    emit_clusters(job, sg, flags);

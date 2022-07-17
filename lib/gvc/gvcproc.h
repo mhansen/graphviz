@@ -82,21 +82,21 @@
     void gvrender_end_job(GVJ_t * job);
     int gvrender_select(GVJ_t * job, const char *lang);
     int gvrender_features(GVJ_t * job);
-    void gvrender_begin_graph(GVJ_t * job, graph_t * g);
+    void gvrender_begin_graph(GVJ_t *job);
     void gvrender_end_graph(GVJ_t * job);
     void gvrender_begin_page(GVJ_t * job);
     void gvrender_end_page(GVJ_t * job);
     void gvrender_begin_layer(GVJ_t * job);
     void gvrender_end_layer(GVJ_t * job);
-    void gvrender_begin_cluster(GVJ_t * job, graph_t * sg);
-    void gvrender_end_cluster(GVJ_t * job, graph_t *g);
+    void gvrender_begin_cluster(GVJ_t *job);
+    void gvrender_end_cluster(GVJ_t *job);
     void gvrender_begin_nodes(GVJ_t * job);
     void gvrender_end_nodes(GVJ_t * job);
     void gvrender_begin_edges(GVJ_t * job);
     void gvrender_end_edges(GVJ_t * job);
-    void gvrender_begin_node(GVJ_t * job, node_t * n);
+    void gvrender_begin_node(GVJ_t *job);
     void gvrender_end_node(GVJ_t * job);
-    void gvrender_begin_edge(GVJ_t * job, edge_t * e);
+    void gvrender_begin_edge(GVJ_t *job);
     void gvrender_end_edge(GVJ_t * job);
     void gvrender_begin_anchor(GVJ_t * job,
 		char *href, char *tooltip, char *target, char *id);
@@ -110,7 +110,7 @@
     void gvrender_set_gradient_vals (GVJ_t * job, char *stopcolor, int angle, float frac);
 
     void gvrender_set_style(GVJ_t * job, char **s);
-    void gvrender_ellipse(GVJ_t * job, pointf * AF, int n, int filled);
+    void gvrender_ellipse(GVJ_t * job, pointf * AF, int filled);
     void gvrender_polygon(GVJ_t* job, pointf* af, int n, int filled);
     void gvrender_box(GVJ_t * job, boxf BF, int filled);
     void gvrender_beziercurve(GVJ_t * job, pointf * AF, int n,

@@ -216,11 +216,8 @@ static void gvrender_resolve_color(gvrender_features_t * features,
     }
 }
 
-void gvrender_begin_graph(GVJ_t * job, graph_t * g)
-{
-    /* GVC_t *gvc = job->gvc; */
+void gvrender_begin_graph(GVJ_t *job) {
     gvrender_engine_t *gvre = job->render.engine;
-    /* char *s; */
 
     if (gvre) {
 	/* render specific init */
@@ -281,8 +278,7 @@ void gvrender_end_layer(GVJ_t * job)
     }
 }
 
-void gvrender_begin_cluster(GVJ_t * job, graph_t * sg)
-{
+void gvrender_begin_cluster(GVJ_t *job) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {
@@ -291,8 +287,7 @@ void gvrender_begin_cluster(GVJ_t * job, graph_t * sg)
     }
 }
 
-void gvrender_end_cluster(GVJ_t * job, graph_t * g)
-{
+void gvrender_end_cluster(GVJ_t *job) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {
@@ -341,8 +336,7 @@ void gvrender_end_edges(GVJ_t * job)
     }
 }
 
-void gvrender_begin_node(GVJ_t * job, node_t * n)
-{
+void gvrender_begin_node(GVJ_t *job) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {
@@ -361,8 +355,7 @@ void gvrender_end_node(GVJ_t * job)
     }
 }
 
-void gvrender_begin_edge(GVJ_t * job, edge_t * e)
-{
+void gvrender_begin_edge(GVJ_t *job) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {
@@ -528,8 +521,7 @@ void gvrender_set_style(GVJ_t * job, char **s)
     }
 }
 
-void gvrender_ellipse(GVJ_t * job, pointf * pf, int n, int filled)
-{
+void gvrender_ellipse(GVJ_t *job, pointf *pf, int filled) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {

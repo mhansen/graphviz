@@ -36,10 +36,6 @@ extern "C" {
 
     extern void appendNodelist(nodelist_t *, nodelistitem_t *,
 			       Agnode_t * n);
-/* extern void removeNodelist(nodelist_t* list, Agnode_t* n); */
-/* extern int node_exists(nodelist_t* list, Agnode_t* n); */
-/* extern int nodename_exists(nodelist_t* list, char* n); */
-    extern int node_position(nodelist_t * list, Agnode_t * n);
 
     extern void realignNodelist(nodelist_t * list, nodelistitem_t * n);
     extern void insertNodelist(nodelist_t *, Agnode_t *, Agnode_t *, int);
