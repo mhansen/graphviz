@@ -441,17 +441,13 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 
 /* getPath
  * Construct the shortest path from one endpoint of e to the other.
- * The obstacles and their number are given by obs and npoly.
  * vconfig is a precomputed data structure to help in the computation.
  * If chkPts is true, the function finds the polygons, if any, containing
  * the endpoints and tells the shortest path computation to ignore them. 
  * Assumes this info is set in ND_lim, usually from _spline_edges.
  * Returns the shortest path.
  */
-Ppolyline_t
-getPath(edge_t * e, vconfig_t * vconfig, int chkPts, Ppoly_t ** obs,
-	int npoly)
-{
+Ppolyline_t getPath(edge_t *e, vconfig_t *vconfig, int chkPts) {
     Ppolyline_t line;
     int pp, qp;
     Ppoint_t p, q;
@@ -596,7 +592,7 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 	/* path-finding pass */
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-		ED_path(e) = getPath(e, vconfig, TRUE, obs, npoly);
+		ED_path(e) = getPath(e, vconfig, TRUE);
 	    }
 	}
     }
