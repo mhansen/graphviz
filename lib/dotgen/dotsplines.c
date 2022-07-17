@@ -942,13 +942,10 @@ cleanupCloneGraph (graph_t* g, attr_state_t* attr_state)
 }
 
 /* cloneNode:
- * If flipped is true, original graph has rankdir=LR or RL.
- * In this case, records change shape, so we wrap a record node's
- * label in "{...}" to prevent this.
+ * If original graph has rankdir=LR or RL, records change shape,
+ * so we wrap a record node's label in "{...}" to prevent this.
  */
-static node_t*
-cloneNode (graph_t* g, node_t* orign, int flipped)
-{
+static node_t *cloneNode(graph_t *g, node_t *orign) {
     node_t* n = agnode(g, agnameof(orign),1);
     agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
     agcopyattr (orign, n);
@@ -1298,8 +1295,8 @@ make_flat_adj_edges(graph_t* g, path* P, edge_t** edges, int ind, int cnt, edge_
         tn = hn;
         hn = n;
     }
-    auxt = cloneNode(subg, tn, GD_flip(g)); 
-    auxh = cloneNode(auxg, hn, GD_flip(g)); 
+    auxt = cloneNode(subg, tn);
+    auxh = cloneNode(auxg, hn);
     for (i = 0; i < cnt; i++) {
 	e = edges[ind + i];
 	for (; ED_edge_type(e) != NORMAL; e = ED_to_orig(e));
