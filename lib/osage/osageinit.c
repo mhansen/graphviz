@@ -388,6 +388,9 @@ void osage_cleanup(Agraph_t *g)
     node_t *n;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+        for (edge_t *e = agfstout(g, n); e; e = agnxtout(g, e)) {
+            gv_cleanup_edge(e);
+        }
         gv_cleanup_node(n);
     }
     cleanup_graphs(g);
