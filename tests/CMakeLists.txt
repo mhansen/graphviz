@@ -68,7 +68,6 @@ endmacro()
 
 CREATE_TEST(AGraph_construction)
 CREATE_TEST(clusters)
-set_tests_properties(test_clusters PROPERTIES WILL_FAIL true)
 CREATE_TEST(engines)
 CREATE_TEST(GVContext_construction)
 CREATE_TEST(GVContext_render_svg)
