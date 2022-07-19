@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - -Tx11: Assertion `xev.xbutton.button >= 1 && xev.xbutton.button <= 5 && "Xlib
   returned invalid button event"` failed #2256
 - missing Perl includes patch #2262
+- smyrna: incorrect tokenization in frmobjectui.c:set_attr_object_type #2259
 
 ## [5.0.0] – 2022-07-07
 
