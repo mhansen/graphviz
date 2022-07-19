@@ -104,7 +104,7 @@ static cairo_surface_t* gdk_loadimage(GVJ_t * job, usershape_t *us)
 #endif /* HAVE_CAIRO_SURFACE_SET_MIME_DATA */
 {
 #ifdef HAVE_CAIRO_SURFACE_SET_MIME_DATA
-    cairo_t *cr = (cairo_t *) job->context; /* target context */
+    cairo_t *cr = job->context; /* target context */
 #endif /* HAVE_CAIRO_SURFACE_SET_MIME_DATA */
     GdkPixbuf *image = NULL;
 #ifdef HAVE_CAIRO_SURFACE_SET_MIME_DATA
@@ -191,7 +191,7 @@ static void gdk_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool fille
 {
     (void)filled;
 
-    cairo_t *cr = (cairo_t *) job->context; /* target context */
+    cairo_t *cr = job->context; /* target context */
 #ifndef HAVE_CAIRO_SURFACE_SET_MIME_DATA
     GdkPixbuf *image;
 #else /* HAVE_CAIRO_SURFACE_SET_MIME_DATA */
