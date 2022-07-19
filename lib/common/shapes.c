@@ -3220,8 +3220,7 @@ static field_t *parse_reclbl(node_t *n, bool LR, int flag, char *text) {
     for (maxf = 1, cnt = 0, sp = reclblp; *sp; sp++) {
 	if (*sp == '\\') {
 	    sp++;
-	    if (*sp
-		&& (*sp == '{' || *sp == '}' || *sp == '|' || *sp == '\\'))
+	    if (*sp && (*sp == '{' || *sp == '}' || *sp == '|' || *sp == '\\'))
 		continue;
 	}
 	if (*sp == '{')
@@ -3289,15 +3288,13 @@ static field_t *parse_reclbl(node_t *n, bool LR, int flag, char *text) {
 	    if (!(mode & (HASTEXT | HASTABLE)))
 		mode |= HASTEXT, *tsp++ = ' ';
 	    if (mode & HASTEXT) {
-		if (tsp > text + 1 &&
-		    tsp - 1 != hstsp && *(tsp - 1) == ' ')
+		if (tsp > text + 1 && tsp - 1 != hstsp && *(tsp - 1) == ' ')
 		    tsp--;
 		*tsp = '\000';
 		fp->lp =
 		    make_label(n, text,
 			       (lbl->html ? LT_HTML : LT_NONE),
-			       lbl->fontsize, lbl->fontname,
-			       lbl->fontcolor);
+			       lbl->fontsize, lbl->fontname, lbl->fontcolor);
 		fp->LR = TRUE;
 		hstsp = tsp = text;
 	    }
@@ -3332,8 +3329,7 @@ static field_t *parse_reclbl(node_t *n, bool LR, int flag, char *text) {
 	    if (!(mode & (INTEXT | INPORT)) && *reclblp != ' ')
 		mode |= (INTEXT | HASTEXT);
 	    if (mode & INTEXT) {
-		if (!
-		    (*reclblp == ' ' && !ishardspace && *(tsp - 1) == ' '
+		if (!(*reclblp == ' ' && !ishardspace && *(tsp - 1) == ' '
 		     && !lbl->html))
 		    *tsp++ = *reclblp;
 		if (ishardspace)
@@ -3346,7 +3342,7 @@ static field_t *parse_reclbl(node_t *n, bool LR, int flag, char *text) {
 		    hspsp = psp - 1;
 	    }
 	    reclblp++;
-	    while (*reclblp & 128)
+	    while ((*reclblp & 0xc0) == 0x80)
 		*tsp++ = *reclblp++;
 	    break;
 	}
