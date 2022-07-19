@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
 
 find_package(Boost REQUIRED)
 find_package(Catch2 REQUIRED)
+find_package(FMT REQUIRED)
 find_package(RAPIDXML REQUIRED)
 find_package(SVGPP REQUIRED)
 
@@ -27,6 +28,7 @@ target_include_directories(test_common PRIVATE
 )
 target_include_directories(test_common SYSTEM PRIVATE
   ${Boost_INCLUDE_DIRS}
+  ${FMT_INCLUDE_DIRS}
   ${RAPIDXML_INCLUDE_DIRS}
   ${SVGPP_INCLUDE_DIRS}
 )
@@ -40,6 +42,7 @@ target_link_libraries(test_common PUBLIC
   cgraph++
   gvc
   gvc++
+  ${FMT_LIBRARIES}
 )
 
 # common steps for creating a test case
