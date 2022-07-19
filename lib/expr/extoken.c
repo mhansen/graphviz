@@ -16,7 +16,7 @@
  */
 
 #include "config.h"
-
+#include <ctype.h>
 #include <expr/exlib.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -548,18 +548,9 @@ extoken_fn(Expr_t* ex)
 			{
 				b = 16;
 				sfputc(ex->tmp, c);
-				for (;;)
+				for (c = lex(ex); isxdigit(c); c = lex(ex))
 				{
-					switch (c = lex(ex))
-					{
-					case '0': case '1': case '2': case '3': case '4':
-					case '5': case '6': case '7': case '8': case '9':
-					case 'a': case 'b': case 'c': case 'd': case 'e': case 'f': 
-					case 'A': case 'B': case 'C': case 'D': case 'E': case 'F': 
-						sfputc(ex->tmp, c);
-						continue;
-					}
-					break;
+					sfputc(ex->tmp, c);
 				}
 			}
 			else
