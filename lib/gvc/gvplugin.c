@@ -266,9 +266,9 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
 
     const strview_t reqtyp = strview(str, ':');
 
-    strview_t reqdep = {NULL};
+    strview_t reqdep = {0};
 
-    strview_t reqpkg = {NULL};
+    strview_t reqpkg = {0};
 
     if (reqtyp.data[reqtyp.size] == ':') {
         reqdep = strview(reqtyp.data + reqtyp.size + strlen(":"), ':');
@@ -281,7 +281,7 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
     for (pnext = gvc->apis[api]; pnext; pnext = pnext->next) {
         const strview_t typ = strview(pnext->typestr, ':');
 
-        strview_t dep = {NULL};
+        strview_t dep = {0};
         if (typ.data[typ.size] == ':') {
             dep = strview(typ.data + typ.size + strlen(":"), '\0');
         }
@@ -372,7 +372,7 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     }
     if (new) {                  /* if the type was not found, or if str without ':',
                                    then just list available types */
-        strview_t type_last = {NULL};
+        strview_t type_last = {0};
         for (pnext = plugin; pnext; pnext = pnext->next) {
             /* list only one instance of type */
             const strview_t type = strview(pnext->typestr, ':');
@@ -424,7 +424,7 @@ char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, const char *str)
 
     /* point to the beginning of the linked list of plugins for this api */
     plugin = gvc->apis[api];
-    strview_t typestr_last = {NULL};
+    strview_t typestr_last = {0};
     for (pnext = plugin; pnext; pnext = pnext->next) {
         /* list only one instance of type */
         strview_t q = strview(pnext->typestr, ':');
