@@ -80,7 +80,7 @@ static cairo_surface_t* cairo_loadimage(GVJ_t * job, usershape_t *us)
 
 static void pango_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
-    cairo_t *cr = (cairo_t *) job->context; /* target context */
+    cairo_t *cr = job->context; /* target context */
     cairo_surface_t *surface;	 /* source surface */
 
     assert(job);
