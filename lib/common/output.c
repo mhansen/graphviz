@@ -30,13 +30,13 @@ static int (*putstr) (void *chan, const char *str);
 
 static void agputs (const char* s, FILE* fp)
 {
-    putstr ((void*)fp, s);
+    putstr(fp, s);
 }
 static void agputc (int c, FILE* fp)
 {
     static char buf[2] = {'\0','\0'};
     buf[0] = c;
-    putstr ((void*)fp, buf);
+    putstr(fp, buf);
 }
 
 
