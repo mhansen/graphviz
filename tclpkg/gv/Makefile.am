@@ -180,7 +180,7 @@ nodist_libgv_perl_la_SOURCES = gv_perl.cpp $(PERL_data)
 libgv_perl_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
 libgv_perl_la_LIBADD = $(BASELIBS) $(PERL_LIBS)
 libgv_perl_la_LDFLAGS = -module -avoid-version $(PERL_LD)
-libgv_perl_la_CPPFLAGS = $(BASECPPFLAGS) $(PERL_CC)
+libgv_perl_la_CPPFLAGS = $(BASECPPFLAGS) $(PERL_INCLUDES) $(PERL_CC)
 $(PERL_data): gv_perl.cpp
 gv_perl.cpp: gv.i
 	$(SWIG) -c++ $(SWIG_PERL_OPT) -o $@ $(srcdir)/gv.i
