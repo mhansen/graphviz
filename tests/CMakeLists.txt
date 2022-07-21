@@ -20,6 +20,8 @@ add_library(test_common SHARED
             svg_analyzer.cpp
             svg_analyzer.h
             svg_analyzer_interface.h
+            svg_element.cpp
+            svg_element.h
             ../cmd/dot/dot_builtins.cpp
 )
 set_target_properties(test_common PROPERTIES CXX_STANDARD 20)

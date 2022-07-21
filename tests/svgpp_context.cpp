@@ -46,7 +46,7 @@ void SvgppContext::on_enter_element(svgpp::tag::element::title) {
   m_svgAnalyzer->on_enter_element_title();
 }
 
-void SvgppContext::on_exit_element() {}
+void SvgppContext::on_exit_element() { m_svgAnalyzer->on_exit_element(); }
 
 void SvgppContext::path_move_to(double x, double y,
                                 svgpp::tag::coordinate::absolute c) {

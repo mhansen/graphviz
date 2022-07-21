@@ -22,4 +22,5 @@ public:
   virtual void on_enter_element_polyline() = 0;
   virtual void on_enter_element_rect() = 0;
   virtual void on_enter_element_title() = 0;
+  virtual void on_exit_element() = 0;
 };

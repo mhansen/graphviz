@@ -1,8 +1,10 @@
 #pragma once
 
 #include <cstddef>
+#include <vector>
 
 #include "svg_analyzer_interface.h"
+#include "svg_element.h"
 
 /**
  * @brief The SVGAnalyzer class analyzes the contents of an SVG document.
@@ -21,6 +23,7 @@ public:
   void on_enter_element_polyline() override;
   void on_enter_element_rect() override;
   void on_enter_element_title() override;
+  void on_exit_element() override;
   std::size_t num_svgs() const { return m_num_svgs; };
   std::size_t num_groups() const { return m_num_groups; };
   std::size_t num_circles() const { return m_num_circles; };
@@ -33,6 +36,16 @@ public:
   std::size_t num_titles() const { return m_num_titles; };
 
 private:
+  /// Get the current element being processed by the SVG document traverser
+  SVG::SVGElement &current_element();
+  /// Enter a new SVG element retrieved by the SVG document traverser into the
+  /// list of elements currently being processed
+  void enter_element(SVG::SVGElementType type);
+
+  /// A list of pointers to elements currently being processed by the SVG++
+  /// document traverser, in hierarchical order. The front element is the top
+  /// level SVG and the back element is the current element.
+  std::vector<SVG::SVGElement *> m_elements_in_process;
   std::size_t m_num_svgs = 1; // the top level svg is implicit. See
                               // https://github.com/svgpp/svgpp/issues/98
   std::size_t m_num_groups = 0;
@@ -44,4 +57,6 @@ private:
   std::size_t m_num_polylines = 0;
   std::size_t m_num_rects = 0;
   std::size_t m_num_titles = 0;
+  /// The top level SVG `svg` element corresponding to the Graphviz graph
+  SVG::SVGElement m_svg;
 };
