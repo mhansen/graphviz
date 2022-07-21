@@ -12,6 +12,7 @@ enable_testing()
 # separate test can be as small as possible
 add_library(test_common SHARED
             catch2_main.cpp
+            test_utilities.cpp
             svgpp_context.cpp
             svgpp_context.h
             svgpp_document_traverser.cpp
@@ -77,3 +78,4 @@ CREATE_TEST(neatopack)
 CREATE_TEST(simple)
 CREATE_TEST(subgraph_layout)
 CREATE_TEST(subgraphs)
+CREATE_TEST(svg_analyzer)
