@@ -15,10 +15,6 @@
 #include <glcomp/glutils.h>
 #include "glmotion.h"
 
-
-
-
-
 void btnToolZoomOut_clicked(GtkWidget * widget, gpointer user_data)
 {
     (void)widget;
@@ -70,15 +66,9 @@ void btnToolFit_clicked(GtkWidget * widget, gpointer user_data)
 
     float scx, scy, gcx, gcy, z;
 
-
-
     (view->active_camera >= 0)
 	? (z = view->cameras[view->active_camera]->r) : (z =
 							 view->zoom * -1);
-
-
-
-
 
     gcx =
 	view->bdxLeft / z + (view->bdxRight / z -
@@ -89,10 +79,7 @@ void btnToolFit_clicked(GtkWidget * widget, gpointer user_data)
 			       view->bdyBottom / z) / (float) (2.0);
     scy = view->clipY1 + (view->clipY2 - view->clipY1) / (float) (2.0);
 
-
-
     if (view->active_camera >= 0) {
-
 	view->cameras[view->active_camera]->targetx += (gcx - scx);
 	view->cameras[view->active_camera]->targety += (gcx - scy);
     } else {
