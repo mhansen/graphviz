@@ -437,8 +437,6 @@ static void set_refresh_filters(ViewInfo * v, int type, char *name)
 static void doApply(void)
 {
     char *attr_name;
-    char *value;
-    char *def_val;
     int prog;
     Agnode_t *v;
     Agedge_t *e;
@@ -451,12 +449,10 @@ static void doApply(void)
     attr_name =
 	(char *) gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtAttr"));
-    def_val =
-	(char *) gtk_entry_get_text((GtkEntry *)
+    const char *def_val = gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml,
 							 "txtDefValue"));
-    value =
-	(char *) gtk_entry_get_text((GtkEntry *)
+    const char *value = gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtValue"));
     prog =
 	gtk_toggle_button_get_active((GtkToggleButton *)
