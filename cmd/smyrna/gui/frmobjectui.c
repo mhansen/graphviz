@@ -434,7 +434,7 @@ static void set_refresh_filters(ViewInfo * v, int type, char *name)
 	v->refresh.selection = 1;
 }
 
-static void doApply(int doAll)
+static void doApply(void)
 {
     char *attr_name;
     char *value;
@@ -476,7 +476,7 @@ static void doApply(int doAll)
     /*nodes */
     else if (objKind == AGNODE) {
 	for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
-	    if (doAll || ND_selected(v))
+	    if (ND_selected(v))
 		agxset(v, sym, value);
 	}
     }
@@ -484,7 +484,7 @@ static void doApply(int doAll)
     else if (objKind == AGEDGE) {
 	for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	    for (e = agfstout(g, v); e; e = agnxtout(g, e)) {
-		if (doAll || ED_selected(e))
+		if (ED_selected(e))
 		    agxset(e, sym, value);
 	    }
 	}
@@ -500,7 +500,7 @@ _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    doApply(0);
+    doApply();
 }
 
 /* This is the action attached to the publish button on the attributes
