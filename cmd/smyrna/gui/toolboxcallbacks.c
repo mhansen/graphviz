@@ -21,11 +21,16 @@
 
 void btnToolZoomOut_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     glmotion_zoom_inc(0);
 }
 
 void btnToolZoomFit_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
 
     float z, GDX, SDX, GDY, SDY;
     (view->active_camera >= 0)
@@ -60,6 +65,9 @@ void btnToolZoomFit_clicked(GtkWidget * widget, gpointer user_data)
 
 void btnToolFit_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     float scx, scy, gcx, gcy, z;
 
 
@@ -98,6 +106,9 @@ void btnToolFit_clicked(GtkWidget * widget, gpointer user_data)
 
 void on_btnActivateGraph_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     int graphId;
     graphId = gtk_combo_box_get_active(view->graphComboBox);
     /* fprintf (stderr, "switch to graph %d\n",graphId); */
