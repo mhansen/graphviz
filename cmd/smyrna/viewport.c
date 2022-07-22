@@ -497,7 +497,7 @@ void refreshViewport(void)
     view->refresh.nodesize=1;
     view->refresh.pos=1;
     view->refresh.selection=1;
-    load_settings_from_graph(graph);
+    load_settings_from_graph();
 
     if(view->guiMode!=GUI_FULLSCREEN)
 	update_graph_from_settings(graph);

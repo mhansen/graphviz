@@ -287,7 +287,7 @@ static int get_combobox_widget_to_attribute(char *attribute,
 
 
 }
-int load_settings_from_graph(Agraph_t * g)
+int load_settings_from_graph(void)
 {
     Agsym_t* sym=NULL;
     while ((sym = agnxtattr(view->systemGraphs.attrs_widgets,AGRAPH, sym))) {
@@ -334,7 +334,7 @@ int show_settings_form()
 {
 
     if (view->activeGraph >= 0) {
-	load_settings_from_graph(view->g[view->activeGraph]);
+	load_settings_from_graph();
 	gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
 	gtk_widget_show(glade_xml_get_widget(xml, "dlgSettings"));
 	gtk_window_set_keep_above((GtkWindow *)
