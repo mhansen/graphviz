@@ -9,7 +9,7 @@ enable_testing()
 
 # for convenience, make a library that depends on everything so each
 # separate test can be as small as possible
-add_library(test_common STATIC
+add_library(test_common SHARED
             catch2_main.cpp
             svgpp_context.cpp
             svgpp_context.h
