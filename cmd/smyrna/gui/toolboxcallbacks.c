@@ -28,10 +28,8 @@ void btnToolZoomFit_clicked(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    float z;
-    (view->active_camera >= 0)
-	? (z = view->cameras[view->active_camera]->r) : (z =
-							 view->zoom * -1);
+    float z = view->active_camera >= 0 ? view->cameras[view->active_camera]->r
+                                       : -view->zoom;
 
     float GDX = view->bdxRight / z - view->bdxLeft / z;
     float SDX = view->clipX2 - view->clipX1;
@@ -39,21 +37,17 @@ void btnToolZoomFit_clicked(GtkWidget * widget, gpointer user_data)
     float SDY = view->clipY2 - view->clipY1;
 
     if (SDX / GDX <= SDY / GDY) {
-	(view->active_camera >= 0) ?
-	    (view->cameras[view->active_camera]->r =
-	     view->cameras[view->active_camera]->r / (SDX /
-						      GDX)) : (view->zoom =
-							       view->zoom /
-							       (SDX /
-								GDX));
+        if (view->active_camera >= 0) {
+            view->cameras[view->active_camera]->r /= SDX / GDX;
+        } else {
+            view->zoom /= SDX / GDX;
+        }
     } else {
-	(view->active_camera >= 0) ?
-	    (view->cameras[view->active_camera]->r =
-	     view->cameras[view->active_camera]->r / (SDY /
-						      GDY)) : (view->zoom =
-							       view->zoom /
-							       (SDY /
-								GDY));
+        if (view->active_camera >= 0) {
+            view->cameras[view->active_camera]->r /= SDY / GDY;
+        } else {
+            view->zoom /= SDY / GDY;
+        }
 
     }
     btnToolFit_clicked(NULL, NULL);
