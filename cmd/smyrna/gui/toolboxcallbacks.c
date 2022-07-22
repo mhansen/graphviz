@@ -64,14 +64,10 @@ void btnToolFit_clicked(GtkWidget * widget, gpointer user_data)
 	? (z = view->cameras[view->active_camera]->r) : (z =
 							 view->zoom * -1);
 
-    gcx =
-	view->bdxLeft / z + (view->bdxRight / z -
-			     view->bdxLeft / z) / (float) (2.0);
-    scx = view->clipX1 + (view->clipX2 - view->clipX1) / (float) (2.0);
-    gcy =
-	view->bdyBottom / z + (view->bdyTop / z -
-			       view->bdyBottom / z) / (float) (2.0);
-    scy = view->clipY1 + (view->clipY2 - view->clipY1) / (float) (2.0);
+    gcx = view->bdxLeft / z + (view->bdxRight / z - view->bdxLeft / z) / 2.0f;
+    scx = view->clipX1 + (view->clipX2 - view->clipX1) / 2.0f;
+    gcy = view->bdyBottom / z + (view->bdyTop / z - view->bdyBottom / z) / 2.0f;
+    scy = view->clipY1 + (view->clipY2 - view->clipY1) / 2.0f;
 
     if (view->active_camera >= 0) {
 	view->cameras[view->active_camera]->targetx += (gcx - scx);
