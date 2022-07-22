@@ -513,6 +513,9 @@ _BB void on_attrProg_toggled(GtkWidget * widget, gpointer user_data)
 
 _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     char *attr_name;
     char *defValue;
     int objKind;
