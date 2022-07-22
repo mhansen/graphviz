@@ -31,8 +31,7 @@ static int sel_node;
 static int sel_edge;
 static int sel_graph;
 
-static char *safestrdup(char *src)
-{
+static char *safestrdup(const char *src) {
     if (!src)
 	return NULL;
     else
