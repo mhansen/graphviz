@@ -26,6 +26,8 @@
 
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/strview.h>
+#include <cgraph/tokenize.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
@@ -118,20 +120,18 @@ static int
 parseStyle (char* s)
 {
     int flags = 0;
-    char* ip;
     char* sep = " \t,";
 
-	s = strdup(s);
-    for (ip = strtok (s, sep); ip; ip = strtok (NULL, sep)) {
-	if (streq(ip,"invis")) flags |= INVIS;
-	else if (streq(ip,"filled")) flags |= FILL;
-	else if (streq(ip,"dashed")) flags |= DASH;
-	else if (streq(ip,"dotted")) flags |= DOT;
-	else if (streq(ip,"solid")) flags |= LINE;
-	else if (streq(ip,"bold")) flags |= BOLD;
+    for (tok_t t = tok(s, sep); !tok_end(&t); tok_next(&t)) {
+	strview_t ip = tok_get(&t);
+	if (strview_str_eq(ip, "invis")) flags |= INVIS;
+	else if (strview_str_eq(ip, "filled")) flags |= FILL;
+	else if (strview_str_eq(ip, "dashed")) flags |= DASH;
+	else if (strview_str_eq(ip, "dotted")) flags |= DOT;
+	else if (strview_str_eq(ip, "solid")) flags |= LINE;
+	else if (strview_str_eq(ip, "bold")) flags |= BOLD;
     }  
 
-    free (s);
     return flags;
 }
 

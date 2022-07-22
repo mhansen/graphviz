@@ -9,7 +9,7 @@ import pytest
 sys.path.append(os.path.dirname(__file__))
 from gvtest import run_c #pylint: disable=wrong-import-position
 
-@pytest.mark.parametrize("utility", ("bitarray", "stack"))
+@pytest.mark.parametrize("utility", ("bitarray", "stack", "tokenize"))
 def test_utility(utility: str):
   """run the given utility’s unit tests"""
 

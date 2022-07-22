@@ -109,6 +109,7 @@ win_flex -oscan.c scan.l</Command>
     <ClInclude Include="stack.h" />
     <ClInclude Include="strcasecmp.h" />
     <ClInclude Include="strview.h" />
+    <ClInclude Include="tokenize.h" />
     <ClInclude Include="unreachable.h" />
     <ClInclude Include="unused.h" />
   </ItemGroup>
