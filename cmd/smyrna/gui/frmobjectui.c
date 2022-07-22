@@ -514,7 +514,6 @@ _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
     (void)user_data;
 
     char *attr_name;
-    char *defValue;
     int objKind;
     topview *t;
     Agraph_t *g;
@@ -525,8 +524,7 @@ _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
     attr_name =
 	(char *) gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtAttr"));
-    defValue =
-	(char *) gtk_entry_get_text((GtkEntry *)
+    const char *defValue = gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml,
 							 "txtDefValue"));
     g = view->g[view->activeGraph];
