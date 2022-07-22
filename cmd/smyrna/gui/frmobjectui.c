@@ -434,7 +434,7 @@ static void set_refresh_filters(ViewInfo * v, int type, char *name)
 	v->refresh.selection = 1;
 }
 
-static void doApply (GtkWidget * widget, int doAll)
+static void doApply(int doAll)
 {
     char *attr_name;
     char *value;
@@ -497,8 +497,10 @@ static void doApply (GtkWidget * widget, int doAll)
 
 _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
     (void)user_data;
-    doApply (widget, 0);
+
+    doApply(0);
 }
 
 /* This is the action attached to the publish button on the attributes
