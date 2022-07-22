@@ -1191,6 +1191,8 @@ tclGdGetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static int
 tclGdSizeCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
+    (void)argc;
+
     gdImagePtr im;
     Tcl_Obj *answers[2];
 
