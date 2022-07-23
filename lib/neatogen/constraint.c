@@ -270,9 +270,7 @@ static graph_t *mkNConstraintG(graph_t * g, Dt_t * list,
 }
 /* mkConstraintG:
  */
-static graph_t *mkConstraintG(graph_t * g, Dt_t * list,
-			      intersectfn intersect, distfn dist)
-{
+static graph_t *mkConstraintG(Dt_t * list, intersectfn intersect, distfn dist) {
     nitem *p;
     nitem *nxt = NULL;
     nitem *nxp;
@@ -402,7 +400,7 @@ static void constrainX(graph_t* g, nitem* nlist, int nnodes, intersectfn ifn,
 	p++;
     }
     if (ortho)
-	cg = mkConstraintG(g, list, ifn, distX);
+	cg = mkConstraintG(list, ifn, distX);
     else
 	cg = mkNConstraintG(g, list, ifn, distX);
     rank(cg, 2, INT_MAX);
@@ -440,7 +438,7 @@ static void constrainY(graph_t* g, nitem* nlist, int nnodes, intersectfn ifn,
 	p++;
     }
     if (ortho)
-	cg = mkConstraintG(g, list, ifn, distY);
+	cg = mkConstraintG(list, ifn, distY);
     else
 	cg = mkNConstraintG(g, list, ifn, distY);
     rank(cg, 2, INT_MAX);
