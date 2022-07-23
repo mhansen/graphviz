@@ -435,7 +435,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    if (k == 1) {
 		/* use quad solver in the y-dimension */
 		constrained_majorization_new_with_gaps(cMajEnv, b[k],
-						       coords, dim, k,
+						       coords, k,
 						       localConstrMajorIterations,
 						       hierarchy_boundaries,
 						       levels_gap);

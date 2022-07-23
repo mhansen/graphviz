@@ -143,7 +143,7 @@ constrained_majorization_new(CMajEnv * e, float *b, float **coords,
     }
     if (levels_gap != 0) {
 	return constrained_majorization_new_with_gaps(e, b, coords,
-						      cur_axis, dims,
+						      dims,
 						      max_iterations,
 						      hierarchy_boundaries,
 						      levels_gap);
@@ -384,7 +384,7 @@ constrained_majorization_new(CMajEnv * e, float *b, float **coords,
 
 int
 constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
-				       float **coords, int ndims,
+				       float **coords,
 				       int cur_axis, int max_iterations,
 				       float *hierarchy_boundaries,
 				       float levels_gap)
