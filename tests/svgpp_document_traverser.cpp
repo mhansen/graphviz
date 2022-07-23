@@ -24,10 +24,14 @@ void traverseDocumentWithSvgpp(SvgppContext &context, char *text) {
         svgpp::tag::element::rect, svgpp::tag::element::text,
         svgpp::tag::element::title>::type;
 
+    using processed_attributes_t =
+        boost::mpl::set<svgpp::traits::shapes_attributes_by_element,
+                        svgpp::tag::attribute::class_ //
+                        >::type;
+
     svgpp::document_traversal<
         svgpp::processed_elements<processed_elements_t>,
-        svgpp::processed_attributes<
-            svgpp::traits::shapes_attributes_by_element>,
+        svgpp::processed_attributes<processed_attributes_t>,
         svgpp::basic_shapes_policy<svgpp::policy::basic_shapes::raw>>::
         load_document(xml_root_element, context);
   }

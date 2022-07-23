@@ -22,6 +22,10 @@ enum class SVGElementType {
 
 std::string_view tag(SVG::SVGElementType type);
 
+struct SVGAttributes {
+  std::string class_;
+};
+
 /**
  * @brief The SVGElement class represents an SVG element
  */
@@ -33,6 +37,7 @@ public:
 
   std::string to_string(std::size_t indent_size) const;
 
+  SVGAttributes attributes;
   /// The Graphviz build date
   std::string graphviz_build_date;
   std::vector<SVGElement> children;

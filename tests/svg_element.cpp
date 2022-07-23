@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include <fmt/format.h>
 
 #include "svg_element.h"
@@ -56,6 +58,41 @@ void SVG::SVGElement::to_string_impl(std::string &output,
 
   output += "<";
   output += tag(type);
+
+  std::string attributes_str{};
+  switch (type) {
+  case SVG::SVGElementType::Ellipse:
+    // ignore for now
+    break;
+  case SVG::SVGElementType::Group:
+    attributes_str += fmt::format(R"(class="{}")", attributes.class_);
+    break;
+  case SVG::SVGElementType::Path:
+    // ignore for now
+    break;
+  case SVG::SVGElementType::Polygon:
+    // ignore for now
+    break;
+  case SVG::SVGElementType::Polyline:
+    // ignore for now
+    break;
+  case SVG::SVGElementType::Svg:
+    // ignore for now
+    break;
+  case SVG::SVGElementType::Text:
+    // ignore for now
+    break;
+  case SVG::SVGElementType::Title:
+    // Graphviz doesn't generate attributes on 'title' elements
+    break;
+  default:
+    throw std::runtime_error{fmt::format(
+        "Attributes on '{}' elements are not yet implemented", tag(type))};
+  }
+  if (!attributes_str.empty()) {
+    output += " ";
+  }
+  output += attributes_str;
 
   if (children.empty() && text.empty()) {
     output += "/>\n";

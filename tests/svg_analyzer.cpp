@@ -111,6 +111,10 @@ void SVGAnalyzer::enter_element(SVG::SVGElementType type) {
   m_elements_in_process.push_back(&element.children.back());
 }
 
+void SVGAnalyzer::set_class(std::string_view class_) {
+  current_element().attributes.class_ = class_;
+}
+
 void SVGAnalyzer::set_text(std::string_view text) {
   auto &element = current_element();
   element.text = text;

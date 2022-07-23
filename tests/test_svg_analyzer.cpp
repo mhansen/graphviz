@@ -135,7 +135,9 @@ TEST_CASE(
     // yet compare with the original SVG
     CHECK(recreated_svg.find("<svg>") != std::string::npos);
     CHECK(recreated_svg.find("</svg>") != std::string::npos);
-    CHECK(recreated_svg.find("<g>") != std::string::npos);
+    CHECK(recreated_svg.find("<g class=\"graph\">") != std::string::npos);
+    CHECK(recreated_svg.find("<g class=\"node\">") != std::string::npos);
+    CHECK(recreated_svg.find("<g class=\"edge\">") != std::string::npos);
     CHECK(recreated_svg.find("</g>") != std::string::npos);
     CHECK(recreated_svg.find("<title>g1</title>") != std::string::npos);
     CHECK(recreated_svg.find("<title>a</title>") != std::string::npos);
