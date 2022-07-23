@@ -96,7 +96,7 @@ ensureMonotonicOrderingWithGaps(float *place, int n, int *ordering,
 }
 
 static void
-computeHierarchyBoundaries(float *place, int n, int *ordering, int *levels,
+computeHierarchyBoundaries(float *place, int *ordering, int *levels,
 			   int num_levels, float *hierarchy_boundaries)
 {
     int i;
@@ -376,7 +376,7 @@ constrained_majorization_new(CMajEnv * e, float *b, float **coords,
 	}
     }
 
-    computeHierarchyBoundaries(place, n, ordering, levels, num_levels,
+    computeHierarchyBoundaries(place, ordering, levels, num_levels,
 			       hierarchy_boundaries);
 
     return counter;
@@ -539,7 +539,7 @@ int constrained_majorization_gradient_projection(CMajEnv * e,
 	    if (test < tmptest)
 		test = tmptest;
 	}
-	computeHierarchyBoundaries(place, e->n, ordering, levels,
+	computeHierarchyBoundaries(place, ordering, levels,
 				   num_levels, hierarchy_boundaries);
 #ifdef CONMAJ_LOGGING
 	double stress = 0;
@@ -892,7 +892,7 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 	    }
 	}
 	orthog1f(n, place);	/* for numerical stability, keep ||place|| small */
-	computeHierarchyBoundaries(place, n, ordering, levels, num_levels,
+	computeHierarchyBoundaries(place, ordering, levels, num_levels,
 				   hierarchy_boundaries);
     }
 
