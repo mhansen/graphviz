@@ -26,7 +26,7 @@ This is somewhat similar to the binary stress model
 
 */
 
-UniformStressSmoother UniformStressSmoother_new(int dim, SparseMatrix A, double *x, double alpha, double M, int *flag){
+UniformStressSmoother UniformStressSmoother_new(SparseMatrix A, double *x, double alpha, double M, int *flag){
   UniformStressSmoother sm;
   int i, j, k, m = A->m, *ia = A->ia, *ja = A->ja, *iw, *jw, *id, *jd;
   int nz;
@@ -160,19 +160,19 @@ void uniform_stress(int dim, SparseMatrix A, double *x, int *flag){
   B = get_distance_matrix(A, scaling);
   assert(SparseMatrix_is_symmetric(B, false));
 
-  sm = UniformStressSmoother_new(dim, B, x, 1000000*lambda0, M, flag);
+  sm = UniformStressSmoother_new(B, x, 1000000*lambda0, M, flag);
   UniformStressSmoother_smooth(sm, dim, x, maxit);
   UniformStressSmoother_delete(sm);
 
-  sm = UniformStressSmoother_new(dim, B, x, 10000*lambda0, M, flag);
+  sm = UniformStressSmoother_new(B, x, 10000*lambda0, M, flag);
   UniformStressSmoother_smooth(sm, dim, x, maxit);
   UniformStressSmoother_delete(sm);
 
-  sm = UniformStressSmoother_new(dim, B, x, 100*lambda0, M, flag);
+  sm = UniformStressSmoother_new(B, x, 100*lambda0, M, flag);
   UniformStressSmoother_smooth(sm, dim, x, maxit);
   UniformStressSmoother_delete(sm);
 
-  sm = UniformStressSmoother_new(dim, B, x, lambda0, M, flag);
+  sm = UniformStressSmoother_new(B, x, lambda0, M, flag);
   UniformStressSmoother_smooth(sm, dim, x, maxit);
   UniformStressSmoother_delete(sm);
 
