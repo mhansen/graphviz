@@ -16,8 +16,7 @@
 #include <neatogen/voronoi.h>
 
 
-void voronoi(int triangulate, Site * (*nextsite) (void))
-{
+void voronoi(Site * (*nextsite) (void)) {
     Site *newsite, *bot, *top, *temp, *p;
     Site *v;
     Point newintstar = {0};

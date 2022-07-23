@@ -516,7 +516,7 @@ static int vAdjust(void)
 
     rmEquality();
     geomUpdate(0);
-    voronoi(0, nextOne);
+    voronoi(nextOne);
     while (1) {
 	newPos();
 	iterCnt++;
@@ -544,7 +544,7 @@ static int vAdjust(void)
 	}
 
 	geomUpdate(1);
-	voronoi(0, nextOne);
+	voronoi(nextOne);
     }
 
     if (Verbose) {
