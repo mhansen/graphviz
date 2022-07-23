@@ -10,5 +10,5 @@
 
 #pragma once
 
-SparseMatrix call_tri(int n, int dim, double * x);
+SparseMatrix call_tri(int n, double * x);
 SparseMatrix call_tri2(int n, int dim, double * x);

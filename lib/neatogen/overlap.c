@@ -390,7 +390,7 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
   lambda = sm->lambda = N_GNEW(m,double);
   for (i = 0; i < m; i++) sm->lambda[i] = lambda0;
   
-  B= call_tri(m, dim, x);
+  B= call_tri(m, x);
 
   if (!neighborhood_only){
     SparseMatrix C, D;
