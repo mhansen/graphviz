@@ -219,7 +219,7 @@ compute_Bij(DistType** Dij, int n)
 }
 
 static void
-CMDS_orthog(vtx_data* graph, int n, int dim, double** eigs, double tol, 
+CMDS_orthog(int n, int dim, double** eigs, double tol,
             double* orthog, DistType** Dij)
 {
 	int i,j;
@@ -296,7 +296,7 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 	}
 
 	/* smart ini: */
-	CMDS_orthog(graph, n, 1, &y, conj_tol, x, Dij);
+	CMDS_orthog(n, 1, &y, conj_tol, x, Dij);
 	
 	/* Compute Laplacian: */
 	f_storage = N_GNEW(n*n, float);
