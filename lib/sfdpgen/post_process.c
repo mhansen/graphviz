@@ -545,7 +545,7 @@ static void get_edge_label_matrix(relative_position_constraints data, int m, int
   *rhs = x00;
 }
 
-double get_stress(int m, int dim, int *iw, int *jw, double *w, double *d, double *x, double scaling, void *data, int weighted){
+double get_stress(int m, int dim, int *iw, int *jw, double *w, double *d, double *x, double scaling, int weighted){
   int i, j;
   double res = 0., dist;
   /* we use the fact that d_ij = w_ij*graph_dist(i,j). Also, d_ij and x are scalinged by *scaling, so divide by it to get actual unscaled streee. */
@@ -616,7 +616,7 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
   iw = Lw->ia; jw = Lw->ja;
 
 #ifdef DEBUG_PRINT
-  if (Verbose) fprintf(stderr, "initial stress = %f\n", get_stress(m, dim, iw, jw, w, d, x, sm->scaling, sm->data, 1));
+  if (Verbose) fprintf(stderr, "initial stress = %f\n", get_stress(m, dim, iw, jw, w, d, x, sm->scaling, 1));
 #else
   (void)iw;
   (void)jw;
@@ -699,7 +699,7 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
 
 #ifdef DEBUG_PRINT
     if (Verbose) {
-      fprintf(stderr, "stress1 = %g\n",get_stress(m, dim, iw, jw, w, d, x, sm->scaling, sm->data, 1));
+      fprintf(stderr, "stress1 = %g\n",get_stress(m, dim, iw, jw, w, d, x, sm->scaling, 1));
     }
 #endif
 
@@ -712,7 +712,7 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
 
     if (flag) goto RETURN;
 #ifdef DEBUG_PRINT
-    if (Verbose) fprintf(stderr, "stress2 = %g\n",get_stress(m, dim, iw, jw, w, d, y, sm->scaling, sm->data, 1));
+    if (Verbose) fprintf(stderr, "stress2 = %g\n",get_stress(m, dim, iw, jw, w, d, y, sm->scaling, 1));
 #endif
     diff = total_distance(m, dim, x, y)/sqrt(vector_product(m*dim, x, x));
 #ifdef DEBUG_PRINT
@@ -730,7 +730,7 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
 #endif
 
 #ifdef DEBUG_PRINT
-  if (Verbose) fprintf(stderr, "iter = %d, final stress = %f\n", iter, get_stress(m, dim, iw, jw, w, d, x, sm->scaling, sm->data, 1));
+  if (Verbose) fprintf(stderr, "iter = %d, final stress = %f\n", iter, get_stress(m, dim, iw, jw, w, d, x, sm->scaling, 1));
 #endif
 
  RETURN:

@@ -81,6 +81,6 @@ SparseStressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatr
 
 double SparseStressMajorizationSmoother_smooth(SparseStressMajorizationSmoother sm, int dim, double *x, int maxit_sm, double tol);
 
-double get_stress(int m, int dim, int *iw, int *jw, double *w, double *d, double *x, double scaling, void *data, int weighted);
+double get_stress(int m, int dim, int *iw, int *jw, double *w, double *d, double *x, double scaling, int weighted);
 
 /*--------------------------------------------------------------*/
