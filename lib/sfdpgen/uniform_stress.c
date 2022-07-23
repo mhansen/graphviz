@@ -26,7 +26,8 @@ This is somewhat similar to the binary stress model
 
 */
 
-UniformStressSmoother UniformStressSmoother_new(SparseMatrix A, double alpha, double M){
+static UniformStressSmoother UniformStressSmoother_new(SparseMatrix A,
+                                                       double alpha, double M) {
   UniformStressSmoother sm;
   int i, j, k, m = A->m, *ia = A->ia, *ja = A->ja, *iw, *jw, *id, *jd;
   int nz;

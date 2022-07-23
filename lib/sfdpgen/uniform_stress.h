@@ -18,6 +18,4 @@ typedef StressMajorizationSmoother UniformStressSmoother;
 
 void UniformStressSmoother_delete(UniformStressSmoother sm);
 
-UniformStressSmoother UniformStressSmoother_new(SparseMatrix A, double alpha, double M);
-
 void uniform_stress(int dim, SparseMatrix A, double *x, int *flag);
