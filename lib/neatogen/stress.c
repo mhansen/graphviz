@@ -441,8 +441,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 				     visited_nodes);
 	    } else {
 		num_visited_nodes =
-		    bfs_bounded(i, graph, n, dist, &Q, dist_bound,
-				visited_nodes);
+		    bfs_bounded(i, graph, dist, &Q, dist_bound, visited_nodes);
 	    }
 	    /* filter the pivots out of the visited nodes list, and the self loop: */
 	    for (j = 0; j < num_visited_nodes;) {
