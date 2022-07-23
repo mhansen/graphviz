@@ -643,7 +643,7 @@ static int scomp(const void *s1, const void *s2){
 }
 
 static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(SparseMatrix A, int csize, 
-									      int randomize, int **cluster, int **clusterp, int *ncluster){
+									      int **cluster, int **clusterp, int *ncluster){
   int i, ii, j, *ia, *ja, m, n, *p = NULL, q, iv;
   (void)n;
   double *a;
@@ -895,7 +895,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
     } else if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST) {
       maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, ctrl->randomize, &cluster, &clusterp, &ncluster);
     } else {
-      maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(A, 4, ctrl->randomize, &cluster, &clusterp, &ncluster);
+      maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(A, 4, &cluster, &clusterp, &ncluster);
     }
     assert(ncluster <= n);
     nc = ncluster;
