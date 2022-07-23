@@ -17,6 +17,7 @@
 #include <stdlib.h>
 
 #include <cgraph/exit.h>
+#include <cgraph/unused.h>
 #include <common/types.h>
 #include <common/memory.h>
 #include <common/globals.h>
@@ -545,7 +546,8 @@ static void get_edge_label_matrix(relative_position_constraints data, int m, int
   *rhs = x00;
 }
 
-double get_stress(int m, int dim, int *iw, int *jw, double *w, double *d, double *x, double scaling){
+static UNUSED double get_stress(int m, int dim, int *iw, int *jw, double *w,
+                                double *d, double *x, double scaling) {
   int i, j;
   double res = 0., dist;
   /* we use the fact that d_ij = w_ij*graph_dist(i,j). Also, d_ij and x are scalinged by *scaling, so divide by it to get actual unscaled streee. */
