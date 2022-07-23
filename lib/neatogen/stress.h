@@ -54,7 +54,7 @@ extern float *compute_apsp_packed(vtx_data * graph, int n);
 extern float *compute_apsp_artifical_weights_packed(vtx_data * graph, int n);
 extern float* circuitModel(vtx_data * graph, int nG);
 extern float* mdsModel (vtx_data * graph, int nG);
-extern int initLayout(vtx_data * graph, int n, int dim, double **coords, node_t** nodes);
+extern int initLayout(int n, int dim, double **coords, node_t **nodes);
 
 #ifdef __cplusplus
 }

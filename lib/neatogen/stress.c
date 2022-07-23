@@ -138,10 +138,7 @@ compute_stress1(double **coords, dist_data * distances, int dim, int n, int exp)
  * a position, use it.
  * Return true if some node is fixed.
  */
-int
-initLayout(vtx_data * graph, int n, int dim, double **coords,
-	   node_t ** nodes)
-{
+int initLayout(int n, int dim, double **coords, node_t **nodes) {
     node_t *np;
     double *xp;
     double *yp;
@@ -984,7 +981,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	    orthog1(n, d_coords[i]);
 	}
     } else {
-	havePinned = initLayout(graph, n, dim, d_coords, nodes);
+	havePinned = initLayout(n, dim, d_coords, nodes);
     }
     if (Verbose)
 	fprintf(stderr, ": %.2f sec", elapsed_sec());

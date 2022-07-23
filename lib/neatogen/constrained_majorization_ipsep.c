@@ -100,7 +100,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     float maxEdgeLen = 0;
     double max = 1;
 
-    initLayout(graph, n, dim, d_coords, nodes);
+    initLayout(n, dim, d_coords, nodes);
     if (n == 1)
 	return 0;
 
