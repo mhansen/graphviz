@@ -236,7 +236,7 @@ double cg(Operator Ax, Operator precond, int n, int dim, double *x0, double *rhs
   return res;
 }
 
-static double* jacobi(SparseMatrix A, int dim, double *x0, double *rhs, int maxit, int *flag){
+static double* jacobi(SparseMatrix A, int dim, double *x0, double *rhs, int maxit) {
   /* maxit iteration of jacobi */
   double *x, *y, *b, sum, diag, *a;
   int k, i, j, n = A->n, *ia, *ja, iter;
@@ -299,7 +299,7 @@ double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, doub
     Operator_diag_precon_delete(precond);
     break;
   case SOLVE_METHOD_JACOBI:{
-    jacobi(A, dim, x0, rhs, maxit, flag);
+    jacobi(A, dim, x0, rhs, maxit);
     break;
   }
   default:
