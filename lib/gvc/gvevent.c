@@ -426,6 +426,9 @@ static void gvevent_button_press(GVJ_t * job, int button, pointf pointer)
 
 static void gvevent_button_release(GVJ_t *job, int button, pointf pointer)
 {
+    (void)button;
+    (void)pointer;
+
     job->click = false;
     job->button = false;
 }
@@ -465,6 +468,8 @@ static void gvevent_motion(GVJ_t * job, pointf pointer)
 
 static int quit_cb(GVJ_t * job)
 {
+    (void)job;
+
     return 1;
 }
 
@@ -538,16 +543,6 @@ static int toggle_fit_cb(GVJ_t * job)
 	job->needs_refresh = true;
     }
     return 0;
-}
-
-static void gvevent_modify (GVJ_t * job, const char *name, const char *value)
-{
-    /* FIXME */
-}
-
-static void gvevent_delete (GVJ_t * job)
-{
-    /* FIXME */
 }
 
 static void gvevent_read (GVJ_t * job, const char *filename, const char *layout)
@@ -648,8 +643,8 @@ gvdevice_callbacks_t gvdevice_callbacks = {
     gvevent_button_press,
     gvevent_button_release,
     gvevent_motion,
-    gvevent_modify,
-    gvevent_delete,
+    NULL, // modify
+    NULL, // del
     gvevent_read,
     gvevent_layout,
     gvevent_render,

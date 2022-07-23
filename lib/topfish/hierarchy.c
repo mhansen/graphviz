@@ -335,7 +335,6 @@ static void makev2cv(int *mflag, /* flag indicating vtx selected or not */
 }
 
 static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
-			     int nvtxs,	/* number of vertices in graph */
 			     int nedges,	/* number of edges in graph */
 			     v_data ** cgp,	/* coarsened version of graph */
 			     int cnvtxs,	/* number of vtxs in coarsened graph */
@@ -563,7 +562,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 static int 
 make_coarse_ex_graph (
     ex_vtx_data * graph, /* array of vtx data for graph */
-    int nvtxs,	/* number of vertices in graph */
     int nedges,	/* number of edges in graph */
     ex_vtx_data ** cgp,	/* coarsened version of graph */
     int cnvtxs,	/* number of vtxs in coarsened graph */
@@ -691,11 +689,8 @@ coarsen_match (
 
     free(mflag);
 
-    *cnedges =
-	make_coarse_graph(graph, nvtxs, nedges, cgraph, cnvtxs, v2cv,
-			  cv2v);
-    *cgeom_nedges =
-	make_coarse_ex_graph(geom_graph, nvtxs, geom_nedges, cgeom_graph,
+    *cnedges = make_coarse_graph(graph, nedges, cgraph, cnvtxs, v2cv, cv2v);
+    *cgeom_nedges = make_coarse_ex_graph(geom_graph, geom_nedges, cgeom_graph,
 			     cnvtxs, v2cv, cv2v);
 }
 

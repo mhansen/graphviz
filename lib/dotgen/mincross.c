@@ -1438,8 +1438,7 @@ void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
     }
 }
 
-static int constraining_flat_edge(Agraph_t *g, Agnode_t *v, Agedge_t *e)
-{
+static int constraining_flat_edge(Agraph_t *g, Agedge_t *e) {
 	if (ED_weight(e) == 0) return FALSE;
 	if (!inside_cluster(g,agtail(e))) return FALSE;
 	if (!inside_cluster(g,aghead(e))) return FALSE;
@@ -1458,7 +1457,7 @@ static int postorder(graph_t * g, node_t * v, node_t ** list, int r)
     MARK(v) = TRUE;
     if (ND_flat_out(v).size > 0) {
 	for (i = 0; (e = ND_flat_out(v).list[i]); i++) {
-	    if (!constraining_flat_edge(g,v,e)) continue;
+	    if (!constraining_flat_edge(g, e)) continue;
 	    if (!MARK(aghead(e)))
 		cnt += postorder(g, aghead(e), list + cnt, r);
 	}
@@ -1493,11 +1492,11 @@ static void flat_reorder(graph_t * g)
 	    local_in_cnt = local_out_cnt = 0;
 	    for (j = 0; j < ND_flat_in(v).size; j++) {
 		flat_e = ND_flat_in(v).list[j];
-		if (constraining_flat_edge(g,v,flat_e)) local_in_cnt++;
+		if (constraining_flat_edge(g, flat_e)) local_in_cnt++;
 	    }
 	    for (j = 0; j < ND_flat_out(v).size; j++) {
 		flat_e = ND_flat_out(v).list[j];
-		if (constraining_flat_edge(g,v,flat_e)) local_out_cnt++;
+		if (constraining_flat_edge(g, flat_e)) local_out_cnt++;
 	    }
 	    if ((local_in_cnt == 0) && (local_out_cnt == 0))
 		temprank[pos++] = v;
@@ -1534,7 +1533,7 @@ static void flat_reorder(graph_t * g)
 		    for (j = 0; (e = ND_flat_out(v).list[j]); j++) {
 			if ( (!GD_flip(g) && ND_order(aghead(e)) < ND_order(agtail(e))) ||
 				 ( (GD_flip(g)) && (ND_order(aghead(e)) > ND_order(agtail(e)) ))) {
-			    assert(!constraining_flat_edge(g,v,e));
+			    assert(!constraining_flat_edge(g, e));
 			    delete_flat_edge(e);
 			    j--;
 			    flat_rev(g, e);

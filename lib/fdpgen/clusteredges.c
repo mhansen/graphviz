@@ -301,8 +301,7 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		 * with change in direction, different arrowheads, labels, etc.
 		 */
 		for (e0 = e; e0; e0 = ED_to_virt(e0)) {
-		    ED_path(e0) =
-			getPath(e0, vconfig, 0, objl->obs, objl->cnt);
+		    ED_path(e0) = getPath(e0, vconfig, 0);
 		    makeSpline(e0, objl->obs, objl->cnt, false);
 		}
 		resetObjlist(objl);
