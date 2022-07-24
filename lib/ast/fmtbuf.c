@@ -10,6 +10,7 @@
 
 
 #include <ast/ast.h>
+#include <stddef.h>
 
 /*
  * return small format buffer chunk of size n
@@ -23,7 +24,7 @@ char *fmtbuf(size_t n)
 {
     char *cur;
 
-    if (n > (&buf[elementsof(buf)] - nxt))
+    if (n > (size_t)(&buf[elementsof(buf)] - nxt))
 	nxt = buf;
     cur = nxt;
     nxt += n;
