@@ -42,6 +42,10 @@ void SvgppContext::on_enter_element(svgpp::tag::element::rect) {
   m_svgAnalyzer->on_enter_element_rect();
 }
 
+void SvgppContext::on_enter_element(svgpp::tag::element::text) {
+  m_svgAnalyzer->on_enter_element_text();
+}
+
 void SvgppContext::on_enter_element(svgpp::tag::element::title) {
   m_svgAnalyzer->on_enter_element_title();
 }

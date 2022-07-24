@@ -93,6 +93,8 @@ TEST_CASE(
     const std::size_t expected_num_rects = 0;
     const std::size_t expected_num_titles =
         expected_num_graphs + expected_num_nodes + expected_num_edges;
+    const std::size_t expected_num_texts =
+        shape == "point" ? 0 : expected_num_nodes;
 
     CHECK(svgAnalyzer.num_svgs() == expected_num_svgs);
     CHECK(svgAnalyzer.num_groups() == expected_num_groups);
@@ -104,6 +106,7 @@ TEST_CASE(
     CHECK(svgAnalyzer.num_polylines() == expected_num_polylines);
     CHECK(svgAnalyzer.num_rects() == expected_num_rects);
     CHECK(svgAnalyzer.num_titles() == expected_num_titles);
+    CHECK(svgAnalyzer.num_texts() == expected_num_texts);
 
     const auto indent_size = 0;
     auto recreated_svg = svgAnalyzer.svg_string(indent_size);
@@ -132,6 +135,9 @@ TEST_CASE(
     CHECK(recreated_svg.find("<g>") != std::string::npos);
     CHECK(recreated_svg.find("</g>") != std::string::npos);
     CHECK(recreated_svg.find("<title/>") != std::string::npos);
+    if (shape != "point") {
+      CHECK(recreated_svg.find("<text/>") != std::string::npos);
+    }
     CHECK(recreated_svg.find("<polygon/>") != std::string::npos);
     CHECK(recreated_svg.find("<path/>") != std::string::npos);
   }

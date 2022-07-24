@@ -23,6 +23,7 @@ public:
   void on_enter_element_polygon() override;
   void on_enter_element_polyline() override;
   void on_enter_element_rect() override;
+  void on_enter_element_text() override;
   void on_enter_element_title() override;
   void on_exit_element() override;
   std::size_t num_svgs() const { return m_num_svgs; };
@@ -34,6 +35,7 @@ public:
   std::size_t num_polygons() const { return m_num_polygons; };
   std::size_t num_polylines() const { return m_num_polylines; };
   std::size_t num_rects() const { return m_num_rects; };
+  std::size_t num_texts() const { return m_num_texts; };
   std::size_t num_titles() const { return m_num_titles; };
   std::string svg_string(std::size_t indent_size = 2) const;
 
@@ -58,6 +60,7 @@ private:
   std::size_t m_num_polygons = 0;
   std::size_t m_num_polylines = 0;
   std::size_t m_num_rects = 0;
+  std::size_t m_num_texts = 0;
   std::size_t m_num_titles = 0;
   /// The top level SVG `svg` element corresponding to the Graphviz graph
   SVG::SVGElement m_svg;

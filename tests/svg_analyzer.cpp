@@ -57,6 +57,11 @@ void SVGAnalyzer::on_enter_element_rect() {
   m_num_rects++;
 }
 
+void SVGAnalyzer::on_enter_element_text() {
+  enter_element(SVG::SVGElementType::Text);
+  m_num_texts++;
+}
+
 void SVGAnalyzer::on_enter_element_title() {
   enter_element(SVG::SVGElementType::Title);
   m_num_titles++;

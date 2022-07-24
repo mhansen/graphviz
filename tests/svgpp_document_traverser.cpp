@@ -21,7 +21,8 @@ void traverseDocumentWithSvgpp(SvgppContext &context, char *text) {
         svgpp::tag::element::circle, svgpp::tag::element::ellipse,
         svgpp::tag::element::line, svgpp::tag::element::path,
         svgpp::tag::element::polygon, svgpp::tag::element::polyline,
-        svgpp::tag::element::rect, svgpp::tag::element::title>::type;
+        svgpp::tag::element::rect, svgpp::tag::element::text,
+        svgpp::tag::element::title>::type;
 
     svgpp::document_traversal<
         svgpp::processed_elements<processed_elements_t>,
