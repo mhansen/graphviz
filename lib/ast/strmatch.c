@@ -424,8 +424,8 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			    } else if (x == 5 && strncmp(oldp, "upper", 5) == 0) {
 				if (icase ? islower(sc) : isupper(sc))
 				    ok = 1;
-			    } else if (x == 6 && strncmp(oldp, "xdigi", 5) == 0) {
-				if (oldp[5] == 't' && isxdigit(sc))
+			    } else if (x == 6 && strncmp(oldp, "xdigit", 6) == 0) {
+				if (isxdigit(sc))
 				    ok = 1;
 			    }
 			}
