@@ -44,6 +44,7 @@
  */
 
 #include <ast/ast.h>
+#include <cgraph/strview.h>
 #include <ctype.h>
 #include <stddef.h>
 #include <string.h>
@@ -377,54 +378,54 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			RETURN(0);
 		    } else if (pc == '['
 			       && (*p == ':' || *p == '=' || *p == '.')) {
-			x = 0;
 			n = mbgetchar(p);
 			oldp = p;
+			strview_t callee = {.data = oldp};
 			for (;;) {
 			    if (!(pc = mbgetchar(p)))
 				RETURN(0);
 			    if (pc == n && *p == ']')
 				break;
-			    x++;
+			    ++callee.size;
 			}
 			(void)mbgetchar(p);
 			if (ok)
 			    /*NOP*/;
 			else if (n == ':') {
-			    if (x == 5 && strncmp(oldp, "alnum", 5) == 0) {
+			    if (strview_str_eq(callee, "alnum")) {
 				if (isalnum(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "alpha", 5) == 0) {
+			    } else if (strview_str_eq(callee, "alpha")) {
 				if (isalpha(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "blank", 5) == 0) {
+			    } else if (strview_str_eq(callee, "blank")) {
 				if (isblank(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "cntrl", 5) == 0) {
+			    } else if (strview_str_eq(callee, "cntrl")) {
 				if (iscntrl(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "digit", 5) == 0) {
+			    } else if (strview_str_eq(callee, "digit")) {
 				if (isdigit(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "graph", 5) == 0) {
+			    } else if (strview_str_eq(callee, "graph")) {
 				if (isgraph(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "lower", 5) == 0) {
+			    } else if (strview_str_eq(callee, "lower")) {
 				if (islower(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "print", 5) == 0) {
+			    } else if (strview_str_eq(callee, "print")) {
 				if (isprint(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "punct", 5) == 0) {
+			    } else if (strview_str_eq(callee, "punct")) {
 				if (ispunct(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "space", 5) == 0) {
+			    } else if (strview_str_eq(callee, "space")) {
 				if (isspace(sc))
 				    ok = 1;
-			    } else if (x == 5 && strncmp(oldp, "upper", 5) == 0) {
+			    } else if (strview_str_eq(callee, "upper")) {
 				if (icase ? islower(sc) : isupper(sc))
 				    ok = 1;
-			    } else if (x == 6 && strncmp(oldp, "xdigit", 6) == 0) {
+			    } else if (strview_str_eq(callee, "xdigit")) {
 				if (isxdigit(sc))
 				    ok = 1;
 			    }
