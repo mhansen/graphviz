@@ -45,7 +45,6 @@
 
 #include <ast/ast.h>
 #include <ctype.h>
-#include <ast/hashkey.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -392,57 +391,42 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			if (ok)
 			    /*NOP*/;
 			else if (n == ':') {
-			    switch (HASHNKEY5
-				    (x, oldp[0], oldp[1], oldp[2], oldp[3],
-				     oldp[4])) {
-			    case HASHNKEY5(5, 'a', 'l', 'n', 'u', 'm'):
+			    if (x == 5 && strncmp(oldp, "alnum", 5) == 0) {
 				if (isalnum(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'a', 'l', 'p', 'h', 'a'):
+			    } else if (x == 5 && strncmp(oldp, "alpha", 5) == 0) {
 				if (isalpha(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'b', 'l', 'a', 'n', 'k'):
+			    } else if (x == 5 && strncmp(oldp, "blank", 5) == 0) {
 				if (isblank(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'c', 'n', 't', 'r', 'l'):
+			    } else if (x == 5 && strncmp(oldp, "cntrl", 5) == 0) {
 				if (iscntrl(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'd', 'i', 'g', 'i', 't'):
+			    } else if (x == 5 && strncmp(oldp, "digit", 5) == 0) {
 				if (isdigit(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'g', 'r', 'a', 'p', 'h'):
+			    } else if (x == 5 && strncmp(oldp, "graph", 5) == 0) {
 				if (isgraph(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'l', 'o', 'w', 'e', 'r'):
+			    } else if (x == 5 && strncmp(oldp, "lower", 5) == 0) {
 				if (islower(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'p', 'r', 'i', 'n', 't'):
+			    } else if (x == 5 && strncmp(oldp, "print", 5) == 0) {
 				if (isprint(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'p', 'u', 'n', 'c', 't'):
+			    } else if (x == 5 && strncmp(oldp, "punct", 5) == 0) {
 				if (ispunct(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 's', 'p', 'a', 'c', 'e'):
+			    } else if (x == 5 && strncmp(oldp, "space", 5) == 0) {
 				if (isspace(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'u', 'p', 'p', 'e', 'r'):
+			    } else if (x == 5 && strncmp(oldp, "upper", 5) == 0) {
 				if (icase ? islower(sc) : isupper(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(6, 'x', 'd', 'i', 'g', 'i'):
+			    } else if (x == 6 && strncmp(oldp, "xdigi", 5) == 0) {
 				if (oldp[5] == 't' && isxdigit(sc))
 				    ok = 1;
-				break;
 			    }
 			}
 			else if (range)

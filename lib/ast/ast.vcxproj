@@ -77,7 +77,6 @@
   <ItemGroup>
     <ClInclude Include="ast.h" />
     <ClInclude Include="error.h" />
-    <ClInclude Include="hashkey.h" />
     <ClInclude Include="sfstr.h" />
   </ItemGroup>
   <ItemGroup>
