@@ -61,6 +61,7 @@ extern "C" {
 			  size_t);
     extern char *pathaccess(char *, const char *, const char *,
 			    const char *, int);
+    extern char *pathcanon(char*);
     extern const char *pathcat(char *, const char *, int, const char *,
 			 const char *);
 

@@ -24,8 +24,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-char *pathcanon(char *path);
-
 char *pathaccess(char *path, const char *dirs,
 		 const char *a, const char *b, int mode)
 {
