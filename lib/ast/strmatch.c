@@ -142,6 +142,8 @@ static char *gobble(Match_t * mp, char *s, int sub,
 	    if (!b && !p && sub == '|')
 		return s;
 	    break;
+	default: // nothing required
+	    break;
 	}
 }
 
