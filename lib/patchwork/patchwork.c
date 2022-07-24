@@ -130,11 +130,13 @@ static treenode_t *mkTree (Agraph_t * g, attrsym_t* gp, attrsym_t* ap, attrsym_t
 
 static int nodecmp (treenode_t** p0, treenode_t** p1)
 {
-    double diff = (*p0)->area - (*p1)->area;
-
-    if (diff < 0) return 1;
-    else if (diff > 0) return -1;
-    else return 0;
+  if ((*p0)->area < (*p1)->area) {
+    return 1;
+  }
+  if ((*p0)->area > (*p1)->area) {
+    return -1;
+  }
+  return 0;
 }
 
 static void layoutTree(treenode_t * tree)

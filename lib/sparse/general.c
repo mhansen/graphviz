@@ -113,9 +113,9 @@ static int comp_ascend_int(const void *s1, const void *s2){
   const int *ss1 = s1;
   const int *ss2 = s2;
 
-  if ((ss1)[0] > (ss2)[0]){
+  if (ss1[0] > ss2[0]){
     return 1;
-  } else if ((ss1)[0] < (ss2)[0]){
+  } else if (ss1[0] < ss2[0]){
     return -1;
   }
   return 0;

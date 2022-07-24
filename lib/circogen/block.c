@@ -20,21 +20,6 @@ void initBlocklist(blocklist_t * bl)
     bl->last = NULL;
 }
 
-/*
-void
-cleanBlocklist(blocklist_t* sp)
-{
-	block_t*  bp;
-	block_t*  temp;
-
-    if (!sp) return;
-	for(bp = sp->first; bp; bp = temp) {
-		temp = bp->next;
-		freeBlock(bp);
-	}
-}
-*/
-
 block_t *mkBlock(Agraph_t * g)
 {
     block_t *sn;

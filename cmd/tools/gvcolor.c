@@ -53,11 +53,11 @@ extern char *colorxlate(char *str, char *buf);
 
 static int cmpf(Agnode_t ** n0, Agnode_t ** n1)
 {
-    double t;
-    t = ND_relrank(*n0) - ND_relrank(*n1);
-    if (t < 0.0)
+    double relrank0 = ND_relrank(*n0);
+    double relrank1 = ND_relrank(*n1);
+    if (relrank0 < relrank1)
 	return -1;
-    if (t > 0.0)
+    if (relrank0 > relrank1)
 	return 1;
     return 0;
 }

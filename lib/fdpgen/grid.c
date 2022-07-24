@@ -94,14 +94,22 @@ static cell *getCell(Grid * g)
 
 static int ijcmpf(Dt_t * d, gridpt * p1, gridpt * p2, Dtdisc_t * disc)
 {
-    int diff;
-
     (void)d;
     (void)disc;
-    if ((diff = p1->i - p2->i))
-	return diff;
-    else
-	return p1->j - p2->j;
+
+    if (p1->i < p2->i) {
+        return -1;
+    }
+    if (p1->i > p2->i) {
+        return 1;
+    }
+    if (p1->j < p2->j) {
+        return -1;
+    }
+    if (p1->j > p2->j) {
+        return 1;
+    }
+    return 0;
 }
 
 static Grid *_grid;		/* hack because can't attach info. to Dt_t */

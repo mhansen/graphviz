@@ -152,8 +152,8 @@ static int textfont_comparf (Dt_t* dt, void* key1, void* key2, Dtdisc_t* disc)
         rc = strcmp(f1->color, f2->color);
         if (rc) return rc;
     }
-    rc = (f1->flags - f2->flags);
-    if (rc) return rc;
+    if (f1->flags < f2->flags) return -1;
+    if (f1->flags > f2->flags) return 1;
     if (f1->size < f2->size) return -1;
     if (f1->size > f2->size) return 1;
     return 0;
