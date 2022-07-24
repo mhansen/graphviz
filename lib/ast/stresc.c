@@ -33,6 +33,8 @@ void stresc(char *s)
 	case 0:
 	    *t = 0;
 	    return;
+	default: // nothing required
+	    break;
 	}
 	*t++ = c;
     }
