@@ -30,7 +30,7 @@ int chrtoi(const char *s)
 	switch (x = *((const unsigned char *) s++)) {
 	case '\\':
 	    x = chresc(s - 1, &p);
-	    s = (const char *) p;
+	    s = p;
 	    break;
 	case 0:
 	    return (c);
