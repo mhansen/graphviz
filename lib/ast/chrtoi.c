@@ -34,6 +34,8 @@ int chrtoi(const char *s)
 	    break;
 	case 0:
 	    return (c);
+	default: // nothing required
+	    break;
 	}
 	c = (c << CHAR_BIT) | x;
     }
