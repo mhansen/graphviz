@@ -12,6 +12,8 @@ enable_testing()
 # separate test can be as small as possible
 add_library(test_common SHARED
             catch2_main.cpp
+            graphviz_node.h
+            graphviz_node.cpp
             test_utilities.cpp
             svgpp_context.cpp
             svgpp_context.h
