@@ -25,13 +25,17 @@ TEST_CASE(
   auto g = CGraph::AGraph{dot};
 
   const auto demand_loading = false;
-  auto gvc = GVC::GVContext(lt_preloaded_symbols, demand_loading);
+  auto gvc = GVC::GVContext{lt_preloaded_symbols, demand_loading};
+  const auto graphviz_version = gvc.version();
+  const auto graphviz_build_date = gvc.buildDate();
 
   const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), "dot");
 
   const auto result = layout.render("svg");
   const std::string original_svg{result.string_view()};
   SVGAnalyzer svgAnalyzer{result.c_str()};
+  svgAnalyzer.set_graphviz_version(graphviz_version);
+  svgAnalyzer.set_graphviz_build_date(graphviz_build_date);
 
   const std::size_t expected_num_graphs = 1;
   const std::size_t expected_num_nodes = 2;
@@ -120,9 +124,8 @@ TEST_CASE(
     for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
       REQUIRE(i < recreated_svg_lines.size());
       if (recreated_svg_lines[i] == "<svg>") {
-        // stop comparison here since we do not yet handle the Graphviz version
-        // and build date comment and the graph title comment that comes before
-        // the 'svg' element
+        // stop comparison here since we do not yet handle the graph title
+        // comment that comes before the 'svg' element
         break;
       }
       REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);

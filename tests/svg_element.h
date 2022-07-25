@@ -33,7 +33,11 @@ public:
 
   std::string to_string(std::size_t indent_size) const;
 
+  /// The Graphviz build date
+  std::string graphviz_build_date;
   std::vector<SVGElement> children;
+  /// The Graphviz release version
+  std::string graphviz_version;
   /// The SVG element text node contents. Not to be confused with an SVG `text`
   /// element
   std::string text;

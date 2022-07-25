@@ -93,6 +93,14 @@ void SVGAnalyzer::set_text(std::string_view text) {
   element.text = text;
 }
 
+void SVGAnalyzer::set_graphviz_version(std::string_view version) {
+  m_svg.graphviz_version = version;
+}
+
+void SVGAnalyzer::set_graphviz_build_date(std::string_view build_date) {
+  m_svg.graphviz_build_date = build_date;
+}
+
 std::string SVGAnalyzer::svg_string(std::size_t indent_size) const {
   std::string output{};
   output += m_svg.to_string(indent_size);

@@ -39,6 +39,8 @@ public:
   std::size_t num_rects() const { return m_num_rects; };
   std::size_t num_texts() const { return m_num_texts; };
   std::size_t num_titles() const { return m_num_titles; };
+  void set_graphviz_version(std::string_view version);
+  void set_graphviz_build_date(std::string_view build_date);
   std::string svg_string(std::size_t indent_size = 2) const;
 
 private:
