@@ -49,6 +49,9 @@ private:
   /// Enter a new SVG element retrieved by the SVG document traverser into the
   /// list of elements currently being processed
   void enter_element(SVG::SVGElementType type);
+  /// Get the parent element of the current element being processed by the SVG
+  /// document traverser
+  SVG::SVGElement &parent_element();
 
   /// A list of pointers to elements currently being processed by the SVG++
   /// document traverser, in hierarchical order. The front element is the top

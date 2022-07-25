@@ -36,6 +36,10 @@ public:
   /// The Graphviz build date
   std::string graphviz_build_date;
   std::vector<SVGElement> children;
+  /// The `graph_id`, `node_id` or `edgeop` according to the DOT language
+  /// specification. Note that this is not the same as the `id` attribute of the
+  /// SVG element
+  std::string graphviz_id;
   /// The Graphviz release version
   std::string graphviz_version;
   /// The SVG element text node contents. Not to be confused with an SVG `text`

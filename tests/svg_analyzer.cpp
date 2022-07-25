@@ -69,6 +69,16 @@ void SVGAnalyzer::on_enter_element_title() {
 
 void SVGAnalyzer::on_exit_element() { m_elements_in_process.pop_back(); }
 
+SVG::SVGElement &SVGAnalyzer::parent_element() {
+  if (m_elements_in_process.empty()) {
+    throw std::runtime_error{"No current element to get parent of"};
+  }
+  if (m_elements_in_process.size() == 1) {
+    throw std::runtime_error{"No parent element"};
+  }
+  return *m_elements_in_process.end()[-2];
+}
+
 SVG::SVGElement &SVGAnalyzer::current_element() {
   if (m_elements_in_process.empty()) {
     throw std::runtime_error{"No current element"};
@@ -91,6 +101,16 @@ void SVGAnalyzer::enter_element(SVG::SVGElementType type) {
 void SVGAnalyzer::set_text(std::string_view text) {
   auto &element = current_element();
   element.text = text;
+
+  if (element.type == SVG::SVGElementType::Title) {
+    // The title text is normally the 'graph_id', 'node_id' or 'edgeop'
+    // according to the DOT language specification. Save it on the parent 'g'
+    // element to avoid having to look it up later.
+    if (parent_element().type != SVG::SVGElementType::Group) {
+      throw std::runtime_error{"Unexpected parent element of 'title' element"};
+    }
+    parent_element().graphviz_id = text;
+  }
 }
 
 void SVGAnalyzer::set_graphviz_version(std::string_view version) {
