@@ -2,6 +2,7 @@
 
 #include <any>
 
+#include <boost/range/iterator_range_core.hpp>
 #include <svgpp/svgpp.hpp>
 
 class ISVGAnalyzer;
@@ -62,13 +63,10 @@ public:
   void set(svgpp::tag::attribute::y y, double v);
   void set(svgpp::tag::attribute::width width, double v);
   void set(svgpp::tag::attribute::height height, double v);
-  template <class Range> void set_text(const Range &range) {
-    set_text_impl(range);
-  }
+  void set_text(boost::iterator_range<const char *> v);
 
 private:
   void set_impl(svgpp::tag::attribute::points &points, const std::any &range);
-  void set_text_impl(const std::any &range);
 
   ISVGAnalyzer *m_svgAnalyzer = nullptr;
 };

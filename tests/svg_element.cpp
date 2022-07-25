@@ -5,6 +5,29 @@
 
 SVG::SVGElement::SVGElement(SVGElementType type) : type(type) {}
 
+static std::string xml_encode(const std::string &text) {
+  std::string out;
+  for (const char &ch : text) {
+    switch (ch) {
+    case '>':
+      out += "&gt;";
+      break;
+    case '<':
+      out += "&lt;";
+      break;
+    case '-':
+      out += "&#45;";
+      break;
+    case '&':
+      out += "&amp;";
+      break;
+    default:
+      out += ch;
+    }
+  }
+  return out;
+}
+
 std::string SVG::SVGElement::to_string(std::size_t indent_size = 2) const {
   std::string output;
   output += R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>)"
@@ -26,14 +49,20 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   output += "<";
   output += tag(type);
 
-  if (children.empty()) {
+  if (children.empty() && text.empty()) {
     output += "/>\n";
   } else {
-    output += ">\n";
-    for (const auto &child : children) {
-      child.to_string_impl(output, indent_size, current_indent + indent_size);
+    output += ">";
+    if (!text.empty()) {
+      output += xml_encode(text);
     }
-    output += indent_str;
+    if (!children.empty()) {
+      output += "\n";
+      for (const auto &child : children) {
+        child.to_string_impl(output, indent_size, current_indent + indent_size);
+      }
+      output += indent_str;
+    }
     output += "</";
     output += tag(type);
     output += ">\n";

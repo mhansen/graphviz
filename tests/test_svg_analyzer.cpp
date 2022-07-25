@@ -134,9 +134,12 @@ TEST_CASE(
     CHECK(recreated_svg.find("</svg>") != std::string::npos);
     CHECK(recreated_svg.find("<g>") != std::string::npos);
     CHECK(recreated_svg.find("</g>") != std::string::npos);
-    CHECK(recreated_svg.find("<title/>") != std::string::npos);
+    CHECK(recreated_svg.find("<title>g1</title>") != std::string::npos);
+    CHECK(recreated_svg.find("<title>a</title>") != std::string::npos);
+    CHECK(recreated_svg.find("<title>b</title>") != std::string::npos);
     if (shape != "point") {
-      CHECK(recreated_svg.find("<text/>") != std::string::npos);
+      CHECK(recreated_svg.find("<text>a</text>") != std::string::npos);
+      CHECK(recreated_svg.find("<text>b</text>") != std::string::npos);
     }
     CHECK(recreated_svg.find("<polygon/>") != std::string::npos);
     CHECK(recreated_svg.find("<path/>") != std::string::npos);

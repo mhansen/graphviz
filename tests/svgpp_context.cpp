@@ -179,7 +179,6 @@ void SvgppContext::set_impl(svgpp::tag::attribute::points &points,
   // ignore for now
 }
 
-void SvgppContext::set_text_impl(const std::any &range) {
-  (void)range;
-  // ignore for now
+void SvgppContext::set_text(boost::iterator_range<const char *> v) {
+  m_svgAnalyzer->set_text({v.begin(), v.end()});
 }

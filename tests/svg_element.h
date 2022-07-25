@@ -34,6 +34,9 @@ public:
   std::string to_string(std::size_t indent_size) const;
 
   std::vector<SVGElement> children;
+  /// The SVG element text node contents. Not to be confused with an SVG `text`
+  /// element
+  std::string text;
   /// The type of SVG element
   const SVGElementType type;
 
