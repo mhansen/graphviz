@@ -135,8 +135,6 @@ static void neato_cleanup_graph(graph_t * g)
 	free_scan_graph(g);
 	free(GD_clust(g));
     }
-    if (g != agroot(g))
-        agclean(g, AGRAPH , "Agraphinfo_t");
 }
 
 void neato_cleanup(graph_t * g)

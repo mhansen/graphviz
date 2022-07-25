@@ -88,6 +88,7 @@ lcov \
 # Libraries used in test
 catch2 \
 libboost-dev \
+libfmt-dev \
 libsvgpp-dev \
 # install Python dependencies
 && python3 -m pip install --user --upgrade pip \

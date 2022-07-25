@@ -267,11 +267,20 @@ remove_rankleaders(graph_t * g)
 	v = GD_rankleader(g)[r];
 
 	/* remove the entire chain */
-	while ((e = ND_out(v).list[0]))
+	while ((e = ND_out(v).list[0])) {
 	    delete_fast_edge(e);
-	while ((e = ND_in(v).list[0]))
+	    free(e->base.data);
+	    free(e);
+	}
+	while ((e = ND_in(v).list[0])) {
 	    delete_fast_edge(e);
+	    free(e);
+	}
 	delete_fast_node(dot_root(g), v);
+	free(ND_in(v).list);
+	free(ND_out(v).list);
+	free(v->base.data);
+	free(v);
 	GD_rankleader(g)[r] = NULL;
     }
 }

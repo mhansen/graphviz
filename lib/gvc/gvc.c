@@ -85,8 +85,6 @@ int gvRender(GVC_t *gvc, graph_t *g, const char *format, FILE *out)
     int rc;
     GVJ_t *job;
 
-    g = g->root;
-
     /* create a job for the required format */
     bool r = gvjobs_output_langname(gvc, format);
     job = gvc->job;
@@ -117,8 +115,6 @@ int gvRenderFilename(GVC_t *gvc, graph_t *g, const char *format, const char *fil
     int rc;
     GVJ_t *job;
 
-    g = g->root;
-
     /* create a job for the required format */
     bool r = gvjobs_output_langname(gvc, format);
     job = gvc->job;
@@ -147,8 +143,6 @@ int gvRenderContext(GVC_t *gvc, graph_t *g, const char *format, void *context)
 {
     int rc;
     GVJ_t *job;
-	
-    g = g->root;
 	
     /* create a job for the required format */
     bool r = gvjobs_output_langname(gvc, format);
@@ -181,8 +175,6 @@ int gvRenderData(GVC_t *gvc, graph_t *g, const char *format, char **result, unsi
 {
     int rc;
     GVJ_t *job;
-
-    g = g->root;
 
     /* create a job for the required format */
     bool r = gvjobs_output_langname(gvc, format);

@@ -739,6 +739,8 @@ ubuntu22-04-cmake-ASan-build-for-ctest:
         paths:
             # the C++ test programs
             - build/tests/test_*
+            # the common C++ test library
+            - build/tests/libtest_common.so
             # the ctest files
             - build/**/CTestTestfile.cmake
             # archive all shared libraries produced directly by "cmake

@@ -58,8 +58,10 @@ int gvLayoutJobs(GVC_t * gvc, Agraph_t * g)
 
     agbindrec(g, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     GD_gvc(g) = gvc;
-    if (g != agroot(g))
-	GD_gvc(agroot(g)) = gvc;
+    if (g != agroot(g)) {
+        agbindrec(agroot(g), "Agraphinfo_t", sizeof(Agraphinfo_t), true);
+        GD_gvc(agroot(g)) = gvc;
+    }
 
     if ((p = agget(g, "layout"))) {
         gvc->layout.engine = NULL;
@@ -99,8 +101,7 @@ bool gvLayoutDone(Agraph_t * g)
  * Free layout resources.
  * First, if the graph has a layout-specific cleanup function attached,
  * use it and reset.
- * Then, if the root graph has not been cleaned up, clean it up and reset.
- * Only the root graph has GD_drawing non-null.
+ * Then do the general graph cleanup.
  */
 int gvFreeLayout(GVC_t * gvc, Agraph_t * g)
 {
@@ -115,8 +116,6 @@ int gvFreeLayout(GVC_t * gvc, Agraph_t * g)
 	GD_cleanup(g) = NULL;
     }
     
-    if (GD_drawing(g)) {
-	graph_cleanup(g);
-    }
+    graph_cleanup(g);
     return 0;
 }

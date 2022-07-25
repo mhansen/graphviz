@@ -433,7 +433,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
 #ifdef DEBUG
     GORIG(dg) = g;
 #endif
-    GD_ndim(dg) = GD_ndim(g);
+    GD_ndim(dg) = GD_ndim(agroot(g));
 
     /* Copy attributes from g.
      */
@@ -1012,7 +1012,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 	if (!strncmp(agnameof(subg), "cluster", 7)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    GD_alg(subg) = NEW(gdata);	/* freed in cleanup_subgs */
-	    GD_ndim(subg) = GD_ndim(parent);
+	    GD_ndim(subg) = GD_ndim(agroot(parent));
 	    LEVEL(subg) = LEVEL(parent) + 1;
 	    GPARENT(subg) = parent;
 	    addCluster(clist, subg);
@@ -1033,8 +1033,8 @@ static void fdp_init_graph(Agraph_t * g)
 {
     setEdgeType (g, EDGETYPE_LINE);
     GD_alg(g) = NEW(gdata);	/* freed in cleanup_graph */
-    GD_ndim(g) = late_int(g, agattr(g,AGRAPH, "dim", NULL), 2, 2);
-    Ndim = GD_ndim(g) = MIN(GD_ndim(g), MAXDIM);
+    GD_ndim(agroot(g)) = late_int(g, agattr(g,AGRAPH, "dim", NULL), 2, 2);
+    Ndim = GD_ndim(agroot(g)) = MIN(GD_ndim(agroot(g)), MAXDIM);
 
     mkClusters (g, NULL, g);
     fdp_initParams(g);

@@ -53,7 +53,7 @@ void twopi_init_graph(graph_t * g)
 {
     setEdgeType (g, EDGETYPE_LINE);
     /* GD_ndim(g) = late_int(g,agfindgraphattr(g,"dim"),2,2); */
-	Ndim = GD_ndim(g)=2;	/* The algorithm only makes sense in 2D */
+	Ndim = GD_ndim(agroot(g)) = 2;	/* The algorithm only makes sense in 2D */
     twopi_init_node_edge(g);
 }
 
@@ -170,8 +170,6 @@ void twopi_layout(Agraph_t * g)
 static void twopi_cleanup_graph(graph_t * g)
 {
     free(GD_neato_nlist(g));
-    if (g != agroot(g))
-	agclean(g,AGRAPH,"Agraphinfo_t");
 }
 
 /* twopi_cleanup:

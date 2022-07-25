@@ -157,7 +157,6 @@ dot_cleanup_graph(graph_t * g)
     }
     if (g != agroot(g)) {
 	free_label (GD_label(g));
-	agdelrec(g,"Agraphinfo_t");
     }
 }
 

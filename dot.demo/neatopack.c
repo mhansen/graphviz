@@ -12,6 +12,7 @@
 #include <graphviz/pack.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char *argv[]) {
   GVC_t *gvc = gvContext();
@@ -22,6 +23,9 @@ int main(int argc, char *argv[]) {
   else
     fp = stdin;
   graph_t *g = agread(fp, NULL);
+
+  aginit(g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
+  aginit(g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
 
   int ncc;
   graph_t **cc = ccomps(g, &ncc, NULL);
@@ -40,6 +44,7 @@ int main(int argc, char *argv[]) {
     gvFreeLayout(gvc, sg);
     agdelete(g, sg);
   }
+  free(cc);
 
   agclose(g);
 

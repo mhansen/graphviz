@@ -27,11 +27,6 @@ def test_compile_example(src):
 
   libs = ["cgraph", "gvc"]
 
-  # FIXME: Remove skip of execution of neatopack.c example when
-  # https://gitlab.com/graphviz/graphviz/-/issues/1800 has been fixed
-  if src == "neatopack.c":
-    pytest.skip("Executing neatopack gives segmentation fault (#1800)")
-
   # run the example
   args = ["-Kneato"] if src in ["demo.c", "dot.c"] else []
 
