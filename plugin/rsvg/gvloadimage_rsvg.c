@@ -156,7 +156,7 @@ static void gvloadimage_rsvg_cairo(GVJ_t * job, usershape_t *us, boxf b, bool fi
 {
     RsvgHandle* rsvgh = gvloadimage_rsvg_load(job, us);
 
-    cairo_t *cr = (cairo_t *) job->context; /* target context */
+    cairo_t *cr = job->context; /* target context */
     cairo_surface_t *surface;	 /* source surface */
 
     if (rsvgh) {

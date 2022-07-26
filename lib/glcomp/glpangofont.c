@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <glcomp/glpangofont.h>
+#include <unistd.h>
 
 #define DEFAULT_FONT_FAMILY "Arial"
 #define DEFAULT_FONT_SIZE 32
@@ -16,12 +17,7 @@
 
 static int file_exists(const char *filename)
 {
-    FILE *file;
-    if ((file = fopen(filename, "r"))) {
-	fclose(file);
-	return 1;
-    }
-    return 0;
+  return access(filename, R_OK) == 0;
 }
 
 static PangoLayout *get_pango_layout(char *markup_text,

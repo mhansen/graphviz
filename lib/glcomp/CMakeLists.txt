@@ -48,6 +48,10 @@ if(with_smyrna)
     ${XRENDER_INCLUDE_DIRS}
   )
 
+  if(WIN32 AND NOT MINGW)
+    target_include_directories(glcomp PRIVATE ../../windows/include/unistd)
+  endif()
+
   target_link_libraries(glcomp PRIVATE
     ${Freetype_LIBRARIES}
     ${GLUT_LIBRARIES}

@@ -21,6 +21,7 @@
 #define _BLD_sfio 1
 #endif
 
+#include <cgraph/strview.h>
 #include <cgraph/exit.h>
 #include <expr/exlib.h>
 #include <expr/exop.h>
@@ -185,10 +186,6 @@ typedef struct
 	Exnode_t*	actuals;
 } Fmt_t;
 
-static bool streqn(const char *s1, const char *s2, size_t n) {
-  return strlen(s2) == n && strncmp(s1, s2, n) == 0;
-}
-
 /*
  * printf %! extension function
  */
@@ -279,12 +276,10 @@ prformat(void* vp, Sffmt_t* dp)
 		dp->size = sizeof(Sflong_t);
 		break;
 	}
-	const char *txt = NULL;;
-	size_t txt_len = 0;
+	strview_t txt = {0};
 	if (dp->n_str > 0)
 	{
-		txt = dp->t_str;
-		txt_len = (size_t)dp->n_str;
+		txt = (strview_t){.data = dp->t_str, .size = (size_t)dp->n_str};
 	}
 	switch (dp->fmt)
 	{
@@ -298,9 +293,9 @@ prformat(void* vp, Sffmt_t* dp)
 	case 'S':
 		dp->flags &= ~SFFMT_LONG;
 		s = *(char**)vp;
-		if (txt)
+		if (txt.data != NULL)
 		{
-			if (streqn(txt, "identifier", txt_len))
+			if (strview_str_eq(txt, "identifier"))
 			{
 				if (*s && !isalpha((int)*s))
 					*s++ = '_';
@@ -308,7 +303,7 @@ prformat(void* vp, Sffmt_t* dp)
 					if (!isalnum((int)*s))
 						*s = '_';
 			}
-			else if (streqn(txt, "invert", txt_len))
+			else if (strview_str_eq(txt, "invert"))
 			{
 				for (; *s; s++)
 					if (isupper((int)*s))
@@ -316,19 +311,19 @@ prformat(void* vp, Sffmt_t* dp)
 					else if (islower((int)*s))
 						*s = (char)toupper(*s);
 			}
-			else if (streqn(txt, "lower", txt_len))
+			else if (strview_str_eq(txt, "lower"))
 			{
 				for (; *s; s++)
 					if (isupper((int)*s))
 						*s = (char)tolower(*s);
 			}
-			else if (streqn(txt, "upper", txt_len))
+			else if (strview_str_eq(txt, "upper"))
 			{
 				for (; *s; s++)
 					if (islower((int)*s))
 						*s = (char)toupper(*s);
 			}
-			else if (streqn(txt, "variable", txt_len))
+			else if (strview_str_eq(txt, "variable"))
 			{
 				for (; *s; s++)
 					if (!isalnum((int)*s) && *s != '_')
@@ -342,17 +337,17 @@ prformat(void* vp, Sffmt_t* dp)
 	case 'T':
 		if ((tm = *(Sflong_t*)vp) == -1)
 			tm = time(NULL);
-        if (!txt) {
+        if (txt.data == NULL) {
             exerror("printf: no time format provided");
         } else {
             s = fmtbuf(TIME_LEN);
             stm = localtime(&tm);
-            char *format = malloc(sizeof(char) * (txt_len + 1));
+            char *format = malloc(sizeof(char) * (txt.size + 1));
             if (format == NULL) {
                 exerror("printf: out of memory");
             } else {
-                strncpy(format, txt, txt_len);
-                format[txt_len] = '\0';
+                strncpy(format, txt.data, txt.size);
+                format[txt.size] = '\0';
                 strftime(s, TIME_LEN, format, stm);
                 free(format);
                 *(char **)vp = s;
