@@ -175,6 +175,11 @@ void SvgppContext::set(svgpp::tag::attribute::class_,
   m_svgAnalyzer->set_class({v.begin(), v.end()});
 }
 
+void SvgppContext::set(svgpp::tag::attribute::viewBox, const double v1,
+                       const double v2, const double v3, const double v4) {
+  m_svgAnalyzer->set_viewBox(v1, v2, v3, v4);
+}
+
 void SvgppContext::set_impl(svgpp::tag::attribute::points &points,
                             const std::any &range) {
   (void)points;

@@ -7,6 +7,13 @@
 
 namespace SVG {
 
+struct SVGRect {
+  double x;
+  double y;
+  double width;
+  double height;
+};
+
 enum class SVGElementType {
   Circle,
   Ellipse,
@@ -26,6 +33,7 @@ std::string_view tag(SVG::SVGElementType type);
 struct SVGAttributes {
   std::string class_;
   double height;
+  SVGRect viewBox;
   double width;
 };
 

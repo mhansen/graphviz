@@ -88,9 +88,14 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     // ignore for now
     break;
   case SVG::SVGElementType::Svg:
-    attributes_str += fmt::format(R"(width="{}pt" height="{}pt")",
-                                  std::lround(px_to_pt(attributes.width)),
-                                  std::lround(px_to_pt(attributes.height)));
+    attributes_str +=
+        fmt::format(R"(width="{}pt" height="{}pt")"
+                    "\n"
+                    R"( viewBox="{:.2f} {:.2f} {:.2f} {:.2f}")",
+                    std::lround(px_to_pt(attributes.width)),
+                    std::lround(px_to_pt(attributes.height)),
+                    attributes.viewBox.x, attributes.viewBox.y,
+                    attributes.viewBox.width, attributes.viewBox.height);
     break;
   case SVG::SVGElementType::Text:
     // ignore for now

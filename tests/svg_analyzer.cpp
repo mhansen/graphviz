@@ -143,6 +143,10 @@ void SVGAnalyzer::set_width(double width) {
   current_element().attributes.width = width;
 }
 
+void SVGAnalyzer::set_viewBox(double x, double y, double width, double height) {
+  current_element().attributes.viewBox = {x, y, width, height};
+}
+
 void SVGAnalyzer::set_graphviz_version(std::string_view version) {
   m_svg.graphviz_version = version;
 }

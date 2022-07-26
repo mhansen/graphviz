@@ -26,9 +26,10 @@ void traverseDocumentWithSvgpp(SvgppContext &context, char *text) {
 
     using processed_attributes_t =
         boost::mpl::set<svgpp::traits::shapes_attributes_by_element,
-                        svgpp::tag::attribute::class_, //
-                        svgpp::tag::attribute::height, //
-                        svgpp::tag::attribute::width   //
+                        svgpp::tag::attribute::class_,  //
+                        svgpp::tag::attribute::height,  //
+                        svgpp::tag::attribute::viewBox, //
+                        svgpp::tag::attribute::width    //
                         >::type;
 
     svgpp::document_traversal<

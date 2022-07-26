@@ -65,6 +65,8 @@ public:
   void set(svgpp::tag::attribute::height height, double v);
   void set(svgpp::tag::attribute::class_ a,
            boost::iterator_range<const char *> v);
+  void set(svgpp::tag::attribute::viewBox a, double v1, double v2, double v3,
+           double v4);
   void set_text(boost::iterator_range<const char *> v);
 
 private:

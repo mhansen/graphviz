@@ -29,5 +29,6 @@ public:
   virtual void set_class(std::string_view) = 0;
   virtual void set_height(double height) = 0;
   virtual void set_text(std::string_view text) = 0;
+  virtual void set_viewBox(double x, double y, double width, double height) = 0;
   virtual void set_width(double width) = 0;
 };
