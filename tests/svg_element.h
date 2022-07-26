@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -24,6 +25,8 @@ std::string_view tag(SVG::SVGElementType type);
 
 struct SVGAttributes {
   std::string class_;
+  double height;
+  double width;
 };
 
 /**

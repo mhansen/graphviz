@@ -115,6 +115,10 @@ void SVGAnalyzer::set_class(std::string_view class_) {
   current_element().attributes.class_ = class_;
 }
 
+void SVGAnalyzer::set_height(double height) {
+  current_element().attributes.height = height;
+}
+
 void SVGAnalyzer::set_text(std::string_view text) {
   auto &element = current_element();
   element.text = text;
@@ -133,6 +137,10 @@ void SVGAnalyzer::set_text(std::string_view text) {
       grandparent_element().graphviz_id = text;
     }
   }
+}
+
+void SVGAnalyzer::set_width(double width) {
+  current_element().attributes.width = width;
 }
 
 void SVGAnalyzer::set_graphviz_version(std::string_view version) {

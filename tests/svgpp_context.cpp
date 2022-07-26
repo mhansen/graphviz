@@ -162,14 +162,12 @@ void SvgppContext::set(svgpp::tag::attribute::y a, const double v) {
   (void)v;
 }
 
-void SvgppContext::set(svgpp::tag::attribute::width a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::width, const double v) {
+  m_svgAnalyzer->set_width(v);
 }
 
-void SvgppContext::set(svgpp::tag::attribute::height a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::height, const double v) {
+  m_svgAnalyzer->set_height(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::class_,

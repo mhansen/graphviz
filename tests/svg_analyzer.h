@@ -27,8 +27,10 @@ public:
   void on_enter_element_text() override;
   void on_enter_element_title() override;
   void on_exit_element() override;
+  void set_height(double height) override;
   void set_class(std::string_view) override;
   void set_text(std::string_view text) override;
+  void set_width(double width) override;
   std::size_t num_svgs() const { return m_num_svgs; };
   std::size_t num_groups() const { return m_num_groups; };
   std::size_t num_circles() const { return m_num_circles; };

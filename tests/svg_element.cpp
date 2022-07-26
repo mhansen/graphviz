@@ -7,6 +7,12 @@
 
 SVG::SVGElement::SVGElement(SVGElementType type) : type(type) {}
 
+static double px_to_pt(double px) {
+  // a `pt` is 0.75 `px`. See e.g.
+  // https://oreillymedia.github.io/Using_SVG/guide/units.html
+  return px * 3 / 4;
+}
+
 static std::string xml_encode(const std::string &text) {
   std::string out;
   for (const char &ch : text) {
@@ -82,7 +88,9 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     // ignore for now
     break;
   case SVG::SVGElementType::Svg:
-    // ignore for now
+    attributes_str += fmt::format(R"(width="{}pt" height="{}pt")",
+                                  std::lround(px_to_pt(attributes.width)),
+                                  std::lround(px_to_pt(attributes.height)));
     break;
   case SVG::SVGElementType::Text:
     // ignore for now
