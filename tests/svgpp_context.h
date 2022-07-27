@@ -1,6 +1,7 @@
 #pragma once
 
 #include <any>
+#include <stdexcept>
 
 #include <boost/range/iterator_range_core.hpp>
 #include <svgpp/svgpp.hpp>
@@ -48,6 +49,56 @@ public:
   void path_exit();
   void set(svgpp::tag::attribute::cy cy, double v);
   void set(svgpp::tag::attribute::cx cx, double v);
+
+  void set(svgpp::tag::attribute::fill, svgpp::tag::value::none);
+  void set(svgpp::tag::attribute::fill, svgpp::tag::value::currentColor);
+  using color_t = int;
+  void set(svgpp::tag::attribute::fill, color_t color,
+           svgpp::tag::skip_icc_color = svgpp::tag::skip_icc_color());
+  template <class IRI> void set(svgpp::tag::attribute::fill, IRI const &) {
+    throw std::runtime_error{
+        "this flavor of the 'fill' attribute is not yet implemented"};
+  };
+  template <class IRI>
+  void set(svgpp::tag::attribute::fill, svgpp::tag::iri_fragment, IRI const &) {
+    throw std::runtime_error{
+        "this flavor of the 'fill' attribute is not yet implemented"};
+  };
+  template <class IRI>
+  void set(svgpp::tag::attribute::fill, IRI const &, svgpp::tag::value::none) {
+    throw std::runtime_error{
+        "this flavor of the 'fill' attribute is not yet implemented"};
+  };
+  template <class IRI>
+  void set(svgpp::tag::attribute::fill, svgpp::tag::iri_fragment, IRI const &,
+           svgpp::tag::value::none) {
+    throw std::runtime_error{
+        "this flavor of the 'fill' attribute is not yet implemented"};
+  };
+  template <class IRI>
+  void set(svgpp::tag::attribute::fill, IRI const &,
+           svgpp::tag::value::currentColor) {
+    throw std::runtime_error{
+        "this flavor of the 'fill' attribute is not yet implemented"};
+  };
+  template <class IRI>
+  void set(svgpp::tag::attribute::fill, svgpp::tag::iri_fragment, IRI const &,
+           svgpp::tag::value::currentColor) {
+    throw std::runtime_error{
+        "this flavor of the 'fill' attribute is not yet implemented"};
+  };
+  template <class IRI>
+  void set(svgpp::tag::attribute::fill, IRI const &, color_t,
+           svgpp::tag::skip_icc_color = svgpp::tag::skip_icc_color()) {
+    throw std::runtime_error{
+        "this flavor of the 'fill' attribute is not yet implemented"};
+  };
+  template <class IRI>
+  void set(svgpp::tag::attribute::fill, svgpp::tag::iri_fragment, IRI const &,
+           color_t, svgpp::tag::skip_icc_color = svgpp::tag::skip_icc_color()) {
+    throw std::runtime_error{
+        "this flavor of the 'fill' attribute is not yet implemented"};
+  };
   void transform_matrix(const boost::array<double, 6> &matrix);
   void set(svgpp::tag::attribute::r r, double v);
   void set(svgpp::tag::attribute::rx rx, double v);

@@ -36,6 +36,25 @@ static std::string xml_encode(const std::string &text) {
   return out;
 }
 
+// convert a valid color specification to the flavor that Graphviz uses
+static std::string to_graphviz_color(const std::string &color) {
+  if (color == "rgb(0,0,0)") {
+    return "black";
+  } else if (color == "rgb(255,255,255)") {
+    return "white";
+  } else if (color.starts_with("rgb")) {
+    const auto comma1 = color.find_first_of(",");
+    const auto r = std::stoi(color.substr(4, comma1 - 1));
+    const auto comma2 = color.find_first_of(",", comma1 + 1);
+    const auto g = std::stoi(color.substr(comma1 + 1, comma2 - 1));
+    const auto close_par = color.find_first_of(")", comma2 + 1);
+    const auto b = std::stoi(color.substr(comma2 + 1, close_par - 1));
+    return fmt::format("#{:02x}{:02x}{:02x}", r, g, b);
+  } else {
+    return color;
+  }
+}
+
 void SVG::SVGElement::append_attribute(std::string &output,
                                        const std::string &attribute) const {
   if (attribute.empty()) {
@@ -45,6 +64,14 @@ void SVG::SVGElement::append_attribute(std::string &output,
     output += " ";
   }
   output += attribute;
+}
+
+std::string SVG::SVGElement::fill_attribute_to_string() const {
+  if (attributes.fill.empty()) {
+    return "";
+  }
+
+  return fmt::format(R"(fill="{}")", to_graphviz_color(attributes.fill));
 }
 
 std::string SVG::SVGElement::id_attribute_to_string() const {
@@ -93,7 +120,7 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   append_attribute(attributes_str, id_attribute_to_string());
   switch (type) {
   case SVG::SVGElementType::Ellipse:
-    // ignore for now
+    append_attribute(attributes_str, fill_attribute_to_string());
     break;
   case SVG::SVGElementType::Group:
     attributes_str += fmt::format(R"( class="{}")", attributes.class_);
@@ -105,13 +132,13 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     }
     break;
   case SVG::SVGElementType::Path:
-    // ignore for now
+    append_attribute(attributes_str, fill_attribute_to_string());
     break;
   case SVG::SVGElementType::Polygon:
-    // ignore for now
+    append_attribute(attributes_str, fill_attribute_to_string());
     break;
   case SVG::SVGElementType::Polyline:
-    // ignore for now
+    append_attribute(attributes_str, fill_attribute_to_string());
     break;
   case SVG::SVGElementType::Svg:
     attributes_str += fmt::format(

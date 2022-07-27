@@ -42,6 +42,7 @@ std::string_view tag(SVG::SVGElementType type);
 
 struct SVGAttributes {
   std::string class_;
+  std::string fill;
   double height;
   std::string id;
   std::optional<SVGMatrix> transform;
@@ -82,6 +83,7 @@ private:
   void append_attribute(std::string &output,
                         const std::string &attribute) const;
   std::string id_attribute_to_string() const;
+  std::string fill_attribute_to_string() const;
   void to_string_impl(std::string &output, std::size_t indent_size,
                       std::size_t current_indent) const;
 };

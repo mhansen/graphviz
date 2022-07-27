@@ -1,9 +1,16 @@
 #include <any>
+#include <stdexcept>
 
 #include <boost/array.hpp>
+#include <fmt/format.h>
 
 #include "svg_analyzer_interface.h"
 #include "svgpp_context.h"
+
+static std::string to_color_string(SvgppContext::color_t color) {
+  return fmt::format("rgb({},{},{})", (color >> 16) & 0xff, (color >> 8) & 0xff,
+                     (color >> 0) & 0xff);
+}
 
 SvgppContext::SvgppContext(ISVGAnalyzer *svgAnalyzer)
     : m_svgAnalyzer(svgAnalyzer){};
@@ -117,6 +124,21 @@ void SvgppContext::set(svgpp::tag::attribute::cy a, const double v) {
 void SvgppContext::set(svgpp::tag::attribute::cx a, const double v) {
   (void)a;
   (void)v;
+}
+
+void SvgppContext::set(svgpp::tag::attribute::fill, svgpp::tag::value::none) {
+  m_svgAnalyzer->set_fill("none");
+}
+
+void SvgppContext::set(svgpp::tag::attribute::fill,
+                       svgpp::tag::value::currentColor) {
+  throw std::runtime_error{
+      "the 'fill' attribute 'currentColor' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::fill, color_t color,
+                       svgpp::tag::skip_icc_color) {
+  m_svgAnalyzer->set_fill(to_color_string(color));
 }
 
 void SvgppContext::transform_matrix(const boost::array<double, 6> &matrix) {
