@@ -82,6 +82,18 @@ std::string SVG::SVGElement::id_attribute_to_string() const {
   return fmt::format(R"(id="{}")", attributes.id);
 }
 
+std::string SVG::SVGElement::points_attribute_to_string() const {
+  std::string points_attribute_str = R"|(points=")|";
+  const char *separator = "";
+  for (const auto &point : attributes.points) {
+    points_attribute_str += separator + fmt::format("{},{}", point.x, point.y);
+    separator = " ";
+  }
+  points_attribute_str += '"';
+
+  return points_attribute_str;
+}
+
 std::string SVG::SVGElement::stroke_attribute_to_string() const {
   if (attributes.stroke.empty()) {
     return "";
@@ -148,10 +160,12 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   case SVG::SVGElementType::Polygon:
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, points_attribute_to_string());
     break;
   case SVG::SVGElementType::Polyline:
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, points_attribute_to_string());
     break;
   case SVG::SVGElementType::Svg:
     attributes_str += fmt::format(

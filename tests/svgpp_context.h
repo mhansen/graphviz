@@ -1,8 +1,8 @@
 #pragma once
 
-#include <any>
 #include <stdexcept>
 
+#include <boost/range/any_range.hpp>
 #include <boost/range/iterator_range_core.hpp>
 #include <svgpp/svgpp.hpp>
 
@@ -157,10 +157,11 @@ public:
   void set(svgpp::tag::attribute::y1 y1, double v);
   void set(svgpp::tag::attribute::x2 x2, double v);
   void set(svgpp::tag::attribute::y2 y2, double v);
-  template <typename Range>
-  void set(svgpp::tag::attribute::points points, const Range &range) {
-    set_impl(points, range);
-  }
+  typedef boost::any_range<std::pair<double, double>,
+                           boost::single_pass_traversal_tag,
+                           const std::pair<double, double> &, std::ptrdiff_t>
+      PointsRange;
+  void set(svgpp::tag::attribute::points points, const PointsRange &range);
   void set(svgpp::tag::attribute::x a, double v);
   void set(svgpp::tag::attribute::y y, double v);
   void set(svgpp::tag::attribute::width width, double v);
@@ -173,7 +174,5 @@ public:
   void set_text(boost::iterator_range<const char *> v);
 
 private:
-  void set_impl(svgpp::tag::attribute::points &points, const std::any &range);
-
   ISVGAnalyzer *m_svgAnalyzer = nullptr;
 };

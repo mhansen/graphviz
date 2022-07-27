@@ -131,6 +131,10 @@ void SVGAnalyzer::set_id(std::string_view id) {
   current_element().attributes.id = id;
 }
 
+void SVGAnalyzer::set_point(std::pair<double, double> point) {
+  current_element().attributes.points.emplace_back(point.first, point.second);
+}
+
 void SVGAnalyzer::set_text(std::string_view text) {
   auto &element = current_element();
   element.text = text;

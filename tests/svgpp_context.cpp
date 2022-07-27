@@ -235,11 +235,11 @@ void SvgppContext::set(svgpp::tag::attribute::viewBox, const double v1,
   m_svgAnalyzer->set_viewBox(v1, v2, v3, v4);
 }
 
-void SvgppContext::set_impl(svgpp::tag::attribute::points &points,
-                            const std::any &range) {
-  (void)points;
-  (void)range;
-  // ignore for now
+void SvgppContext::set(svgpp::tag::attribute::points,
+                       const SvgppContext::PointsRange &range) {
+  for (auto &it : range) {
+    m_svgAnalyzer->set_point(it);
+  }
 }
 
 void SvgppContext::set_text(boost::iterator_range<const char *> v) {

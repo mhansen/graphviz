@@ -123,10 +123,20 @@ TEST_CASE(
     boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
     for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
       REQUIRE(i < recreated_svg_lines.size());
+      if (recreated_svg_lines[i].starts_with("<ellipse fill=\"")) {
+        // stop comparison here for ellipse based node shapes since we do not
+        // yet handle all attributes on the 'ellipse' element
+        break;
+      }
       if (recreated_svg_lines[i] ==
-          "<polygon fill=\"white\" stroke=\"none\"/>") {
-        // stop comparison here since we do not yet handle all attributes on the
-        // 'polygon' element
+          ("<path fill=\"none\" stroke=\"black\"/>")) {
+        // stop comparison here for the 'cylinder' node shape since we do not
+        // yet handle all attributes on the 'path' element
+        break;
+      }
+      if (recreated_svg_lines[i] == "<text>a</text>") {
+        // stop comparison here for polygon based shapes since we do not yet
+        // handle all attributes on the 'text' element
         break;
       }
       REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);
@@ -141,8 +151,6 @@ TEST_CASE(
       CHECK(recreated_svg.find("<text>a</text>") != std::string::npos);
       CHECK(recreated_svg.find("<text>b</text>") != std::string::npos);
     }
-    CHECK(recreated_svg.find("<polygon fill=\"white\" stroke=\"none\"/>") !=
-          std::string::npos);
     CHECK(recreated_svg.find("<path fill=\"none\" stroke=\"black\"/>") !=
           std::string::npos);
     CHECK(recreated_svg.find("<!-- a -->") != std::string::npos);

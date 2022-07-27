@@ -32,6 +32,7 @@ public:
   void set_id(std::string_view id) override;
   void set_class(std::string_view) override;
   void set_stroke(std::string_view stroke) override;
+  void set_point(std::pair<double, double> point) override;
   void set_text(std::string_view text) override;
   void set_transform(double a, double b, double c, double d, double e,
                      double f) override;
