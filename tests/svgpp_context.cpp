@@ -6,53 +6,43 @@
 SvgppContext::SvgppContext(ISVGAnalyzer *svgAnalyzer)
     : m_svgAnalyzer(svgAnalyzer){};
 
-void SvgppContext::on_enter_element(svgpp::tag::element::svg e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::svg) {
   m_svgAnalyzer->on_enter_element_svg();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::g e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::g) {
   m_svgAnalyzer->on_enter_element_g();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::circle e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::circle) {
   m_svgAnalyzer->on_enter_element_circle();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::ellipse e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::ellipse) {
   m_svgAnalyzer->on_enter_element_ellipse();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::line e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::line) {
   m_svgAnalyzer->on_enter_element_line();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::path e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::path) {
   m_svgAnalyzer->on_enter_element_path();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::polygon e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::polygon) {
   m_svgAnalyzer->on_enter_element_polygon();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::polyline e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::polyline) {
   m_svgAnalyzer->on_enter_element_polyline();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::rect e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::rect) {
   m_svgAnalyzer->on_enter_element_rect();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::title e) {
-  (void)e;
+void SvgppContext::on_enter_element(svgpp::tag::element::title) {
   m_svgAnalyzer->on_enter_element_title();
 }
 
