@@ -24,6 +24,9 @@
 
 void mOpenSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     GtkWidget *dialog;
     GtkFileFilter *filter;
 

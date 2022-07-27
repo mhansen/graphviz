@@ -21,6 +21,6 @@
     _BB void color_change_request(GtkWidget * widget, gpointer user_data);
     _BB void size_change_request(GtkWidget * widget, gpointer user_data);
     _BB void on_dlgSettings_close (GtkWidget * widget, gpointer user_data);
-    extern int load_settings_from_graph(Agraph_t * g);
+    extern int load_settings_from_graph(void);
     extern int update_graph_from_settings(Agraph_t * g);
     extern int show_settings_form(void);

@@ -31,8 +31,7 @@ static int sel_node;
 static int sel_edge;
 static int sel_graph;
 
-static char *safestrdup(char *src)
-{
+static char *safestrdup(const char *src) {
     if (!src)
 	return NULL;
     else
@@ -434,11 +433,9 @@ static void set_refresh_filters(ViewInfo * v, int type, char *name)
 	v->refresh.selection = 1;
 }
 
-static void doApply (GtkWidget * widget, int doAll)
+static void doApply(void)
 {
     char *attr_name;
-    char *value;
-    char *def_val;
     int prog;
     Agnode_t *v;
     Agedge_t *e;
@@ -451,12 +448,10 @@ static void doApply (GtkWidget * widget, int doAll)
     attr_name =
 	(char *) gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtAttr"));
-    def_val =
-	(char *) gtk_entry_get_text((GtkEntry *)
+    const char *def_val = gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml,
 							 "txtDefValue"));
-    value =
-	(char *) gtk_entry_get_text((GtkEntry *)
+    const char *value = gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtValue"));
     prog =
 	gtk_toggle_button_get_active((GtkToggleButton *)
@@ -476,7 +471,7 @@ static void doApply (GtkWidget * widget, int doAll)
     /*nodes */
     else if (objKind == AGNODE) {
 	for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
-	    if (doAll || ND_selected(v))
+	    if (ND_selected(v))
 		agxset(v, sym, value);
 	}
     }
@@ -484,7 +479,7 @@ static void doApply (GtkWidget * widget, int doAll)
     else if (objKind == AGEDGE) {
 	for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	    for (e = agfstout(g, v); e; e = agnxtout(g, e)) {
-		if (doAll || ED_selected(e))
+		if (ED_selected(e))
 		    agxset(e, sym, value);
 	    }
 	}
@@ -497,8 +492,10 @@ static void doApply (GtkWidget * widget, int doAll)
 
 _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
     (void)user_data;
-    doApply (widget, 0);
+
+    doApply();
 }
 
 /* This is the action attached to the publish button on the attributes
@@ -513,8 +510,10 @@ _BB void on_attrProg_toggled(GtkWidget * widget, gpointer user_data)
 
 _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     char *attr_name;
-    char *defValue;
     int objKind;
     topview *t;
     Agraph_t *g;
@@ -525,8 +524,7 @@ _BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
     attr_name =
 	(char *) gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtAttr"));
-    defValue =
-	(char *) gtk_entry_get_text((GtkEntry *)
+    const char *defValue = gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml,
 							 "txtDefValue"));
     g = view->g[view->activeGraph];

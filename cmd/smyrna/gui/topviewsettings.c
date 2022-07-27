@@ -17,10 +17,16 @@
 
 void color_change_request(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     view->refresh.color=1;
 }
 void size_change_request(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     view->refresh.nodesize=1;
 }
 
@@ -32,17 +38,26 @@ void on_settingsOKBtn_clicked(GtkWidget * widget, gpointer user_data)
 
 void on_settingsApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     update_graph_from_settings(view->g[view->activeGraph]);
     set_viewport_settings_from_template(view, view->g[view->activeGraph]);
     updateSmGraph(view->g[view->activeGraph],view->Topview);
 }
 void on_dlgSettings_close (GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
 }
 
 void on_settingsCancelBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
 }
 static void copy_attr(Agraph_t* destG,char* attr,Agraph_t* g)
@@ -287,7 +302,7 @@ static int get_combobox_widget_to_attribute(char *attribute,
 
 
 }
-int load_settings_from_graph(Agraph_t * g)
+int load_settings_from_graph(void)
 {
     Agsym_t* sym=NULL;
     while ((sym = agnxtattr(view->systemGraphs.attrs_widgets,AGRAPH, sym))) {
@@ -334,7 +349,7 @@ int show_settings_form()
 {
 
     if (view->activeGraph >= 0) {
-	load_settings_from_graph(view->g[view->activeGraph]);
+	load_settings_from_graph();
 	gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
 	gtk_widget_show(glade_xml_get_widget(xml, "dlgSettings"));
 	gtk_window_set_keep_above((GtkWindow *)
