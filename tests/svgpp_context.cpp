@@ -116,14 +116,12 @@ void SvgppContext::path_close_subpath() {}
 
 void SvgppContext::path_exit() {}
 
-void SvgppContext::set(svgpp::tag::attribute::cy a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::cy, const double v) {
+  m_svgAnalyzer->set_cy(v);
 }
 
-void SvgppContext::set(svgpp::tag::attribute::cx a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::cx, const double v) {
+  m_svgAnalyzer->set_cx(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::fill, svgpp::tag::value::none) {

@@ -143,6 +143,8 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   case SVG::SVGElementType::Ellipse:
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    attributes_str +=
+        fmt::format(R"( cx="{}" cy="{}")", attributes.cx, attributes.cy);
     break;
   case SVG::SVGElementType::Group:
     attributes_str += fmt::format(R"( class="{}")", attributes.class_);

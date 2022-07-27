@@ -47,6 +47,8 @@ std::string_view tag(SVG::SVGElementType type);
 
 struct SVGAttributes {
   std::string class_;
+  double cx;
+  double cy;
   std::string fill;
   double height;
   std::string id;

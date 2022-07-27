@@ -27,6 +27,8 @@ void traverseDocumentWithSvgpp(SvgppContext &context, char *text) {
     using processed_attributes_t =
         boost::mpl::set<svgpp::traits::shapes_attributes_by_element,
                         svgpp::tag::attribute::class_,    //
+                        svgpp::tag::attribute::cx,        //
+                        svgpp::tag::attribute::cy,        //
                         svgpp::tag::attribute::fill,      //
                         svgpp::tag::attribute::height,    //
                         svgpp::tag::attribute::id,        //

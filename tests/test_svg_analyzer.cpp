@@ -144,6 +144,10 @@ TEST_CASE(
 
     // do some sanity checks of the parts of the recreated SVG that we cannot
     // yet compare with the original SVG
+    if (contains_ellipse_shape(shape)) {
+      CHECK(recreated_svg.find(" cx=\"") != std::string::npos);
+      CHECK(recreated_svg.find(" cy=\"") != std::string::npos);
+    }
     CHECK(recreated_svg.find("<title>g1</title>") != std::string::npos);
     CHECK(recreated_svg.find("<title>a</title>") != std::string::npos);
     CHECK(recreated_svg.find("<title>b</title>") != std::string::npos);
