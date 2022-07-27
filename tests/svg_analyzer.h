@@ -32,6 +32,8 @@ public:
   void set_fill(std::string_view fill) override;
   void set_height(double height) override;
   void set_id(std::string_view id) override;
+  void set_rx(double rx) override;
+  void set_ry(double ry) override;
   void set_class(std::string_view) override;
   void set_stroke(std::string_view stroke) override;
   void set_point(std::pair<double, double> point) override;

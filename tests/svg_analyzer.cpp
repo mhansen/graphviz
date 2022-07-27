@@ -135,6 +135,10 @@ void SVGAnalyzer::set_id(std::string_view id) {
   current_element().attributes.id = id;
 }
 
+void SVGAnalyzer::set_rx(double rx) { current_element().attributes.rx = rx; }
+
+void SVGAnalyzer::set_ry(double ry) { current_element().attributes.ry = ry; }
+
 void SVGAnalyzer::set_point(std::pair<double, double> point) {
   current_element().attributes.points.emplace_back(point.first, point.second);
 }

@@ -53,6 +53,8 @@ struct SVGAttributes {
   double height;
   std::string id;
   std::vector<SVGPoint> points;
+  double rx;
+  double ry;
   std::string stroke;
   std::optional<SVGMatrix> transform;
   SVGRect viewBox;

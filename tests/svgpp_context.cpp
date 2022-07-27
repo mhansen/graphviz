@@ -170,14 +170,12 @@ void SvgppContext::set(svgpp::tag::attribute::r a, const double v) {
   (void)v;
 }
 
-void SvgppContext::set(svgpp::tag::attribute::rx a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::rx, const double v) {
+  m_svgAnalyzer->set_rx(v);
 }
 
-void SvgppContext::set(svgpp::tag::attribute::ry a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::ry, const double v) {
+  m_svgAnalyzer->set_ry(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::x1 a, const double v) {
