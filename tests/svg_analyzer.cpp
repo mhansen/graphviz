@@ -119,6 +119,10 @@ void SVGAnalyzer::set_height(double height) {
   current_element().attributes.height = height;
 }
 
+void SVGAnalyzer::set_id(std::string_view id) {
+  current_element().attributes.id = id;
+}
+
 void SVGAnalyzer::set_text(std::string_view text) {
   auto &element = current_element();
   element.text = text;

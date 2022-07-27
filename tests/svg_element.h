@@ -33,6 +33,7 @@ std::string_view tag(SVG::SVGElementType type);
 struct SVGAttributes {
   std::string class_;
   double height;
+  std::string id;
   SVGRect viewBox;
   double width;
 };
@@ -65,6 +66,11 @@ public:
   const SVGElementType type;
 
 private:
+  /// append a string possibly containing an attribute to another string,
+  /// handling space separation
+  void append_attribute(std::string &output,
+                        const std::string &attribute) const;
+  std::string id_attribute_to_string() const;
   void to_string_impl(std::string &output, std::size_t indent_size,
                       std::size_t current_indent) const;
 };

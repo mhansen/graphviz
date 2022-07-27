@@ -123,7 +123,7 @@ TEST_CASE(
     boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
     for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
       REQUIRE(i < recreated_svg_lines.size());
-      if (recreated_svg_lines[i] == "<g class=\"graph\">") {
+      if (recreated_svg_lines[i] == "<g id=\"graph0\" class=\"graph\">") {
         // stop comparison here since we do not yet handle all attributes on the
         // 'g' element
         break;
@@ -133,9 +133,14 @@ TEST_CASE(
 
     // do some sanity checks of the parts of the recreated SVG that we cannot
     // yet compare with the original SVG
-    CHECK(recreated_svg.find("<g class=\"graph\">") != std::string::npos);
-    CHECK(recreated_svg.find("<g class=\"node\">") != std::string::npos);
-    CHECK(recreated_svg.find("<g class=\"edge\">") != std::string::npos);
+    CHECK(recreated_svg.find("<g id=\"graph0\" class=\"graph\">") !=
+          std::string::npos);
+    CHECK(recreated_svg.find("<g id=\"node1\" class=\"node\">") !=
+          std::string::npos);
+    CHECK(recreated_svg.find("<g id=\"node2\" class=\"node\">") !=
+          std::string::npos);
+    CHECK(recreated_svg.find("<g id=\"edge1\" class=\"edge\">") !=
+          std::string::npos);
     CHECK(recreated_svg.find("</g>") != std::string::npos);
     CHECK(recreated_svg.find("<title>g1</title>") != std::string::npos);
     CHECK(recreated_svg.find("<title>a</title>") != std::string::npos);

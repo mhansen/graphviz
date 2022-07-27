@@ -63,6 +63,7 @@ public:
   void set(svgpp::tag::attribute::y y, double v);
   void set(svgpp::tag::attribute::width width, double v);
   void set(svgpp::tag::attribute::height height, double v);
+  void set(svgpp::tag::attribute::id a, boost::iterator_range<const char *> v);
   void set(svgpp::tag::attribute::class_ a,
            boost::iterator_range<const char *> v);
   void set(svgpp::tag::attribute::viewBox a, double v1, double v2, double v3,

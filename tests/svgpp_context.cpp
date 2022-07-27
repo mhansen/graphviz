@@ -170,6 +170,11 @@ void SvgppContext::set(svgpp::tag::attribute::height, const double v) {
   m_svgAnalyzer->set_height(v);
 }
 
+void SvgppContext::set(svgpp::tag::attribute::id,
+                       boost::iterator_range<const char *> v) {
+  m_svgAnalyzer->set_id({v.begin(), v.end()});
+}
+
 void SvgppContext::set(svgpp::tag::attribute::class_,
                        boost::iterator_range<const char *> v) {
   m_svgAnalyzer->set_class({v.begin(), v.end()});

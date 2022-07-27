@@ -36,6 +36,25 @@ static std::string xml_encode(const std::string &text) {
   return out;
 }
 
+void SVG::SVGElement::append_attribute(std::string &output,
+                                       const std::string &attribute) const {
+  if (attribute.empty()) {
+    return;
+  }
+  if (!output.empty()) {
+    output += " ";
+  }
+  output += attribute;
+}
+
+std::string SVG::SVGElement::id_attribute_to_string() const {
+  if (attributes.id.empty()) {
+    return "";
+  }
+
+  return fmt::format(R"(id="{}")", attributes.id);
+}
+
 std::string SVG::SVGElement::to_string(std::size_t indent_size = 2) const {
   std::string output;
   output += R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>)"
@@ -71,12 +90,13 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   output += tag(type);
 
   std::string attributes_str{};
+  append_attribute(attributes_str, id_attribute_to_string());
   switch (type) {
   case SVG::SVGElementType::Ellipse:
     // ignore for now
     break;
   case SVG::SVGElementType::Group:
-    attributes_str += fmt::format(R"(class="{}")", attributes.class_);
+    attributes_str += fmt::format(R"( class="{}")", attributes.class_);
     break;
   case SVG::SVGElementType::Path:
     // ignore for now

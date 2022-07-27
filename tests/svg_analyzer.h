@@ -28,6 +28,7 @@ public:
   void on_enter_element_title() override;
   void on_exit_element() override;
   void set_height(double height) override;
+  void set_id(std::string_view id) override;
   void set_class(std::string_view) override;
   void set_text(std::string_view text) override;
   void set_viewBox(double x, double y, double width, double height) override;
