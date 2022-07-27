@@ -48,6 +48,7 @@ public:
   void path_exit();
   void set(svgpp::tag::attribute::cy cy, double v);
   void set(svgpp::tag::attribute::cx cx, double v);
+  void transform_matrix(const boost::array<double, 6> &matrix);
   void set(svgpp::tag::attribute::r r, double v);
   void set(svgpp::tag::attribute::rx rx, double v);
   void set(svgpp::tag::attribute::ry ry, double v);

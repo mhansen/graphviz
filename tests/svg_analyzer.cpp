@@ -147,6 +147,11 @@ void SVGAnalyzer::set_width(double width) {
   current_element().attributes.width = width;
 }
 
+void SVGAnalyzer::set_transform(double a, double b, double c, double d,
+                                double e, double f) {
+  current_element().attributes.transform = {a, b, c, d, e, f};
+}
+
 void SVGAnalyzer::set_viewBox(double x, double y, double width, double height) {
   current_element().attributes.viewBox = {x, y, width, height};
 }

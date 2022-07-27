@@ -1,5 +1,7 @@
 #include <any>
 
+#include <boost/array.hpp>
+
 #include "svg_analyzer_interface.h"
 #include "svgpp_context.h"
 
@@ -115,6 +117,16 @@ void SvgppContext::set(svgpp::tag::attribute::cy a, const double v) {
 void SvgppContext::set(svgpp::tag::attribute::cx a, const double v) {
   (void)a;
   (void)v;
+}
+
+void SvgppContext::transform_matrix(const boost::array<double, 6> &matrix) {
+  double a = matrix.at(0);
+  double b = matrix.at(1);
+  double c = matrix.at(2);
+  double d = matrix.at(3);
+  double e = matrix.at(4);
+  double f = matrix.at(5);
+  m_svgAnalyzer->set_transform(a, b, c, d, e, f);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::r a, const double v) {

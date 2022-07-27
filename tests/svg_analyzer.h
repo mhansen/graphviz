@@ -31,6 +31,8 @@ public:
   void set_id(std::string_view id) override;
   void set_class(std::string_view) override;
   void set_text(std::string_view text) override;
+  void set_transform(double a, double b, double c, double d, double e,
+                     double f) override;
   void set_viewBox(double x, double y, double width, double height) override;
   void set_width(double width) override;
   std::size_t num_svgs() const { return m_num_svgs; };

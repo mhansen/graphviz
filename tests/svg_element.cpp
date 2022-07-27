@@ -97,6 +97,12 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     break;
   case SVG::SVGElementType::Group:
     attributes_str += fmt::format(R"( class="{}")", attributes.class_);
+    if (attributes.transform.has_value()) {
+      const auto transform = attributes.transform;
+      attributes_str += fmt::format(
+          R"|( transform="scale({} {}) rotate({}) translate({} {})")|",
+          transform->a, transform->d, transform->c, transform->e, transform->f);
+    }
     break;
   case SVG::SVGElementType::Path:
     // ignore for now

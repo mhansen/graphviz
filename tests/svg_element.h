@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -12,6 +13,15 @@ struct SVGRect {
   double y;
   double width;
   double height;
+};
+
+struct SVGMatrix {
+  double a;
+  double b;
+  double c;
+  double d;
+  double e;
+  double f;
 };
 
 enum class SVGElementType {
@@ -34,6 +44,7 @@ struct SVGAttributes {
   std::string class_;
   double height;
   std::string id;
+  std::optional<SVGMatrix> transform;
   SVGRect viewBox;
   double width;
 };
