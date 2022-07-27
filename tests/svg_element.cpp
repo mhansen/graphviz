@@ -82,6 +82,15 @@ std::string SVG::SVGElement::id_attribute_to_string() const {
   return fmt::format(R"(id="{}")", attributes.id);
 }
 
+std::string SVG::SVGElement::stroke_attribute_to_string() const {
+  if (attributes.stroke.empty()) {
+    return "";
+  }
+
+  return fmt::format(R"(stroke="{}")",
+                     stroke_to_graphviz_color(attributes.stroke));
+}
+
 std::string SVG::SVGElement::to_string(std::size_t indent_size = 2) const {
   std::string output;
   output += R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>)"
@@ -121,6 +130,7 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   switch (type) {
   case SVG::SVGElementType::Ellipse:
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, stroke_attribute_to_string());
     break;
   case SVG::SVGElementType::Group:
     attributes_str += fmt::format(R"( class="{}")", attributes.class_);
@@ -133,12 +143,15 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     break;
   case SVG::SVGElementType::Path:
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, stroke_attribute_to_string());
     break;
   case SVG::SVGElementType::Polygon:
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, stroke_attribute_to_string());
     break;
   case SVG::SVGElementType::Polyline:
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, stroke_attribute_to_string());
     break;
   case SVG::SVGElementType::Svg:
     attributes_str += fmt::format(
@@ -183,6 +196,11 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     output += tag(type);
     output += ">\n";
   }
+}
+
+std::string
+SVG::SVGElement::stroke_to_graphviz_color(const std::string &color) const {
+  return to_graphviz_color(color);
 }
 
 std::string_view SVG::tag(SVGElementType type) {

@@ -141,6 +141,22 @@ void SvgppContext::set(svgpp::tag::attribute::fill, color_t color,
   m_svgAnalyzer->set_fill(to_color_string(color));
 }
 
+void SvgppContext::set(svgpp::tag::attribute::stroke, svgpp::tag::value::none) {
+  m_svgAnalyzer->set_stroke("none");
+}
+
+void SvgppContext::set(svgpp::tag::attribute::stroke,
+                       svgpp::tag::value::currentColor) {
+  throw std::runtime_error{
+      "the 'stroke' attribute 'currentColor' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::stroke,
+                       SvgppContext::color_t color,
+                       svgpp::tag::skip_icc_color) {
+  m_svgAnalyzer->set_stroke(to_color_string(color));
+}
+
 void SvgppContext::transform_matrix(const boost::array<double, 6> &matrix) {
   double a = matrix.at(0);
   double b = matrix.at(1);

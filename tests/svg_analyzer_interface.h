@@ -30,6 +30,7 @@ public:
   virtual void set_fill(std::string_view fill) = 0;
   virtual void set_height(double height) = 0;
   virtual void set_id(std::string_view id) = 0;
+  virtual void set_stroke(std::string_view stroke) = 0;
   virtual void set_text(std::string_view text) = 0;
   virtual void set_transform(double a, double b, double c, double d, double e,
                              double f) = 0;

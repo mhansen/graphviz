@@ -123,6 +123,10 @@ void SVGAnalyzer::set_height(double height) {
   current_element().attributes.height = height;
 }
 
+void SVGAnalyzer::set_stroke(std::string_view stroke) {
+  current_element().attributes.stroke = stroke;
+}
+
 void SVGAnalyzer::set_id(std::string_view id) {
   current_element().attributes.id = id;
 }

@@ -30,6 +30,7 @@ void traverseDocumentWithSvgpp(SvgppContext &context, char *text) {
                         svgpp::tag::attribute::fill,      //
                         svgpp::tag::attribute::height,    //
                         svgpp::tag::attribute::id,        //
+                        svgpp::tag::attribute::stroke,    //
                         svgpp::tag::attribute::transform, //
                         svgpp::tag::attribute::viewBox,   //
                         svgpp::tag::attribute::width      //

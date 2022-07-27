@@ -45,6 +45,7 @@ struct SVGAttributes {
   std::string fill;
   double height;
   std::string id;
+  std::string stroke;
   std::optional<SVGMatrix> transform;
   SVGRect viewBox;
   double width;
@@ -84,6 +85,8 @@ private:
                         const std::string &attribute) const;
   std::string id_attribute_to_string() const;
   std::string fill_attribute_to_string() const;
+  std::string stroke_attribute_to_string() const;
+  std::string stroke_to_graphviz_color(const std::string &color) const;
   void to_string_impl(std::string &output, std::size_t indent_size,
                       std::size_t current_indent) const;
 };

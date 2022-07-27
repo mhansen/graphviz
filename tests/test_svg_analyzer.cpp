@@ -123,7 +123,8 @@ TEST_CASE(
     boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
     for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
       REQUIRE(i < recreated_svg_lines.size());
-      if (recreated_svg_lines[i] == "<polygon fill=\"white\"/>") {
+      if (recreated_svg_lines[i] ==
+          "<polygon fill=\"white\" stroke=\"none\"/>") {
         // stop comparison here since we do not yet handle all attributes on the
         // 'polygon' element
         break;
@@ -140,8 +141,10 @@ TEST_CASE(
       CHECK(recreated_svg.find("<text>a</text>") != std::string::npos);
       CHECK(recreated_svg.find("<text>b</text>") != std::string::npos);
     }
-    CHECK(recreated_svg.find("<polygon fill=\"white\"/>") != std::string::npos);
-    CHECK(recreated_svg.find("<path fill=\"none\"/>") != std::string::npos);
+    CHECK(recreated_svg.find("<polygon fill=\"white\" stroke=\"none\"/>") !=
+          std::string::npos);
+    CHECK(recreated_svg.find("<path fill=\"none\" stroke=\"black\"/>") !=
+          std::string::npos);
     CHECK(recreated_svg.find("<!-- a -->") != std::string::npos);
     CHECK(recreated_svg.find("<!-- b -->") != std::string::npos);
     CHECK(recreated_svg.find("<!-- a&#45;&gt;b -->") != std::string::npos);
