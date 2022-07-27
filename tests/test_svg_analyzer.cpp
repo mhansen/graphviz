@@ -124,8 +124,8 @@ TEST_CASE(
     for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
       REQUIRE(i < recreated_svg_lines.size());
       if (recreated_svg_lines[i] == "<svg>") {
-        // stop comparison here since we do not yet handle the graph title
-        // comment that comes before the 'svg' element
+        // stop comparison here since we do not yet handle attributes on the
+        // 'svg' element
         break;
       }
       REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);

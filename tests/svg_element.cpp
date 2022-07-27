@@ -49,6 +49,11 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   const auto indent_str = std::string(current_indent, ' ');
   output += indent_str;
 
+  if (type == SVG::SVGElementType::Svg) {
+    const auto comment = fmt::format("Title: {} Pages: 1", graphviz_id);
+    output += fmt::format("<!-- {} -->\n", xml_encode(comment));
+  }
+
   output += "<";
   output += tag(type);
 
