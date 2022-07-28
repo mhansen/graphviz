@@ -181,7 +181,8 @@ void SVG::SVGElement::to_string_impl(std::string &output,
         attributes.viewBox.height);
     break;
   case SVG::SVGElementType::Text:
-    // ignore for now
+    attributes_str +=
+        fmt::format(R"(text-anchor="{}")", attributes.text_anchor);
     break;
   case SVG::SVGElementType::Title:
     // Graphviz doesn't generate attributes on 'title' elements

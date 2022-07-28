@@ -37,6 +37,7 @@ public:
   virtual void set_point(std::pair<double, double> point) = 0;
   virtual void set_stroke(std::string_view stroke) = 0;
   virtual void set_text(std::string_view text) = 0;
+  virtual void set_text_anchor(std::string_view text_anchor) = 0;
   virtual void set_transform(double a, double b, double c, double d, double e,
                              double f) = 0;
   virtual void set_viewBox(double x, double y, double width, double height) = 0;

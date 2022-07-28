@@ -38,6 +38,7 @@ public:
   void set_stroke(std::string_view stroke) override;
   void set_point(std::pair<double, double> point) override;
   void set_text(std::string_view text) override;
+  void set_text_anchor(std::string_view text_anchor) override;
   void set_transform(double a, double b, double c, double d, double e,
                      double f) override;
   void set_viewBox(double x, double y, double width, double height) override;

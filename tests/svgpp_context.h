@@ -169,6 +169,9 @@ public:
   void set(svgpp::tag::attribute::id a, boost::iterator_range<const char *> v);
   void set(svgpp::tag::attribute::class_ a,
            boost::iterator_range<const char *> v);
+  void set(svgpp::tag::attribute::text_anchor a, svgpp::tag::value::start v);
+  void set(svgpp::tag::attribute::text_anchor a, svgpp::tag::value::middle v);
+  void set(svgpp::tag::attribute::text_anchor a, svgpp::tag::value::end v);
   void set(svgpp::tag::attribute::viewBox a, double v1, double v2, double v3,
            double v4);
   void set_text(boost::iterator_range<const char *> v);

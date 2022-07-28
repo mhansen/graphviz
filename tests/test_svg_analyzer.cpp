@@ -129,9 +129,9 @@ TEST_CASE(
         // yet handle all attributes on the 'path' element
         break;
       }
-      if (recreated_svg_lines[i] == "<text>a</text>") {
-        // stop comparison here for polygon based shapes since we do not yet
-        // handle all attributes on the 'text' element
+      if (recreated_svg_lines[i] == "<text text-anchor=\"middle\">a</text>") {
+        // stop comparison here since we do not yet handle all attributes on the
+        // 'text' element
         break;
       }
       REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);
@@ -143,8 +143,10 @@ TEST_CASE(
     CHECK(recreated_svg.find("<title>a</title>") != std::string::npos);
     CHECK(recreated_svg.find("<title>b</title>") != std::string::npos);
     if (shape != "point") {
-      CHECK(recreated_svg.find("<text>a</text>") != std::string::npos);
-      CHECK(recreated_svg.find("<text>b</text>") != std::string::npos);
+      CHECK(recreated_svg.find("<text text-anchor=\"middle\">a</text>") !=
+            std::string::npos);
+      CHECK(recreated_svg.find("<text text-anchor=\"middle\">b</text>") !=
+            std::string::npos);
     }
     CHECK(recreated_svg.find("<path fill=\"none\" stroke=\"black\"/>") !=
           std::string::npos);

@@ -56,6 +56,7 @@ struct SVGAttributes {
   double rx;
   double ry;
   std::string stroke;
+  std::string text_anchor;
   std::optional<SVGMatrix> transform;
   SVGRect viewBox;
   double width;

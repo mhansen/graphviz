@@ -163,6 +163,10 @@ void SVGAnalyzer::set_text(std::string_view text) {
   }
 }
 
+void SVGAnalyzer::set_text_anchor(std::string_view text_anchor) {
+  current_element().attributes.text_anchor = text_anchor;
+}
+
 void SVGAnalyzer::set_width(double width) {
   current_element().attributes.width = width;
 }

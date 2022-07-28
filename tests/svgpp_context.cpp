@@ -226,6 +226,21 @@ void SvgppContext::set(svgpp::tag::attribute::class_,
   m_svgAnalyzer->set_class({v.begin(), v.end()});
 }
 
+void SvgppContext::set(svgpp::tag::attribute::text_anchor,
+                       svgpp::tag::value::start) {
+  m_svgAnalyzer->set_text_anchor("start");
+}
+
+void SvgppContext::set(svgpp::tag::attribute::text_anchor,
+                       svgpp::tag::value::middle) {
+  m_svgAnalyzer->set_text_anchor("middle");
+}
+
+void SvgppContext::set(svgpp::tag::attribute::text_anchor,
+                       svgpp::tag::value::end) {
+  m_svgAnalyzer->set_text_anchor("end");
+}
+
 void SvgppContext::set(svgpp::tag::attribute::viewBox, const double v1,
                        const double v2, const double v3, const double v4) {
   m_svgAnalyzer->set_viewBox(v1, v2, v3, v4);
