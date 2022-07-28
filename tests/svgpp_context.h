@@ -176,6 +176,16 @@ public:
            boost::iterator_range<const char *> v);
   void set(svgpp::tag::attribute::font_family a,
            boost::iterator_range<const char *> v);
+  void set(svgpp::tag::attribute::font_size a, double v);
+  void set(svgpp::tag::attribute::font_size a, svgpp::tag::value::xx_small v);
+  void set(svgpp::tag::attribute::font_size a, svgpp::tag::value::x_small v);
+  void set(svgpp::tag::attribute::font_size a, svgpp::tag::value::smaller v);
+  void set(svgpp::tag::attribute::font_size a, svgpp::tag::value::small v);
+  void set(svgpp::tag::attribute::font_size a, svgpp::tag::value::medium v);
+  void set(svgpp::tag::attribute::font_size a, svgpp::tag::value::large v);
+  void set(svgpp::tag::attribute::font_size a, svgpp::tag::value::larger v);
+  void set(svgpp::tag::attribute::font_size a, svgpp::tag::value::x_large v);
+  void set(svgpp::tag::attribute::font_size a, svgpp::tag::value::xx_large v);
   void set(svgpp::tag::attribute::text_anchor a, svgpp::tag::value::start v);
   void set(svgpp::tag::attribute::text_anchor a, svgpp::tag::value::middle v);
   void set(svgpp::tag::attribute::text_anchor a, svgpp::tag::value::end v);

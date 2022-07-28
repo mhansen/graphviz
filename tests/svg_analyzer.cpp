@@ -123,6 +123,10 @@ void SVGAnalyzer::set_font_family(std::string_view font_family) {
   current_element().attributes.font_family = font_family;
 }
 
+void SVGAnalyzer::set_font_size(double font_size) {
+  current_element().attributes.font_size = font_size;
+}
+
 void SVGAnalyzer::set_fill(std::string_view fill) {
   current_element().attributes.fill = fill;
 }

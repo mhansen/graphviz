@@ -245,6 +245,64 @@ void SvgppContext::set(svgpp::tag::attribute::font_family,
   m_svgAnalyzer->set_font_family({v.begin(), v.end()});
 }
 
+void SvgppContext::set(svgpp::tag::attribute::font_size, const double v) {
+  m_svgAnalyzer->set_font_size(v);
+}
+
+void SvgppContext::set(svgpp::tag::attribute::font_size,
+                       svgpp::tag::value::xx_small) {
+  throw std::runtime_error{
+      "the 'font_size' attribute 'xx_small' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::font_size,
+                       svgpp::tag::value::x_small) {
+  throw std::runtime_error{
+      "the 'font_size' attribute 'x_small' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::font_size,
+                       svgpp::tag::value::smaller) {
+  throw std::runtime_error{
+      "the 'font_size' attribute 'smaller' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::font_size,
+                       svgpp::tag::value::small) {
+  throw std::runtime_error{
+      "the 'font_size' attribute 'small' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::font_size,
+                       svgpp::tag::value::medium) {
+  throw std::runtime_error{
+      "the 'font_size' attribute 'medium' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::font_size,
+                       svgpp::tag::value::large) {
+  throw std::runtime_error{
+      "the 'font_size' attribute 'large' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::font_size,
+                       svgpp::tag::value::larger) {
+  throw std::runtime_error{
+      "the 'font_size' attribute 'larger' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::font_size,
+                       svgpp::tag::value::x_large) {
+  throw std::runtime_error{
+      "the 'font_size' attribute 'x_large' value is not yet implemented"};
+}
+
+void SvgppContext::set(svgpp::tag::attribute::font_size,
+                       svgpp::tag::value::xx_large) {
+  throw std::runtime_error{
+      "the 'font_size' attribute 'xx_large' value is not yet implemented"};
+}
+
 void SvgppContext::set(svgpp::tag::attribute::text_anchor,
                        svgpp::tag::value::start) {
   m_svgAnalyzer->set_text_anchor("start");

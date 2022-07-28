@@ -30,6 +30,7 @@ public:
   void set_cx(double cx) override;
   void set_cy(double cy) override;
   void set_font_family(std::string_view font_family) override;
+  void set_font_size(double font_size) override;
   void set_fill(std::string_view fill) override;
   void set_height(double height) override;
   void set_id(std::string_view id) override;

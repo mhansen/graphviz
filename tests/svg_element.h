@@ -51,6 +51,7 @@ struct SVGAttributes {
   double cy;
   std::string fill;
   std::string font_family;
+  double font_size;
   double height;
   std::string id;
   std::vector<SVGPoint> points;
