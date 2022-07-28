@@ -275,6 +275,9 @@ static Agraph_t *cloneSubg(Agraph_t * tgt, Agraph_t * g, Dt_t* emap)
 
 static int cmppair(Dt_t * d, Agedge_t** key1, Agedge_t** key2, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     if (*key1 > *key2) return 1;
     else if (*key1 < *key2) return -1;
     else return 0;
