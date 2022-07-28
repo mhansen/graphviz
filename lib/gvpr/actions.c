@@ -25,6 +25,7 @@
 #include <ctype.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/unreachable.h>
 
 #define KINDS(p) ((AGTYPE(p) == AGRAPH) ? "graph" : (AGTYPE(p) == AGNODE) ? "node" : "edge")
 
@@ -200,6 +201,8 @@ Agobj_t *copy(Agraph_t * g, Agobj_t * obj)
 	name = agnameof (AGMKOUT(e));
 	nobj = (Agobj_t *) openEdge(g, t, h, name);
 	break;
+    default:
+	UNREACHABLE();
     }
     if (nobj)
 	copyAttr(obj, nobj);
