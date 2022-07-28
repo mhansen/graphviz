@@ -69,6 +69,21 @@ void SVGAnalyzer::on_enter_element_title() {
 
 void SVGAnalyzer::on_exit_element() { m_elements_in_process.pop_back(); }
 
+void SVGAnalyzer::path_cubic_bezier_to(double x1, double y1, double x2,
+                                       double y2, double x, double y) {
+  auto &path_points = current_element().path_points;
+  path_points.emplace_back(x1, y1);
+  path_points.emplace_back(x2, y2);
+  path_points.emplace_back(x, y);
+}
+
+void SVGAnalyzer::path_move_to(double x, double y) {
+  auto &paths = current_element().path_points;
+  paths.emplace_back(x, y);
+}
+
+void SVGAnalyzer::path_exit() {}
+
 SVG::SVGElement &SVGAnalyzer::grandparent_element() {
   if (m_elements_in_process.empty()) {
     throw std::runtime_error{"No current element to get grandparent of"};

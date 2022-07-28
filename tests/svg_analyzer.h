@@ -27,6 +27,10 @@ public:
   void on_enter_element_text() override;
   void on_enter_element_title() override;
   void on_exit_element() override;
+  void path_cubic_bezier_to(double x1, double y1, double x2, double y2,
+                            double x, double y) override;
+  void path_move_to(double x, double y) override;
+  void path_exit() override;
   void set_cx(double cx) override;
   void set_cy(double cy) override;
   void set_font_family(std::string_view font_family) override;

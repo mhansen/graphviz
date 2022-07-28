@@ -87,6 +87,8 @@ public:
   std::string graphviz_id;
   /// The Graphviz release version
   std::string graphviz_version;
+  /// The points given by the `d` attribute of a path element
+  std::vector<SVGPoint> path_points;
   /// The SVG element text node contents. Not to be confused with an SVG `text`
   /// element
   std::string text;

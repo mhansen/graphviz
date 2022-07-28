@@ -63,58 +63,45 @@ void SvgppContext::on_exit_element() { m_svgAnalyzer->on_exit_element(); }
 
 void SvgppContext::path_move_to(double x, double y,
                                 svgpp::tag::coordinate::absolute c) {
-  (void)x;
-  (void)y;
-  (void)c;
+  if (!c.is_absolute) {
+    throw std::runtime_error{
+        "'path_move_to' using relative coordinates is not yet implemented"};
+  }
+  m_svgAnalyzer->path_move_to(x, y);
 }
 
-void SvgppContext::path_line_to(double x, double y,
-                                svgpp::tag::coordinate::absolute c) {
-  (void)x;
-  (void)y;
-  (void)c;
+void SvgppContext::path_line_to(double, double,
+                                svgpp::tag::coordinate::absolute) {
+  throw std::runtime_error{"'path_line_to' is not yet implemented"};
 }
 
 void SvgppContext::path_cubic_bezier_to(double x1, double y1, double x2,
                                         double y2, double x, double y,
                                         svgpp::tag::coordinate::absolute c) {
-  (void)x1;
-  (void)y1;
-  (void)x2;
-  (void)y2;
-  (void)x;
-  (void)y;
-  (void)c;
+  if (!c.is_absolute) {
+    throw std::runtime_error{
+        "'path_cubic_bezier_to' using relative coordinates "
+        "is not yet implemented"};
+  }
+  m_svgAnalyzer->path_cubic_bezier_to(x1, y1, x2, y2, x, y);
 }
 
-void SvgppContext::path_quadratic_bezier_to(
-    double x1, double y1, double x, double y,
-    svgpp::tag::coordinate::absolute c) {
-  (void)x1;
-  (void)y1;
-  (void)x;
-  (void)y;
-  (void)c;
+void SvgppContext::path_quadratic_bezier_to(double, double, double, double,
+                                            svgpp::tag::coordinate::absolute) {
+  throw std::runtime_error{"'path_quadratic_bezier_to' is not yet implemented"};
 }
 
-void SvgppContext::path_elliptical_arc_to(double rx, double ry,
-                                          double x_axis_rotation,
-                                          bool large_arc_flag, bool sweep_flag,
-                                          double x, double y,
-                                          svgpp::tag::coordinate::absolute c) {
-  (void)rx;
-  (void)ry;
-  (void)x_axis_rotation;
-  (void)large_arc_flag;
-  (void)sweep_flag;
-  (void)x;
-  (void)y;
-  (void)c;
+void SvgppContext::path_elliptical_arc_to(double, double, double, bool, bool,
+                                          double, double,
+                                          svgpp::tag::coordinate::absolute) {
+  throw std::runtime_error{"'path_elliptical_arc_to' is not yet implemented"};
 }
 
-void SvgppContext::path_close_subpath() {}
+void SvgppContext::path_close_subpath() {
+  throw std::runtime_error{"'path_close_subpath' is not yet implemented"};
+}
 
-void SvgppContext::path_exit() {}
+void SvgppContext::path_exit() { m_svgAnalyzer->path_exit(); }
 
 void SvgppContext::set(svgpp::tag::attribute::cy, const double v) {
   m_svgAnalyzer->set_cy(v);

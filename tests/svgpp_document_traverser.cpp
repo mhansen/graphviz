@@ -29,6 +29,7 @@ void traverseDocumentWithSvgpp(SvgppContext &context, char *text) {
                         svgpp::tag::attribute::class_,      //
                         svgpp::tag::attribute::cx,          //
                         svgpp::tag::attribute::cy,          //
+                        svgpp::tag::attribute::d,           //
                         svgpp::tag::attribute::fill,        //
                         svgpp::tag::attribute::font_family, //
                         svgpp::tag::attribute::font_size,   //

@@ -156,10 +156,29 @@ void SVG::SVGElement::to_string_impl(std::string &output,
           transform->a, transform->d, transform->c, transform->e, transform->f);
     }
     break;
-  case SVG::SVGElementType::Path:
+  case SVG::SVGElementType::Path: {
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    attributes_str += R"|( d=")|";
+    auto command = 'M';
+    for (const auto &point : path_points) {
+      attributes_str += fmt::format("{}{},{}", command, point.x, point.y);
+      switch (command) {
+      case 'M':
+        command = 'C';
+        break;
+      case 'C':
+        command = ' ';
+        break;
+      case ' ':
+        break;
+      default:
+        UNREACHABLE();
+      }
+    }
+    attributes_str += '"';
     break;
+  }
   case SVG::SVGElementType::Polygon:
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());

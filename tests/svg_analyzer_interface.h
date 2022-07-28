@@ -26,6 +26,10 @@ public:
   virtual void on_enter_element_text() = 0;
   virtual void on_enter_element_title() = 0;
   virtual void on_exit_element() = 0;
+  virtual void path_exit() = 0;
+  virtual void path_move_to(double x, double y) = 0;
+  virtual void path_cubic_bezier_to(double x1, double y1, double x2, double y2,
+                                    double x, double y) = 0;
   virtual void set_class(std::string_view) = 0;
   virtual void set_cx(double cx) = 0;
   virtual void set_cy(double cy) = 0;

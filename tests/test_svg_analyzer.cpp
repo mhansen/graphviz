@@ -115,32 +115,17 @@ TEST_CASE(
     const auto indent_size = 0;
     auto recreated_svg = svgAnalyzer.svg_string(indent_size);
 
-    // compare the initial lines of the recreated SVG that we can fully recreate
-    // with the original SVG
-    std::vector<std::string> original_svg_lines;
-    boost::split(original_svg_lines, original_svg, boost::is_any_of("\n"));
-    std::vector<std::string> recreated_svg_lines;
-    boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
-    for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
-      REQUIRE(i < recreated_svg_lines.size());
-      if (recreated_svg_lines[i] ==
-          ("<path fill=\"none\" stroke=\"black\"/>")) {
-        // stop comparison here for the 'cylinder' node shape since we do not
-        // yet handle all attributes on the 'path' element
-        break;
+    // compare the recreated SVG with the original SVG
+    if (recreated_svg != original_svg) {
+      std::vector<std::string> original_svg_lines;
+      boost::split(original_svg_lines, original_svg, boost::is_any_of("\n"));
+      std::vector<std::string> recreated_svg_lines;
+      boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
+      for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
+        REQUIRE(i < recreated_svg_lines.size());
+        REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);
       }
-      REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);
+      REQUIRE(recreated_svg_lines.size() == original_svg_lines.size());
     }
-
-    // do some sanity checks of the parts of the recreated SVG that we cannot
-    // yet compare with the original SVG
-    CHECK(recreated_svg.find("<title>g1</title>") != std::string::npos);
-    CHECK(recreated_svg.find("<title>a</title>") != std::string::npos);
-    CHECK(recreated_svg.find("<title>b</title>") != std::string::npos);
-    CHECK(recreated_svg.find("<path fill=\"none\" stroke=\"black\"/>") !=
-          std::string::npos);
-    CHECK(recreated_svg.find("<!-- a -->") != std::string::npos);
-    CHECK(recreated_svg.find("<!-- b -->") != std::string::npos);
-    CHECK(recreated_svg.find("<!-- a&#45;&gt;b -->") != std::string::npos);
   }
 }
