@@ -171,6 +171,10 @@ void SVGAnalyzer::set_width(double width) {
   current_element().attributes.width = width;
 }
 
+void SVGAnalyzer::set_x(double x) { current_element().attributes.x = x; }
+
+void SVGAnalyzer::set_y(double y) { current_element().attributes.y = y; }
+
 void SVGAnalyzer::set_transform(double a, double b, double c, double d,
                                 double e, double f) {
   current_element().attributes.transform = {a, b, c, d, e, f};

@@ -198,14 +198,28 @@ void SvgppContext::set(svgpp::tag::attribute::y2 a, const double v) {
   (void)v;
 }
 
-void SvgppContext::set(svgpp::tag::attribute::x a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::x, const double v) {
+  m_svgAnalyzer->set_x(v);
 }
 
-void SvgppContext::set(svgpp::tag::attribute::y a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::x, const NumbersRange &range) {
+  if (boost::size(range) != 1) {
+    throw std::runtime_error{
+        "Multiple value list for the 'x' attribute is not yet implemented"};
+  }
+  m_svgAnalyzer->set_x(*range.begin());
+}
+
+void SvgppContext::set(svgpp::tag::attribute::y, const double v) {
+  m_svgAnalyzer->set_y(v);
+}
+
+void SvgppContext::set(svgpp::tag::attribute::y, const NumbersRange &range) {
+  if (boost::size(range) != 1) {
+    throw std::runtime_error{
+        "Multiple value list for the 'y' attribute is not yet implemented"};
+  }
+  m_svgAnalyzer->set_y(*range.begin());
 }
 
 void SvgppContext::set(svgpp::tag::attribute::width, const double v) {

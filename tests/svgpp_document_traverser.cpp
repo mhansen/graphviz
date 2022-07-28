@@ -39,7 +39,9 @@ void traverseDocumentWithSvgpp(SvgppContext &context, char *text) {
                         svgpp::tag::attribute::text_anchor, //
                         svgpp::tag::attribute::transform,   //
                         svgpp::tag::attribute::viewBox,     //
-                        svgpp::tag::attribute::width        //
+                        svgpp::tag::attribute::width,       //
+                        svgpp::tag::attribute::x,           //
+                        svgpp::tag::attribute::y            //
                         >::type;
 
     svgpp::document_traversal<

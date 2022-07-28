@@ -42,4 +42,6 @@ public:
                              double f) = 0;
   virtual void set_viewBox(double x, double y, double width, double height) = 0;
   virtual void set_width(double width) = 0;
+  virtual void set_x(double x) = 0;
+  virtual void set_y(double y) = 0;
 };

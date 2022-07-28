@@ -162,8 +162,13 @@ public:
                            const std::pair<double, double> &, std::ptrdiff_t>
       PointsRange;
   void set(svgpp::tag::attribute::points points, const PointsRange &range);
-  void set(svgpp::tag::attribute::x a, double v);
-  void set(svgpp::tag::attribute::y y, double v);
+  void set(svgpp::tag::attribute::x, double v);
+  typedef boost::any_range<double, boost::single_pass_traversal_tag, double,
+                           std::ptrdiff_t>
+      NumbersRange;
+  void set(svgpp::tag::attribute::x, const NumbersRange &range);
+  void set(svgpp::tag::attribute::y, double v);
+  void set(svgpp::tag::attribute::y, const NumbersRange &range);
   void set(svgpp::tag::attribute::width width, double v);
   void set(svgpp::tag::attribute::height height, double v);
   void set(svgpp::tag::attribute::id a, boost::iterator_range<const char *> v);

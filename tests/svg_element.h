@@ -60,6 +60,8 @@ struct SVGAttributes {
   std::optional<SVGMatrix> transform;
   SVGRect viewBox;
   double width;
+  double x;
+  double y;
 };
 
 /**

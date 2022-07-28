@@ -43,6 +43,8 @@ public:
                      double f) override;
   void set_viewBox(double x, double y, double width, double height) override;
   void set_width(double width) override;
+  void set_x(double x) override;
+  void set_y(double y) override;
   std::size_t num_svgs() const { return m_num_svgs; };
   std::size_t num_groups() const { return m_num_groups; };
   std::size_t num_circles() const { return m_num_circles; };
