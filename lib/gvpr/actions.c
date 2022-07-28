@@ -937,8 +937,6 @@ static char *canontoken(char *str)
     }
     q = canon;
     while ((c = *p++)) {
-	/* if (isalnum(c) == FALSE) */
-	    /* continue; */
 	if (isupper(c))
 	    c = tolower(c);
 	*q++ = c;
