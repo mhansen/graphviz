@@ -413,6 +413,8 @@ Agobj_t *cloneO(Agraph_t * g, Agobj_t * obj)
 	if (nobj)
 	    copyAttr(obj, nobj);
 	break;
+    default:
+	UNREACHABLE();
     }
 
     return nobj;
