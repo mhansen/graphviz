@@ -18,6 +18,7 @@
 #include <ast/ast.h>
 #include <gvpr/compile.h>
 #include <ast/sfstr.h>
+#include <limits.h>
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
@@ -63,15 +64,17 @@ int indexOf(char *s1, char *s2)
 /* rindexOf:
  * Return index of rightmost string s2 in string s1, or -1
  */
-int rindexOf(char *s1, char *s2)
+long rindexOf(char *s1, char *s2)
 {
     char c1 = *s2;
     char *p;
     size_t len1 = strlen(s1);
     size_t len2 = strlen(s2);
 
-    if (c1 == '\0')
-	return (len1);
+    if (c1 == '\0') {
+	assert(len1 <= LONG_MAX);
+	return (long)len1;
+    }
     if (len2 > len1)
 	return -1;
     p = s1 + (len1 - len2);
