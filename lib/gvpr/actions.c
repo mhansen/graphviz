@@ -643,7 +643,8 @@ int fwriteFile(Expr_t * ex, Agraph_t * g, int fd, Agiodisc_t* io)
 {
     Sfio_t *sp;
 
-    if (fd < 0 || fd >= elementsof(ex->file)
+    if (fd < 0 ||
+        (elementsof(ex->file) <= INT_MAX && fd >= (int)elementsof(ex->file))
 	|| !((sp = ex->file[fd]))) {
 	exerror("fwriteG: %d: invalid descriptor", fd);
 	return 0;
