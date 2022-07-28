@@ -16,8 +16,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-SparseMatrix call_tri(int n, int dim, double * x)
-{
+SparseMatrix call_tri(int n, double *x) {
     double one = 1;
     int i, ii, jj;
     SparseMatrix A;

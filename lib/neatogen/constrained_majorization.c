@@ -155,7 +155,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    }
 	}
     } else {
-	initLayout(graph, n, dim, d_coords, nodes);
+	initLayout(n, dim, d_coords, nodes);
 	if (compute_hierarchy(graph, n, abs_tol, relative_tol, NULL, &ordering,
 			  &levels, &num_levels)) {
 	    iterations = -1;
@@ -435,7 +435,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    if (k == 1) {
 		/* use quad solver in the y-dimension */
 		constrained_majorization_new_with_gaps(cMajEnv, b[k],
-						       coords, dim, k,
+						       coords, k,
 						       localConstrMajorIterations,
 						       hierarchy_boundaries,
 						       levels_gap);

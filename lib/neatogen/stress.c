@@ -138,10 +138,7 @@ compute_stress1(double **coords, dist_data * distances, int dim, int n, int exp)
  * a position, use it.
  * Return true if some node is fixed.
  */
-int
-initLayout(vtx_data * graph, int n, int dim, double **coords,
-	   node_t ** nodes)
-{
+int initLayout(int n, int dim, double **coords, node_t **nodes) {
     node_t *np;
     double *xp;
     double *yp;
@@ -444,8 +441,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 				     visited_nodes);
 	    } else {
 		num_visited_nodes =
-		    bfs_bounded(i, graph, n, dist, &Q, dist_bound,
-				visited_nodes);
+		    bfs_bounded(i, graph, dist, &Q, dist_bound, visited_nodes);
 	    }
 	    /* filter the pivots out of the visited nodes list, and the self loop: */
 	    for (j = 0; j < num_visited_nodes;) {
@@ -984,7 +980,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	    orthog1(n, d_coords[i]);
 	}
     } else {
-	havePinned = initLayout(graph, n, dim, d_coords, nodes);
+	havePinned = initLayout(n, dim, d_coords, nodes);
     }
     if (Verbose)
 	fprintf(stderr, ": %.2f sec", elapsed_sec());

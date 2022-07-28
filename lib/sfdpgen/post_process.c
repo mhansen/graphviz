@@ -792,7 +792,7 @@ TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double lambda0, d
   
   if (m > 2){
     if (use_triangularization){
-      B= call_tri(m, dim, x);
+      B= call_tri(m, x);
     } else {
       B= call_tri2(m, dim, x);
     }

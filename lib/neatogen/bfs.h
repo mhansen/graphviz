@@ -32,8 +32,7 @@ extern "C" {
     extern bool enQueue(Queue *, int);
 
     extern void bfs(int, vtx_data *, int, DistType *, Queue *);
-    extern int bfs_bounded(int, vtx_data *, int, DistType *, Queue *, int,
-			   int *);
+    extern int bfs_bounded(int, vtx_data*, DistType *, Queue*, int, int*);
 
 #ifdef __cplusplus
 }

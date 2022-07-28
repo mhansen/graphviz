@@ -68,7 +68,7 @@ void bfs(int vertex, vtx_data * graph, int n, DistType * dist, Queue * Q)
 }
 
 int
-bfs_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
+bfs_bounded(int vertex, vtx_data * graph, DistType * dist,
 	    Queue * Q, int bound, int *visited_nodes)
  /* compute vector 'dist' of distances of all nodes  from 'vertex' */
  /* ignore nodes whose distance to 'vertex' is more than bound */
