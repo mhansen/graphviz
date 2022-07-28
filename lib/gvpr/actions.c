@@ -922,27 +922,27 @@ static int colorcmpf(const void *p0, const void *p1)
 
 static char *canontoken(char *str)
 {
-    static unsigned char *canon;
+    static char *canon;
     static size_t allocated;
-    unsigned char c, *p, *q;
+    char c, *p, *q;
     size_t len;
 
-    p = (unsigned char *) str;
+    p = str;
     len = strlen(str);
     if (len >= allocated) {
 	allocated = len + 1 + 10;
-	canon = newof(canon, unsigned char, allocated, 0);
+	canon = newof(canon, char, allocated, 0);
 	if (!canon)
 	    return NULL;
     }
     q = canon;
     while ((c = *p++)) {
-	if (isupper(c))
-	    c = tolower(c);
+	if (isupper((int)c))
+	    c = (char)tolower((int)c);
 	*q++ = c;
     }
     *q = '\0';
-    return (char*)canon;
+    return canon;
 }
 
 /* fullColor:
