@@ -29,6 +29,7 @@ public:
   void on_exit_element() override;
   void set_cx(double cx) override;
   void set_cy(double cy) override;
+  void set_font_family(std::string_view font_family) override;
   void set_fill(std::string_view fill) override;
   void set_height(double height) override;
   void set_id(std::string_view id) override;

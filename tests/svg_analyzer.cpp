@@ -119,6 +119,10 @@ void SVGAnalyzer::set_cx(double cx) { current_element().attributes.cx = cx; }
 
 void SVGAnalyzer::set_cy(double cy) { current_element().attributes.cy = cy; }
 
+void SVGAnalyzer::set_font_family(std::string_view font_family) {
+  current_element().attributes.font_family = font_family;
+}
+
 void SVGAnalyzer::set_fill(std::string_view fill) {
   current_element().attributes.fill = fill;
 }

@@ -174,6 +174,8 @@ public:
   void set(svgpp::tag::attribute::id a, boost::iterator_range<const char *> v);
   void set(svgpp::tag::attribute::class_ a,
            boost::iterator_range<const char *> v);
+  void set(svgpp::tag::attribute::font_family a,
+           boost::iterator_range<const char *> v);
   void set(svgpp::tag::attribute::text_anchor a, svgpp::tag::value::start v);
   void set(svgpp::tag::attribute::text_anchor a, svgpp::tag::value::middle v);
   void set(svgpp::tag::attribute::text_anchor a, svgpp::tag::value::end v);

@@ -182,8 +182,9 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     break;
   case SVG::SVGElementType::Text:
     attributes_str +=
-        fmt::format(R"(text-anchor="{}" x="{}" y="{}")", attributes.text_anchor,
-                    attributes.x, attributes.y);
+        fmt::format(R"(text-anchor="{}" x="{}" y="{}" font-family="{}")",
+                    attributes.text_anchor, attributes.x, attributes.y,
+                    attributes.font_family);
     break;
   case SVG::SVGElementType::Title:
     // Graphviz doesn't generate attributes on 'title' elements

@@ -147,8 +147,10 @@ TEST_CASE(
       CHECK(recreated_svg.find("<text text-anchor=\"middle\" x=\"") !=
             std::string::npos);
       CHECK(recreated_svg.find("\" y=\"") != std::string::npos);
-      CHECK(recreated_svg.find("a</text>") != std::string::npos);
-      CHECK(recreated_svg.find("b</text>") != std::string::npos);
+      CHECK(recreated_svg.find(" font-family=\"Times,serif\">a</text>") !=
+            std::string::npos);
+      CHECK(recreated_svg.find(" font-family=\"Times,serif\">b</text>") !=
+            std::string::npos);
     }
     CHECK(recreated_svg.find("<path fill=\"none\" stroke=\"black\"/>") !=
           std::string::npos);

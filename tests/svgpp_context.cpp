@@ -240,6 +240,11 @@ void SvgppContext::set(svgpp::tag::attribute::class_,
   m_svgAnalyzer->set_class({v.begin(), v.end()});
 }
 
+void SvgppContext::set(svgpp::tag::attribute::font_family,
+                       boost::iterator_range<const char *> v) {
+  m_svgAnalyzer->set_font_family({v.begin(), v.end()});
+}
+
 void SvgppContext::set(svgpp::tag::attribute::text_anchor,
                        svgpp::tag::value::start) {
   m_svgAnalyzer->set_text_anchor("start");
