@@ -719,9 +719,9 @@ char *readLine(Expr_t * ex, int fd)
     }
     agxbinit(&tmps, 0, NULL);
     while ((c = sfgetc(sp)) > 0 && c != '\n')
-	agxbputc(&tmps, c);
+	agxbputc(&tmps, (char)c);
     if (c == '\n')
-	agxbputc(&tmps, c);
+	agxbputc(&tmps, (char)c);
     line = exstring(ex, agxbuse(&tmps));
     agxbfree(&tmps);
     return line;
