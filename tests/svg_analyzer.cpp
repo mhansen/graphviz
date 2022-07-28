@@ -82,3 +82,9 @@ void SVGAnalyzer::enter_element(SVG::SVGElementType type) {
   element.children.emplace_back(type);
   m_elements_in_process.push_back(&element.children.back());
 }
+
+std::string SVGAnalyzer::svg_string(std::size_t indent_size) const {
+  std::string output{};
+  output += m_svg.to_string(indent_size);
+  return output;
+}

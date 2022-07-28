@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <string>
 #include <vector>
 
 #include "svg_analyzer_interface.h"
@@ -34,6 +35,7 @@ public:
   std::size_t num_polylines() const { return m_num_polylines; };
   std::size_t num_rects() const { return m_num_rects; };
   std::size_t num_titles() const { return m_num_titles; };
+  std::string svg_string(std::size_t indent_size = 2) const;
 
 private:
   /// Get the current element being processed by the SVG document traverser

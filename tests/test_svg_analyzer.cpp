@@ -1,3 +1,4 @@
+#include <boost/algorithm/string.hpp>
 #include <catch2/catch.hpp>
 #include <fmt/format.h>
 
@@ -12,7 +13,8 @@
 TEST_CASE(
     "SvgAnalyzer",
     "The SvgAnalyzer parses an SVG produced by Graphviz to an internal data "
-    "structure and supports retrieval of information about that graph") {
+    "structure, supports retrieval of information about that graph and "
+    "recreation of the original SVG from that data structure") {
 
   const auto shape_char_ptr = GENERATE(from_range(all_node_shapes));
   const std::string shape{shape_char_ptr};
@@ -102,5 +104,35 @@ TEST_CASE(
     CHECK(svgAnalyzer.num_polylines() == expected_num_polylines);
     CHECK(svgAnalyzer.num_rects() == expected_num_rects);
     CHECK(svgAnalyzer.num_titles() == expected_num_titles);
+
+    const auto indent_size = 0;
+    auto recreated_svg = svgAnalyzer.svg_string(indent_size);
+
+    // compare the initial lines of the recreated SVG that we can fully recreate
+    // with the original SVG
+    std::vector<std::string> original_svg_lines;
+    boost::split(original_svg_lines, original_svg, boost::is_any_of("\n"));
+    std::vector<std::string> recreated_svg_lines;
+    boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
+    for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
+      REQUIRE(i < recreated_svg_lines.size());
+      if (recreated_svg_lines[i] == "<svg>") {
+        // stop comparison here since we do not yet handle the Graphviz version
+        // and build date comment and the graph title comment that comes before
+        // the 'svg' element
+        break;
+      }
+      REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);
+    }
+
+    // do some sanity checks of the parts of the recreated SVG that we cannot
+    // yet compare with the original SVG
+    CHECK(recreated_svg.find("<svg>") != std::string::npos);
+    CHECK(recreated_svg.find("</svg>") != std::string::npos);
+    CHECK(recreated_svg.find("<g>") != std::string::npos);
+    CHECK(recreated_svg.find("</g>") != std::string::npos);
+    CHECK(recreated_svg.find("<title/>") != std::string::npos);
+    CHECK(recreated_svg.find("<polygon/>") != std::string::npos);
+    CHECK(recreated_svg.find("<path/>") != std::string::npos);
   }
 }
