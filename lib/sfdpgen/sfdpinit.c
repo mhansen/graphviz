@@ -136,7 +136,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
 	    D = DD;
 	}
 
-	stress_model(Ndim, A, D, &pos, TRUE, maxit, tol, &flag);
+	stress_model(Ndim, D, &pos, TRUE, maxit, tol, &flag);
 	}
 	break;
     }

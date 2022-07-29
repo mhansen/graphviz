@@ -54,6 +54,6 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int edge_len_
   if (A != B) SparseMatrix_delete(A);
 }
 
-void stress_model(int dim, SparseMatrix A, SparseMatrix D, double **x, int edge_len_weighted, int maxit_sm, double tol, int *flag){
+void stress_model(int dim, SparseMatrix D, double **x, int edge_len_weighted, int maxit_sm, double tol, int *flag){
   stress_model_core(dim, D, x, edge_len_weighted, maxit_sm, tol, flag);
 }

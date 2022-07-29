@@ -144,7 +144,7 @@ void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_m
   }
 
   if (Verbose) fprintf(stderr,"ratio (edges among discontiguous regions vs total edges)=%f\n",((double) nbad)/ia[n]);
-  stress_model(dim, D, D, &x, FALSE, maxit, tol, &flag);
+  stress_model(dim, D, &x, FALSE, maxit, tol, &flag);
 
   assert(!flag);
 

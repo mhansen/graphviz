@@ -643,7 +643,7 @@ static int scomp(const void *s1, const void *s2){
 }
 
 static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(SparseMatrix A, int csize, 
-									      int randomize, int **cluster, int **clusterp, int *ncluster){
+									      int **cluster, int **clusterp, int *ncluster){
   int i, ii, j, *ia, *ja, m, n, *p = NULL, q, iv;
   (void)n;
   double *a;
@@ -814,13 +814,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatri
   }
 }
 
-static SparseMatrix DistanceMatrix_restrict_filtering(int *mask, int is_C, int is_F, SparseMatrix D){
-  /* max independent vtx set based coarsening. Coarsen nodes has mask >= is_C. Fine nodes == is_F. */
-  if (!D) return NULL;
-  assert(0);/* not yet implemented! */
-  return NULL;
-}
-
 static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD,
 					double *node_wgt, double **cnode_wgt,
 					SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl, int *coarsen_scheme_used){
@@ -895,7 +888,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
     } else if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST) {
       maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, ctrl->randomize, &cluster, &clusterp, &ncluster);
     } else {
-      maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(A, 4, ctrl->randomize, &cluster, &clusterp, &ncluster);
+      maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(A, 4, &cluster, &clusterp, &ncluster);
     }
     assert(ncluster <= n);
     nc = ncluster;
@@ -1059,7 +1052,10 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
     SparseMatrix_set_pattern_symmetric(*cA);
     *cA = SparseMatrix_remove_diagonal(*cA);
 
-    *cD = DistanceMatrix_restrict_filtering(vset, MAX_IND_VTX_SET_C, MAX_IND_VTX_SET_F, D);
+    // TODO: restrict filtering, the operation that would happen here, has not
+    // been implemented
+    assert(!D);
+    *cD = NULL;
     break;
   default:
     goto RETURN;
