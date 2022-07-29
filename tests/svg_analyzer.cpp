@@ -69,6 +69,19 @@ void SVGAnalyzer::on_enter_element_title() {
 
 void SVGAnalyzer::on_exit_element() { m_elements_in_process.pop_back(); }
 
+SVG::SVGElement &SVGAnalyzer::grandparent_element() {
+  if (m_elements_in_process.empty()) {
+    throw std::runtime_error{"No current element to get grandparent of"};
+  }
+  if (m_elements_in_process.size() == 1) {
+    throw std::runtime_error{"No parent element"};
+  }
+  if (m_elements_in_process.size() == 2) {
+    throw std::runtime_error{"No grandparent element"};
+  }
+  return *m_elements_in_process.end()[-3];
+}
+
 SVG::SVGElement &SVGAnalyzer::parent_element() {
   if (m_elements_in_process.empty()) {
     throw std::runtime_error{"No current element to get parent of"};
@@ -110,6 +123,11 @@ void SVGAnalyzer::set_text(std::string_view text) {
       throw std::runtime_error{"Unexpected parent element of 'title' element"};
     }
     parent_element().graphviz_id = text;
+    // If the 'g' element corresponds to the graph, set the Graphviz ID also on
+    // the top level 'svg' element.
+    if (grandparent_element().type == SVG::SVGElementType::Svg) {
+      grandparent_element().graphviz_id = text;
+    }
   }
 }
 
