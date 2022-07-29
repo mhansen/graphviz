@@ -55,6 +55,11 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     const auto comment = fmt::format("Title: {} Pages: 1", graphviz_id);
     output += fmt::format("<!-- {} -->\n", xml_encode(comment));
   }
+  if (type == SVG::SVGElementType::Group &&
+      (attributes.class_ == "node" || attributes.class_ == "edge")) {
+    const auto comment = graphviz_id;
+    output += fmt::format("<!-- {} -->\n", xml_encode(comment));
+  }
 
   output += "<";
   output += tag(type);

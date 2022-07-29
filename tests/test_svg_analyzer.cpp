@@ -148,5 +148,8 @@ TEST_CASE(
     }
     CHECK(recreated_svg.find("<polygon/>") != std::string::npos);
     CHECK(recreated_svg.find("<path/>") != std::string::npos);
+    CHECK(recreated_svg.find("<!-- a -->") != std::string::npos);
+    CHECK(recreated_svg.find("<!-- b -->") != std::string::npos);
+    CHECK(recreated_svg.find("<!-- a&#45;&gt;b -->") != std::string::npos);
   }
 }
