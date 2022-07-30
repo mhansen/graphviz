@@ -148,7 +148,8 @@ int Pobspath(vconfig_t * config, Ppoint_t p0, int poly0, Ppoint_t p1,
     free(ptvis0);
     free(ptvis1);
 
-    output_route->pn = opn;
+    assert(opn <= INT_MAX);
+    output_route->pn = (int)opn;
     output_route->ps = ops;
 #ifdef GASP
     gasp_print_polyline(output_route);
