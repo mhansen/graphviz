@@ -1181,8 +1181,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 	point[j] = xmin[j] + (xmax[j] - xmin[j])*drand();
       }
       
-      QuadTree_get_nearest(qt, point, ymin, &imin, &min, flag);
-      assert(!(*flag));
+      QuadTree_get_nearest(qt, point, ymin, &imin, &min);
 
       if (min > shore_depth_tol){/* point not too close, accepted */
 	for (j = 0; j < dim2; j++){

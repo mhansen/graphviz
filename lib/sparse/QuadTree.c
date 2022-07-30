@@ -713,9 +713,8 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, dou
 }
 
 
-void QuadTree_get_nearest(QuadTree qt, double *x, double *ymin, int *imin, double *min, int *flag){
+void QuadTree_get_nearest(QuadTree qt, double *x, double *ymin, int *imin, double *min){
 
-  *flag = 0;
   *min = -1;
 
   QuadTree_get_nearest_internal(qt, x, ymin, min, imin, TRUE);
