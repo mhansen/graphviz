@@ -1029,7 +1029,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 		      int n, int dim, double *x0, int *grouping0, SparseMatrix graph, double bounding_box_margin[], int *nrandom, int nedgep, 
 		      double shore_depth_tol, double **xcombined, int *nverts, double **x_poly, 
 		      int *npolys, SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map,
-		      SparseMatrix *country_graph, int highlight_cluster, int *flag){
+		      SparseMatrix *country_graph, int highlight_cluster){
 
 
   double xmax[2], xmin[2], area, *x = x0;
@@ -1049,7 +1049,6 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 
   int HIGHLIGHT_SET = highlight_cluster;
 
-  *flag = 0;
   for (j = 0; j < dim2; j++) {
     xmax[j] = x[j];
     xmin[j] = x[j];
@@ -1415,7 +1414,7 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
   if (!sizes){
     return make_map_internal(exclude_random, include_OK_points, n, dim, x, grouping, graph, bounding_box_margin, nrandom, nedgep, 
 			    shore_depth_tol, xcombined, nverts, x_poly, 
-			     npolys, poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster, flag);
+			     npolys, poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
   } else {
 
     /* add artificial node due to node sizes */
@@ -1579,7 +1578,7 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
 
     res = make_map_internal(exclude_random, include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep, 
 			    shore_depth_tol, xcombined, nverts, x_poly, 
-			    npolys, poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster, flag);
+			    npolys, poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
     if (graph != graph0) SparseMatrix_delete(graph);
     free(groups);
     free(X);
