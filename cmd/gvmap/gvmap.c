@@ -337,7 +337,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   char** labels, float* fsz, float* rgb_r, float* rgb_g, float* rgb_b, params_t* pm, Agraph_t* g )
 {
   int dim = pm->dim;
-  int i, flag = 0;
+  int i;
   SparseMatrix poly_lines, polys, poly_point_map;
   double edge_bridge_tol = 0.;
   int npolys, nverts, *polys_groups, exclude_random;
