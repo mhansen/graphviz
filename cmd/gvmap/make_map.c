@@ -1323,7 +1323,7 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
 				   double shore_depth_tol, double edge_bridge_tol,
 				   double **xcombined, int *nverts, double **x_poly, 
 				   int *npolys, SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, 
-				   SparseMatrix *country_graph, int highlight_cluster, int *flag){
+				   SparseMatrix *country_graph, int highlight_cluster){
 
   /* create a list of polygons from a list of rectangles in 2D. rectangles belong to groups. rectangles in the same group that are also close 
      geometrically will be in the same polygon describing the outline of the group. The main difference for this function and

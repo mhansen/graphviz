@@ -363,7 +363,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   make_map_from_rectangle_groups(exclude_random, pm->include_OK_points,
 				 n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
 				 pm->shore_depth_tol, edge_bridge_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
-				 &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster, &flag);
+				 &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
 
   if (Verbose) fprintf(stderr,"nart = %d\n",nart);
   /* compute a good color permutation */
@@ -389,9 +389,8 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       make_map_from_rectangle_groups(exclude_random, pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, edge_bridge_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
-				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster, &flag);
+				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
     }
-    assert(!flag);    
     {
       SparseMatrix D;
       D = SparseMatrix_get_real_adjacency_matrix_symmetrized(graph);
@@ -403,9 +402,8 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       make_map_from_rectangle_groups(exclude_random, pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, edge_bridge_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
-				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster, &flag);
+				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
     }
-    assert(!flag);
     
   }
 
