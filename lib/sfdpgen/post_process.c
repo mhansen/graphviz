@@ -704,8 +704,7 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
     if (sm->scheme == SM_SCHEME_UNIFORM_STRESS){
       uniform_stress_solve(Lw, alpha, dim, x, y, sm->tol_cg, sm->maxit_cg);
     } else {
-      SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, sm->maxit_cg, SOLVE_METHOD_CG, &flag);
-      //SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, 1, SOLVE_METHOD_JACOBI, &flag);
+      SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, sm->maxit_cg, &flag);
     }
 
     if (flag) goto RETURN;

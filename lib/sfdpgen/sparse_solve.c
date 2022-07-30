@@ -236,77 +236,17 @@ double cg(Operator Ax, Operator precond, int n, int dim, double *x0, double *rhs
   return res;
 }
 
-static double* jacobi(SparseMatrix A, int dim, double *x0, double *rhs, int maxit) {
-  /* maxit iteration of jacobi */
-  double *x, *y, *b, sum, diag, *a;
-  int k, i, j, n = A->n, *ia, *ja, iter;
-  x = MALLOC(sizeof(double)*n);
-  y = MALLOC(sizeof(double)*n);
-  b = MALLOC(sizeof(double)*n);
-  assert(A->type == MATRIX_TYPE_REAL);
-  ia = A->ia;
-  ja = A->ja;
-  a = A->a;
-
-  for (k = 0; k < dim; k++){
-    for (i = 0; i < n; i++) {
-      x[i] = x0[i*dim+k];
-      b[i] = rhs[i*dim+k];
-    }
-
-    for (iter = 0; iter < maxit; iter++){
-      for (i = 0; i < n; i++){
-	sum = 0; diag = 0;
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  if (ja[j] != i){
-	    sum += a[j]*x[ja[j]];
-	  } else {
-	    diag = a[j];
-	  }
-	}
-	if (sum == 0) fprintf(stderr,"neighb=%d\n",ia[i+1]-ia[i]);
-	assert(diag != 0);
-	y[i] = (b[i] - sum)/diag;
-
-      }
-      memcpy(x, y, sizeof(double)*n);
-    }
-
-    for (i = 0; i < n; i++) {
-      rhs[i*dim+k] = x[i];
-    }
-  }
-
-
-  free(x);
-  free(y);
-  free(b);
-  return rhs;
-}
-
-double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit, int method, int *flag){
+double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit, int *flag){
   Operator Ax, precond;
   int n = A->m;
   double res = 0;
   *flag = 0;
 
-  switch (method){
-  case SOLVE_METHOD_CG:
-    Ax =  Operator_matmul_new(A);
-    precond = Operator_diag_precon_new(A);
-    res = cg(Ax, precond, n, dim, x0, rhs, tol, maxit);
-    Operator_matmul_delete(Ax);
-    Operator_diag_precon_delete(precond);
-    break;
-  case SOLVE_METHOD_JACOBI:{
-    jacobi(A, dim, x0, rhs, maxit);
-    break;
-  }
-  default:
-    assert(0);
-    break;
-
-  }
+  Ax =  Operator_matmul_new(A);
+  precond = Operator_diag_precon_new(A);
+  res = cg(Ax, precond, n, dim, x0, rhs, tol, maxit);
+  Operator_matmul_delete(Ax);
+  Operator_diag_precon_delete(precond);
   return res;
 }
 
