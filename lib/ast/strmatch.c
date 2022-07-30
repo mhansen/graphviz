@@ -44,8 +44,8 @@
  */
 
 #include <ast/ast.h>
+#include <cgraph/strview.h>
 #include <ctype.h>
-#include <ast/hashkey.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -77,7 +77,7 @@ typedef struct {
     char *next_p;
 } Match_t;
 
-#if _lib_mbtowc && MB_LEN_MAX > 1
+#if defined(_lib_mbtowc) && _lib_mbtowc && MB_LEN_MAX > 1
 #define mbgetchar(p)	((ast.locale.set&AST_LC_multibyte)?((ast.tmp_int=mbtowc(&ast.tmp_wchar,p,MB_CUR_MAX))>=0?((p+=ast.tmp_int),ast.tmp_wchar):0):(*p++))
 #else
 #define mbgetchar(p)	(*p++)
@@ -141,6 +141,8 @@ static char *gobble(Match_t * mp, char *s, int sub,
 	case '|':
 	    if (!b && !p && sub == '|')
 		return s;
+	    break;
+	default: // nothing required
 	    break;
 	}
 }
@@ -376,71 +378,56 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			RETURN(0);
 		    } else if (pc == '['
 			       && (*p == ':' || *p == '=' || *p == '.')) {
-			x = 0;
 			n = mbgetchar(p);
 			oldp = p;
+			strview_t callee = {.data = oldp};
 			for (;;) {
 			    if (!(pc = mbgetchar(p)))
 				RETURN(0);
 			    if (pc == n && *p == ']')
 				break;
-			    x++;
+			    ++callee.size;
 			}
 			(void)mbgetchar(p);
 			if (ok)
 			    /*NOP*/;
 			else if (n == ':') {
-			    switch (HASHNKEY5
-				    (x, oldp[0], oldp[1], oldp[2], oldp[3],
-				     oldp[4])) {
-			    case HASHNKEY5(5, 'a', 'l', 'n', 'u', 'm'):
+			    if (strview_str_eq(callee, "alnum")) {
 				if (isalnum(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'a', 'l', 'p', 'h', 'a'):
+			    } else if (strview_str_eq(callee, "alpha")) {
 				if (isalpha(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'b', 'l', 'a', 'n', 'k'):
+			    } else if (strview_str_eq(callee, "blank")) {
 				if (isblank(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'c', 'n', 't', 'r', 'l'):
+			    } else if (strview_str_eq(callee, "cntrl")) {
 				if (iscntrl(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'd', 'i', 'g', 'i', 't'):
+			    } else if (strview_str_eq(callee, "digit")) {
 				if (isdigit(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'g', 'r', 'a', 'p', 'h'):
+			    } else if (strview_str_eq(callee, "graph")) {
 				if (isgraph(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'l', 'o', 'w', 'e', 'r'):
+			    } else if (strview_str_eq(callee, "lower")) {
 				if (islower(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'p', 'r', 'i', 'n', 't'):
+			    } else if (strview_str_eq(callee, "print")) {
 				if (isprint(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'p', 'u', 'n', 'c', 't'):
+			    } else if (strview_str_eq(callee, "punct")) {
 				if (ispunct(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 's', 'p', 'a', 'c', 'e'):
+			    } else if (strview_str_eq(callee, "space")) {
 				if (isspace(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(5, 'u', 'p', 'p', 'e', 'r'):
+			    } else if (strview_str_eq(callee, "upper")) {
 				if (icase ? islower(sc) : isupper(sc))
 				    ok = 1;
-				break;
-			    case HASHNKEY5(6, 'x', 'd', 'i', 'g', 'i'):
-				if (oldp[5] == 't' && isxdigit(sc))
+			    } else if (strview_str_eq(callee, "xdigit")) {
+				if (isxdigit(sc))
 				    ok = 1;
-				break;
 			    }
 			}
 			else if (range)
@@ -466,7 +453,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		    else if (range)
 		    {
 		      getrange:
-#if _lib_mbtowc
+#if defined(_lib_mbtowc) && _lib_mbtowc
 			if (ast.locale.set & AST_LC_multibyte) {
 			    wchar_t sw;
 			    wchar_t bw;

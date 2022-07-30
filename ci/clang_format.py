@@ -236,7 +236,6 @@ EXCLUDE = (
   "lib/ast/error.h",
   "lib/ast/fmtbuf.c",
   "lib/ast/fmtesc.c",
-  "lib/ast/hashkey.h",
   "lib/ast/pathaccess.c",
   "lib/ast/pathcanon.c",
   "lib/ast/pathcat.c",

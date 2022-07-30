@@ -2,7 +2,6 @@ add_library(ast STATIC
   # Header files
   ast.h
   error.h
-  hashkey.h
 
   # Source files
   pathpath.c

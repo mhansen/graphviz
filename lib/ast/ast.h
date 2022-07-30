@@ -61,6 +61,7 @@ extern "C" {
 			  size_t);
     extern char *pathaccess(char *, const char *, const char *,
 			    const char *, int);
+    extern char *pathcanon(char*);
     extern const char *pathcat(char *, const char *, int, const char *,
 			 const char *);
 
@@ -74,7 +75,7 @@ extern "C" {
 
     extern int strmatch(const char *, const char *);
     extern int strgrpmatch(const char *, const char *, int *, int, int);
-    extern int stresc(char *);
+    extern void stresc(char *);
     extern char *strcopy(char *s, const char *t);
 
 #ifdef __cplusplus

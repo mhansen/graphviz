@@ -21,9 +21,6 @@
     <ClInclude Include="error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hashkey.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sfstr.h">
       <Filter>Header Files</Filter>
     </ClInclude>

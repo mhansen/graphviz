@@ -13,19 +13,17 @@
  * AT&T Bell Laboratories
  *
  * convert \x character constants in s in place
- * the length of the converted s is returned (may have imbedded \0's)
  */
 
 #include <ast/ast.h>
 
-int stresc(char *s)
+void stresc(char *s)
 {
     char *t;
     int c;
-    char *b;
     char *p;
 
-    b = t = s;
+    t = s;
     for (;;) {
 	switch (c = *s++) {
 	case '\\':
@@ -34,7 +32,9 @@ int stresc(char *s)
 	    break;
 	case 0:
 	    *t = 0;
-	    return (t - b);
+	    return;
+	default: // nothing required
+	    break;
 	}
 	*t++ = c;
     }
