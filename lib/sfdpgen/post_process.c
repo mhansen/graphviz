@@ -592,7 +592,7 @@ static double uniform_stress_solve(SparseMatrix Lw, double alpha, int dim, doubl
 
 double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim, double *x, int maxit_sm, double tol) {
   SparseMatrix Lw = sm->Lw, Lwd = sm->Lwd, Lwdd = NULL;
-  int i, j, k, m, *id, *jd, *iw, *jw, idiag, flag = 0, iter = 0;
+  int i, j, k, m, *id, *jd, *iw, *jw, idiag, iter = 0;
   double *w, *dd, *d, *y = NULL, *x0 = NULL, *x00 = NULL, diag, diff = 1, *lambda = sm->lambda, alpha = 0., M = 0.;
   SparseMatrix Lc = NULL;
   double dij, dist;
@@ -704,10 +704,9 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
     if (sm->scheme == SM_SCHEME_UNIFORM_STRESS){
       uniform_stress_solve(Lw, alpha, dim, x, y, sm->tol_cg, sm->maxit_cg);
     } else {
-      SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, sm->maxit_cg, &flag);
+      SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, sm->maxit_cg);
     }
 
-    if (flag) goto RETURN;
 #ifdef DEBUG_PRINT
     if (Verbose) fprintf(stderr, "stress2 = %g\n",get_stress(m, dim, iw, jw, w, d, y, sm->scaling));
 #endif

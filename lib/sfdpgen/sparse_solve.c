@@ -236,11 +236,10 @@ double cg(Operator Ax, Operator precond, int n, int dim, double *x0, double *rhs
   return res;
 }
 
-double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit, int *flag){
+double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit){
   Operator Ax, precond;
   int n = A->m;
   double res = 0;
-  *flag = 0;
 
   Ax =  Operator_matmul_new(A);
   precond = Operator_diag_precon_new(A);
