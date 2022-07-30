@@ -152,9 +152,8 @@ void SvgppContext::transform_matrix(const boost::array<double, 6> &matrix) {
   m_svgAnalyzer->set_transform(a, b, c, d, e, f);
 }
 
-void SvgppContext::set(svgpp::tag::attribute::r a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::r, const double) {
+  throw std::runtime_error{"the 'r' attribute is not yet implemented"};
 }
 
 void SvgppContext::set(svgpp::tag::attribute::rx, const double v) {
@@ -165,24 +164,20 @@ void SvgppContext::set(svgpp::tag::attribute::ry, const double v) {
   m_svgAnalyzer->set_ry(v);
 }
 
-void SvgppContext::set(svgpp::tag::attribute::x1 a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::x1, const double) {
+  throw std::runtime_error{"the 'x1' attribute is not yet implemented"};
 }
 
-void SvgppContext::set(svgpp::tag::attribute::y1 a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::y1, const double) {
+  throw std::runtime_error{"the 'y1' attribute is not yet implemented"};
 }
 
-void SvgppContext::set(svgpp::tag::attribute::x2 a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::x2, const double) {
+  throw std::runtime_error{"the 'x2' attribute is not yet implemented"};
 }
 
-void SvgppContext::set(svgpp::tag::attribute::y2 a, const double v) {
-  (void)a;
-  (void)v;
+void SvgppContext::set(svgpp::tag::attribute::y2, const double) {
+  throw std::runtime_error{"the 'y2' attribute is not yet implemented"};
 }
 
 void SvgppContext::set(svgpp::tag::attribute::x, const double v) {
