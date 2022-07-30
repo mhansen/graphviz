@@ -27,18 +27,6 @@ static void gasp_print_polyline(Ppolyline_t * route);
 static void gasp_print_bezier(Ppolyline_t * route);
 #endif
 
-static void *mymalloc(size_t newsize)
-{
-    void *rv;
-
-    if (newsize > 0)
-	rv = malloc(newsize);
-    else
-	rv = NULL;
-    return rv;
-}
-
-
 vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
 {
     vconfig_t *rv;
@@ -54,10 +42,10 @@ vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
     n = 0;
     for (poly_i = 0; poly_i < n_obs; poly_i++)
 	n += obs[poly_i]->pn;
-    rv->P = mymalloc(n * sizeof(Ppoint_t));
-    rv->start = mymalloc((n_obs + 1) * sizeof(int));
-    rv->next = mymalloc(n * sizeof(int));
-    rv->prev = mymalloc(n * sizeof(int));
+    rv->P = malloc(n * sizeof(Ppoint_t));
+    rv->start = malloc((n_obs + 1) * sizeof(int));
+    rv->next = malloc(n * sizeof(int));
+    rv->prev = malloc(n * sizeof(int));
     rv->N = n;
     rv->Npoly = n_obs;
 
