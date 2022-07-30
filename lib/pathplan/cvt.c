@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cgraph/alloc.h>
 #include <cgraph/likely.h>
 #include <limits.h>
 #include <pathplan/vis.h>
@@ -128,7 +129,7 @@ int Pobspath(vconfig_t * config, Ppoint_t p0, int poly0, Ppoint_t p1,
     for (i = dad[config->N]; i != config->N + 1; i = dad[i])
 	opn++;
     opn++;
-    ops = malloc(opn * sizeof(Ppoint_t));
+    ops = gv_calloc(opn, sizeof(Ppoint_t));
 
     size_t j = opn - 1;
     ops[j--] = p1;
