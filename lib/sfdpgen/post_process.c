@@ -361,13 +361,6 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
 	    w[nz] = -1/(dist*dist);
 	  }
 	  break;
-	case WEIGHTING_SCHEME_INV_DIST:
-	  if (dist*dist == 0){
-	    w[nz] = -100000;
-	  } else {
-	    w[nz] = -1/(dist);
-	  }
-	  break;
 	case WEIGHTING_SCHEME_NONE:
 	  w[nz] = -1;
 	  break;
