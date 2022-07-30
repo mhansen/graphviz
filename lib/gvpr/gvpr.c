@@ -211,7 +211,6 @@ static char *resolve(char *arg, int Verbose)
     char *cp;
     char c;
     char *fname = 0;
-    agxbuf fp;
     char *pathp = NULL;
     size_t sz;
 
@@ -233,7 +232,7 @@ static char *resolve(char *arg, int Verbose)
 	path = DFLT_GVPRPATH;
     if (Verbose)
 	fprintf (stderr, "PATH: %s\n", path);
-    agxbinit(&fp, 0, NULL);
+    agxbuf fp = {0};
 
     while (*path && !fname) {
 	if (*path == LISTSEP) {	/* skip colons */

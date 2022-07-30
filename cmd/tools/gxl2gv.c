@@ -151,12 +151,9 @@ static Dtdisc_t nameDisc = {
 
 static userdata_t *genUserdata(void)
 {
-    userdata_t *user = malloc(sizeof(userdata_t));
+    userdata_t *user = calloc(1, sizeof(userdata_t));
     if (user == NULL)
 	return NULL;
-    agxbinit(&(user->xml_attr_name), NAMEBUF, 0);
-    agxbinit(&(user->xml_attr_value), SMALLBUF, 0);
-    agxbinit(&(user->composite_buffer), SMALLBUF, 0);
     user->listen = FALSE;
     user->elements = (gv_stack_t){0};
     user->closedElementType = TAG_NONE;

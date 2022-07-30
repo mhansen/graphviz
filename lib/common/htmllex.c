@@ -760,7 +760,7 @@ int initHTMLlexer(char *src, agxbuf * xb, htmlenv_t *env)
 {
 #ifdef HAVE_EXPAT
     state.xb = xb;
-    agxbinit (&state.lb, SMALLBUF, NULL);
+    state.lb = (agxbuf){0};
     state.ptr = src;
     state.mode = 0;
     state.warn = 0;

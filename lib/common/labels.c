@@ -295,7 +295,6 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
     int isEdge = 0;
     textlabel_t *tl;
     port pt;
-    agxbuf buf;
 
     /* prepare substitution strings */
     switch (agobjkind(obj)) {
@@ -337,7 +336,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
     }
 
     /* allocate a dynamic buffer that we will use to construct the result */
-    agxbinit(&buf, 0, NULL);
+    agxbuf buf = {0};
 
     /* assemble new string */
     for (s = str; (c = *s++);) {

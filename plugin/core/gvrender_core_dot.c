@@ -252,10 +252,7 @@ static void xdot_style (GVJ_t *job)
  */
 static void put_escaping_backslashes(Agobj_t* n, Agsym_t *sym, const char *value)
 {
-    agxbuf buf;
-
-    /* create a temporary buffer */
-    agxbinit(&buf, 0, NULL);
+    agxbuf buf = {0};
 
     /* print the given string to the buffer, escaping as we go */
     for (; *value != '\0'; ++value) {
