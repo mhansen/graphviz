@@ -756,9 +756,7 @@ static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
  *
  * Otherwise, return p unchanged.
  */
-static Ppoint_t
-tweakEnd (Ppoly_t poly, int s, Ppolyline_t pl, Ppoint_t q)
-{
+static Ppoint_t tweakEnd (Ppoly_t poly, int s, Ppoint_t q) {
     Ppoint_t prv, nxt, p;
 
     p = poly.ps[s];
@@ -782,8 +780,8 @@ tweakEnd (Ppoly_t poly, int s, Ppolyline_t pl, Ppoint_t q)
 static void
 tweakPath (Ppoly_t poly, int s, int t, Ppolyline_t pl)
 {
-    pl.ps[0] = tweakEnd (poly, s, pl, pl.ps[1]);
-    pl.ps[pl.pn-1] = tweakEnd (poly, t, pl, pl.ps[pl.pn-2]);
+    pl.ps[0] = tweakEnd (poly, s, pl.ps[1]);
+    pl.ps[pl.pn-1] = tweakEnd (poly, t, pl.ps[pl.pn-2]);
 }
 
 
