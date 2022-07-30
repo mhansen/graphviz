@@ -8,9 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <cgraph/likely.h>
+#include <limits.h>
 #include <pathplan/vis.h>
 
 typedef Ppoint_t ilcoord_t;
@@ -31,7 +33,7 @@ static void gasp_print_bezier(Ppolyline_t * route);
 vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
 {
     vconfig_t *rv;
-    int poly_i, pt_i, i, n;
+    int poly_i, pt_i, i;
     int start, end;
 
     rv = malloc(sizeof(vconfig_t));
@@ -40,14 +42,20 @@ vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
     }
 
     /* get storage */
-    n = 0;
-    for (poly_i = 0; poly_i < n_obs; poly_i++)
-	n += obs[poly_i]->pn;
+    size_t n = 0;
+    for (poly_i = 0; poly_i < n_obs; poly_i++) {
+	assert(obs[poly_i]->pn >= 0);
+	n += (size_t)obs[poly_i]->pn;
+    }
+    if (n > INT_MAX) { // will this overflow rv->N?
+	free(rv);
+	return NULL;
+    }
     rv->P = malloc(n * sizeof(Ppoint_t));
     rv->start = malloc((n_obs + 1) * sizeof(int));
     rv->next = malloc(n * sizeof(int));
     rv->prev = malloc(n * sizeof(int));
-    rv->N = n;
+    rv->N = (int)n;
     rv->Npoly = n_obs;
 
     // bail out if any above allocations failed
