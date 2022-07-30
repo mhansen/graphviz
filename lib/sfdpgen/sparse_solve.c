@@ -26,7 +26,7 @@ struct uniform_stress_matmul_data{
 };
 
 static double *Operator_uniform_stress_matmul_apply(Operator o, double *x, double *y){
-  struct uniform_stress_matmul_data *d = (struct uniform_stress_matmul_data*) (o->data);
+  struct uniform_stress_matmul_data *d = o->data;
   SparseMatrix A = d->A;
   double alpha = d->alpha;
   double xsum = 0.;
@@ -58,7 +58,7 @@ Operator Operator_uniform_stress_matmul(SparseMatrix A, double alpha){
 
 
 static double *Operator_matmul_apply(Operator o, double *x, double *y){
-  SparseMatrix A = (SparseMatrix) o->data;
+  SparseMatrix A = o->data;
   SparseMatrix_multiply_vector(A, x, &y);
   return y;
 }
