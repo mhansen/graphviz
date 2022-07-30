@@ -52,7 +52,8 @@ vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
 	return NULL;
     }
     rv->P = malloc(n * sizeof(Ppoint_t));
-    rv->start = malloc((n_obs + 1) * sizeof(int));
+    assert(n_obs >= 0);
+    rv->start = malloc(((size_t)n_obs + 1) * sizeof(int));
     rv->next = malloc(n * sizeof(int));
     rv->prev = malloc(n * sizeof(int));
     rv->N = (int)n;
