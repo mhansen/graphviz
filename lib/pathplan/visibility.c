@@ -220,8 +220,7 @@ static bool clear(Ppoint_t pti, Ppoint_t ptj,
  * If two nodes can see each other, the matrix entry is the distance
  * between them.
  */
-static void compVis(vconfig_t * conf, int start)
-{
+static void compVis(vconfig_t * conf) {
     int V = conf->N;
     Ppoint_t *pts = conf->P;
     int *nextPt = conf->next;
@@ -230,7 +229,7 @@ static void compVis(vconfig_t * conf, int start)
     int j, i, previ;
     COORD d;
 
-    for (i = start; i < V; i++) {
+    for (i = 0; i < V; i++) {
 	/* add edge between i and previ.
 	 * Note that this works for the cases of polygons of 1 and 2
 	 * vertices, though needless work is done.
@@ -266,7 +265,7 @@ static void compVis(vconfig_t * conf, int start)
 void visibility(vconfig_t * conf)
 {
     conf->vis = allocArray(conf->N, 2);
-    compVis(conf, 0);
+    compVis(conf);
 }
 
 /* polyhit:
