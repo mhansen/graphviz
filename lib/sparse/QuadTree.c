@@ -661,7 +661,7 @@ void QuadTree_print(FILE *fp, QuadTree q){
 
 
 
-static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, double *min, int *imin, int tentative, int *flag){
+static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, double *min, int *imin, int tentative){
   /* get the narest point years to {x[0], ..., x[dim]} and store in y.*/
   SingleLinkedList l;
   double *coord, dist;
@@ -669,7 +669,6 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, dou
   double qmin;
   double *point = x;
 
-  *flag = 0;
   if (!qt) return;
   dim = qt->dim;
   l = qt->l;
@@ -702,10 +701,10 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, dou
 	  }
 	}
 	assert(iq >= 0);
-	QuadTree_get_nearest_internal(qt->qts[iq], x, y, min, imin, tentative, flag);
+	QuadTree_get_nearest_internal(qt->qts[iq], x, y, min, imin, tentative);
       } else {
 	for (i = 0; i < 1<<dim; i++){
-	  QuadTree_get_nearest_internal(qt->qts[i], x, y, min, imin, tentative, flag);
+	  QuadTree_get_nearest_internal(qt->qts[i], x, y, min, imin, tentative);
 	}
       }
     }
@@ -719,9 +718,6 @@ void QuadTree_get_nearest(QuadTree qt, double *x, double *ymin, int *imin, doubl
   *flag = 0;
   *min = -1;
 
-  QuadTree_get_nearest_internal(qt, x, ymin, min, imin, TRUE, flag);
-
-  QuadTree_get_nearest_internal(qt, x, ymin, min, imin, FALSE, flag);
-
-
+  QuadTree_get_nearest_internal(qt, x, ymin, min, imin, TRUE);
+  QuadTree_get_nearest_internal(qt, x, ymin, min, imin, FALSE);
 }
