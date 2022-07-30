@@ -51,11 +51,11 @@ vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
 	free(rv);
 	return NULL;
     }
-    rv->P = malloc(n * sizeof(Ppoint_t));
+    rv->P = calloc(n, sizeof(Ppoint_t));
     assert(n_obs >= 0);
-    rv->start = malloc(((size_t)n_obs + 1) * sizeof(int));
-    rv->next = malloc(n * sizeof(int));
-    rv->prev = malloc(n * sizeof(int));
+    rv->start = calloc((size_t)n_obs + 1, sizeof(int));
+    rv->next = calloc(n, sizeof(int));
+    rv->prev = calloc(n, sizeof(int));
     rv->N = (int)n;
     rv->Npoly = n_obs;
 
