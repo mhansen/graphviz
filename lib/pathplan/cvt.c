@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <cgraph/likely.h>
 #include <pathplan/vis.h>
 
 typedef Ppoint_t ilcoord_t;
@@ -48,6 +49,18 @@ vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
     rv->prev = malloc(n * sizeof(int));
     rv->N = n;
     rv->Npoly = n_obs;
+
+    // bail out if any above allocations failed
+    if (UNLIKELY(rv->start == NULL || (n > 0 && (rv->P == NULL ||
+                                                 rv->next == NULL ||
+                                                 rv->prev == NULL)))) {
+	free(rv->prev);
+	free(rv->next);
+	free(rv->start);
+	free(rv->P);
+	free(rv);
+	return NULL;
+    }
 
     /* build arrays */
     i = 0;
