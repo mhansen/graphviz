@@ -76,7 +76,7 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
   char *nbuf;       // new buffer
 
   size = (size_t)(xb->eptr - xb->buf);
-  nsize = 2 * size;
+  nsize = size == 0 ? BUFSIZ : (2 * size);
   if (size + ssz > nsize)
     nsize = size + ssz;
   cnt = (size_t)(xb->ptr - xb->buf);
