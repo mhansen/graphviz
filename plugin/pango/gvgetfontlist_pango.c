@@ -243,8 +243,6 @@ typedef struct {
     int faces;
 } availfont_t;
 
-#define NEW(t)          malloc(sizeof(t))
-
 static PostscriptAlias postscript_alias[] = {
 #include "ps_font_equiv.h"
 };
