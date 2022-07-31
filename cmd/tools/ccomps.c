@@ -29,8 +29,6 @@
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
 
-#define N_NEW(n,t) gv_calloc((n), sizeof(t))
-
 typedef struct {
     Agrec_t h;
     char cc_subg;   /* true iff subgraph corresponds to a component */
@@ -497,7 +495,7 @@ static int cmp(Agraph_t** p0, Agraph_t** p1)
 static void
 printSorted (Agraph_t* root, int c_cnt)
 {
-    Agraph_t** ccs = N_NEW(c_cnt, Agraph_t*);
+    Agraph_t** ccs = gv_calloc(c_cnt, sizeof(Agraph_t*));
     Agraph_t* subg;
     int i = 0, endi;
 
