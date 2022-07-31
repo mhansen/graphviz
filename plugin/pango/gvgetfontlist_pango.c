@@ -243,7 +243,6 @@ typedef struct {
 } availfont_t;
 
 #define NEW(t)          malloc(sizeof(t))
-#define N_NEW(n,t)      calloc((n),sizeof(t))
 
 static PostscriptAlias postscript_alias[] = {
 #include "ps_font_equiv.h"
@@ -498,7 +497,7 @@ gv_font_map* get_font_mapping(PangoFontMap * fontmap)
     availfont_t *gv_af_p;
     static const size_t ps_fontnames_sz =
       sizeof(postscript_alias) / sizeof(PostscriptAlias);
-    gv_font_map* gv_fmap = N_NEW(ps_fontnames_sz, gv_font_map);
+    gv_font_map* gv_fmap = gv_calloc(ps_fontnames_sz, sizeof(gv_font_map));
     agxbuf xb;
     agxbuf xb2;
     char buf[BUFSIZ];
