@@ -16,6 +16,7 @@
 #include <ctype.h>
 #include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/strview.h>
 
 /* FIXME - the following declaration should be removed
  * when configure is coordinated with flags passed to the
@@ -332,7 +333,6 @@ static availfont_t *gv_get_ps_fontlist(PangoFontMap * fontmap)
     int i, k, array_sz, availfaces = 0;
     availfont_t *gv_af_p, *gv_afs;
     const char *name;
-    char *family_name;
 
     /* Get a list of font families installed on the system */
     pango_font_map_list_families(fontmap, &families, &n_families);
@@ -346,7 +346,7 @@ static availfont_t *gv_get_ps_fontlist(PangoFontMap * fontmap)
 	gv_afs = gv_af_p+j;
 	gv_ps_fontdef = gv_ps_fontdefs+j;
 	gv_afs->gv_ps_fontname = gv_ps_fontdef->fontname;
-	family_name = NULL;
+	strview_t family_name = {0};
 	/* Search the installed system font families for the current
 	   Graphvis PS font family name, i.e. AvantGarde */
 	for (i = 0; i < n_families; i++) {
@@ -354,38 +354,38 @@ static availfont_t *gv_get_ps_fontlist(PangoFontMap * fontmap)
 	    name = pango_font_family_get_name(family);
 	    /* if a match is found get the installed font faces */
 	    if (strcasecmp(gv_ps_fontdef->fontname, name) == 0) {
-		family_name = strdup(name);
+		family_name = strview(name, '\0');
 		availfaces = get_faces(family);
 	    }
-	    if (family_name)
+	    if (family_name.data != NULL)
 		break;
 	}
 	/* if a match is not found on the primary Graphviz font family,
 	   search for a match on the equivalent font family names */
-	if (!family_name) {
+	if (family_name.data == NULL) {
 	    array_sz = gv_ps_fontdef->eq_sz;
 	    for (k = 0; k < array_sz; k++) {
 		for (i = 0; i < n_families; i++) {
 		    family = families[i];
 		    name = pango_font_family_get_name(family);
 		    if (strcasecmp(gv_ps_fontdef->equiv[k], name) == 0) {
-			family_name = strdup(name);
+			family_name = strview(name, '\0');
 			availfaces = get_faces(family);
 			break;
 		    }
 		}
-		if (family_name)
+		if (family_name.data != NULL)
 		    break;
 	    }
 	}
 	/* if a match is not found on the equivalent font family names, search
 	   for a match on the generic family name assigned to the Graphviz PS font */
-	if (!family_name) {
+	if (family_name.data == NULL) {
 	    for (i = 0; i < n_families; i++) {
 		family = families[i];
 		name = pango_font_family_get_name(family);
 		if (strcasecmp(gv_ps_fontdef->generic_name, name) == 0) {
-		    family_name = strdup(name);
+		    family_name = strview(name, '\0');
 		    availfaces = get_faces(family);
 		    break;
 		}
@@ -393,13 +393,12 @@ static availfont_t *gv_get_ps_fontlist(PangoFontMap * fontmap)
 	}
 	/* if not match is found on the generic name, set the available font
 	   name to NULL */
-	if (family_name && availfaces) {
-	    gv_afs->fontname = family_name;
+	if (family_name.data != NULL && availfaces) {
+	    gv_afs->fontname = strview_str(family_name);
 	    gv_afs->faces = availfaces;
 	} else {
 	    gv_afs->fontname = NULL;
 	    gv_afs->faces = 0;
-	    free(family_name);
 	}
     }
     g_free(families);
