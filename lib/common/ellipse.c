@@ -57,8 +57,6 @@
 #define MAX(a,b)        ((a)>(b)?(a):(b))
 #define MIN(a,b)        ((a)<(b)?(a):(b))
 
-#define NEW(t) calloc(1,sizeof(t))
-
 #define PI            3.14159265358979323846
 
 typedef struct {
@@ -460,7 +458,7 @@ static Ppolyline_t *genEllipticPath(ellipse_t * ep) {
     double yBDot;
     double t;
     double alpha;
-    Ppolyline_t *polypath = NEW(Ppolyline_t);
+    Ppolyline_t *polypath = gv_alloc(sizeof(Ppolyline_t));
 
     static const double THRESHOLD = 0.00001; // quality of approximation
     static const int DEGREE = 3;
