@@ -289,8 +289,6 @@ constructSierpinski(int v1, int v2, int v3, int depth, vtx_data* graph)
 
 }
 
-#define NEW(t)           calloc((1),sizeof(t))
-
 void makeSierpinski(int depth, edgefn ef)
 {
     vtx_data* graph;
@@ -743,7 +741,7 @@ struct treegen_s {
 treegen_t* 
 makeTreeGen (int N)
 {
-    treegen_t* tg = NEW(treegen_t);
+    treegen_t* tg = gv_alloc(sizeof(treegen_t));
 
     tg->N = N;
     tg->T = genCnt(N);
