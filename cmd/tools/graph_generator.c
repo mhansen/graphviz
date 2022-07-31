@@ -386,8 +386,8 @@ void makeTetrix(int depth, edgefn ef)
     depth--;
     n = 4 + 2 * (((int) (pow(4.0, (double) depth) + 0.5) - 1));
 
-    graph = N_NEW(n + 1, vtx_data);
-    edges = N_NEW(6 * n, int);
+    graph = gv_calloc(n + 1, sizeof(vtx_data));
+    edges = gv_calloc(6 * n, sizeof(int));
 
     for (i = 1; i <= n; i++) {
         graph[i].edges = edges;
