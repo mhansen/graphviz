@@ -547,10 +547,10 @@ typedef struct {
 static tree_t*
 mkTree (int sz)
 {
-    tree_t* tp = NEW(tree_t);
+    tree_t* tp = gv_alloc(sizeof(tree_t));
     tp->root = 0;
     tp->top = 0;
-    tp->p = N_NEW(sz,int);
+    tp->p = gv_calloc(sz, sizeof(int));
     return tp;
 }
 
