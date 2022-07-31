@@ -290,7 +290,6 @@ constructSierpinski(int v1, int v2, int v3, int depth, vtx_data* graph)
 }
 
 #define NEW(t)           calloc((1),sizeof(t))
-#define N_NEW(n,t)       calloc((n),sizeof(t))
 
 void makeSierpinski(int depth, edgefn ef)
 {
@@ -648,7 +647,7 @@ static pair pop(gv_stack_t *sp) {
 static int*
 genCnt(int NN)
 {
-    int* T = N_NEW(NN+1,int);
+    int* T = gv_calloc(NN + 1, sizeof(int));
     int D, I, J, TD;
     int SUM;
     int NLAST = 1;
