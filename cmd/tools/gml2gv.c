@@ -13,11 +13,9 @@
 #include <string.h>
 
 #include <getopt.h>
-
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/unreachable.h>
-
-#define N_NEW(n,t)       calloc((n),sizeof(t))
 
 static int Verbose;
 static char* gname = "";
@@ -144,7 +142,7 @@ nameOf (char* name, int cnt)
 	return name;
     if (cnt) {
 	if (!buf)
-	    buf = N_NEW (strlen(name)+32,char);  /* 32 to handle any integer plus null byte */
+	    buf = gv_calloc(strlen(name) + 32, sizeof(char)); // 32 to handle any integer plus null byte
 	sprintf (buf, "%s%d", name, cnt);
 	return buf;
     }
