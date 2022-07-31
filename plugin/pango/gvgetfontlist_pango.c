@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
 
 /* FIXME - the following declaration should be removed
@@ -338,7 +339,7 @@ static availfont_t *gv_get_ps_fontlist(PangoFontMap * fontmap)
     pango_font_map_list_families(fontmap, &families, &n_families);
 
     /* Setup a pointer to available font structs */
-    gv_af_p = N_NEW(GV_FONT_LIST_SIZE, availfont_t);
+    gv_af_p = gv_calloc(GV_FONT_LIST_SIZE, sizeof(availfont_t));
 
     for (size_t j = 0; j < GV_FONT_LIST_SIZE; j++) {
 	/* get the Graphviz PS font information and create the
