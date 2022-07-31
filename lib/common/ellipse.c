@@ -46,6 +46,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <cgraph/alloc.h>
 #include <stdbool.h>
 #ifdef STANDALONE
 #include <limits.h>
@@ -57,7 +58,6 @@
 #define MIN(a,b)        ((a)<(b)?(a):(b))
 
 #define NEW(t) calloc(1,sizeof(t))
-#define N_NEW(n,t) calloc(n,sizeof(t))
 
 #define PI            3.14159265358979323846
 
@@ -403,7 +403,7 @@ static int bufsize;
 static void moveTo(Ppolyline_t *polypath, double x, double y)
 {
     bufsize = 100;
-    polypath->ps = N_NEW(bufsize, pointf);
+    polypath->ps = gv_calloc(bufsize, sizeof(pointf));
     polypath->ps[0].x = x;
     polypath->ps[0].y = y;
     polypath->pn = 1;
