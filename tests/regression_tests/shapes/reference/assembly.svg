@@ -14,8 +14,8 @@
 <title>a</title>
 <polygon fill="none" stroke="black" points="15,-19.5 39,-19.5 39,-25.5 15,-25.5 15,-19.5"/>
 <polygon fill="none" stroke="black" points="15,-10.5 39,-10.5 39,-16.5 15,-16.5 15,-10.5"/>
-<polyline fill="none" stroke="black" points="39,-18 54,-18 "/>
-<polyline fill="none" stroke="black" points="0,-18 15,-18 "/>
+<polyline fill="none" stroke="black" points="39,-18 54,-18"/>
+<polyline fill="none" stroke="black" points="0,-18 15,-18"/>
 </g>
 </g>
 </svg>
