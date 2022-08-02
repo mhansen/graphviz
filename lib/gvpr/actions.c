@@ -18,12 +18,14 @@
 #include <ast/ast.h>
 #include <gvpr/compile.h>
 #include <ast/sfstr.h>
+#include <limits.h>
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/unreachable.h>
 
 #define KINDS(p) ((AGTYPE(p) == AGRAPH) ? "graph" : (AGTYPE(p) == AGNODE) ? "node" : "edge")
 
@@ -63,15 +65,17 @@ int indexOf(char *s1, char *s2)
 /* rindexOf:
  * Return index of rightmost string s2 in string s1, or -1
  */
-int rindexOf(char *s1, char *s2)
+long rindexOf(char *s1, char *s2)
 {
     char c1 = *s2;
     char *p;
     size_t len1 = strlen(s1);
     size_t len2 = strlen(s2);
 
-    if (c1 == '\0')
-	return (len1);
+    if (c1 == '\0') {
+	assert(len1 <= LONG_MAX);
+	return (long)len1;
+    }
     if (len2 > len1)
 	return -1;
     p = s1 + (len1 - len2);
@@ -197,6 +201,8 @@ Agobj_t *copy(Agraph_t * g, Agobj_t * obj)
 	name = agnameof (AGMKOUT(e));
 	nobj = (Agobj_t *) openEdge(g, t, h, name);
 	break;
+    default:
+	UNREACHABLE();
     }
     if (nobj)
 	copyAttr(obj, nobj);
@@ -275,6 +281,9 @@ static Agraph_t *cloneSubg(Agraph_t * tgt, Agraph_t * g, Dt_t* emap)
 
 static int cmppair(Dt_t * d, Agedge_t** key1, Agedge_t** key2, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     if (*key1 > *key2) return 1;
     else if (*key1 < *key2) return -1;
     else return 0;
@@ -404,6 +413,8 @@ Agobj_t *cloneO(Agraph_t * g, Agobj_t * obj)
 	if (nobj)
 	    copyAttr(obj, nobj);
 	break;
+    default:
+	UNREACHABLE();
     }
 
     return nobj;
@@ -632,7 +643,8 @@ int fwriteFile(Expr_t * ex, Agraph_t * g, int fd, Agiodisc_t* io)
 {
     Sfio_t *sp;
 
-    if (fd < 0 || fd >= elementsof(ex->file)
+    if (fd < 0 ||
+        (elementsof(ex->file) <= INT_MAX && fd >= (int)elementsof(ex->file))
 	|| !((sp = ex->file[fd]))) {
 	exerror("fwriteG: %d: invalid descriptor", fd);
 	return 0;
@@ -644,7 +656,8 @@ Agraph_t *freadFile(Expr_t * ex, int fd)
 {
     Sfio_t *sp;
 
-    if (fd < 0 || fd >= elementsof(ex->file)
+    if (fd < 0 ||
+        (elementsof(ex->file) <= INT_MAX && fd >= (int)elementsof(ex->file))
 	|| !((sp = ex->file[fd]))) {
 	exerror("freadG: %d: invalid descriptor", fd);
 	return 0;
@@ -706,9 +719,9 @@ char *readLine(Expr_t * ex, int fd)
     }
     agxbinit(&tmps, 0, NULL);
     while ((c = sfgetc(sp)) > 0 && c != '\n')
-	agxbputc(&tmps, c);
+	agxbputc(&tmps, (char)c);
     if (c == '\n')
-	agxbputc(&tmps, c);
+	agxbputc(&tmps, (char)c);
     line = exstring(ex, agxbuse(&tmps));
     agxbfree(&tmps);
     return line;
@@ -909,29 +922,27 @@ static int colorcmpf(const void *p0, const void *p1)
 
 static char *canontoken(char *str)
 {
-    static unsigned char *canon;
+    static char *canon;
     static size_t allocated;
-    unsigned char c, *p, *q;
+    char c, *p, *q;
     size_t len;
 
-    p = (unsigned char *) str;
+    p = str;
     len = strlen(str);
     if (len >= allocated) {
 	allocated = len + 1 + 10;
-	canon = newof(canon, unsigned char, allocated, 0);
+	canon = newof(canon, char, allocated, 0);
 	if (!canon)
 	    return NULL;
     }
     q = canon;
     while ((c = *p++)) {
-	/* if (isalnum(c) == FALSE) */
-	    /* continue; */
-	if (isupper(c))
-	    c = tolower(c);
+	if (isupper((int)c))
+	    c = (char)tolower((int)c);
 	*q++ = c;
     }
     *q = '\0';
-    return (char*)canon;
+    return canon;
 }
 
 /* fullColor:
