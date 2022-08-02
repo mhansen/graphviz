@@ -56,10 +56,6 @@ void SvgppContext::on_enter_element(svgpp::tag::element::title e) {
   m_svgAnalyzer->on_enter_element_title();
 }
 
-void SvgppContext::on_enter_element(svgpp::tag::element::any) {
-  m_svgAnalyzer->on_enter_element_unknown();
-}
-
 void SvgppContext::on_exit_element() {}
 
 void SvgppContext::path_move_to(double x, double y,

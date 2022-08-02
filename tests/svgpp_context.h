@@ -31,7 +31,6 @@ public:
   void on_enter_element(svgpp::tag::element::polyline e);
   void on_enter_element(svgpp::tag::element::rect e);
   void on_enter_element(svgpp::tag::element::title e);
-  void on_enter_element(svgpp::tag::element::any e);
   void on_exit_element();
   void path_move_to(double x, double y, svgpp::tag::coordinate::absolute);
   void path_line_to(double x, double y, svgpp::tag::coordinate::absolute);

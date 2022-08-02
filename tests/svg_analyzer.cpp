@@ -26,5 +26,3 @@ void SVGAnalyzer::on_enter_element_polyline() { m_num_polylines++; }
 void SVGAnalyzer::on_enter_element_rect() { m_num_rects++; }
 
 void SVGAnalyzer::on_enter_element_title() { m_num_titles++; }
-
-void SVGAnalyzer::on_enter_element_unknown() { m_num_unknowns++; }

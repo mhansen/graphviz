@@ -78,7 +78,6 @@ TEST_CASE("subgraphs in directed and undirected graphs with different layout "
   CHECK(svg_analyzer.num_polylines() == 0);
   CHECK(svg_analyzer.num_rects() == 0);
   CHECK(svg_analyzer.num_titles() == num_titles);
-  CHECK(svg_analyzer.num_unknowns() == 0);
 
   gvFreeRenderData(result);
   gvFreeLayout(gvc, g);

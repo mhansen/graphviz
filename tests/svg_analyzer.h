@@ -21,7 +21,6 @@ public:
   void on_enter_element_polyline() override;
   void on_enter_element_rect() override;
   void on_enter_element_title() override;
-  void on_enter_element_unknown() override;
   std::size_t num_svgs() const { return m_num_svgs; };
   std::size_t num_groups() const { return m_num_groups; };
   std::size_t num_circles() const { return m_num_circles; };
@@ -32,7 +31,6 @@ public:
   std::size_t num_polylines() const { return m_num_polylines; };
   std::size_t num_rects() const { return m_num_rects; };
   std::size_t num_titles() const { return m_num_titles; };
-  std::size_t num_unknowns() const { return m_num_unknowns; };
 
 private:
   std::size_t m_num_svgs = 1; // the top level svg is implicit. See
@@ -46,5 +44,4 @@ private:
   std::size_t m_num_polylines = 0;
   std::size_t m_num_rects = 0;
   std::size_t m_num_titles = 0;
-  std::size_t m_num_unknowns = 0;
 };
