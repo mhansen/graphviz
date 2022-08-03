@@ -240,7 +240,7 @@ static int endString(Sfio_t * ins, agxbuf * outs, char ec)
 
     while ((c = sfgetc(ins)) != ec) {
 	if (c == '\\') {
-	    agxbputc(outs, c);
+	    agxbputc(outs, (char)c);
 	    c = sfgetc(ins);
 	}
 	if (c < 0) {
