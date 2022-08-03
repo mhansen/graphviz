@@ -165,23 +165,21 @@ static int skipWS(Sfio_t * str)
  */
 static void parseID(Sfio_t * str, int c, char *buf, size_t bsize)
 {
-    bool more = true;
     char *ptr = buf;
     char *eptr = buf + (bsize - 1);
 
     *ptr++ = c;
-    while (more) {
+    while (true) {
 	c = readc(str, 0);
 	if (c < 0)
-	    more = false;
+	    break;
 	if (isalpha(c) || c == '_') {
 	    if (ptr == eptr)
-		more = false;
-	    else
-		*ptr++ = c;
+		break;
+	    *ptr++ = c;
 	} else {
-	    more = false;
 	    unreadc(str, c);
+	    break;
 	}
     }
     *ptr = '\0';
