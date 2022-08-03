@@ -17,10 +17,11 @@
 #include <gvpr/gprstate.h>
 #include <ast/error.h>
 #include <ast/sfstr.h>
+#include <stdbool.h>
 
 static int name_used;
 
-int validTVT(long long c) {
+bool validTVT(long long c) {
     return ((TV_flat <= c) && (c <= TV_prepostrev));
 }
 
