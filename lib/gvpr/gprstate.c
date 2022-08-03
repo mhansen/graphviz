@@ -20,8 +20,7 @@
 
 static int name_used;
 
-int validTVT(int c)
-{
+int validTVT(long long c) {
     return ((TV_flat <= c) && (c <= TV_prepostrev));
 }
 

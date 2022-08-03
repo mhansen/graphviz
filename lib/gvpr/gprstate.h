@@ -76,7 +76,7 @@ extern "C" {
     extern gvprbinding* findBinding(Gpr_t* state, char*);
     extern void closeGPRState(Gpr_t* state);
     extern void initGPRState(Gpr_t *, Vmalloc_t *);
-    extern int validTVT(int);
+    extern int validTVT(long long);
 
 #ifdef __cplusplus
 }
