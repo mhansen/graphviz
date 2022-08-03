@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief @ref point containers @ref PointSet and @ref PointMap
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -17,8 +22,8 @@
 extern "C" {
 #endif
 
-    typedef Dict_t PointSet;
-    typedef Dict_t PointMap;
+    typedef Dict_t PointSet; ///< set of @ref point. Created by @ref newPS
+    typedef Dict_t PointMap; ///< map of @ref point. Created by @ref newPM
 
 #ifdef GVDLL
 #ifdef GVC_EXPORTS
@@ -28,23 +33,25 @@ extern "C" {
 #endif
 #endif
 
+/// @cond
 #ifndef POINTSET_API
 #define POINTSET_API /* nothing */
 #endif
+/// @endcond
 
 	POINTSET_API PointSet *newPS(void);
     POINTSET_API void freePS(PointSet *);
     POINTSET_API void insertPS(PointSet *, point);
-    POINTSET_API void addPS(PointSet *, int, int);
+    POINTSET_API void addPS(PointSet *, int x, int y);
     POINTSET_API int inPS(PointSet *, point);
-    POINTSET_API int isInPS(PointSet *, int, int);
+    POINTSET_API int isInPS(PointSet *, int x, int y);
     POINTSET_API int sizeOf(PointSet *);
     POINTSET_API point *pointsOf(PointSet *);
 
     POINTSET_API PointMap *newPM(void);
     POINTSET_API void clearPM(PointMap *);
     POINTSET_API void freePM(PointMap *);
-    POINTSET_API int insertPM(PointMap *, int, int, int);
+    POINTSET_API int insertPM(PointMap *, int x, int y, int value);
 
 #undef POINTSET_API
 #ifdef __cplusplus
