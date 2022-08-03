@@ -2029,9 +2029,7 @@ strToTvtype (char* s)
 
 /* tvtypeToStr:
  */
-static char*
-tvtypeToStr (int v)
-{
+static char *tvtypeToStr(long long v) {
     char* s = 0;
 
     switch (v) {
@@ -2075,8 +2073,7 @@ tvtypeToStr (int v)
 	s = "TV_prepostrev";
 	break;
     default:
-	exerror("Unexpected value %d for type tvtype_t",
-	    v);
+	exerror("Unexpected value %lld for type tvtype_t", v);
 	break;
     }
     return s;
