@@ -22,7 +22,7 @@
 static int name_used;
 
 bool validTVT(long long c) {
-    return ((TV_flat <= c) && (c <= TV_prepostrev));
+  return TV_flat <= c && c <= TV_prepostrev;
 }
 
 void initGPRState(Gpr_t * state, Vmalloc_t * vm)
