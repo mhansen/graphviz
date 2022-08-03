@@ -95,7 +95,7 @@ static int readc(Sfio_t * str, agxbuf * ostr)
 		case '\n':
 		    lineno++;
 		    if (ostr)
-			agxbputc(ostr, c);
+			agxbputc(ostr, (char)c);
 		    break;
 		case '*':
 		    switch (cc = sfgetc(str)) {
@@ -105,7 +105,7 @@ static int readc(Sfio_t * str, agxbuf * ostr)
 		    case '\n':
 			lineno++;
 			if (ostr)
-			    agxbputc(ostr, cc);
+			    agxbputc(ostr, (char)cc);
 			break;
 		    case '*':
 			sfungetc(str, cc);
