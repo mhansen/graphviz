@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief function @ref partition, subroutine of @ref mkMaze
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -12,4 +17,12 @@
 
 #include <ortho/maze.h>
 
-extern boxf* partition (cell*, int, int*, boxf);
+/**
+ * @brief partitions space around cells (nodes) into rectangular tiles
+ * @param[in] cells rectangular borders of user's input graph's nodes
+ * @param[in] bb range of the space to partition
+ * @param[out] nrects number of tiles
+ * @returns array of the tiles
+ */
+
+boxf* partition(cell* cells, int ncells, int* nrects, boxf bb);
