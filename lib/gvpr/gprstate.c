@@ -18,6 +18,7 @@
 #include <ast/error.h>
 #include <ast/sfstr.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 static int name_used;
 
@@ -95,7 +96,7 @@ findBinding (Gpr_t* state, char* fname)
  */
 void addBindings (Gpr_t* state, gvprbinding* bindings)
 {
-    int n = 0;
+    size_t n = 0;
     gvprbinding* bp = bindings;
     gvprbinding* buf;
     gvprbinding* bufp;

@@ -18,6 +18,7 @@ extern "C" {
 #include "cgraph.h"
 #include <ast/ast.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <vmalloc/vmalloc.h>
 #include <expr/expr.h>
 #include "gvpr.h"
@@ -60,7 +61,7 @@ extern "C" {
 	char **argv;
 	int flags;
 	gvprbinding* bindings;
-	int n_bindings;
+	size_t n_bindings;
     } Gpr_t;
 
     typedef struct {
