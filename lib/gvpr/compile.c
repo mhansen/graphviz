@@ -1602,7 +1602,6 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
     Gpr_t *state;
     Agobj_t *objp;
     Agnode_t *np;
-    int iv;
     int rv = 0;
 
     state = env;
@@ -1618,14 +1617,15 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
 	case V_outgraph:
 	    state->outgraph = int2ptr(v.integer);
 	    break;
-	case V_travtype:
-	    iv = v.integer;
+	case V_travtype: {
+	    long long iv = v.integer;
 	    if (validTVT(v.integer))
 		state->tvt = (trav_type) iv;
 	    else
-		error(1, "unexpected value %d assigned to %s : ignored",
+		error(1, "unexpected value %lld assigned to %s : ignored",
 		      iv, typeName(pgm, T_tvtyp));
 	    break;
+	}
 	case V_travroot:
 	    np = int2ptr(v.integer);
 	    if (!np || agroot(np) == state->curgraph)
