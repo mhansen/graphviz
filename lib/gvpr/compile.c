@@ -1897,37 +1897,37 @@ binary(Expr_t * pg, Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg,
 	case EQ:
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li == ri);
+	    l->data.constant.value.integer = li == ri;
 	    ret = 0;
 	    break;
 	case NE:
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li != ri);
+	    l->data.constant.value.integer = li != ri;
 	    ret = 0;
 	    break;
 	case '<':
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li < ri);
+	    l->data.constant.value.integer = li < ri;
 	    ret = 0;
 	    break;
 	case LE:
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li <= ri);
+	    l->data.constant.value.integer = li <= ri;
 	    ret = 0;
 	    break;
 	case GE:
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li >= ri);
+	    l->data.constant.value.integer = li >= ri;
 	    ret = 0;
 	    break;
 	case '>':
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li > ri);
+	    l->data.constant.value.integer = li > ri;
 	    ret = 0;
 	    break;
 	}
@@ -1958,25 +1958,25 @@ binary(Expr_t * pg, Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg,
     case '<':
 	if (arg)
 	    return 0;
-	l->data.constant.value.integer = (compare(lobjp, robjp) < 0);
+	l->data.constant.value.integer = compare(lobjp, robjp) < 0;
 	ret = 0;
 	break;
     case LE:
 	if (arg)
 	    return 0;
-	l->data.constant.value.integer = (compare(lobjp, robjp) <= 0);
+	l->data.constant.value.integer = compare(lobjp, robjp) <= 0;
 	ret = 0;
 	break;
     case GE:
 	if (arg)
 	    return 0;
-	l->data.constant.value.integer = (compare(lobjp, robjp) >= 0);
+	l->data.constant.value.integer = compare(lobjp, robjp) >= 0;
 	ret = 0;
 	break;
     case '>':
 	if (arg)
 	    return 0;
-	l->data.constant.value.integer = (compare(lobjp, robjp) > 0);
+	l->data.constant.value.integer = compare(lobjp, robjp) > 0;
 	ret = 0;
 	break;
     }
