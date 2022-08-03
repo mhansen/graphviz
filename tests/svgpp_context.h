@@ -70,6 +70,5 @@ private:
   void set_impl(svgpp::tag::attribute::points &points, const std::any &range);
   void set_text_impl(const std::any &range);
 
-private:
   ISVGAnalyzer *m_svgAnalyzer = nullptr;
 };
