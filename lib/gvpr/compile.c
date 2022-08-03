@@ -1885,15 +1885,14 @@ binary(Expr_t * pg, Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg,
 	return -1;
 
     if (l->type == T_tvtyp) {
-	int li, ri;
 
 	if (!r)
 	    return -1;		/* Assume libexpr handled unary */
 	if (r->type != T_tvtyp)
 	    return -1;
 
-	li = l->data.constant.value.integer;
-	ri = r->data.constant.value.integer;
+	long long li = l->data.constant.value.integer;
+	long long ri = r->data.constant.value.integer;
 	switch (ex->op) {
 	case EQ:
 	    if (arg)
