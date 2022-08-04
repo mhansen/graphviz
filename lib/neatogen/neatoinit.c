@@ -1232,7 +1232,7 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
 	    fprintf (stderr, "\n");
 	    dumpOpts (&opt, nv);
 #endif
-            rv = stress_majorization_cola(gp, nv, ne, coords, nodes, Ndim, model, MaxIter, &opt);
+            rv = stress_majorization_cola(gp, nv, coords, nodes, Ndim, model, MaxIter, &opt);
 	    freeClusterData(cs);
 	    free (nsize);
         }

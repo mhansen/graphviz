@@ -75,9 +75,9 @@ typedef  StressMajorizationSmoother SparseStressMajorizationSmoother;
 
 void SparseStressMajorizationSmoother_delete(SparseStressMajorizationSmoother sm);
 
-enum {WEIGHTING_SCHEME_NONE, WEIGHTING_SCHEME_INV_DIST, WEIGHTING_SCHEME_SQR_DIST};
+enum {WEIGHTING_SCHEME_NONE, WEIGHTING_SCHEME_SQR_DIST};
 SparseStressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double lambda, double *x, 
-								      int weighting_scheme, int scale_initial_coord);
+								      int weighting_scheme);
 
 double SparseStressMajorizationSmoother_smooth(SparseStressMajorizationSmoother sm, int dim, double *x, int maxit_sm, double tol);
 

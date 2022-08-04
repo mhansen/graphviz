@@ -538,11 +538,10 @@ static ipair sharedEdge(int *p, int *q)
 }
 
 /* addTriEdge:
- * Add an edge to g, with tail t, head h, distance d, and shared
+ * Add an edge to g, with tail t, head h, and shared
  * segment seg.
  */
-static void addTriEdge(tgraph * g, int t, int h, double d, ipair seg)
-{
+static void addTriEdge(tgraph *g, int t, int h, ipair seg) {
     tedge *ep = g->edges + g->nedges;
     tnode *tp = g->nodes + t;
     tnode *hp = g->nodes + h;
@@ -616,10 +615,9 @@ static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
         ne = 0;
 	while ((ne < 3) && ((j = *jp++) != -1)) {
 	    if (i < j) {
-		double dist = DIST(np->ctr, (g->nodes + j)->ctr);
 		ipair seg =
 		    sharedEdge(sf->faces + 3 * i, sf->faces + 3 * j);
-		addTriEdge(g, i, j, dist, seg);
+		addTriEdge(g, i, j, seg);
 	    }
 	    ne++;
 	}
@@ -758,9 +756,7 @@ static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
  *
  * Otherwise, return p unchanged.
  */
-static Ppoint_t
-tweakEnd (Ppoly_t poly, int s, Ppolyline_t pl, Ppoint_t q)
-{
+static Ppoint_t tweakEnd (Ppoly_t poly, int s, Ppoint_t q) {
     Ppoint_t prv, nxt, p;
 
     p = poly.ps[s];
@@ -784,8 +780,8 @@ tweakEnd (Ppoly_t poly, int s, Ppolyline_t pl, Ppoint_t q)
 static void
 tweakPath (Ppoly_t poly, int s, int t, Ppolyline_t pl)
 {
-    pl.ps[0] = tweakEnd (poly, s, pl, pl.ps[1]);
-    pl.ps[pl.pn-1] = tweakEnd (poly, t, pl, pl.ps[pl.pn-2]);
+    pl.ps[0] = tweakEnd (poly, s, pl.ps[1]);
+    pl.ps[pl.pn-1] = tweakEnd (poly, t, pl.ps[pl.pn-2]);
 }
 
 
@@ -942,7 +938,6 @@ static void addEndpoint(router_t * rtr, pointf p, node_t* v, int v_id, int sides
     int endi = rtr->obs[obs_id + 1];
     pointf* pts = rtr->ps;
     int i, t;
-    double d;
     pointf vr, v0, v1;
 
     switch (sides) {
@@ -1005,8 +1000,7 @@ static void addEndpoint(router_t * rtr, pointf p, node_t* v, int v_id, int sides
 	t = findMap(rtr->trimap, seg.i, seg.j);
 	if (sides && !inCone (v0, p, v1, pts[seg.i]) && !inCone (v0, p, v1, pts[seg.j]) && !raySeg(p,vr,pts[seg.i],pts[seg.j]))
 	    continue;
-	d = DIST(p, (rtr->tg->nodes + t)->ctr);
-	addTriEdge(rtr->tg, v_id, t, d, seg);
+	addTriEdge(rtr->tg, v_id, t, seg);
     }
 }
 

@@ -40,7 +40,7 @@ typedef struct ipsep_options {
 } ipsep_options;
 
  /* stress majorization, for Constraint Layout */
-extern int stress_majorization_cola(vtx_data*, int, int, double**, node_t**, int, int, int, ipsep_options*);
+extern int stress_majorization_cola(vtx_data*, int, double**, node_t**, int, int, int, ipsep_options*);
 #endif
 #endif
 

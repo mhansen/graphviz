@@ -31,9 +31,9 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int edge_len_
   }
 
   if (edge_len_weighted){
-    sm = SparseStressMajorizationSmoother_new(A, dim, lambda, *x, WEIGHTING_SCHEME_SQR_DIST, TRUE);/* do not under weight the long distances */
+    sm = SparseStressMajorizationSmoother_new(A, dim, lambda, *x, WEIGHTING_SCHEME_SQR_DIST);/* do not under weight the long distances */
   } else {
-    sm = SparseStressMajorizationSmoother_new(A, dim, lambda, *x, WEIGHTING_SCHEME_NONE, TRUE);/* weight the long distances */
+    sm = SparseStressMajorizationSmoother_new(A, dim, lambda, *x, WEIGHTING_SCHEME_NONE);/* weight the long distances */
   }
 
   if (!sm) {

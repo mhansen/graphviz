@@ -294,7 +294,7 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
 }
 	
 StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double lambda0, double *x,
-								int weighting_scheme, int scale_initial_coord){
+								int weighting_scheme){
   /* solve a stress model to achieve the ideal distance among a sparse set of edges recorded in A.
      A must be a real matrix.
    */
@@ -361,13 +361,6 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
 	    w[nz] = -1/(dist*dist);
 	  }
 	  break;
-	case WEIGHTING_SCHEME_INV_DIST:
-	  if (dist*dist == 0){
-	    w[nz] = -100000;
-	  } else {
-	    w[nz] = -1/(dist);
-	  }
-	  break;
 	case WEIGHTING_SCHEME_NONE:
 	  w[nz] = -1;
 	  break;
@@ -398,11 +391,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
     iw[i+1] = nz;
     id[i+1] = nz;
   }
-  if (scale_initial_coord){
-    s = stop/sbot;
-  } else {
-    s = 1.;
-  }
+  s = stop/sbot;
   if (s == 0) {
     return NULL;
   }
@@ -592,7 +581,7 @@ static double uniform_stress_solve(SparseMatrix Lw, double alpha, int dim, doubl
 
 double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim, double *x, int maxit_sm, double tol) {
   SparseMatrix Lw = sm->Lw, Lwd = sm->Lwd, Lwdd = NULL;
-  int i, j, k, m, *id, *jd, *iw, *jw, idiag, flag = 0, iter = 0;
+  int i, j, k, m, *id, *jd, *iw, *jw, idiag, iter = 0;
   double *w, *dd, *d, *y = NULL, *x0 = NULL, *x00 = NULL, diag, diff = 1, *lambda = sm->lambda, alpha = 0., M = 0.;
   SparseMatrix Lc = NULL;
   double dij, dist;
@@ -704,11 +693,9 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
     if (sm->scheme == SM_SCHEME_UNIFORM_STRESS){
       uniform_stress_solve(Lw, alpha, dim, x, y, sm->tol_cg, sm->maxit_cg);
     } else {
-      SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, sm->maxit_cg, SOLVE_METHOD_CG, &flag);
-      //SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, 1, SOLVE_METHOD_JACOBI, &flag);
+      SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, sm->maxit_cg);
     }
 
-    if (flag) goto RETURN;
 #ifdef DEBUG_PRINT
     if (Verbose) fprintf(stderr, "stress2 = %g\n",get_stress(m, dim, iw, jw, w, d, y, sm->scaling));
 #endif

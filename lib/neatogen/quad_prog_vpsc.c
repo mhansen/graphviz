@@ -156,7 +156,7 @@ constrained_majorization_vpsc(CMajEnvVPSC * e, float *b, float *place,
 	    if (beta > 0 && beta < 1.0) {
 		place[i] = old_place[i] + beta * d[i];
 	    }
-	    test += fabs(place[i] - old_place[i]);
+	    test += fabsf(place[i] - old_place[i]);
 	}
 #ifdef CONMAJ_LOGGING
 	float stress = 0;
