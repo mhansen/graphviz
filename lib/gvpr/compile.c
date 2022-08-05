@@ -1808,11 +1808,8 @@ static tctype typeChkExp(Exref_t * ref, Exid_t * sym)
  * Type check expressions; return value unused.
  */
 static Extype_t
-refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
-       char *str, int elt)
+refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref)
 {
-    (void)str;
-    (void)elt;
 
     Extype_t v;
     if (sym->lex == CONSTANT) {
