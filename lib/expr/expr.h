@@ -204,7 +204,7 @@ struct Exdisc_s				/* discipline			*/
 					/* unknown cast function	*/
 	int		(*convertf)(Exnode_t*, int, int);
 					/* type conversion function	*/
-	int		(*binaryf) (Expr_t *, Exnode_t *, Exnode_t *, Exnode_t *, int, Exdisc_t *);
+	int		(*binaryf) (Exnode_t *, Exnode_t *, Exnode_t *, int);
 					/* binary operator function     */
 	char*		(*typename) (Expr_t *, int);
 					/* application type names       */

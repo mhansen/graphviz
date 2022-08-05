@@ -1680,7 +1680,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			tmp.data.constant.value = v;
 			rtmp = *x;
 			rtmp.data.constant.value = r;
-			if (!ex->disc->binaryf(ex, &tmp, expr, &rtmp, 0, ex->disc))
+			if (!ex->disc->binaryf(&tmp, expr, &rtmp, 0))
 			  return tmp.data.constant.value;
 		}
 	}
@@ -1803,7 +1803,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				rp = &rtmp;
 			} else
 				rp = 0;
-			if (!ex->disc->binaryf(ex, &tmp, expr, rp, 0, ex->disc))
+			if (!ex->disc->binaryf(&tmp, expr, rp, 0))
 				return tmp.data.constant.value;
 		}
 		goto integer;
