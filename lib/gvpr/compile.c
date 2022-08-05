@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <gvpr/compile.h>
 #include <assert.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/itos.h>
@@ -264,12 +265,10 @@ static Agdesc_t xargs(char *args)
 /* deparse:
  * Recreate string representation of expression involving
  * a reference and a symbol.
- * The parameter sf must be a string stream.
  */
-static char *deparse(Expr_t * ex, Exnode_t * n, Sfio_t * sf)
-{
-    exdump(ex, n, sf);
-    return sfstruse(sf);
+static char *deparse(Expr_t *ex, Exnode_t *n, agxbuf *xb) {
+  exdump(ex, n, xb);
+  return xb->buf;
 }
 
 /* deref:
@@ -289,9 +288,11 @@ static Agobj_t *deref(Expr_t * pgm, Exnode_t * x, Exref_t * ref,
 	ptr = int2ptr(x->data.variable.dyna->data.variable.dyna->data.
 		    constant.value.integer);
 	if (!ptr) {
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
 	    exerror("null reference %s in expression %s.%s",
-		  ref->symbol->name, ref->symbol->name, deparse(pgm, x,
-								state->tmp));
+		  ref->symbol->name, ref->symbol->name, deparse(pgm, x, &xb));
+	    agxbfree(&xb);
 	    return ptr;
 	} else
 	    return deref(pgm, x, ref->next, (Agobj_t *) ptr, state);
@@ -1517,9 +1518,12 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
     state = env;
     if (ref) {
 	objp = deref(pgm, node, ref, 0, state);
-	if (!objp)
-	    exerror("null reference in expression %s",
-		  deparse(pgm, node, state->tmp));
+	if (!objp) {
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
+	    exerror("null reference in expression %s", deparse(pgm, node, &xb));
+	    agxbfree(&xb);
+	}
     } else if (sym->lex == ID && sym->index <= LAST_V) {
 	switch (sym->index) {
 	case V_this:
@@ -1563,14 +1567,20 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
     } else {
 	objp = state->curobj;
 	if (!objp) {
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
 	    exerror("current object $ not defined as reference for %s",
-		  deparse(pgm, node, state->tmp));
+		  deparse(pgm, node, &xb));
+	    agxbfree(&xb);
 	}
     }
 
     if (objp) {
 	if (lookup(pgm, objp, sym, &v, state)) {
-	    exerror("in expression %s", deparse(pgm, node, state->tmp));
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
+	    exerror("in expression %s", deparse(pgm, node, &xb));
+	    agxbfree(&xb);
 	    v.integer = 0;
 	}
     }
@@ -1608,8 +1618,10 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
     if (ref) {
 	objp = deref(pgm, x, ref, 0, state);
 	if (!objp) {
-	    exerror("in expression %s.%s",
-		  ref->symbol->name, deparse(pgm, x, state->tmp));
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
+	    exerror("in expression %s.%s", ref->symbol->name, deparse(pgm, x, &xb));
+	    agxbfree(&xb);
 	    return -1;
 	}
     } else if (MINNAME <= sym->index && sym->index <= MAXNAME) {
@@ -1660,8 +1672,11 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
     } else {
 	objp = state->curobj;
 	if (!objp) {
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
 	    exerror("current object $ undefined in expression %s",
-		  deparse(pgm, x, state->tmp));
+		  deparse(pgm, x, &xb));
+	    agxbfree(&xb);
 	    return -1;
 	}
     }
@@ -1850,9 +1865,10 @@ refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 	}
     } else {
 	if (!typeChkExp(ref, sym)) {
-	    Gpr_t *state = disc->user;
-	    exerror("type error using %s",
-		    deparse(pgm, node, state->tmp));
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
+	    exerror("type error using %s", deparse(pgm, node, &xb));
+	    agxbfree(&xb);
 	}
 	v = exzero(node->type);
     }
