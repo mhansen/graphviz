@@ -295,7 +295,7 @@ gen(Excc_t* cc, Exnode_t* expr)
 		return;
 	case ID:
 		if (cc->ccdisc->ccf)
-			(*cc->ccdisc->ccf)(cc, expr, expr->data.variable.symbol, expr->data.variable.reference, expr->data.variable.index, cc->ccdisc);
+			cc->ccdisc->ccf(cc, expr, expr->data.variable.symbol, expr->data.variable.reference, expr->data.variable.index, cc->ccdisc);
 		else
 			sfprintf(cc->ccdisc->text, "%s", expr->data.variable.symbol->name);
 		return;
