@@ -859,7 +859,7 @@ extoken_fn(Expr_t* ex)
 			}
 			break;
 		}
-		(*ex->disc->reff)(ex, NULL, ex_lval.id, NULL);
+		ex->disc->reff(ex, NULL, ex_lval.id, NULL);
 
 						/*..INDENT*/
 					}

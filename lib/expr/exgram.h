@@ -397,8 +397,7 @@ static Exnode_t *makeVar(Expr_t * prog, Exid_t * s, Exnode_t * idx,
 	if (!prog->disc->getf)
 	    exerror("%s: identifier references not supported", sym->name);
 	else if (expr.program->disc->reff)
-	    (*expr.program->disc->reff) (prog, nn,
-					 nn->data.variable.symbol, refs);
+	    expr.program->disc->reff(prog, nn, nn->data.variable.symbol, refs);
 
 	return nn;
 }
