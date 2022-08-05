@@ -8,8 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cgraph/alloc.h>
+#include <cgraph/likely.h>
+#include <limits.h>
 #include <pathplan/vis.h>
 
 typedef Ppoint_t ilcoord_t;
@@ -27,22 +31,10 @@ static void gasp_print_polyline(Ppolyline_t * route);
 static void gasp_print_bezier(Ppolyline_t * route);
 #endif
 
-static void *mymalloc(size_t newsize)
-{
-    void *rv;
-
-    if (newsize > 0)
-	rv = malloc(newsize);
-    else
-	rv = NULL;
-    return rv;
-}
-
-
 vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
 {
     vconfig_t *rv;
-    int poly_i, pt_i, i, n;
+    int poly_i, pt_i, i;
     int start, end;
 
     rv = malloc(sizeof(vconfig_t));
@@ -51,15 +43,34 @@ vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
     }
 
     /* get storage */
-    n = 0;
-    for (poly_i = 0; poly_i < n_obs; poly_i++)
-	n += obs[poly_i]->pn;
-    rv->P = mymalloc(n * sizeof(Ppoint_t));
-    rv->start = mymalloc((n_obs + 1) * sizeof(int));
-    rv->next = mymalloc(n * sizeof(int));
-    rv->prev = mymalloc(n * sizeof(int));
-    rv->N = n;
+    size_t n = 0;
+    for (poly_i = 0; poly_i < n_obs; poly_i++) {
+	assert(obs[poly_i]->pn >= 0);
+	n += (size_t)obs[poly_i]->pn;
+    }
+    if (n > INT_MAX) { // will this overflow rv->N?
+	free(rv);
+	return NULL;
+    }
+    rv->P = calloc(n, sizeof(Ppoint_t));
+    assert(n_obs >= 0);
+    rv->start = calloc((size_t)n_obs + 1, sizeof(int));
+    rv->next = calloc(n, sizeof(int));
+    rv->prev = calloc(n, sizeof(int));
+    rv->N = (int)n;
     rv->Npoly = n_obs;
+
+    // bail out if any above allocations failed
+    if (UNLIKELY(rv->start == NULL || (n > 0 && (rv->P == NULL ||
+                                                 rv->next == NULL ||
+                                                 rv->prev == NULL)))) {
+	free(rv->prev);
+	free(rv->next);
+	free(rv->start);
+	free(rv->P);
+	free(rv);
+	return NULL;
+    }
 
     /* build arrays */
     i = 0;
@@ -118,7 +129,7 @@ int Pobspath(vconfig_t * config, Ppoint_t p0, int poly0, Ppoint_t p1,
     for (i = dad[config->N]; i != config->N + 1; i = dad[i])
 	opn++;
     opn++;
-    ops = malloc(opn * sizeof(Ppoint_t));
+    ops = gv_calloc(opn, sizeof(Ppoint_t));
 
     size_t j = opn - 1;
     ops[j--] = p1;
@@ -137,7 +148,8 @@ int Pobspath(vconfig_t * config, Ppoint_t p0, int poly0, Ppoint_t p1,
     free(ptvis0);
     free(ptvis1);
 
-    output_route->pn = opn;
+    assert(opn <= INT_MAX);
+    output_route->pn = (int)opn;
     output_route->ps = ops;
 #ifdef GASP
     gasp_print_polyline(output_route);

@@ -27,8 +27,7 @@ void printvis(vconfig_t * cp)
 
     printf("this next prev point\n");
     for (i = 0; i < cp->N; i++)
-	printf("%3d  %3d  %3d    (%f,%f)\n", i, next[i], prev[i],
-	       (double) pts[i].x, (double) pts[i].y);
+	printf("%3d  %3d  %3d    (%f,%f)\n", i, next[i], prev[i], pts[i].x, pts[i].y);
 
     printf("\n\n");
 
