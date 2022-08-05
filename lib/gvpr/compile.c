@@ -2132,14 +2132,7 @@ static int stringOf(Expr_t * prog, Exnode_t * x, int arg, Exdisc_t* disc)
  * If arg is > 0, conversion unnecessary; just report possibility.
  * In particular, assume x != 0 if arg == 0.
  */
-static int
-convert(Expr_t * prog, Exnode_t * x, int type,
-	Exid_t * xref, int arg, Exdisc_t * disc)
-{
-    (void)prog;
-    (void)xref;
-    (void)disc;
-
+static int convert(Exnode_t *x, int type, int arg) {
     Agobj_t *objp;
     int ret = -1;
 

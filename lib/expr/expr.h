@@ -202,7 +202,7 @@ struct Exdisc_s				/* discipline			*/
 	char*		type;		/* pathfind() type		*/
 	int		(*castf)(Expr_t*, Exnode_t*, const char*, int, Exid_t*, int, Exdisc_t*);
 					/* unknown cast function	*/
-	int		(*convertf)(Expr_t*, Exnode_t*, int, Exid_t*, int, Exdisc_t*);
+	int		(*convertf)(Exnode_t*, int, int);
 					/* type conversion function	*/
 	int		(*binaryf) (Expr_t *, Exnode_t *, Exnode_t *, Exnode_t *, int, Exdisc_t *);
 					/* binary operator function     */
