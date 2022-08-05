@@ -624,11 +624,11 @@ global(Dt_t* table, void* object, void* handle)
 {
 	(void)table;
 
-	Excc_t*	cc = handle;
+	Sfio_t *stream = handle;
 	Exid_t*	sym = object;
 
 	if (sym->lex == DYNAMIC)
-		sfprintf(cc->ccdisc->text, "static %s	%s;\n", extype(sym->type), sym->name);
+		sfprintf(stream, "static %s	%s;\n", extype(sym->type), sym->name);
 	return 0;
 }
 
@@ -657,7 +657,7 @@ exccopen(Expr_t* expr, Exccdisc_t* disc)
 		if (*id)
 			snprintf(cc->id, strlen(id) + 2, "%s_", id);
 		sfprintf(disc->text, "\n");
-		dtwalk(expr->symbols, global, cc);
+		dtwalk(expr->symbols, global, disc->text);
 	}
 	return cc;
 }
