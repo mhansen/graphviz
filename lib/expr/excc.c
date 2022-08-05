@@ -636,9 +636,7 @@ global(Dt_t* table, void* object, void* handle)
  * open C program generator context
  */
 
-Excc_t*
-exccopen(Expr_t* expr, Exccdisc_t* disc)
-{
+static Excc_t *exccopen(Expr_t *expr, Exccdisc_t *disc) {
 	Excc_t*	cc;
 	char*			id;
 
@@ -666,9 +664,7 @@ exccopen(Expr_t* expr, Exccdisc_t* disc)
  * close C program generator context
  */
 
-int
-exccclose(Excc_t* cc)
-{
+static int exccclose(Excc_t *cc) {
 	int	r = 0;
 
 	if (!cc)
