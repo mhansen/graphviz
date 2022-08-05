@@ -464,7 +464,7 @@ excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
 			Exid_t *sym = (xref ? xref->data.variable.symbol : NULL);
 			if (EXTERNAL(t2t)) {
 				int a = (arg ? arg : 1);
-		    	if ((*p->disc->convertf) (x, type, a) < 0) {
+		    	if (p->disc->convertf(x, type, a) < 0) {
 					if (xref) {
 						if ((sym->lex == FUNCTION) && arg)
 							exerror ("%s: cannot use value of type %s as argument %d in function %s",
@@ -494,10 +494,10 @@ excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
 		case X2X:
 			if (xref && xref->op == ID)
 			{
-				if ((*p->disc->convertf)(x, type, arg) < 0)
+				if (p->disc->convertf(x, type, arg) < 0)
 					exerror("%s: cannot cast constant %s to %s", xref->data.variable.symbol->name, extypename(p, x->type), extypename(p, type));
 			}
-			else if ((*p->disc->convertf)(x, type, arg) < 0)
+			else if (p->disc->convertf(x, type, arg) < 0)
 				exerror("cannot cast constant %s to %s", extypename(p, x->type), extypename(p, type));
 			break;
 		case F2I:
@@ -785,7 +785,7 @@ preprint(Exnode_t* args)
 				{
 					if (x->arg->op == CONSTANT && x->arg->data.constant.reference && expr.program->disc->convertf)
 					{
-						if ((*expr.program->disc->convertf)(x->arg, STRING, 0) < 0)
+						if (expr.program->disc->convertf(x->arg, STRING, 0) < 0)
 							exerror("cannot convert string format argument");
 						else x->arg->data.constant.value.string = vmstrdup(expr.program->vm, x->arg->data.constant.value.string);
 					}
