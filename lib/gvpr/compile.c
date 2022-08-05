@@ -1592,8 +1592,7 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 
 #define MINTYPE (LAST_M+1)	/* First type occurs after last M_ */
 
-static char *typeName(Expr_t * pg, int op)
-{
+static char *typeName(int op) {
     return typenames[op - MINTYPE];
 }
 
@@ -1635,7 +1634,7 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
 		state->tvt = (trav_type) iv;
 	    else
 		error(1, "unexpected value %lld assigned to %s : ignored",
-		      iv, typeName(pgm, T_tvtyp));
+		      iv, typeName(T_tvtyp));
 	    break;
 	}
 	case V_travroot:
@@ -2107,8 +2106,7 @@ static int stringOf(Expr_t * prog, Exnode_t * x, int arg, Exdisc_t* disc)
     } else {
 	objp = int2ptr(x->data.constant.value.integer);
 	if (!objp) {
-	    exerror("cannot generate name for NULL %s",
-		    typeName(prog, x->type));
+	    exerror("cannot generate name for NULL %s", typeName(x->type));
 	    rv = -1;
 	}
 	else {

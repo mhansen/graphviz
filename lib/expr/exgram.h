@@ -430,7 +430,7 @@ static int	typecast[6][6] =
 char *extypename(Expr_t * p, int type) {
 	if (BUILTIN(type))
 	    return TYPENAME(type);
-	return (p->disc->typename) (p, type);
+	return (p->disc->typename) (type);
 }
 
 /* exnoncast:
