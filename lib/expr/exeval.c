@@ -1204,8 +1204,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				x->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
 			}
 			if (ex->disc->setf(ex, x, x->data.variable.symbol,
-			                   x->data.variable.reference, env, (int)i.integer, v,
-			                   ex->disc) < 0)
+			                   x->data.variable.reference, env, v) < 0)
 				exerror("%s: cannot set value", x->data.variable.symbol->name);
 		}
 		if (expr->subop == PRE)

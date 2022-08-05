@@ -217,7 +217,7 @@ struct Exdisc_s				/* discipline			*/
 					/* get value function		*/
 	Extype_t	(*reff)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*);
 					/* reference value function	*/
-	int		(*setf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, int, Extype_t, Exdisc_t*);
+	int		(*setf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, Extype_t);
 					/* set value function		*/
 	int		(*matchf)(Expr_t*, Exnode_t*, const char*, Exnode_t*, const char*, void*, Exdisc_t*);
 	/* exit function           */
