@@ -210,7 +210,7 @@ struct Exdisc_s				/* discipline			*/
 					/* application type names       */
 	int		(*stringof) (Expr_t *, Exnode_t *, int, Exdisc_t *);
 					/* value to string conversion   */
-	Extype_t	(*keyf) (Expr_t *, Extype_t, int, Exdisc_t *);
+	Extype_t	(*keyf) (Extype_t, int);
 					/* dictionary key for external type objects     */
 	Exerror_f	errorf;		/* error function		*/
 	Extype_t	(*getf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, int, Exdisc_t*);

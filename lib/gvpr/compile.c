@@ -2201,11 +2201,7 @@ static int convert(Exnode_t *x, int type, int arg) {
  * Calculate unique key for object.
  * We use this to unify local copies of nodes and edges.
  */
-static Extype_t keyval(Expr_t * pgm, Extype_t v, int type, Exdisc_t * disc)
-{
-    (void)pgm;
-    (void)disc;
-
+static Extype_t keyval(Extype_t v, int type) {
     if (type <= T_obj) {
 	v.integer = AGID(int2ptr(v.integer));
     }

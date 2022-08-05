@@ -99,7 +99,7 @@ static int evaldyn(Expr_t *ex, Exnode_t *exnode, void *env, int delete) {
 		int type = exnode->data.variable.index->type;
 		if (type != STRING) {
 			if (!BUILTIN(type)) {
-				key = (*ex->disc->keyf) (ex, v, type, ex->disc);
+				key = (*ex->disc->keyf) (v, type);
 			} else
 				key.integer = v.integer;
 			snprintf(buf, sizeof(buf), "%llx", (unsigned long long)key.integer);
@@ -146,7 +146,7 @@ static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
 			int type = exnode->data.variable.index->type;
 			if (type != STRING) {
 				if (!BUILTIN(type)) {
-					key = (*ex->disc->keyf) (ex, v, type, ex->disc);
+					key = (*ex->disc->keyf) (v, type);
 				} else
 					key.integer = v.integer;
 				snprintf(buf, sizeof(buf), "%llx", (unsigned long long)key.integer);
