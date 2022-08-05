@@ -15,12 +15,6 @@
  * expression library C program generator
  */
 
-#define _EX_CC_PRIVATE_ \
-	char*		id;		/* prefix + _			*/ \
-	int		lastop;		/* last op			*/ \
-	int		tmp;		/* temp var index		*/ \
-	Exccdisc_t*	ccdisc;		/* excc() discipline		*/
-
 #include <cgraph/exit.h>
 #include <expr/exlib.h>
 #include <stddef.h>
@@ -43,11 +37,10 @@ struct Excc_s				/* excc() state			*/
 {
 	Expr_t*		expr;		/* exopen() state		*/
 	Exdisc_t*	disc;		/* exopen() discipline		*/
-
-#ifdef _EX_CC_PRIVATE_
-	_EX_CC_PRIVATE_
-#endif
-
+	char*		id;		/* prefix + _			*/
+	int		lastop;		/* last op			*/
+	int		tmp;		/* temp var index		*/
+	Exccdisc_t*	ccdisc;		/* excc() discipline		*/
 };
 
 #define EX_CC_DUMP	0x8000
