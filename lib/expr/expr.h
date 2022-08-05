@@ -215,7 +215,7 @@ struct Exdisc_s				/* discipline			*/
 	Exerror_f	errorf;		/* error function		*/
 	Extype_t	(*getf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, int, Exdisc_t*);
 					/* get value function		*/
-	Extype_t	(*reff)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, char*, int, Exdisc_t*);
+	Extype_t	(*reff)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, char*, int);
 					/* reference value function	*/
 	int		(*setf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, int, Extype_t, Exdisc_t*);
 					/* set value function		*/

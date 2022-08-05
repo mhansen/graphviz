@@ -1809,7 +1809,7 @@ static tctype typeChkExp(Exref_t * ref, Exid_t * sym)
  */
 static Extype_t
 refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
-       char *str, int elt, Exdisc_t * disc)
+       char *str, int elt)
 {
     (void)str;
     (void)elt;

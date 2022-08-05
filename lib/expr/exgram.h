@@ -399,7 +399,7 @@ static Exnode_t *makeVar(Expr_t * prog, Exid_t * s, Exnode_t * idx,
 	else if (expr.program->disc->reff)
 	    (*expr.program->disc->reff) (prog, nn,
 					 nn->data.variable.symbol, refs,
-					 NULL, EX_SCALAR, prog->disc);
+					 NULL, EX_SCALAR);
 
 	return nn;
 }
