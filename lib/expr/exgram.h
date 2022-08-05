@@ -1014,7 +1014,7 @@ exclose(Expr_t* p, int all)
 static void
 checkBinary(Expr_t * p, Exnode_t * l, Exnode_t * ex, Exnode_t * r) 
 {
-	if ((*p->disc->binaryf) (l, ex, r, 1) < 0) {
+	if (p->disc->binaryf(l, ex, r, 1) < 0) {
 	    if (r)
 		exerror
 		    ("cannot apply operator %s to expressions of types %s and %s",
