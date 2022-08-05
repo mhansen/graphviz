@@ -2208,16 +2208,7 @@ static Extype_t keyval(Extype_t v, int type) {
 /* matchval:
  * Pattern match strings.
  */
-static int
-matchval(Expr_t * pgm, Exnode_t * xstr, const char *str, Exnode_t * xpat,
-	 const char *pat, void *env, Exdisc_t * disc)
-{
-    (void)pgm;
-    (void)xstr;
-    (void)xpat;
-    (void)env;
-    (void)disc;
-
+static int matchval(const char *str, const char *pat) {
     return strgrpmatch(str, pat, NULL, 0,
 		       STR_MAXIMAL | STR_LEFT | STR_RIGHT);
 }
