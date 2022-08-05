@@ -27,6 +27,29 @@
 #include <stdio.h>
 #include <string.h>
 
+typedef struct Excc_s Excc_t;
+typedef struct Exccdisc_s Exccdisc_t;
+
+struct Exccdisc_s			/* excc() discipline		*/
+{
+  Sfio_t*		text;		/* text output stream		*/
+  char*		id;		/* symbol prefix		*/
+  uint64_t	flags;		/* EXCC_* flags			*/
+  int		(*ccf)(Excc_t*, Exnode_t*, Exid_t*, Exref_t*, Exnode_t*, Exccdisc_t*);
+          /* program generator function	*/
+};
+
+struct Excc_s				/* excc() state			*/
+{
+	Expr_t*		expr;		/* exopen() state		*/
+	Exdisc_t*	disc;		/* exopen() discipline		*/
+
+#ifdef _EX_CC_PRIVATE_
+	_EX_CC_PRIVATE_
+#endif
+
+};
+
 #define EX_CC_DUMP	0x8000
 
 static const char	quote[] = "\"";
