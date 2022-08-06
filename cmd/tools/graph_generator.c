@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
 #include <stdio.h>
@@ -289,9 +289,6 @@ constructSierpinski(int v1, int v2, int v3, int depth, vtx_data* graph)
 
 }
 
-#define NEW(t)           calloc((1),sizeof(t))
-#define N_NEW(n,t)       calloc((n),sizeof(t))
-
 void makeSierpinski(int depth, edgefn ef)
 {
     vtx_data* graph;
@@ -302,8 +299,8 @@ void makeSierpinski(int depth, edgefn ef)
     depth--;
     n = 3 * (1 + ((int) (pow(3.0, (double) depth) + 0.5) - 1) / 2);
 
-    graph = N_NEW(n + 1, vtx_data);
-    edges = N_NEW(4 * n, int);
+    graph = gv_calloc(n + 1, sizeof(vtx_data));
+    edges = gv_calloc(4 * n, sizeof(int));
 
     for (i = 1; i <= n; i++) {
 	graph[i].edges = edges;
@@ -386,8 +383,8 @@ void makeTetrix(int depth, edgefn ef)
     depth--;
     n = 4 + 2 * (((int) (pow(4.0, (double) depth) + 0.5) - 1));
 
-    graph = N_NEW(n + 1, vtx_data);
-    edges = N_NEW(6 * n, int);
+    graph = gv_calloc(n + 1, sizeof(vtx_data));
+    edges = gv_calloc(6 * n, sizeof(int));
 
     for (i = 1; i <= n; i++) {
         graph[i].edges = edges;
@@ -547,10 +544,10 @@ typedef struct {
 static tree_t*
 mkTree (int sz)
 {
-    tree_t* tp = NEW(tree_t);
+    tree_t* tp = gv_alloc(sizeof(tree_t));
     tp->root = 0;
     tp->top = 0;
-    tp->p = N_NEW(sz,int);
+    tp->p = gv_calloc(sz, sizeof(int));
     return tp;
 }
 
@@ -648,7 +645,7 @@ static pair pop(gv_stack_t *sp) {
 static int*
 genCnt(int NN)
 {
-    int* T = N_NEW(NN+1,int);
+    int* T = gv_calloc(NN + 1, sizeof(int));
     int D, I, J, TD;
     int SUM;
     int NLAST = 1;
@@ -744,7 +741,7 @@ struct treegen_s {
 treegen_t* 
 makeTreeGen (int N)
 {
-    treegen_t* tg = NEW(treegen_t);
+    treegen_t* tg = gv_alloc(sizeof(treegen_t));
 
     tg->N = N;
     tg->T = genCnt(N);
