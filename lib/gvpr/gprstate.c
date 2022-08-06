@@ -17,12 +17,13 @@
 #include <gvpr/gprstate.h>
 #include <ast/error.h>
 #include <ast/sfstr.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 static int name_used;
 
-int validTVT(int c)
-{
-    return ((TV_flat <= c) && (c <= TV_prepostrev));
+bool validTVT(long long c) {
+  return TV_flat <= c && c <= TV_prepostrev;
 }
 
 void initGPRState(Gpr_t * state, Vmalloc_t * vm)
@@ -95,7 +96,7 @@ findBinding (Gpr_t* state, char* fname)
  */
 void addBindings (Gpr_t* state, gvprbinding* bindings)
 {
-    int n = 0;
+    size_t n = 0;
     gvprbinding* bp = bindings;
     gvprbinding* buf;
     gvprbinding* bufp;

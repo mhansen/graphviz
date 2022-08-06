@@ -1602,7 +1602,6 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
     Gpr_t *state;
     Agobj_t *objp;
     Agnode_t *np;
-    int iv;
     int rv = 0;
 
     state = env;
@@ -1618,14 +1617,15 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
 	case V_outgraph:
 	    state->outgraph = int2ptr(v.integer);
 	    break;
-	case V_travtype:
-	    iv = v.integer;
+	case V_travtype: {
+	    long long iv = v.integer;
 	    if (validTVT(v.integer))
 		state->tvt = (trav_type) iv;
 	    else
-		error(1, "unexpected value %d assigned to %s : ignored",
+		error(1, "unexpected value %lld assigned to %s : ignored",
 		      iv, typeName(pgm, T_tvtyp));
 	    break;
+	}
 	case V_travroot:
 	    np = int2ptr(v.integer);
 	    if (!np || agroot(np) == state->curgraph)
@@ -1885,50 +1885,49 @@ binary(Expr_t * pg, Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg,
 	return -1;
 
     if (l->type == T_tvtyp) {
-	int li, ri;
 
 	if (!r)
 	    return -1;		/* Assume libexpr handled unary */
 	if (r->type != T_tvtyp)
 	    return -1;
 
-	li = l->data.constant.value.integer;
-	ri = r->data.constant.value.integer;
+	long long li = l->data.constant.value.integer;
+	long long ri = r->data.constant.value.integer;
 	switch (ex->op) {
 	case EQ:
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li == ri);
+	    l->data.constant.value.integer = li == ri;
 	    ret = 0;
 	    break;
 	case NE:
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li != ri);
+	    l->data.constant.value.integer = li != ri;
 	    ret = 0;
 	    break;
 	case '<':
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li < ri);
+	    l->data.constant.value.integer = li < ri;
 	    ret = 0;
 	    break;
 	case LE:
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li <= ri);
+	    l->data.constant.value.integer = li <= ri;
 	    ret = 0;
 	    break;
 	case GE:
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li >= ri);
+	    l->data.constant.value.integer = li >= ri;
 	    ret = 0;
 	    break;
 	case '>':
 	    if (arg)
 		return 0;
-	    l->data.constant.value.integer = (li > ri);
+	    l->data.constant.value.integer = li > ri;
 	    ret = 0;
 	    break;
 	}
@@ -1959,25 +1958,25 @@ binary(Expr_t * pg, Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg,
     case '<':
 	if (arg)
 	    return 0;
-	l->data.constant.value.integer = (compare(lobjp, robjp) < 0);
+	l->data.constant.value.integer = compare(lobjp, robjp) < 0;
 	ret = 0;
 	break;
     case LE:
 	if (arg)
 	    return 0;
-	l->data.constant.value.integer = (compare(lobjp, robjp) <= 0);
+	l->data.constant.value.integer = compare(lobjp, robjp) <= 0;
 	ret = 0;
 	break;
     case GE:
 	if (arg)
 	    return 0;
-	l->data.constant.value.integer = (compare(lobjp, robjp) >= 0);
+	l->data.constant.value.integer = compare(lobjp, robjp) >= 0;
 	ret = 0;
 	break;
     case '>':
 	if (arg)
 	    return 0;
-	l->data.constant.value.integer = (compare(lobjp, robjp) > 0);
+	l->data.constant.value.integer = compare(lobjp, robjp) > 0;
 	ret = 0;
 	break;
     }
@@ -2030,9 +2029,7 @@ strToTvtype (char* s)
 
 /* tvtypeToStr:
  */
-static char*
-tvtypeToStr (int v)
-{
+static char *tvtypeToStr(long long v) {
     char* s = 0;
 
     switch (v) {
@@ -2076,8 +2073,7 @@ tvtypeToStr (int v)
 	s = "TV_prepostrev";
 	break;
     default:
-	exerror("Unexpected value %d for type tvtype_t",
-	    v);
+	exerror("Unexpected value %lld for type tvtype_t", v);
 	break;
     }
     return s;

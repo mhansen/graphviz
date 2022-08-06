@@ -17,6 +17,8 @@ extern "C" {
 #include <sfio/sfio.h>
 #include "cgraph.h"
 #include <ast/ast.h>
+#include <stdbool.h>
+#include <stddef.h>
 #include <vmalloc/vmalloc.h>
 #include <expr/expr.h>
 #include "gvpr.h"
@@ -59,7 +61,7 @@ extern "C" {
 	char **argv;
 	int flags;
 	gvprbinding* bindings;
-	int n_bindings;
+	size_t n_bindings;
     } Gpr_t;
 
     typedef struct {
@@ -76,7 +78,7 @@ extern "C" {
     extern gvprbinding* findBinding(Gpr_t* state, char*);
     extern void closeGPRState(Gpr_t* state);
     extern void initGPRState(Gpr_t *, Vmalloc_t *);
-    extern int validTVT(int);
+    extern bool validTVT(long long);
 
 #ifdef __cplusplus
 }
