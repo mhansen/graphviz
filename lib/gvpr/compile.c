@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <gvpr/compile.h>
 #include <assert.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/itos.h>
@@ -264,12 +265,10 @@ static Agdesc_t xargs(char *args)
 /* deparse:
  * Recreate string representation of expression involving
  * a reference and a symbol.
- * The parameter sf must be a string stream.
  */
-static char *deparse(Expr_t * ex, Exnode_t * n, Sfio_t * sf)
-{
-    exdump(ex, n, sf);
-    return sfstruse(sf);
+static char *deparse(Expr_t *ex, Exnode_t *n, agxbuf *xb) {
+  exdump(ex, n, xb);
+  return xb->buf;
 }
 
 /* deref:
@@ -289,9 +288,11 @@ static Agobj_t *deref(Expr_t * pgm, Exnode_t * x, Exref_t * ref,
 	ptr = int2ptr(x->data.variable.dyna->data.variable.dyna->data.
 		    constant.value.integer);
 	if (!ptr) {
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
 	    exerror("null reference %s in expression %s.%s",
-		  ref->symbol->name, ref->symbol->name, deparse(pgm, x,
-								state->tmp));
+		  ref->symbol->name, ref->symbol->name, deparse(pgm, x, &xb));
+	    agxbfree(&xb);
 	    return ptr;
 	} else
 	    return deref(pgm, x, ref->next, (Agobj_t *) ptr, state);
@@ -1517,9 +1518,12 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
     state = env;
     if (ref) {
 	objp = deref(pgm, node, ref, 0, state);
-	if (!objp)
-	    exerror("null reference in expression %s",
-		  deparse(pgm, node, state->tmp));
+	if (!objp) {
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
+	    exerror("null reference in expression %s", deparse(pgm, node, &xb));
+	    agxbfree(&xb);
+	}
     } else if (sym->lex == ID && sym->index <= LAST_V) {
 	switch (sym->index) {
 	case V_this:
@@ -1563,14 +1567,20 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
     } else {
 	objp = state->curobj;
 	if (!objp) {
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
 	    exerror("current object $ not defined as reference for %s",
-		  deparse(pgm, node, state->tmp));
+		  deparse(pgm, node, &xb));
+	    agxbfree(&xb);
 	}
     }
 
     if (objp) {
 	if (lookup(pgm, objp, sym, &v, state)) {
-	    exerror("in expression %s", deparse(pgm, node, state->tmp));
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
+	    exerror("in expression %s", deparse(pgm, node, &xb));
+	    agxbfree(&xb);
 	    v.integer = 0;
 	}
     }
@@ -1582,8 +1592,7 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 
 #define MINTYPE (LAST_M+1)	/* First type occurs after last M_ */
 
-static char *typeName(Expr_t * pg, int op)
-{
+static char *typeName(int op) {
     return typenames[op - MINTYPE];
 }
 
@@ -1594,11 +1603,8 @@ static char *typeName(Expr_t * pg, int op)
  */
 static int
 setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
-       void *env, int elt, Extype_t v, Exdisc_t * disc)
+       void *env, Extype_t v)
 {
-    (void)elt;
-    (void)disc;
-
     Gpr_t *state;
     Agobj_t *objp;
     Agnode_t *np;
@@ -1608,8 +1614,10 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
     if (ref) {
 	objp = deref(pgm, x, ref, 0, state);
 	if (!objp) {
-	    exerror("in expression %s.%s",
-		  ref->symbol->name, deparse(pgm, x, state->tmp));
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
+	    exerror("in expression %s.%s", ref->symbol->name, deparse(pgm, x, &xb));
+	    agxbfree(&xb);
 	    return -1;
 	}
     } else if (MINNAME <= sym->index && sym->index <= MAXNAME) {
@@ -1623,7 +1631,7 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
 		state->tvt = (trav_type) iv;
 	    else
 		error(1, "unexpected value %lld assigned to %s : ignored",
-		      iv, typeName(pgm, T_tvtyp));
+		      iv, typeName(T_tvtyp));
 	    break;
 	}
 	case V_travroot:
@@ -1660,8 +1668,11 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
     } else {
 	objp = state->curobj;
 	if (!objp) {
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
 	    exerror("current object $ undefined in expression %s",
-		  deparse(pgm, x, state->tmp));
+		  deparse(pgm, x, &xb));
+	    agxbfree(&xb);
 	    return -1;
 	}
     }
@@ -1793,11 +1804,8 @@ static tctype typeChkExp(Exref_t * ref, Exid_t * sym)
  * Type check expressions; return value unused.
  */
 static Extype_t
-refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
-       char *str, int elt, Exdisc_t * disc)
+refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref)
 {
-    (void)str;
-    (void)elt;
 
     Extype_t v;
     if (sym->lex == CONSTANT) {
@@ -1850,9 +1858,10 @@ refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 	}
     } else {
 	if (!typeChkExp(ref, sym)) {
-	    Gpr_t *state = disc->user;
-	    exerror("type error using %s",
-		    deparse(pgm, node, state->tmp));
+	    agxbuf xb = {0};
+	    agxbinit(&xb, 0, NULL);
+	    exerror("type error using %s", deparse(pgm, node, &xb));
+	    agxbfree(&xb);
 	}
 	v = exzero(node->type);
     }
@@ -1866,13 +1875,7 @@ refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
  * Return -1 if operation cannot be done, 0 otherwise.
  * If arg is > 0, operation unnecessary; just report possibility.
  */
-static int
-binary(Expr_t * pg, Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg,
-       Exdisc_t * disc)
-{
-    (void)pg;
-    (void)disc;
-
+static int binary(Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg) {
     Agobj_t *lobjp;
     Agobj_t *robjp;
     int ret = -1;
@@ -2100,8 +2103,7 @@ static int stringOf(Expr_t * prog, Exnode_t * x, int arg, Exdisc_t* disc)
     } else {
 	objp = int2ptr(x->data.constant.value.integer);
 	if (!objp) {
-	    exerror("cannot generate name for NULL %s",
-		    typeName(prog, x->type));
+	    exerror("cannot generate name for NULL %s", typeName(x->type));
 	    rv = -1;
 	}
 	else {
@@ -2119,14 +2121,7 @@ static int stringOf(Expr_t * prog, Exnode_t * x, int arg, Exdisc_t* disc)
  * If arg is > 0, conversion unnecessary; just report possibility.
  * In particular, assume x != 0 if arg == 0.
  */
-static int
-convert(Expr_t * prog, Exnode_t * x, int type,
-	Exid_t * xref, int arg, Exdisc_t * disc)
-{
-    (void)prog;
-    (void)xref;
-    (void)disc;
-
+static int convert(Exnode_t *x, int type, int arg) {
     Agobj_t *objp;
     int ret = -1;
 
@@ -2203,11 +2198,7 @@ convert(Expr_t * prog, Exnode_t * x, int type,
  * Calculate unique key for object.
  * We use this to unify local copies of nodes and edges.
  */
-static Extype_t keyval(Expr_t * pgm, Extype_t v, int type, Exdisc_t * disc)
-{
-    (void)pgm;
-    (void)disc;
-
+static Extype_t keyval(Extype_t v, int type) {
     if (type <= T_obj) {
 	v.integer = AGID(int2ptr(v.integer));
     }
@@ -2217,16 +2208,7 @@ static Extype_t keyval(Expr_t * pgm, Extype_t v, int type, Exdisc_t * disc)
 /* matchval:
  * Pattern match strings.
  */
-static int
-matchval(Expr_t * pgm, Exnode_t * xstr, const char *str, Exnode_t * xpat,
-	 const char *pat, void *env, Exdisc_t * disc)
-{
-    (void)pgm;
-    (void)xstr;
-    (void)xpat;
-    (void)env;
-    (void)disc;
-
+static int matchval(const char *str, const char *pat) {
     return strgrpmatch(str, pat, NULL, 0,
 		       STR_MAXIMAL | STR_LEFT | STR_RIGHT);
 }

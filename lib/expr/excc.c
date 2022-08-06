@@ -15,17 +15,34 @@
  * expression library C program generator
  */
 
-#define _EX_CC_PRIVATE_ \
-	char*		id;		/* prefix + _			*/ \
-	int		lastop;		/* last op			*/ \
-	int		tmp;		/* temp var index		*/ \
-	Exccdisc_t*	ccdisc;		/* excc() discipline		*/
-
+#include <cgraph/agxbuf.h>
 #include <cgraph/exit.h>
 #include <expr/exlib.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+
+typedef struct Excc_s Excc_t;
+typedef struct Exccdisc_s Exccdisc_t;
+
+struct Exccdisc_s			/* excc() discipline		*/
+{
+  agxbuf *text; // text output buffer
+  char*		id;		/* symbol prefix		*/
+  uint64_t	flags;		/* EXCC_* flags			*/
+  int		(*ccf)(Excc_t*, Exnode_t*, Exid_t*, Exref_t*, Exnode_t*, Exccdisc_t*);
+          /* program generator function	*/
+};
+
+struct Excc_s				/* excc() state			*/
+{
+	Expr_t*		expr;		/* exopen() state		*/
+	Exdisc_t*	disc;		/* exopen() discipline		*/
+	char*		id;		/* prefix + _			*/
+	int		lastop;		/* last op			*/
+	int		tmp;		/* temp var index		*/
+	Exccdisc_t*	ccdisc;		/* excc() discipline		*/
+};
 
 #define EX_CC_DUMP	0x8000
 
@@ -110,26 +127,26 @@ print(Excc_t* cc, Exnode_t* expr)
 
 	if ((x = expr->data.print.args))
 	{
-		sfprintf(cc->ccdisc->text, "sfprintf(%s, \"%s", expr->data.print.descriptor->op == CONSTANT && expr->data.print.descriptor->data.constant.value.integer == 2 ? "sfstderr" : "sfstdout", fmtesq(x->format, quote));
+		agxbprint(cc->ccdisc->text, "sfprintf(%s, \"%s", expr->data.print.descriptor->op == CONSTANT && expr->data.print.descriptor->data.constant.value.integer == 2 ? "sfstderr" : "sfstdout", fmtesq(x->format, quote));
 		while ((x = x->next))
-			sfprintf(cc->ccdisc->text, "%s", fmtesq(x->format, quote));
-		sfprintf(cc->ccdisc->text, "\"");
+			agxbput(cc->ccdisc->text, fmtesq(x->format, quote));
+		agxbputc(cc->ccdisc->text, '"');
 		for (x = expr->data.print.args; x; x = x->next)
 		{
 			if (x->arg)
 			{
 				for (size_t i = 0; i < elementsof(x->param) && x->param[i]; i++)
 				{
-					sfprintf(cc->ccdisc->text, ", (");
+					agxbput(cc->ccdisc->text, ", (");
 					gen(cc, x->param[i]);
-					sfprintf(cc->ccdisc->text, ")");
+					agxbputc(cc->ccdisc->text, ')');
 				}
-				sfprintf(cc->ccdisc->text, ", (");
+				agxbput(cc->ccdisc->text, ", (");
 				gen(cc, x->arg);
-				sfprintf(cc->ccdisc->text, ")");
+				agxbputc(cc->ccdisc->text, ')');
 			}
 		}
-		sfprintf(cc->ccdisc->text, ");\n");
+		agxbput(cc->ccdisc->text, ");\n");
 	}
 }
 
@@ -144,26 +161,26 @@ scan(Excc_t* cc, Exnode_t* expr)
 
 	if ((x = expr->data.print.args))
 	{
-		sfprintf(cc->ccdisc->text, "sfscanf(sfstdin, \"%s", fmtesq(x->format, quote));
+		agxbprint(cc->ccdisc->text, "sfscanf(sfstdin, \"%s", fmtesq(x->format, quote));
 		while ((x = x->next))
-			sfprintf(cc->ccdisc->text, "%s", fmtesq(x->format, quote));
-		sfprintf(cc->ccdisc->text, "\"");
+			agxbput(cc->ccdisc->text, fmtesq(x->format, quote));
+		agxbputc(cc->ccdisc->text, '"');
 		for (x = expr->data.print.args; x; x = x->next)
 		{
 			if (x->arg)
 			{
 				for (size_t i = 0; i < elementsof(x->param) && x->param[i]; i++)
 				{
-					sfprintf(cc->ccdisc->text, ", &(");
+					agxbput(cc->ccdisc->text, ", &(");
 					gen(cc, x->param[i]);
-					sfprintf(cc->ccdisc->text, ")");
+					agxbputc(cc->ccdisc->text, ')');
 				}
-				sfprintf(cc->ccdisc->text, ", &(");
+				agxbput(cc->ccdisc->text, ", &(");
 				gen(cc, x->arg);
-				sfprintf(cc->ccdisc->text, ")");
+				agxbputc(cc->ccdisc->text, ')');
 			}
 		}
-		sfprintf(cc->ccdisc->text, ");\n");
+		agxbput(cc->ccdisc->text, ");\n");
 	}
 }
 
@@ -186,146 +203,147 @@ gen(Excc_t* cc, Exnode_t* expr)
 	if (!expr)
 		return;
 	if (expr->op == CALL) {
-		sfprintf(cc->ccdisc->text, "%s(", expr->data.call.procedure->name);
+		agxbprint(cc->ccdisc->text, "%s(", expr->data.call.procedure->name);
 		if (expr->data.call.args)
 			gen(cc, expr->data.call.args);
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	}
 	x = expr->data.operand.left;
 	switch (expr->op)
 	{
 	case BREAK:
-		sfprintf(cc->ccdisc->text, "break;\n");
+		agxbput(cc->ccdisc->text, "break;\n");
 		return;
 	case CONTINUE:
-		sfprintf(cc->ccdisc->text, "continue;\n");
+		agxbput(cc->ccdisc->text, "continue;\n");
 		return;
 	case CONSTANT:
 		switch (expr->type)
 		{
 		case FLOATING:
-			sfprintf(cc->ccdisc->text, "%g", expr->data.constant.value.floating);
+			agxbprint(cc->ccdisc->text, "%g", expr->data.constant.value.floating);
 			break;
 		case STRING:
-			sfprintf(cc->ccdisc->text, "\"%s\"", fmtesq(expr->data.constant.value.string, quote));
+			agxbprint(cc->ccdisc->text, "\"%s\"", fmtesq(expr->data.constant.value.string, quote));
 			break;
 		case UNSIGNED:
-			sfprintf(cc->ccdisc->text, "%I*u", sizeof(expr->data.constant.value.integer), expr->data.constant.value.integer);
+			agxbprint(cc->ccdisc->text, "%llu",
+			          (long long unsigned)expr->data.constant.value.integer);
 			break;
 		default:
-			sfprintf(cc->ccdisc->text, "%I*d", sizeof(expr->data.constant.value.integer), expr->data.constant.value.integer);
+			agxbprint(cc->ccdisc->text, "%lld", expr->data.constant.value.integer);
 			break;
 		}
 		return;
 	case DEC:
-		sfprintf(cc->ccdisc->text, "%s--", x->data.variable.symbol->name);
+		agxbprint(cc->ccdisc->text, "%s--", x->data.variable.symbol->name);
 		return;
 	case DYNAMIC:
-		sfprintf(cc->ccdisc->text, "%s", expr->data.variable.symbol->name);
+		agxbput(cc->ccdisc->text, expr->data.variable.symbol->name);
 		return;
 	case EXIT:
-                sfprintf(cc->ccdisc->text, "exit(");
+		agxbput(cc->ccdisc->text, "exit(");
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ");\n");
+		agxbput(cc->ccdisc->text, ");\n");
 		return;
 	case FUNCTION:
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, "(");
+		agxbputc(cc->ccdisc->text, '(');
 		if ((y = expr->data.operand.right)) {
 			gen(cc, y);
 		}
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case RAND:
-		sfprintf(cc->ccdisc->text, "rand();\n");
+		agxbput(cc->ccdisc->text, "rand();\n");
 		return;
 	case SRAND:
 		if (expr->binary) {
-			sfprintf(cc->ccdisc->text, "srand(");
+			agxbput(cc->ccdisc->text, "srand(");
 			gen(cc, x);
-			sfprintf(cc->ccdisc->text, ");\n");
+			agxbput(cc->ccdisc->text, ");\n");
 		} else
-			sfprintf(cc->ccdisc->text, "srand();\n");
+			agxbput(cc->ccdisc->text, "srand();\n");
 		return;
    	case GSUB:
    	case SUB:
    	case SUBSTR:
 		s = (expr->op == GSUB ? "gsub(" : expr->op == SUB ? "sub(" : "substr(");
-		sfprintf(cc->ccdisc->text, s);
+		agxbput(cc->ccdisc->text, s);
 		gen(cc, expr->data.string.base);
-		sfprintf(cc->ccdisc->text, ", ");
+		agxbput(cc->ccdisc->text, ", ");
 		gen(cc, expr->data.string.pat);
 		if (expr->data.string.repl) {
-			sfprintf(cc->ccdisc->text, ", ");
+			agxbput(cc->ccdisc->text, ", ");
 			gen(cc, expr->data.string.repl);
 		}
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
    	case IN_OP:
 		gen(cc, expr->data.variable.index);
-		sfprintf(cc->ccdisc->text, " in %s", expr->data.variable.symbol->name);
+		agxbprint(cc->ccdisc->text, " in %s", expr->data.variable.symbol->name);
 		return;
 	case IF:
-		sfprintf(cc->ccdisc->text, "if (");
+		agxbput(cc->ccdisc->text, "if (");
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ") {\n");
+		agxbput(cc->ccdisc->text, ") {\n");
 		gen(cc, expr->data.operand.right->data.operand.left);
 		if (expr->data.operand.right->data.operand.right)
 		{
-			sfprintf(cc->ccdisc->text, "} else {\n");
+			agxbput(cc->ccdisc->text, "} else {\n");
 			gen(cc, expr->data.operand.right->data.operand.right);
 		}
-		sfprintf(cc->ccdisc->text, "}\n");
+		agxbput(cc->ccdisc->text, "}\n");
 		return;
 	case FOR:
-		sfprintf(cc->ccdisc->text, "for (;");
+		agxbput(cc->ccdisc->text, "for (;");
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ");");
+		agxbput(cc->ccdisc->text, ");");
 		if (expr->data.operand.left)
 		{
-			sfprintf(cc->ccdisc->text, "(");
+			agxbputc(cc->ccdisc->text, '(');
 			gen(cc, expr->data.operand.left);
-			sfprintf(cc->ccdisc->text, ")");
+			agxbputc(cc->ccdisc->text, ')');
 		}
-		sfprintf(cc->ccdisc->text, ") {");
+		agxbput(cc->ccdisc->text, ") {");
 		if (expr->data.operand.right)
 			gen(cc, expr->data.operand.right);
-		sfprintf(cc->ccdisc->text, "}");
+		agxbputc(cc->ccdisc->text, '}');
 		return;
 	case ID:
 		if (cc->ccdisc->ccf)
-			(*cc->ccdisc->ccf)(cc, expr, expr->data.variable.symbol, expr->data.variable.reference, expr->data.variable.index, cc->ccdisc);
+			cc->ccdisc->ccf(cc, expr, expr->data.variable.symbol, expr->data.variable.reference, expr->data.variable.index, cc->ccdisc);
 		else
-			sfprintf(cc->ccdisc->text, "%s", expr->data.variable.symbol->name);
+			agxbput(cc->ccdisc->text, expr->data.variable.symbol->name);
 		return;
 	case INC:
-		sfprintf(cc->ccdisc->text, "%s++", x->data.variable.symbol->name);
+		agxbprint(cc->ccdisc->text, "%s++", x->data.variable.symbol->name);
 		return;
 	case ITERATE:
 	case ITERATER:
 		if (expr->op == DYNAMIC)
 		{
-			sfprintf(cc->ccdisc->text, "{ Exassoc_t* %stmp_%d;", cc->id, ++cc->tmp);
-			sfprintf(cc->ccdisc->text, "for (%stmp_%d = (Exassoc_t*)dtfirst(%s); %stmp_%d && (%s = %stmp_%d->name); %stmp_%d = (Exassoc_t*)dtnext(%s, %stmp_%d)) {", cc->id, cc->tmp, expr->data.generate.array->data.variable.symbol->name, cc->id, cc->tmp, expr->data.generate.index->name, cc->id, cc->tmp, cc->id, cc->tmp, expr->data.generate.array->data.variable.symbol->name, cc->id, cc->tmp);
+			agxbprint(cc->ccdisc->text, "{ Exassoc_t* %stmp_%d;", cc->id, ++cc->tmp);
+			agxbprint(cc->ccdisc->text, "for (%stmp_%d = (Exassoc_t*)dtfirst(%s); %stmp_%d && (%s = %stmp_%d->name); %stmp_%d = (Exassoc_t*)dtnext(%s, %stmp_%d)) {", cc->id, cc->tmp, expr->data.generate.array->data.variable.symbol->name, cc->id, cc->tmp, expr->data.generate.index->name, cc->id, cc->tmp, cc->id, cc->tmp, expr->data.generate.array->data.variable.symbol->name, cc->id, cc->tmp);
 			gen(cc, expr->data.generate.statement);
-			sfprintf(cc->ccdisc->text, "} }");
+			agxbput(cc->ccdisc->text, "} }");
 		}
 		return;
 	case PRINT:
-		sfprintf(cc->ccdisc->text, "print");
+		agxbput(cc->ccdisc->text, "print");
 		if (x)
 			gen(cc, x);
 		else
-			sfprintf(cc->ccdisc->text, "()");
+			agxbput(cc->ccdisc->text, "()");
 		return;
 	case PRINTF:
 		print(cc, expr);
 		return;
 	case RETURN:
-		sfprintf(cc->ccdisc->text, "return(");
+		agxbput(cc->ccdisc->text, "return(");
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ");\n");
+		agxbput(cc->ccdisc->text, ");\n");
 		return;
 	case SCANF:
 		scan(cc, expr);
@@ -333,29 +351,29 @@ gen(Excc_t* cc, Exnode_t* expr)
 	case SPLIT:
 	case TOKENS:
 		if (expr->op == SPLIT)
-			sfprintf(cc->ccdisc->text, "split (");
+			agxbput(cc->ccdisc->text, "split (");
 		else
-			sfprintf(cc->ccdisc->text, "tokens (");
+			agxbput(cc->ccdisc->text, "tokens (");
 		gen(cc, expr->data.split.string);
-		sfprintf(cc->ccdisc->text, ", %s", expr->data.split.array->name);
+		agxbprint(cc->ccdisc->text, ", %s", expr->data.split.array->name);
 		if (expr->data.split.seps) {
-			sfprintf(cc->ccdisc->text, ",");
+			agxbputc(cc->ccdisc->text, ',');
 			gen(cc, expr->data.split.seps);
 		}
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case SWITCH:
 		t = x->type;
-		sfprintf(cc->ccdisc->text, "{ %s %stmp_%d = ", extype(t), cc->id, ++cc->tmp);
+		agxbprint(cc->ccdisc->text, "{ %s %stmp_%d = ", extype(t), cc->id, ++cc->tmp);
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ";");
+		agxbputc(cc->ccdisc->text, ';');
 		x = expr->data.operand.right;
 		y = x->data.select.statement;
 		n = 0;
 		while ((x = x->data.select.next))
 		{
 			if (n)
-				sfprintf(cc->ccdisc->text, "else ");
+				agxbput(cc->ccdisc->text, "else ");
 			if (!(p = x->data.select.constant))
 				y = x->data.select.statement;
 			else
@@ -364,67 +382,68 @@ gen(Excc_t* cc, Exnode_t* expr)
 				while ((v = *p++))
 				{
 					if (m)
-						sfprintf(cc->ccdisc->text, "||");
+						agxbput(cc->ccdisc->text, "||");
 					else
 					{
 						m = 1;
-						sfprintf(cc->ccdisc->text, "if (");
+						agxbput(cc->ccdisc->text, "if (");
 					}
 					if (t == STRING)
-						sfprintf(cc->ccdisc->text, "strmatch(%stmp_%d, \"%s\")", cc->id, cc->tmp, fmtesq(v->string, quote));
+						agxbprint(cc->ccdisc->text, "strmatch(%stmp_%d, \"%s\")", cc->id, cc->tmp, fmtesq(v->string, quote));
 					else
 					{
-						sfprintf(cc->ccdisc->text, "%stmp_%d == ", cc->id, cc->tmp);
+						agxbprint(cc->ccdisc->text, "%stmp_%d == ", cc->id, cc->tmp);
 						switch (t)
 						{
 						case INTEGER:
 						case UNSIGNED:
-							sfprintf(cc->ccdisc->text, "%I*u", sizeof(v->integer), v->integer);
+							agxbprint(cc->ccdisc->text, "%llu",
+							          (unsigned long long)v->integer);
 							break;
 						default:
-							sfprintf(cc->ccdisc->text, "%g", v->floating);
+							agxbprint(cc->ccdisc->text, "%g", v->floating);
 							break;
 						}
 					}
 				}
-				sfprintf(cc->ccdisc->text, ") {");
+				agxbput(cc->ccdisc->text, ") {");
 				gen(cc, x->data.select.statement);
-				sfprintf(cc->ccdisc->text, "}");
+				agxbputc(cc->ccdisc->text, '}');
 			}
 		}
 		if (y)
 		{
 			if (n)
-				sfprintf(cc->ccdisc->text, "else ");
-			sfprintf(cc->ccdisc->text, "{");
+				agxbput(cc->ccdisc->text, "else ");
+			agxbputc(cc->ccdisc->text, '{');
 			gen(cc, y);
-			sfprintf(cc->ccdisc->text, "}");
+			agxbputc(cc->ccdisc->text, '}');
 		}
-		sfprintf(cc->ccdisc->text, "}");
+		agxbputc(cc->ccdisc->text, '}');
 		return;
 	case UNSET:
-		sfprintf(cc->ccdisc->text, "unset(%s", expr->data.variable.symbol->name);
+		agxbprint(cc->ccdisc->text, "unset(%s", expr->data.variable.symbol->name);
 		if (expr->data.variable.index) {
-			sfprintf(cc->ccdisc->text, ",");
+			agxbputc(cc->ccdisc->text, ',');
 			gen(cc, expr->data.variable.index);
 		}
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case WHILE:
-		sfprintf(cc->ccdisc->text, "while (");
+		agxbput(cc->ccdisc->text, "while (");
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ") {");
+		agxbput(cc->ccdisc->text, ") {");
 		if (expr->data.operand.right)
 			gen(cc, expr->data.operand.right);
-		sfprintf(cc->ccdisc->text, "}");
+		agxbputc(cc->ccdisc->text, '}');
 		return;
     case '#':
-		sfprintf(cc->ccdisc->text, "# %s", expr->data.variable.symbol->name);
+		agxbprint(cc->ccdisc->text, "# %s", expr->data.variable.symbol->name);
 		return;
 	case '=':
-		sfprintf(cc->ccdisc->text, "(%s%s=", x->data.variable.symbol->name, expr->subop == '=' ? "" : exopname(expr->subop));
+		agxbprint(cc->ccdisc->text, "(%s%s=", x->data.variable.symbol->name, expr->subop == '=' ? "" : exopname(expr->subop));
 		gen(cc, expr->data.operand.right);
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case ';':
 		for (;;)
@@ -440,11 +459,11 @@ gen(Excc_t* cc, Exnode_t* expr)
 				case WHILE:
 					break;
 				default:
-					sfprintf(cc->ccdisc->text, "_%svalue=", cc->id);
+					agxbprint(cc->ccdisc->text, "_%svalue=", cc->id);
 					break;
 				}
 			gen(cc, expr->data.operand.left);
-			sfprintf(cc->ccdisc->text, ";\n");
+			agxbput(cc->ccdisc->text, ";\n");
 			if (!(expr = x))
 				break;
 			switch (cc->lastop = expr->op)
@@ -459,77 +478,76 @@ gen(Excc_t* cc, Exnode_t* expr)
 			case WHILE:
 				break;
 			default:
-				sfprintf(cc->ccdisc->text, "_%svalue=", cc->id);
+				agxbprint(cc->ccdisc->text, "_%svalue=", cc->id);
 				break;
 			}
 			gen(cc, expr);
-			sfprintf(cc->ccdisc->text, ";\n");
+			agxbput(cc->ccdisc->text, ";\n");
 			break;
 		}
 		return;
 	case ',':
-		sfprintf(cc->ccdisc->text, "(");
+		agxbputc(cc->ccdisc->text, '(');
 		gen(cc, x);
 		while ((expr = expr->data.operand.right) && expr->op == ',')
 		{
-			sfprintf(cc->ccdisc->text, "), (");
+			agxbput(cc->ccdisc->text, "), (");
 			gen(cc, expr->data.operand.left);
 		}
 		if (expr)
 		{
-			sfprintf(cc->ccdisc->text, "), (");
+			agxbput(cc->ccdisc->text, "), (");
 			gen(cc, expr);
 		}
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case '?':
-		sfprintf(cc->ccdisc->text, "(");
+		agxbputc(cc->ccdisc->text, '(');
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ") ? (");
+		agxbput(cc->ccdisc->text, ") ? (");
 		gen(cc, expr->data.operand.right->data.operand.left);
-		sfprintf(cc->ccdisc->text, ") : (");
+		agxbput(cc->ccdisc->text, ") : (");
 		gen(cc, expr->data.operand.right->data.operand.right);
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case AND:
-		sfprintf(cc->ccdisc->text, "(");
+		agxbputc(cc->ccdisc->text, '(');
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ") && (");
+		agxbput(cc->ccdisc->text, ") && (");
 		gen(cc, expr->data.operand.right);
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case OR:
-		sfprintf(cc->ccdisc->text, "(");
+		agxbputc(cc->ccdisc->text, '(');
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ") || (");
+		agxbput(cc->ccdisc->text, ") || (");
 		gen(cc, expr->data.operand.right);
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case F2I:
-		sfprintf(cc->ccdisc->text, "(%s)(", extype(INTEGER));
+		agxbprint(cc->ccdisc->text, "(%s)(", extype(INTEGER));
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case I2F:
-		sfprintf(cc->ccdisc->text, "(%s)(", extype(FLOATING));
+		agxbprint(cc->ccdisc->text, "(%s)(", extype(FLOATING));
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case S2I:
-		/* sfprintf(cc->ccdisc->text, "strto%s(", sizeof(intmax_t) > sizeof(long) ? "ll" : "l"); */
-		sfprintf(cc->ccdisc->text, "strtoll(");
+		agxbput(cc->ccdisc->text, "strtoll(");
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ",(char**)0,0)");
+		agxbput(cc->ccdisc->text, ",(char**)0,0)");
 		return;
     case X2I:
-		sfprintf(cc->ccdisc->text, "X2I(");
+		agxbput(cc->ccdisc->text, "X2I(");
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	case X2X:
-		sfprintf(cc->ccdisc->text, "X2X(");
+		agxbput(cc->ccdisc->text, "X2X(");
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 		return;
 	}
 	y = expr->data.operand.right;
@@ -538,32 +556,32 @@ gen(Excc_t* cc, Exnode_t* expr)
 		switch (expr->op)
 		{
 		case S2B:
-			sfprintf(cc->ccdisc->text, "*(");
+			agxbput(cc->ccdisc->text, "*(");
 			gen(cc, x);
-			sfprintf(cc->ccdisc->text, ")!=0");
+			agxbput(cc->ccdisc->text, ")!=0");
 			return;
 		case S2F:
-			sfprintf(cc->ccdisc->text, "strtod(");
+			agxbput(cc->ccdisc->text, "strtod(");
 			gen(cc, x);
-			sfprintf(cc->ccdisc->text, ",0)");
+			agxbput(cc->ccdisc->text, ",0)");
 			return;
 		case S2I:
-			sfprintf(cc->ccdisc->text, "strtol(");
+			agxbput(cc->ccdisc->text, "strtol(");
 			gen(cc, x);
-			sfprintf(cc->ccdisc->text, ",0,0)");
+			agxbput(cc->ccdisc->text, ",0,0)");
 			return;
 		case S2X:
-			sfprintf(cc->ccdisc->text, "** cannot convert string value to external **");
+			agxbput(cc->ccdisc->text, "** cannot convert string value to external **");
 			return;
 		case NE:
-			sfprintf(cc->ccdisc->text, "!");
+			agxbputc(cc->ccdisc->text, '!');
 			/*FALLTHROUGH*/
 		case EQ:
-			sfprintf(cc->ccdisc->text, "strmatch(");
+			agxbput(cc->ccdisc->text, "strmatch(");
 			gen(cc, x);
-			sfprintf(cc->ccdisc->text, ",");
+			agxbputc(cc->ccdisc->text, ',');
 			gen(cc, y);
-			sfprintf(cc->ccdisc->text, ")");
+			agxbputc(cc->ccdisc->text, ')');
 			return;
 		case '+':
 		case '|':
@@ -571,7 +589,7 @@ gen(Excc_t* cc, Exnode_t* expr)
 		case '^':
 		case '%':
 		case '*':
-			sfprintf(cc->ccdisc->text, "** string bits not supported **");
+			agxbput(cc->ccdisc->text, "** string bits not supported **");
 			return;
 		}
 		switch (expr->op)
@@ -592,25 +610,25 @@ gen(Excc_t* cc, Exnode_t* expr)
 			s = "** unknown string op **";
 			break;
 		}
-		sfprintf(cc->ccdisc->text, "strcoll(");
+		agxbput(cc->ccdisc->text, "strcoll(");
 		gen(cc, x);
-		sfprintf(cc->ccdisc->text, ",");
+		agxbputc(cc->ccdisc->text, ',');
 		gen(cc, y);
-		sfprintf(cc->ccdisc->text, ")%s", s);
+		agxbprint(cc->ccdisc->text, ")%s", s);
 		return;
 	}
 	else
 	{
 		if (!y)
-			sfprintf(cc->ccdisc->text, "%s", exopname(expr->op));
-		sfprintf(cc->ccdisc->text, "(");
+			agxbput(cc->ccdisc->text, exopname(expr->op));
+		agxbputc(cc->ccdisc->text, '(');
 		gen(cc, x);
 		if (y)
 		{
-			sfprintf(cc->ccdisc->text, ")%s(", exopname(expr->op));
+			agxbprint(cc->ccdisc->text, ")%s(", exopname(expr->op));
 			gen(cc, y);
 		}
-		sfprintf(cc->ccdisc->text, ")");
+		agxbputc(cc->ccdisc->text, ')');
 	}
 	return;
 }
@@ -624,11 +642,11 @@ global(Dt_t* table, void* object, void* handle)
 {
 	(void)table;
 
-	Excc_t*	cc = handle;
+	agxbuf *stream = handle;
 	Exid_t*	sym = object;
 
 	if (sym->lex == DYNAMIC)
-		sfprintf(cc->ccdisc->text, "static %s	%s;\n", extype(sym->type), sym->name);
+		agxbprint(stream, "static %s	%s;\n", extype(sym->type), sym->name);
 	return 0;
 }
 
@@ -636,9 +654,7 @@ global(Dt_t* table, void* object, void* handle)
  * open C program generator context
  */
 
-Excc_t*
-exccopen(Expr_t* expr, Exccdisc_t* disc)
-{
+static Excc_t *exccopen(Expr_t *expr, Exccdisc_t *disc) {
 	Excc_t*	cc;
 	char*			id;
 
@@ -652,12 +668,12 @@ exccopen(Expr_t* expr, Exccdisc_t* disc)
 	cc->ccdisc = disc;
 	if (!(disc->flags & EX_CC_DUMP))
 	{
-		sfprintf(disc->text, "/* : : generated by %s : : */\n", exversion);
-		sfprintf(disc->text, "\n#include <ast/ast.h>\n");
+		agxbprint(disc->text, "/* : : generated by %s : : */\n", exversion);
+		agxbput(disc->text, "\n#include <ast/ast.h>\n");
 		if (*id)
 			snprintf(cc->id, strlen(id) + 2, "%s_", id);
-		sfprintf(disc->text, "\n");
-		dtwalk(expr->symbols, global, cc);
+		agxbputc(disc->text, '\n');
+		dtwalk(expr->symbols, global, disc->text);
 	}
 	return cc;
 }
@@ -666,9 +682,7 @@ exccopen(Expr_t* expr, Exccdisc_t* disc)
  * close C program generator context
  */
 
-int
-exccclose(Excc_t* cc)
-{
+static int exccclose(Excc_t *cc) {
 	int	r = 0;
 
 	if (!cc)
@@ -678,7 +692,7 @@ exccclose(Excc_t* cc)
 		if (!(cc->ccdisc->flags & EX_CC_DUMP))
 		{
 			if (cc->ccdisc->text)
-				sfclose(cc->ccdisc->text);
+				agxbuse(cc->ccdisc->text);
 			else
 				r = -1;
 		}
@@ -688,19 +702,17 @@ exccclose(Excc_t* cc)
 }
 
 /*
- * dump an expression tree on sp
+ * dump an expression tree to a buffer
  */
 
-int
-exdump(Expr_t* expr, Exnode_t* node, Sfio_t* sp)
-{
+int exdump(Expr_t *expr, Exnode_t *node, agxbuf *xb) {
 	Excc_t*		cc;
 	Exccdisc_t	ccdisc;
 	Exid_t*		sym;
 
 	memset(&ccdisc, 0, sizeof(ccdisc));
 	ccdisc.flags = EX_CC_DUMP;
-	ccdisc.text = sp;
+	ccdisc.text = xb;
 	if (!(cc = exccopen(expr, &ccdisc)))
 		return -1;
 	if (node)
@@ -709,9 +721,9 @@ exdump(Expr_t* expr, Exnode_t* node, Sfio_t* sp)
 		for (sym = dtfirst(expr->symbols); sym; sym = dtnext(expr->symbols, sym))
 			if (sym->lex == PROCEDURE && sym->value)
 			{
-				sfprintf(sp, "%s:\n", sym->name);
+				agxbprint(xb, "%s:\n", sym->name);
 				gen(cc, sym->value->data.procedure.body);
 			}
-	sfprintf(sp, "\n");
+	agxbputc(xb, '\n');
 	return exccclose(cc);
 }

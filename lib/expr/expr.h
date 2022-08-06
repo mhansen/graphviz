@@ -31,6 +31,7 @@ extern "C" {
 
 #include <assert.h>
 #include <cdt.h>
+#include <cgraph/agxbuf.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -201,24 +202,24 @@ struct Exdisc_s				/* discipline			*/
 	char*		type;		/* pathfind() type		*/
 	int		(*castf)(Expr_t*, Exnode_t*, const char*, int, Exid_t*, int, Exdisc_t*);
 					/* unknown cast function	*/
-	int		(*convertf)(Expr_t*, Exnode_t*, int, Exid_t*, int, Exdisc_t*);
+	int		(*convertf)(Exnode_t*, int, int);
 					/* type conversion function	*/
-	int		(*binaryf) (Expr_t *, Exnode_t *, Exnode_t *, Exnode_t *, int, Exdisc_t *);
+	int		(*binaryf) (Exnode_t *, Exnode_t *, Exnode_t *, int);
 					/* binary operator function     */
-	char*		(*typename) (Expr_t *, int);
+	char*		(*typename) (int);
 					/* application type names       */
 	int		(*stringof) (Expr_t *, Exnode_t *, int, Exdisc_t *);
 					/* value to string conversion   */
-	Extype_t	(*keyf) (Expr_t *, Extype_t, int, Exdisc_t *);
+	Extype_t	(*keyf) (Extype_t, int);
 					/* dictionary key for external type objects     */
 	Exerror_f	errorf;		/* error function		*/
 	Extype_t	(*getf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, int, Exdisc_t*);
 					/* get value function		*/
-	Extype_t	(*reff)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, char*, int, Exdisc_t*);
+	Extype_t	(*reff)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*);
 					/* reference value function	*/
-	int		(*setf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, int, Extype_t, Exdisc_t*);
+	int		(*setf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, Extype_t);
 					/* set value function		*/
-	int		(*matchf)(Expr_t*, Exnode_t*, const char*, Exnode_t*, const char*, void*, Exdisc_t*);
+	int		(*matchf)(const char*, const char*);
 	/* exit function           */
 	Exexit_f	exitf;
 	int*		types;
@@ -239,38 +240,12 @@ struct Expr_s				/* ex program state		*/
 
 };
 
-typedef struct Excc_s Excc_t;
-typedef struct Exccdisc_s Exccdisc_t;
-
-struct Exccdisc_s			/* excc() discipline		*/
-{
-	Sfio_t*		text;		/* text output stream		*/
-	char*		id;		/* symbol prefix		*/
-	uint64_t	flags;		/* EXCC_* flags			*/
-	int		(*ccf)(Excc_t*, Exnode_t*, Exid_t*, Exref_t*, Exnode_t*, Exccdisc_t*);
-					/* program generator function	*/
-};
-
-struct Excc_s				/* excc() state			*/
-{
-	Expr_t*		expr;		/* exopen() state		*/
-	Exdisc_t*	disc;		/* exopen() discipline		*/
-
-#ifdef _EX_CC_PRIVATE_
-	_EX_CC_PRIVATE_
-#endif
-
-};
-
-
 extern Exnode_t*	excast(Expr_t*, Exnode_t*, int, Exnode_t*, int);
 extern Exnode_t*	exnoncast(Exnode_t *);
-extern int		exccclose(Excc_t*);
-extern Excc_t*		exccopen(Expr_t*, Exccdisc_t*);
 extern void		exclose(Expr_t*, int);
 extern int		excomp(Expr_t*, const char*, int, const char*, Sfio_t*);
 extern char*		excontext(Expr_t*, char*, int);
-extern int		exdump(Expr_t*, Exnode_t*, Sfio_t*);
+extern int		exdump(Expr_t*, Exnode_t*, agxbuf*);
 #ifdef __GNUC__
 __attribute__((format(printf, 1, 2)))
 #endif

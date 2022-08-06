@@ -1009,7 +1009,7 @@ constant	:	CONSTANT
 			if (!expr.program->disc->reff)
 				exerror("%s: identifier references not supported", $1->name);
 			else
-				$$->data.constant.value = (*expr.program->disc->reff)(expr.program, $$, $1, NULL, NULL, EX_SCALAR, expr.program->disc);
+				$$->data.constant.value = expr.program->disc->reff(expr.program, $$, $1, NULL);
 		}
 		|	FLOATING
 		{

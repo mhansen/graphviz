@@ -304,7 +304,7 @@ static Exnode_t *exstringOf(Expr_t * p, Exnode_t * x) {
 	    exerror("cannot convert %s to STRING", extypename(p, type));
 	if (x->op != CONSTANT) {
 	    if (!BUILTIN(type)) {
-		if ((*p->disc->stringof) (p, x, 1, p->disc) < 0) {
+		if (p->disc->stringof(p, x, 1, p->disc) < 0) {
 		    exerror("cannot convert %s to STRING",
 			    extypename(p, type));
 		}
@@ -320,7 +320,7 @@ static Exnode_t *exstringOf(Expr_t * p, Exnode_t * x) {
 		}
 	    x = exnewnode(p, cvt, 0, STRING, x, 0);
 	} else if (!BUILTIN(type)) {
-	    if ((*p->disc->stringof) (p, x, 0, p->disc) < 0)
+	    if (p->disc->stringof(p, x, 0, p->disc) < 0)
 		exerror("cannot convert constant %s to STRING",
 			extypename(p, x->type));
 	} else
@@ -397,9 +397,7 @@ static Exnode_t *makeVar(Expr_t * prog, Exid_t * s, Exnode_t * idx,
 	if (!prog->disc->getf)
 	    exerror("%s: identifier references not supported", sym->name);
 	else if (expr.program->disc->reff)
-	    (*expr.program->disc->reff) (prog, nn,
-					 nn->data.variable.symbol, refs,
-					 NULL, EX_SCALAR, prog->disc);
+	    expr.program->disc->reff(prog, nn, nn->data.variable.symbol, refs);
 
 	return nn;
 }
@@ -432,7 +430,7 @@ static int	typecast[6][6] =
 char *extypename(Expr_t * p, int type) {
 	if (BUILTIN(type))
 	    return TYPENAME(type);
-	return (p->disc->typename) (p, type);
+	return p->disc->typename(type);
 }
 
 /* exnoncast:
@@ -466,7 +464,7 @@ excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
 			Exid_t *sym = (xref ? xref->data.variable.symbol : NULL);
 			if (EXTERNAL(t2t)) {
 				int a = (arg ? arg : 1);
-		    	if ((*p->disc->convertf) (p, x, type, sym, a, p->disc) < 0) {
+		    	if (p->disc->convertf(x, type, a) < 0) {
 					if (xref) {
 						if ((sym->lex == FUNCTION) && arg)
 							exerror ("%s: cannot use value of type %s as argument %d in function %s",
@@ -496,10 +494,10 @@ excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
 		case X2X:
 			if (xref && xref->op == ID)
 			{
-				if ((*p->disc->convertf)(p, x, type, xref->data.variable.symbol, arg, p->disc) < 0)
+				if (p->disc->convertf(x, type, arg) < 0)
 					exerror("%s: cannot cast constant %s to %s", xref->data.variable.symbol->name, extypename(p, x->type), extypename(p, type));
 			}
-			else if ((*p->disc->convertf)(p, x, type, NULL, arg, p->disc) < 0)
+			else if (p->disc->convertf(x, type, arg) < 0)
 				exerror("cannot cast constant %s to %s", extypename(p, x->type), extypename(p, type));
 			break;
 		case F2I:
@@ -787,7 +785,7 @@ preprint(Exnode_t* args)
 				{
 					if (x->arg->op == CONSTANT && x->arg->data.constant.reference && expr.program->disc->convertf)
 					{
-						if ((*expr.program->disc->convertf)(expr.program, x->arg, STRING, x->arg->data.constant.reference, 0, expr.program->disc) < 0)
+						if (expr.program->disc->convertf(x->arg, STRING, 0) < 0)
 							exerror("cannot convert string format argument");
 						else x->arg->data.constant.value.string = vmstrdup(expr.program->vm, x->arg->data.constant.value.string);
 					}
@@ -1016,7 +1014,7 @@ exclose(Expr_t* p, int all)
 static void
 checkBinary(Expr_t * p, Exnode_t * l, Exnode_t * ex, Exnode_t * r) 
 {
-	if ((*p->disc->binaryf) (p, l, ex, r, 1, p->disc) < 0) {
+	if (p->disc->binaryf(l, ex, r, 1) < 0) {
 	    if (r)
 		exerror
 		    ("cannot apply operator %s to expressions of types %s and %s",
