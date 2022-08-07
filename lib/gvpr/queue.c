@@ -69,16 +69,14 @@ void push(queue * nq, void *n)
     dtinsert(nq, &obj);
 }
 
-void *pop(queue * nq, int delete)
-{
+void *pop(queue *nq) {
     nsitem *obj;
     void *n;
 
     obj = dtfirst(nq);
     if (obj) {
 	n = obj->np;
-	if (delete)
-	    dtdelete(nq, 0);
+	dtdelete(nq, 0);
 	return n;
     } else
 	return 0;

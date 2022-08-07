@@ -20,7 +20,7 @@ extern "C" {
 
     extern queue *mkQ(Dtmethod_t *);
     extern void push(queue *, void *);
-    extern void *pop(queue *, int remove);
+    extern void *pop(queue *);
     extern void freeQ(queue *);
 
 /* pseudo-functions:
@@ -30,8 +30,7 @@ extern void* head(queue*);
  */
 
 #define mkQueue()  mkQ(Dtqueue)
-#define pull(q)  (pop(q,1))
-#define head(q)  (pop(q,0))
+#define pull(q)  (pop(q))
 
 #ifdef __cplusplus
 }
