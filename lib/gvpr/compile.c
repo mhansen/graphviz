@@ -1446,7 +1446,7 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 	    }
 	    break;
 	case F_tolower:
-	    v.string = toLower(pgm, args[0].string, state->tmp);
+	    v.string = toLower(pgm, args[0].string);
 	    break;
 	case F_colorx:
 	    v.string = colorx(pgm, args[0].string, args[1].string, state->tmp);
