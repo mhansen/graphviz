@@ -302,7 +302,7 @@ static char *parseBracket(Sfio_t * str, agxbuf * buf, int bc, int ec)
 	return 0;
     }
     startLine = lineno;
-    c = endBracket(str, buf, bc, ec);
+    c = endBracket(str, buf, bc, (char)ec);
     if (c < 0) {
 	if (!getErrorErrors())
 	    error(ERROR_ERROR,
