@@ -1463,7 +1463,7 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		v.integer = 0; 
 	    break;
 	case F_toupper:
-	    v.string = toUpper(pgm, args[0].string, state->tmp);
+	    v.string = toUpper(pgm, args[0].string);
 	    break;
 	case F_xof:
 	    v.string = xyOf(pgm, args[0].string, true);

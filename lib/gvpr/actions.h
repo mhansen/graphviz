@@ -43,7 +43,7 @@ extern "C" {
     extern char *canon(Expr_t * pgm, char *);
     extern char *toHtml(Agraph_t*, char *);
     extern char *toLower(Expr_t *pgm, char *src);
-    extern char *toUpper(Expr_t * pgm, char *, Sfio_t*);
+    extern char *toUpper(Expr_t *pgm, char *src);
     extern int deleteObj(Agraph_t * g, Agobj_t * obj);
     extern char *colorx (Expr_t* ex, char* incolor, char* fmt, Sfio_t* fp);
     extern void gvstart_timer(void);
