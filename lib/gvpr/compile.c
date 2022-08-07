@@ -540,7 +540,9 @@ static int lookup(Expr_t * pgm, Agobj_t * objp, Exid_t * sym, Extype_t * v,
 	Agsym_t *gsym = agattrsym(objp, sym->name);
 	if (!gsym) {
 	    gsym = agattr(agroot(agraphof(objp)), AGTYPE(objp), sym->name, "");
-	    error(ERROR_WARNING, "Using value of uninitialized %s attribute \"%s\" of \"%s\"", kindOf (objp), sym->name, nameOf(pgm, objp, state->tmp));
+	    error(ERROR_WARNING,
+	          "Using value of uninitialized %s attribute \"%s\" of \"%s\"",
+	          kindOf (objp), sym->name, nameOf(pgm, objp, state->tmp));
 	}
 	v->string = agxget(objp, gsym);
     }
@@ -1332,7 +1334,9 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		else {
 		    if (!gsym) {
 	    		gsym = agattr(agroot(agraphof(objp)), AGTYPE(objp), name, "");
-	    		error(ERROR_WARNING, "Using value of %s uninitialized attribute \"%s\" of \"%s\" in aget()", kindOf (objp), name, nameOf(pgm, objp, state->tmp));
+	    		error(ERROR_WARNING,
+	    		      "Using value of %s uninitialized attribute \"%s\" of \"%s\" in aget()",
+	    		      kindOf (objp), name, nameOf(pgm, objp, state->tmp));
 		    }
 		    v.string = agxget(objp, gsym);
         	}
