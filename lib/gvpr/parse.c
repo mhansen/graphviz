@@ -251,7 +251,7 @@ static int endString(Sfio_t * ins, agxbuf * outs, char ec)
 	    lineno++;
 	agxbputc(outs, (char) c);
     }
-    agxbputc(outs, c);
+    agxbputc(outs, (char)c);
     return 0;
 }
 
