@@ -35,6 +35,9 @@ static void *makef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
 
 static void freef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     free(obj);
 }
 
