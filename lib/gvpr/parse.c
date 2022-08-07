@@ -168,7 +168,7 @@ static void parseID(Sfio_t * str, int c, char *buf, size_t bsize)
     char *ptr = buf;
     char *eptr = buf + (bsize - 1);
 
-    *ptr++ = c;
+    *ptr++ = (char)c;
     while (true) {
 	c = readc(str, 0);
 	if (c < 0)
@@ -176,7 +176,7 @@ static void parseID(Sfio_t * str, int c, char *buf, size_t bsize)
 	if (isalpha(c) || c == '_') {
 	    if (ptr == eptr)
 		break;
-	    *ptr++ = c;
+	    *ptr++ = (char)c;
 	} else {
 	    unreadc(str, c);
 	    break;
