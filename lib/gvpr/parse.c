@@ -18,6 +18,7 @@
 #include <ast/sfstr.h>
 #include <ast/error.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <gvpr/parse.h>
 #include <stdbool.h>
 #include <string.h>
@@ -374,6 +375,8 @@ parseCase(Sfio_t * str, char **guard, int *gline, char **action,
     case Eof:
     case Error:		/* to silence warnings */
 	break;
+    default:
+	UNREACHABLE();
     }
 
     agxbfree(&buf);
