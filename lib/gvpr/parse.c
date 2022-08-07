@@ -279,7 +279,7 @@ static int endBracket(Sfio_t * ins, agxbuf * outs, char bc, char ec)
 		agxbputc(outs, (char) c);
 	} else if (c == '\'' || c == '"') {
 	    agxbputc(outs, (char) c);
-	    if (endString(ins, outs, c)) return -1;
+	    if (endString(ins, outs, (char)c)) return -1;
 	} else
 	    agxbputc(outs, (char) c);
     }
