@@ -150,6 +150,9 @@ static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
  * Append string s of length ssz into xb
  */
 static inline size_t agxbput_n(agxbuf *xb, const char *s, size_t ssz) {
+  if (ssz == 0) {
+    return 0;
+  }
   if (xb->ptr + ssz > xb->eptr)
     agxbmore(xb, ssz);
   memcpy(xb->ptr, s, ssz);
