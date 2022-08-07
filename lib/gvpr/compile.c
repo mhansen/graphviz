@@ -2094,8 +2094,7 @@ static char *tvtypeToStr(long long v) {
  * Return -1 if conversion cannot be done, 0 otherwise.
  * If arg is > 0, conversion unnecessary; just report possibility.
  */
-static int stringOf(Expr_t * prog, Exnode_t * x, int arg, Exdisc_t* disc)
-{
+static int stringOf(Expr_t *prog, Exnode_t *x, int arg) {
     Agobj_t *objp;
     int rv = 0;
 
