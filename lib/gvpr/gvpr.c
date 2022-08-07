@@ -719,22 +719,25 @@ static void doCleanup (Agraph_t* g)
  */
 static int traverse(Gpr_t * state, Expr_t* prog, comp_block * bp, int cleanup)
 {
-    char *target;
-
     if (!state->target) {
+	char *target;
+	agxbuf tmp = {0};
+	agxbinit(&tmp, 0, NULL);
+
 	if (state->name_used) {
-	    sfprintf(state->tmp, "%s%d", state->tgtname, state->name_used);
-	    target = sfstruse(state->tmp);
+	    agxbprint(&tmp, "%s%d", state->tgtname, state->name_used);
+	    target = agxbuse(&tmp);
 	} else
 	    target = state->tgtname;
 	state->name_used++;
 	/* make sure target subgraph does not exist */
 	while (agsubg (state->curgraph, target, 0)) {
 	    state->name_used++;
-	    sfprintf(state->tmp, "%s%d", state->tgtname, state->name_used);
-	    target = sfstruse(state->tmp);
+	    agxbprint(&tmp, "%s%d", state->tgtname, state->name_used);
+	    target = agxbuse(&tmp);
 	}
 	state->target = openSubg(state->curgraph, target);
+	agxbfree(&tmp);
     }
     if (!state->outgraph)
 	state->outgraph = state->target;
