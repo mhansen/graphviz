@@ -25,6 +25,9 @@ typedef struct {
 
 static void *makef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     nsitem *p = gv_alloc(sizeof(nsitem));
     p->np = obj->np;
     return p;
