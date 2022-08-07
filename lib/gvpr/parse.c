@@ -548,6 +548,8 @@ parse_prog *parseProg(char *input, int isFile)
 	case Error:		/* to silence warnings */
 	    more = false;
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
 
