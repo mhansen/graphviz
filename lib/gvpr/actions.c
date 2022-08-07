@@ -1276,8 +1276,7 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 /* colorx:
  * RGB, RGBA, HSV, HSVA, CMYK
  */
-char *colorx (Expr_t* ex, char* incolor, char* fmt, Sfio_t* fp)
-{
+char *colorx(Expr_t *ex, char *incolor, char *fmt) {
     gvcolor_t color = {{{0}},0};
     color_type_t type;
     int rc;
@@ -1310,28 +1309,33 @@ char *colorx (Expr_t* ex, char* incolor, char* fmt, Sfio_t* fp)
     if (rc != COLOR_OK)
 	return "";
 
+    agxbuf fp = {0};
+    agxbinit(&fp, 0, NULL);
+
     switch (type) {
     case HSVA_DOUBLE :
-	sfprintf (fp, "%.03f %.03f %.03f", 
+	agxbprint(&fp, "%.03f %.03f %.03f",
 	    color.u.HSVA[0], color.u.HSVA[1], color.u.HSVA[2]);
 	if (alpha)
-	    sfprintf (fp, " %.03f", color.u.HSVA[3]);
+	    agxbprint(&fp, " %.03f", color.u.HSVA[3]);
 	break;
     case RGBA_BYTE :
-	sfprintf (fp, "#%02x%02x%02x", 
+	agxbprint(&fp, "#%02x%02x%02x",
 	    color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
 	if (alpha)
-	    sfprintf (fp, "%02x", color.u.rgba[3]);
+	    agxbprint(&fp, "%02x", color.u.rgba[3]);
 	break;
     case CMYK_BYTE :
-	sfprintf (fp, "#%02x%02x%02x%02x", 
+	agxbprint(&fp, "#%02x%02x%02x%02x",
 	    color.u.cmyk[0], color.u.cmyk[1], color.u.cmyk[2], color.u.cmyk[3]);
 	break;
     default :
 	break;
     }
 
-    return exstring(ex, sfstruse(fp));
+    char *result = exstring(ex, agxbuse(&fp));
+    agxbfree(&fp);
+    return result;
 }
 
 #ifndef _WIN32
