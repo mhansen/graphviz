@@ -40,12 +40,6 @@ Gpr_t *openGPRState(gpr_info* info)
 	return state;
     }
 
-    if (!(state->tmp = sfstropen())) {
-	error(ERROR_ERROR, "Could not create state tmpfile");
-	free (state);
-	return 0;
-    }
-
     state->tvt = TV_flat;
     state->name_used = name_used;
     state->tvroot = 0;
@@ -126,8 +120,6 @@ void closeGPRState(Gpr_t* state)
 {
     if (!state) return;
     name_used = state->name_used;
-    if (state->tmp)
-	sfclose (state->tmp);
     free (state->dp);
     free (state);
 }
