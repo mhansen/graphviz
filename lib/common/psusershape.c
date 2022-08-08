@@ -294,9 +294,6 @@ char *ps_string(char *ins, int chset)
 	}
     }
 
-    if (xb.buf == NULL)
-        agxbinit (&xb, 0, NULL);
-
     agxbputc (&xb, LPAREN);
     s = base;
     while (*s) {

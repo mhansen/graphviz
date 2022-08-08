@@ -710,14 +710,14 @@ char *readLine(Expr_t * ex, int fd)
 {
     Sfio_t *sp;
     int c;
-    agxbuf tmps;
     char *line;
 
     if (fd < 0 || fd >= elementsof(ex->file) || !((sp = ex->file[fd]))) {
 	exerror("readL: %d: invalid descriptor", fd);
 	return "";
     }
-    agxbinit(&tmps, 0, NULL);
+
+    agxbuf tmps = {0};
     while ((c = sfgetc(sp)) > 0 && c != '\n')
 	agxbputc(&tmps, (char)c);
     if (c == '\n')

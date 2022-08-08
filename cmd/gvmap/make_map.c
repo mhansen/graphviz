@@ -317,9 +317,7 @@ void plot_dot_map(Agraph_t* gr, int n, int dim, double *x, SparseMatrix polys,
                   const char* opacity, SparseMatrix A, FILE* f) {
   /* if graph object exist, we just modify some attributes, otherwise we dump the whole graph */
   bool plot_polyQ = true;
-  agxbuf sbuff;
-
-  agxbinit(&sbuff, 0, NULL);
+  agxbuf sbuff = {0};
 
   if (!r || !g || !b) plot_polyQ = false;
 

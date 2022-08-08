@@ -346,8 +346,7 @@ parseCase(Sfio_t * str, char **guard, int *gline, char **action,
 {
     case_t kind;
 
-    agxbuf buf;
-    agxbinit(&buf, 0, NULL);
+    agxbuf buf = {0};
 
     kind = parseKind(str);
     switch (kind) {

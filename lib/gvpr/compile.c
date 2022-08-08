@@ -289,7 +289,6 @@ static Agobj_t *deref(Expr_t * pgm, Exnode_t * x, Exref_t * ref,
 		    constant.value.integer);
 	if (!ptr) {
 	    agxbuf xb = {0};
-	    agxbinit(&xb, 0, NULL);
 	    exerror("null reference %s in expression %s.%s",
 		  ref->symbol->name, ref->symbol->name, deparse(pgm, x, &xb));
 	    agxbfree(&xb);
@@ -1520,7 +1519,6 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 	objp = deref(pgm, node, ref, 0, state);
 	if (!objp) {
 	    agxbuf xb = {0};
-	    agxbinit(&xb, 0, NULL);
 	    exerror("null reference in expression %s", deparse(pgm, node, &xb));
 	    agxbfree(&xb);
 	}
@@ -1568,7 +1566,6 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 	objp = state->curobj;
 	if (!objp) {
 	    agxbuf xb = {0};
-	    agxbinit(&xb, 0, NULL);
 	    exerror("current object $ not defined as reference for %s",
 		  deparse(pgm, node, &xb));
 	    agxbfree(&xb);
@@ -1578,7 +1575,6 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
     if (objp) {
 	if (lookup(pgm, objp, sym, &v, state)) {
 	    agxbuf xb = {0};
-	    agxbinit(&xb, 0, NULL);
 	    exerror("in expression %s", deparse(pgm, node, &xb));
 	    agxbfree(&xb);
 	    v.integer = 0;
@@ -1615,7 +1611,6 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
 	objp = deref(pgm, x, ref, 0, state);
 	if (!objp) {
 	    agxbuf xb = {0};
-	    agxbinit(&xb, 0, NULL);
 	    exerror("in expression %s.%s", ref->symbol->name, deparse(pgm, x, &xb));
 	    agxbfree(&xb);
 	    return -1;
@@ -1669,7 +1664,6 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
 	objp = state->curobj;
 	if (!objp) {
 	    agxbuf xb = {0};
-	    agxbinit(&xb, 0, NULL);
 	    exerror("current object $ undefined in expression %s",
 		  deparse(pgm, x, &xb));
 	    agxbfree(&xb);
@@ -1859,7 +1853,6 @@ refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref)
     } else {
 	if (!typeChkExp(ref, sym)) {
 	    agxbuf xb = {0};
-	    agxbinit(&xb, 0, NULL);
 	    exerror("type error using %s", deparse(pgm, node, &xb));
 	    agxbfree(&xb);
 	}

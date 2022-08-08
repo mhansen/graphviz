@@ -23,7 +23,7 @@
 	char *buf;	/* start of buffer */
 	char *ptr;	/* next place to write */
 	char *eptr;	/* end of buffer */
-	int dyna;		/* true if buffer is malloc'ed */
+	int stack_allocated; // false if buffer is malloc'ed
     } agxbuf;
 
 /* agxbinit:
@@ -33,12 +33,12 @@
 static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
   if (init != NULL) {
     xb->buf = init;
-    xb->dyna = 0;
+    xb->stack_allocated = 1;
   } else {
     if (hint == 0) {
       hint = BUFSIZ;
     }
-    xb->dyna = 1;
+    xb->stack_allocated = 0;
     xb->buf = (char *)gv_calloc(hint, sizeof(char));
   }
   xb->eptr = xb->buf + hint;
@@ -50,7 +50,7 @@ static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
  * Free any malloced resources.
  */
 static inline void agxbfree(agxbuf *xb) {
-  if (xb->dyna)
+  if (!xb->stack_allocated)
     free(xb->buf);
 }
 
@@ -76,16 +76,16 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
   char *nbuf;       // new buffer
 
   size = (size_t)(xb->eptr - xb->buf);
-  nsize = 2 * size;
+  nsize = size == 0 ? BUFSIZ : (2 * size);
   if (size + ssz > nsize)
     nsize = size + ssz;
   cnt = (size_t)(xb->ptr - xb->buf);
-  if (xb->dyna) {
+  if (!xb->stack_allocated) {
     nbuf = (char *)gv_recalloc(xb->buf, size, nsize, sizeof(char));
   } else {
     nbuf = (char *)gv_calloc(nsize, sizeof(char));
     memcpy(nbuf, xb->buf, cnt);
-    xb->dyna = 1;
+    xb->stack_allocated = 0;
   }
   xb->buf = nbuf;
   xb->ptr = xb->buf + cnt;
@@ -150,6 +150,9 @@ static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
  * Append string s of length ssz into xb
  */
 static inline size_t agxbput_n(agxbuf *xb, const char *s, size_t ssz) {
+  if (ssz == 0) {
+    return 0;
+  }
   if (xb->ptr + ssz > xb->eptr)
     agxbmore(xb, ssz);
   memcpy(xb->ptr, s, ssz);
@@ -226,7 +229,7 @@ static inline char *agxbdisown(agxbuf *xb) {
   // terminate the existing string
   agxbputc(xb, '\0');
 
-  if (!xb->dyna) {
+  if (xb->stack_allocated) {
     // the buffer is not dynamically allocated, so we need to copy its contents
     // to heap memory
 
@@ -242,7 +245,7 @@ static inline char *agxbdisown(agxbuf *xb) {
 
   // reset xb to a state where it is usable
   xb->buf = xb->ptr = xb->eptr = NULL;
-  xb->dyna = 1;
+  xb->stack_allocated = 0;
 
   return buf;
 }

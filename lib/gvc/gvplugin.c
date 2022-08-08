@@ -337,7 +337,6 @@ gvplugin_available_t *gvplugin_load(GVC_t * gvc, api_t api, const char *str)
  */
 char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
 {
-    static int first = 1;
     const gvplugin_available_t *pnext, *plugin;
     char *bp;
     bool new = true;
@@ -346,11 +345,6 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
     /* check for valid str */
     if (!str)
         return NULL;
-
-    if (first) {
-        agxbinit(&xb, 0, 0);
-        first = 0;
-    }
 
     /* does str have a :path modifier? */
     const strview_t strv = strview(str, ':');
