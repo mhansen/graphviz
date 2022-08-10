@@ -142,6 +142,10 @@ void SvgppContext::set(svgpp::tag::attribute::stroke,
   m_svg_analyzer->set_stroke(to_color_string(color));
 }
 
+void SvgppContext::set(svgpp::tag::attribute::stroke_width, const double v) {
+  m_svg_analyzer->set_stroke_width(v);
+}
+
 void SvgppContext::transform_matrix(const boost::array<double, 6> &matrix) {
   double a = matrix.at(0);
   double b = matrix.at(1);

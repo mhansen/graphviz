@@ -46,6 +46,7 @@ public:
   void set_ry(double ry) override;
   void set_class(std::string_view) override;
   void set_stroke(std::string_view stroke) override;
+  void set_stroke_width(double stroke_width) override;
   void set_point(std::pair<double, double> point) override;
   void set_text(std::string_view text) override;
   void set_text_anchor(std::string_view text_anchor) override;

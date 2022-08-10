@@ -202,6 +202,15 @@ std::string SVG::SVGElement::stroke_attribute_to_string() const {
                      stroke_to_graphviz_color(attributes.stroke));
 }
 
+std::string SVG::SVGElement::stroke_width_attribute_to_string() const {
+  if (attributes.stroke_width == 1) {
+    // Graphviz doesn't set `stroke-width` to 1 since that's the default
+    return "";
+  }
+
+  return fmt::format(R"(stroke-width="{}")", attributes.stroke_width);
+}
+
 std::string SVG::SVGElement::to_string(std::size_t indent_size = 2) const {
   std::string output;
   output += R"(<?xml version="1.0" encoding="UTF-8" standalone="no"?>)"
@@ -242,6 +251,7 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   case SVG::SVGElementType::Ellipse:
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, stroke_width_attribute_to_string());
     attributes_str +=
         fmt::format(R"( cx="{}" cy="{}" rx="{}" ry="{}")", attributes.cx,
                     attributes.cy, attributes.rx, attributes.ry);
@@ -258,6 +268,7 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   case SVG::SVGElementType::Path: {
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, stroke_width_attribute_to_string());
     attributes_str += R"|( d=")|";
     auto command = 'M';
     for (const auto &point : path_points) {
@@ -281,11 +292,13 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   case SVG::SVGElementType::Polygon:
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, stroke_width_attribute_to_string());
     append_attribute(attributes_str, points_attribute_to_string());
     break;
   case SVG::SVGElementType::Polyline:
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, stroke_width_attribute_to_string());
     append_attribute(attributes_str, points_attribute_to_string());
     break;
   case SVG::SVGElementType::Svg:

@@ -1,3 +1,7 @@
+// The pre-processed boost::mpl::set allows only 20 elements, but we need more
+#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+#define BOOST_MPL_LIMIT_SET_SIZE 40
+
 #include <rapidxml_ns/rapidxml_ns.hpp>
 #include <svgpp/policy/xml/rapidxml_ns.hpp>
 #include <svgpp/svgpp.hpp>
@@ -26,25 +30,26 @@ void traverseDocumentWithSvgpp(SvgppContext &context, char *text) {
 
     using processed_attributes_t =
         boost::mpl::set<svgpp::traits::shapes_attributes_by_element,
-                        svgpp::tag::attribute::class_,      //
-                        svgpp::tag::attribute::cx,          //
-                        svgpp::tag::attribute::cy,          //
-                        svgpp::tag::attribute::d,           //
-                        svgpp::tag::attribute::fill,        //
-                        svgpp::tag::attribute::font_family, //
-                        svgpp::tag::attribute::font_size,   //
-                        svgpp::tag::attribute::height,      //
-                        svgpp::tag::attribute::id,          //
-                        svgpp::tag::attribute::points,      //
-                        svgpp::tag::attribute::rx,          //
-                        svgpp::tag::attribute::ry,          //
-                        svgpp::tag::attribute::stroke,      //
-                        svgpp::tag::attribute::text_anchor, //
-                        svgpp::tag::attribute::transform,   //
-                        svgpp::tag::attribute::viewBox,     //
-                        svgpp::tag::attribute::width,       //
-                        svgpp::tag::attribute::x,           //
-                        svgpp::tag::attribute::y            //
+                        svgpp::tag::attribute::class_,       //
+                        svgpp::tag::attribute::cx,           //
+                        svgpp::tag::attribute::cy,           //
+                        svgpp::tag::attribute::d,            //
+                        svgpp::tag::attribute::fill,         //
+                        svgpp::tag::attribute::font_family,  //
+                        svgpp::tag::attribute::font_size,    //
+                        svgpp::tag::attribute::height,       //
+                        svgpp::tag::attribute::id,           //
+                        svgpp::tag::attribute::points,       //
+                        svgpp::tag::attribute::rx,           //
+                        svgpp::tag::attribute::ry,           //
+                        svgpp::tag::attribute::stroke,       //
+                        svgpp::tag::attribute::stroke_width, //
+                        svgpp::tag::attribute::text_anchor,  //
+                        svgpp::tag::attribute::transform,    //
+                        svgpp::tag::attribute::viewBox,      //
+                        svgpp::tag::attribute::width,        //
+                        svgpp::tag::attribute::x,            //
+                        svgpp::tag::attribute::y             //
                         >::type;
 
     svgpp::document_traversal<

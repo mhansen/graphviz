@@ -227,6 +227,10 @@ void SVGAnalyzer::set_stroke(std::string_view stroke) {
   current_element().attributes.stroke = stroke;
 }
 
+void SVGAnalyzer::set_stroke_width(double stroke_width) {
+  current_element().attributes.stroke_width = stroke_width;
+}
+
 void SVGAnalyzer::set_id(std::string_view id) {
   current_element().attributes.id = id;
 }
