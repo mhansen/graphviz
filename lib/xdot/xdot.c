@@ -128,8 +128,8 @@ static char *parseString(char *s, char **sp)
 	return 0;
     }
 
-    char *c = gv_strndup(s, i);
-    if (strlen(c) != i) {
+    char *c = gv_strndup(s, (size_t)i);
+    if (strlen(c) != (size_t)i) {
 	free (c);
 	return 0;
     }
