@@ -227,6 +227,10 @@ void SVGAnalyzer::set_stroke(std::string_view stroke) {
   current_element().attributes.stroke = stroke;
 }
 
+void SVGAnalyzer::set_stroke_opacity(double stroke_opacity) {
+  current_element().attributes.stroke_opacity = stroke_opacity;
+}
+
 void SVGAnalyzer::set_stroke_width(double stroke_width) {
   current_element().attributes.stroke_width = stroke_width;
 }

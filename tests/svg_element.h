@@ -68,6 +68,7 @@ struct SVGAttributes {
   double rx;
   double ry;
   std::string stroke;
+  double stroke_opacity = 1;
   double stroke_width = 1;
   std::string text_anchor;
   std::optional<SVGMatrix> transform;
@@ -161,6 +162,7 @@ private:
   std::string fill_attribute_to_string() const;
   std::string points_attribute_to_string() const;
   std::string stroke_attribute_to_string() const;
+  std::string stroke_opacity_attribute_to_string() const;
   std::string stroke_width_attribute_to_string() const;
   std::string stroke_to_graphviz_color(const std::string &color) const;
   SVG::SVGRect text_bbox() const;

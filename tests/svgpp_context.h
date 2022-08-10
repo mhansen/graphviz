@@ -149,6 +149,7 @@ public:
     throw std::runtime_error{
         "this flavor of the 'stroke' attribute is not yet implemented"};
   };
+  void set(svgpp::tag::attribute::stroke_opacity, double v);
   void set(svgpp::tag::attribute::stroke_width, double v);
   void transform_matrix(const boost::array<double, 6> &matrix);
   void set(svgpp::tag::attribute::r r, double v);
