@@ -92,7 +92,8 @@ static char *parsePolyline(char *s, xdot_polyline * pp)
 
     s = parseInt(s, &i);
     if (!s) return s;
-    pts = ps = gv_calloc(i, sizeof(ps[0]));
+    if (i < 0) return NULL;
+    pts = ps = gv_calloc((size_t)i, sizeof(ps[0]));
     pp->cnt = i;
     for (i = 0; i < pp->cnt; i++) {
 	ps->x = strtod (s, &endp);
