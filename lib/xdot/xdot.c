@@ -395,7 +395,7 @@ xdot *parseXDot(char *s)
     return parseXDotF(s, 0, 0);
 }
 
-typedef void (*pf) (char *, void *);
+typedef int (*pf)(void*, char*, ...);
 
 /* trim:
  * Trailing zeros are removed and decimal point, if possible.
@@ -423,16 +423,16 @@ static void printRect(xdot_rect * r, pf print, void *info)
 
     snprintf(buf, sizeof(buf), " %.02f", r->x);
     trim(buf);
-    print(buf, info);
+    print(info, "%s", buf);
     snprintf(buf, sizeof(buf), " %.02f", r->y);
     trim(buf);
-    print(buf, info);
+    print(info, "%s", buf);
     snprintf(buf, sizeof(buf), " %.02f", r->w);
     trim(buf);
-    print(buf, info);
+    print(info, "%s", buf);
     snprintf(buf, sizeof(buf), " %.02f", r->h);
     trim(buf);
-    print(buf, info);
+    print(info, "%s", buf);
 }
 
 static void printPolyline(xdot_polyline * p, pf print, void *info)
@@ -440,33 +440,25 @@ static void printPolyline(xdot_polyline * p, pf print, void *info)
     int i;
     char buf[512];
 
-    snprintf(buf, sizeof(buf), " %d", p->cnt);
-    print(buf, info);
+    print(info, " %d", p->cnt);
     for (i = 0; i < p->cnt; i++) {
 	snprintf(buf, sizeof(buf), " %.02f", p->pts[i].x);
 	trim(buf);
-	print(buf, info);
+	print(info, "%s", buf);
 	snprintf(buf, sizeof(buf), " %.02f", p->pts[i].y);
 	trim(buf);
-	print(buf, info);
+	print(info, "%s", buf);
     }
 }
 
 static void printString(char *p, pf print, void *info)
 {
-    char buf[30];
-
-    snprintf(buf, sizeof(buf), " %" PRISIZE_T " -", strlen(p));
-    print(buf, info);
-    print(p, info);
+    print(info, " %" PRISIZE_T " -%s", strlen(p), p);
 }
 
 static void printInt(int i, pf print, void *info)
 {
-    char buf[30];
-
-    snprintf(buf, sizeof(buf), " %d", i);
-    print(buf, info);
+    print(info, " %d", i);
 }
 
 static void printFloat(double f, pf print, void *info, int space) {
@@ -477,30 +469,24 @@ static void printFloat(double f, pf print, void *info, int space) {
     else
 	snprintf(buf, sizeof(buf), "%.02f", f);
     trim (buf);
-    print(buf, info);
+    print(info, "%s", buf);
 }
 
 static void printAlign(xdot_align a, pf print, void *info)
 {
     switch (a) {
     case xd_left:
-	print(" -1", info);
+	print(info, " -1");
 	break;
     case xd_right:
-	print(" 1", info);
+	print(info, " 1");
 	break;
     case xd_center:
-	print(" 0", info);
+	print(info, " 0");
 	break;
     default:
 	UNREACHABLE();
     }
-}
-
-static void
-gradprint (char* s, void* v)
-{
-    agxbput(v, s);
 }
 
 static void
@@ -511,28 +497,28 @@ toGradString (agxbuf* xb, xdot_color* cp)
 
     if (cp->type == xd_linear) {
 	agxbputc (xb, '[');
-	printFloat (cp->u.ling.x0, gradprint, xb, 0);
-	printFloat (cp->u.ling.y0, gradprint, xb, 1);
-	printFloat (cp->u.ling.x1, gradprint, xb, 1);
-	printFloat (cp->u.ling.y1, gradprint, xb, 1);
+	printFloat (cp->u.ling.x0, (pf)agxbprint, xb, 0);
+	printFloat (cp->u.ling.y0, (pf)agxbprint, xb, 1);
+	printFloat (cp->u.ling.x1, (pf)agxbprint, xb, 1);
+	printFloat (cp->u.ling.y1, (pf)agxbprint, xb, 1);
 	n_stops = cp->u.ling.n_stops;
 	stops = cp->u.ling.stops;
     }
     else {
 	agxbputc (xb, '(');
-	printFloat (cp->u.ring.x0, gradprint, xb, 0);
-	printFloat (cp->u.ring.y0, gradprint, xb, 1);
-	printFloat (cp->u.ring.r0, gradprint, xb, 1);
-	printFloat (cp->u.ring.x1, gradprint, xb, 1);
-	printFloat (cp->u.ring.y1, gradprint, xb, 1);
-	printFloat (cp->u.ring.r1, gradprint, xb, 1);
+	printFloat (cp->u.ring.x0, (pf)agxbprint, xb, 0);
+	printFloat (cp->u.ring.y0, (pf)agxbprint, xb, 1);
+	printFloat (cp->u.ring.r0, (pf)agxbprint, xb, 1);
+	printFloat (cp->u.ring.x1, (pf)agxbprint, xb, 1);
+	printFloat (cp->u.ring.y1, (pf)agxbprint, xb, 1);
+	printFloat (cp->u.ring.r1, (pf)agxbprint, xb, 1);
 	n_stops = cp->u.ring.n_stops;
 	stops = cp->u.ring.stops;
     }
-    printInt (n_stops, gradprint, xb);
+    printInt (n_stops, (pf)agxbprint, xb);
     for (i = 0; i < n_stops; i++) {
-	printFloat (stops[i].frac, gradprint, xb, 1);
-	printString (stops[i].color, gradprint, xb);
+	printFloat (stops[i].frac, (pf)agxbprint, xb, 1);
+	printString (stops[i].color, (pf)agxbprint, xb);
     }
 
     if (cp->type == xd_linear)
@@ -551,53 +537,53 @@ static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
     agxbinit (&xb, BUFSIZ, buf);
     switch (op->kind) {
     case xd_filled_ellipse:
-	print("E", info);
+	print(info, "E");
 	printRect(&op->u.ellipse, print, info);
 	break;
     case xd_unfilled_ellipse:
-	print("e", info);
+	print(info, "e");
 	printRect(&op->u.ellipse, print, info);
 	break;
     case xd_filled_polygon:
-	print("P", info);
+	print(info, "P");
 	printPolyline(&op->u.polygon, print, info);
 	break;
     case xd_unfilled_polygon:
-	print("p", info);
+	print(info, "p");
 	printPolyline(&op->u.polygon, print, info);
 	break;
     case xd_filled_bezier:
-	print("b", info);
+	print(info, "b");
 	printPolyline(&op->u.bezier, print, info);
 	break;
     case xd_unfilled_bezier:
-	print("B", info);
+	print(info, "B");
 	printPolyline(&op->u.bezier, print, info);
 	break;
     case xd_pen_color:
-	print("c", info);
+	print(info, "c");
 	printString(op->u.color, print, info);
 	break;
     case xd_grad_pen_color:
-	print("c", info);
+	print(info, "c");
 	toGradString (&xb, &op->u.grad_color);
 	printString(agxbuse(&xb), print, info);
 	break;
     case xd_fill_color:
-	print("C", info);
+	print(info, "C");
 	printString(op->u.color, print, info);
 	break;
     case xd_grad_fill_color:
-	print("C", info);
+	print(info, "C");
 	toGradString (&xb, &op->u.grad_color);
 	printString(agxbuse(&xb), print, info);
 	break;
     case xd_polyline:
-	print("L", info);
+	print(info, "L");
 	printPolyline(&op->u.polyline, print, info);
 	break;
     case xd_text:
-	print("T", info);
+	print(info, "T");
 	printInt(op->u.text.x, print, info);
 	printInt(op->u.text.y, print, info);
 	printAlign(op->u.text.align, print, info);
@@ -605,66 +591,57 @@ static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 	printString(op->u.text.text, print, info);
 	break;
     case xd_font:
-	print("F", info);
+	print(info, "F");
 	printFloat(op->u.font.size, print, info, 1);
 	printString(op->u.font.name, print, info);
 	break;
     case xd_fontchar:
-	print("t", info);
+	print(info, "t");
 	printInt(op->u.fontchar, print, info);
 	break;
     case xd_style:
-	print("S", info);
+	print(info, "S");
 	printString(op->u.style, print, info);
 	break;
     case xd_image:
-	print("I", info);
+	print(info, "I");
 	printRect(&op->u.image.pos, print, info);
 	printString(op->u.image.name, print, info);
 	break;
     }
     if (more)
-	print(" ", info);
+	print(info, " ");
     agxbfree (&xb);
 }
 
 static void jsonRect(xdot_rect * r, pf print, void *info)
 {
-    char buf[128];
-
-    snprintf(buf, sizeof(buf), "[%.06f,%.06f,%.06f,%.06f]", r->x, r->y, r->w,
-             r->h);
-    print(buf, info);
+  print(info, "[%.06f,%.06f,%.06f,%.06f]", r->x, r->y, r->w, r->h);
 }
 
 static void jsonPolyline(xdot_polyline * p, pf print, void *info)
 {
     int i;
-    char buf[128];
 
-    print("[", info);
+    print(info, "[");
     for (i = 0; i < p->cnt; i++) {
-	snprintf(buf, sizeof(buf), "%.06f,%.06f", p->pts[i].x, p->pts[i].y);
-	print(buf, info);
-	if (i < p->cnt-1) print(",", info);
+	print(info, "%.06f,%.06f", p->pts[i].x, p->pts[i].y);
+	if (i < p->cnt-1) print(info, ",");
     }
-    print("]", info);
+    print(info, "]");
 }
 
 static void jsonString(char *p, pf print, void *info)
 {
     char c;
 
-    print("\"", info);
+    print(info, "\"");
     while ((c = *p++)) {
-	if (c == '"') print("\\\"", info);
-	else if (c == '\\') print("\\\\", info);
-	else {
-		char buf[2] = { c, '\0' };
-		print(buf, info);
-	}
+	if (c == '"') print(info, "\\\"");
+	else if (c == '\\') print(info, "\\\\");
+	else print(info, "%c", c);
     }
-    print("\"", info);
+    print(info, "\"");
 }
 
 static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
@@ -675,92 +652,92 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
     agxbinit (&xb, BUFSIZ, buf);
     switch (op->kind) {
     case xd_filled_ellipse:
-	print("{\"E\" : ", info);
+	print(info, "{\"E\" : ");
 	jsonRect(&op->u.ellipse, print, info);
 	break;
     case xd_unfilled_ellipse:
-	print("{\"e\" : ", info);
+	print(info, "{\"e\" : ");
 	jsonRect(&op->u.ellipse, print, info);
 	break;
     case xd_filled_polygon:
-	print("{\"P\" : ", info);
+	print(info, "{\"P\" : ");
 	jsonPolyline(&op->u.polygon, print, info);
 	break;
     case xd_unfilled_polygon:
-	print("{\"p\" : ", info);
+	print(info, "{\"p\" : ");
 	jsonPolyline(&op->u.polygon, print, info);
 	break;
     case xd_filled_bezier:
-	print("{\"b\" : ", info);
+	print(info, "{\"b\" : ");
 	jsonPolyline(&op->u.bezier, print, info);
 	break;
     case xd_unfilled_bezier:
-	print("{\"B\" : ", info);
+	print(info, "{\"B\" : ");
 	jsonPolyline(&op->u.bezier, print, info);
 	break;
     case xd_pen_color:
-	print("{\"c\" : ", info);
+	print(info, "{\"c\" : ");
 	jsonString(op->u.color, print, info);
 	break;
     case xd_grad_pen_color:
-	print("{\"c\" : ", info);
+	print(info, "{\"c\" : ");
 	toGradString (&xb, &op->u.grad_color);
 	jsonString(agxbuse(&xb), print, info);
 	break;
     case xd_fill_color:
-	print("{\"C\" : ", info);
+	print(info, "{\"C\" : ");
 	jsonString(op->u.color, print, info);
 	break;
     case xd_grad_fill_color:
-	print("{\"C\" : ", info);
+	print(info, "{\"C\" : ");
 	toGradString (&xb, &op->u.grad_color);
 	jsonString(agxbuse(&xb), print, info);
 	break;
     case xd_polyline:
-	print("{\"L\" :", info);
+	print(info, "{\"L\" :");
 	jsonPolyline(&op->u.polyline, print, info);
 	break;
     case xd_text:
-	print("{\"T\" : [", info);
+	print(info, "{\"T\" : [");
 	printInt(op->u.text.x, print, info);
-	print(",", info);
+	print(info, ",");
 	printInt(op->u.text.y, print, info);
-	print(",", info);
+	print(info, ",");
 	printAlign(op->u.text.align, print, info);
-	print(",", info);
+	print(info, ",");
 	printInt(op->u.text.width, print, info);
-	print(",", info);
+	print(info, ",");
 	jsonString(op->u.text.text, print, info);
-	print("]", info);
+	print(info, "]");
 	break;
     case xd_font:
-	print("{\"F\" : [", info);
+	print(info, "{\"F\" : [");
 	op->kind = xd_font;
 	printFloat(op->u.font.size, print, info, 1);
-	print(",", info);
+	print(info, ",");
 	jsonString(op->u.font.name, print, info);
-	print("]", info);
+	print(info, "]");
 	break;
     case xd_fontchar:
-	print("{\"t\" : ", info);
+	print(info, "{\"t\" : ");
 	printInt(op->u.fontchar, print, info);
 	break;
     case xd_style:
-	print("{\"S\" : ", info);
+	print(info, "{\"S\" : ");
 	jsonString(op->u.style, print, info);
 	break;
     case xd_image:
-	print("{\"I\" : [", info);
+	print(info, "{\"I\" : [");
 	jsonRect(&op->u.image.pos, print, info);
-	print(",", info);
+	print(info, ",");
 	jsonString(op->u.image.name, print, info);
-	print("]", info);
+	print(info, "]");
 	break;
     }
     if (more)
-	print("},\n", info);
+	print(info, "},\n");
     else
-	print("}\n", info);
+	print(info, "}\n");
     agxbfree (&xb);
 }
 
@@ -775,19 +752,13 @@ static void _printXDot(xdot * x, pf print, void *info, print_op ofn)
     }
 }
 
-// an alternate version of `agxbput` to handle differences in calling
-// conventions
-static void agxbput_(char *s, void *xb) {
-  (void)agxbput(xb, s);
-}
-
 char *sprintXDot(xdot * x)
 {
     char *s;
     char buf[BUFSIZ];
     agxbuf xb;
     agxbinit(&xb, BUFSIZ, buf);
-    _printXDot(x, agxbput_, &xb, printXDot_Op);
+    _printXDot(x, (pf)agxbprint, &xb, printXDot_Op);
     s = agxbdisown(&xb);
 
     return s;
@@ -795,13 +766,13 @@ char *sprintXDot(xdot * x)
 
 void fprintXDot(FILE * fp, xdot * x)
 {
-    _printXDot(x, (pf) fputs, fp, printXDot_Op);
+    _printXDot(x, (pf)fprintf, fp, printXDot_Op);
 }
 
 void jsonXDot(FILE * fp, xdot * x)
 {
     fputs ("[\n", fp);
-    _printXDot(x, (pf) fputs, fp, jsonXDot_Op);
+    _printXDot(x, (pf)fprintf, fp, jsonXDot_Op);
     fputs ("]\n", fp);
 }
 
