@@ -341,7 +341,7 @@ xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
 
     if (!x) {
 	x = gv_alloc(sizeof(*x));
-	if (sz <= sizeof(xdot_op))
+	if (sz < 0 || (size_t)sz <= sizeof(xdot_op))
 	    sz = sizeof(xdot_op);
 
 	/* cnt, freefunc, ops, flags zeroed by gv_alloc */
