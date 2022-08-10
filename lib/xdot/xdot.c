@@ -11,6 +11,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/prisize_t.h>
+#include <cgraph/unreachable.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
 #include <string.h>
@@ -491,6 +492,8 @@ static void printAlign(xdot_align a, pf print, void *info)
     case xd_center:
 	print(" 0", info);
 	break;
+    default:
+	UNREACHABLE();
     }
 }
 
