@@ -456,11 +456,6 @@ static void printString(char *p, pf print, void *info)
     print(info, " %" PRISIZE_T " -%s", strlen(p), p);
 }
 
-static void printInt(int i, pf print, void *info)
-{
-    print(info, " %d", i);
-}
-
 static void printFloat(double f, pf print, void *info, int space) {
     char buf[128];
 
@@ -515,7 +510,7 @@ toGradString (agxbuf* xb, xdot_color* cp)
 	n_stops = cp->u.ring.n_stops;
 	stops = cp->u.ring.stops;
     }
-    printInt (n_stops, (pf)agxbprint, xb);
+    agxbprint(xb, " %d", n_stops);
     for (i = 0; i < n_stops; i++) {
 	printFloat (stops[i].frac, (pf)agxbprint, xb, 1);
 	printString (stops[i].color, (pf)agxbprint, xb);
@@ -584,10 +579,10 @@ static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 	break;
     case xd_text:
 	print(info, "T");
-	printInt(op->u.text.x, print, info);
-	printInt(op->u.text.y, print, info);
+	print(info, " %.f", op->u.text.x);
+	print(info, " %.f", op->u.text.y);
 	printAlign(op->u.text.align, print, info);
-	printInt(op->u.text.width, print, info);
+	print(info, " %.f", op->u.text.width);
 	printString(op->u.text.text, print, info);
 	break;
     case xd_font:
@@ -597,7 +592,7 @@ static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 	break;
     case xd_fontchar:
 	print(info, "t");
-	printInt(op->u.fontchar, print, info);
+	print(info, " %u", op->u.fontchar);
 	break;
     case xd_style:
 	print(info, "S");
@@ -699,13 +694,13 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 	break;
     case xd_text:
 	print(info, "{\"T\" : [");
-	printInt(op->u.text.x, print, info);
+	print(info, " %.f", op->u.text.x);
 	print(info, ",");
-	printInt(op->u.text.y, print, info);
+	print(info, " %.f", op->u.text.y);
 	print(info, ",");
 	printAlign(op->u.text.align, print, info);
 	print(info, ",");
-	printInt(op->u.text.width, print, info);
+	print(info, " %.f", op->u.text.width);
 	print(info, ",");
 	jsonString(op->u.text.text, print, info);
 	print(info, "]");
@@ -720,7 +715,7 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 	break;
     case xd_fontchar:
 	print(info, "{\"t\" : ");
-	printInt(op->u.fontchar, print, info);
+	print(info, " %u", op->u.fontchar);
 	break;
     case xd_style:
 	print(info, "{\"S\" : ");
