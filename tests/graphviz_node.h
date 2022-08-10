@@ -21,6 +21,8 @@ public:
   SVG::SVGPoint center() const;
   /// Return the node's `node_id` as defined by the DOT language
   std::string_view node_id() const;
+  /// Return the node's `penwidth` attribute
+  double penwidth() const;
   /// Return a non-mutable reference to the SVG `g` element corresponding to the
   /// node
   const SVG::SVGElement &svg_g_element() const;
