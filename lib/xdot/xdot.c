@@ -578,9 +578,7 @@ static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 	printPolyline(&op->u.polyline, print, info);
 	break;
     case xd_text:
-	print(info, "T");
-	print(info, " %.f", op->u.text.x);
-	print(info, " %.f", op->u.text.y);
+	print(info, "T %.f %.f", op->u.text.x, op->u.text.y);
 	printAlign(op->u.text.align, print, info);
 	print(info, " %.f", op->u.text.width);
 	printString(op->u.text.text, print, info);
@@ -591,8 +589,7 @@ static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 	printString(op->u.font.name, print, info);
 	break;
     case xd_fontchar:
-	print(info, "t");
-	print(info, " %u", op->u.fontchar);
+	print(info, "t %u", op->u.fontchar);
 	break;
     case xd_style:
 	print(info, "S");
@@ -693,15 +690,9 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 	jsonPolyline(&op->u.polyline, print, info);
 	break;
     case xd_text:
-	print(info, "{\"T\" : [");
-	print(info, " %.f", op->u.text.x);
-	print(info, ",");
-	print(info, " %.f", op->u.text.y);
-	print(info, ",");
+	print(info, "{\"T\" : [ %.f, %.f,", op->u.text.x, op->u.text.y);
 	printAlign(op->u.text.align, print, info);
-	print(info, ",");
-	print(info, " %.f", op->u.text.width);
-	print(info, ",");
+	print(info, ", %.f,", op->u.text.width);
 	jsonString(op->u.text.text, print, info);
 	print(info, "]");
 	break;
@@ -714,8 +705,7 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 	print(info, "]");
 	break;
     case xd_fontchar:
-	print(info, "{\"t\" : ");
-	print(info, " %u", op->u.fontchar);
+	print(info, "{\"t\" :  %u", op->u.fontchar);
 	break;
     case xd_style:
 	print(info, "{\"S\" : ");
