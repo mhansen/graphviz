@@ -221,6 +221,21 @@ std::string SVG::SVGElement::id_attribute_to_string() const {
   return fmt::format(R"(id="{}")", attributes.id);
 }
 
+std::string SVG::SVGElement::fill_opacity_attribute_to_string() const {
+  if (attributes.fill_opacity == 1) {
+    // Graphviz doesn't set `fill-opacity` to 1 since that's the default
+    return "";
+  }
+
+  if (attributes.fill_opacity == 0) {
+    // Graphviz doesn't set `fill-opacity` to 0 since in that case it sets
+    // `fill` to "none" instead
+    return "";
+  }
+
+  return fmt::format(R"(fill-opacity="{}")", attributes.fill_opacity);
+}
+
 std::string SVG::SVGElement::points_attribute_to_string() const {
   std::string points_attribute_str = R"|(points=")|";
   const char *separator = "";
@@ -305,6 +320,7 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   switch (type) {
   case SVG::SVGElementType::Ellipse:
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, fill_opacity_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
     append_attribute(attributes_str, stroke_width_attribute_to_string());
     append_attribute(attributes_str, stroke_opacity_attribute_to_string());
@@ -323,6 +339,7 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     break;
   case SVG::SVGElementType::Path: {
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, fill_opacity_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
     append_attribute(attributes_str, stroke_width_attribute_to_string());
     append_attribute(attributes_str, stroke_opacity_attribute_to_string());
@@ -348,6 +365,7 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   }
   case SVG::SVGElementType::Polygon:
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, fill_opacity_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
     append_attribute(attributes_str, stroke_width_attribute_to_string());
     append_attribute(attributes_str, stroke_opacity_attribute_to_string());

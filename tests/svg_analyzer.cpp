@@ -219,6 +219,10 @@ void SVGAnalyzer::set_fill(std::string_view fill) {
   current_element().attributes.fill = fill;
 }
 
+void SVGAnalyzer::set_fill_opacity(double fill_opacity) {
+  current_element().attributes.fill_opacity = fill_opacity;
+}
+
 void SVGAnalyzer::set_height(double height) {
   current_element().attributes.height = height;
 }

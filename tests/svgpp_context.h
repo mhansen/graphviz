@@ -99,6 +99,8 @@ public:
     throw std::runtime_error{
         "this flavor of the 'fill' attribute is not yet implemented"};
   };
+
+  void set(svgpp::tag::attribute::fill_opacity, double v);
   void set(svgpp::tag::attribute::stroke, svgpp::tag::value::none);
   void set(svgpp::tag::attribute::stroke, svgpp::tag::value::currentColor);
   void set(svgpp::tag::attribute::stroke, color_t color,

@@ -36,6 +36,7 @@ public:
   virtual void set_font_family(std::string_view font_family) = 0;
   virtual void set_font_size(double font_size) = 0;
   virtual void set_fill(std::string_view fill) = 0;
+  virtual void set_fill_opacity(double fill_opacity) = 0;
   virtual void set_height(double height) = 0;
   virtual void set_id(std::string_view id) = 0;
   virtual void set_rx(double rx) = 0;

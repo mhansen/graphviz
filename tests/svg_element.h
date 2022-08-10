@@ -60,6 +60,7 @@ struct SVGAttributes {
   double cx;
   double cy;
   std::string fill;
+  double fill_opacity = 1;
   std::string font_family;
   double font_size;
   double height;
@@ -162,6 +163,7 @@ private:
                         const std::string &attribute) const;
   std::string id_attribute_to_string() const;
   std::string fill_attribute_to_string() const;
+  std::string fill_opacity_attribute_to_string() const;
   std::string points_attribute_to_string() const;
   std::string stroke_attribute_to_string() const;
   std::string stroke_opacity_attribute_to_string() const;

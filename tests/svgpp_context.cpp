@@ -126,6 +126,10 @@ void SvgppContext::set(svgpp::tag::attribute::fill, color_t color,
   m_svg_analyzer->set_fill(to_color_string(color));
 }
 
+void SvgppContext::set(svgpp::tag::attribute::fill_opacity, const double v) {
+  m_svg_analyzer->set_fill_opacity(v);
+}
+
 void SvgppContext::set(svgpp::tag::attribute::stroke, svgpp::tag::value::none) {
   m_svg_analyzer->set_stroke("none");
 }
