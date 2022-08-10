@@ -18,6 +18,7 @@
 #include <ast/sfstr.h>
 #include <ast/error.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <gvpr/parse.h>
 #include <stdbool.h>
 #include <string.h>
@@ -168,7 +169,7 @@ static void parseID(Sfio_t * str, int c, char *buf, size_t bsize)
     char *ptr = buf;
     char *eptr = buf + (bsize - 1);
 
-    *ptr++ = c;
+    *ptr++ = (char)c;
     while (true) {
 	c = readc(str, 0);
 	if (c < 0)
@@ -176,7 +177,7 @@ static void parseID(Sfio_t * str, int c, char *buf, size_t bsize)
 	if (isalpha(c) || c == '_') {
 	    if (ptr == eptr)
 		break;
-	    *ptr++ = c;
+	    *ptr++ = (char)c;
 	} else {
 	    unreadc(str, c);
 	    break;
@@ -251,7 +252,7 @@ static int endString(Sfio_t * ins, agxbuf * outs, char ec)
 	    lineno++;
 	agxbputc(outs, (char) c);
     }
-    agxbputc(outs, c);
+    agxbputc(outs, (char)c);
     return 0;
 }
 
@@ -279,7 +280,7 @@ static int endBracket(Sfio_t * ins, agxbuf * outs, char bc, char ec)
 		agxbputc(outs, (char) c);
 	} else if (c == '\'' || c == '"') {
 	    agxbputc(outs, (char) c);
-	    if (endString(ins, outs, c)) return -1;
+	    if (endString(ins, outs, (char)c)) return -1;
 	} else
 	    agxbputc(outs, (char) c);
     }
@@ -302,7 +303,7 @@ static char *parseBracket(Sfio_t * str, agxbuf * buf, int bc, int ec)
 	return 0;
     }
     startLine = lineno;
-    c = endBracket(str, buf, bc, ec);
+    c = endBracket(str, buf, bc, (char)ec);
     if (c < 0) {
 	if (!getErrorErrors())
 	    error(ERROR_ERROR,
@@ -373,6 +374,8 @@ parseCase(Sfio_t * str, char **guard, int *gline, char **action,
     case Eof:
     case Error:		/* to silence warnings */
 	break;
+    default:
+	UNREACHABLE();
     }
 
     agxbfree(&buf);
@@ -544,6 +547,8 @@ parse_prog *parseProg(char *input, int isFile)
 	case Error:		/* to silence warnings */
 	    more = false;
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
 

@@ -25,6 +25,9 @@ typedef struct {
 
 static void *makef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     nsitem *p = gv_alloc(sizeof(nsitem));
     p->np = obj->np;
     return p;
@@ -32,6 +35,9 @@ static void *makef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
 
 static void freef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
 {
+    (void)d;
+    (void)disc;
+
     free(obj);
 }
 
@@ -63,16 +69,14 @@ void push(queue * nq, void *n)
     dtinsert(nq, &obj);
 }
 
-void *pop(queue * nq, int delete)
-{
+void *pop(queue *nq) {
     nsitem *obj;
     void *n;
 
     obj = dtfirst(nq);
     if (obj) {
 	n = obj->np;
-	if (delete)
-	    dtdelete(nq, 0);
+	dtdelete(nq, 0);
 	return n;
     } else
 	return 0;
