@@ -1,9 +1,21 @@
+#include <string>
+
 #include "graphviz_node.h"
+#include "svg_element.h"
 
 GraphvizNode::GraphvizNode(SVG::SVGElement &svg_element)
     : m_node_id(svg_element.graphviz_id), m_svg_g_element(svg_element) {}
 
 SVG::SVGPoint GraphvizNode::center() const { return bbox().center(); }
+
+std::string GraphvizNode::color() const {
+  const auto stroke = m_svg_g_element.attribute_from_subtree<std::string>(
+      &SVG::SVGAttributes::stroke, &SVG::SVGElement::is_shape_element, "");
+  const auto stroke_opacity = m_svg_g_element.attribute_from_subtree<double>(
+      &SVG::SVGAttributes::stroke_opacity, &SVG::SVGElement::is_shape_element,
+      1);
+  return SVG::to_dot_color(stroke, stroke_opacity);
+}
 
 double GraphvizNode::penwidth() const {
   return m_svg_g_element.attribute_from_subtree<double>(

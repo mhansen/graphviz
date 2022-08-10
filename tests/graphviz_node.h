@@ -19,6 +19,9 @@ public:
   SVG::SVGRect bbox() const;
   /// Return the center of the node's bounding box
   SVG::SVGPoint center() const;
+  /// Return the node's `color` attribute in RGB hex format if the opacity is
+  /// 100 % or in RGBA hex format otherwise.
+  std::string color() const;
   /// Return the node's `node_id` as defined by the DOT language
   std::string_view node_id() const;
   /// Return the node's `penwidth` attribute

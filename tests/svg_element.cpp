@@ -81,6 +81,22 @@ static std::string to_graphviz_color(const std::string &color) {
   }
 }
 
+// convert a valid color specification to the RGB or RGBA type that Graphviz
+// uses in the DOT source
+std::string SVG::to_dot_color(const std::string &color, double opacity) {
+  if (color == "none") {
+    return "#00000000";
+  }
+  if (opacity < 1.0) {
+    if (!color.starts_with("rgb")) {
+      throw std::runtime_error{fmt::format(
+          "Cannot convert stroke={}, stroke_opacity={} to Graphviz color",
+          color, opacity)};
+    }
+  }
+  return rgb_to_hex(color, opacity);
+}
+
 SVG::SVGRect SVG::SVGElement::bbox(bool throw_if_bbox_not_defined) {
   if (!m_bbox.has_value()) {
     // negative width and height bbox that will be imediately replaced by the

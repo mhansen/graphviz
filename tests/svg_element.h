@@ -78,6 +78,8 @@ struct SVGAttributes {
   double y;
 };
 
+std::string to_dot_color(const std::string &color, double opacity = 1.0);
+
 /**
  * @brief The SVGElement class represents an SVG element
  */
