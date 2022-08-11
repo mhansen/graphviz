@@ -218,28 +218,24 @@ static inline char *agxbnext(agxbuf *xb) { return xb->ptr; }
 /* agxbdisown:
  * Disassociate the backing buffer from this agxbuf and return it. The buffer is
  * NUL terminated before being returned. If the agxbuf is using stack memory,
- * this will first copy the data to a new heap buffer to then return. If failure
- * occurs, NULL is returned. If you want to temporarily access the string in the
- * buffer, but have it overwritten and reused the next time, e.g., agxbput is
- * called, use agxbuse instead of agxbdisown.
+ * this will first copy the data to a new heap buffer to then return. If you
+ * want to temporarily access the string in the buffer, but have it overwritten
+ * and reused the next time, e.g., agxbput is called, use agxbuse instead of
+ * agxbdisown.
  */
 static inline char *agxbdisown(agxbuf *xb) {
   char *buf;
-
-  // terminate the existing string
-  agxbputc(xb, '\0');
 
   if (xb->stack_allocated) {
     // the buffer is not dynamically allocated, so we need to copy its contents
     // to heap memory
 
-    buf = strdup(xb->buf);
-    if (buf == NULL) {
-      return NULL;
-    }
+    buf = gv_strndup(xb->buf, agxblen(xb));
 
   } else {
-    // the buffer is already dynamically allocated, so take it as-is
+    // the buffer is already dynamically allocated, so terminate it and then
+    // take it as-is
+    agxbputc(xb, '\0');
     buf = xb->buf;
   }
 
