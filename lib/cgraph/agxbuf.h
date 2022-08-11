@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,12 +19,12 @@
 /* Extensible buffer:
  *  Malloc'ed memory is never released until agxbfree is called.
  */
-    typedef struct {
-	char *buf;	/* start of buffer */
-	char *ptr;	/* next place to write */
-	char *eptr;	/* end of buffer */
-	int stack_allocated; // false if buffer is malloc'ed
-    } agxbuf;
+typedef struct {
+  char *buf;           // start of buffer
+  char *ptr;           // next place to write
+  char *eptr;          // end of buffer
+  int stack_allocated; // false if buffer is malloc'ed
+} agxbuf;
 
 /* agxbinit:
  * Initializes new agxbuf; caller provides memory.
@@ -94,9 +94,9 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
 
 /* support for extra API misuse warnings if available */
 #ifdef __GNUC__
-  #define PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
+#define PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
 #else
-  #define PRINTF_LIKE(index, first) /* nothing */
+#define PRINTF_LIKE(index, first) /* nothing */
 #endif
 
 /* agxbprint:
@@ -173,7 +173,7 @@ static inline size_t agxbput(agxbuf *xb, const char *s) {
  * Add character to buffer.
  *  int agxbputc(agxbuf*, char)
  */
-static inline int agxbputc(agxbuf * xb, char c) {
+static inline int agxbputc(agxbuf *xb, char c) {
   if (xb->ptr >= xb->eptr) {
     agxbmore(xb, 1);
   }
