@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include <limits>
 #include <stdexcept>
 
@@ -53,6 +54,19 @@ static std::string xml_encode(const std::string &text) {
   return out;
 }
 
+static std::string rgb_to_hex(const std::string &color, double opacity = 1.0) {
+  const auto comma1 = color.find_first_of(",");
+  const auto r = std::stoi(color.substr(4, comma1 - 1));
+  const auto comma2 = color.find_first_of(",", comma1 + 1);
+  const auto g = std::stoi(color.substr(comma1 + 1, comma2 - 1));
+  const auto close_par = color.find_first_of(")", comma2 + 1);
+  const auto b = std::stoi(color.substr(comma2 + 1, close_par - 1));
+  const auto opacity_int = std::lround(opacity * 255.0);
+  const auto opacity_hex_str =
+      opacity_int < 255 ? fmt::format("{:02x}", opacity_int) : "";
+  return fmt::format("#{:02x}{:02x}{:02x}{}", r, g, b, opacity_hex_str);
+}
+
 // convert a valid color specification to the flavor that Graphviz uses in the
 // SVG
 static std::string to_graphviz_color(const std::string &color) {
@@ -61,13 +75,7 @@ static std::string to_graphviz_color(const std::string &color) {
   } else if (color == "rgb(255,255,255)") {
     return "white";
   } else if (color.starts_with("rgb")) {
-    const auto comma1 = color.find_first_of(",");
-    const auto r = std::stoi(color.substr(4, comma1 - 1));
-    const auto comma2 = color.find_first_of(",", comma1 + 1);
-    const auto g = std::stoi(color.substr(comma1 + 1, comma2 - 1));
-    const auto close_par = color.find_first_of(")", comma2 + 1);
-    const auto b = std::stoi(color.substr(comma2 + 1, close_par - 1));
-    return fmt::format("#{:02x}{:02x}{:02x}", r, g, b);
+    return rgb_to_hex(color);
   } else {
     return color;
   }
