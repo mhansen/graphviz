@@ -1426,7 +1426,6 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
 {
     static graph_t* lastg;
     static bool warned;
-    char*  ns;
     unsigned char c;
     unsigned int v;
 
@@ -1498,9 +1497,7 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
 	            }
         agxbputc(&xb, (char)c);
     }
-    ns = agxbdisown(&xb);
-    agxbfree(&xb);
-    return ns;
+    return agxbdisown(&xb);
 }
 
 /* latin1ToUTF8:
@@ -1510,7 +1507,6 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
  */
 char* latin1ToUTF8 (char* s)
 {
-    char*  ns;
     agxbuf xb = {0};
     unsigned int  v;
 
@@ -1534,9 +1530,7 @@ char* latin1ToUTF8 (char* s)
 	    agxbputc(&xb, (char)((v & 0x3F) | 0x80));
 	}
     }
-    ns = agxbdisown(&xb);
-    agxbfree(&xb);
-    return ns;
+    return agxbdisown(&xb);
 }
 
 /* utf8ToLatin1:
@@ -1547,7 +1541,6 @@ char* latin1ToUTF8 (char* s)
 char*
 utf8ToLatin1 (char* s)
 {
-    char*  ns;
     agxbuf xb = {0};
     unsigned char c;
     unsigned char outc;
@@ -1562,9 +1555,7 @@ utf8ToLatin1 (char* s)
 	    agxbputc(&xb, (char)outc);
 	}
     }
-    ns = agxbdisown(&xb);
-    agxbfree(&xb);
-    return ns;
+    return agxbdisown(&xb);
 }
 
 bool overlap_node(node_t *n, boxf b)

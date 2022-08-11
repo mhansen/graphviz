@@ -286,7 +286,7 @@ void emit_label(GVJ_t * job, emit_state_t emit_state, textlabel_t * lp)
  */
 static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
 {
-    char c, *s, *newstr;
+    char c, *s;
     char *tp_str = "", *hp_str = "";
     char *g_str = "\\G", *n_str = "\\N", *e_str = "\\E",
 	*h_str = "\\H", *t_str = "\\T", *l_str = "\\L";
@@ -385,10 +385,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
     }
 
     /* extract the final string with replacements applied */
-    newstr = agxbdisown(&buf);
-    agxbfree(&buf);
-
-    return newstr;
+    return agxbdisown(&buf);
 }
 
 /* strdup_and_subst_obj:
