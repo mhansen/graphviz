@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,12 +19,12 @@
 /* Extensible buffer:
  *  Malloc'ed memory is never released until agxbfree is called.
  */
-    typedef struct {
-	char *buf;	/* start of buffer */
-	char *ptr;	/* next place to write */
-	char *eptr;	/* end of buffer */
-	int stack_allocated; // false if buffer is malloc'ed
-    } agxbuf;
+typedef struct {
+  char *buf;           // start of buffer
+  char *ptr;           // next place to write
+  char *eptr;          // end of buffer
+  int stack_allocated; // false if buffer is malloc'ed
+} agxbuf;
 
 /* agxbinit:
  * Initializes new agxbuf; caller provides memory.
@@ -94,9 +94,9 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
 
 /* support for extra API misuse warnings if available */
 #ifdef __GNUC__
-  #define PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
+#define PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
 #else
-  #define PRINTF_LIKE(index, first) /* nothing */
+#define PRINTF_LIKE(index, first) /* nothing */
 #endif
 
 /* agxbprint:
@@ -173,7 +173,7 @@ static inline size_t agxbput(agxbuf *xb, const char *s) {
  * Add character to buffer.
  *  int agxbputc(agxbuf*, char)
  */
-static inline int agxbputc(agxbuf * xb, char c) {
+static inline int agxbputc(agxbuf *xb, char c) {
   if (xb->ptr >= xb->eptr) {
     agxbmore(xb, 1);
   }
@@ -218,28 +218,24 @@ static inline char *agxbnext(agxbuf *xb) { return xb->ptr; }
 /* agxbdisown:
  * Disassociate the backing buffer from this agxbuf and return it. The buffer is
  * NUL terminated before being returned. If the agxbuf is using stack memory,
- * this will first copy the data to a new heap buffer to then return. If failure
- * occurs, NULL is returned. If you want to temporarily access the string in the
- * buffer, but have it overwritten and reused the next time, e.g., agxbput is
- * called, use agxbuse instead of agxbdisown.
+ * this will first copy the data to a new heap buffer to then return. If you
+ * want to temporarily access the string in the buffer, but have it overwritten
+ * and reused the next time, e.g., agxbput is called, use agxbuse instead of
+ * agxbdisown.
  */
 static inline char *agxbdisown(agxbuf *xb) {
   char *buf;
-
-  // terminate the existing string
-  agxbputc(xb, '\0');
 
   if (xb->stack_allocated) {
     // the buffer is not dynamically allocated, so we need to copy its contents
     // to heap memory
 
-    buf = strdup(xb->buf);
-    if (buf == NULL) {
-      return NULL;
-    }
+    buf = gv_strndup(xb->buf, agxblen(xb));
 
   } else {
-    // the buffer is already dynamically allocated, so take it as-is
+    // the buffer is already dynamically allocated, so terminate it and then
+    // take it as-is
+    agxbputc(xb, '\0');
     buf = xb->buf;
   }
 

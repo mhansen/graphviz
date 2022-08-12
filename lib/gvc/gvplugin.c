@@ -424,7 +424,7 @@ char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, const char *str)
         strview_t q = strview(pnext->typestr, ':');
         if (!typestr_last.data || !strview_case_eq(typestr_last, q)) {
             list = RALLOC(cnt + 1, list, char *);
-            list[cnt++] = gv_strndup(q.data, q.size);
+            list[cnt++] = strview_str(q);
         }
         typestr_last = q;
     }
