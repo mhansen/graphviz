@@ -13,7 +13,6 @@ AM_CPPFLAGS = \
 
 if WITH_WIN32
 AM_CFLAGS = -DGVC_EXPORTS
-AM_CPPFLAGS += -O0
 endif
 
 BUILT_SOURCES = colortbl.h htmlparse.h
