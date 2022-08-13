@@ -8,7 +8,7 @@
  viewBox="0.00 0.00 172.00 364.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 360)">
 <title>G</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-360 168,-360 168,4 -4,4"/>
+<polygon fill="#ffffff" stroke="none" points="-4,4 -4,-360 168,-360 168,4 -4,4"/>
 <g id="clust1" class="cluster">
 <title>cluster0</title>
 <defs>
@@ -27,7 +27,7 @@
 <stop offset="1" style="stop-color:#ff0000;stop-opacity:1.;"/>
 </linearGradient>
 </defs>
-<polygon fill="url(#l_1)" stroke="transparent" points="8,-224 8,-276 78,-276 78,-224 8,-224"/>
+<polygon fill="url(#l_1)" stroke="none" points="8,-224 8,-276 78,-276 78,-224 8,-224"/>
 </g>
 <g id="clust3" class="cluster">
 <title>cluster2</title>
@@ -35,7 +35,7 @@
 </g>
 <g id="clust4" class="cluster">
 <title>cluster3</title>
-<path fill="#ff0000" stroke="transparent" d="M20,-80C20,-80 66,-80 66,-80 72,-80 78,-86 78,-92 78,-92 78,-120 78,-120 78,-126 72,-132 66,-132 66,-132 20,-132 20,-132 14,-132 8,-126 8,-120 8,-120 8,-92 8,-92 8,-86 14,-80 20,-80"/>
+<path fill="#ff0000" stroke="none" d="M20,-80C20,-80 66,-80 66,-80 72,-80 78,-86 78,-92 78,-92 78,-120 78,-120 78,-126 72,-132 66,-132 66,-132 20,-132 20,-132 14,-132 8,-126 8,-120 8,-120 8,-92 8,-92 8,-86 14,-80 20,-80"/>
 </g>
 <g id="clust5" class="cluster">
 <title>cluster4</title>
@@ -45,7 +45,7 @@
 <stop offset="1" style="stop-color:#0000ff;stop-opacity:1.;"/>
 </linearGradient>
 </defs>
-<polygon fill="url(#l_2)" stroke="transparent" points="8,-8 8,-60 78,-60 78,-8 8,-8"/>
+<polygon fill="url(#l_2)" stroke="none" points="8,-8 8,-60 78,-60 78,-8 8,-8"/>
 </g>
 <g id="clust6" class="cluster">
 <title>cluster5</title>

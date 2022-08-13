@@ -8,7 +8,7 @@
  viewBox="0.00 0.00 510.00 392.19" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 388.1915)">
 <title>G</title>
-<polygon fill="#0000ff" stroke="transparent" points="-4,4 -4,-388.1915 506,-388.1915 506,4 -4,4"/>
+<polygon fill="#0000ff" stroke="none" points="-4,4 -4,-388.1915 506,-388.1915 506,4 -4,4"/>
 <g id="clust1" class="cluster">
 <title>cluster_1</title>
 <polygon fill="#0000ff" stroke="#000000" points="49,-291.1915 49,-376.1915 489,-376.1915 489,-291.1915 49,-291.1915"/>
