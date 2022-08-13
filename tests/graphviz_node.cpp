@@ -17,6 +17,14 @@ std::string GraphvizNode::color() const {
   return SVG::to_dot_color(stroke, stroke_opacity);
 }
 
+std::string GraphvizNode::fillcolor() const {
+  const auto fill = m_svg_g_element.attribute_from_subtree<std::string>(
+      &SVG::SVGAttributes::fill, &SVG::SVGElement::is_shape_element, "");
+  const auto fill_opacity = m_svg_g_element.attribute_from_subtree<double>(
+      &SVG::SVGAttributes::fill_opacity, &SVG::SVGElement::is_shape_element, 1);
+  return SVG::to_dot_color(fill, fill_opacity);
+}
+
 double GraphvizNode::penwidth() const {
   return m_svg_g_element.attribute_from_subtree<double>(
       &SVG::SVGAttributes::stroke_width, &SVG::SVGElement::is_shape_element, 1);

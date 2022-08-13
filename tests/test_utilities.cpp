@@ -144,14 +144,34 @@ const std::unordered_set<std::string_view> all_node_shapes = {
     "lpromoter"        //
 };
 
+static const std::unordered_set<std::string_view>
+    node_shapes_containing_multiple_same_shapes_with_different_fill = {
+        "cylinder",      // two paths
+        "doublecircle",  // two ellipses
+        "doubleoctagon", // two polygons
+        "tripleoctagon", // three polygons
+};
+
 bool contains_polygon_shape(const std::string_view shape) {
   return node_shapes_consisting_of_polygon.contains(shape) ||
+         node_shapes_consisting_of_polygon_and_polyline.contains(shape);
+}
+
+bool contains_polyline_shape(const std::string_view shape) {
+  return node_shapes_consisting_of_ellipse_and_polyline.contains(shape) ||
          node_shapes_consisting_of_polygon_and_polyline.contains(shape);
 }
 
 bool contains_ellipse_shape(const std::string_view shape) {
   return node_shapes_consisting_of_ellipse.contains(shape) ||
          node_shapes_consisting_of_ellipse_and_polyline.contains(shape);
+}
+
+bool contains_multiple_shapes_with_different_fill(
+    const std::string_view shape) {
+  return node_shapes_containing_multiple_same_shapes_with_different_fill
+             .contains(shape) ||
+         contains_polyline_shape(shape);
 }
 
 const std::unordered_set<std::string_view> primitive_polygon_arrow_shapes = {
