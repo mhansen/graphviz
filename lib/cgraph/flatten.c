@@ -17,8 +17,7 @@ static void agflatten_elist(Dict_t * d, Dtlink_t ** lptr, int flag)
     *lptr = dtextract(d);
 }
 
-void agflatten_edges(Agraph_t * g, Agnode_t * n, int flag)
-{
+static void agflatten_edges(Agraph_t *g, Agnode_t *n, int flag) {
     Agsubnode_t *sn;
     Dtlink_t **tmp;
 
