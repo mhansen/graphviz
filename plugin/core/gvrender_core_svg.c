@@ -46,13 +46,13 @@
 typedef enum { FORMAT_SVG, FORMAT_SVGZ, } format_type;
 
 /* SVG dash array */
-static char *sdasharray = "5,2";
+static const char sdasharray[] = "5,2";
 /* SVG dot array */
-static char *sdotarray = "1,5";
+static const char sdotarray[] = "1,5";
 
-static char *transparent = "transparent";
-static char *none = "none";
-static char *black = "black";
+static const char transparent[] = "transparent";
+static const char none[] = "none";
+static const char black[] = "black";
 
 static void svg_bzptarray(GVJ_t * job, pointf * A, int n)
 {
