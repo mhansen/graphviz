@@ -1383,3 +1383,7 @@ getPackInfo(Agraph_t * g, pack_mode dflt, int dfltMargin, pack_info* pinfo)
 
     return pinfo->mode;
 }
+/**
+ * @dir lib/pack
+ * @brief support for connected components, API pack.h
+ */

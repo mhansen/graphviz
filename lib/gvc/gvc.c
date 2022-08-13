@@ -232,3 +232,8 @@ void gvAddLibrary(GVC_t *gvc, gvplugin_library_t *lib)
 char **gvcInfo(GVC_t* gvc) { return gvc->common.info; }
 char *gvcVersion(GVC_t* gvc) { return gvc->common.info[1]; }
 char *gvcBuildDate(GVC_t* gvc) { return gvc->common.info[2]; }
+
+/**
+ * @dir lib/gvc
+ * @brief Graphviz context library, API gvc.h
+ */
