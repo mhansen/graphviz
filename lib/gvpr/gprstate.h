@@ -44,7 +44,6 @@ extern "C" {
 	Agraph_t *target;
 	Agraph_t *outgraph;
 	Agobj_t *curobj;
-	Sfio_t *tmp;
 	Exdisc_t *dp;
 	Exerror_f errf;
 	Exexit_f exitf;

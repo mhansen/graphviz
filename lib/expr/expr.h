@@ -208,7 +208,7 @@ struct Exdisc_s				/* discipline			*/
 					/* binary operator function     */
 	char*		(*typename) (int);
 					/* application type names       */
-	int		(*stringof) (Expr_t *, Exnode_t *, int, Exdisc_t *);
+	int		(*stringof) (Expr_t *, Exnode_t *, int);
 					/* value to string conversion   */
 	Extype_t	(*keyf) (Extype_t, int);
 					/* dictionary key for external type objects     */

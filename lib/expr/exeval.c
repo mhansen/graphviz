@@ -1099,7 +1099,7 @@ xPrint(Expr_t * ex, Exnode_t * expr, Extype_t v, Exnode_t * tmp)
 {
 	*tmp = *expr->data.operand.left;
 	tmp->data.constant.value = v;
-	if (ex->disc->stringof(ex, tmp, 0, ex->disc))
+	if (ex->disc->stringof(ex, tmp, 0))
 	exerror("%s: no string representation of %s value",
 		expr->data.operand.left->data.variable.symbol->name,
 		extypename(ex, expr->data.operand.left->type));

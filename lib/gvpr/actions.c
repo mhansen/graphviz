@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/likely.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 
@@ -762,27 +763,39 @@ int compare(Agobj_t * l, Agobj_t * r)
 /* toLower:
  * Convert characters to lowercase
  */
-char *toLower(Expr_t * pgm, char *s, Sfio_t* tmps)
-{
-    int c;
+char *toLower(Expr_t *pgm, char *src) {
 
-    while ((c = *s++))
-	sfputc (tmps, tolower (c));
+  const size_t len = strlen(src);
+  char *dst = exstralloc(pgm, len + 1);
+  if (UNLIKELY(dst == NULL)) {
+    return NULL;
+  }
 
-    return exstring(pgm, sfstruse(tmps));
+  for (size_t i = 0; i < len; ++i) {
+    dst[i] = (char)tolower((int)src[i]);
+  }
+
+  dst[len] = '\0';
+  return dst;
 }
 
 /* toUpper:
  * Convert characters to uppercase
  */
-char *toUpper(Expr_t * pgm, char *s, Sfio_t* tmps)
-{
-    int c;
+char *toUpper(Expr_t *pgm, char *src) {
 
-    while ((c = *s++))
-	sfputc (tmps, toupper (c));
+  const size_t len = strlen(src);
+  char *dst = exstralloc(pgm, len + 1);
+  if (UNLIKELY(dst == NULL)) {
+    return NULL;
+  }
 
-    return exstring(pgm, sfstruse(tmps));
+  for (size_t i = 0; i < len; ++i) {
+    dst[i] = (char)toupper((int)src[i]);
+  }
+
+  dst[len] = '\0';
+  return dst;
 }
 
 /* toHtml:
@@ -1263,8 +1276,7 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 /* colorx:
  * RGB, RGBA, HSV, HSVA, CMYK
  */
-char *colorx (Expr_t* ex, char* incolor, char* fmt, Sfio_t* fp)
-{
+char *colorx(Expr_t *ex, char *incolor, char *fmt) {
     gvcolor_t color = {{{0}},0};
     color_type_t type;
     int rc;
@@ -1297,28 +1309,33 @@ char *colorx (Expr_t* ex, char* incolor, char* fmt, Sfio_t* fp)
     if (rc != COLOR_OK)
 	return "";
 
+    agxbuf fp = {0};
+    agxbinit(&fp, 0, NULL);
+
     switch (type) {
     case HSVA_DOUBLE :
-	sfprintf (fp, "%.03f %.03f %.03f", 
+	agxbprint(&fp, "%.03f %.03f %.03f",
 	    color.u.HSVA[0], color.u.HSVA[1], color.u.HSVA[2]);
 	if (alpha)
-	    sfprintf (fp, " %.03f", color.u.HSVA[3]);
+	    agxbprint(&fp, " %.03f", color.u.HSVA[3]);
 	break;
     case RGBA_BYTE :
-	sfprintf (fp, "#%02x%02x%02x", 
+	agxbprint(&fp, "#%02x%02x%02x",
 	    color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
 	if (alpha)
-	    sfprintf (fp, "%02x", color.u.rgba[3]);
+	    agxbprint(&fp, "%02x", color.u.rgba[3]);
 	break;
     case CMYK_BYTE :
-	sfprintf (fp, "#%02x%02x%02x%02x", 
+	agxbprint(&fp, "#%02x%02x%02x%02x",
 	    color.u.cmyk[0], color.u.cmyk[1], color.u.cmyk[2], color.u.cmyk[3]);
 	break;
     default :
 	break;
     }
 
-    return exstring(ex, sfstruse(fp));
+    char *result = exstring(ex, agxbuse(&fp));
+    agxbfree(&fp);
+    return result;
 }
 
 #ifndef _WIN32
