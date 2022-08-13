@@ -31,6 +31,7 @@
 
 #include <gvc/gvplugin_render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
@@ -127,7 +128,7 @@ static void svg_print_paint(GVJ_t * job, gvcolor_t color)
 		     color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
 	break;
     default:
-	assert(0);		/* internal error */
+	UNREACHABLE(); // internal error
     }
 }
 
@@ -152,7 +153,7 @@ static void svg_print_gradient_color(GVJ_t * job, gvcolor_t color)
 		 color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
 	break;
     default:
-	assert(0);		/* internal error */
+	UNREACHABLE(); // internal error
     }
 }
 
@@ -502,7 +503,7 @@ static void svg_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    gvprintf(job, " fill-opacity=\"%f\"", ((float) obj->pencolor.u.rgba[3] / 255.0));
 	break;
     default:
-	assert(0);		/* internal error */
+	UNREACHABLE(); // internal error
     }
     gvputc(job, '>');
     if (obj->labeledgealigned) {

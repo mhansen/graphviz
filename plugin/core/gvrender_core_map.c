@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 
+#include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <gvc/gvplugin_render.h>
@@ -61,8 +62,7 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
             gvputs(job, "\n");
             break;
         default:
-            assert(0);
-            break;
+            UNREACHABLE();
         }
 
     } else if (job->render.id == FORMAT_ISMAP && url && url[0]) {
@@ -77,8 +77,7 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
 	    break;
         }
         default:
-            assert(0);
-            break;
+            UNREACHABLE();
         }
 
     } else if (job->render.id == FORMAT_CMAP || job->render.id == FORMAT_CMAPX) {
@@ -93,8 +92,7 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
             gvputs(job, "<area shape=\"poly\"");
             break;
         default:
-            assert(0);
-            break;
+            UNREACHABLE();
         }
         if (id && id[0]) {
             gvputs(job, " id=\"");
