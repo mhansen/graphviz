@@ -238,10 +238,8 @@ static void delete_items(item *ilist)
 
 	for (p = ilist; p; p = pn) {
 		pn = p->next;
-		switch(p->tag) {
-			case T_list: delete_items(p->u.list); break;
-			case T_atom: case T_attr: agstrfree(G,p->str); break;
-		}
+		if (p->tag == T_list) delete_items(p->u.list);
+		if (p->tag == T_atom) agstrfree(G,p->str);
 		agfree(G,p);
 	}
 }
