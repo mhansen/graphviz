@@ -170,7 +170,6 @@ extern "C" {
 #define SF_NEW		0	/* new stream                           */
 #define SF_SETFD	(-1)	/* about to set the file descriptor     */
 
-#define SF_BUFSIZE	8192	/* default buffer size                  */
 #define SF_UNBOUND SIZE_MAX // unbounded buffer size
 
      extern ssize_t _Sfi;
