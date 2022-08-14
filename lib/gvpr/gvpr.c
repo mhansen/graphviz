@@ -80,7 +80,7 @@ static Sfio_t *openOut(char *name)
 {
     Sfio_t *outs;
 
-    outs = sfopen(0, name, "w");
+    outs = sfopen(name, "w");
     if (outs == 0) {
 	error(ERROR_ERROR, "could not open %s for writing", name);
     }
@@ -849,7 +849,7 @@ static void chkClose(Agraph_t * g)
 
 static void *ing_open(char *f)
 {
-    return sfopen(0, f, "r");
+    return sfopen(f, "r");
 }
 
 static Agraph_t *ing_read(void *fp)

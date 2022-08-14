@@ -493,7 +493,7 @@ parse_prog *parseProg(char *input, int isFile)
 	prog->source = NULL;	/* command line */
     }
 
-    str = sfopen(0, input, mode);
+    str = sfopen(input, mode);
     if (!str) {
 	if (isFile)
 	    error(ERROR_ERROR, "could not open %s for reading", input);

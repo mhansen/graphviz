@@ -15,18 +15,15 @@
 #endif
 
 /*	Open a file/string for IO.
-**	If f is not nil, it is taken as an existing stream that should be
-**	closed and its structure reused for the new stream.
 **
 **	Written by Kiem-Phong Vo.
 */
 
 /**
- * @param f old stream structure
  * @param file file/string to be opened
  * @param mode mode of the stream
  */
-Sfio_t *sfopen(Sfio_t * f, const char *file, const char *mode)
+Sfio_t *sfopen(const char *file, const char *mode)
 {
     int fd, oldfd, oflags, sflags;
 
@@ -36,42 +33,9 @@ Sfio_t *sfopen(Sfio_t * f, const char *file, const char *mode)
 
     /* usually used on the standard streams to change control flags */
 
-#ifndef _WIN32	
-    if (f && !file && (f->mode & SF_INIT)) {
-	SFMTXSTART(f, NULL);
-
-	if (f->mode & SF_INIT) {	/* paranoia in case another thread snuck in */
-	    if (f->file >= 0 && !(f->flags & SF_STRING) && (oflags &= (O_TEXT | O_BINARY | O_APPEND)) != 0) {	/* set the wanted file access control flags */
-		int ctl = fcntl(f->file, F_GETFL, 0);
-		ctl = (ctl & ~(O_TEXT | O_BINARY | O_APPEND)) | oflags;
-		fcntl(f->file, F_SETFL, ctl);
-	    }
-	    /* set all non read-write flags */
-	    f->flags |= (sflags & (SF_FLAGS & ~SF_RDWR));
-
-	    /* reset read/write modes */
-	    if ((sflags &= SF_RDWR) != 0) {
-		f->flags = (f->flags & ~SF_RDWR) | sflags;
-
-		if ((f->flags & SF_RDWR) == SF_RDWR)
-		    f->bits |= SF_BOTH;
-		else
-		    f->bits &= (unsigned short)~SF_BOTH;
-
-		if (f->flags & SF_READ)
-		    f->mode = (f->mode & ~SF_WRITE) | SF_READ;
-		else
-		    f->mode = (f->mode & ~SF_READ) | SF_WRITE;
-	    }
-
-	    SFMTXRETURN(f, f);
-	} else
-	    SFMTXRETURN(f, NULL);
-    }
-
-#endif
+    Sfio_t *f = NULL;
     if (sflags & SF_STRING) {
-	f = sfnew(f, (char *)file, file ? strlen(file) : SF_UNBOUND, -1, sflags);
+	f = sfnew(NULL, (char *)file, file ? strlen(file) : SF_UNBOUND, -1, sflags);
     } else {
 	if (!file)
 	    return NULL;

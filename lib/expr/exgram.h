@@ -834,7 +834,7 @@ expush(Expr_t* p, const char* name, int line, const char* sp, Sfio_t* fp)
 			in->close = 0;
 		else if (name)
 		{
-			if (!(s = pathfind(name, p->disc->lib, p->disc->type, buf, sizeof(buf))) || !(in->fp = sfopen(NULL, s, "r")))
+			if (!(s = pathfind(name, p->disc->lib, p->disc->type, buf, sizeof(buf))) || !(in->fp = sfopen(s, "r")))
 			{
 				exerror("%s: file not found", name);
 				in->bp = in->sp = "";

@@ -606,7 +606,7 @@ int writeFile(Agraph_t * g, char *f, Agiodisc_t* io)
 	exerror("NULL string passed to writeG");
 	return 1;
     }
-    fp = sfopen(0, f, "w");
+    fp = sfopen(f, "w");
     if (!fp) {
 	exwarn("Could not open %s for writing in writeG", f);
 	return 1;
@@ -629,7 +629,7 @@ Agraph_t *readFile(char *f)
 	exerror("NULL string passed to readG");
 	return 0;
     }
-    fp = sfopen(0, f, "r");
+    fp = sfopen(f, "r");
     if (!fp) {
 	exwarn("Could not open %s for reading in readG", f);
 	return 0;
@@ -678,7 +678,7 @@ int openFile(Expr_t * ex, const char *fname, const char *mode)
 	exerror("openF: no available descriptors");
 	return -1;
     }
-    ex->file[idx] = sfopen(0, fname, mode);
+    ex->file[idx] = sfopen(fname, mode);
     if (ex->file[idx])
 	return idx;
     else
