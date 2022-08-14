@@ -19,6 +19,8 @@
 **	Written by Kiem-Phong Vo.
 */
 
+static int _sftype(const char *mode, int *oflagsp, int *uflagp);
+
 /**
  * @param file file/string to be opened
  * @param mode mode of the stream
@@ -83,8 +85,7 @@ Sfio_t *sfopen(const char *file, const char *mode)
     return f;
 }
 
-int _sftype(const char *mode, int *oflagsp, int *uflagp)
-{
+static int _sftype(const char *mode, int *oflagsp, int *uflagp) {
     int sflags, oflags, uflag;
 
     if (!mode)
