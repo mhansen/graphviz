@@ -145,11 +145,6 @@ extern "C" {
 #define SF_SEEK		3	/* seek error                           */
 
 #define SF_CLOSING	4	/* stream is about to be closed.        */
-#if defined(_mac_SF_CLOSE) && !_mac_SF_CLOSE
-#define SF_CLOSE	SF_CLOSING	/* this was the original close event */
-    /* but AIX now uses this symbol. So we  */
-    /* avoid defining it in such cases.     */
-#endif
 
 #define SF_DPUSH	5	/* when discipline is being pushed      */
 #define SF_DPOP		6	/* when discipline is being popped      */
