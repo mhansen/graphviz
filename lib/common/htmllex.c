@@ -278,7 +278,7 @@ static int cellborderfn(htmltbl_t * p, char *v)
 {
     long u;
 
-    if (doInt(v, "CELLSBORDER", 0, SCHAR_MAX, &u))
+    if (doInt(v, "CELLBORDER", 0, SCHAR_MAX, &u))
 	return 1;
     p->cb = (signed char)u;
     return 0;
