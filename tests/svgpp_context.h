@@ -44,23 +44,23 @@ public:
                               double y, svgpp::tag::coordinate::absolute);
   void path_close_subpath();
   void path_exit();
-  void set(svgpp::tag::attribute::cy cy, const double v);
-  void set(svgpp::tag::attribute::cx cx, const double v);
-  void set(svgpp::tag::attribute::r r, const double v);
-  void set(svgpp::tag::attribute::rx rx, const double v);
-  void set(svgpp::tag::attribute::ry ry, const double v);
-  void set(svgpp::tag::attribute::x1 x1, const double v);
-  void set(svgpp::tag::attribute::y1 y1, const double v);
-  void set(svgpp::tag::attribute::x2 x2, const double v);
-  void set(svgpp::tag::attribute::y2 y2, const double v);
+  void set(svgpp::tag::attribute::cy cy, double v);
+  void set(svgpp::tag::attribute::cx cx, double v);
+  void set(svgpp::tag::attribute::r r, double v);
+  void set(svgpp::tag::attribute::rx rx, double v);
+  void set(svgpp::tag::attribute::ry ry, double v);
+  void set(svgpp::tag::attribute::x1 x1, double v);
+  void set(svgpp::tag::attribute::y1 y1, double v);
+  void set(svgpp::tag::attribute::x2 x2, double v);
+  void set(svgpp::tag::attribute::y2 y2, double v);
   template <typename Range>
   void set(svgpp::tag::attribute::points points, const Range &range) {
     set_impl(points, range);
   }
-  void set(svgpp::tag::attribute::x a, const double v);
-  void set(svgpp::tag::attribute::y y, const double v);
-  void set(svgpp::tag::attribute::width width, const double v);
-  void set(svgpp::tag::attribute::height height, const double v);
+  void set(svgpp::tag::attribute::x a, double v);
+  void set(svgpp::tag::attribute::y y, double v);
+  void set(svgpp::tag::attribute::width width, double v);
+  void set(svgpp::tag::attribute::height height, double v);
   template <class Range> void set_text(const Range &range) {
     set_text_impl(range);
   }
