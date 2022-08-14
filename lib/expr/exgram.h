@@ -924,23 +924,21 @@ void exinit(void) {
 }
 
 /*
- * compile the expression in [sf]p
+ * compile the expression in fp
  */
 
-int
-excomp(Expr_t* p, const char* name, int line, const char* sp, Sfio_t* fp)
-{
+int excomp(Expr_t *p, const char *name, int line, Sfio_t *fp) {
 	Exid_t*	v;
 	int	eof;
 
 	p->more = 0;
 	eof = p->eof;
-	if (!sp && !fp)
+	if (!fp)
 	{
 		if (!p->input)
 			return -1;
 	}
-	else if (expush(p, name, line, sp, fp))
+	else if (expush(p, name, line, NULL, fp))
 		return -1;
 	else
 		p->input->unit = line >= 0;

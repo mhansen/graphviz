@@ -2297,7 +2297,7 @@ static Exnode_t *compile(Expr_t * prog, char *src, char *input, int line,
 
     if (!src)
 	src = "<command line>";
-    rv = excomp(prog, src, line, 0, sf);
+    rv = excomp(prog, src, line, sf);
     sfclose(sf);
 
     if (rv >= 0 && getErrorErrors() == 0)
