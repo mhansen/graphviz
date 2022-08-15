@@ -88,6 +88,15 @@ env PATH=${PREFIX}/bin:${PATH} C_INCLUDE_PATH=${PREFIX}/include \
 On macOS, use the same command except replacing `LD_LIBRARY_PATH` with
 `DYLD_LIBRARY_PATH`.
 
+To run a single test, you use its name qualified by the file it lives in. E.g.
+
+```sh
+env PATH=${PREFIX}/bin:${PATH} C_INCLUDE_PATH=${PREFIX}/include \
+  LD_LIBRARY_PATH=${PREFIX}/lib LIBRARY_PATH=${PREFIX}/lib \
+  PYTHONPATH=${PREFIX}/lib/graphviz/python3 \
+  python3 -m pytest tests/test_regression::test_2225 --verbose
+```
+
 *TODO: on Windows, you probably need to override different environment variables?*
 
 ## Performance and profiling
