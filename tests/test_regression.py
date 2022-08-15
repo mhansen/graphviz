@@ -1901,3 +1901,28 @@ def test_2225():
     return
 
   p.check_returncode()
+
+@pytest.mark.xfail(strict=True)
+def test_2258():
+  """
+  'id' attribute should be propagated to all graph children in output
+  https://gitlab.com/graphviz/graphviz/-/issues/2258
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "2258.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # translate this to SVG
+  svg = dot("svg", input)
+
+  # load this as XML
+  root = ET.fromstring(svg)
+
+  # the output is expected to contain a number of linear gradients, all of which
+  # are semantic children of graph marked `id = "G2"`
+  gradients = root.findall(".//{http://www.w3.org/2000/svg}linearGradient")
+  assert len(gradients) > 0, "no gradients in output"
+
+  for gradient in gradients:
+    assert "G2" in gradient.get("id"), "ID was not applied to linear gradients"
