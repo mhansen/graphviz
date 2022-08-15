@@ -82,7 +82,7 @@ follows:
 env PATH=${PREFIX}/bin:${PATH} C_INCLUDE_PATH=${PREFIX}/include \
   LD_LIBRARY_PATH=${PREFIX}/lib LIBRARY_PATH=${PREFIX}/lib \
   PYTHONPATH=${PREFIX}/lib/graphviz/python3 \
-  python3 -m pytest tests rtest --verbose
+  python3 -m pytest tests --verbose
 ```
 
 On macOS, use the same command except replacing `LD_LIBRARY_PATH` with
