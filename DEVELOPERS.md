@@ -365,10 +365,6 @@ profiler like Linux Perf.
 
 TODO
 
-## TODO with this guide
-
-* Update with new example commits after next stable release.
-
 ## How to update this guide
 
 ### Markdown flavor used
