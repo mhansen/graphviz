@@ -12,6 +12,7 @@ enable_testing()
 # separate test can be as small as possible
 add_library(test_common SHARED
             catch2_main.cpp
+            test_utilities.cpp
             svgpp_context.cpp
             svgpp_context.h
             svgpp_document_traverser.cpp
@@ -19,6 +20,8 @@ add_library(test_common SHARED
             svg_analyzer.cpp
             svg_analyzer.h
             svg_analyzer_interface.h
+            svg_element.cpp
+            svg_element.h
             ../cmd/dot/dot_builtins.cpp
 )
 set_target_properties(test_common PROPERTIES CXX_STANDARD 20)
@@ -77,3 +80,4 @@ CREATE_TEST(neatopack)
 CREATE_TEST(simple)
 CREATE_TEST(subgraph_layout)
 CREATE_TEST(subgraphs)
+CREATE_TEST(svg_analyzer)

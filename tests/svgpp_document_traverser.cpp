@@ -21,12 +21,35 @@ void traverseDocumentWithSvgpp(SvgppContext &context, char *text) {
         svgpp::tag::element::circle, svgpp::tag::element::ellipse,
         svgpp::tag::element::line, svgpp::tag::element::path,
         svgpp::tag::element::polygon, svgpp::tag::element::polyline,
-        svgpp::tag::element::rect, svgpp::tag::element::title>::type;
+        svgpp::tag::element::rect, svgpp::tag::element::text,
+        svgpp::tag::element::title>::type;
+
+    using processed_attributes_t =
+        boost::mpl::set<svgpp::traits::shapes_attributes_by_element,
+                        svgpp::tag::attribute::class_,      //
+                        svgpp::tag::attribute::cx,          //
+                        svgpp::tag::attribute::cy,          //
+                        svgpp::tag::attribute::d,           //
+                        svgpp::tag::attribute::fill,        //
+                        svgpp::tag::attribute::font_family, //
+                        svgpp::tag::attribute::font_size,   //
+                        svgpp::tag::attribute::height,      //
+                        svgpp::tag::attribute::id,          //
+                        svgpp::tag::attribute::points,      //
+                        svgpp::tag::attribute::rx,          //
+                        svgpp::tag::attribute::ry,          //
+                        svgpp::tag::attribute::stroke,      //
+                        svgpp::tag::attribute::text_anchor, //
+                        svgpp::tag::attribute::transform,   //
+                        svgpp::tag::attribute::viewBox,     //
+                        svgpp::tag::attribute::width,       //
+                        svgpp::tag::attribute::x,           //
+                        svgpp::tag::attribute::y            //
+                        >::type;
 
     svgpp::document_traversal<
         svgpp::processed_elements<processed_elements_t>,
-        svgpp::processed_attributes<
-            svgpp::traits::shapes_attributes_by_element>,
+        svgpp::processed_attributes<processed_attributes_t>,
         svgpp::basic_shapes_policy<svgpp::policy::basic_shapes::raw>>::
         load_document(xml_root_element, context);
   }

@@ -13,9 +13,9 @@
 <g id="node1" class="node">
 <title>a</title>
 <polygon fill="none" stroke="black" points="33,-24 33,-12 21,-12 21,-24 33,-24"/>
-<polyline fill="none" stroke="black" points="36,-27 36,-9 18,-9 18,-27 36,-27 "/>
-<polyline fill="none" stroke="black" points="36,-18 54,-18 "/>
-<polyline fill="none" stroke="black" points="0,-18 18,-18 "/>
+<polyline fill="none" stroke="black" points="36,-27 36,-9 18,-9 18,-27 36,-27"/>
+<polyline fill="none" stroke="black" points="36,-18 54,-18"/>
+<polyline fill="none" stroke="black" points="0,-18 18,-18"/>
 </g>
 </g>
 </svg>

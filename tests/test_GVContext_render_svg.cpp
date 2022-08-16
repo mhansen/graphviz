@@ -31,7 +31,6 @@ TEST_CASE(
   REQUIRE(svgAnalyzer.num_polylines() == 0);
   REQUIRE(svgAnalyzer.num_rects() == 0);
   REQUIRE(svgAnalyzer.num_titles() == 0);
-  REQUIRE(svgAnalyzer.num_unknowns() == 0);
 }
 
 TEST_CASE("Rendering an SVG from a graph with a single node outputs an SVG "
@@ -56,7 +55,6 @@ TEST_CASE("Rendering an SVG from a graph with a single node outputs an SVG "
   REQUIRE(svgAnalyzer.num_polylines() == 0);
   REQUIRE(svgAnalyzer.num_rects() == 0);
   REQUIRE(svgAnalyzer.num_titles() == 1);
-  REQUIRE(svgAnalyzer.num_unknowns() == 0);
 }
 
 TEST_CASE("Rendering an SVG from a graph with two nodes outputs an SVG "
@@ -81,7 +79,6 @@ TEST_CASE("Rendering an SVG from a graph with two nodes outputs an SVG "
   REQUIRE(svgAnalyzer.num_polylines() == 0);
   REQUIRE(svgAnalyzer.num_rects() == 0);
   REQUIRE(svgAnalyzer.num_titles() == 2);
-  REQUIRE(svgAnalyzer.num_unknowns() == 0);
 }
 
 TEST_CASE("Rendering an SVG from a graph with two nodes and one edge outputs "
@@ -106,5 +103,4 @@ TEST_CASE("Rendering an SVG from a graph with two nodes and one edge outputs "
   REQUIRE(svgAnalyzer.num_polylines() == 0);
   REQUIRE(svgAnalyzer.num_rects() == 0);
   REQUIRE(svgAnalyzer.num_titles() == 3);
-  REQUIRE(svgAnalyzer.num_unknowns() == 0);
 }

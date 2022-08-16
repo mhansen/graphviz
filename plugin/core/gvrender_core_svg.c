@@ -686,7 +686,9 @@ static void svg_polyline(GVJ_t * job, pointf * A, int n)
         gvprintdouble(job, A[i].x);
         gvputc(job, ',');
         gvprintdouble(job, -A[i].y);
-        gvputc(job, ' ');
+        if (i != n - 1) {
+            gvputc(job, ' ');
+        }
     }
     gvputs(job, "\"/>\n");
 }

@@ -16,8 +16,8 @@
 <polygon fill="none" stroke="black" points="13.5,-10.5 25.5,-10.5 25.5,-16.5 13.5,-16.5 13.5,-10.5"/>
 <polygon fill="none" stroke="black" points="28.5,-10.5 40.5,-10.5 40.5,-16.5 28.5,-16.5 28.5,-10.5"/>
 <polygon fill="none" stroke="black" points="28.5,-19.5 40.5,-19.5 40.5,-25.5 28.5,-25.5 28.5,-19.5"/>
-<polyline fill="none" stroke="black" points="40.5,-18 54,-18 "/>
-<polyline fill="none" stroke="black" points="13.5,-18 0,-18 "/>
+<polyline fill="none" stroke="black" points="40.5,-18 54,-18"/>
+<polyline fill="none" stroke="black" points="13.5,-18 0,-18"/>
 </g>
 </g>
 </svg>
