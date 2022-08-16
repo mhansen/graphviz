@@ -18,6 +18,8 @@ struct SVGRect {
   double y;
   double width;
   double height;
+  void extend(const SVGPoint &point);
+  void extend(const SVGRect &other);
 };
 
 struct SVGMatrix {
@@ -75,6 +77,13 @@ public:
   SVGElement() = delete;
   explicit SVGElement(SVG::SVGElementType type);
 
+  /// Return the bounding box of the element and its children. The bounding box
+  /// is calculated and stored the first time this function is called and later
+  /// calls will return the already calculated value. If this function is called
+  /// for an SVG element for which the bounding box is not defined, it will
+  /// throw an exception unless the `throw_if_bbox_not_defined` parameter is
+  /// `false`.
+  SVG::SVGRect bbox(bool throw_if_bbox_not_defined = true);
   std::string to_string(std::size_t indent_size) const;
 
   SVGAttributes attributes;
@@ -105,8 +114,13 @@ private:
   std::string points_attribute_to_string() const;
   std::string stroke_attribute_to_string() const;
   std::string stroke_to_graphviz_color(const std::string &color) const;
+  SVG::SVGRect text_bbox() const;
   void to_string_impl(std::string &output, std::size_t indent_size,
                       std::size_t current_indent) const;
+
+  /// The bounding box of the element and its children. Stored the first time
+  /// it's computed
+  std::optional<SVG::SVGRect> m_bbox;
 };
 
 } // namespace SVG
