@@ -1902,7 +1902,6 @@ def test_2225():
 
   p.check_returncode()
 
-@pytest.mark.xfail(strict=True)
 def test_2257():
   """
   `$GV_FILE_PATH` being set should prevent Graphviz from running

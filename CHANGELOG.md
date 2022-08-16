@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (6.0.0)]
 
+### Removed
+
+- The `$GV_FILE_PATH` sandboxing mechanism has been removed #2257
+
 ## [5.0.1] – 2022-08-20
 
 ### Fixed

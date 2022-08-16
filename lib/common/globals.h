@@ -34,7 +34,6 @@ extern "C" {
     GLOBALS_API EXTERN char **Files;	/* from command line */
     GLOBALS_API EXTERN const char **Lib;		/* from command line */
     GLOBALS_API EXTERN char *CmdName;
-    GLOBALS_API EXTERN char *Gvfilepath;  /* Per-process path of files allowed in image attributes (also ps libs) */
     GLOBALS_API EXTERN char *Gvimagepath; /* Per-graph path of files allowed in image attributes  (also ps libs) */
 
     GLOBALS_API EXTERN unsigned char Verbose;
