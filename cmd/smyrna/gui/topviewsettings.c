@@ -60,24 +60,24 @@ void on_settingsCancelBtn_clicked(GtkWidget * widget, gpointer user_data)
 
     gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
 }
-static void copy_attr(Agraph_t* destG,char* attr,Agraph_t* g)
+static void copy_attr(Agraph_t *destG, char *attrib, Agraph_t *g)
 {
-    agattr(g,AGRAPH,attr,agget(destG,attr));
+    agattr(g, AGRAPH, attrib, agget(destG, attrib));
 }
 
 
-static int set_color_button_widget(char *attribute, char *widget_name)
+static int set_color_button_widget(char *attrib, char *widget_name)
 {
     GdkColor color;
     gvcolor_t cl;
 
     char *buf;
-    attribute=attribute +13;
-    buf = agget(view->g[view->activeGraph], attribute);
+    attrib = attrib + 13;
+    buf = agget(view->g[view->activeGraph], attrib);
     if ((!buf) || (strcmp(buf, "") == 0))
     {
-	buf = agget(view->systemGraphs.def_attrs, attribute);
-	copy_attr(view->systemGraphs.def_attrs, attribute,view->g[view->activeGraph]);
+	buf = agget(view->systemGraphs.def_attrs, attrib);
+	copy_attr(view->systemGraphs.def_attrs, attrib, view->g[view->activeGraph]);
     }
     if (buf) {
 	colorxlate(buf, &cl, RGBA_DOUBLE);
@@ -92,13 +92,13 @@ static int set_color_button_widget(char *attribute, char *widget_name)
     }
     return 0;
 }
-static int get_color_button_widget_to_attribute(char *attribute,
+static int get_color_button_widget_to_attribute(char *attrib,
 						char *widget_name,
 						Agraph_t * g)
 {
     GdkColor color;
     char buf[256];
-    attribute=attribute +13;
+    attrib = attrib + 13;
 
     gtk_color_button_get_color((GtkColorButton *)
 			       glade_xml_get_widget(xml, widget_name),
@@ -107,31 +107,31 @@ static int get_color_button_widget_to_attribute(char *attribute,
 	    (int) ((float) color.red / 65535.0 * 255.0),
 	    (int) ((float) color.green / 65535.0 * 255.0),
 	    (int) ((float) color.blue / 65535.0 * 255.0));
-    agattr(g, AGRAPH, attribute, buf);
+    agattr(g, AGRAPH, attrib, buf);
     return 1;
 }
-static int get_text_widget_to_attribute(char *attribute, char *widget_name,
+static int get_text_widget_to_attribute(char *attrib, char *widget_name,
 					Agraph_t * g)
 {
-    attribute=attribute +9;
+    attrib = attrib + 9;
 
-    if (strlen(attribute) > 512)
+    if (strlen(attrib) > 512)
 	return 0;
-    agattr(g, AGRAPH, attribute, 
+    agattr(g, AGRAPH, attrib, 
 	    (char*)gtk_entry_get_text((GtkEntry *)
 			       glade_xml_get_widget(xml, widget_name)));
     return 1;
 }
-static int set_text_widget(char *attribute, char *widget_name)
+static int set_text_widget(char *attrib, char *widget_name)
 {
     char *buf;
-    attribute=attribute +9;
+    attrib = attrib + 9;
 
-    buf = agget(view->g[view->activeGraph], attribute);
+    buf = agget(view->g[view->activeGraph], attrib);
     if ((!buf) || (strcmp(buf, "") == 0))
     {
-	buf = agget(view->systemGraphs.def_attrs, attribute);
-	copy_attr(view->systemGraphs.def_attrs, attribute,view->g[view->activeGraph]);
+	buf = agget(view->systemGraphs.def_attrs, attrib);
+	copy_attr(view->systemGraphs.def_attrs, attrib, view->g[view->activeGraph]);
     }
 
     if (buf) {
@@ -142,17 +142,17 @@ static int set_text_widget(char *attribute, char *widget_name)
     }
     return 0;
 }
-static int set_checkbox_widget(char *attribute, char *widget_name)
+static int set_checkbox_widget(char *attrib, char *widget_name)
 {
     char *buf;
     int value;
-    attribute=attribute +10;
+    attrib = attrib + 10;
 
-    buf = agget(view->g[view->activeGraph], attribute);
+    buf = agget(view->g[view->activeGraph], attrib);
     if ((!buf) || (strcmp(buf, "") == 0))
     {
-	buf = agget(view->systemGraphs.def_attrs, attribute);
-	copy_attr(view->systemGraphs.def_attrs, attribute,view->g[view->activeGraph]);
+	buf = agget(view->systemGraphs.def_attrs, attrib);
+	copy_attr(view->systemGraphs.def_attrs, attrib, view->g[view->activeGraph]);
     }
 
 
@@ -169,33 +169,33 @@ static int set_checkbox_widget(char *attribute, char *widget_name)
 
 }
 
-static int get_checkbox_widget_to_attribute(char *attribute,
+static int get_checkbox_widget_to_attribute(char *attrib,
 					    char *widget_name,
 					    Agraph_t * g)
 {
     int value;
     char buf[100];
-    attribute=attribute +10;
+    attrib = attrib + 10;
 
     value = (int) gtk_toggle_button_get_active((GtkToggleButton *)
 					       glade_xml_get_widget(xml,
 								    widget_name));
     snprintf(buf, sizeof(buf), "%d", value);
-    agattr(g, AGRAPH, attribute, buf);
+    agattr(g, AGRAPH, attrib, buf);
    return 1;
 }
 
-static int set_spinbtn_widget(char *attribute, char *widget_name)
+static int set_spinbtn_widget(char *attrib, char *widget_name)
 {
     char *buf;
     float value;
-    attribute=attribute +12;
+    attrib = attrib + 12;
 
-    buf = agget(view->g[view->activeGraph], attribute);
+    buf = agget(view->g[view->activeGraph], attrib);
     if ((!buf) || (strcmp(buf, "") == 0))
     {
-	buf = agget(view->systemGraphs.def_attrs, attribute);
-	copy_attr(view->systemGraphs.def_attrs, attribute,view->g[view->activeGraph]);
+	buf = agget(view->systemGraphs.def_attrs, attrib);
+	copy_attr(view->systemGraphs.def_attrs, attrib, view->g[view->activeGraph]);
     }
     if (buf) {
 	value = (float) atof(buf);
@@ -206,48 +206,48 @@ static int set_spinbtn_widget(char *attribute, char *widget_name)
     }
     return 0;
 }
-static int get_spinbtn_widget_to_attribute(char *attribute,
+static int get_spinbtn_widget_to_attribute(char *attrib,
 					   char *widget_name, Agraph_t * g)
 {
     float value;
     char buf[25];
-    attribute=attribute +12;
+    attrib = attrib + 12;
 
     value = (float) gtk_spin_button_get_value((GtkSpinButton *)
 					      glade_xml_get_widget(xml,
 								   widget_name));
     snprintf(buf, sizeof(buf), "%f", value);
-    agattr(g, AGRAPH, attribute, buf);
+    agattr(g, AGRAPH, attrib, buf);
     return 1;
 }
-static int get_scalebtn_widget_to_attribute(char *attribute,
+static int get_scalebtn_widget_to_attribute(char *attrib,
 					    char *widget_name,
 					    Agraph_t * g)
 {
     float value;
     char buf[25];
-    attribute=attribute +13;
+    attrib = attrib + 13;
 
     value = (float) gtk_range_get_value((GtkRange *)
 					glade_xml_get_widget(xml,
 							     widget_name));
     snprintf(buf, sizeof(buf), "%f", value);
-    agattr(g, AGRAPH, attribute, buf);
+    agattr(g, AGRAPH, attrib, buf);
     return 1;
 }
 
-static int set_scalebtn_widget_to_attribute(char *attribute,
+static int set_scalebtn_widget_to_attribute(char *attrib,
 					    char *widget_name)
 {
     char *buf;
     float value;
-    attribute=attribute +13;
-    buf = agget(view->g[view->activeGraph], attribute);
+    attrib = attrib + 13;
+    buf = agget(view->g[view->activeGraph], attrib);
 
     if ((!buf) || (strcmp(buf, "") == 0))
     {
-	buf = agget(view->systemGraphs.def_attrs, attribute);
-	copy_attr(view->systemGraphs.def_attrs, attribute,view->g[view->activeGraph]);
+	buf = agget(view->systemGraphs.def_attrs, attrib);
+	copy_attr(view->systemGraphs.def_attrs, attrib, view->g[view->activeGraph]);
 
     }
     if (buf) {
@@ -259,16 +259,16 @@ static int set_scalebtn_widget_to_attribute(char *attribute,
     return 0;
 }
 
-static int set_combobox_widget(char *attribute, char *widget_name)
+static int set_combobox_widget(char *attrib, char *widget_name)
 {
     char *buf;
     int value;
-    attribute=attribute +9;
-    buf = agget(view->g[view->activeGraph], attribute);
+    attrib = attrib + 9;
+    buf = agget(view->g[view->activeGraph], attrib);
     if ((!buf) || (strcmp(buf, "") == 0))
     {
-	buf = agget(view->systemGraphs.def_attrs, attribute);
-	copy_attr(view->systemGraphs.def_attrs, attribute,view->g[view->activeGraph]);
+	buf = agget(view->systemGraphs.def_attrs, attrib);
+	copy_attr(view->systemGraphs.def_attrs, attrib, view->g[view->activeGraph]);
     }
     if (buf) {
 	value = (int) atoi(buf);
@@ -282,21 +282,21 @@ static int set_combobox_widget(char *attribute, char *widget_name)
     return 0;
 }
 
-static int get_combobox_widget_to_attribute(char *attribute,
+static int get_combobox_widget_to_attribute(char *attrib,
 					    char *widget_name,
 					    Agraph_t * g)
 {
     char buf[25];
     int value;
 
-    attribute=attribute +9;
+    attrib = attrib + 9;
 
     value = (int)
 	gtk_combo_box_get_active((GtkComboBox *)
 				 glade_xml_get_widget(xml, widget_name));
 
     snprintf(buf, sizeof(buf), "%d", value);
-    agattr(g, AGRAPH, attribute, buf);
+    agattr(g, AGRAPH, attrib, buf);
     /* printf ("%s %f \n",attribute,value); */
     return 1;
 
