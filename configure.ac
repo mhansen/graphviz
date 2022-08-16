@@ -1392,7 +1392,7 @@ if test "x$use_tcl" = "x"; then
   TCLSH_EXEC_PREFIX=`echo $TCLSH|sed -e 's%/bin/.*tclsh.*$%%'`
 
   if test -f ${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}/tcl.h; then
-    TCL_INCLUDES="-I${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND} -I${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}/generic"
+    TCL_INCLUDES="-I${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}"
     if test -d ${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}/generic; then
       TCL_INCLUDES="${TCL_INCLUDES} -I${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}/generic"
     fi
