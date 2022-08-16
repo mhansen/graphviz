@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <string.h>
 #include "tcldot.h"
 
 static int dotnew(ClientData clientData, Tcl_Interp * interp,
@@ -21,9 +21,7 @@ static int dotnew(ClientData clientData, Tcl_Interp * interp,
 {
     ictx_t *ictx = (ictx_t *)clientData;
     Agraph_t *g;
-    char c;
     int i;
-    size_t length;
     Agdesc_t kind;
 
     if ((argc < 2)) {
@@ -32,15 +30,13 @@ static int dotnew(ClientData clientData, Tcl_Interp * interp,
 			 NULL);
 	return TCL_ERROR;
     }
-    c = argv[1][0];
-    length = strlen(argv[1]);
-    if (MATCHES_OPTION("digraph", argv[1], c, length)) {
+    if (strcmp("digraph", argv[1]) == 0) {
 	kind = Agdirected;
-    } else if (MATCHES_OPTION("digraphstrict", argv[1], c, length)) {
+    } else if (strcmp("digraphstrict", argv[1]) == 0) {
 	kind = Agstrictdirected;
-    } else if (MATCHES_OPTION("graph", argv[1], c, length)) {
+    } else if (strcmp("graph", argv[1]) == 0) {
 	kind = Agundirected;
-    } else if (MATCHES_OPTION("graphstrict", argv[1], c, length)) {
+    } else if (strcmp("graphstrict", argv[1]) == 0) {
 	kind = Agstrictundirected;
     } else {
 	Tcl_AppendResult(interp, "bad graphtype \"", argv[1], "\": must be one of:",
