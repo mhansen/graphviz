@@ -23,6 +23,8 @@ public:
   void add_node(SVG::SVGElement &svg_g_element);
   /// Return a non-mutable reference to the list of Graphviz edges
   const std::vector<GraphvizEdge> &edges() const;
+  /// Return the node with the specified `node_id`
+  const GraphvizNode &node(std::string_view node_id) const;
   /// Return a non-mutable reference to the list of Graphviz nodes
   const std::vector<GraphvizNode> &nodes() const;
   /// Return a non-mutable reference to the SVG `g` element corresponding to the

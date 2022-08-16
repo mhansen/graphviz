@@ -38,4 +38,7 @@ TEST_CASE("Graph rankdir", "Test that the Graphviz `rankdir` attribute affects "
   SVGAnalyzer svgAnalyzer{result.c_str()};
 
   REQUIRE(svgAnalyzer.graphs().size() == 1);
+  const auto &graph = svgAnalyzer.graphs().back();
+  const auto node_a = graph.node("a");
+  const auto node_b = graph.node("b");
 }
