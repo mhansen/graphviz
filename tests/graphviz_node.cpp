@@ -5,6 +5,8 @@ GraphvizNode::GraphvizNode(SVG::SVGElement &svg_element)
 
 std::string_view GraphvizNode::node_id() const { return m_node_id; }
 
+SVG::SVGRect GraphvizNode::bbox() const { return m_svg_g_element.bbox(); }
+
 const SVG::SVGElement &GraphvizNode::svg_g_element() const {
   return m_svg_g_element;
 }
