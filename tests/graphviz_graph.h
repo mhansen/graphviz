@@ -21,6 +21,7 @@ public:
   void add_edge(SVG::SVGElement &svg_g_element);
   /// Add a Graphviz node to the graph
   void add_node(SVG::SVGElement &svg_g_element);
+  const GraphvizEdge &edge(std::string_view edgeop) const;
   /// Return a non-mutable reference to the list of Graphviz edges
   const std::vector<GraphvizEdge> &edges() const;
   /// Return the node with the specified `node_id`

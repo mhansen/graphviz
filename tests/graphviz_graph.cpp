@@ -36,3 +36,13 @@ void GraphvizGraph::add_edge(SVG::SVGElement &svg_g_element) {
 const std::vector<GraphvizEdge> &GraphvizGraph::edges() const {
   return m_edges;
 }
+
+const GraphvizEdge &GraphvizGraph::edge(std::string_view edgeop) const {
+  for (auto &edge : m_edges) {
+    if (edge.edgeop() == edgeop) {
+      return edge;
+    }
+  }
+  throw std::runtime_error("Unknown edge '" + std::string{edgeop} +
+                           "' in graph " + m_graph_id);
+}
