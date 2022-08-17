@@ -16,6 +16,7 @@ public:
   explicit GraphvizEdge(SVG::SVGElement &svg_g_element);
 
   SVG::SVGRect bbox() const;
+  SVG::SVGPoint center() const;
   std::string_view edgeop() const;
   /// Return a non-mutable reference to the SVG `g` element corresponding to the
   /// edge

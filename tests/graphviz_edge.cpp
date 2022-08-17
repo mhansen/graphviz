@@ -10,3 +10,5 @@ const SVG::SVGElement &GraphvizEdge::svg_g_element() const {
 }
 
 SVG::SVGRect GraphvizEdge::bbox() const { return m_svg_g_element.bbox(); }
+
+SVG::SVGPoint GraphvizEdge::center() const { return bbox().center(); }
