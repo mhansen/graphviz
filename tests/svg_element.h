@@ -11,6 +11,10 @@ namespace SVG {
 struct SVGPoint {
   double x;
   double y;
+  bool is_higher_than(const SVGPoint &other) const;
+  bool is_lower_than(const SVGPoint &other) const;
+  bool is_more_left_than(const SVGPoint &other) const;
+  bool is_more_right_than(const SVGPoint &other) const;
 };
 
 struct SVGRect {

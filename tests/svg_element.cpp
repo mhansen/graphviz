@@ -396,3 +396,21 @@ std::string_view SVG::tag(SVGElementType type) {
   }
   UNREACHABLE();
 }
+
+bool SVG::SVGPoint::is_higher_than(const SVGPoint &other) const {
+  // SVG uses inverted y axis, so smaller is higher
+  return y < other.y;
+}
+
+bool SVG::SVGPoint::is_lower_than(const SVGPoint &other) const {
+  // SVG uses inverted y axis, so larger is lower
+  return y > other.y;
+}
+
+bool SVG::SVGPoint::is_more_left_than(const SVGPoint &other) const {
+  return x < other.x;
+}
+
+bool SVG::SVGPoint::is_more_right_than(const SVGPoint &other) const {
+  return x > other.x;
+}
