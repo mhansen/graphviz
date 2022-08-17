@@ -5,16 +5,20 @@
 #include <string_view>
 #include <vector>
 
+#include "graphviz_graph.h"
 #include "svg_analyzer_interface.h"
 #include "svg_element.h"
 
 /**
- * @brief The SVGAnalyzer class analyzes the contents of an SVG document.
+ * @brief The SVGAnalyzer class analyzes the contents of an SVG document and
+ * identifies Graphviz graphs, nodes and edges.
  */
 
 class SVGAnalyzer : public ISVGAnalyzer {
 public:
   SVGAnalyzer(char *text);
+  /// Return a non-mutable reference to the list of Graphviz graphs
+  const std::vector<GraphvizGraph> &graphs() const;
   void on_enter_element_svg() override;
   void on_enter_element_g() override;
   void on_enter_element_circle() override;
@@ -78,6 +82,10 @@ private:
   /// Get the parent element of the current element being processed by the SVG
   /// document traverser
   SVG::SVGElement &parent_element();
+  /// Traverses the processed SVG element hierarchy, identifies nodes and edges,
+  /// creates objects representing them and stores them in lists
+  void retrieve_graphviz_components();
+  void retrieve_graphviz_components_impl(SVG::SVGElement &parent_svg_element);
 
   /// A list of pointers to elements currently being processed by the SVG++
   /// document traverser, in hierarchical order. The front element is the top
@@ -95,6 +103,8 @@ private:
   std::size_t m_num_rects = 0;
   std::size_t m_num_texts = 0;
   std::size_t m_num_titles = 0;
+  /// A list of Graphviz recreated graphs
+  std::vector<GraphvizGraph> m_graphs;
   /// The top level SVG `svg` element corresponding to the Graphviz graph
   SVG::SVGElement m_svg;
 };

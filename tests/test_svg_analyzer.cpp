@@ -1,7 +1,9 @@
 #include <boost/algorithm/string.hpp>
+#include <boost/range/adaptor/indexed.hpp>
 #include <catch2/catch.hpp>
 #include <fmt/format.h>
 
+#include "graphviz_graph.h"
 #include "svg_analyzer.h"
 #include <cgraph++/AGraph.h>
 #include <gvc++/GVContext.h>
@@ -41,7 +43,29 @@ TEST_CASE(
   const std::size_t expected_num_nodes = 2;
   const std::size_t expected_num_edges = 1;
 
-  {
+  CHECK(svgAnalyzer.graphs().size() == expected_num_graphs);
+  for (const auto &graph : svgAnalyzer.graphs()) {
+    CHECK(graph.svg_g_element().type == SVG::SVGElementType::Group);
+    CHECK(graph.svg_g_element().attributes.class_ == "graph");
+    CHECK(graph.svg_g_element().graphviz_id == "g1");
+
+    CHECK(graph.nodes().size() == expected_num_nodes);
+    for (const auto &node_it : graph.nodes() | boost::adaptors::indexed(0)) {
+      const auto node = node_it.value();
+      const auto i = node_it.index();
+      CHECK(node.svg_g_element().type == SVG::SVGElementType::Group);
+      CHECK(node.svg_g_element().attributes.class_ == "node");
+      const auto node_id = i == 0 ? "a" : "b";
+      CHECK(node.svg_g_element().graphviz_id == node_id);
+    }
+
+    CHECK(graph.edges().size() == expected_num_edges);
+    for (const auto &edge : graph.edges()) {
+      CHECK(edge.svg_g_element().type == SVG::SVGElementType::Group);
+      CHECK(edge.svg_g_element().attributes.class_ == "edge");
+      CHECK(edge.svg_g_element().graphviz_id == "a->b");
+    }
+
     const std::size_t expected_num_svgs = expected_num_graphs;
     const std::size_t expected_num_groups =
         expected_num_graphs + expected_num_nodes + expected_num_edges;
