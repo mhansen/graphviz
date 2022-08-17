@@ -41,4 +41,13 @@ TEST_CASE("Graph rankdir", "Test that the Graphviz `rankdir` attribute affects "
   const auto &graph = svgAnalyzer.graphs().back();
   const auto node_a = graph.node("a");
   const auto node_b = graph.node("b");
+  if (rankdir == "TB") {
+    CHECK(node_a.center().is_higher_than(node_b.center()));
+  } else if (rankdir == "BT") {
+    CHECK(node_a.center().is_lower_than(node_b.center()));
+  } else if (rankdir == "LR") {
+    CHECK(node_a.center().is_more_left_than(node_b.center()));
+  } else if (rankdir == "RL") {
+    CHECK(node_a.center().is_more_right_than(node_b.center()));
+  }
 }
