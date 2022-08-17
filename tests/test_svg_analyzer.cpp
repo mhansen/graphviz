@@ -16,8 +16,7 @@ TEST_CASE("SvgAnalyzer",
           "an internal data structure and re-create the original SVG exactly "
           "from that data structure") {
 
-  const auto shape_char_ptr = GENERATE(from_range(all_node_shapes));
-  const std::string shape{shape_char_ptr};
+  const auto shape = GENERATE(from_range(all_node_shapes));
   INFO(fmt::format("Shape: {}", shape));
 
   auto dot = fmt::format("digraph g1 {{node [shape={}]; a -> b}}", shape);
