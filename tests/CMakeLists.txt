@@ -14,6 +14,8 @@ add_library(test_common SHARED
             catch2_main.cpp
             graphviz_edge.cpp
             graphviz_edge.h
+            graphviz_graph.cpp
+            graphviz_graph.h
             graphviz_node.h
             graphviz_node.cpp
             test_utilities.cpp
