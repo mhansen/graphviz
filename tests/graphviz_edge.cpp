@@ -8,3 +8,5 @@ std::string_view GraphvizEdge::edgeop() const { return m_edgeop; }
 const SVG::SVGElement &GraphvizEdge::svg_g_element() const {
   return m_svg_g_element;
 }
+
+SVG::SVGRect GraphvizEdge::bbox() const { return m_svg_g_element.bbox(); }
