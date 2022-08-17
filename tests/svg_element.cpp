@@ -353,6 +353,10 @@ void SVG::SVGRect::extend(const SVGPoint &point) {
   height = ymax - ymin;
 }
 
+SVG::SVGPoint SVG::SVGRect::center() const {
+  return {x + width / 2, y + height / 2};
+}
+
 void SVG::SVGRect::extend(const SVG::SVGRect &other) {
   const auto xmin = std::min(x, other.x);
   const auto ymin = std::min(y, other.y);

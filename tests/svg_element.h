@@ -18,6 +18,7 @@ struct SVGRect {
   double y;
   double width;
   double height;
+  SVGPoint center() const;
   void extend(const SVGPoint &point);
   void extend(const SVGRect &other);
 };

@@ -17,6 +17,8 @@ public:
 
   /// Return the node's bounding box
   SVG::SVGRect bbox() const;
+  /// Return the center of the node's bounding box
+  SVG::SVGPoint center() const;
   /// Return the node's `node_id` as defined by the DOT language
   std::string_view node_id() const;
   /// Return a non-mutable reference to the SVG `g` element corresponding to the
