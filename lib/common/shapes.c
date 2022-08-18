@@ -3437,9 +3437,9 @@ static void resize_reclbl(field_t * f, pointf sz, int nojustify_p)
  * the sides attribute, which indicates which sides of the
  * record are accessible to the field.
  */
-static void pos_reclbl(field_t * f, pointf ul, int sides)
-{
-    int i, last, mask;
+static void pos_reclbl(field_t *f, pointf ul, unsigned char sides) {
+    int i, last;
+    unsigned char mask;
 
     f->sides = sides;
     f->b.LL = pointfof(ul.x, ul.y - f->size.y);
@@ -3470,7 +3470,7 @@ static void pos_reclbl(field_t * f, pointf ul, int sides)
 	    }
 	} else
 	    mask = 0;
-	pos_reclbl(f->fld[i], ul, sides & mask);
+	pos_reclbl(f->fld[i], ul, (unsigned char)(sides & mask));
 	if (f->LR)
 	    ul.x = ul.x + f->fld[i]->size.x;
 	else
@@ -3518,7 +3518,7 @@ static void record_init(node_t * n)
     int flip;
     size_t len;
     char *textbuf;		/* temp buffer for storing labels */
-    int sides = BOTTOM | RIGHT | TOP | LEFT;
+    unsigned char sides = BOTTOM | RIGHT | TOP | LEFT;
 
     /* Always use rankdir to determine how records are laid out */
     flip = !GD_realflip(agraphof(n));
