@@ -1279,7 +1279,8 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     graph_t* subg;
     node_t *auxt, *auxh;
     edge_t* auxe;
-    int     i, j, midx, midy, leftx, rightx;
+    int     i, j;
+    double midx, midy, leftx, rightx;
     pointf   del;
     edge_t* hvye = NULL;
     attr_state_t* attrs;
