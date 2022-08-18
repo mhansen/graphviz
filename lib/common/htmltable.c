@@ -1122,7 +1122,7 @@ size_html_cell(graph_t * g, htmlcell_t * cp, htmltbl_t * parent,
     }
     if (!(cp->data.flags & BORDER_SET)) {
 	if (parent->cb >= 0)
-	    cp->data.border = parent->cb;
+	    cp->data.border = (unsigned char)parent->cb;
 	else if (parent->data.flags & BORDER_SET)
 	    cp->data.border = parent->data.border;
 	else
