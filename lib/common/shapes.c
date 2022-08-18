@@ -3639,7 +3639,8 @@ static bool record_inside(inside_t * inside_context, pointf p)
 static int record_path(node_t * n, port * prt, int side, boxf rv[],
 		       int *kptr)
 {
-    int i, ls, rs;
+    int i;
+    double ls, rs;
     pointf p;
     field_t *info;
 
