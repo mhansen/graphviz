@@ -454,7 +454,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 {
     pointf rule_pt;
     double rule_length;
-    unsigned char base;
+    double base;
     boxf pts = cp->data.box;
     pointf pos = env->pos;
 
