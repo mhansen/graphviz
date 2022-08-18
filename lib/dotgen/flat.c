@@ -132,7 +132,8 @@ static int flat_limits(graph_t * g, edge_t * e)
 static void 
 flat_node(edge_t * e)
 {
-    int r, place, ypos, h2;
+    int r, place;
+    double ypos, h2;
     graph_t *g;
     node_t *n, *vn;
     edge_t *ve;
