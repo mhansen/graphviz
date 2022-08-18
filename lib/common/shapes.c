@@ -3081,8 +3081,6 @@ static void point_gencode(GVJ_t * job, node_t * n)
     polygon_t *poly;
     int i, j, sides, peripheries, style;
     pointf P, *vertices;
-    static pointf *AF;
-    static int A_size;
     bool filled;
     char *color;
     int doMap = obj->url || obj->explicit_tooltip;
@@ -3096,10 +3094,6 @@ static void point_gencode(GVJ_t * job, node_t * n)
     vertices = poly->vertices;
     sides = poly->sides;
     peripheries = poly->peripheries;
-    if (A_size < sides) {
-	A_size = sides + 2;
-	AF = ALLOC(A_size, AF, pointf);
-    }
 
     checkStyle(n, &style);
     if (style & INVISIBLE)
@@ -3152,10 +3146,14 @@ static void point_gencode(GVJ_t * job, node_t * n)
     }
 
     for (j = 0; j < peripheries; j++) {
+	enum {A_size = 2};
+	pointf AF[A_size] = {{0}};
 	for (i = 0; i < sides; i++) {
 	    P = vertices[i + j * sides];
-	    AF[i].x = P.x + ND_coord(n).x;
-	    AF[i].y = P.y + ND_coord(n).y;
+	    if (i < A_size) {
+	      AF[i].x = P.x + ND_coord(n).x;
+	      AF[i].y = P.y + ND_coord(n).y;
+	    }
 	}
 	gvrender_ellipse(job, AF, filled);
 	/* fill innermost periphery only */
