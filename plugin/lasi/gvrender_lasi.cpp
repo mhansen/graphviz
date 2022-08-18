@@ -534,10 +534,11 @@ static void lasi_comment(GVJ_t * job, char *str)
 
 static void lasi_library_shape(GVJ_t * job, char *name, pointf * A, int n, int filled)
 {
+    assert(n >= 0);
     if (filled && job->obj->fillcolor.u.HSVA[3] > .5) {
 	ps_set_color(job, &(job->obj->fillcolor));
 	gvputs(job, "[ ");
-	gvprintpointflist(job, A, n);
+	gvprintpointflist(job, A, (size_t)n);
 	gvputs(job, " ");
 	gvprintpointf(job, A[0]);
 	gvprintf(job, " ]  %d true %s\n", n, name);

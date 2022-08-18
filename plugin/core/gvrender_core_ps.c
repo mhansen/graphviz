@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -413,10 +413,11 @@ static void psgen_comment(GVJ_t * job, char *str)
 
 static void psgen_library_shape(GVJ_t * job, char *name, pointf * A, int n, int filled)
 {
+    assert(n >= 0);
     if (filled && job->obj->fillcolor.u.HSVA[3] > .5) {
 	ps_set_color(job, &(job->obj->fillcolor));
 	gvputs(job, "[ ");
-        gvprintpointflist(job, A, n);
+        gvprintpointflist(job, A, (size_t)n);
         gvputs(job, " ");
         gvprintpointf(job, A[0]);
 	gvprintf(job, " ]  %d true %s\n", n, name);
@@ -425,7 +426,7 @@ static void psgen_library_shape(GVJ_t * job, char *name, pointf * A, int n, int 
         ps_set_pen_style(job);
         ps_set_color(job, &(job->obj->pencolor));
         gvputs(job, "[ ");
-        gvprintpointflist(job, A, n);
+        gvprintpointflist(job, A, (size_t)n);
         gvputs(job, " ");
         gvprintpointf(job, A[0]);
         gvprintf(job, " ]  %d false %s\n", n, name);
