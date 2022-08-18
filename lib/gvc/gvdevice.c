@@ -597,12 +597,10 @@ void gvprintpointf(GVJ_t * job, pointf p)
 
 void gvprintpointflist(GVJ_t * job, pointf *p, int n)
 {
-    int i = 0;
-
-    while (true) {
-	gvprintpointf(job, p[i]);
-        if (++i >= n) break;
-        gvwrite(job, " ", 1);
-    }
+  const char *separator = "";
+  for (int i = 0; i < n; ++i) {
+    gvputs(job, separator);
+    gvprintpointf(job, p[i]);
+    separator = " ";
+  }
 } 
-
