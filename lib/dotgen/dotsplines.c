@@ -488,7 +488,8 @@ static void _dot_splines(graph_t * g, int normalize)
 		free (edgelist);
 	}
 	else if (agtail(e0) == aghead(e0)) {
-	    int b, sizey, r;
+	    int b, r;
+	    double sizey;
 	    n = agtail(e0);
 	    r = ND_rank(n);
 	    if (r == GD_maxrank(g)) {
@@ -501,8 +502,8 @@ static void _dot_splines(graph_t * g, int normalize)
 		sizey = ND_coord(n).y - ND_coord(GD_rank(g)[r+1].v[0]).y;
 	    }
 	    else {
-		int upy = ND_coord(GD_rank(g)[r-1].v[0]).y - ND_coord(n).y;
-		int dwny = ND_coord(n).y - ND_coord(GD_rank(g)[r+1].v[0]).y;
+		double upy = ND_coord(GD_rank(g)[r-1].v[0]).y - ND_coord(n).y;
+		double dwny = ND_coord(n).y - ND_coord(GD_rank(g)[r+1].v[0]).y;
 		sizey = MIN(upy, dwny);
 	    }
 	    makeSelfEdge(edges, ind, cnt, sd.Multisep, sizey / 2, &sinfo);
