@@ -2231,7 +2231,7 @@ static void poly_init(node_t * n)
 	ND_width(n) = PS2INCH(bb.x);
 	ND_height(n) = PS2INCH(bb.y);
     }
-    ND_shape_info(n) = (void *) poly;
+    ND_shape_info(n) = poly;
 }
 
 static void poly_free(node_t * n)
@@ -2283,7 +2283,7 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 
     if (n != lastn) {
 	double n_width, n_height;
-	poly = (polygon_t *) ND_shape_info(n);
+	poly = ND_shape_info(n);
 	vertex = poly->vertices;
 	sides = poly->sides;
 
@@ -2779,7 +2779,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 			      obj->url, obj->tooltip, obj->target,
 			      obj->id);
 
-    poly = (polygon_t *) ND_shape_info(n);
+    poly = ND_shape_info(n);
     vertices = poly->vertices;
     sides = poly->sides;
     peripheries = poly->peripheries;
@@ -3037,7 +3037,7 @@ static void point_init(node_t * n)
     poly->vertices = vertices;
 
     ND_height(n) = ND_width(n) = PS2INCH(sz);
-    ND_shape_info(n) = (void *) poly;
+    ND_shape_info(n) = poly;
 }
 
 static bool point_inside(inside_t * inside_context, pointf p)
@@ -3057,7 +3057,7 @@ static bool point_inside(inside_t * inside_context, pointf p)
 
     if (n != lastn) {
 	int outp;
-	polygon_t *poly = (polygon_t *) ND_shape_info(n);
+	polygon_t *poly = ND_shape_info(n);
 
 	/* index to outer-periphery */
 	outp = 2 * (poly->peripheries - 1);
@@ -3092,7 +3092,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
 			      obj->url, obj->tooltip, obj->target,
 			      obj->id);
 
-    poly = (polygon_t *) ND_shape_info(n);
+    poly = ND_shape_info(n);
     vertices = poly->vertices;
     sides = poly->sides;
     peripheries = poly->peripheries;
@@ -3558,7 +3558,7 @@ static void record_init(node_t * n)
     ND_width(n) = PS2INCH(info->size.x);
     ND_height(n) = PS2INCH(info->size.y + 1);	/* Kluge!!  +1 to fix rounding diff between layout and rendering 
 						   otherwise we can get -1 coords in output */
-    ND_shape_info(n) = (void *) info;
+    ND_shape_info(n) = info;
 }
 
 static void record_free(node_t * n)
@@ -3596,7 +3596,7 @@ static port record_port(node_t * n, char *portname, char *compass)
     sides = BOTTOM | RIGHT | TOP | LEFT;
     if (compass == NULL)
 	compass = "_";
-    f = (field_t *) ND_shape_info(n);
+    f = ND_shape_info(n);
     if ((subf = map_rec_port(f, portname))) {
 	if (compassPort(n, &subf->b, &rv, compass, subf->sides, NULL)) {
 	    agerr(AGWARN,
@@ -3626,7 +3626,7 @@ static bool record_inside(inside_t * inside_context, pointf p)
     p = ccwrotatepf(p, 90 * GD_rankdir(agraphof(n)));
 
     if (bp == NULL) {
-	fld0 = (field_t *) ND_shape_info(n);
+	fld0 = ND_shape_info(n);
 	bbox = fld0->b;
     } else
 	bbox = *bp;
@@ -3648,7 +3648,7 @@ static int record_path(node_t * n, port * prt, int side, boxf rv[],
     if (!prt->defined)
 	return 0;
     p = prt->p;
-    info = (field_t *) ND_shape_info(n);
+    info = ND_shape_info(n);
 
     for (i = 0; i < info->n_flds; i++) {
 	if (!GD_flip(agraphof(n))) {
@@ -3717,7 +3717,7 @@ static void record_gencode(GVJ_t * job, node_t * n)
     int filled;
     char* clrs[2];
 
-    f = (field_t *) ND_shape_info(n);
+    f = ND_shape_info(n);
     BF = f->b;
     BF.LL.x += ND_coord(n).x;
     BF.LL.y += ND_coord(n).y;
@@ -3856,7 +3856,7 @@ static void epsf_gencode(GVJ_t * job, node_t * n)
     epsf_t *desc;
     int doMap = obj->url || obj->explicit_tooltip;
 
-    desc = (epsf_t *) (ND_shape_info(n));
+    desc = ND_shape_info(n);
     if (!desc)
 	return;
 
@@ -3962,7 +3962,7 @@ static bool star_inside(inside_t * inside_context, pointf p)
     }
 
     if (n != lastn) {
-	poly = (polygon_t *) ND_shape_info(n);
+	poly = ND_shape_info(n);
 	vertex = poly->vertices;
 	sides = poly->sides;
 

@@ -294,7 +294,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
     case SH_POLY:
     case SH_POINT:
 	obs = NEW(Ppoly_t);
-	poly = (polygon_t *) ND_shape_info(n);
+	poly = ND_shape_info(n);
 	if (isOrtho) {
 	    isPoly = 1;
 	    sides = 4;
@@ -393,7 +393,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	}
 	break;
     case SH_RECORD:
-	fld = (field_t *) ND_shape_info(n);
+	fld = ND_shape_info(n);
 	b = fld->b;
 	obs = NEW(Ppoly_t);
 	obs->pn = 4;

@@ -158,7 +158,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
     } else
 	switch (shapeOf(n)) {
 	case SH_POLY:
-	    poly = (polygon_t *) ND_shape_info(n);
+	    poly = ND_shape_info(n);
 	    sides = poly->sides;
 
 	    if (streq(ND_shape(n)->name, "box"))
@@ -250,7 +250,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
     } else
 	switch (shapeOf(n)) {
 	case SH_POLY:
-	    poly = (polygon_t *) ND_shape_info(n);
+	    poly = ND_shape_info(n);
 	    sides = poly->sides;
 	    if (sides >= 3) {	/* real polygon */
 		verts = N_GNEW(sides, Point);
