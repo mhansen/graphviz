@@ -1468,7 +1468,7 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
     bool ps_needs_free = false;
     pathend_t tend, hend;
     boxf lb;
-    int i, pn, ydelta;
+    int i, pn;
     edge_t *f;
     pointf points[7];
 
@@ -1498,8 +1498,8 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
 	lb.LL.x = ND_coord(ln).x - ND_lw(ln);
 	lb.UR.x = ND_coord(ln).x + ND_rw(ln);
 	lb.UR.y = ND_coord(ln).y + ND_ht(ln)/2;
-	ydelta = ND_coord(ln).y - GD_rank(g)[ND_rank(tn)].ht1 -
-		ND_coord(tn).y + GD_rank(g)[ND_rank(tn)].ht2;
+	double ydelta = ND_coord(ln).y - GD_rank(g)[ND_rank(tn)].ht1 -
+	                ND_coord(tn).y + GD_rank(g)[ND_rank(tn)].ht2;
 	ydelta /= 6;
 	lb.LL.y = lb.UR.y - MAX(5,ydelta);
 
