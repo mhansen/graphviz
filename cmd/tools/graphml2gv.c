@@ -773,7 +773,7 @@ int main(int argc, char **argv)
 
     graphviz_exit(rv);
 #else
-    fputs("cvtgxl: not configured for conversion from GXL to GV\n", stderr);
+    fputs("graphml2gv: not configured for conversion from GXL to GV\n", stderr);
     graphviz_exit(1);
 #endif
 }
