@@ -31,6 +31,7 @@
 
 #include <gvc/gvplugin_render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
@@ -46,13 +47,13 @@
 typedef enum { FORMAT_SVG, FORMAT_SVGZ, } format_type;
 
 /* SVG dash array */
-static char *sdasharray = "5,2";
+static const char sdasharray[] = "5,2";
 /* SVG dot array */
-static char *sdotarray = "1,5";
+static const char sdotarray[] = "1,5";
 
-static char *transparent = "transparent";
-static char *none = "none";
-static char *black = "black";
+static const char transparent[] = "transparent";
+static const char none[] = "none";
+static const char black[] = "black";
 
 static void svg_bzptarray(GVJ_t * job, pointf * A, int n)
 {
@@ -127,7 +128,7 @@ static void svg_print_paint(GVJ_t * job, gvcolor_t color)
 		     color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
 	break;
     default:
-	assert(0);		/* internal error */
+	UNREACHABLE(); // internal error
     }
 }
 
@@ -152,7 +153,7 @@ static void svg_print_gradient_color(GVJ_t * job, gvcolor_t color)
 		 color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
 	break;
     default:
-	assert(0);		/* internal error */
+	UNREACHABLE(); // internal error
     }
 }
 
@@ -502,7 +503,7 @@ static void svg_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    gvprintf(job, " fill-opacity=\"%f\"", ((float) obj->pencolor.u.rgba[3] / 255.0));
 	break;
     default:
-	assert(0);		/* internal error */
+	UNREACHABLE(); // internal error
     }
     gvputc(job, '>');
     if (obj->labeledgealigned) {

@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <cgraph/unreachable.h>
 #include <common/macros.h>
 #include <common/const.h>
 
@@ -45,7 +46,7 @@ static void tkgen_print_color(GVJ_t * job, gvcolor_t color)
 		color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
 	break;
     default:
-	assert(0);		/* internal error */
+	UNREACHABLE(); // internal error
     }
 }
 
@@ -102,8 +103,7 @@ static void tkgen_print_tags(GVJ_t *job)
 	ObjId = AGID(obj->u.sg);
 	break;
     default:
-	assert (0);
-	break;
+	UNREACHABLE();
     }
     gvprintf(job, " -tags {%d%s0x%" PRIx64 "}", ObjFlag, ObjType, ObjId);
 }

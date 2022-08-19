@@ -26,6 +26,7 @@
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <common/color.h>
 
@@ -119,7 +120,7 @@ static void fig_resolve_color(GVJ_t *job, gvcolor_t * color)
 	    color->u.index = i;
 	    break;
 	default:
-	    assert(0);	/* internal error */
+	    UNREACHABLE(); // internal error
     }
 
     color->type = COLOR_INDEX;

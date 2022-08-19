@@ -25,6 +25,7 @@
 #include <gvc/gvio.h>
 #include <common/memory.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/unreachable.h>
 
 typedef enum { FORMAT_VML, FORMAT_VMLZ, } format_type;
 
@@ -61,7 +62,7 @@ static void vml_print_color(GVJ_t * job, gvcolor_t color)
 		color.u.rgba[0], color.u.rgba[1], color.u.rgba[2]);
 	break;
     default:
-	assert(0);		/* internal error */
+	UNREACHABLE(); // internal error
     }
 }
 
@@ -316,7 +317,7 @@ static void vml_textspan(GVJ_t * job, pointf p, textspan_t * span)
 		obj->pencolor.u.rgba[0], obj->pencolor.u.rgba[1], obj->pencolor.u.rgba[2]);
 	break;
     default:
-	assert(0);		/* internal error */
+	UNREACHABLE(); // internal error
     }
     gvputs(job, "\"><center>");
     html_puts(job, span->str);

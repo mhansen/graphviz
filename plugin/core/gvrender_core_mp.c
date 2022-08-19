@@ -21,6 +21,7 @@
 #include <io.h>
 #endif
 
+#include <cgraph/unreachable.h>
 #include <common/macros.h>
 #include <common/const.h>
 
@@ -123,7 +124,7 @@ static void mp_resolve_color(GVJ_t *job, gvcolor_t * color)
 	    color->u.index = 0;
             break;
 	default:
-	    assert(0);	/* internal error */
+	    UNREACHABLE(); // internal error
     }
 
     color->type = COLOR_INDEX;
