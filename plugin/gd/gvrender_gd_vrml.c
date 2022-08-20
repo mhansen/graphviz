@@ -700,10 +700,6 @@ doSphere (GVJ_t *job, node_t *n, pointf p, double z, double rx, double ry)
 {
     obj_state_t *obj = job->obj;
 
-//    if (!(strcmp(cstk[SP].fillcolor, "transparent"))) {
-//	return;
-//    }
- 
     gvputs(job,   "Transform {\n");
     gvprintf(job, "  translation %.3f %.3f %.3f\n", p.x, p.y, z);
     gvprintf(job, "  scale %.3f %.3f %.3f\n", rx, rx, rx);
