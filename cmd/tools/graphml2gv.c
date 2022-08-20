@@ -100,7 +100,6 @@ typedef struct {
     gv_stack_t elements;
     int listen;
     int closedElementType;
-    int globalAttrType;
     int edgeinverted;
     Dt_t *nameMap;
 } userdata_t;
@@ -147,7 +146,6 @@ static userdata_t *genUserdata(char* dfltname)
     user->listen = FALSE;
     user->elements = (gv_stack_t){0};
     user->closedElementType = TAG_NONE;
-    user->globalAttrType = TAG_NONE;
     user->edgeinverted = FALSE;
     user->gname = dfltname;
     user->nameMap = dtopen(&nameDisc, Dtoset);
@@ -281,29 +279,6 @@ setNodeAttr(Agnode_t * np, char *name, char *value, userdata_t * ud)
     }
 }
 
-#define NODELBL "node:"
-#define NLBLLEN (sizeof(NODELBL)-1)
-#define EDGELBL "edge:"
-#define ELBLLEN (sizeof(EDGELBL)-1)
-
-/* setGlobalNodeAttr:
- * Set global node attribute.
- * The names must always begin with "node:".
- */
-static void
-setGlobalNodeAttr(Agraph_t * g, char *name, char *value)
-{
-    if (strncmp(name, NODELBL, NLBLLEN))
-	fprintf(stderr,
-		"Warning: global node attribute %s in graph %s does not begin with the prefix %s\n",
-		name, agnameof(g), NODELBL);
-    else
-	name += NLBLLEN;
-    if ((g != root) && !agattr(root, AGNODE, name, 0))
-	agattr(root, AGNODE, name, defval);
-    agattr(G, AGNODE, name, value);
-}
-
 static void
 setEdgeAttr(Agedge_t * ep, char *name, char *value, userdata_t * ud)
 {
@@ -334,24 +309,6 @@ setEdgeAttr(Agedge_t * ep, char *name, char *value, userdata_t * ud)
 	    ap = agattr(root, AGEDGE, name, defval);
 	agxset(ep, ap, value);
     }
-}
-
-/* setGlobalEdgeAttr:
- * Set global edge attribute.
- * The names always begin with "edge:".
- */
-static void
-setGlobalEdgeAttr(Agraph_t * g, char *name, char *value)
-{
-    if (strncmp(name, EDGELBL, ELBLLEN))
-	fprintf(stderr,
-		"Warning: global edge attribute %s in graph %s does not begin with the prefix %s\n",
-		name, agnameof(g), EDGELBL);
-    else
-	name += ELBLLEN;
-    if ((g != root) && !agattr(root, AGEDGE, name, 0))
-	agattr(root, AGEDGE, name, defval);
-    agattr(g, AGEDGE, name, value);
 }
 
 static void
@@ -543,21 +500,7 @@ static void endElementHandler(void *userData, const char *name)
 	name = agxbuse(&ud->xml_attr_name);
 	value = agxbuse(&ud->xml_attr_value);
 
-	switch (ud->globalAttrType) {
-	case TAG_NONE:
-	    setAttr(name, value, ud);
-	    break;
-	case TAG_NODE:
-	    setGlobalNodeAttr(G, name, value);
-	    break;
-	case TAG_EDGE:
-	    setGlobalEdgeAttr(G, name, value);
-	    break;
-	case TAG_GRAPH:
-	    setGraphAttr(G, name, value, ud);
-	    break;
-	}
-	ud->globalAttrType = TAG_NONE;
+	setAttr(name, value, ud);
     } 
 }
 
