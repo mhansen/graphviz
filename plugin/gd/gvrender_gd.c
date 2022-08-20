@@ -10,7 +10,7 @@
 
 #include "config.h"
 #include "gdioctx_wrapper.h"
-
+#include "gdgen_text.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>

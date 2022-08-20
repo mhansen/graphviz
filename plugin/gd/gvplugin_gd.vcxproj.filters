@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gdgen_text.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="gvdevice_gd.c">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -3,6 +3,7 @@ if(GD_FOUND)
   add_library(gvplugin_gd SHARED
     # Source files
     gdioctx_wrapper.h
+    gdgen_text.h
     gvdevice_gd.c
     gvloadimage_gd.c
     gvplugin_gd.c

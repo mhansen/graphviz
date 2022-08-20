@@ -10,7 +10,7 @@
 
 
 #include "config.h"
-
+#include "gdgen_text.h"
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
@@ -338,8 +338,6 @@ static void vrml_end_edge(GVJ_t *job)
 	finishSegment(job, job->obj->u.e);
     gvputs(job,   "] }\n");
 }
-
-extern void gdgen_text(gdImagePtr im, pointf spf, pointf epf, int fontcolor, double fontsize, int fontdpi, double fontangle, char *fontname, char *str);
 
 static void vrml_textspan(GVJ_t *job, pointf p, textspan_t * span)
 {
