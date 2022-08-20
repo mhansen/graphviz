@@ -243,7 +243,7 @@ struct Expr_s				/* ex program state		*/
 extern Exnode_t*	excast(Expr_t*, Exnode_t*, int, Exnode_t*, int);
 extern Exnode_t*	exnoncast(Exnode_t *);
 extern void		exclose(Expr_t*, int);
-extern int		excomp(Expr_t*, const char*, int, const char*, Sfio_t*);
+extern int		excomp(Expr_t*, const char*, int, Sfio_t*);
 extern char*		excontext(Expr_t*, char*, int);
 extern int		exdump(Expr_t*, Exnode_t*, agxbuf*);
 #ifdef __GNUC__
@@ -261,7 +261,7 @@ extern Exnode_t*	exnewnode(Expr_t*, int, int, int, Exnode_t*, Exnode_t*);
 extern char*		exnospace(void);
 extern Expr_t*		exopen(Exdisc_t*);
 extern int		expop(Expr_t*);
-extern int		expush(Expr_t*, const char*, int, const char*, Sfio_t*);
+extern int		expush(Expr_t*, const char*, int, Sfio_t*);
 extern char*		exstash(Sfio_t*, Vmalloc_t*);
 extern int		extoken_fn(Expr_t*);
 extern char*		exstring(Expr_t *, char *);

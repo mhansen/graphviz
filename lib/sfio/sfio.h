@@ -145,11 +145,6 @@ extern "C" {
 #define SF_SEEK		3	/* seek error                           */
 
 #define SF_CLOSING	4	/* stream is about to be closed.        */
-#if defined(_mac_SF_CLOSE) && !_mac_SF_CLOSE
-#define SF_CLOSE	SF_CLOSING	/* this was the original close event */
-    /* but AIX now uses this symbol. So we  */
-    /* avoid defining it in such cases.     */
-#endif
 
 #define SF_DPUSH	5	/* when discipline is being pushed      */
 #define SF_DPOP		6	/* when discipline is being popped      */
@@ -170,7 +165,6 @@ extern "C" {
 #define SF_NEW		0	/* new stream                           */
 #define SF_SETFD	(-1)	/* about to set the file descriptor     */
 
-#define SF_BUFSIZE	8192	/* default buffer size                  */
 #define SF_UNBOUND SIZE_MAX // unbounded buffer size
 
      extern ssize_t _Sfi;
@@ -191,7 +185,7 @@ extern "C" {
 
 
     extern Sfio_t *sfnew(Sfio_t *, void *, size_t, int, int);
-    extern Sfio_t *sfopen(Sfio_t *, const char *, const char *);
+    extern Sfio_t *sfopen(const char *, const char *);
     extern Sfio_t *sfstack(Sfio_t *, Sfio_t *);
     extern Sfio_t *sfswap(Sfio_t *, Sfio_t *);
     extern int sfsync(Sfio_t *);

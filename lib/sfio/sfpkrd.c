@@ -196,15 +196,16 @@ ssize_t sfpkrd(int fd, void * argbuf, size_t n, int rc, long tm,
 	    if ((action = action ? -action : 1) > (int) n)
 		action = n;
 	    r = 0;
-	    while ((t = read(fd, buf, action)) > 0) {
-		r += t;
+	    ssize_t r_chunk;
+	    while ((r_chunk = read(fd, buf, action)) > 0) {
+		r += r_chunk;
 		for (endbuf = buf + t; buf < endbuf;)
 		    if (*buf++ == rc)
 			action -= 1;
 		if (action == 0 || (int) (n - r) < action)
 		    break;
 	    }
-	    return r == 0 ? t : r;
+	    return r == 0 ? r_chunk : r;
 	}
     }
 

@@ -814,9 +814,7 @@ preprint(Exnode_t* args)
  * push a new input stream and program
  */
 
-int
-expush(Expr_t* p, const char* name, int line, const char* sp, Sfio_t* fp)
-{
+int expush(Expr_t *p, const char *name, int line, Sfio_t *fp) {
 	Exinput_t*	in;
 	char*		s;
 	char			buf[PATH_MAX];
@@ -828,25 +826,22 @@ expush(Expr_t* p, const char* name, int line, const char* sp, Sfio_t* fp)
 	}
 	if (!p->input)
 		p->input = &expr.null;
-	if (!(in->bp = in->sp = (char*)sp))
+	in->bp = in->sp = NULL;
+	if ((in->fp = fp))
+		in->close = 0;
+	else if (name)
 	{
-		if ((in->fp = fp))
-			in->close = 0;
-		else if (name)
+		if (!(s = pathfind(name, p->disc->lib, p->disc->type, buf, sizeof(buf))) || !(in->fp = sfopen(s, "r")))
 		{
-			if (!(s = pathfind(name, p->disc->lib, p->disc->type, buf, sizeof(buf))) || !(in->fp = sfopen(NULL, s, "r")))
-			{
-				exerror("%s: file not found", name);
-				in->bp = in->sp = "";
-			}
-			else
-			{
-				name = vmstrdup(p->vm, s);
-				in->close = 1;
-			}
+			exerror("%s: file not found", name);
+			in->bp = in->sp = "";
+		}
+		else
+		{
+			name = vmstrdup(p->vm, s);
+			in->close = 1;
 		}
 	}
-	else in->fp = 0;
 	if (!(in->next = p->input)->next)
 	{
 		p->errors = 0;
@@ -924,23 +919,21 @@ void exinit(void) {
 }
 
 /*
- * compile the expression in [sf]p
+ * compile the expression in fp
  */
 
-int
-excomp(Expr_t* p, const char* name, int line, const char* sp, Sfio_t* fp)
-{
+int excomp(Expr_t *p, const char *name, int line, Sfio_t *fp) {
 	Exid_t*	v;
 	int	eof;
 
 	p->more = 0;
 	eof = p->eof;
-	if (!sp && !fp)
+	if (!fp)
 	{
 		if (!p->input)
 			return -1;
 	}
-	else if (expush(p, name, line, sp, fp))
+	else if (expush(p, name, line, fp))
 		return -1;
 	else
 		p->input->unit = line >= 0;

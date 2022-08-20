@@ -2278,17 +2278,17 @@ static Exnode_t *compile(Expr_t * prog, char *src, char *input, int line,
 
     /* create input stream */
     if (sfx) {
-	sf = sfopen(0, sfx, "rs");
+	sf = sfopen(sfx, "rs");
 	if (input) {
-	    prefix = sfopen(0, input, "rs");
+	    prefix = sfopen(input, "rs");
 	    sfstack(sf, prefix);
 	}
     } else
-	sf = sfopen(0, input, "rs");
+	sf = sfopen(input, "rs");
 
     /*  prefixing label if necessary */
     if (lbl) {
-	prefix = sfopen(0, 0, "sr+");
+	prefix = sfopen(0, "sr+");
 	sfprintf(prefix, "%s:\n", lbl);
 	sfseek(prefix, 0, 0);
 	sfstack(sf, prefix);
@@ -2297,7 +2297,7 @@ static Exnode_t *compile(Expr_t * prog, char *src, char *input, int line,
 
     if (!src)
 	src = "<command line>";
-    rv = excomp(prog, src, line, 0, sf);
+    rv = excomp(prog, src, line, sf);
     sfclose(sf);
 
     if (rv >= 0 && getErrorErrors() == 0)

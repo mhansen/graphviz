@@ -482,7 +482,7 @@ extoken_fn(Expr_t* ex)
 					{
 						if (extoken_fn(ex) != STRING)
 							exerror("#%s: string argument expected", s);
-						else if (!expush(ex, ex_lval.string, 1, NULL, NULL))
+						else if (!expush(ex, ex_lval.string, 1, NULL))
 						{
 							setcontext(ex);
 							goto again;
