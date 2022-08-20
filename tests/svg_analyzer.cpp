@@ -1,3 +1,4 @@
+#include <memory>
 #include <stdexcept>
 
 #include <fmt/format.h>
@@ -251,12 +252,19 @@ SVGAnalyzer SVGAnalyzer::make_from_dot(const std::string &dot_source,
   auto g = CGraph::AGraph{dot_source};
 
   const auto demand_loading = false;
-  auto gvc = GVC::GVContext{lt_preloaded_symbols, demand_loading};
+  auto gvc =
+      std::make_shared<GVC::GVContext>(lt_preloaded_symbols, demand_loading);
 
-  const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), engine);
+  const auto layout = GVC::GVLayout(gvc, std::move(g), engine);
 
   const auto result = layout.render("svg");
-  return SVGAnalyzer{result.c_str()};
+
+  auto svg_analyzer = SVGAnalyzer{result.c_str()};
+
+  svg_analyzer.set_graphviz_version(gvc->version());
+  svg_analyzer.set_graphviz_build_date(gvc->buildDate());
+
+  return svg_analyzer;
 }
 
 std::string_view SVGAnalyzer::original_svg() const { return m_original_svg; }

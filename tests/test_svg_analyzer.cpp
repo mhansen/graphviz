@@ -4,11 +4,6 @@
 #include <fmt/format.h>
 
 #include "svg_analyzer.h"
-#include <cgraph++/AGraph.h>
-#include <gvc++/GVContext.h>
-#include <gvc++/GVLayout.h>
-#include <gvc++/GVRenderData.h>
-
 #include "test_utilities.h"
 
 TEST_CASE("SvgAnalyzer",
@@ -21,20 +16,7 @@ TEST_CASE("SvgAnalyzer",
 
   auto dot = fmt::format("digraph g1 {{node [shape={}]; a -> b}}", shape);
 
-  auto g = CGraph::AGraph{dot};
-
-  const auto demand_loading = false;
-  auto gvc = GVC::GVContext{lt_preloaded_symbols, demand_loading};
-  const auto graphviz_version = gvc.version();
-  const auto graphviz_build_date = gvc.buildDate();
-
-  const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), "dot");
-
-  const auto result = layout.render("svg");
-  const std::string original_svg{result.string_view()};
-  SVGAnalyzer svg_analyzer{result.c_str()};
-  svg_analyzer.set_graphviz_version(graphviz_version);
-  svg_analyzer.set_graphviz_build_date(graphviz_build_date);
+  auto svg_analyzer = SVGAnalyzer::make_from_dot(dot);
 
   const std::size_t expected_num_graphs = 1;
   const std::size_t expected_num_nodes = 2;
@@ -133,6 +115,7 @@ TEST_CASE("SvgAnalyzer",
     CHECK(svg_analyzer.num_titles() == expected_num_titles);
     CHECK(svg_analyzer.num_texts() == expected_num_texts);
 
+    auto original_svg = svg_analyzer.original_svg();
     const auto indent_size = 0;
     auto recreated_svg = svg_analyzer.svg_string(indent_size);
 
