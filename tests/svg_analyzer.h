@@ -74,6 +74,9 @@ public:
   std::size_t num_titles() const { return m_num_titles; };
   /// Return a view of the original SVG
   std::string_view original_svg() const;
+  /// Re-create the SVG from the internal data structure and verify it against
+  /// the original SVG produced by Graphviz
+  void re_create_and_verify_svg();
   void set_graphviz_version(std::string_view version);
   void set_graphviz_build_date(std::string_view build_date);
   std::string svg_string(std::size_t indent_size = 2) const;

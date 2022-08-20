@@ -1,6 +1,8 @@
 #include <memory>
 #include <stdexcept>
 
+#include <boost/algorithm/string.hpp>
+#include <catch2/catch.hpp>
 #include <fmt/format.h>
 
 #include "svg_analyzer.h"
@@ -176,6 +178,28 @@ void SVGAnalyzer::retrieve_graphviz_components_impl(
 
   for (auto &child : svg_element.children) {
     retrieve_graphviz_components_impl(child);
+  }
+}
+
+void SVGAnalyzer::re_create_and_verify_svg() {
+
+  const auto indent_size = 0;
+  auto recreated_svg = svg_string(indent_size);
+
+  // compare the recreated SVG with the original SVG
+  if (recreated_svg != m_original_svg) {
+    std::vector<std::string> original_svg_lines;
+    boost::split(original_svg_lines, m_original_svg, boost::is_any_of("\n"));
+
+    std::vector<std::string> recreated_svg_lines;
+    boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
+
+    for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
+      REQUIRE(i < recreated_svg_lines.size());
+      REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);
+    }
+
+    REQUIRE(recreated_svg_lines.size() == original_svg_lines.size());
   }
 }
 

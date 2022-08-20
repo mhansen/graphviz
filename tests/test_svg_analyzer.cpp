@@ -1,4 +1,3 @@
-#include <boost/algorithm/string.hpp>
 #include <boost/range/adaptor/indexed.hpp>
 #include <catch2/catch.hpp>
 #include <fmt/format.h>
@@ -115,21 +114,6 @@ TEST_CASE("SvgAnalyzer",
     CHECK(svg_analyzer.num_titles() == expected_num_titles);
     CHECK(svg_analyzer.num_texts() == expected_num_texts);
 
-    auto original_svg = svg_analyzer.original_svg();
-    const auto indent_size = 0;
-    auto recreated_svg = svg_analyzer.svg_string(indent_size);
-
-    // compare the recreated SVG with the original SVG
-    if (recreated_svg != original_svg) {
-      std::vector<std::string> original_svg_lines;
-      boost::split(original_svg_lines, original_svg, boost::is_any_of("\n"));
-      std::vector<std::string> recreated_svg_lines;
-      boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
-      for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
-        REQUIRE(i < recreated_svg_lines.size());
-        REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);
-      }
-      REQUIRE(recreated_svg_lines.size() == original_svg_lines.size());
-    }
+    svg_analyzer.re_create_and_verify_svg();
   }
 }
