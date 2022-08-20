@@ -295,17 +295,7 @@ char *Fgets(FILE * fp)
  * It returns NULL if the filename is trivial.
  *
  * If the application has set the SERVER_NAME environment variable,
- * this indicates it is web-active. In this case, it requires that the GV_FILE_PATH
- * environment variable be set. This gives the legal directories
- * from which files may be read. safefile then derives the rightmost component
- * of filename, where components are separated by a slash, backslash or colon,
- * It then checks for the existence of a file consisting of a directory from
- * GV_FILE_PATH followed by the rightmost component of filename. It returns the
- * first such found, or NULL otherwise.
- * The filename returned is thus
- * Gvfilepath concatenated with the last component of filename,
- * where a component is determined by a slash, backslash or colon
- * character.
+ * this indicates it is web-active.
  *
  * If filename contains multiple components, the user is
  * warned, once, that everything to the left is ignored.
@@ -360,48 +350,18 @@ const char *safefile(const char *filename)
     static char *pathlist = NULL;
     static size_t maxdirlen;
     static strview_t *dirs;
-    const char *str, *p;
 
     if (!filename || !filename[0])
 	return NULL;
 
     if (HTTPServerEnVar) {   /* If used as a server */
-	/*
-	 * If we are running in an http server we allow
-	 * files only from the directory specified in
-	 * the GV_FILE_PATH environment variable.
-	 */
-	if (!Gvfilepath || (*Gvfilepath == '\0')) {
-	    if (onetime) {
-		agerr(AGWARN,
-		      "file loading is disabled because the environment contains SERVER_NAME=\"%s\"\n"
-		      "and the GV_FILE_PATH variable is unset or empty.\n",
+	if (onetime) {
+	    agerr(AGWARN,
+		      "file loading is disabled because the environment contains SERVER_NAME=\"%s\"\n",
 		      HTTPServerEnVar);
-		onetime = false;
-	    }
-	    return NULL;
-	}
-	if (!pathlist) {
-	    dirs = mkDirlist (Gvfilepath, &maxdirlen);
-	    pathlist = Gvfilepath;
-	}
-
-	str = filename;
-	if ((p = strrchr(str, '/')))
-	    str = ++p;
-	if ((p = strrchr(str, '\\')))
-	    str = ++p;
-	if ((p = strrchr(str, ':')))
-	    str = ++p;
-
-	if (onetime && str != filename) {
-	    agerr(AGWARN, "Path provided to file: \"%s\" has been ignored"
-		  " because files are only permitted to be loaded from the directories in \"%s\""
-		  " when running in an http server.\n", filename, Gvfilepath);
 	    onetime = false;
 	}
-
-	return findPath (dirs, maxdirlen, str);
+	return NULL;
     }
 
     if (pathlist != Gvimagepath) {

@@ -1902,6 +1902,32 @@ def test_2225():
 
   p.check_returncode()
 
+def test_2257():
+  """
+  `$GV_FILE_PATH` being set should prevent Graphviz from running
+
+  `$GV_FILE_PATH` was an environment variable formerly used to implement a file
+  system sandboxing policy when Graphviz was exposed to the internet via a web
+  server. These days, there are safer and more robust techniques to sandbox
+  Graphviz and so `$GV_FILE_PATH` usage has been removed. But if someone
+  attempts to use this legacy mechanism, we do not want Graphviz to
+  “fail-open,” starting anyway and silently ignoring `$GV_FILE_PATH` giving
+  the user the false impression the sandboxing is in force.
+
+  https://gitlab.com/graphviz/graphviz/-/issues/2257
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "2257.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  env = os.environ.copy()
+  env["GV_FILE_PATH"] = "/tmp"
+
+  # Graphviz should refuse to process an input file
+  with pytest.raises(subprocess.CalledProcessError):
+    subprocess.check_call(["dot", "-Tsvg", input, "-o", os.devnull], env=env)
+
 @pytest.mark.xfail(strict=True)
 def test_2258():
   """

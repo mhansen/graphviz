@@ -234,8 +234,13 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     /* establish if we are running in a CGI environment */
     HTTPServerEnVar = getenv("SERVER_NAME");
 
-    /* establish Gvfilepath, if any */
-    Gvfilepath = getenv("GV_FILE_PATH");
+    // test `$GV_FILE_PATH`, a legacy knob, is not set
+    if (getenv("GV_FILE_PATH") != NULL) {
+        fprintf(stderr, "$GV_FILE_PATH environment variable set; exiting\n"
+                        "\n"
+                        "This sandboxing mechanism is no longer supported\n");
+        graphviz_exit(EXIT_FAILURE);
+    }
 
     gvc->common.cmdname = dotneato_basename(argv[0]);
     if (gvc->common.verbose) {
@@ -657,8 +662,6 @@ void graph_init(graph_t * g, bool use_rankdir)
 
     if (!HTTPServerEnVar) {
 	Gvimagepath = agget (g, "imagepath");
-	if (!Gvimagepath)
-	    Gvimagepath = Gvfilepath;
     }
 
     GD_drawing(g)->quantum =
