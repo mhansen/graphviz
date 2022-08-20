@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <fcntl.h>
-
+#include <cgraph/unreachable.h>
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvcint.h>	/* for gvc->g for agget */
@@ -217,6 +217,8 @@ static void gdgen_end_page(GVJ_t * job)
 
 	case FORMAT_XBM:
 	    break;
+	default:
+	    UNREACHABLE();
 	}
 	gdImageDestroy(im);
 #ifdef MYTRACE
