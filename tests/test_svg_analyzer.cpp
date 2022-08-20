@@ -11,11 +11,10 @@
 
 #include "test_utilities.h"
 
-TEST_CASE(
-    "SvgAnalyzer",
-    "The SvgAnalyzer parses an SVG produced by Graphviz to an internal data "
-    "structure, supports retrieval of information about that graph and "
-    "recreation of the original SVG from that data structure") {
+TEST_CASE("SvgAnalyzer",
+          "Test that the SvgAnalyzer can parse an SVG produced by Graphviz to "
+          "an internal data structure and re-create the original SVG exactly "
+          "from that data structure") {
 
   const auto shape_char_ptr = GENERATE(from_range(all_node_shapes));
   const std::string shape{shape_char_ptr};
