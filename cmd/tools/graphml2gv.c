@@ -101,7 +101,6 @@ typedef struct {
     int listen;
     int closedElementType;
     int globalAttrType;
-    int compositeReadState;
     int edgeinverted;
     Dt_t *nameMap;
 } userdata_t;
@@ -149,7 +148,6 @@ static userdata_t *genUserdata(char* dfltname)
     user->elements = (gv_stack_t){0};
     user->closedElementType = TAG_NONE;
     user->globalAttrType = TAG_NONE;
-    user->compositeReadState = FALSE;
     user->edgeinverted = FALSE;
     user->gname = dfltname;
     user->nameMap = dtopen(&nameDisc, Dtoset);
@@ -540,20 +538,10 @@ static void endElementHandler(void *userData, const char *name)
     } else if (strcmp(name, "attr") == 0) {
 	char *name;
 	char *value;
-	char *dynbuf = 0;
 
 	ud->closedElementType = TAG_NONE;
-	if (ud->compositeReadState) {
-	    size_t len = sizeof(GRAPHML_COMP) + agxblen(&ud->xml_attr_name);
-	    name = dynbuf = gv_calloc(len, sizeof(char));
-	    (void)snprintf(name, len, "%s%s", GRAPHML_COMP, agxbuse(&ud->xml_attr_name));
-	    value = agxbuse(&ud->composite_buffer);
-	    agxbclear(&ud->xml_attr_value);
-	    ud->compositeReadState = FALSE;
-	} else {
-	    name = agxbuse(&ud->xml_attr_name);
-	    value = agxbuse(&ud->xml_attr_value);
-	}
+	name = agxbuse(&ud->xml_attr_name);
+	value = agxbuse(&ud->xml_attr_value);
 
 	switch (ud->globalAttrType) {
 	case TAG_NONE:
@@ -569,7 +557,6 @@ static void endElementHandler(void *userData, const char *name)
 	    setGraphAttr(G, name, value, ud);
 	    break;
 	}
-	free(dynbuf);
 	ud->globalAttrType = TAG_NONE;
     } 
 }
@@ -580,11 +567,6 @@ static void characterDataHandler(void *userData, const char *s, int length)
 
     if (!ud->listen)
 	return;
-
-    if (ud->compositeReadState) {
-	agxbput_n(&ud->composite_buffer, s, length);
-	return;
-    }
 
     agxbput_n(&ud->xml_attr_value, s, length);
 }
