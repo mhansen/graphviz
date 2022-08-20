@@ -229,8 +229,7 @@ static void gdgen_end_page(GVJ_t * job)
 }
 
 #ifdef HAVE_GD_FREETYPE
-static void gdgen_missingfont(char *err, char *fontreq)
-{
+static void gdgen_missingfont(char *fontreq) {
     static char *lastmissing = 0;
     static int n_errors = 0;
 
@@ -297,7 +296,7 @@ void gdgen_text(gdImagePtr im, pointf spf, pointf epf, int fontcolor, double fon
 
         if (err) {
             /* revert to builtin fonts */
-            gdgen_missingfont(err, fontname);
+            gdgen_missingfont(fontname);
 #endif
             sp.y += 2;
             if (fontsize <= 8.5) {
