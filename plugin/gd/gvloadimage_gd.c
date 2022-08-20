@@ -108,7 +108,8 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
     (void)filled;
 
     cairo_t *cr = job->context; /* target context */
-    unsigned int x, y, stride, width, height, px;
+    int x, y, stride, width, height;
+    unsigned px;
     unsigned char *data;
     cairo_surface_t *surface;    /* source surface */
     gdImagePtr im;
