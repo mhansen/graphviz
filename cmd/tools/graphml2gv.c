@@ -98,7 +98,6 @@ typedef struct {
     agxbuf composite_buffer;
     char* gname;
     gv_stack_t elements;
-    int listen;
     int closedElementType;
     int edgeinverted;
     Dt_t *nameMap;
@@ -143,7 +142,6 @@ static Dtdisc_t nameDisc = {
 static userdata_t *genUserdata(char* dfltname)
 {
     userdata_t *user = gv_alloc(sizeof(*user));
-    user->listen = FALSE;
     user->elements = (gv_stack_t){0};
     user->closedElementType = TAG_NONE;
     user->edgeinverted = FALSE;
@@ -504,16 +502,6 @@ static void endElementHandler(void *userData, const char *name)
     } 
 }
 
-static void characterDataHandler(void *userData, const char *s, int length)
-{
-    userdata_t *ud = userData;
-
-    if (!ud->listen)
-	return;
-
-    agxbput_n(&ud->xml_attr_value, s, length);
-}
-
 static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
 {
     char buf[BUFSIZ];
@@ -524,7 +512,6 @@ static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
     *rv = 0;
     XML_SetUserData(parser, udata);
     XML_SetElementHandler(parser, startElementHandler, endElementHandler);
-    XML_SetCharacterDataHandler(parser, characterDataHandler);
 
     Current_class = TAG_GRAPH;
     root = 0;
