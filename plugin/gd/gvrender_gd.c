@@ -145,7 +145,7 @@ static void gdgen_end_page(GVJ_t * job)
 {
     gdImagePtr im = job->context;
 
-    gd_context_t gd_context = {{0}};
+    gd_context_t gd_context = {{0}, 0};
 
     gd_context.ctx.putBuf = gvdevice_gd_putBuf;
     gd_context.ctx.putC = gvdevice_gd_putC;
