@@ -11,6 +11,7 @@
 #include "config.h"
 #include "gdioctx_wrapper.h"
 #include "gdgen_text.h"
+#include "gd_psfontResolve.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -315,8 +316,6 @@ void gdgen_text(gdImagePtr im, pointf spf, pointf epf, int fontcolor, double fon
 #endif
     }
 }
-
-extern char* gd_psfontResolve (PostscriptAlias* pa);
 
 static void gdgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 {

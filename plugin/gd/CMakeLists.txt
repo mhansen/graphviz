@@ -4,6 +4,7 @@ if(GD_FOUND)
     # Source files
     gdioctx_wrapper.h
     gdgen_text.h
+    gd_psfontResolve.h
     gvdevice_gd.c
     gvloadimage_gd.c
     gvplugin_gd.c

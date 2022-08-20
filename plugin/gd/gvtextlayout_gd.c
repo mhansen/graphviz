@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include "gd_psfontResolve.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
