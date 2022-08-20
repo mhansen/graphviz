@@ -695,9 +695,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 /* doSphere:
  * Output sphere in VRML for point nodes.
  */
-static void 
-doSphere (GVJ_t *job, node_t *n, pointf p, double z, double rx, double ry)
-{
+static void doSphere(GVJ_t *job, pointf p, double z, double rx) {
     obj_state_t *obj = job->obj;
 
     gvputs(job,   "Transform {\n");
@@ -748,7 +746,7 @@ static void vrml_ellipse(GVJ_t * job, pointf * A, int filled)
     case NODE_OBJTYPE:
 	n = obj->u.n;
 	if (shapeOf(n) == SH_POINT) {
-	    doSphere (job, n, A[0], z, rx, ry);
+	    doSphere(job, A[0], z, rx);
 	    return;
 	}
 	pen = set_penstyle(job, state->im, brush);
