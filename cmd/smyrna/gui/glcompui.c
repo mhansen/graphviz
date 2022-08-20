@@ -36,24 +36,44 @@ static glCompButton *panBtn;
 void menu_click_pan(glCompObj *obj, GLfloat x, GLfloat y,
 			   glMouseButtonType t)
 {
+        (void)obj;
+        (void)x;
+        (void)y;
+        (void)t;
+
         deselect_all(view->g[view->activeGraph]);
 }
 
 void menu_click_zoom_minus(glCompObj *obj, GLfloat x, GLfloat y,
 				  glMouseButtonType t)
 {
+    (void)obj;
+    (void)x;
+    (void)y;
+    (void)t;
+
     glmotion_zoom_inc(0);
 }
 
 void menu_click_zoom_plus(glCompObj *obj, GLfloat x, GLfloat y,
 				 glMouseButtonType t)
 {
+    (void)obj;
+    (void)x;
+    (void)y;
+    (void)t;
+
     glmotion_zoom_inc(1);
 }
 
 static void menu_switch_to_fisheye(glCompObj *obj, GLfloat x, GLfloat y,
 				   glMouseButtonType t)
 {
+    (void)obj;
+    (void)x;
+    (void)y;
+    (void)t;
+
     if (!view->Topview->fisheyeParams.active)
 	{
 	    if (!view->Topview->fisheyeParams.h) {
@@ -82,6 +102,11 @@ static void menu_switch_to_fisheye(glCompObj *obj, GLfloat x, GLfloat y,
 void menu_click_center(glCompObj *obj, GLfloat x, GLfloat y,
 			      glMouseButtonType t)
 {
+    (void)obj;
+    (void)x;
+    (void)y;
+    (void)t;
+
     if (view->active_camera == -1) {	/*2D mode */
 	btnToolZoomFit_clicked(NULL, NULL);
     } else {			/*there is active camera , adjust it to look at the center */
@@ -96,6 +121,8 @@ void switch2D3D(glCompObj *obj, GLfloat x, GLfloat y,
 		       glMouseButtonType t)
 {
     (void)obj;
+    (void)x;
+    (void)y;
 
     if (t == glMouseLeftButton) {
 
@@ -126,6 +153,11 @@ void switch2D3D(glCompObj *obj, GLfloat x, GLfloat y,
 
 static void CBglCompMouseUp(glCompObj *obj, GLfloat x, GLfloat y, glMouseButtonType t)
 {
+    (void)obj;
+    (void)x;
+    (void)y;
+    (void)t;
+
     sel->common.visible = 0;
     sel->common.pos.x = -5000;
 
@@ -135,6 +167,8 @@ static void CBglCompMouseUp(glCompObj *obj, GLfloat x, GLfloat y, glMouseButtonT
 static void CBglCompMouseRightClick(glCompObj *obj, GLfloat x, GLfloat y,
 			     glMouseButtonType t)
 {
+    (void)obj;
+
     if (t == glMouseRightButton) 
 	{
 		GLfloat X, Y, Z = 0;
@@ -144,11 +178,19 @@ static void CBglCompMouseRightClick(glCompObj *obj, GLfloat x, GLfloat y,
 
 static void attrList(glCompObj *obj, GLfloat x, GLfloat y, glMouseButtonType t)
 {
+	(void)obj;
+	(void)x;
+	(void)y;
+	(void)t;
+
 	showAttrsWidget(view->Topview);
 }
 
 static void glCompMouseMove(glCompObj *obj, GLfloat x, GLfloat y)
 {
+    (void)x;
+    (void)y;
+
     glCompMouse *m = &((glCompSet *) obj)->mouse;
 
     sel->common.visible = 1;
@@ -165,6 +207,10 @@ static void glCompMouseMove(glCompObj *obj, GLfloat x, GLfloat y)
 }
 static void selectedges(glCompObj *obj, GLfloat x, GLfloat y)
 {
+    (void)obj;
+    (void)x;
+    (void)y;
+
     if(view->Topview->sel.selectEdges==0)
 	view->Topview->sel.selectEdges=1;
     else
@@ -173,6 +219,10 @@ static void selectedges(glCompObj *obj, GLfloat x, GLfloat y)
 }
 static void selectnodes(glCompObj *obj, GLfloat x, GLfloat y)
 {
+    (void)obj;
+    (void)x;
+    (void)y;
+
     if(view->Topview->sel.selectNodes==0)
 	view->Topview->sel.selectNodes=1;
     else
