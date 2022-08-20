@@ -20,17 +20,17 @@ TEST_CASE(
   const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), "dot");
 
   const auto result = layout.render("svg");
-  SVGAnalyzer svgAnalyzer{result.c_str()};
-  REQUIRE(svgAnalyzer.num_svgs() == 1);
-  REQUIRE(svgAnalyzer.num_groups() == 1);
-  REQUIRE(svgAnalyzer.num_circles() == 0);
-  REQUIRE(svgAnalyzer.num_ellipses() == 0);
-  REQUIRE(svgAnalyzer.num_lines() == 0);
-  REQUIRE(svgAnalyzer.num_paths() == 0);
-  REQUIRE(svgAnalyzer.num_polygons() == 1);
-  REQUIRE(svgAnalyzer.num_polylines() == 0);
-  REQUIRE(svgAnalyzer.num_rects() == 0);
-  REQUIRE(svgAnalyzer.num_titles() == 0);
+  SVGAnalyzer svg_analyzer{result.c_str()};
+  REQUIRE(svg_analyzer.num_svgs() == 1);
+  REQUIRE(svg_analyzer.num_groups() == 1);
+  REQUIRE(svg_analyzer.num_circles() == 0);
+  REQUIRE(svg_analyzer.num_ellipses() == 0);
+  REQUIRE(svg_analyzer.num_lines() == 0);
+  REQUIRE(svg_analyzer.num_paths() == 0);
+  REQUIRE(svg_analyzer.num_polygons() == 1);
+  REQUIRE(svg_analyzer.num_polylines() == 0);
+  REQUIRE(svg_analyzer.num_rects() == 0);
+  REQUIRE(svg_analyzer.num_titles() == 0);
 }
 
 TEST_CASE("Rendering an SVG from a graph with a single node outputs an SVG "
@@ -44,17 +44,17 @@ TEST_CASE("Rendering an SVG from a graph with a single node outputs an SVG "
   const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), "dot");
 
   const auto result = layout.render("svg");
-  SVGAnalyzer svgAnalyzer{result.c_str()};
-  REQUIRE(svgAnalyzer.num_svgs() == 1);
-  REQUIRE(svgAnalyzer.num_groups() == 2);
-  REQUIRE(svgAnalyzer.num_ellipses() == 1);
-  REQUIRE(svgAnalyzer.num_circles() == 0);
-  REQUIRE(svgAnalyzer.num_lines() == 0);
-  REQUIRE(svgAnalyzer.num_paths() == 0);
-  REQUIRE(svgAnalyzer.num_polygons() == 1);
-  REQUIRE(svgAnalyzer.num_polylines() == 0);
-  REQUIRE(svgAnalyzer.num_rects() == 0);
-  REQUIRE(svgAnalyzer.num_titles() == 1);
+  SVGAnalyzer svg_analyzer{result.c_str()};
+  REQUIRE(svg_analyzer.num_svgs() == 1);
+  REQUIRE(svg_analyzer.num_groups() == 2);
+  REQUIRE(svg_analyzer.num_ellipses() == 1);
+  REQUIRE(svg_analyzer.num_circles() == 0);
+  REQUIRE(svg_analyzer.num_lines() == 0);
+  REQUIRE(svg_analyzer.num_paths() == 0);
+  REQUIRE(svg_analyzer.num_polygons() == 1);
+  REQUIRE(svg_analyzer.num_polylines() == 0);
+  REQUIRE(svg_analyzer.num_rects() == 0);
+  REQUIRE(svg_analyzer.num_titles() == 1);
 }
 
 TEST_CASE("Rendering an SVG from a graph with two nodes outputs an SVG "
@@ -68,17 +68,17 @@ TEST_CASE("Rendering an SVG from a graph with two nodes outputs an SVG "
   const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), "dot");
 
   const auto result = layout.render("svg");
-  SVGAnalyzer svgAnalyzer{result.c_str()};
-  REQUIRE(svgAnalyzer.num_svgs() == 1);
-  REQUIRE(svgAnalyzer.num_groups() == 3);
-  REQUIRE(svgAnalyzer.num_ellipses() == 2);
-  REQUIRE(svgAnalyzer.num_circles() == 0);
-  REQUIRE(svgAnalyzer.num_lines() == 0);
-  REQUIRE(svgAnalyzer.num_paths() == 0);
-  REQUIRE(svgAnalyzer.num_polygons() == 1);
-  REQUIRE(svgAnalyzer.num_polylines() == 0);
-  REQUIRE(svgAnalyzer.num_rects() == 0);
-  REQUIRE(svgAnalyzer.num_titles() == 2);
+  SVGAnalyzer svg_analyzer{result.c_str()};
+  REQUIRE(svg_analyzer.num_svgs() == 1);
+  REQUIRE(svg_analyzer.num_groups() == 3);
+  REQUIRE(svg_analyzer.num_ellipses() == 2);
+  REQUIRE(svg_analyzer.num_circles() == 0);
+  REQUIRE(svg_analyzer.num_lines() == 0);
+  REQUIRE(svg_analyzer.num_paths() == 0);
+  REQUIRE(svg_analyzer.num_polygons() == 1);
+  REQUIRE(svg_analyzer.num_polylines() == 0);
+  REQUIRE(svg_analyzer.num_rects() == 0);
+  REQUIRE(svg_analyzer.num_titles() == 2);
 }
 
 TEST_CASE("Rendering an SVG from a graph with two nodes and one edge outputs "
@@ -92,15 +92,15 @@ TEST_CASE("Rendering an SVG from a graph with two nodes and one edge outputs "
   const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), "dot");
 
   const auto result = layout.render("svg");
-  SVGAnalyzer svgAnalyzer{result.c_str()};
-  REQUIRE(svgAnalyzer.num_svgs() == 1);
-  REQUIRE(svgAnalyzer.num_groups() == 4);
-  REQUIRE(svgAnalyzer.num_ellipses() == 2);
-  REQUIRE(svgAnalyzer.num_circles() == 0);
-  REQUIRE(svgAnalyzer.num_lines() == 0);
-  REQUIRE(svgAnalyzer.num_paths() == 1);
-  REQUIRE(svgAnalyzer.num_polygons() == 2);
-  REQUIRE(svgAnalyzer.num_polylines() == 0);
-  REQUIRE(svgAnalyzer.num_rects() == 0);
-  REQUIRE(svgAnalyzer.num_titles() == 3);
+  SVGAnalyzer svg_analyzer{result.c_str()};
+  REQUIRE(svg_analyzer.num_svgs() == 1);
+  REQUIRE(svg_analyzer.num_groups() == 4);
+  REQUIRE(svg_analyzer.num_ellipses() == 2);
+  REQUIRE(svg_analyzer.num_circles() == 0);
+  REQUIRE(svg_analyzer.num_lines() == 0);
+  REQUIRE(svg_analyzer.num_paths() == 1);
+  REQUIRE(svg_analyzer.num_polygons() == 2);
+  REQUIRE(svg_analyzer.num_polylines() == 0);
+  REQUIRE(svg_analyzer.num_rects() == 0);
+  REQUIRE(svg_analyzer.num_titles() == 3);
 }
