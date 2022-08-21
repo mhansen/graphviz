@@ -15,6 +15,7 @@
 #include "config.h"
 #include <assert.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
 #include <ctype.h>
 #include <locale.h>
@@ -1474,12 +1475,12 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
     int ptsize = INITPTS;
     pointf* pts = N_GNEW(INITPTS, pointf);
     exdot_op* op;
-    int i, angle;
+    int angle;
     char** styles = NULL;
     int filled = FILL;
 
     op = (exdot_op*)(xd->ops);
-    for (i = 0; i < xd->cnt; i++) {
+    for (size_t i = 0; i < xd->cnt; i++) {
 	switch (op->op.kind) {
 	case xd_filled_ellipse :
 	case xd_unfilled_ellipse :
@@ -2932,7 +2933,6 @@ boxf xdotBB (Agraph_t* g)
 {
     GVC_t *gvc = GD_gvc(g);
     exdot_op* op;
-    int i;
     double fontsize = 0.0;
     char* fontname = NULL;
     pointf pts[2];
@@ -2951,7 +2951,7 @@ boxf xdotBB (Agraph_t* g)
     }
 
     op = (exdot_op*)xd->ops;
-    for (i = 0; i < xd->cnt; i++) {
+    for (size_t i = 0; i < xd->cnt; i++) {
 	tf = null_tf;
 	switch (op->op.kind) {
 	case xd_filled_ellipse :

@@ -308,7 +308,6 @@ static void write_xdot (xdot_op * op, GVJ_t * job, state_t* sp)
 static void write_xdots (char * val, GVJ_t * job, state_t* sp)
 {
     xdot* cmds;
-    int i;
 
     if (!val || *val == '\0') return;
 
@@ -321,7 +320,7 @@ static void write_xdots (char * val, GVJ_t * job, state_t* sp)
     gvputs(job, "\n");
     indent(job, sp->Level++);
     gvputs(job, "[\n");
-    for (i = 0; i < cmds->cnt; i++) {
+    for (size_t i = 0; i < cmds->cnt; i++) {
 	if (i > 0)
 	    gvputs(job, ",\n");
 	write_xdot (cmds->ops+i, job, sp);

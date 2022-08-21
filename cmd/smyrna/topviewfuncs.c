@@ -24,11 +24,10 @@
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
+#include <stddef.h>
 
 static xdot *parseXdotwithattrs(void *e)
 {
-	
-    int cnt=0;
     xdot* xDot=NULL;
     xDot=parseXDotFOn (agget(e,"_draw_" ), OpFns,sizeof(sdot_op), xDot);
     if (agobjkind(e) == AGRAPH)
@@ -40,7 +39,7 @@ static xdot *parseXdotwithattrs(void *e)
     xDot=parseXDotFOn (agget(e,"_tldraw_" ), OpFns,sizeof(sdot_op), xDot);
     if(xDot)
     {
-	for (cnt=0;cnt < xDot->cnt ; cnt++)
+	for (size_t cnt = 0; cnt < xDot->cnt; cnt++)
 	{
 	    ((sdot_op*)(xDot->ops))[cnt].obj=e;
         }
@@ -73,7 +72,6 @@ static void set_boundaries(Agraph_t * g)
 
 static void draw_xdot(xdot* x,float base_z)
 {
-	int i;
 	sdot_op *op;
 	if (!x)
 		return;
@@ -81,7 +79,7 @@ static void draw_xdot(xdot* x,float base_z)
 	view->Topview->global_z=base_z;
 
 	op=(sdot_op*)x->ops;
-	for (i=0; i < x->cnt; i++,op++)
+	for (size_t i = 0; i < x->cnt; i++, op++)
 	{
 		if(op->op.drawfunc)
 			op->op.drawfunc(&op->op,0);
@@ -556,7 +554,7 @@ static xdot* makeXDotSpline (char* pos)
 {
     xdot_point s, e;
     int v, have_s, have_e, cnt;
-    int sz = sizeof(sdot_op);
+    static const size_t sz = sizeof(sdot_op);
     xdot* xd;
     xdot_op* op;
     xdot_point* pts;

@@ -329,26 +329,24 @@ static char *parseOp(xdot_op * op, char *s, drawfunc_t ops[], int* error)
  * Parse and append additional xops onto a given xdot object.
  * Return x.
  */ 
-xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
-{
+xdot *parseXDotFOn(char *s, drawfunc_t fns[], size_t sz, xdot *x) {
     xdot_op op;
     char *ops;
-    int oldsz, bufsz;
+    size_t oldsz, bufsz;
     int error;
-    int initcnt;
 
     if (!s)
 	return x;
 
     if (!x) {
 	x = gv_alloc(sizeof(*x));
-	if (sz < 0 || (size_t)sz <= sizeof(xdot_op))
+	if (sz <= sizeof(xdot_op))
 	    sz = sizeof(xdot_op);
 
 	/* cnt, freefunc, ops, flags zeroed by gv_alloc */
 	x->sz = sz;
     }
-    initcnt = x->cnt;
+    size_t initcnt = x->cnt;
     sz = x->sz;
 
     if (initcnt == 0) {
@@ -385,8 +383,7 @@ xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
 
 }
 
-xdot *parseXDotF(char *s, drawfunc_t fns[], int sz)
-{
+xdot *parseXDotF(char *s, drawfunc_t fns[], size_t sz) {
     return parseXDotFOn (s, fns, sz, NULL);
 }
 
@@ -728,10 +725,9 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 
 static void _printXDot(xdot * x, pf print, void *info, print_op ofn)
 {
-    int i;
     xdot_op *op;
     char *base = (char *) (x->ops);
-    for (i = 0; i < x->cnt; i++) {
+    for (size_t i = 0; i < x->cnt; i++) {
 	op = (xdot_op *) (base + i * x->sz);
 	ofn(op, print, info, i < x->cnt - 1);
     }
@@ -799,14 +795,13 @@ static void freeXOpData(xdot_op * x)
 
 void freeXDot (xdot * x)
 {
-    int i;
     xdot_op *op;
     char *base;
     freefunc_t ff = x->freefunc;
 
     if (!x) return;
     base = (char *) (x->ops);
-    for (i = 0; i < x->cnt; i++) {
+    for (size_t i = 0; i < x->cnt; i++) {
 	op = (xdot_op *) (base + i * x->sz);
 	if (ff) ff (op);
 	freeXOpData(op);
@@ -817,7 +812,6 @@ void freeXDot (xdot * x)
 
 int statXDot (xdot* x, xdot_stats* sp)
 {
-    int i;
     xdot_op *op;
     char *base;
 
@@ -825,7 +819,7 @@ int statXDot (xdot* x, xdot_stats* sp)
     memset(sp, 0, sizeof(xdot_stats));
     sp->cnt = x->cnt;
     base = (char *) (x->ops);
-    for (i = 0; i < x->cnt; i++) {
+    for (size_t i = 0; i < x->cnt; i++) {
 	op = (xdot_op *) (base + i * x->sz);
  	switch (op->kind) {
 	case xd_filled_ellipse:

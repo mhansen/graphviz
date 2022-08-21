@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <stddef.h>
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -143,15 +144,15 @@ struct _xdot_op {
 #define XDOT_PARSE_ERROR 1
 
 typedef struct {
-    int cnt;  /* no. of xdot ops */
-    int sz;   /* sizeof structure containing xdot_op as first field */
+    size_t cnt;  /* no. of xdot ops */
+    size_t sz;   /* sizeof structure containing xdot_op as first field */
     xdot_op* ops;
     freefunc_t freefunc;
     int flags;
 } xdot;
 
 typedef struct {
-    int cnt;  /* no. of xdot ops */
+    size_t cnt;  /* no. of xdot ops */
     int n_ellipse;
     int n_polygon;
     int n_polygon_pts;
@@ -169,8 +170,8 @@ typedef struct {
 } xdot_stats;
 
 /* ops are indexed by xop_kind */
-XDOT_API xdot* parseXDotF (char*, drawfunc_t opfns[], int sz);
-XDOT_API xdot* parseXDotFOn (char*, drawfunc_t opfns[], int sz, xdot*);
+XDOT_API xdot *parseXDotF(char*, drawfunc_t opfns[], size_t sz);
+XDOT_API xdot *parseXDotFOn(char*, drawfunc_t opfns[], size_t sz, xdot*);
 XDOT_API xdot* parseXDot (char*);
 XDOT_API char* sprintXDot (xdot*);
 XDOT_API void fprintXDot (FILE*, xdot*);
