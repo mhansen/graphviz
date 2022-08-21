@@ -318,30 +318,29 @@ static int triangulate(pointnlink_t **points, int point_count) {
 }
 
 /* check if (i, i + 2) is a diagonal */
-static bool isdiagonal(int pnli, int pnlip2, pointnlink_t ** pnlps,
-		      int pnln)
-{
+static bool isdiagonal(int pnli, int pnlip2, pointnlink_t **points,
+                       int point_count) {
     int pnlip1, pnlim1, pnlj, pnljp1, res;
 
     /* neighborhood test */
-    pnlip1 = (pnli + 1) % pnln;
-    pnlim1 = (pnli + pnln - 1) % pnln;
+    pnlip1 = (pnli + 1) % point_count;
+    pnlim1 = (pnli + point_count - 1) % point_count;
     /* If P[pnli] is a convex vertex [ pnli+1 left of (pnli-1,pnli) ]. */
-    if (ccw(pnlps[pnlim1]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) == ISCCW)
-	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlim1]->pp) == ISCCW
-	   && ccw(pnlps[pnlip2]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) == ISCCW;
+    if (ccw(points[pnlim1]->pp, points[pnli]->pp, points[pnlip1]->pp) == ISCCW)
+	res = ccw(points[pnli]->pp, points[pnlip2]->pp, points[pnlim1]->pp) == ISCCW
+	   && ccw(points[pnlip2]->pp, points[pnli]->pp, points[pnlip1]->pp) == ISCCW;
     /* Assume (pnli - 1, pnli, pnli + 1) not collinear. */
     else
-	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlip1]->pp) == ISCW;
+	res = ccw(points[pnli]->pp, points[pnlip2]->pp, points[pnlip1]->pp) == ISCW;
     if (!res)
 	return false;
 
     /* check against all other edges */
-    for (pnlj = 0; pnlj < pnln; pnlj++) {
-	pnljp1 = (pnlj + 1) % pnln;
+    for (pnlj = 0; pnlj < point_count; pnlj++) {
+	pnljp1 = (pnlj + 1) % point_count;
 	if (!(pnlj == pnli || pnljp1 == pnli || pnlj == pnlip2 || pnljp1 == pnlip2))
-	    if (intersects(pnlps[pnli]->pp, pnlps[pnlip2]->pp,
-			   pnlps[pnlj]->pp, pnlps[pnljp1]->pp))
+	    if (intersects(points[pnli]->pp, points[pnlip2]->pp,
+			   points[pnlj]->pp, points[pnljp1]->pp))
 		return false;
     }
     return true;
