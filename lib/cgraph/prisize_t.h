@@ -15,9 +15,9 @@
 /// user-defined string literal indicator. So it is best to always use a space
 /// on either side.
 #ifdef __MINGW64__
-  // Microsoft’s Visual C Runtime (msvcrt) ships a printf that does not
-  // understand "%zu". MSVC itself uses a different printf that does not rely on
-  // this, but MinGW uses msvcrt and so cannot handle "%zu".
+// Microsoft’s Visual C Runtime (msvcrt) ships a printf that does not
+// understand "%zu". MSVC itself uses a different printf that does not rely on
+// this, but MinGW uses msvcrt and so cannot handle "%zu".
 #define PRISIZE_T "llu"
 #elif defined(__MINGW32__)
 #define PRISIZE_T "u"
