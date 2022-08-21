@@ -68,8 +68,8 @@ static int opn;
 static int triangulate(pointnlink_t **, int);
 static bool isdiagonal(int, int, pointnlink_t **, int);
 static int loadtriangle(pointnlink_t *, pointnlink_t *, pointnlink_t *);
-static void connecttris(int, int);
-static bool marktripath(int, int);
+static void connecttris(long, long);
+static bool marktripath(long, long);
 
 static void add2dq(int, pointnlink_t *);
 static void splitdq(int, int);
@@ -78,7 +78,7 @@ static int finddqsplit(pointnlink_t *);
 static int ccw(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
-static int pointintri(int, Ppoint_t *);
+static int pointintri(long, Ppoint_t *);
 
 static int growpnls(int);
 static int growtris(int);
@@ -95,7 +95,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     int pi, minpi;
     double minx;
     Ppoint_t p1, p2, p3;
-    int trii, trij, ftrii, ltrii;
+    long trii, trij, ftrii, ltrii;
     int ei;
     pointnlink_t epnls[2], *lpnlp, *rpnlp, *pnlp;
     triangle_t *trip;
@@ -371,8 +371,7 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
 }
 
 /* connect a pair of triangles at their common edge (if any) */
-static void connecttris(int tri1, int tri2)
-{
+static void connecttris(long tri1, long tri2) {
     triangle_t *tri1p, *tri2p;
     int ei, ej;
 
@@ -390,8 +389,7 @@ static void connecttris(int tri1, int tri2)
 }
 
 /* find and mark path from trii, to trij */
-static bool marktripath(int trii, int trij)
-{
+static bool marktripath(long trii, long trij) {
     int ei;
 
     if (tris[trii].mark)
@@ -488,8 +486,7 @@ static bool between(Ppoint_t * pap, Ppoint_t * pbp, Ppoint_t * pcp)
 	p2.x * p2.x + p2.y * p2.y <= p1.x * p1.x + p1.y * p1.y;
 }
 
-static int pointintri(int trii, Ppoint_t * pp)
-{
+static int pointintri(long trii, Ppoint_t *pp) {
     int ei, sum;
 
     for (ei = 0, sum = 0; ei < 3; ei++)
