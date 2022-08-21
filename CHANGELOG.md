@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking**: libxdot fields for the size and number of operations are now
-  `size_t` values instead of `int` values
+- **Breaking**: libxdot fields for the size and number of operations, the
+  statistics counts, and polygon line points are now `size_t` values instead of
+  `int` values
 
 ### Removed
 

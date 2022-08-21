@@ -78,7 +78,7 @@ typedef struct {
 } xdot_rect;
 
 typedef struct {
-    int cnt;
+    size_t cnt;
     xdot_point* pts;
 } xdot_polyline;
 
@@ -153,20 +153,20 @@ typedef struct {
 
 typedef struct {
     size_t cnt;  /* no. of xdot ops */
-    int n_ellipse;
-    int n_polygon;
-    int n_polygon_pts;
-    int n_polyline;
-    int n_polyline_pts;
-    int n_bezier;
-    int n_bezier_pts;
-    int n_text;
-    int n_font;
-    int n_style;
-    int n_color;
-    int n_image;
-    int n_gradcolor;
-    int n_fontchar;
+    size_t n_ellipse;
+    size_t n_polygon;
+    size_t n_polygon_pts;
+    size_t n_polyline;
+    size_t n_polyline_pts;
+    size_t n_bezier;
+    size_t n_bezier_pts;
+    size_t n_text;
+    size_t n_font;
+    size_t n_style;
+    size_t n_color;
+    size_t n_image;
+    size_t n_gradcolor;
+    size_t n_fontchar;
 } xdot_stats;
 
 /* ops are indexed by xop_kind */

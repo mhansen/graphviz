@@ -486,9 +486,9 @@ static char* readPoint (char* p, xdot_point* pt)
  * return start of point list (skip over e and s points).
  * return NULL on failure
  */
-static char* countPoints (char* pos, int* have_sp, xdot_point* sp, int* have_ep, xdot_point* ep, int* cntp)
-{
-    int cnt = 0;
+static char *countPoints(char *pos, int *have_sp, xdot_point *sp, int *have_ep,
+                         xdot_point *ep, size_t *cntp) {
+    size_t cnt = 0;
     char* p;
 
     pos = skipWS (pos);
@@ -553,7 +553,8 @@ static int storePoints (char* pos, xdot_point* ps)
 static xdot* makeXDotSpline (char* pos)
 {
     xdot_point s, e;
-    int v, have_s, have_e, cnt;
+    int v, have_s, have_e;
+    size_t cnt;
     static const size_t sz = sizeof(sdot_op);
     xdot* xd;
     xdot_op* op;

@@ -86,15 +86,14 @@ static char *parseRect(char *s, xdot_rect * rp)
 
 static char *parsePolyline(char *s, xdot_polyline * pp)
 {
-    int i;
+    unsigned i;
     xdot_point *pts;
     xdot_point *ps;
     char* endp;
 
-    s = parseInt(s, &i);
+    s = parseUInt(s, &i);
     if (!s) return NULL;
-    if (i < 0) return NULL;
-    pts = ps = gv_calloc((size_t)i, sizeof(ps[0]));
+    pts = ps = gv_calloc(i, sizeof(ps[0]));
     pp->cnt = i;
     for (i = 0; i < pp->cnt; i++) {
 	ps->x = strtod (s, &endp);
@@ -434,11 +433,10 @@ static void printRect(xdot_rect * r, pf print, void *info)
 
 static void printPolyline(xdot_polyline * p, pf print, void *info)
 {
-    int i;
     char buf[512];
 
-    print(info, " %d", p->cnt);
-    for (i = 0; i < p->cnt; i++) {
+    print(info, " %" PRISIZE_T, p->cnt);
+    for (size_t i = 0; i < p->cnt; i++) {
 	snprintf(buf, sizeof(buf), " %.02f", p->pts[i].x);
 	trim(buf);
 	print(info, "%s", buf);
@@ -610,10 +608,8 @@ static void jsonRect(xdot_rect * r, pf print, void *info)
 
 static void jsonPolyline(xdot_polyline * p, pf print, void *info)
 {
-    int i;
-
     print(info, "[");
-    for (i = 0; i < p->cnt; i++) {
+    for (size_t i = 0; i < p->cnt; i++) {
 	print(info, "%.06f,%.06f", p->pts[i].x, p->pts[i].y);
 	if (i < p->cnt-1) print(info, ",");
     }
