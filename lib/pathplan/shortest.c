@@ -289,29 +289,28 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 }
 
 /* triangulate polygon */
-static int triangulate(pointnlink_t ** pnlps, int pnln)
-{
+static int triangulate(pointnlink_t **points, int point_count) {
     int pnli, pnlip1, pnlip2;
 
-	if (pnln > 3) 
+	if (point_count > 3)
 	{
-		for (pnli = 0; pnli < pnln; pnli++) 
+		for (pnli = 0; pnli < point_count; pnli++)
 		{
-			pnlip1 = (pnli + 1) % pnln;
-			pnlip2 = (pnli + 2) % pnln;
-			if (isdiagonal(pnli, pnlip2, pnlps, pnln)) 
+			pnlip1 = (pnli + 1) % point_count;
+			pnlip2 = (pnli + 2) % point_count;
+			if (isdiagonal(pnli, pnlip2, points, point_count))
 			{
-				if (loadtriangle(pnlps[pnli], pnlps[pnlip1], pnlps[pnlip2]) != 0)
+				if (loadtriangle(points[pnli], points[pnlip1], points[pnlip2]) != 0)
 					return -1;
-				for (pnli = pnlip1; pnli < pnln - 1; pnli++)
-					pnlps[pnli] = pnlps[pnli + 1];
-				return triangulate(pnlps, pnln - 1);
+				for (pnli = pnlip1; pnli < point_count - 1; pnli++)
+					points[pnli] = points[pnli + 1];
+				return triangulate(points, point_count - 1);
 			}
 		}
 		prerror("triangulation failed");
     } 
 	else {
-		if (loadtriangle(pnlps[0], pnlps[1], pnlps[2]) != 0)
+		if (loadtriangle(points[0], points[1], points[2]) != 0)
 			return -1;
 	}
 
