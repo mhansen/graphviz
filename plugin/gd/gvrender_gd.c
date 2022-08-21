@@ -10,13 +10,14 @@
 
 #include "config.h"
 #include "gdioctx_wrapper.h"
-
+#include "gdgen_text.h"
+#include "gd_psfontResolve.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <fcntl.h>
-
+#include <cgraph/unreachable.h>
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvcint.h>	/* for gvc->g for agget */
@@ -145,7 +146,7 @@ static void gdgen_end_page(GVJ_t * job)
 {
     gdImagePtr im = job->context;
 
-    gd_context_t gd_context = {{0}};
+    gd_context_t gd_context = {{0}, 0};
 
     gd_context.ctx.putBuf = gvdevice_gd_putBuf;
     gd_context.ctx.putC = gvdevice_gd_putC;
@@ -217,6 +218,8 @@ static void gdgen_end_page(GVJ_t * job)
 
 	case FORMAT_XBM:
 	    break;
+	default:
+	    UNREACHABLE();
 	}
 	gdImageDestroy(im);
 #ifdef MYTRACE
@@ -227,8 +230,7 @@ static void gdgen_end_page(GVJ_t * job)
 }
 
 #ifdef HAVE_GD_FREETYPE
-static void gdgen_missingfont(char *err, char *fontreq)
-{
+static void gdgen_missingfont(char *fontreq) {
     static char *lastmissing = 0;
     static int n_errors = 0;
 
@@ -295,7 +297,7 @@ void gdgen_text(gdImagePtr im, pointf spf, pointf epf, int fontcolor, double fon
 
         if (err) {
             /* revert to builtin fonts */
-            gdgen_missingfont(err, fontname);
+            gdgen_missingfont(fontname);
 #endif
             sp.y += 2;
             if (fontsize <= 8.5) {
@@ -314,8 +316,6 @@ void gdgen_text(gdImagePtr im, pointf spf, pointf epf, int fontcolor, double fon
 #endif
     }
 }
-
-extern char* gd_psfontResolve (PostscriptAlias* pa);
 
 static void gdgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 {
@@ -424,6 +424,9 @@ static void
 gdgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
 	     int arrow_at_end, int filled)
 {
+    (void)arrow_at_start;
+    (void)arrow_at_end;
+
     obj_state_t *obj = job->obj;
     gdImagePtr im = job->context;
     pointf p0, p1, V[4];

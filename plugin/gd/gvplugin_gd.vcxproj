@@ -106,6 +106,10 @@ copy $(SolutionDir)windows\dependencies\libraries\x86\bin\pixman-1.dll $(OutDir)
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="gdgen_text.h" />
+    <ClInclude Include="gd_psfontResolve.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="gvdevice_gd.c" />
     <ClCompile Include="gvloadimage_gd.c" />
     <ClCompile Include="gvplugin_gd.c" />

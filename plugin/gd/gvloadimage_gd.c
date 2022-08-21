@@ -90,6 +90,8 @@ static gdImagePtr gd_rotateimage(gdImagePtr im, int rotation)
 	
 static void gd_loadimage_gd(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+    (void)filled;
+
     gdImagePtr im2, im = job->context;
 
     if ((im2 = gd_loadimage(job, us))) {
@@ -103,8 +105,11 @@ static void gd_loadimage_gd(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 #ifdef HAVE_PANGOCAIRO
 static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+    (void)filled;
+
     cairo_t *cr = job->context; /* target context */
-    unsigned int x, y, stride, width, height, px;
+    int x, y, stride, width, height;
+    unsigned px;
     unsigned char *data;
     cairo_surface_t *surface;    /* source surface */
     gdImagePtr im;
@@ -169,6 +174,8 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
 
 static void gd_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+    (void)filled;
+
     gdImagePtr im = NULL;
     int X, Y, x, y, px;
 
