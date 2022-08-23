@@ -55,6 +55,12 @@ public:
   void set_width(double width) override;
   void set_x(double x) override;
   void set_y(double y) override;
+  /// Create an SVGAnalyzer from DOT source using the `engine` layout engine.
+  ///
+  /// \param dot_source The DOT source
+  /// \param engine The Graphviz layout engine
+  static SVGAnalyzer make_from_dot(const std::string &dot_source,
+                                   const std::string &engine = "dot");
   std::size_t num_svgs() const { return m_num_svgs; };
   std::size_t num_groups() const { return m_num_groups; };
   std::size_t num_circles() const { return m_num_circles; };

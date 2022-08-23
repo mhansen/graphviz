@@ -34,6 +34,7 @@ set_target_properties(test_common PROPERTIES CXX_STANDARD 20)
 set_target_properties(test_common PROPERTIES CXX_STANDARD_REQUIRED ON)
 target_include_directories(test_common PRIVATE
   ../lib
+  ../lib/cgraph++
 )
 target_include_directories(test_common SYSTEM PRIVATE
   ${Boost_INCLUDE_DIRS}

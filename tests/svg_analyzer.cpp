@@ -5,6 +5,10 @@
 #include "svg_analyzer.h"
 #include "svgpp_context.h"
 #include "svgpp_document_traverser.h"
+#include <cgraph++/AGraph.h>
+#include <gvc++/GVContext.h>
+#include <gvc++/GVLayout.h>
+#include <gvc++/GVRenderData.h>
 
 SVGAnalyzer::SVGAnalyzer(char *text)
     : m_svg(SVG::SVGElement(SVG::SVGElementType::Svg)) {
@@ -241,6 +245,19 @@ void SVGAnalyzer::set_width(double width) {
 void SVGAnalyzer::set_x(double x) { current_element().attributes.x = x; }
 
 void SVGAnalyzer::set_y(double y) { current_element().attributes.y = y; }
+
+SVGAnalyzer SVGAnalyzer::make_from_dot(const std::string &dot_source,
+                                       const std::string &engine) {
+  auto g = CGraph::AGraph{dot_source};
+
+  const auto demand_loading = false;
+  auto gvc = GVC::GVContext{lt_preloaded_symbols, demand_loading};
+
+  const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), engine);
+
+  const auto result = layout.render("svg");
+  return SVGAnalyzer{result.c_str()};
+}
 
 void SVGAnalyzer::set_transform(double a, double b, double c, double d,
                                 double e, double f) {
