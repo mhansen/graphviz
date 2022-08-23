@@ -135,6 +135,7 @@ public:
   /// throw an exception unless the `throw_if_bbox_not_defined` parameter is
   /// `false`.
   SVG::SVGRect bbox(bool throw_if_bbox_not_defined = true);
+  bool is_closed_shape_element() const;
   bool is_shape_element() const;
   std::string to_string(std::size_t indent_size) const;
 

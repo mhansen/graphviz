@@ -29,6 +29,8 @@ extern const std::unordered_set<std::string_view>
 extern const std::unordered_set<std::string_view>
     primitive_polygon_and_polyline_arrow_shapes;
 extern const std::unordered_set<std::string_view> all_primitive_arrow_shapes;
+extern const std::unordered_set<std::string_view>
+    primitive_arrow_shapes_without_closed_svg_shape;
 
 /// rank directions
 extern const std::unordered_set<std::string_view> all_rank_directions;

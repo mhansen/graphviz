@@ -16,6 +16,18 @@ static double px_to_pt(double px) {
   return px * 3 / 4;
 }
 
+bool SVG::SVGElement::is_closed_shape_element() const {
+  switch (type) {
+  case SVG::SVGElementType::Circle:
+  case SVG::SVGElementType::Ellipse:
+  case SVG::SVGElementType::Polygon:
+  case SVG::SVGElementType::Rect:
+    return true;
+  default:
+    return false;
+  }
+}
+
 bool SVG::SVGElement::is_shape_element() const {
   switch (type) {
   case SVG::SVGElementType::Circle:
