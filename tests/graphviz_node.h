@@ -27,6 +27,9 @@ public:
   std::string fillcolor() const;
   /// Return the node's `node_id` as defined by the DOT language
   std::string_view node_id() const;
+  /// Return the outline bounding box of the node. The outline bounding box is
+  /// the bounding box with penwidth taken into account.
+  SVG::SVGRect outline_bbox() const;
   /// Return the node's `penwidth` attribute
   double penwidth() const;
   /// Return a non-mutable reference to the SVG `g` element corresponding to the
