@@ -1,3 +1,5 @@
+#include <cassert>
+#include <limits>
 #include <stdexcept>
 
 #include <fmt/format.h>
@@ -53,6 +55,103 @@ static std::string to_graphviz_color(const std::string &color) {
   } else {
     return color;
   }
+}
+
+SVG::SVGRect SVG::SVGElement::bbox(bool throw_if_bbox_not_defined) {
+  if (!m_bbox.has_value()) {
+    // negative width and height bbox that will be imediately replaced by the
+    // first bbox found
+    m_bbox = {.x = std::numeric_limits<double>::max() / 2,
+              .y = std::numeric_limits<double>::max() / 2,
+              .width = std::numeric_limits<double>::lowest(),
+              .height = std::numeric_limits<double>::lowest()};
+    switch (type) {
+    case SVG::SVGElementType::Group:
+      // SVG group bounding box is detemined solely by its children
+      break;
+    case SVG::SVGElementType::Ellipse: {
+      m_bbox = {
+          .x = attributes.cx - attributes.rx,
+          .y = attributes.cy - attributes.ry,
+          .width = attributes.rx * 2,
+          .height = attributes.ry * 2,
+      };
+      break;
+    }
+    case SVG::SVGElementType::Polygon:
+    case SVG::SVGElementType::Polyline: {
+      for (const auto &point : attributes.points) {
+        m_bbox->extend(point);
+      }
+      break;
+    }
+    case SVG::SVGElementType::Path: {
+      if (path_points.empty()) {
+        throw std::runtime_error{"No points for 'path' element"};
+      }
+      for (const auto &point : path_points) {
+        m_bbox->extend(point);
+      }
+      break;
+    }
+    case SVG::SVGElementType::Rect: {
+      m_bbox = {
+          .x = attributes.x,
+          .y = attributes.y,
+          .width = attributes.width,
+          .height = attributes.height,
+      };
+      break;
+    }
+    case SVG::SVGElementType::Text: {
+      m_bbox = text_bbox();
+      break;
+    }
+    case SVG::SVGElementType::Title:
+      // title has no size
+      if (throw_if_bbox_not_defined) {
+        throw std::runtime_error{"A 'title' element has no bounding box"};
+      }
+      break;
+    default:
+      throw std::runtime_error{
+          fmt::format("Unhandled svg element type {}", tag(type))};
+    }
+
+    const auto throw_if_child_bbox_is_not_defined = false;
+    for (auto &child : children) {
+      const auto child_bbox = child.bbox(throw_if_child_bbox_is_not_defined);
+      m_bbox->extend(child_bbox);
+    }
+  }
+
+  return *m_bbox;
+}
+
+SVG::SVGRect SVG::SVGElement::text_bbox() const {
+  assert(type == SVG::SVGElementType::Text && "Not a 'text' element");
+
+  if (attributes.font_family != "Courier,monospace") {
+    throw std::runtime_error(
+        fmt::format("Cannot calculate bounding box for font \"{}\"",
+                    attributes.font_family));
+  }
+
+  // Epirically determined font metrics for the Courier font
+  const auto courier_width_per_pt = 0.6;
+  const auto courier_height_per_pt = 1.2;
+  const auto descent_per_pt = 1.0 / 3.0;
+  const auto font_width = attributes.font_size * courier_width_per_pt;
+  const auto font_height = attributes.font_size * courier_height_per_pt;
+  const auto descent = attributes.font_size * descent_per_pt;
+
+  const SVG::SVGRect bbox = {
+      .x = attributes.x - font_width * text.size() / 2,
+      .y = attributes.y - font_height + descent,
+      .width = font_width * text.size(),
+      .height = font_height,
+  };
+  return bbox;
 }
 
 void SVG::SVGElement::append_attribute(std::string &output,
@@ -242,6 +341,34 @@ SVG::SVGElement::stroke_to_graphviz_color(const std::string &color) const {
   return to_graphviz_color(color);
 }
 
+void SVG::SVGRect::extend(const SVGPoint &point) {
+  const auto xmin = std::min(x, point.x);
+  const auto ymin = std::min(y, point.y);
+  const auto xmax = std::max(x + width, point.x);
+  const auto ymax = std::max(y + height, point.y);
+
+  x = xmin;
+  y = ymin;
+  width = xmax - xmin;
+  height = ymax - ymin;
+}
+
+SVG::SVGPoint SVG::SVGRect::center() const {
+  return {x + width / 2, y + height / 2};
+}
+
+void SVG::SVGRect::extend(const SVG::SVGRect &other) {
+  const auto xmin = std::min(x, other.x);
+  const auto ymin = std::min(y, other.y);
+  const auto xmax = std::max(x + width, other.x + other.width);
+  const auto ymax = std::max(y + height, other.y + other.height);
+
+  x = xmin;
+  y = ymin;
+  width = xmax - xmin;
+  height = ymax - ymin;
+}
+
 std::string_view SVG::tag(SVGElementType type) {
   switch (type) {
   case SVG::SVGElementType::Circle:
@@ -268,4 +395,22 @@ std::string_view SVG::tag(SVGElementType type) {
     return "title";
   }
   UNREACHABLE();
+}
+
+bool SVG::SVGPoint::is_higher_than(const SVGPoint &other) const {
+  // SVG uses inverted y axis, so smaller is higher
+  return y < other.y;
+}
+
+bool SVG::SVGPoint::is_lower_than(const SVGPoint &other) const {
+  // SVG uses inverted y axis, so larger is lower
+  return y > other.y;
+}
+
+bool SVG::SVGPoint::is_more_left_than(const SVGPoint &other) const {
+  return x < other.x;
+}
+
+bool SVG::SVGPoint::is_more_right_than(const SVGPoint &other) const {
+  return x > other.x;
 }

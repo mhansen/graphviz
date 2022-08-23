@@ -1,5 +1,7 @@
 #include <stdexcept>
 
+#include <fmt/format.h>
+
 #include "svg_analyzer.h"
 #include "svgpp_context.h"
 #include "svgpp_document_traverser.h"
@@ -13,6 +15,12 @@ SVGAnalyzer::SVGAnalyzer(char *text)
     throw std::runtime_error{
         "Wrong number of elements in process after traversing SVG document"};
   }
+  m_elements_in_process.pop_back();
+  retrieve_graphviz_components();
+}
+
+const std::vector<GraphvizGraph> &SVGAnalyzer::graphs() const {
+  return m_graphs;
 }
 
 void SVGAnalyzer::on_enter_element_svg() { m_num_svgs++; }
@@ -128,6 +136,42 @@ void SVGAnalyzer::enter_element(SVG::SVGElementType type) {
 
 void SVGAnalyzer::set_class(std::string_view class_) {
   current_element().attributes.class_ = class_;
+}
+
+void SVGAnalyzer::retrieve_graphviz_components() {
+  retrieve_graphviz_components_impl(m_svg);
+}
+
+void SVGAnalyzer::retrieve_graphviz_components_impl(
+    SVG::SVGElement &svg_element) {
+  if (svg_element.type == SVG::SVGElementType::Group) {
+    // The SVG 'class' attribute determines which type of Graphviz element a 'g'
+    // element corresponds to
+    const auto class_ = svg_element.attributes.class_;
+    if (class_ == "graph") {
+      m_graphs.emplace_back(svg_element);
+    } else if (class_ == "node") {
+      if (m_graphs.empty()) {
+        throw std::runtime_error{
+            fmt::format("No graph to add node {} to", svg_element.graphviz_id)};
+      }
+      m_graphs.back().add_node(svg_element);
+    } else if (class_ == "edge") {
+      if (m_graphs.empty()) {
+        throw std::runtime_error{
+            fmt::format("No graph to add edge {} to", svg_element.graphviz_id)};
+      }
+      m_graphs.back().add_edge(svg_element);
+    } else if (class_ == "cluster") {
+      // ignore of now
+    } else {
+      throw std::runtime_error("Unknown class" + std::string{class_});
+    }
+  }
+
+  for (auto &child : svg_element.children) {
+    retrieve_graphviz_components_impl(child);
+  }
 }
 
 void SVGAnalyzer::set_cx(double cx) { current_element().attributes.cx = cx; }

@@ -12,6 +12,12 @@ enable_testing()
 # separate test can be as small as possible
 add_library(test_common SHARED
             catch2_main.cpp
+            graphviz_edge.cpp
+            graphviz_edge.h
+            graphviz_graph.cpp
+            graphviz_graph.h
+            graphviz_node.h
+            graphviz_node.cpp
             test_utilities.cpp
             svgpp_context.cpp
             svgpp_context.h
@@ -77,6 +83,7 @@ CREATE_TEST(GVContext_render_svg)
 CREATE_TEST(GVLayout_construction)
 CREATE_TEST(GVLayout_render)
 CREATE_TEST(neatopack)
+CREATE_TEST(rankdir)
 CREATE_TEST(simple)
 CREATE_TEST(subgraph_layout)
 CREATE_TEST(subgraphs)

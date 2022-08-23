@@ -153,3 +153,6 @@ bool contains_ellipse_shape(std::string_view shape) {
   return node_shapes_consisting_of_ellipse.contains(shape) ||
          node_shapes_consisting_of_ellipse_and_polyline.contains(shape);
 }
+
+const std::unordered_set<std::string_view> all_rank_directions = {"TB", "BT",
+                                                                  "LR", "RL"};
