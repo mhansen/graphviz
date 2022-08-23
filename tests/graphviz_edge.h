@@ -28,6 +28,9 @@ public:
   /// Return the edge's `fillcolor` attribute in RGB hex format if the opacity
   /// is 100 % or in RGBA hex format otherwise.
   std::string fillcolor() const;
+  /// Return the outline bounding box of the edge. The outline bounding box is
+  /// the bounding box with penwidth taken into account.
+  SVG::SVGRect outline_bbox() const;
   /// Return the edge's `penwidth` attribute
   double penwidth() const;
   /// Return a non-mutable reference to the SVG `g` element corresponding to the
