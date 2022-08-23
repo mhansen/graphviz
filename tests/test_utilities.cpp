@@ -154,5 +154,15 @@ bool contains_ellipse_shape(std::string_view shape) {
          node_shapes_consisting_of_ellipse_and_polyline.contains(shape);
 }
 
+const std::unordered_set<std::string_view> primitive_polygon_arrow_shapes = {
+    "crow", "diamond", "inv", "normal", "vee"};
+
+const std::unordered_set<std::string_view>
+    primitive_polygon_and_polyline_arrow_shapes = {"box", "tee"};
+
+const std::unordered_set<std::string_view> all_primitive_arrow_shapes = {
+    "box", "crow", "curve",  "diamond", "dot", "icurve",
+    "inv", "none", "normal", "tee",     "vee"};
+
 const std::unordered_set<std::string_view> all_rank_directions = {"TB", "BT",
                                                                   "LR", "RL"};

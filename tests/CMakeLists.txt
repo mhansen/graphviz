@@ -78,6 +78,7 @@ endmacro()
 
 CREATE_TEST(AGraph_construction)
 CREATE_TEST(clusters)
+CREATE_TEST(edge_penwidth)
 CREATE_TEST(engines)
 CREATE_TEST(GVContext_construction)
 CREATE_TEST(GVContext_render_svg)
