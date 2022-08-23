@@ -1,3 +1,5 @@
+#include <string>
+
 #include "graphviz_edge.h"
 
 GraphvizEdge::GraphvizEdge(SVG::SVGElement &svg_g_element)
@@ -12,6 +14,15 @@ const SVG::SVGElement &GraphvizEdge::svg_g_element() const {
 SVG::SVGRect GraphvizEdge::bbox() const { return m_svg_g_element.bbox(); }
 
 SVG::SVGPoint GraphvizEdge::center() const { return bbox().center(); }
+
+std::string GraphvizEdge::color() const {
+  const auto stroke = m_svg_g_element.attribute_from_subtree<std::string>(
+      &SVG::SVGAttributes::stroke, &SVG::SVGElement::is_shape_element, "");
+  const auto stroke_opacity = m_svg_g_element.attribute_from_subtree<double>(
+      &SVG::SVGAttributes::stroke_opacity, &SVG::SVGElement::is_shape_element,
+      1);
+  return SVG::to_dot_color(stroke, stroke_opacity);
+}
 
 double GraphvizEdge::penwidth() const {
   return m_svg_g_element.attribute_from_subtree<double>(
