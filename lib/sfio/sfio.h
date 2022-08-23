@@ -122,11 +122,6 @@ extern "C" {
 #define SF_STRING	0000004	/* a string stream                      */
 
 #define SF_APPENDWR	0000010	/* file is in append mode only.         */
-#if defined(_mac_SF_APPEND) && !_mac_SF_APPEND
-#define SF_APPEND	SF_APPENDWR	/* this was the original append bit */
-    /* but BSDI stat.h now uses this symbol. */
-    /* So we leave it out in such cases.    */
-#endif
 
 #define SF_MALLOC	0000020	/* buffer is malloc-ed                  */
 #define SF_LINE		0000040	/* line buffering                       */
