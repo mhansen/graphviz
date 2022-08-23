@@ -20,6 +20,13 @@ struct SVGPoint {
   bool is_more_right_than(const SVGPoint &other) const;
 };
 
+struct SVGLine {
+  double x1;
+  double y1;
+  double x2;
+  double y2;
+};
+
 struct SVGRect {
   double x;
   double y;
@@ -165,6 +172,11 @@ private:
   std::string id_attribute_to_string() const;
   std::string fill_attribute_to_string() const;
   std::string fill_opacity_attribute_to_string() const;
+  /// Compute the stroke shape miter point according to
+  /// https://www.w3.org/TR/SVG2/painting.html#StrokeShape.
+  SVG::SVGPoint miter_point(SVG::SVGPoint segment_start,
+                            SVG::SVGPoint segment_end,
+                            SVG::SVGPoint following_segment_end) const;
   std::string points_attribute_to_string() const;
   std::string stroke_attribute_to_string() const;
   std::string stroke_opacity_attribute_to_string() const;

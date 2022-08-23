@@ -438,6 +438,127 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   }
 }
 
+SVG::SVGPoint
+SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
+                             SVG::SVGPoint segment_end,
+                             SVG::SVGPoint following_segment_end) const {
+  /*
+   * Compute the stroke shape miter point according to
+   * https://www.w3.org/TR/SVG2/painting.html#StrokeShape.
+   *
+   * The spec assumes the points of a shape are given in clockwise
+   * (mathematically negative) direction which is how Graphviz draws the points
+   * of an arrow head. A standard arrow head looks like this:
+   *
+   *             1
+   *             ^
+   *            /◡\
+   *           / θ \
+   *          /     \
+   *         /       \
+   *        /         \
+   *      0 ----------- 2
+   *     (3)     |
+   *             |
+   *             |
+   *             |
+   *
+   *
+   * NOTE: Graphviz draws node shapes in the opposite direction, i.e., in
+   * counter-clockwise (mathematically positive) direction which means that such
+   * points must be reordered before calling this method.
+   *
+   * See https://www.w3.org/TR/SVG2/painting.html#TermLineJoinShape for how the
+   * terminating line join shape should be calculated. Below is an attempt to
+   * copy the diagram from the spec with some details added
+   *
+   *
+   *                   P3
+   *                   /\
+   *                  .  .
+   *              l  .    .
+   *                .      .
+   *               .        .
+   *            P1           . P2
+   *             /˙·.ٜ  P ٜ .·˙ \
+   *            /      /\      \
+   *           /      /◟◞\      \
+   *          /      / θ  \      \
+   *         /      /      \      \
+   *  Aleft /    A /        \ B    \ Bleft
+   *       /      /          \      \
+   *      /      /            \      \
+   *     /      / α    /\      \      \  β-π
+   * .../....../◝...../..\.....◜ ◝.....\◝.....
+   *   /      /      /    \    ◟ \      \
+   *         /      /      \   β  \
+   *               /        \
+   *            Aright     Bright
+   *
+   * A is the current segment that ends in P.
+   * B is the following segment that starts in P.
+   *
+   * θ is the angle between the A segment and the B segment in the reverse
+   * direction
+   *
+   * α is the angle of the A segment to the x-axis.
+   *
+   * β is the angle of the B segment to the x-axis.
+   *     NOTE: In the diagram above, the B segment crosses the x-axis in the
+   *           downwards direction so its angle to the x-axis is in this case
+   *           larger than a semi-circle (π or 180°). In the picture it is
+   *           around 5π/6 or 300°. The B segement in the opposite direction has
+   *           an angle to the x-axis which is β-π. This is denoted next to the
+   *           Bleft line in the picture.
+   *
+   * π is the number pi ≃ 3.14
+   *
+   * l is the calculated length between P1 and P3.
+   *
+   * The distance between P and P1 and between P and P2 is stroke-width / 2.
+   *
+   * NOTE: This method only implements the 'miter' join and does not fallback to
+   * 'bevel' when stroke-miterlimit is exceeded.
+   */
+
+  const auto stroke_width = attributes.stroke_width;
+
+  // SVG has inverted y axis so invert all y values before use
+  const SVG::SVGPoint P = {segment_end.x, -segment_end.y};
+  const SVG::SVGLine A = {segment_start.x, -segment_start.y, segment_end.x,
+                          -segment_end.y};
+  const SVG::SVGLine B = {segment_end.x, -segment_end.y,
+                          following_segment_end.x, -following_segment_end.y};
+
+  const auto dxA = A.x2 - A.x1;
+  const auto dyA = A.y2 - A.y1;
+  const auto hypotA = std::hypot(dxA, dyA);
+  const auto cosAlpha = dxA / hypotA;
+  const auto sinAlpha = dyA / hypotA;
+  const auto alpha = dyA > 0 ? std::acos(cosAlpha) : -std::acos(cosAlpha);
+
+  const SVG::SVGPoint P1 = {P.x - stroke_width / 2.0 * sinAlpha,
+                            P.y + stroke_width / 2.0 * cosAlpha};
+
+  const auto dxB = B.x2 - B.x1;
+  const auto dyB = B.y2 - B.y1;
+  const auto hypotB = std::hypot(dxB, dyB);
+  const auto cosBeta = dxB / hypotB;
+  const auto beta = dyB > 0 ? std::acos(cosBeta) : -std::acos(cosBeta);
+
+  // angle between the A segment and the B segment in the reverse direction
+  const auto beta_rev = beta - std::numbers::pi;
+  const auto theta = beta_rev - alpha;
+
+  // length between P1 and P3 (and between P2 and P3)
+  const auto l = stroke_width / 2.0 / std::tan(theta / 2.0);
+
+  const SVG::SVGPoint P3 = {P1.x + l * cosAlpha, P1.y + l * sinAlpha};
+
+  // SVG has inverted y axis so invert the returned y value
+  return {P3.x, -P3.y};
+}
+
 std::string
 SVG::SVGElement::stroke_to_graphviz_color(const std::string &color) const {
   return to_graphviz_color(color);
