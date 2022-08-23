@@ -53,7 +53,8 @@ static std::string xml_encode(const std::string &text) {
   return out;
 }
 
-// convert a valid color specification to the flavor that Graphviz uses
+// convert a valid color specification to the flavor that Graphviz uses in the
+// SVG
 static std::string to_graphviz_color(const std::string &color) {
   if (color == "rgb(0,0,0)") {
     return "black";
