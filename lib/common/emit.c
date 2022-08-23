@@ -1792,7 +1792,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
         bool filled = isFilled(n);
 
         if (shape == SH_POLY || shape == SH_POINT) {
-            poly = (polygon_t *) ND_shape_info(n);
+            poly = ND_shape_info(n);
 
             /* checking if polygon is regular rectangle */
             if (isRect(poly) && (poly->peripheries || filled))

@@ -43,7 +43,7 @@ extern "C" {
     GVIO_API void gvprintf(GVJ_t * job, const char *format, ...);
     GVIO_API void gvprintdouble(GVJ_t * job, double num);
     GVIO_API void gvprintpointf(GVJ_t * job, pointf p);
-    GVIO_API void gvprintpointflist(GVJ_t * job, pointf *p, int n);
+    GVIO_API void gvprintpointflist(GVJ_t *job, pointf *p, size_t n);
 
 #undef GVIO_API
 

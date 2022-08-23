@@ -300,7 +300,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 	    polygon_t *poly;
 	    int i;
 	    if (N_vertices && isPolygon(n)) {
-		poly = (polygon_t *) ND_shape_info(n);
+		poly = ND_shape_info(n);
 		sides = poly->sides;
 		if (sides < 3) {
 		    char *p = agget(n, "samplepoints");
