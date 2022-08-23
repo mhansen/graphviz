@@ -180,6 +180,206 @@ SVG::SVGRect SVG::SVGElement::bbox(bool throw_if_bbox_not_defined) {
   return *m_bbox;
 }
 
+SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
+  if (m_outline_bbox.has_value()) {
+    return *m_outline_bbox;
+  }
+  // negative width and height bbox that will be immediately replaced by the
+  // first bbox found
+  m_bbox = {.x = std::numeric_limits<double>::max() / 2,
+            .y = std::numeric_limits<double>::max() / 2,
+            .width = std::numeric_limits<double>::lowest(),
+            .height = std::numeric_limits<double>::lowest()};
+  switch (type) {
+  case SVG::SVGElementType::Group:
+    // SVG group bounding box is detemined solely by its children
+    break;
+  case SVG::SVGElementType::Ellipse:
+    m_bbox = {
+        .x = attributes.cx - attributes.rx - attributes.stroke_width / 2,
+        .y = attributes.cy - attributes.ry - attributes.stroke_width / 2,
+        .width = attributes.rx * 2 + attributes.stroke_width,
+        .height = attributes.ry * 2 + attributes.stroke_width,
+    };
+    break;
+  case SVG::SVGElementType::Polygon: {
+    // it takes at least 3 points to make a polygon (triangle) and Graphviz
+    // always generates the last point to be the same as the first so there
+    // will always be at least 4 points
+    const auto &points = attributes.points;
+    if (points.size() < 4) {
+      throw std::runtime_error{"Too few points"};
+    }
+    if (points.front().x != points.back().x ||
+        points.front().y != points.back().y) {
+      throw std::runtime_error{"First and last point are not the same"};
+    }
+    const auto clockwise = has_clockwise_points();
+    // the first and last points are always the same so we skip the last
+    for (auto it = points.cbegin(); it != points.cend() - 1; ++it) {
+      const SVG::SVGPoint &prev_point = [&]() {
+        if (it == points.begin()) {
+          // the last point is the same as the first so we must use the next
+          // to last one as the next point to get the start point of the
+          // current path segment
+          return *(points.cend() - 2);
+        } else {
+          return *std::prev(it);
+        }
+      }();
+      const auto &point = *it;
+      // there is always a next point since we iterate only to the next to
+      // last point
+      const auto &next_point = *std::next(it);
+      const SVG::SVGPoint miter_point =
+          clockwise ?
+                    // Graphviz draws some polygons clockwise and some
+                    // counter-clockwise.
+              SVGElement::miter_point(prev_point, point, next_point)
+                    :
+                    // the SVG spec assumes clockwise so we swap the points
+              SVGElement::miter_point(next_point, point, prev_point);
+      m_bbox->extend(miter_point);
+    }
+    break;
+  }
+  case SVG::SVGElementType::Path: {
+    if (path_points.empty()) {
+      throw std::runtime_error{"No points for 'path' element"};
+    }
+    const auto first_point = path_points.front();
+    auto is_vertical = std::all_of(
+        path_points.cbegin(), path_points.cend(),
+        [&](const SVGPoint &point) { return point.x == first_point.x; });
+    auto is_horizontal = std::all_of(
+        path_points.cbegin(), path_points.cend(),
+        [&](const SVGPoint &point) { return point.y == first_point.y; });
+    if (!is_vertical && !is_horizontal) {
+      const std::size_t num_points_in_cylinder_node_shape_path1 = 19;
+      const std::size_t num_points_in_cylinder_node_shape_path2 = 7;
+      if (path_points.size() == num_points_in_cylinder_node_shape_path1 ||
+          path_points.size() == num_points_in_cylinder_node_shape_path2) {
+        // cylinder node shape which is flat at the extreme points so we can
+        // just extend the crossing points with penwidth / 2 and exclude the
+        // intermediate control points. Graphviz uses cubic splines so there are
+        // always two intermediate control points between the curve segment
+        // endpoints.
+        const auto num_intermediate_control_points = 2;
+        for (std::size_t i = 0; i < path_points.size();
+             i += num_intermediate_control_points + 1) {
+          const auto &point = path_points[i];
+          SVG::SVGRect point_bbox = {
+              .x = point.x - attributes.stroke_width / 2,
+              .y = point.y - attributes.stroke_width / 2,
+              .width = attributes.stroke_width,
+              .height = attributes.stroke_width,
+          };
+          m_bbox->extend(point_bbox);
+        }
+        break;
+      }
+      throw std::runtime_error(
+          "paths other than straight vertical, straight horizontal or the "
+          "cylinder special case are currently not supported");
+    }
+    // we now know we have a straight horizontal or vertical line (or the
+    // degenerate case of a point)
+    if (is_vertical) {
+      const SVG::SVGRect first_point_bbox = {
+          first_point.x - attributes.stroke_width / 2, first_point.y,
+          attributes.stroke_width, 0};
+      m_bbox->extend(first_point_bbox);
+      for (const auto &point : path_points) {
+        m_bbox->extend(point);
+      }
+    }
+    if (is_horizontal) {
+      for (const auto &point : path_points) {
+        m_bbox->extend(point);
+      }
+      const SVG::SVGRect first_point_bbox = {
+          first_point.x, first_point.y - attributes.stroke_width / 2, 0,
+          attributes.stroke_width};
+      m_bbox->extend(first_point_bbox);
+    }
+    break;
+  }
+  case SVG::SVGElementType::Polyline: {
+    const auto &points = attributes.points;
+    if (points.size() < 2) {
+      throw std::runtime_error{"Too few points for 'polyline' element"};
+    }
+
+    // handle first and last point which may not be part of a corner
+    const SVG::SVGRect first_point_bbox = {
+        points.front().x - attributes.stroke_width / 2,
+        points.front().y - attributes.stroke_width / 2,
+        attributes.stroke_width,
+        attributes.stroke_width,
+    };
+    m_bbox->extend(first_point_bbox);
+    const SVG::SVGRect last_point_bbox = {
+        points.back().x - attributes.stroke_width / 2,
+        points.back().y - attributes.stroke_width / 2,
+        attributes.stroke_width,
+        attributes.stroke_width,
+    };
+    m_bbox->extend(last_point_bbox);
+
+    if (points.size() >= 3) {
+      // at least one corner
+      const auto clockwise = has_clockwise_points();
+      for (auto it = points.cbegin() + 1; it < points.cend() - 1; ++it) {
+        // there is always a previous point since we iterate from the second
+        // point
+        const auto &prev_point = *std::prev(it);
+        const auto &point = *it;
+        // there is always a next point since we iterate only to the next to
+        // last point
+        const auto &next_point = *std::next(it);
+        const SVG::SVGPoint miter_point =
+            // Graphviz draws some polylines clockwise and some
+            // counter-clockwise.
+            clockwise ? SVGElement::miter_point(prev_point, point, next_point) :
+                      // `miter_point` assumes clockwise so we swap the points
+                SVGElement::miter_point(next_point, point, prev_point);
+        m_bbox->extend(miter_point);
+      }
+    }
+    break;
+  }
+  case SVG::SVGElementType::Rect:
+    m_bbox = {
+        .x = attributes.x - attributes.stroke_width / 2,
+        .y = attributes.y - attributes.stroke_width / 2,
+        .width = attributes.width + attributes.stroke_width,
+        .height = attributes.height + attributes.stroke_width,
+    };
+    break;
+  case SVG::SVGElementType::Text:
+    m_bbox = text_bbox();
+    break;
+  case SVG::SVGElementType::Title:
+    // title has no size
+    if (throw_if_bbox_not_defined) {
+      throw std::runtime_error{"A 'title' element has no bounding box"};
+    }
+    break;
+  default:
+    throw std::runtime_error{
+        fmt::format("Unhandled svg element type {}", tag(type))};
+  }
+
+  const auto throw_if_child_bbox_is_not_defined = false;
+  for (auto &child : children) {
+    const auto child_bbox =
+        child.outline_bbox(throw_if_child_bbox_is_not_defined);
+    m_bbox->extend(child_bbox);
+  }
+
+  return *m_bbox;
+}
+
 SVG::SVGRect SVG::SVGElement::text_bbox() const {
   assert(type == SVG::SVGElementType::Text && "Not a 'text' element");
 
@@ -215,6 +415,27 @@ void SVG::SVGElement::append_attribute(std::string &output,
     output += " ";
   }
   output += attribute;
+}
+
+bool SVG::SVGElement::has_clockwise_points() const {
+  assert((type == SVG::SVGElementType::Polygon ||
+          type == SVG::SVGElementType::Polyline) &&
+         "not a polygon or polyline");
+  assert(attributes.points.size() >= 3 && "too few points");
+  // Sum over the edges, (x2 − x1)(y2 + y1). If the result is positive, the
+  // curve is clockwise, if it's negative the curve is counter-clockwise.
+  // Implementation is based on https://stackoverflow.com/a/1165943/3122101
+  const auto &points = attributes.points;
+  double sum = 0;
+  for (auto it = points.cbegin(); it < points.cend() - 1; ++it) {
+    const auto &[x1, y1i] = *it;
+    const auto &[x2, y2i] = *std::next(it);
+    // SVG uses inverted y axis, so negate y values
+    const auto y1 = -y1i;
+    const auto y2 = -y2i;
+    sum += (x2 - x1) * (y2 + y1);
+  }
+  return sum > 0;
 }
 
 std::string SVG::SVGElement::fill_attribute_to_string() const {
