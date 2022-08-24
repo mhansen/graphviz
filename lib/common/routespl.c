@@ -39,8 +39,7 @@ static void printboxes(int boxn, boxf* boxes)
     for (bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
 	agxbuf buf = {0};
-	agxbprint(&buf, "%d %d %d %d pathbox", (int)ll.x, (int)ll.y,
-	         (int)ur.x, (int)ur.y);
+	agxbprint(&buf, "%.0f %.0f %.0f %.0f pathbox", ll.x, ll.y, ur.x, ur.y);
 	Show_boxes[bi + 1 + Show_cnt] = agxbdisown(&buf);
     }
     Show_cnt = newcnt;
@@ -166,13 +165,13 @@ static void psprintboxes(int boxn, boxf* boxes)
     for (bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
 	agxbuf buf = {0};
-	agxbprint(&buf, "newpath\n%d %d moveto", (int)ll.x, (int)ll.y);
+	agxbprint(&buf, "newpath\n%.0f %.0f moveto", ll.x, ll.y);
 	Show_boxes[li++] = agxbdisown(&buf);
-	agxbprint(&buf, "%d %d lineto", (int)ll.x, (int)ur.y);
+	agxbprint(&buf, "%.0f %.0f lineto", ll.x, ur.y);
 	Show_boxes[li++] = agxbdisown(&buf);
-	agxbprint(&buf, "%d %d lineto", (int)ur.x, (int)ur.y);
+	agxbprint(&buf, "%.0f %.0f lineto", ur.x, ur.y);
 	Show_boxes[li++] = agxbdisown(&buf);
-	agxbprint(&buf, "%d %d lineto", (int)ur.x, (int)ll.y);
+	agxbprint(&buf, "%.0f %.0f lineto", ur.x, ll.y);
 	Show_boxes[li++] = agxbdisown(&buf);
 	Show_boxes[li++] = strdup ("closepath stroke");
     }

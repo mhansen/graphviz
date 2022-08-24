@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: libxdot fields for the size and number of operations, the
   statistics counts, and polygon line points are now `size_t` values instead of
   `int` values
+- Accuracy of the bounding boxes printed by the `showboxes` feature have been
+  improved.
 
 ### Removed
 
