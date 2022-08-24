@@ -851,7 +851,7 @@ static SparseMatrix SparseMatrix_from_coordinate_arrays_internal(int nz, int m, 
 
 
 
-  if(sum_repeated) A = SparseMatrix_sum_repeat_entries(A, sum_repeated);
+  if(sum_repeated) A = SparseMatrix_sum_repeat_entries(A);
  
   return A;
 }
@@ -1349,12 +1349,10 @@ SparseMatrix SparseMatrix_multiply3(SparseMatrix A, SparseMatrix B, SparseMatrix
   return D;
 }
 
-SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum){
+SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A){
   /* sum repeated entries in the same row, i.e., {1,1}->1, {1,1}->2 becomes {1,1}->3 */
   int *ia = A->ia, *ja = A->ja, type = A->type, n = A->n;
   int *mask = NULL, nz = 0, i, j, sta;
-
-  if (what_to_sum == SUM_REPEATED_NONE) return A;
 
   mask = MALLOC(sizeof(int)*((size_t)n));
   for (i = 0; i < n; i++) mask[i] = -1;
@@ -1362,7 +1360,7 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum){
   switch (type){
   case MATRIX_TYPE_REAL:
     {
-      double *a = (double*) A->a;
+      double *a = A->a;
       nz = 0;
       sta = ia[0];
       for (i = 0; i < A->m; i++){
@@ -1383,32 +1381,30 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum){
     break;
   case MATRIX_TYPE_COMPLEX:
     {
-      double *a = (double*) A->a;
-      if (what_to_sum == SUM_REPEATED_ALL){
-	nz = 0;
-	sta = ia[0];
-	for (i = 0; i < A->m; i++){
-	  for (j = sta; j < ia[i+1]; j++){
-	    if (mask[ja[j]] < ia[i]){
-	      ja[nz] = ja[j];
-	      a[2*nz] = a[2*j];
-	      a[2*nz+1] = a[2*j+1];
-	      mask[ja[j]] = nz++;
-	    } else {
-	      assert(ja[mask[ja[j]]] == ja[j]);
-	      a[2*mask[ja[j]]] += a[2*j];
-	      a[2*mask[ja[j]]+1] += a[2*j+1];
-	    }
-	  }
-	  sta = ia[i+1];
-	  ia[i+1] = nz;
-	}
+      double *a = A->a;
+      nz = 0;
+      sta = ia[0];
+      for (i = 0; i < A->m; i++) {
+        for (j = sta; j < ia[i+1]; j++) {
+          if (mask[ja[j]] < ia[i]) {
+            ja[nz] = ja[j];
+            a[2 * nz] = a[2 * j];
+            a[2 * nz + 1] = a[2 * j + 1];
+            mask[ja[j]] = nz++;
+          } else {
+            assert(ja[mask[ja[j]]] == ja[j]);
+            a[2 * mask[ja[j]]] += a[2 * j];
+            a[2 * mask[ja[j]]+1] += a[2 * j + 1];
+          }
+        }
+        sta = ia[i + 1];
+        ia[i + 1] = nz;
       }
     }
     break;
   case MATRIX_TYPE_INTEGER:
     {
-      int *a = (int*) A->a;
+      int *a = A->a;
       nz = 0;
       sta = ia[0];
       for (i = 0; i < A->m; i++){
