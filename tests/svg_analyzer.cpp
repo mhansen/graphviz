@@ -147,7 +147,7 @@ void SVGAnalyzer::retrieve_graphviz_components_impl(
   if (svg_element.type == SVG::SVGElementType::Group) {
     // The SVG 'class' attribute determines which type of Graphviz element a 'g'
     // element corresponds to
-    const auto class_ = svg_element.attributes.class_;
+    const auto &class_ = svg_element.attributes.class_;
     if (class_ == "graph") {
       m_graphs.emplace_back(svg_element);
     } else if (class_ == "node") {
