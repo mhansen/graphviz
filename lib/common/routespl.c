@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/agxbuf.h>
 #include <common/render.h>
 #include <math.h>
 #include <pathplan/pathplan.h>
@@ -33,15 +33,15 @@ static void printboxes(int boxn, boxf* boxes)
 {
     pointf ll, ur;
     int bi;
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + boxn;
 
     Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
     for (bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
-	snprintf(buf, sizeof(buf), "%d %d %d %d pathbox", (int)ll.x, (int)ll.y,
+	agxbuf buf = {0};
+	agxbprint(&buf, "%d %d %d %d pathbox", (int)ll.x, (int)ll.y,
 	         (int)ur.x, (int)ur.y);
-	Show_boxes[bi+1+Show_cnt] = strdup (buf);
+	Show_boxes[bi + 1 + Show_cnt] = agxbdisown(&buf);
     }
     Show_cnt = newcnt;
     Show_boxes[Show_cnt+1] = NULL;
@@ -85,7 +85,6 @@ static void psprintpointf(pointf p)
 
 static void psprintspline(Ppolyline_t spl)
 {
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + spl.pn + 4;
     int li, i;
 
@@ -95,9 +94,10 @@ static void psprintspline(Ppolyline_t spl)
     Show_boxes[li++] = strdup ("%% spline");
     Show_boxes[li++] = strdup ("gsave 1 0 0 setrgbcolor newpath");
     for (i = 0; i < spl.pn; i++) {
-	snprintf(buf, sizeof(buf), "%f %f %s", spl.ps[i].x, spl.ps[i].y,
+	agxbuf buf = {0};
+	agxbprint(&buf, "%f %f %s", spl.ps[i].x, spl.ps[i].y,
 	  i == 0 ?  "moveto" : (i % 3 == 0 ? "curveto" : ""));
-	Show_boxes[li++] = strdup (buf);
+	Show_boxes[li++] = agxbdisown(&buf);
     }
     Show_boxes[li++] = strdup ("stroke grestore");
     Show_cnt = newcnt;
@@ -106,7 +106,6 @@ static void psprintspline(Ppolyline_t spl)
 
 static void psprintline(Ppolyline_t pl)
 {
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + pl.pn + 4;
     int i, li;
 
@@ -116,9 +115,10 @@ static void psprintline(Ppolyline_t pl)
     Show_boxes[li++] = strdup ("%% line");
     Show_boxes[li++] = strdup ("gsave 0 0 1 setrgbcolor newpath");
     for (i = 0; i < pl.pn; i++) {
-	snprintf(buf, sizeof(buf), "%f %f %s", pl.ps[i].x, pl.ps[i].y,
+	agxbuf buf = {0};
+	agxbprint(&buf, "%f %f %s", pl.ps[i].x, pl.ps[i].y,
 		i == 0 ? "moveto" : "lineto");
-	Show_boxes[li++] = strdup (buf);
+	Show_boxes[li++] = agxbdisown(&buf);
     }
     Show_boxes[li++] = strdup ("stroke grestore");
     Show_cnt = newcnt;
@@ -127,7 +127,6 @@ static void psprintline(Ppolyline_t pl)
 
 static void psprintpoly(Ppoly_t p)
 {
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + p.pn + 3;
     point tl, hd;
     int bi, li;
@@ -144,9 +143,9 @@ static void psprintpoly(Ppoly_t p)
 	hd.y = (int)p.ps[(bi+1) % p.pn].y;
 	if (tl.x == hd.x && tl.y == hd.y) pfx = "%%";
 	else pfx ="";
-	snprintf(buf, sizeof(buf), "%s%d %d %d %d makevec", pfx, tl.x, tl.y, hd.x,
-	         hd.y);
-	Show_boxes[li++] = strdup (buf);
+	agxbuf buf = {0};
+	agxbprint(&buf, "%s%d %d %d %d makevec", pfx, tl.x, tl.y, hd.x, hd.y);
+	Show_boxes[li++] = agxbdisown(&buf);
     }
     Show_boxes[li++] = strdup ("grestore");
 
@@ -156,7 +155,6 @@ static void psprintpoly(Ppoly_t p)
 
 static void psprintboxes(int boxn, boxf* boxes)
 {
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + 5*boxn + 3;
     pointf ll, ur;
     int bi, li;
@@ -167,14 +165,15 @@ static void psprintboxes(int boxn, boxf* boxes)
     Show_boxes[li++] = strdup ("gsave 0 1 0 setrgbcolor");
     for (bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
-	snprintf(buf, sizeof(buf), "newpath\n%d %d moveto", (int)ll.x, (int)ll.y);
-	Show_boxes[li++] = strdup (buf);
-	snprintf(buf, sizeof(buf), "%d %d lineto", (int)ll.x, (int)ur.y);
-	Show_boxes[li++] = strdup (buf);
-	snprintf(buf, sizeof(buf), "%d %d lineto", (int)ur.x, (int)ur.y);
-	Show_boxes[li++] = strdup (buf);
-	snprintf(buf, sizeof(buf), "%d %d lineto", (int)ur.x, (int)ll.y);
-	Show_boxes[li++] = strdup (buf);
+	agxbuf buf = {0};
+	agxbprint(&buf, "newpath\n%d %d moveto", (int)ll.x, (int)ll.y);
+	Show_boxes[li++] = agxbdisown(&buf);
+	agxbprint(&buf, "%d %d lineto", (int)ll.x, (int)ur.y);
+	Show_boxes[li++] = agxbdisown(&buf);
+	agxbprint(&buf, "%d %d lineto", (int)ur.x, (int)ur.y);
+	Show_boxes[li++] = agxbdisown(&buf);
+	agxbprint(&buf, "%d %d lineto", (int)ur.x, (int)ll.y);
+	Show_boxes[li++] = agxbdisown(&buf);
 	Show_boxes[li++] = strdup ("closepath stroke");
     }
     Show_boxes[li++] = strdup ("grestore");

@@ -14,6 +14,7 @@
  */
 
 #include <math.h>
+#include <cgraph/agxbuf.h>
 #include <common/render.h>
 #include <cgraph/unreachable.h>
 #include <stdbool.h>
@@ -30,7 +31,6 @@ static int debugleveln(edge_t* e, int i)
 
 static void showPoints(pointf ps[], int pn)
 {
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + pn + 3;
     int bi, li;
 
@@ -39,8 +39,9 @@ static void showPoints(pointf ps[], int pn)
     Show_boxes[li++] = strdup ("%% self list");
     Show_boxes[li++] = strdup ("dbgstart");
     for (bi = 0; bi < pn; bi++) {
-	snprintf(buf, sizeof(buf), "%.5g %.5g point", ps[bi].x, ps[bi].y);
-	Show_boxes[li++] = strdup (buf);
+	agxbuf buf = {0};
+	agxbprint(&buf, "%.5g %.5g point", ps[bi].x, ps[bi].y);
+	Show_boxes[li++] = agxbdisown(&buf);
     }
     Show_boxes[li++] = strdup ("grestore");
 
