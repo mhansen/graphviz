@@ -109,6 +109,18 @@ std::string SVG::to_dot_color(const std::string &color, double opacity) {
   return rgb_to_hex(color, opacity);
 }
 
+void SVG::SVGElement::add_rect(SVGRect rect, const std::string color) {
+  SVG::SVGElement element{SVG::SVGElementType::Rect};
+  element.attributes.x = rect.x;
+  element.attributes.y = rect.y;
+  element.attributes.width = rect.width;
+  element.attributes.height = rect.height;
+  element.attributes.stroke_width = 0.1;
+  element.attributes.stroke = color;
+  element.attributes.fill = "none";
+  children.push_back(element);
+}
+
 SVG::SVGRect SVG::SVGElement::bbox(bool throw_if_bbox_not_defined) {
   if (!m_bbox.has_value()) {
     // negative width and height bbox that will be immediately replaced by the
@@ -610,6 +622,15 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     append_attribute(attributes_str, stroke_width_attribute_to_string());
     append_attribute(attributes_str, stroke_opacity_attribute_to_string());
     append_attribute(attributes_str, points_attribute_to_string());
+    break;
+  case SVG::SVGElementType::Rect:
+    attributes_str +=
+        fmt::format(R"(x="{}" y="{}" width="{}" height="{}")", attributes.x,
+                    attributes.y, attributes.width, attributes.height);
+    append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, stroke_width_attribute_to_string());
+    append_attribute(attributes_str, stroke_opacity_attribute_to_string());
     break;
   case SVG::SVGElementType::Svg:
     attributes_str += fmt::format(

@@ -98,6 +98,8 @@ public:
   SVGElement() = delete;
   explicit SVGElement(SVG::SVGElementType type);
 
+  /// Add an SVG `rect` element as a child to the element
+  void add_rect(SVG::SVGRect rect, std::string color);
   /// \brief Return the value of an attribute retrieved from the element and its
   /// children
   ///
