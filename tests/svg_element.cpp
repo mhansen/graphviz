@@ -416,6 +416,22 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
   return *m_bbox;
 }
 
+SVG::SVGElement &SVG::SVGElement::find_child(const SVG::SVGElementType type,
+                                             std::size_t index) {
+  std::size_t i = 0;
+  for (auto &child : children) {
+    if (child.type == type) {
+      if (i == index) {
+        return child;
+      }
+      ++i;
+    }
+  }
+  throw std::runtime_error(
+      fmt::format("SVG element only has {} \"{}\" children, index {} not found",
+                  i, tag(type), index));
+}
+
 SVG::SVGRect SVG::SVGElement::text_bbox() const {
   assert(type == SVG::SVGElementType::Text && "Not a 'text' element");
 
