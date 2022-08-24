@@ -165,7 +165,7 @@ void SVGAnalyzer::retrieve_graphviz_components_impl(
     } else if (class_ == "cluster") {
       // ignore for now
     } else {
-      throw std::runtime_error("Unknown class" + std::string{class_});
+      throw std::runtime_error{fmt::format("Unknown class {}", class_)};
     }
   }
 
