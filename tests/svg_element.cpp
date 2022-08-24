@@ -801,6 +801,19 @@ SVG::SVGPoint SVG::SVGRect::center() const {
   return {x + width / 2, y + height / 2};
 }
 
+SVG::SVGRect SVG::SVGRect::intersection(SVG::SVGRect other) const {
+  const SVG::SVGLine intersection_diagonal = {
+      std::max(x, other.x), std::max(y, other.y),
+      std::min(x + width, other.x + other.width),
+      std::min(y + height, other.y + other.height)};
+
+  return SVG::SVGRect{
+      .x = intersection_diagonal.x1,
+      .y = intersection_diagonal.y1,
+      .width = intersection_diagonal.x2 - intersection_diagonal.x1,
+      .height = intersection_diagonal.y2 - intersection_diagonal.y1};
+}
+
 void SVG::SVGRect::extend(const SVG::SVGRect &other) {
   const auto xmin = std::min(x, other.x);
   const auto ymin = std::min(y, other.y);

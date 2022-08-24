@@ -33,6 +33,7 @@ struct SVGRect {
   double width;
   double height;
   SVGPoint center() const;
+  SVGRect intersection(SVGRect other) const;
   void extend(const SVGPoint &point);
   void extend(const SVGRect &other);
 };
