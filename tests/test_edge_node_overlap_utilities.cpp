@@ -21,7 +21,7 @@ static double overlap_in_rank_direction(SVG::SVGRect intersection,
   UNREACHABLE();
 }
 
-/// check that edges do not overlap nodes
+/// check overlap between the edge and the nodes
 static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
                                const graph_options &graph_options,
                                const check_options &check_options) {
@@ -64,6 +64,13 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
                check_options.max_node_edge_overlap +
                    check_options.svg_rounding_error * 2);
     }
+
+    // check minimum head node and edge overlap
+    if (check_options.check_min_edge_node_overlap) {
+      DO_CHECK(head_node_edge_overlap >=
+               check_options.min_node_edge_overlap -
+                   check_options.svg_rounding_error * 2);
+    }
   }
 
   // check tail node and edge overlap
@@ -80,6 +87,13 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
     if (check_options.check_max_edge_node_overlap) {
       DO_CHECK(tail_node_edge_overlap <=
                check_options.max_node_edge_overlap +
+                   check_options.svg_rounding_error * 2);
+    }
+
+    // check minimum overlap at edge tail
+    if (check_options.check_min_edge_node_overlap) {
+      DO_CHECK(tail_node_edge_overlap >=
+               check_options.min_node_edge_overlap -
                    check_options.svg_rounding_error * 2);
     }
   }
@@ -161,7 +175,10 @@ void test_edge_node_overlap(const graph_options &graph_options,
   const check_options check_options = {
       .check_max_edge_node_overlap =
           tc_check_options.check_max_edge_node_overlap,
+      .check_min_edge_node_overlap =
+          tc_check_options.check_min_edge_node_overlap,
       .max_node_edge_overlap = graphviz_bezier_clip_margin,
+      .min_node_edge_overlap = 0,
       .svg_rounding_error = graphviz_max_svg_rounding_error,
   };
 
