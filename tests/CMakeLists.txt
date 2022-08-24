@@ -28,6 +28,8 @@ add_library(test_common SHARED
             svg_analyzer_interface.h
             svg_element.cpp
             svg_element.h
+            test_edge_node_overlap_utilities.cpp
+            test_edge_node_overlap_utilities.h
             ../cmd/dot/dot_builtins.cpp
 )
 set_target_properties(test_common PROPERTIES CXX_STANDARD 20)
@@ -86,6 +88,7 @@ CREATE_TEST(GVContext_construction)
 CREATE_TEST(GVContext_render_svg)
 CREATE_TEST(GVLayout_construction)
 CREATE_TEST(GVLayout_render)
+CREATE_TEST(edge_node_overlap_simple)
 CREATE_TEST(neatopack)
 CREATE_TEST(node_color)
 CREATE_TEST(node_fillcolor)
