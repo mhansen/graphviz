@@ -21,6 +21,7 @@ TEST_CASE(
   const tc_check_options check_options = {
       .check_max_edge_node_overlap = true,
       .check_min_edge_node_overlap = false,
+      .check_min_edge_stem_arrow_overlap = false,
   };
 
   const auto filename_base =

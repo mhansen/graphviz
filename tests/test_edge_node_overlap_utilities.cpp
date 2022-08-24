@@ -172,13 +172,15 @@ static bool skip_min_check_at_tail_node(std::string_view rankdir,
   return shapes_not_meeting_edge(rankdir).contains(node_shape);
 }
 
-/// check overlap between the edge and the nodes
+/// check overlap between the edge and the nodes and between the edge stem and
+/// the edge arrows
 static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
                                const graph_options &graph_options,
                                const check_options &check_options) {
 
   const auto rankdir = graph_options.rankdir;
   const auto node_shape = graph_options.node_shape;
+  const auto dir = graph_options.dir;
 
   REQUIRE(svg_analyzer.graphs().size() == 1);
   auto &recreated_graph = svg_analyzer.graphs().back();
@@ -255,6 +257,51 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
                  check_options.min_node_edge_overlap -
                      check_options.svg_rounding_error * 2);
       }
+    }
+  }
+
+  auto &edge_stem = edge.stem();
+  const auto edge_stem_bbox = edge_stem.outline_bbox();
+
+  // check overlap of edge stem and arrowhead
+  if (dir == "forward" || dir == "both") {
+    auto edge_arrowhead = dir == "forward" ? edge.arrow(0) : edge.arrow(1);
+    const auto edge_arrowhead_bbox = edge_arrowhead.outline_bbox();
+    const auto overlap_bbox = edge_stem_bbox.intersection(edge_arrowhead_bbox);
+    INFO("Edge stem and arrowhead overlap:");
+    INFO(fmt::format("  width:  {:.3f}", overlap_bbox.width));
+    INFO(fmt::format("  height: {:.3f}", overlap_bbox.height));
+    const auto edge_stem_arrowhead_overlap =
+        overlap_in_rank_direction(overlap_bbox, rankdir);
+
+    // check minimum overlap of edge stem and arrowhead
+    if (check_options.check_min_edge_stem_arrow_overlap) {
+      const auto min_edge_stem_arrowhead_overlap =
+          check_options.min_edge_stem_arrow_overlap;
+      DO_CHECK(edge_stem_arrowhead_overlap >=
+               min_edge_stem_arrowhead_overlap -
+                   check_options.svg_rounding_error * 2);
+    }
+  }
+
+  // check overlap of edge stem and arrowtail
+  if (dir == "back" || dir == "both") {
+    auto edge_arrowtail = edge.arrow(0);
+    const auto edge_arrowtail_bbox = edge_arrowtail.outline_bbox();
+    const auto overlap_bbox = edge_stem_bbox.intersection(edge_arrowtail_bbox);
+    INFO("Edge stem and arrowtail overlap:");
+    INFO(fmt::format("  width:  {:.3f}", overlap_bbox.width));
+    INFO(fmt::format("  height: {:.3f}", overlap_bbox.height));
+    const auto edge_stem_arrowtail_overlap =
+        overlap_in_rank_direction(overlap_bbox, rankdir);
+
+    // check minimum overlap of edge stem and arrowtail
+    if (check_options.check_min_edge_stem_arrow_overlap) {
+      const auto min_edge_stem_arrowtail_overlap =
+          check_options.min_edge_stem_arrow_overlap;
+      DO_CHECK(edge_stem_arrowtail_overlap >=
+               min_edge_stem_arrowtail_overlap -
+                   check_options.svg_rounding_error * 2);
     }
   }
 
@@ -337,8 +384,11 @@ void test_edge_node_overlap(const graph_options &graph_options,
           tc_check_options.check_max_edge_node_overlap,
       .check_min_edge_node_overlap =
           tc_check_options.check_min_edge_node_overlap,
+      .check_min_edge_stem_arrow_overlap =
+          tc_check_options.check_min_edge_stem_arrow_overlap,
       .max_node_edge_overlap = graphviz_bezier_clip_margin,
       .min_node_edge_overlap = 0,
+      .min_edge_stem_arrow_overlap = 0,
       .svg_rounding_error = graphviz_max_svg_rounding_error,
   };
 

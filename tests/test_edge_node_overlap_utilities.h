@@ -9,6 +9,8 @@ struct tc_check_options {
   bool check_max_edge_node_overlap = true;
   /// whether to check that there is enough overlap
   bool check_min_edge_node_overlap = true;
+  /// whether to check that there is enough overlap between edge stem and arrow
+  bool check_min_edge_stem_arrow_overlap = true;
 };
 
 struct check_options {
@@ -16,10 +18,14 @@ struct check_options {
   bool check_max_edge_node_overlap = true;
   /// whether to check that there is enough overlap
   bool check_min_edge_node_overlap = true;
+  /// whether to check that there is enough overlap between edge stem and arrow
+  bool check_min_edge_stem_arrow_overlap = true;
   /// maximum allowed overlap between edge and node
   double max_node_edge_overlap;
   /// minimum required overlap between edge and node
   double min_node_edge_overlap;
+  /// minimum required overlap between edge stem and arrow
+  double min_edge_stem_arrow_overlap;
   /// rounding error caused by limited precision in SVG attribute values
   double svg_rounding_error;
 };
