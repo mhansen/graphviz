@@ -163,7 +163,7 @@ void SVGAnalyzer::retrieve_graphviz_components_impl(
       }
       m_graphs.back().add_edge(svg_element);
     } else if (class_ == "cluster") {
-      // ignore of now
+      // ignore for now
     } else {
       throw std::runtime_error("Unknown class" + std::string{class_});
     }
