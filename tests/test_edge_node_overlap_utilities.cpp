@@ -69,7 +69,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
 
 /// write SVG files for manual analysis if any of the above checks failed or if
 /// we explicitly have requested it
-static void write_svg_files(const SVGAnalyzer &svg_analyzer,
+static void write_svg_files(SVGAnalyzer &svg_analyzer,
+                            const check_options &check_options,
                             const write_options &write_options) {
   const std::filesystem::path test_artifacts_directory = "test_artifacts";
 
@@ -87,6 +88,19 @@ static void write_svg_files(const SVGAnalyzer &svg_analyzer,
         write_options.filename_base + "_recreated.svg";
     const auto recreated_svg = svg_analyzer.svg_string();
     write_to_file(test_artifacts_directory, filename, recreated_svg);
+  }
+
+  if (write_options.write_annotated_svg) {
+    // annotate the SVG recreated by the SVG analyzer with bounding boxes
+    // and write to file
+    svg_analyzer.add_bboxes();
+    svg_analyzer.add_outline_bboxes();
+    svg_analyzer.add_node_edge_outline_bbox_overlaps(
+        check_options.max_node_edge_overlap);
+    const std::filesystem::path filename =
+        write_options.filename_base + "_annotated.svg";
+    write_to_file(test_artifacts_directory, filename,
+                  svg_analyzer.svg_string());
   }
 }
 
@@ -114,6 +128,6 @@ void test_edge_node_overlap(const std::string &dot,
   const auto success = check_analyzed_svg(svg_analyzer, check_options);
 
   if (!success || write_options.write_svg_on_success) {
-    write_svg_files(svg_analyzer, write_options);
+    write_svg_files(svg_analyzer, check_options, write_options);
   }
 }

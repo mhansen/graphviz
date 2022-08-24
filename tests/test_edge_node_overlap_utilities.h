@@ -13,7 +13,8 @@ struct write_options {
   std::string filename_base = "test_edge_node_overlap";
   bool write_svg_on_success = false;
   bool write_original_svg = false;
-  bool write_recreated_svg = true;
+  bool write_recreated_svg = false;
+  bool write_annotated_svg = true;
 };
 
 /// generate an SVG graph from the `dot` source and check that edges don't
