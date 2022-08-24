@@ -86,15 +86,14 @@ static char *parseRect(char *s, xdot_rect * rp)
 
 static char *parsePolyline(char *s, xdot_polyline * pp)
 {
-    int i;
+    unsigned i;
     xdot_point *pts;
     xdot_point *ps;
     char* endp;
 
-    s = parseInt(s, &i);
+    s = parseUInt(s, &i);
     if (!s) return NULL;
-    if (i < 0) return NULL;
-    pts = ps = gv_calloc((size_t)i, sizeof(ps[0]));
+    pts = ps = gv_calloc(i, sizeof(ps[0]));
     pp->cnt = i;
     for (i = 0; i < pp->cnt; i++) {
 	ps->x = strtod (s, &endp);
@@ -329,26 +328,24 @@ static char *parseOp(xdot_op * op, char *s, drawfunc_t ops[], int* error)
  * Parse and append additional xops onto a given xdot object.
  * Return x.
  */ 
-xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
-{
+xdot *parseXDotFOn(char *s, drawfunc_t fns[], size_t sz, xdot *x) {
     xdot_op op;
     char *ops;
-    int oldsz, bufsz;
+    size_t oldsz, bufsz;
     int error;
-    int initcnt;
 
     if (!s)
 	return x;
 
     if (!x) {
 	x = gv_alloc(sizeof(*x));
-	if (sz < 0 || (size_t)sz <= sizeof(xdot_op))
+	if (sz <= sizeof(xdot_op))
 	    sz = sizeof(xdot_op);
 
 	/* cnt, freefunc, ops, flags zeroed by gv_alloc */
 	x->sz = sz;
     }
-    initcnt = x->cnt;
+    size_t initcnt = x->cnt;
     sz = x->sz;
 
     if (initcnt == 0) {
@@ -385,8 +382,7 @@ xdot *parseXDotFOn (char *s, drawfunc_t fns[], int sz, xdot* x)
 
 }
 
-xdot *parseXDotF(char *s, drawfunc_t fns[], int sz)
-{
+xdot *parseXDotF(char *s, drawfunc_t fns[], size_t sz) {
     return parseXDotFOn (s, fns, sz, NULL);
 }
 
@@ -437,11 +433,10 @@ static void printRect(xdot_rect * r, pf print, void *info)
 
 static void printPolyline(xdot_polyline * p, pf print, void *info)
 {
-    int i;
     char buf[512];
 
-    print(info, " %d", p->cnt);
-    for (i = 0; i < p->cnt; i++) {
+    print(info, " %" PRISIZE_T, p->cnt);
+    for (size_t i = 0; i < p->cnt; i++) {
 	snprintf(buf, sizeof(buf), " %.02f", p->pts[i].x);
 	trim(buf);
 	print(info, "%s", buf);
@@ -613,10 +608,8 @@ static void jsonRect(xdot_rect * r, pf print, void *info)
 
 static void jsonPolyline(xdot_polyline * p, pf print, void *info)
 {
-    int i;
-
     print(info, "[");
-    for (i = 0; i < p->cnt; i++) {
+    for (size_t i = 0; i < p->cnt; i++) {
 	print(info, "%.06f,%.06f", p->pts[i].x, p->pts[i].y);
 	if (i < p->cnt-1) print(info, ",");
     }
@@ -728,10 +721,9 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 
 static void _printXDot(xdot * x, pf print, void *info, print_op ofn)
 {
-    int i;
     xdot_op *op;
     char *base = (char *) (x->ops);
-    for (i = 0; i < x->cnt; i++) {
+    for (size_t i = 0; i < x->cnt; i++) {
 	op = (xdot_op *) (base + i * x->sz);
 	ofn(op, print, info, i < x->cnt - 1);
     }
@@ -799,14 +791,13 @@ static void freeXOpData(xdot_op * x)
 
 void freeXDot (xdot * x)
 {
-    int i;
     xdot_op *op;
     char *base;
     freefunc_t ff = x->freefunc;
 
     if (!x) return;
     base = (char *) (x->ops);
-    for (i = 0; i < x->cnt; i++) {
+    for (size_t i = 0; i < x->cnt; i++) {
 	op = (xdot_op *) (base + i * x->sz);
 	if (ff) ff (op);
 	freeXOpData(op);
@@ -817,7 +808,6 @@ void freeXDot (xdot * x)
 
 int statXDot (xdot* x, xdot_stats* sp)
 {
-    int i;
     xdot_op *op;
     char *base;
 
@@ -825,7 +815,7 @@ int statXDot (xdot* x, xdot_stats* sp)
     memset(sp, 0, sizeof(xdot_stats));
     sp->cnt = x->cnt;
     base = (char *) (x->ops);
-    for (i = 0; i < x->cnt; i++) {
+    for (size_t i = 0; i < x->cnt; i++) {
 	op = (xdot_op *) (base + i * x->sz);
  	switch (op->kind) {
 	case xd_filled_ellipse:

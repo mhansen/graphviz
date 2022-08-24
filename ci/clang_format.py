@@ -179,7 +179,6 @@ EXCLUDE = (
   "lib/cgraph/node.c",
   "lib/cgraph/obj.c",
   "lib/cgraph/pend.c",
-  "lib/cgraph/prisize_t.h",
   "lib/cgraph/rec.c",
   "lib/cgraph/refstr.c",
   "lib/cgraph/subg.c",

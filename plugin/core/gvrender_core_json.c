@@ -158,12 +158,11 @@ static void set_attrwf(Agraph_t * g, bool toplevel, bool value)
 
 static void write_polyline (GVJ_t * job, xdot_polyline* polyline)
 {
-    int i;
-    int cnt = polyline->cnt;
+    const size_t cnt = polyline->cnt;
     xdot_point* pts = polyline->pts;
 
     gvprintf(job, "\"points\": [");
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
 	if (i > 0) gvprintf(job, ",");
 	gvprintf(job, "[%.03f,%.03f]", pts[i].x, pts[i].y);
     }
@@ -308,7 +307,6 @@ static void write_xdot (xdot_op * op, GVJ_t * job, state_t* sp)
 static void write_xdots (char * val, GVJ_t * job, state_t* sp)
 {
     xdot* cmds;
-    int i;
 
     if (!val || *val == '\0') return;
 
@@ -321,7 +319,7 @@ static void write_xdots (char * val, GVJ_t * job, state_t* sp)
     gvputs(job, "\n");
     indent(job, sp->Level++);
     gvputs(job, "[\n");
-    for (i = 0; i < cmds->cnt; i++) {
+    for (size_t i = 0; i < cmds->cnt; i++) {
 	if (i > 0)
 	    gvputs(job, ",\n");
 	write_xdot (cmds->ops+i, job, sp);

@@ -15,8 +15,10 @@
 #include "config.h"
 #include <assert.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
 #include <locale.h>
 #include <math.h>
 #include <common/render.h>
@@ -1449,10 +1451,9 @@ static bool write_node_test(Agraph_t * g, Agnode_t * n)
 
 #define INITPTS 1000
 
-static pointf*
-copyPts (pointf* pts, int* ptsize, xdot_point* inpts, int numpts)
-{
-    int i, sz = *ptsize;
+static pointf *copyPts(pointf *pts, size_t *ptsize, xdot_point *inpts,
+                       size_t numpts) {
+    size_t sz = *ptsize;
 
     if (numpts > sz) {
 	sz = MAX(2*sz, numpts);
@@ -1460,7 +1461,7 @@ copyPts (pointf* pts, int* ptsize, xdot_point* inpts, int numpts)
 	*ptsize = sz;
     }
 
-    for (i = 0; i < numpts; i++) {
+    for (size_t i = 0; i < numpts; i++) {
 	pts[i].x = inpts[i].x;
 	pts[i].y = inpts[i].y;
     }
@@ -1471,15 +1472,15 @@ copyPts (pointf* pts, int* ptsize, xdot_point* inpts, int numpts)
 static void emit_xdot (GVJ_t * job, xdot* xd)
 {
     int image_warn = 1;
-    int ptsize = INITPTS;
+    size_t ptsize = INITPTS;
     pointf* pts = N_GNEW(INITPTS, pointf);
     exdot_op* op;
-    int i, angle;
+    int angle;
     char** styles = NULL;
     int filled = FILL;
 
     op = (exdot_op*)(xd->ops);
-    for (i = 0; i < xd->cnt; i++) {
+    for (size_t i = 0; i < xd->cnt; i++) {
 	switch (op->op.kind) {
 	case xd_filled_ellipse :
 	case xd_unfilled_ellipse :
@@ -1495,7 +1496,9 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 	case xd_unfilled_polygon :
     	    if (boxf_overlap(op->bb, job->clip)) {
 		pts = copyPts (pts, &ptsize, op->op.u.polygon.pts, op->op.u.polygon.cnt);
-		gvrender_polygon(job, pts, op->op.u.polygon.cnt,
+		assert(op->op.u.polygon.cnt <= INT_MAX &&
+		       "polygon count exceeds gvrender_polygon support");
+		gvrender_polygon(job, pts, (int)op->op.u.polygon.cnt,
 		                 op->op.kind == xd_filled_polygon ? filled : 0);
 	    }
 	    break;
@@ -1503,14 +1506,18 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 	case xd_unfilled_bezier :
     	    if (boxf_overlap(op->bb, job->clip)) {
 		pts = copyPts (pts, &ptsize, op->op.u.bezier.pts, op->op.u.bezier.cnt);
-		gvrender_beziercurve(job, pts, op->op.u.bezier.cnt, 0, 0,
+		assert(op->op.u.bezier.cnt <= INT_MAX &&
+		       "polygon count exceeds gvrender_beizercurve support");
+		gvrender_beziercurve(job, pts, (int)op->op.u.bezier.cnt, 0, 0,
 		                     op->op.kind == xd_filled_bezier ? filled : 0);
 	    }
 	    break;
 	case xd_polyline :
     	    if (boxf_overlap(op->bb, job->clip)) {
 		pts = copyPts (pts, &ptsize, op->op.u.polyline.pts, op->op.u.polyline.cnt);
-		gvrender_polyline(job, pts, op->op.u.polyline.cnt);
+		assert(op->op.u.polyline.cnt <= INT_MAX &&
+		       "polygon count exceeds gvrender_polyline support");
+		gvrender_polyline(job, pts, (int)op->op.u.polyline.cnt);
 	    }
 	    break;
 	case xd_text :
@@ -2871,15 +2878,12 @@ expandBB (boxf* bb, pointf p)
     bb->LL.y = fmin(bb->LL.y, p.y);
 }
 
-static boxf
-ptsBB (xdot_point* inpts, int numpts, boxf* bb)
-{
+static boxf ptsBB(xdot_point *inpts, size_t numpts, boxf *bb) {
     boxf opbb;
-    int i;
 
     opbb.LL.x = opbb.UR.x = inpts->x;
     opbb.LL.y = opbb.UR.y = inpts->y;
-    for (i = 1; i < numpts; i++) {
+    for (size_t i = 1; i < numpts; i++) {
 	inpts++;
 	if (inpts->x < opbb.LL.x)
 	    opbb.LL.x = inpts->x;
@@ -2932,7 +2936,6 @@ boxf xdotBB (Agraph_t* g)
 {
     GVC_t *gvc = GD_gvc(g);
     exdot_op* op;
-    int i;
     double fontsize = 0.0;
     char* fontname = NULL;
     pointf pts[2];
@@ -2951,7 +2954,7 @@ boxf xdotBB (Agraph_t* g)
     }
 
     op = (exdot_op*)xd->ops;
-    for (i = 0; i < xd->cnt; i++) {
+    for (size_t i = 0; i < xd->cnt; i++) {
 	tf = null_tf;
 	switch (op->op.kind) {
 	case xd_filled_ellipse :

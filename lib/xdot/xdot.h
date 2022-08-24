@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <stddef.h>
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -77,7 +78,7 @@ typedef struct {
 } xdot_rect;
 
 typedef struct {
-    int cnt;
+    size_t cnt;
     xdot_point* pts;
 } xdot_polyline;
 
@@ -143,34 +144,34 @@ struct _xdot_op {
 #define XDOT_PARSE_ERROR 1
 
 typedef struct {
-    int cnt;  /* no. of xdot ops */
-    int sz;   /* sizeof structure containing xdot_op as first field */
+    size_t cnt;  /* no. of xdot ops */
+    size_t sz;   /* sizeof structure containing xdot_op as first field */
     xdot_op* ops;
     freefunc_t freefunc;
     int flags;
 } xdot;
 
 typedef struct {
-    int cnt;  /* no. of xdot ops */
-    int n_ellipse;
-    int n_polygon;
-    int n_polygon_pts;
-    int n_polyline;
-    int n_polyline_pts;
-    int n_bezier;
-    int n_bezier_pts;
-    int n_text;
-    int n_font;
-    int n_style;
-    int n_color;
-    int n_image;
-    int n_gradcolor;
-    int n_fontchar;
+    size_t cnt;  /* no. of xdot ops */
+    size_t n_ellipse;
+    size_t n_polygon;
+    size_t n_polygon_pts;
+    size_t n_polyline;
+    size_t n_polyline_pts;
+    size_t n_bezier;
+    size_t n_bezier_pts;
+    size_t n_text;
+    size_t n_font;
+    size_t n_style;
+    size_t n_color;
+    size_t n_image;
+    size_t n_gradcolor;
+    size_t n_fontchar;
 } xdot_stats;
 
 /* ops are indexed by xop_kind */
-XDOT_API xdot* parseXDotF (char*, drawfunc_t opfns[], int sz);
-XDOT_API xdot* parseXDotFOn (char*, drawfunc_t opfns[], int sz, xdot*);
+XDOT_API xdot *parseXDotF(char*, drawfunc_t opfns[], size_t sz);
+XDOT_API xdot *parseXDotFOn(char*, drawfunc_t opfns[], size_t sz, xdot*);
 XDOT_API xdot* parseXDot (char*);
 XDOT_API char* sprintXDot (xdot*);
 XDOT_API void fprintXDot (FILE*, xdot*);

@@ -121,7 +121,6 @@ static void set_options(int param)
 static void DrawBeziers(sdot_op* o, int param)
 {
     int filled;
-    int i = 0;
     xdot_op *  op=&o->op;
     xdot_point* ps = op->u.bezier.pts;
     view->Topview->global_z = view->Topview->global_z + o->layer*LAYER_DIFF;
@@ -131,7 +130,7 @@ static void DrawBeziers(sdot_op* o, int param)
     else
 	filled = 0;
 
-    for (i = 1; i < op->u.bezier.cnt; i += 3) {
+    for (size_t i = 1; i < op->u.bezier.cnt; i += 3) {
 	DrawBezier(ps, filled, param);
 	ps += 3;
     }
@@ -219,7 +218,6 @@ static void DrawPolygon(sdot_op * o, int param)
 
 static void DrawPolyline(sdot_op* o, int param)
 {
-    int i = 0;
     xdot_op * op=&o->op;
     view->Topview->global_z=view->Topview->global_z+o->layer*LAYER_DIFF;
 
@@ -232,7 +230,7 @@ static void DrawPolyline(sdot_op* o, int param)
     set_options(param);
     glLineWidth(view->LineWidth);
     glBegin(GL_LINE_STRIP);
-    for (i = 0; i < op->u.polyline.cnt; i = i + 1) {
+    for (size_t i = 0; i < op->u.polyline.cnt; ++i) {
 	glVertex3f((GLfloat) op->u.polyline.pts[i].x - dx,
 		   (GLfloat) op->u.polyline.pts[i].y - dy,
 		   (GLfloat) op->u.polyline.pts[i].z + view->Topview->global_z);
