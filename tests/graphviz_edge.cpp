@@ -30,6 +30,10 @@ std::string GraphvizEdge::fillcolor() const {
   return SVG::to_dot_color(fill, fill_opacity);
 }
 
+SVG::SVGElement &GraphvizEdge::stem() const {
+  return m_svg_g_element.find_child(SVG::SVGElementType::Path);
+}
+
 const SVG::SVGElement &GraphvizEdge::svg_g_element() const {
   return m_svg_g_element;
 }

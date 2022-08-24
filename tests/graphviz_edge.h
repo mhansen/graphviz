@@ -44,6 +44,9 @@ public:
   /// Return the outline bounding box of the edge. The outline bounding box is
   /// the bounding box with penwidth taken into account.
   SVG::SVGRect outline_bbox() const;
+  /// Return the edge stem, i.e., the part of the edge that does not include any
+  /// arrowhead or arrowtail
+  SVG::SVGElement &stem() const;
   /// Return the edge's `penwidth` attribute
   double penwidth() const;
   /// Return a non-mutable reference to the SVG `g` element corresponding to the
