@@ -33,15 +33,7 @@
 
 #define NAMEBUF		100
 
-#define GRAPHML_ATTR	"_graphml_"
 #define GRAPHML_ID      "_graphml_id"
-#define GRAPHML_ROLE	"_graphml_role"
-#define GRAPHML_HYPER	"_graphml_hypergraph"
-#define GRAPHML_FROM    "_graphml_fromorder"
-#define GRAPHML_TO      "_graphml_toorder"
-#define GRAPHML_TYPE    "_graphml_type"
-#define GRAPHML_COMP    "_graphml_composite_"
-#define GRAPHML_LOC     "_graphml_locator_"
 
 #define	TAG_NONE	-1
 #define	TAG_GRAPH	0
