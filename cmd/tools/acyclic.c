@@ -26,6 +26,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/unreachable.h>
+#include "openFile.h"
 
 typedef struct {
     Agrec_t h;
@@ -112,24 +113,6 @@ static void usage(int v)
     graphviz_exit(v);
 }
 
-static FILE *openFile(const char *name, const char *mode)
-{
-    FILE *fp;
-    char *modestr;
-
-    fp = fopen(name, mode);
-    if (!fp) {
-	if (*mode == 'r')
-	    modestr = "reading";
-	else
-	    modestr = "writing";
-	fprintf(stderr, "%s: could not open file %s for %s\n",
-		cmd, name, modestr);
-	graphviz_exit(-1);
-    }
-    return fp;
-}
-
 static void init(int argc, char *argv[])
 {
     int c;
@@ -141,7 +124,7 @@ static void init(int argc, char *argv[])
 	case 'o':
 	    if (outFile != NULL)
 		fclose(outFile);
-	    outFile = openFile(optarg, "w");
+	    outFile = openFile(argv[0], optarg, "w");
 	    break;
 	case 'n':
 	    doWrite = 0;
@@ -167,7 +150,7 @@ static void init(int argc, char *argv[])
 	    UNREACHABLE();
 	}
     if (optind < argc) {
-	inFile = openFile(argv[optind], "r");
+	inFile = openFile(argv[0], argv[optind], "r");
     } else
 	inFile = stdin;
     if (!outFile)

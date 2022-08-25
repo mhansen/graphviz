@@ -28,6 +28,7 @@
 #include    <ingraphs/ingraphs.h>
 
 #include <getopt.h>
+#include "openFile.h"
 
 static bool Do_fans = false;
 static int MaxMinlen = 0;
@@ -147,18 +148,6 @@ static void usage(int v)
     graphviz_exit(v);
 }
 
-static FILE *openFile(const char *name)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-	fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
-	graphviz_exit(-1);
-    }
-    return fp;
-}
-
 static char **scanargs(int argc, char **argv)
 {
     int c, ival;
@@ -183,7 +172,7 @@ static char **scanargs(int argc, char **argv)
 	case 'o':
 	    if (outFile != NULL)
 		fclose(outFile);
-	    outFile = openFile(optarg);
+	    outFile = openFile(cmd, optarg, "w");
 	    break;
 	case '?':
 	    if (optopt == '?')

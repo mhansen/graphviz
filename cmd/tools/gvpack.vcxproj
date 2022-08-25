@@ -100,6 +100,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="graph_generator.h" />
+    <ClInclude Include="openFile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gvpack.cpp" />

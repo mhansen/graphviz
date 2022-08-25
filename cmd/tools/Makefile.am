@@ -11,7 +11,7 @@ AM_CPPFLAGS = \
 	$(EXPAT_INCLUDES)
 
 noinst_HEADERS = colortbl.h convert.h mmio.h matrix_market.h \
-	graph_generator.h gml2gv.h gmlparse.h
+	graph_generator.h gml2gv.h gmlparse.h openFile.h
 if ENABLE_STATIC
 bin_PROGRAMS = gc gvcolor gxl2gv acyclic nop ccomps sccmap tred \
 	unflatten gvpack gvpack_static dijkstra bcomps mm2gv gvgen gml2gv gv2gml graphml2gv

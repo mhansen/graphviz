@@ -35,6 +35,7 @@
 #include <ingraphs/ingraphs.h>
 
 #include <getopt.h>
+#include "openFile.h"
 
 #define INF UINT_MAX
 
@@ -247,18 +248,6 @@ static void process(Agraph_t * G)
 
 }
 
-static FILE *openFile(const char *name)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-	fprintf(stderr, "gvpack: could not open file %s for writing\n", name);
-	graphviz_exit(1);
-    }
-    return (fp);
-}
-
 static char *useString = "Usage: %s [-sdv?] <files>\n\
   -s           - only produce statistics\n\
   -S           - silent\n\
@@ -291,7 +280,7 @@ static void scanArgs(int argc, char **argv)
 	case 'o':
 	    if (outfp != NULL)
 		fclose(outfp);
-	    outfp = openFile(optarg);
+	    outfp = openFile(CmdName, optarg, "w");
 	    break;
 	case 'v':
 	    Verbose = 1;

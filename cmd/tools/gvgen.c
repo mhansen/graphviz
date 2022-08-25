@@ -26,7 +26,7 @@
 #include <ctype.h>
 #include <getopt.h>
 #include "graph_generator.h"
-
+#include "openFile.h"
 #include <cgraph/exit.h>
 
 typedef enum { unknown, grid, circle, complete, completeb, 
@@ -50,18 +50,6 @@ typedef struct {
 } opts_t;
 
 static char *cmd;
-
-static FILE *openFile(const char *name)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-	fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
-	graphviz_exit(1);
-    }
-    return fp;
-}
 
 static char *Usage = "Usage: %s [-dv?] [options]\n\
  -c<n>         : cycle \n\
@@ -356,7 +344,7 @@ static GraphType init(int argc, char *argv[], opts_t* opts)
 	    opts->name = optarg;
 	    break;
 	case 'o':
-	    opts->outfile = openFile(optarg);
+	    opts->outfile = openFile(cmd, optarg, "w");
 	    break;
 	case 'p':
 	    graphType = path;

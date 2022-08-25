@@ -94,6 +94,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="openFile.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="graph_generator.c" />
     <ClCompile Include="gvgen.c" />
   </ItemGroup>

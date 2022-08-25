@@ -32,6 +32,7 @@
 #include <common/utils.h>
 #include <ctype.h>
 #include <ingraphs/ingraphs.h>
+#include "openFile.h"
 
 static FILE *outFile;
 static char *CmdName;
@@ -640,21 +641,6 @@ static void gv_to_gml(Agraph_t *G) {
     fprintf (outFile, "]\n");
 }
 
-static FILE *openFile(const char *name)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-        fprintf(stderr, "%s: could not open file %s for writing\n",
-                CmdName, name);
-        perror(name);
-        graphviz_exit(1);
-    }
-    return fp;
-}
-
-
 static char *useString = "Usage: %s [-?] <files>\n\
   -o<file>  : output to <file> (stdout)\n\
   -? - print usage\n\
@@ -689,7 +675,7 @@ static void initargs(int argc, char **argv)
 	case 'o':
 	    if (outFile != NULL)
 		fclose(outFile);
-	    outFile = openFile(optarg);
+	    outFile = openFile(CmdName, optarg, "w");
 	    break;
 	case ':':
 	    fprintf(stderr, "%s: option -%c missing parameter\n", CmdName, optopt);
