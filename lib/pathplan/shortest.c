@@ -68,8 +68,8 @@ static int opn;
 static int triangulate(pointnlink_t **, int);
 static bool isdiagonal(int, int, pointnlink_t **, int);
 static int loadtriangle(pointnlink_t *, pointnlink_t *, pointnlink_t *);
-static void connecttris(int, int);
-static bool marktripath(int, int);
+static void connecttris(long, long);
+static bool marktripath(long, long);
 
 static void add2dq(int, pointnlink_t *);
 static void splitdq(int, int);
@@ -78,7 +78,7 @@ static int finddqsplit(pointnlink_t *);
 static int ccw(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
-static int pointintri(int, Ppoint_t *);
+static int pointintri(long, Ppoint_t *);
 
 static int growpnls(int);
 static int growtris(int);
@@ -95,7 +95,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     int pi, minpi;
     double minx;
     Ppoint_t p1, p2, p3;
-    int trii, trij, ftrii, ltrii;
+    long trii, trij, ftrii, ltrii;
     int ei;
     pointnlink_t epnls[2], *lpnlp, *rpnlp, *pnlp;
     triangle_t *trip;
@@ -289,29 +289,28 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 }
 
 /* triangulate polygon */
-static int triangulate(pointnlink_t ** pnlps, int pnln)
-{
+static int triangulate(pointnlink_t **points, int point_count) {
     int pnli, pnlip1, pnlip2;
 
-	if (pnln > 3) 
+	if (point_count > 3)
 	{
-		for (pnli = 0; pnli < pnln; pnli++) 
+		for (pnli = 0; pnli < point_count; pnli++)
 		{
-			pnlip1 = (pnli + 1) % pnln;
-			pnlip2 = (pnli + 2) % pnln;
-			if (isdiagonal(pnli, pnlip2, pnlps, pnln)) 
+			pnlip1 = (pnli + 1) % point_count;
+			pnlip2 = (pnli + 2) % point_count;
+			if (isdiagonal(pnli, pnlip2, points, point_count))
 			{
-				if (loadtriangle(pnlps[pnli], pnlps[pnlip1], pnlps[pnlip2]) != 0)
+				if (loadtriangle(points[pnli], points[pnlip1], points[pnlip2]) != 0)
 					return -1;
-				for (pnli = pnlip1; pnli < pnln - 1; pnli++)
-					pnlps[pnli] = pnlps[pnli + 1];
-				return triangulate(pnlps, pnln - 1);
+				for (pnli = pnlip1; pnli < point_count - 1; pnli++)
+					points[pnli] = points[pnli + 1];
+				return triangulate(points, point_count - 1);
 			}
 		}
 		prerror("triangulation failed");
     } 
 	else {
-		if (loadtriangle(pnlps[0], pnlps[1], pnlps[2]) != 0)
+		if (loadtriangle(points[0], points[1], points[2]) != 0)
 			return -1;
 	}
 
@@ -319,30 +318,29 @@ static int triangulate(pointnlink_t ** pnlps, int pnln)
 }
 
 /* check if (i, i + 2) is a diagonal */
-static bool isdiagonal(int pnli, int pnlip2, pointnlink_t ** pnlps,
-		      int pnln)
-{
+static bool isdiagonal(int pnli, int pnlip2, pointnlink_t **points,
+                       int point_count) {
     int pnlip1, pnlim1, pnlj, pnljp1, res;
 
     /* neighborhood test */
-    pnlip1 = (pnli + 1) % pnln;
-    pnlim1 = (pnli + pnln - 1) % pnln;
+    pnlip1 = (pnli + 1) % point_count;
+    pnlim1 = (pnli + point_count - 1) % point_count;
     /* If P[pnli] is a convex vertex [ pnli+1 left of (pnli-1,pnli) ]. */
-    if (ccw(pnlps[pnlim1]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) == ISCCW)
-	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlim1]->pp) == ISCCW
-	   && ccw(pnlps[pnlip2]->pp, pnlps[pnli]->pp, pnlps[pnlip1]->pp) == ISCCW;
+    if (ccw(points[pnlim1]->pp, points[pnli]->pp, points[pnlip1]->pp) == ISCCW)
+	res = ccw(points[pnli]->pp, points[pnlip2]->pp, points[pnlim1]->pp) == ISCCW
+	   && ccw(points[pnlip2]->pp, points[pnli]->pp, points[pnlip1]->pp) == ISCCW;
     /* Assume (pnli - 1, pnli, pnli + 1) not collinear. */
     else
-	res = ccw(pnlps[pnli]->pp, pnlps[pnlip2]->pp, pnlps[pnlip1]->pp) == ISCW;
+	res = ccw(points[pnli]->pp, points[pnlip2]->pp, points[pnlip1]->pp) == ISCW;
     if (!res)
 	return false;
 
     /* check against all other edges */
-    for (pnlj = 0; pnlj < pnln; pnlj++) {
-	pnljp1 = (pnlj + 1) % pnln;
+    for (pnlj = 0; pnlj < point_count; pnlj++) {
+	pnljp1 = (pnlj + 1) % point_count;
 	if (!(pnlj == pnli || pnljp1 == pnli || pnlj == pnlip2 || pnljp1 == pnlip2))
-	    if (intersects(pnlps[pnli]->pp, pnlps[pnlip2]->pp,
-			   pnlps[pnlj]->pp, pnlps[pnljp1]->pp))
+	    if (intersects(points[pnli]->pp, points[pnlip2]->pp,
+			   points[pnlj]->pp, points[pnljp1]->pp))
 		return false;
     }
     return true;
@@ -371,8 +369,7 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
 }
 
 /* connect a pair of triangles at their common edge (if any) */
-static void connecttris(int tri1, int tri2)
-{
+static void connecttris(long tri1, long tri2) {
     triangle_t *tri1p, *tri2p;
     int ei, ej;
 
@@ -390,8 +387,7 @@ static void connecttris(int tri1, int tri2)
 }
 
 /* find and mark path from trii, to trij */
-static bool marktripath(int trii, int trij)
-{
+static bool marktripath(long trii, long trij) {
     int ei;
 
     if (tris[trii].mark)
@@ -488,8 +484,7 @@ static bool between(Ppoint_t * pap, Ppoint_t * pbp, Ppoint_t * pcp)
 	p2.x * p2.x + p2.y * p2.y <= p1.x * p1.x + p1.y * p1.y;
 }
 
-static int pointintri(int trii, Ppoint_t * pp)
-{
+static int pointintri(long trii, Ppoint_t *pp) {
     int ei, sum;
 
     for (ei = 0, sum = 0; ei < 3; ei++)
