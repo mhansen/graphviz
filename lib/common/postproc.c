@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/agxbuf.h>
 #include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <label/xlabels.h>
@@ -679,13 +680,13 @@ void gv_postprocess(Agraph_t * g, int allowTranslation)
 	place_root_label(g, dimen);
 
     if (Show_boxes) {
-	char buf[BUFSIZ];
+	agxbuf buf = {0};
 	if (Flip)
-	    snprintf(buf, sizeof(buf), M2, Offset.x, Offset.y, Offset.x, Offset.y);
+	    agxbprint(&buf, M2, Offset.x, Offset.y, Offset.x, Offset.y);
 	else
-	    snprintf(buf, sizeof(buf), M1, Offset.y, Offset.x, Offset.y, Offset.x,
+	    agxbprint(&buf, M1, Offset.y, Offset.x, Offset.y, Offset.x,
 		    -Offset.x, -Offset.y);
-	Show_boxes[0] = strdup(buf);
+	Show_boxes[0] = agxbdisown(&buf);
     }
 }
 

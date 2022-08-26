@@ -9,7 +9,8 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <math.h>
 #include <pathplan/pathplan.h>
@@ -33,15 +34,14 @@ static void printboxes(int boxn, boxf* boxes)
 {
     pointf ll, ur;
     int bi;
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + boxn;
 
     Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
     for (bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
-	snprintf(buf, sizeof(buf), "%d %d %d %d pathbox", (int)ll.x, (int)ll.y,
-	         (int)ur.x, (int)ur.y);
-	Show_boxes[bi+1+Show_cnt] = strdup (buf);
+	agxbuf buf = {0};
+	agxbprint(&buf, "%.0f %.0f %.0f %.0f pathbox", ll.x, ll.y, ur.x, ur.y);
+	Show_boxes[bi + 1 + Show_cnt] = agxbdisown(&buf);
     }
     Show_cnt = newcnt;
     Show_boxes[Show_cnt+1] = NULL;
@@ -85,49 +85,48 @@ static void psprintpointf(pointf p)
 
 static void psprintspline(Ppolyline_t spl)
 {
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + spl.pn + 4;
     int li, i;
 
     Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
     li = Show_cnt+1;
-    Show_boxes[li++] = strdup ("%%!");
-    Show_boxes[li++] = strdup ("%% spline");
-    Show_boxes[li++] = strdup ("gsave 1 0 0 setrgbcolor newpath");
+    Show_boxes[li++] = gv_strdup("%%!");
+    Show_boxes[li++] = gv_strdup("%% spline");
+    Show_boxes[li++] = gv_strdup("gsave 1 0 0 setrgbcolor newpath");
     for (i = 0; i < spl.pn; i++) {
-	snprintf(buf, sizeof(buf), "%f %f %s", spl.ps[i].x, spl.ps[i].y,
+	agxbuf buf = {0};
+	agxbprint(&buf, "%f %f %s", spl.ps[i].x, spl.ps[i].y,
 	  i == 0 ?  "moveto" : (i % 3 == 0 ? "curveto" : ""));
-	Show_boxes[li++] = strdup (buf);
+	Show_boxes[li++] = agxbdisown(&buf);
     }
-    Show_boxes[li++] = strdup ("stroke grestore");
+    Show_boxes[li++] = gv_strdup("stroke grestore");
     Show_cnt = newcnt;
     Show_boxes[Show_cnt+1] = NULL;
 }
 
 static void psprintline(Ppolyline_t pl)
 {
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + pl.pn + 4;
     int i, li;
 
     Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
     li = Show_cnt+1;
-    Show_boxes[li++] = strdup ("%%!");
-    Show_boxes[li++] = strdup ("%% line");
-    Show_boxes[li++] = strdup ("gsave 0 0 1 setrgbcolor newpath");
+    Show_boxes[li++] = gv_strdup("%%!");
+    Show_boxes[li++] = gv_strdup("%% line");
+    Show_boxes[li++] = gv_strdup("gsave 0 0 1 setrgbcolor newpath");
     for (i = 0; i < pl.pn; i++) {
-	snprintf(buf, sizeof(buf), "%f %f %s", pl.ps[i].x, pl.ps[i].y,
+	agxbuf buf = {0};
+	agxbprint(&buf, "%f %f %s", pl.ps[i].x, pl.ps[i].y,
 		i == 0 ? "moveto" : "lineto");
-	Show_boxes[li++] = strdup (buf);
+	Show_boxes[li++] = agxbdisown(&buf);
     }
-    Show_boxes[li++] = strdup ("stroke grestore");
+    Show_boxes[li++] = gv_strdup("stroke grestore");
     Show_cnt = newcnt;
     Show_boxes[Show_cnt+1] = NULL;
 }
 
 static void psprintpoly(Ppoly_t p)
 {
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + p.pn + 3;
     point tl, hd;
     int bi, li;
@@ -135,8 +134,8 @@ static void psprintpoly(Ppoly_t p)
 
     Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
     li = Show_cnt+1;
-    Show_boxes[li++] = strdup ("%% poly list");
-    Show_boxes[li++] = strdup ("gsave 0 1 0 setrgbcolor");
+    Show_boxes[li++] = gv_strdup("%% poly list");
+    Show_boxes[li++] = gv_strdup("gsave 0 1 0 setrgbcolor");
     for (bi = 0; bi < p.pn; bi++) {
 	tl.x = (int)p.ps[bi].x;
 	tl.y = (int)p.ps[bi].y;
@@ -144,11 +143,11 @@ static void psprintpoly(Ppoly_t p)
 	hd.y = (int)p.ps[(bi+1) % p.pn].y;
 	if (tl.x == hd.x && tl.y == hd.y) pfx = "%%";
 	else pfx ="";
-	snprintf(buf, sizeof(buf), "%s%d %d %d %d makevec", pfx, tl.x, tl.y, hd.x,
-	         hd.y);
-	Show_boxes[li++] = strdup (buf);
+	agxbuf buf = {0};
+	agxbprint(&buf, "%s%d %d %d %d makevec", pfx, tl.x, tl.y, hd.x, hd.y);
+	Show_boxes[li++] = agxbdisown(&buf);
     }
-    Show_boxes[li++] = strdup ("grestore");
+    Show_boxes[li++] = gv_strdup("grestore");
 
     Show_cnt = newcnt;
     Show_boxes[Show_cnt+1] = NULL;
@@ -156,28 +155,28 @@ static void psprintpoly(Ppoly_t p)
 
 static void psprintboxes(int boxn, boxf* boxes)
 {
-    char buf[BUFSIZ];
     int newcnt = Show_cnt + 5*boxn + 3;
     pointf ll, ur;
     int bi, li;
 
     Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
     li = Show_cnt+1;
-    Show_boxes[li++] = strdup ("%% box list");
-    Show_boxes[li++] = strdup ("gsave 0 1 0 setrgbcolor");
+    Show_boxes[li++] = gv_strdup("%% box list");
+    Show_boxes[li++] = gv_strdup("gsave 0 1 0 setrgbcolor");
     for (bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
-	snprintf(buf, sizeof(buf), "newpath\n%d %d moveto", (int)ll.x, (int)ll.y);
-	Show_boxes[li++] = strdup (buf);
-	snprintf(buf, sizeof(buf), "%d %d lineto", (int)ll.x, (int)ur.y);
-	Show_boxes[li++] = strdup (buf);
-	snprintf(buf, sizeof(buf), "%d %d lineto", (int)ur.x, (int)ur.y);
-	Show_boxes[li++] = strdup (buf);
-	snprintf(buf, sizeof(buf), "%d %d lineto", (int)ur.x, (int)ll.y);
-	Show_boxes[li++] = strdup (buf);
-	Show_boxes[li++] = strdup ("closepath stroke");
+	agxbuf buf = {0};
+	agxbprint(&buf, "newpath\n%.0f %.0f moveto", ll.x, ll.y);
+	Show_boxes[li++] = agxbdisown(&buf);
+	agxbprint(&buf, "%.0f %.0f lineto", ll.x, ur.y);
+	Show_boxes[li++] = agxbdisown(&buf);
+	agxbprint(&buf, "%.0f %.0f lineto", ur.x, ur.y);
+	Show_boxes[li++] = agxbdisown(&buf);
+	agxbprint(&buf, "%.0f %.0f lineto", ur.x, ll.y);
+	Show_boxes[li++] = agxbdisown(&buf);
+	Show_boxes[li++] = gv_strdup("closepath stroke");
     }
-    Show_boxes[li++] = strdup ("grestore");
+    Show_boxes[li++] = gv_strdup("grestore");
 
     Show_cnt = newcnt;
     Show_boxes[Show_cnt+1] = NULL;
@@ -189,9 +188,9 @@ static void psprintinit (int begin)
 
     Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
     if (begin)
-	Show_boxes[1+Show_cnt] = strdup ("dbgstart");
+	Show_boxes[1+Show_cnt] = gv_strdup("dbgstart");
     else
-	Show_boxes[1+Show_cnt] = strdup ("grestore");
+	Show_boxes[1+Show_cnt] = gv_strdup("grestore");
     Show_cnt = newcnt;
     Show_boxes[Show_cnt+1] = NULL;
 }
