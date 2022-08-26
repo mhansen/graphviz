@@ -3,7 +3,6 @@
 #include <catch2/catch.hpp>
 #include <fmt/format.h>
 
-#include "graphviz_graph.h"
 #include "svg_analyzer.h"
 #include <cgraph++/AGraph.h>
 #include <gvc++/GVContext.h>
