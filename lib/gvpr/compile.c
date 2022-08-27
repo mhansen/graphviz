@@ -2485,7 +2485,7 @@ comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
 	comp_block* bp;
 	parse_block* ibp = inp->blocks;
 
-	p->blocks = bp = newof(0, comp_block, inp->n_blocks, 0);
+	p->blocks = bp = gv_calloc(inp->n_blocks, sizeof(comp_block));
 
 	for (i = 0; i < inp->n_blocks; bp++, i++) {
 	    useflags |= mkBlock(bp, p->prog, inp->source, ibp, i);
