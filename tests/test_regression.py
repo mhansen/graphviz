@@ -1928,7 +1928,6 @@ def test_2257():
   with pytest.raises(subprocess.CalledProcessError):
     subprocess.check_call(["dot", "-Tsvg", input, "-o", os.devnull], env=env)
 
-@pytest.mark.xfail(strict=True)
 def test_2258():
   """
   'id' attribute should be propagated to all graph children in output

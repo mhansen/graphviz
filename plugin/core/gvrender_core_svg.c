@@ -553,8 +553,12 @@ static int svg_gradstyle(GVJ_t * job, pointf * A, int n)
     G[0].x = G[0].y = G[1].x = G[1].y = 0.;
     get_gradient_points(A, G, n, angle, 0);	//get points on gradient line
 
-    gvprintf(job,
-	     "<defs>\n<linearGradient id=\"l_%d\" gradientUnits=\"userSpaceOnUse\" ", id);
+    gvputs(job, "<defs>\n<linearGradient id=\"");
+    if (obj->id != NULL) {
+        gvputs_xml(job, obj->id);
+        gvputc(job, '_');
+    }
+    gvprintf(job, "l_%d\" gradientUnits=\"userSpaceOnUse\" ", id);
     gvputs(job, "x1=\"");
     gvprintdouble(job, G[0].x);
     gvputs(job, "\" y1=\"");
@@ -589,8 +593,12 @@ static int svg_rgradstyle(GVJ_t * job)
 	ifx = round(50 * (1 + cos(angle)));
 	ify = round(50 * (1 - sin(angle)));
     }
-    gvprintf(job,
-	     "<defs>\n<radialGradient id=\"r_%d\" cx=\"50%%\" cy=\"50%%\" r=\"75%%\" "
+    gvputs(job, "<defs>\n<radialGradient id=\"");
+    if (obj->id != NULL) {
+	gvputs_xml(job, obj->id);
+	gvputc(job, '_');
+    }
+    gvprintf(job, "r_%d\" cx=\"50%%\" cy=\"50%%\" r=\"75%%\" "
 	     "fx=\"%.0f%%\" fy=\"%.0f%%\">\n",
 	     id, ifx, ify);
 
