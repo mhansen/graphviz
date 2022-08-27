@@ -34,7 +34,7 @@ static void *memresize(void *heap, void *ptr, size_t oldsize,
 
     (void)heap;
     rv = realloc(ptr, request);
-    if (request > oldsize)
+    if (rv != NULL && request > oldsize)
 	memset((char *) rv + oldsize, 0, request - oldsize);
     return rv;
 }
