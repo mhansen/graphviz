@@ -15,6 +15,9 @@ public:
   GraphvizNode() = delete;
   explicit GraphvizNode(SVG::SVGElement &svg_element);
 
+  /// Add an SVG `rect` element representing the bounding box of the node to the
+  /// corresponding `g` element
+  void add_bbox();
   /// Return the node's bounding box
   SVG::SVGRect bbox() const;
   /// Return the center of the node's bounding box

@@ -109,6 +109,11 @@ std::string SVG::to_dot_color(const std::string &color, double opacity) {
   return rgb_to_hex(color, opacity);
 }
 
+void SVG::SVGElement::add_bbox() {
+  const auto bbox = SVGElement::bbox();
+  add_rect(bbox, "green");
+}
+
 void SVG::SVGElement::add_rect(SVGRect rect, const std::string color) {
   SVG::SVGElement element{SVG::SVGElementType::Rect};
   element.attributes.x = rect.x;

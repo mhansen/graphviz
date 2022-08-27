@@ -58,6 +58,9 @@ public:
   void set_width(double width) override;
   void set_x(double x) override;
   void set_y(double y) override;
+  /// Add SVG `rect` elements representing the bounding boxes of nodes and edges
+  /// to the corresponding `g` elements
+  void add_bboxes();
   /// Create an SVGAnalyzer from DOT source using the `engine` layout engine.
   ///
   /// \param dot_source The DOT source

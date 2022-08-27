@@ -6,6 +6,8 @@
 GraphvizNode::GraphvizNode(SVG::SVGElement &svg_element)
     : m_node_id(svg_element.graphviz_id), m_svg_g_element(svg_element) {}
 
+void GraphvizNode::add_bbox() { m_svg_g_element.add_bbox(); }
+
 SVG::SVGPoint GraphvizNode::center() const { return bbox().center(); }
 
 std::string GraphvizNode::color() const {

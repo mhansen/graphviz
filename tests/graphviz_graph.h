@@ -17,6 +17,9 @@ public:
   GraphvizGraph() = delete;
   explicit GraphvizGraph(SVG::SVGElement &g_element);
 
+  /// Add SVG `rect` elements representing the bounding boxes of nodes and edges
+  /// to the corresponding `g` elements
+  void add_bboxes();
   /// Add a Graphviz edge to the graph
   void add_edge(SVG::SVGElement &svg_g_element);
   /// Add a Graphviz node to the graph

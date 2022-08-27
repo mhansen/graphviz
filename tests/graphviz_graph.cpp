@@ -46,3 +46,12 @@ const GraphvizEdge &GraphvizGraph::edge(std::string_view edgeop) const {
   throw std::runtime_error{
       fmt::format("Unknown edge '{}' in graph '{}'", edgeop, m_graph_id)};
 }
+
+void GraphvizGraph::add_bboxes() {
+  for (auto &node : m_nodes) {
+    node.add_bbox();
+  }
+  for (auto &edge : m_edges) {
+    edge.add_bbox();
+  }
+}

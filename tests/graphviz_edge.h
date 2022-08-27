@@ -15,6 +15,9 @@ public:
   GraphvizEdge() = delete;
   explicit GraphvizEdge(SVG::SVGElement &svg_g_element);
 
+  /// Add an SVG `rect` element to the edge's corresponding `g` element. The
+  /// `rect` is represes the bounding box of the edge.
+  void add_bbox();
   /// Return the bounding box of the edge
   SVG::SVGRect bbox() const;
   /// Return the center of the edge's bounding box

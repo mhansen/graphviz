@@ -6,6 +6,8 @@
 GraphvizEdge::GraphvizEdge(SVG::SVGElement &svg_g_element)
     : m_edgeop(svg_g_element.graphviz_id), m_svg_g_element(svg_g_element) {}
 
+void GraphvizEdge::add_bbox() { m_svg_g_element.add_bbox(); }
+
 std::string_view GraphvizEdge::edgeop() const { return m_edgeop; }
 
 std::string GraphvizEdge::fillcolor() const {
