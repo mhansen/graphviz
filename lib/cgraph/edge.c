@@ -13,8 +13,6 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-static Agtag_t Tag;		/* to silence warnings about initialization */
-
 /* return first outedge of <n> */
 Agedge_t *agfstout(Agraph_t * g, Agnode_t * n)
 {
@@ -130,9 +128,8 @@ static Agedge_t *agfindedge_by_key(Agraph_t * g, Agnode_t * t, Agnode_t * h,
 static Agedge_t *agfindedge_by_id(Agraph_t * g, Agnode_t * t, Agnode_t * h,
                   IDTYPE id)
 {
-    Agtag_t tag;
+    Agtag_t tag = {0};
 
-    tag = Tag;
     tag.objtype = AGEDGE;
     tag.id = id;
     return agfindedge_by_key(g, t, h, tag);
@@ -227,11 +224,10 @@ static Agedge_t *newedge(Agraph_t * g, Agnode_t * t, Agnode_t * h,
 /* edge creation predicate */
 static int ok_to_make_edge(Agraph_t * g, Agnode_t * t, Agnode_t * h)
 {
-    Agtag_t key;
+    Agtag_t key = {0};
 
     /* protect against self, multi-edges in strict graphs */
     if (agisstrict(g)) {
-	key = Tag;
 	key.objtype = 0;	/* wild card */
 	if (agfindedge_by_key(g, t, h, key))
 	    return FALSE;
@@ -273,8 +269,7 @@ Agedge_t *agedge(Agraph_t * g, Agnode_t * t, Agnode_t * h, char *name,
     have_id = agmapnametoid(g, AGEDGE, name, &my_id, FALSE);
     if (have_id || (name == NULL && (!cflag || agisstrict(g)))) {
 	/* probe for pre-existing edge */
-	Agtag_t key;
-	key = Tag;
+	Agtag_t key = {0};
 	if (have_id) {
 	    key.id = my_id;
 	    key.objtype = AGEDGE;
