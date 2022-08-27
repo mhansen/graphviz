@@ -61,6 +61,9 @@ public:
   /// Add SVG `rect` elements representing the bounding boxes of nodes and edges
   /// to the corresponding `g` elements
   void add_bboxes();
+  /// Add SVG rects showing the overlap between the outline bounding boxes of
+  /// each node and edge (with penwidth taken into account)
+  void add_node_edge_outline_bbox_overlaps(double tolerance = 0);
   /// Add SVG `rect` elements representing the outline bounding boxes of nodes
   /// and edges to the corresponding `g` elements. The outline bounding box is
   /// the bounding box with penwidth taken into account.

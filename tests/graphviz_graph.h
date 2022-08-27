@@ -24,6 +24,10 @@ public:
   void add_edge(SVG::SVGElement &svg_g_element);
   /// Add a Graphviz node to the graph
   void add_node(SVG::SVGElement &svg_g_element);
+  /// Add SVG `rect` elements representing the overlap between the outline
+  /// bounding box of nodes and edges. The outline bounding box is the bounding
+  /// box with penwidth taken into account.
+  void add_node_edge_outline_bbox_overlaps(double tolerance = 0);
   /// Add SVG `rect` elements representing the outline bounding boxes of nodes
   /// and edges to the corresponding `g` elements. The outline bounding box is
   /// the bounding box with penwidth taken into account.

@@ -289,6 +289,12 @@ void SVGAnalyzer::add_bboxes() {
   }
 }
 
+void SVGAnalyzer::add_node_edge_outline_bbox_overlaps(double tolerance) {
+  for (auto &graph : m_graphs) {
+    graph.add_node_edge_outline_bbox_overlaps(tolerance);
+  }
+}
+
 void SVGAnalyzer::add_outline_bboxes() {
   for (auto &graph : m_graphs) {
     graph.add_outline_bboxes();

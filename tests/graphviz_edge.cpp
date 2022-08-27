@@ -1,6 +1,7 @@
 #include <string>
 
 #include "graphviz_edge.h"
+#include "graphviz_node.h"
 #include "svg_element.h"
 
 GraphvizEdge::GraphvizEdge(SVG::SVGElement &svg_g_element)
@@ -9,6 +10,11 @@ GraphvizEdge::GraphvizEdge(SVG::SVGElement &svg_g_element)
 void GraphvizEdge::add_bbox() { m_svg_g_element.add_bbox(); }
 
 void GraphvizEdge::add_outline_bbox() { m_svg_g_element.add_outline_bbox(); }
+
+void GraphvizEdge::add_outline_overlap_bbox(const GraphvizNode &node,
+                                            const double tolerance) {
+  m_svg_g_element.add_outline_overlap_bbox(node.svg_g_element(), tolerance);
+}
 
 std::string_view GraphvizEdge::edgeop() const { return m_edgeop; }
 

@@ -56,6 +56,15 @@ void GraphvizGraph::add_bboxes() {
   }
 }
 
+void GraphvizGraph::add_node_edge_outline_bbox_overlaps(
+    const double tolerance) {
+  for (auto &node : m_nodes) {
+    for (auto &edge : m_edges) {
+      edge.add_outline_overlap_bbox(node, tolerance);
+    }
+  }
+}
+
 void GraphvizGraph::add_outline_bboxes() {
   for (auto &node : m_nodes) {
     node.add_outline_bbox();

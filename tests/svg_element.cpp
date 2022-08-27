@@ -131,6 +131,20 @@ void SVG::SVGElement::add_outline_bbox() {
   add_rect(bbox, "blue");
 }
 
+void SVG::SVGElement::add_outline_overlap_bbox(SVG::SVGElement other,
+                                               const double tolerance) {
+  const auto bbox = outline_bbox();
+  const auto other_bbox = other.outline_bbox();
+  const auto overlap_bbox = bbox.intersection(other_bbox);
+  if (overlap_bbox.width <= 0 || overlap_bbox.height <= 0) {
+    return;
+  }
+  const auto within_tolerance =
+      overlap_bbox.width <= tolerance && overlap_bbox.height <= tolerance;
+  const auto color = within_tolerance ? "yellow" : "red";
+  add_rect(overlap_bbox, color);
+}
+
 SVG::SVGRect SVG::SVGElement::bbox(bool throw_if_bbox_not_defined) {
   if (!m_bbox.has_value()) {
     // negative width and height bbox that will be immediately replaced by the

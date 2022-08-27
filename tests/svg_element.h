@@ -105,6 +105,10 @@ public:
   /// edge to the element. The outline bounding box is the bounding box with
   /// stroke width taken into account.
   void add_outline_bbox();
+  /// Add an SVG `rect` element representing the overlap between the outline
+  /// bounding box of the element and another element. The outline bounding box
+  /// is the bounding box with penwidth taken into account.
+  void add_outline_overlap_bbox(SVG::SVGElement other, double tolerance = 0);
   /// Add an SVG `rect` element as a child to the element
   void add_rect(SVG::SVGRect rect, std::string color);
   /// \brief Return the value of an attribute retrieved from the element and its
