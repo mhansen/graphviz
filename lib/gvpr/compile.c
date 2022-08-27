@@ -20,6 +20,7 @@
 #include <gvpr/compile.h>
 #include <assert.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/itos.h>
@@ -2325,7 +2326,6 @@ static void checkGuard(Exnode_t * gp, char *src, int line)
 static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
                           int cnt, const char *lbl)
 {
-    case_stmt *cs;
     int i;
     static const char LONGEST_CALLER_PREFIX[] = "_begin_g_";
     static const char LONGEST_INFIX[] = "__a";
@@ -2336,7 +2336,7 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
     assert(strlen(lbl) + sizeof(LONGEST_INFIX) - 1 +
            CHARS_FOR_NUL_TERM_INT - 1 + 1 <= sizeof(tmp));
 
-    cs = newof(0, case_stmt, cnt, 0);
+    case_stmt *cs = gv_calloc(cnt, sizeof(case_stmt));
 
     for (i = 0; i < cnt; i++) {
 	if (sp->guard) {
