@@ -375,7 +375,6 @@ static void freeOpts(options opts) {
  */
 static options scanArgs(int argc, char **argv) {
     int i, nfiles;
-    char** input_filenames;
     char* arg;
     options opts = {0};
 
@@ -390,7 +389,7 @@ static options scanArgs(int argc, char **argv) {
     for (i = 1; i < argc; i++)
 	if (argv[i] && argv[i][0] != '-')
 	    nfiles++;
-    input_filenames = newof(0,char*,nfiles + 1,0);
+    char** input_filenames = gv_calloc(nfiles + 1, sizeof(char*));
 
     /* loop over arguments */
     nfiles = 0;
