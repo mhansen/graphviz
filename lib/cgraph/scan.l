@@ -28,6 +28,7 @@
 #include <cghdr.h>
 #include <agxbuf.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -98,7 +99,7 @@ storeFileName (char* fname, int len)
     static char* buf;
 
     if (len > cnt) {
-	buf = realloc (buf, len+1);
+	buf = gv_realloc(buf, cnt + 1, len + 1);
 	cnt = len;
     }
     strcpy (buf, fname);
