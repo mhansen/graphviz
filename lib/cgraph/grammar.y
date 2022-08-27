@@ -21,6 +21,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <cghdr.h>
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <stddef.h>
 extern void aagerror(const char*);
@@ -437,7 +438,7 @@ concat (char* s1, char* s2)
   size_t len = strlen(s1) + strlen(s2) + 1;
 
   if (len <= BUFSIZ) sym = buf;
-  else sym = malloc(len);
+  else sym = gv_alloc(len);
   strcpy(sym,s1);
   strcat(sym,s2);
   s = agstrdup (G,sym);
