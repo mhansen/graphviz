@@ -73,7 +73,6 @@ int agapply(Agraph_t * g, Agobj_t * obj, agobjfn_t fn, void *arg,
     default:
 	agerr(AGERR, "agapply: unknown object type %d\n", AGTYPE(obj));
 	return FAILURE;
-	break;
     }
     if ((subobj = objsearch(g, obj))) {
 	rec_apply(g, subobj, fn, arg, objsearch, preorder != 0);
