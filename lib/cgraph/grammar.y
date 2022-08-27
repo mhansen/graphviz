@@ -459,7 +459,7 @@ concatPort (char* s1, char* s2)
   size_t len = strlen(s1) + strlen(s2) + 2;  /* one more for ':' */
 
   if (len <= BUFSIZ) sym = buf;
-  else sym = malloc(len);
+  else sym = gv_alloc(len);
   sprintf (sym, "%s:%s", s1, s2);
   s = agstrdup (G,sym);
   agstrfree (G,s1);
