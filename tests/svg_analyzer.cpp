@@ -289,6 +289,12 @@ void SVGAnalyzer::add_bboxes() {
   }
 }
 
+void SVGAnalyzer::add_outline_bboxes() {
+  for (auto &graph : m_graphs) {
+    graph.add_outline_bboxes();
+  }
+}
+
 SVGAnalyzer SVGAnalyzer::make_from_dot(const std::string &dot_source,
                                        const std::string &engine) {
   auto g = CGraph::AGraph{dot_source};

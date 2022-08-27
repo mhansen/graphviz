@@ -55,3 +55,12 @@ void GraphvizGraph::add_bboxes() {
     edge.add_bbox();
   }
 }
+
+void GraphvizGraph::add_outline_bboxes() {
+  for (auto &node : m_nodes) {
+    node.add_outline_bbox();
+  }
+  for (auto &edge : m_edges) {
+    edge.add_outline_bbox();
+  }
+}

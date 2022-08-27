@@ -24,6 +24,10 @@ public:
   void add_edge(SVG::SVGElement &svg_g_element);
   /// Add a Graphviz node to the graph
   void add_node(SVG::SVGElement &svg_g_element);
+  /// Add SVG `rect` elements representing the outline bounding boxes of nodes
+  /// and edges to the corresponding `g` elements. The outline bounding box is
+  /// the bounding box with penwidth taken into account.
+  void add_outline_bboxes();
   const GraphvizEdge &edge(std::string_view edgeop) const;
   /// Return a non-mutable reference to the list of Graphviz edges
   const std::vector<GraphvizEdge> &edges() const;

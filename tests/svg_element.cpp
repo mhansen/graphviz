@@ -126,6 +126,11 @@ void SVG::SVGElement::add_rect(SVGRect rect, const std::string color) {
   children.push_back(element);
 }
 
+void SVG::SVGElement::add_outline_bbox() {
+  const auto bbox = SVGElement::outline_bbox();
+  add_rect(bbox, "blue");
+}
+
 SVG::SVGRect SVG::SVGElement::bbox(bool throw_if_bbox_not_defined) {
   if (!m_bbox.has_value()) {
     // negative width and height bbox that will be immediately replaced by the

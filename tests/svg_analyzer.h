@@ -61,6 +61,10 @@ public:
   /// Add SVG `rect` elements representing the bounding boxes of nodes and edges
   /// to the corresponding `g` elements
   void add_bboxes();
+  /// Add SVG `rect` elements representing the outline bounding boxes of nodes
+  /// and edges to the corresponding `g` elements. The outline bounding box is
+  /// the bounding box with penwidth taken into account.
+  void add_outline_bboxes();
   /// Create an SVGAnalyzer from DOT source using the `engine` layout engine.
   ///
   /// \param dot_source The DOT source

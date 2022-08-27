@@ -8,6 +8,8 @@ GraphvizEdge::GraphvizEdge(SVG::SVGElement &svg_g_element)
 
 void GraphvizEdge::add_bbox() { m_svg_g_element.add_bbox(); }
 
+void GraphvizEdge::add_outline_bbox() { m_svg_g_element.add_outline_bbox(); }
+
 std::string_view GraphvizEdge::edgeop() const { return m_edgeop; }
 
 std::string GraphvizEdge::fillcolor() const {

@@ -18,6 +18,10 @@ public:
   /// Add an SVG `rect` element to the edge's corresponding `g` element. The
   /// `rect` is represes the bounding box of the edge.
   void add_bbox();
+  /// Add an SVG `rect` element to the edge's corresponding `g` element. The
+  /// `rect` represents the outline bounding box of the edge. The outline
+  /// bounding box is the bounding box with penwidth taken into account.
+  void add_outline_bbox();
   /// Return the bounding box of the edge
   SVG::SVGRect bbox() const;
   /// Return the center of the edge's bounding box
