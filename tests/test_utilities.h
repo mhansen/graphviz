@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string_view>
 #include <unordered_set>
 
@@ -34,3 +35,9 @@ extern const std::unordered_set<std::string_view>
 
 /// rank directions
 extern const std::unordered_set<std::string_view> all_rank_directions;
+
+/// misc utilities
+
+void write_to_file(const std::filesystem::path &directory,
+                   const std::filesystem::path &filename,
+                   std::string_view text);
