@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/bitarray.h>
 #include <sparse/SparseMatrix.h>
 #include <sfdpgen/spring_electrical.h>
 #include <sparse/QuadTree.h>
@@ -380,21 +380,21 @@ static void beautify_leaves(int dim, SparseMatrix A, double *x){
 
   assert(!SparseMatrix_has_diagonal(A));
 
-  bool *checked = gcalloc(sizeof(bool), m);
+  bitarray_t checked = bitarray_new_or_exit(m);
   angles = MALLOC(sizeof(double)*nangles_max);
   leaves = MALLOC(sizeof(int)*nleaves_max);
 
 
   for (i = 0; i < m; i++){
     if (ia[i+1] - ia[i] != 1) continue;
-    if (checked[i]) continue;
+    if (bitarray_get(checked, i)) continue;
     p = ja[ia[i]];
-    if (!checked[p]){
-      checked[p] = true;
+    if (!bitarray_get(checked, p)) {
+      bitarray_set(&checked, p, true);
       dist = 0; nleaves = 0; nangles = 0;
       for (j = ia[p]; j < ia[p+1]; j++){
 	if (node_degree(ja[j]) == 1){
-	  checked[ja[j]] = TRUE;
+	  bitarray_set(&checked, ja[j], true);
 	  check_int_array_size(&leaves, nleaves, &nleaves_max);
 	  dist += distance(x, dim, p, ja[j]);
 	  leaves[nleaves] = ja[j];
@@ -437,8 +437,7 @@ ang1 = 0; ang2 = 2*PI; maxang = 2*PI;
     }
   }
 
-
-  free(checked);
+  bitarray_reset(&checked);
   free(angles);
   free(leaves);
 }
