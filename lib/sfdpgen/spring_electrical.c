@@ -100,7 +100,7 @@ void oned_optimizer_delete(oned_optimizer opt){
 
 oned_optimizer oned_optimizer_new(int i){
   oned_optimizer opt;
-  opt = MALLOC(sizeof(struct oned_optimizer_struct));
+  opt = gv_alloc(sizeof(struct oned_optimizer_struct));
   opt->i = i;
   opt->direction = OPT_INIT;
   return opt;
