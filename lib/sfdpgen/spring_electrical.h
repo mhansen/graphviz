@@ -32,7 +32,6 @@ struct spring_electrical_control_struct {
   double K;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
   double C;/* another parameter. f_a(i,j) = C*dist(i,j)^2/K * d_ij, f_r(i,j) = K^(3-p)/dist(i,j)^(-p). By default C = 0.2. */
   int multilevels;/* if <=1, single level */
-  int multilevel_coarsen_mode;/* pass on to Multilevel_control->coarsen_mode */
   int quadtree_size;/* cut off size above which quadtree approximation is used */
   int max_qtree_level;/* max level of quadtree */
   double bh;/* Barnes-Hutt constant, if width(snode)/dist[i,snode] < bh, treat snode as a supernode. default 0.2*/

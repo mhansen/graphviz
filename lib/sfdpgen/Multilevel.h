@@ -48,7 +48,7 @@ struct Multilevel_control_struct {
 
 typedef struct Multilevel_control_struct *Multilevel_control;
 
-Multilevel_control Multilevel_control_new(int mode);
+Multilevel_control Multilevel_control_new(void);
 
 void Multilevel_control_delete(Multilevel_control ctrl);
 
