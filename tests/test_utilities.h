@@ -26,6 +26,8 @@ bool contains_multiple_shapes_with_different_fill(std::string_view shape);
 bool contains_polygon_shape(std::string_view shape);
 bool contains_polyline_shape(std::string_view shape);
 
+bool is_polygon_shape(std::string_view shape);
+
 /// arrow shapes
 extern const std::unordered_set<std::string_view>
     primitive_polygon_arrow_shapes;
@@ -37,6 +39,9 @@ extern const std::unordered_set<std::string_view>
 
 /// rank directions
 extern const std::unordered_set<std::string_view> all_rank_directions;
+
+/// edge directions
+extern const std::unordered_set<std::string_view> all_edge_directions;
 
 /// misc utilities
 

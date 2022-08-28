@@ -1,4 +1,6 @@
 #include <string>
+#include <string_view>
+#include <unordered_set>
 
 #include <catch2/catch.hpp>
 #include <cmath>
@@ -8,6 +10,133 @@
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
 #include <cgraph/unreachable.h>
+
+/// return union of unordered sets of string views
+std::unordered_set<std::string_view>
+union_(const std::unordered_set<std::string_view> &a,
+       const std::unordered_set<std::string_view> &b,
+       const std::unordered_set<std::string_view> &c = {}) {
+  std::unordered_set<std::string_view> ret = a;
+  ret.insert(b.begin(), b.end());
+  ret.insert(c.begin(), c.end());
+
+  return ret;
+}
+
+static const std::unordered_set<std::string_view>
+    shapes_not_meeting_edge_vertically = {
+        "plaintext",       //
+        "plain",           //
+        "none",            //
+        "promoter",        //
+        "cds",             //
+        "terminator",      //
+        "utr",             //
+        "primersite",      //
+        "restrictionsite", //
+        "fivepoverhang",   //
+        "threepoverhang",  //
+        "noverhang",       //
+        "assembly",        //
+        "signature",       //
+        "insulator",       //
+        "ribosite",        //
+        "rnastab",         //
+        "proteasesite",    //
+        "proteinstab",     //
+};
+
+static const std::unordered_set<std::string_view>
+    shapes_not_meeting_edge_horizontally = {
+        "plaintext", // has space around the label as if it was a box shape
+        "none",      // has space around the label as if it was a box shape
+};
+
+static const std::unordered_set<std::string_view> &
+shapes_not_meeting_edge(const std::string_view rankdir) {
+  if (rankdir == "TB" || rankdir == "BT") {
+    return shapes_not_meeting_edge_vertically;
+  } else if (rankdir == "LR" || rankdir == "RL") {
+    return shapes_not_meeting_edge_horizontally;
+  }
+  UNREACHABLE();
+}
+
+static const std::unordered_set<std::string_view> shapes_with_concave_top = {
+    "folder", "tab", "promoter", "rpromoter", "rarrow", "larrow", "lpromoter",
+};
+
+static const std::unordered_set<std::string_view> shapes_with_concave_bottom = {
+    "star", "rpromoter", "rarrow", "larrow", "lpromoter"};
+
+static const std::unordered_set<std::string_view> shapes_with_concave_left = {
+    "component"};
+
+static const std::unordered_set<std::string_view>
+    shapes_with_left_extreme_not_centered = {
+        "egg",           "triangle", "invtriangle", "trapezium", "invtrapezium",
+        "parallelogram", "pentagon", "septagon",    "star"};
+
+static const std::unordered_set<std::string_view>
+    shapes_with_right_extreme_not_centered = {
+        "egg",           "triangle", "invtriangle", "trapezium", "invtrapezium",
+        "parallelogram", "pentagon", "septagon",    "star"};
+
+static const std::unordered_set<std::string_view>
+    shapes_with_invisible_descent = {"plain"};
+
+static const std::unordered_set<std::string_view>
+    shapes_with_invisible_left_extension = {"plain"};
+
+static const std::unordered_set<std::string_view>
+    shapes_with_invisible_right_extension = {"plain"};
+
+static const std::unordered_set<std::string_view>
+    shapes_not_to_check_for_overlap_at_top = shapes_with_concave_top;
+
+static const std::unordered_set<std::string_view>
+    shapes_not_to_check_for_overlap_at_bottom =
+        union_(shapes_with_concave_bottom, shapes_with_invisible_descent);
+
+static const std::unordered_set<std::string_view>
+    shapes_not_to_check_for_overlap_at_left_side =
+        union_(shapes_with_left_extreme_not_centered, shapes_with_concave_left,
+               shapes_with_invisible_left_extension);
+
+static const std::unordered_set<std::string_view>
+    shapes_not_to_check_for_overlap_at_right_side =
+        union_(shapes_with_right_extreme_not_centered,
+               shapes_with_invisible_right_extension);
+
+static const std::unordered_set<std::string_view> &
+shapes_not_to_check_for_max_overlap_at_edge_head(
+    const std::string_view rankdir) {
+  if (rankdir == "TB") {
+    return shapes_not_to_check_for_overlap_at_top;
+  } else if (rankdir == "BT") {
+    return shapes_not_to_check_for_overlap_at_bottom;
+  } else if (rankdir == "LR") {
+    return shapes_not_to_check_for_overlap_at_left_side;
+  } else if (rankdir == "RL") {
+    return shapes_not_to_check_for_overlap_at_right_side;
+  }
+  UNREACHABLE();
+}
+
+const std::unordered_set<std::string_view> &
+shapes_not_to_check_for_max_overlap_at_edge_tail(
+    const std::string_view rankdir) {
+  if (rankdir == "TB") {
+    return shapes_not_to_check_for_overlap_at_bottom;
+  } else if (rankdir == "BT") {
+    return shapes_not_to_check_for_overlap_at_top;
+  } else if (rankdir == "LR") {
+    return shapes_not_to_check_for_overlap_at_right_side;
+  } else if (rankdir == "RL") {
+    return shapes_not_to_check_for_overlap_at_left_side;
+  }
+  UNREACHABLE();
+}
 
 /// return the overlap in the rank direction from an intersection rectangle
 static double overlap_in_rank_direction(SVG::SVGRect intersection,
@@ -21,12 +150,35 @@ static double overlap_in_rank_direction(SVG::SVGRect intersection,
   UNREACHABLE();
 }
 
+static bool skip_max_check_at_head_node(std::string_view rankdir,
+                                        std::string_view node_shape) {
+  return shapes_not_to_check_for_max_overlap_at_edge_head(rankdir).contains(
+      node_shape);
+}
+
+static bool skip_max_check_at_tail_node(std::string_view rankdir,
+                                        std::string_view node_shape) {
+  return shapes_not_to_check_for_max_overlap_at_edge_tail(rankdir).contains(
+      node_shape);
+}
+
+static bool skip_min_check_at_head_node(std::string_view rankdir,
+                                        std::string_view node_shape) {
+  return shapes_not_meeting_edge(rankdir).contains(node_shape);
+}
+
+static bool skip_min_check_at_tail_node(std::string_view rankdir,
+                                        std::string_view node_shape) {
+  return shapes_not_meeting_edge(rankdir).contains(node_shape);
+}
+
 /// check overlap between the edge and the nodes
 static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
                                const graph_options &graph_options,
                                const check_options &check_options) {
 
   const auto rankdir = graph_options.rankdir;
+  const auto node_shape = graph_options.node_shape;
 
   REQUIRE(svg_analyzer.graphs().size() == 1);
   auto &recreated_graph = svg_analyzer.graphs().back();
@@ -60,16 +212,20 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
 
     // check maximum head node and edge overlap
     if (check_options.check_max_edge_node_overlap) {
-      DO_CHECK(head_node_edge_overlap <=
-               check_options.max_node_edge_overlap +
-                   check_options.svg_rounding_error * 2);
+      if (!skip_max_check_at_head_node(rankdir, node_shape)) {
+        DO_CHECK(head_node_edge_overlap <=
+                 check_options.max_node_edge_overlap +
+                     check_options.svg_rounding_error * 2);
+      }
     }
 
     // check minimum head node and edge overlap
     if (check_options.check_min_edge_node_overlap) {
-      DO_CHECK(head_node_edge_overlap >=
-               check_options.min_node_edge_overlap -
-                   check_options.svg_rounding_error * 2);
+      if (!skip_min_check_at_head_node(rankdir, node_shape)) {
+        DO_CHECK(head_node_edge_overlap >=
+                 check_options.min_node_edge_overlap -
+                     check_options.svg_rounding_error * 2);
+      }
     }
   }
 
@@ -85,16 +241,20 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
 
     // check maximum tail node and edge overlap
     if (check_options.check_max_edge_node_overlap) {
-      DO_CHECK(tail_node_edge_overlap <=
-               check_options.max_node_edge_overlap +
-                   check_options.svg_rounding_error * 2);
+      if (!skip_max_check_at_tail_node(rankdir, node_shape)) {
+        DO_CHECK(tail_node_edge_overlap <=
+                 check_options.max_node_edge_overlap +
+                     check_options.svg_rounding_error * 2);
+      }
     }
 
     // check minimum overlap at edge tail
     if (check_options.check_min_edge_node_overlap) {
-      DO_CHECK(tail_node_edge_overlap >=
-               check_options.min_node_edge_overlap -
-                   check_options.svg_rounding_error * 2);
+      if (!skip_min_check_at_tail_node(rankdir, node_shape)) {
+        DO_CHECK(tail_node_edge_overlap >=
+                 check_options.min_node_edge_overlap -
+                     check_options.svg_rounding_error * 2);
+      }
     }
   }
 

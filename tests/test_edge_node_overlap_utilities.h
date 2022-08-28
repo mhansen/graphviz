@@ -1,4 +1,5 @@
 #include <string>
+#include <string_view>
 
 #include "svg_analyzer.h"
 
