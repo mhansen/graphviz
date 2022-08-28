@@ -183,7 +183,7 @@ pushG (void)
 static gmlnode*
 mkNode (void)
 {
-    gmlnode* np = NEW(gmlnode);
+    gmlnode* np = gv_alloc(sizeof(gmlnode));
     np->attrlist = dtopen (&attrDisc, Dtqueue);
     np->id = NULL;
     return np;
