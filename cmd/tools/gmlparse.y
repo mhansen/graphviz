@@ -23,6 +23,7 @@
 #include <gml2gv.h>
 #include <agxbuf.h>
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
 
@@ -164,7 +165,7 @@ popG (void)
 static void
 pushG (void)
 {
-    gmlgraph* g = NEW(gmlgraph);
+    gmlgraph* g = gv_alloc(sizeof(gmlgraph));
 
     g->attrlist = dtopen(&attrDisc, Dtqueue);
     g->nodelist = dtopen(&nodeDisc, Dtqueue);
