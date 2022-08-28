@@ -374,9 +374,8 @@ static void beautify_leaves(int dim, SparseMatrix A, double *x){
   assert(!SparseMatrix_has_diagonal(A));
 
   bitarray_t checked = bitarray_new_or_exit(m);
-  angles = MALLOC(sizeof(double)*nangles_max);
-  leaves = MALLOC(sizeof(int)*nleaves_max);
-
+  angles = gv_calloc(nangles_max, sizeof(double));
+  leaves = gv_calloc(nleaves_max, sizeof(int));
 
   for (i = 0; i < m; i++){
     if (ia[i+1] - ia[i] != 1) continue;
