@@ -297,7 +297,7 @@ glistitem : node { dtinsert (G->nodelist, $1); }
 		    YYABORT;
 		}
 	  }
-	  | ID INTEGER { dtinsert (G->attrlist, mkAttr (strdup("id"), 0, INTEGER, $2, 0)); }
+	  | ID INTEGER { dtinsert (G->attrlist, mkAttr(gv_strdup("id"), 0, INTEGER, $2, 0)); }
           | alistitem { dtinsert (G->attrlist, $1); }
           ;
 
@@ -321,7 +321,7 @@ elist : elist elistitem
 
 elistitem : SOURCE INTEGER { E->source = $2; }
           | TARGET INTEGER { E->target = $2; }
-	  | ID INTEGER { dtinsert (E->attrlist, mkAttr (strdup("id"), 0, INTEGER, $2, 0)); }
+	  | ID INTEGER { dtinsert (E->attrlist, mkAttr(gv_strdup("id"), 0, INTEGER, $2, 0)); }
           | alistitem { dtinsert (E->attrlist, $1); }
           ;
 
