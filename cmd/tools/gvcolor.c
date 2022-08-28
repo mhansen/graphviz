@@ -23,6 +23,7 @@
 #define	NC	3		/* size of HSB color vector */
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <math.h>
@@ -147,7 +148,7 @@ static void color(Agraph_t * g)
     nn = agnnodes(g);
     assert(nn >= 0);
     size_t nnodes = (size_t)nn;
-    nlist = malloc(nnodes * sizeof(Agnode_t *));
+    nlist = gv_calloc(nnodes, sizeof(Agnode_t *));
     size_t i = 0;
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	nlist[i++] = n;
