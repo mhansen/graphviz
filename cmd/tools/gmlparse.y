@@ -27,8 +27,6 @@
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
 
-#define NEW(t)       malloc(sizeof(t))
-
 static gmlgraph* G;
 static gmlnode* N;
 static gmledge* E;
@@ -201,11 +199,11 @@ mkEdge (void)
 
 static gmlattr *mkAttr(char* name, unsigned short sort, unsigned short kind,
                        char* str,  Dt_t* list) {
-    gmlattr* gp = NEW(gmlattr);
+    gmlattr* gp = gv_alloc(sizeof(gmlattr));
 
     assert (name || sort);
     if (!name)
-	name = strdup (sortToStr (sort));
+	name = gv_strdup (sortToStr (sort));
     gp->sort = sort;
     gp->kind = kind;
     gp->name = name;
