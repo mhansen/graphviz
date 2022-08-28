@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
+#include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <sparse/SparseMatrix.h>
 #include <sfdpgen/spring_electrical.h>
@@ -30,7 +31,7 @@
 
 spring_electrical_control spring_electrical_control_new(){
   spring_electrical_control ctrl;
-  ctrl = MALLOC(sizeof(struct spring_electrical_control_struct));
+  ctrl = gv_alloc(sizeof(struct spring_electrical_control_struct));
   ctrl->p = AUTOP;/*a negativve number default to -1. repulsive force = dist^p */
   ctrl->q = 1;/*a positive number default to 1. Only apply to maxent.
 		attractive force = dist^q. Stress energy = (||x_i-x_j||-d_ij)^{q+1} */
