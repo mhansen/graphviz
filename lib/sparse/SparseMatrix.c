@@ -1464,7 +1464,7 @@ SparseMatrix SparseMatrix_coordinate_form_add_entry(SparseMatrix A, int irn,
 
   if (nz + nentries >= A->nzmax){
     nzmax = nz + nentries;
-     nzmax = MAX(10, (int) 0.2*nzmax) + nzmax;
+    nzmax += 10;
     A = SparseMatrix_realloc(A, nzmax);
   }
   A->ia[nz] = irn;
