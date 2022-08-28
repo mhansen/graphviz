@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
@@ -269,8 +270,8 @@ static void init(int argc, char *argv[])
 	fprintf(stderr, "%s: no node specified\n", CmdName);
 	usage(1);
     }
-    Files = calloc(sizeof(char *), (size_t)argc / 2 + 2);
-    Nodes = calloc(sizeof(char *), (size_t)argc / 2 + 2);
+    Files = gv_calloc((size_t)argc / 2 + 2, sizeof(char *));
+    Nodes = gv_calloc((size_t)argc / 2 + 2, sizeof(char *));
     for (j = i = 0; i < argc; i++) {
 	Nodes[j] = argv[i++];
 	Files[j] = argv[i] ? argv[i] : "-";
