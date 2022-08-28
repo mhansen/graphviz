@@ -138,7 +138,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    int stop;
 	    for (i = 0; i < num_levels; i++) {
 		displacement +=
-		    MAX((double) 0,
+		    MAX(0.0,
 			levels_gap - (y[ordering[levels[i]]] +
 				      displacement -
 				      y[ordering[levels[i] - 1]]));
