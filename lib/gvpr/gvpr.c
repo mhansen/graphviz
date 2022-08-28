@@ -936,7 +936,6 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
     gpr_info info;
     int rv = 0;
     int cleanup, i, incoreGraphs;
-    Agraph_t* nextg = NULL;
 
     setErrorErrors (0);
     ingDisc.dflt = sfstdin;
@@ -1012,6 +1011,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 	    gs->ing = newIng(0, gs->opts.inFiles, &ingDisc);
 	
 	if (gs->opts.verbose) gvstart_timer ();
+	Agraph_t* nextg = NULL;
 	for (gs->state->curgraph = nextGraph(gs->ing); gs->state->curgraph;
 	     gs->state->curgraph = nextg) {
 	    if (gs->opts.verbose) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
