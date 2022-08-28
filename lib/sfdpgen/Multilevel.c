@@ -16,7 +16,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-Multilevel_control Multilevel_control_new(int scheme, int mode){
+Multilevel_control Multilevel_control_new(int mode) {
   Multilevel_control ctrl;
 
   ctrl = GNEW(struct Multilevel_control_struct);
@@ -25,15 +25,10 @@ Multilevel_control Multilevel_control_new(int scheme, int mode){
   ctrl->maxlevel = 1<<30;
   ctrl->randomize = TRUE;
   /* now set in spring_electrical_control_new(), as well as by command line argument -c
-    ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_CLUSTER_PERNODE_LEAVES_FIRST;
-    ctrl->coarsen_scheme = COARSEN_INDEPENDENT_VERTEX_SET_RS;
-    ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE;
-    ctrl->coarsen_scheme = COARSEN_HYBRID;
-    ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;
     ctrl->coarsen_mode = COARSEN_MODE_FORCEFUL; or COARSEN_MODE_GENTLE;
   */
 
-  ctrl->coarsen_scheme = scheme;
+  ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;
   ctrl->coarsen_mode = mode;
   return ctrl;
 }

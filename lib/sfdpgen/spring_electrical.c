@@ -40,10 +40,8 @@ spring_electrical_control spring_electrical_control_new(){
   ctrl->C = 0.2;/* another parameter. f_a(i,j) = C*dist(i,j)^2/K * d_ij, f_r(i,j) = K^(3-p)/dist(i,j)^(-p). By default C = 0.2. */
   ctrl->multilevels = FALSE;/* if <=1, single level */
 
-  //ctrl->multilevel_coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET;
   //ctrl->multilevel_coarsen_mode = COARSEN_MODE_GENTLE;
 
-  ctrl->multilevel_coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;  /* pass on to Multilevel_control->coarsen_scheme */
   ctrl->multilevel_coarsen_mode = COARSEN_MODE_FORCEFUL;/*alternative: COARSEN_MODE_GENTLE. pass on to Multilevel_control->coarsen_mode */
 
 
@@ -89,8 +87,8 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  repulsive and attractive exponents: %.03f %.03f\n", ctrl->p, ctrl->q);
   fprintf (stderr, "  random start %d seed %d\n", ctrl->random_start, ctrl->random_seed);
   fprintf (stderr, "  K : %.03f C : %.03f\n", ctrl->K, ctrl->C);
-  fprintf (stderr, "  max levels %d coarsen_scheme %d coarsen_node %d\n", ctrl->multilevels,
-    ctrl->multilevel_coarsen_scheme,ctrl->multilevel_coarsen_mode);
+  fprintf (stderr, "  max levels %d coarsen_node %d\n", ctrl->multilevels,
+           ctrl->multilevel_coarsen_mode);
   fprintf (stderr, "  quadtree size %d max_level %d\n", ctrl->quadtree_size, ctrl->max_qtree_level);
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
   fprintf (stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool, ctrl->step, ctrl->adaptive_cooling);
@@ -1916,7 +1914,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
     return;
   }
 
-  mctrl = Multilevel_control_new(ctrl->multilevel_coarsen_scheme, ctrl->multilevel_coarsen_mode);
+  mctrl = Multilevel_control_new(ctrl->multilevel_coarsen_mode);
   mctrl->maxlevel = ctrl->multilevels;
   grid0 = Multilevel_new(A, D, mctrl);
 
