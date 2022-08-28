@@ -192,7 +192,7 @@ mkNode (void)
 static gmledge*
 mkEdge (void)
 {
-    gmledge* ep = NEW(gmledge);
+    gmledge* ep = gv_alloc(sizeof(gmledge));
     ep->attrlist = dtopen (&attrDisc, Dtqueue);
     ep->source = NULL;
     ep->target = NULL;
