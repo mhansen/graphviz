@@ -107,6 +107,7 @@ win_bison -dy -Wno-yacc gmlparse.y -o gmlparse.c</Command>
   <ItemGroup>
     <ClInclude Include="gml2gv.h" />
     <ClInclude Include="gmlparse.h" />
+    <ClInclude Include="openFile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gml2gv.c" />

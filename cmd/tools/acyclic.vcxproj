@@ -99,6 +99,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="openFile.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="acyclic.c" />
   </ItemGroup>
   <ItemGroup>

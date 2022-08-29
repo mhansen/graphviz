@@ -97,6 +97,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="openFile.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="gv2gml.c" />
   </ItemGroup>
   <ItemGroup>

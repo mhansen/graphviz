@@ -16,6 +16,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/unreachable.h>
+#include "openFile.h"
 
 static int Verbose;
 static char* gname = "";
@@ -46,21 +47,6 @@ static FILE *getFile(void)
     savef = rv;
     return rv;
 }
-
-static FILE *openFile(const char *name)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-        fprintf(stderr, "%s: could not open file %s for writing\n",
-                CmdName, name);
-        perror(name);
-        graphviz_exit(1);
-    }
-    return fp;
-}
-
 
 static char *useString = "Usage: %s [-v?] [-g<name>] [-o<file>] <files>\n\
   -g<name>  : use <name> as template for graph names\n\
@@ -104,7 +90,7 @@ static void initargs(int argc, char **argv)
 	case 'o':
 	    if (outFile != NULL)
 		fclose(outFile);
-	    outFile = openFile(optarg);
+	    outFile = openFile(CmdName, optarg, "w");
 	    break;
 	case ':':
 	    fprintf(stderr, "%s: option -%c missing argument\n", CmdName, optopt);

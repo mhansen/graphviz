@@ -99,6 +99,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="openFile.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="unflatten.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

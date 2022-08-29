@@ -21,6 +21,9 @@
     <ClInclude Include="gmlparse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="openFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gml2gv.c">

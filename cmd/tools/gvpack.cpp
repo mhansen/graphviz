@@ -36,6 +36,7 @@
 #include <stddef.h>
 #include <string>
 #include <vector>
+#include "openFile.h"
 
 extern "C" {
 #ifdef GVDLL
@@ -103,18 +104,6 @@ static void usage(int v)
 {
     std::cout << useString;
     graphviz_exit(v);
-}
-
-static FILE *openFile(const char *name)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-	std::cerr << "gvpack: could not open file " << name << " for writing\n";
-	graphviz_exit(1);
-    }
-    return (fp);
 }
 
 /* setNameValue:
@@ -201,7 +190,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
 	case 'o':
 	    if (outfp != nullptr)
 		fclose(outfp);
-	    outfp = openFile(optarg);
+	    outfp = openFile("gvpack", optarg, "w");
 	    break;
 	case 'u':
 	    pinfo->mode = l_undef;

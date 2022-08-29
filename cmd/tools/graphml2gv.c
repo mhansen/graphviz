@@ -23,6 +23,7 @@
 #include    <getopt.h>
 #include    <stdio.h>
 #include    <string.h>
+#include    "openFile.h"
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <ctype.h>
@@ -33,15 +34,7 @@
 
 #define NAMEBUF		100
 
-#define GRAPHML_ATTR	"_graphml_"
 #define GRAPHML_ID      "_graphml_id"
-#define GRAPHML_ROLE	"_graphml_role"
-#define GRAPHML_HYPER	"_graphml_hypergraph"
-#define GRAPHML_FROM    "_graphml_fromorder"
-#define GRAPHML_TO      "_graphml_toorder"
-#define GRAPHML_TYPE    "_graphml_type"
-#define GRAPHML_COMP    "_graphml_composite_"
-#define GRAPHML_LOC     "_graphml_locator_"
 
 #define	TAG_NONE	-1
 #define	TAG_GRAPH	0
@@ -559,19 +552,6 @@ static FILE *getFile(void)
     return rv;
 }
 
-static FILE *openFile(const char *name)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-	fprintf(stderr, "%s: could not open file %s for writing\n", CmdName, name);
-	perror(name);
-	graphviz_exit(1);
-    }
-    return fp;
-}
-
 static const char *use = "Usage: %s [-gd?] [-o<file>] [<graphs>]\n\
  -g<name>  : use <name> as template for graph names\n\
  -o<file>  : output to <file> (stdout)\n\
@@ -613,7 +593,7 @@ static void initargs(int argc, char **argv)
 	case 'o':
 	    if (outFile != NULL)
 		fclose(outFile);
-	    outFile = openFile(optarg);
+	    outFile = openFile(CmdName, optarg, "w");
 	    break;
 	case ':':
 	    fprintf(stderr, "%s: option -%c missing argument\n", CmdName, optopt);
