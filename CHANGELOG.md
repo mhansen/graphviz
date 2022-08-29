@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Accuracy of the bounding boxes printed by the `showboxes` feature have been
   improved.
 
+### Fixed
+
+- Id attribute is not used in linearGradient. #2258
+
 ### Removed
 
 - The `$GV_FILE_PATH` sandboxing mechanism has been removed #2257
