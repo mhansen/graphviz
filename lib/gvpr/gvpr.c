@@ -910,8 +910,16 @@ gverrorf (Expr_t *handle, Exdisc_t *discipline, int level, const char *fmt, ...)
     return 0;
 }
 
-/* gvpr:
- * main loop for gvpr.
+/// collective managed state used in \p gvpr_core
+typedef struct {
+  parse_prog *prog;
+  ingraph_state *ing;
+  comp_prog *xprog;
+  Gpr_t *state;
+  options opts;
+} gvpr_state_t;
+
+/* gvpr_core:
  * Return 0 on success; non-zero on error.
  *
  * FIX/TODO:
@@ -921,18 +929,13 @@ gverrorf (Expr_t *handle, Exdisc_t *discipline, int level, const char *fmt, ...)
  *  - do automatic cast for array indices if type is known
  *  - array initialization
  */
-int gvpr (int argc, char *argv[], gvpropts * uopts)
-{
+static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
+                     gvpr_state_t *gs) {
     Sfdisc_t errdisc;
     Sfdisc_t outdisc;
-    parse_prog *prog = 0;
-    ingraph_state *ing = 0;
-    comp_prog *xprog = 0;
-    Gpr_t *state = 0;
     gpr_info info;
     int rv = 0;
     int cleanup, i, incoreGraphs;
-    Agraph_t* nextg = NULL;
 
     setErrorErrors (0);
     ingDisc.dflt = sfstdin;
@@ -941,22 +944,20 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	if (uopts->err) setDisc (sfstderr, &errdisc, uopts->err);
     }
 
-    options opts = scanArgs(argc, argv);
-    if (opts.state <= 0) {
-	rv = opts.state;
-	goto finish;
+    gs->opts = scanArgs(argc, argv);
+    if (gs->opts.state <= 0) {
+	return gs->opts.state;
     }
 
-    if (opts.verbose)
+    if (gs->opts.verbose)
 	gvstart_timer ();
-    prog = parseProg(opts.program, opts.useFile);
-    if (!prog) {
-	rv = 1;
-	goto finish;
+    gs->prog = parseProg(gs->opts.program, gs->opts.useFile);
+    if (gs->prog == NULL) {
+	return 1;
     }
-    info.outFile = opts.outFile;
-    info.argc = opts.argc;
-    info.argv = opts.argv;
+    info.outFile = gs->opts.outFile;
+    info.argc = gs->opts.argc;
+    info.argv = gs->opts.argv;
     info.errf = gverrorf;
     if (uopts) 
 	info.flags = uopts->flags; 
@@ -966,20 +967,18 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	info.exitf = 0;
     else
 	info.exitf = gvexitf;
-    state = openGPRState(&info);
-    if (!state) {
-	rv = 1;
-	goto finish;
+    gs->state = openGPRState(&info);
+    if (gs->state == NULL) {
+	return 1;
     }
     if (uopts->bindings)
-	addBindings (state, uopts->bindings);
-    xprog = compileProg(prog, state, opts.compflags);
-    if (!xprog) {
-	rv = 1;
-	goto finish;
+	addBindings(gs->state, uopts->bindings);
+    gs->xprog = compileProg(gs->prog, gs->state, gs->opts.compflags);
+    if (gs->xprog == NULL) {
+	return 1;
     }
 
-    initGPRState(state, xprog->prog->vm);
+    initGPRState(gs->state, gs->xprog->prog->vm);
     
     if ((uopts->flags & GV_USE_OUTGRAPH)) {
 	uopts->outgraphs = 0;
@@ -987,9 +986,9 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
     }
 
     if (!(uopts->flags & GV_USE_EXIT)) {
-	state->flags |= GV_USE_JUMP;
+	gs->state->flags |= GV_USE_JUMP;
 	if ((rv = setjmp (jbuf))) {
-	    goto finish;
+	    return rv;
 	}
     }
 
@@ -998,99 +997,123 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
     else
 	incoreGraphs = 0;
 
-    if (opts.verbose)
+    if (gs->opts.verbose)
 	fprintf(stderr, "Parse/compile/init: %.2f secs.\n", gvelapsed_sec());
     /* do begin */
-    if (xprog->begin_stmt)
-	exeval(xprog->prog, xprog->begin_stmt, state);
+    if (gs->xprog->begin_stmt != NULL)
+	exeval(gs->xprog->prog, gs->xprog->begin_stmt, gs->state);
 
     /* if program is not null */
-    if (usesGraph(xprog)) {
+    if (usesGraph(gs->xprog)) {
 	if (uopts && uopts->ingraphs)
-	    ing = newIngGraphs(0, uopts->ingraphs, &ingDisc);
+	    gs->ing = newIngGraphs(0, uopts->ingraphs, &ingDisc);
 	else
-	    ing = newIng(0, opts.inFiles, &ingDisc);
+	    gs->ing = newIng(0, gs->opts.inFiles, &ingDisc);
 	
-	if (opts.verbose) gvstart_timer ();
-	for (state->curgraph = nextGraph(ing); state->curgraph; state->curgraph = nextg) {
-	    if (opts.verbose) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
-	    state->infname = fileName(ing);
-	    if (opts.readAhead)
-		nextg = state->nextgraph = nextGraph(ing);
+	if (gs->opts.verbose) gvstart_timer ();
+	Agraph_t* nextg = NULL;
+	for (gs->state->curgraph = nextGraph(gs->ing); gs->state->curgraph;
+	     gs->state->curgraph = nextg) {
+	    if (gs->opts.verbose) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
+	    gs->state->infname = fileName(gs->ing);
+	    if (gs->opts.readAhead)
+		nextg = gs->state->nextgraph = nextGraph(gs->ing);
 	    cleanup = 0;
 
-	    for (i = 0; i < xprog->n_blocks; i++) {
-		comp_block* bp = xprog->blocks + i;
+	    for (i = 0; i < gs->xprog->n_blocks; i++) {
+		comp_block* bp = gs->xprog->blocks + i;
 
 		/* begin graph */
-		if (incoreGraphs && (opts.compflags & CLONE))
-		    state->curgraph = (Agraph_t*)cloneO (0, (Agobj_t*)(state->curgraph));
-		state->curobj = (Agobj_t *) state->curgraph;
-		state->tvroot = 0;
+		if (incoreGraphs && (gs->opts.compflags & CLONE))
+		    gs->state->curgraph = (Agraph_t*)cloneO(0, (Agobj_t*)gs->state->curgraph);
+		gs->state->curobj = (Agobj_t*)gs->state->curgraph;
+		gs->state->tvroot = 0;
 		if (bp->begg_stmt)
-		    exeval(xprog->prog, bp->begg_stmt, state);
+		    exeval(gs->xprog->prog, bp->begg_stmt, gs->state);
 
 		/* walk graph */
 		if (walksGraph(bp)) {
-		    cleanup = traverse(state, xprog->prog, bp, cleanup);
+		    cleanup = traverse(gs->state, gs->xprog->prog, bp, cleanup);
 		}
 	    }
 
 	    /* end graph */
-	    state->curobj = (Agobj_t *) state->curgraph;
-	    if (xprog->endg_stmt)
-		exeval(xprog->prog, xprog->endg_stmt, state);
-	    if (opts.verbose) fprintf(stderr, "Finish graph: %.2f secs.\n", gvelapsed_sec());
+	    gs->state->curobj = (Agobj_t*)gs->state->curgraph;
+	    if (gs->xprog->endg_stmt != NULL)
+		exeval(gs->xprog->prog, gs->xprog->endg_stmt, gs->state);
+	    if (gs->opts.verbose) fprintf(stderr, "Finish graph: %.2f secs.\n", gvelapsed_sec());
 
 	    /* if $O == $G and $T is empty, delete $T */
-	    if ((state->outgraph == state->curgraph) &&
-		(state->target) && !agnnodes(state->target))
-		agdelete(state->curgraph, state->target);
+	    if (gs->state->outgraph == gs->state->curgraph &&
+		gs->state->target != NULL && !agnnodes(gs->state->target))
+		agdelete(gs->state->curgraph, gs->state->target);
 
 	    /* output graph, if necessary
 	     * For this, the outgraph must be defined, and either
 	     * be non-empty or the -c option was used.
 	     */
-	    if (state->outgraph && (agnnodes(state->outgraph)
-				    || (opts.compflags & SRCOUT))) {
+	    if (gs->state->outgraph != NULL && (agnnodes(gs->state->outgraph)
+				    || (gs->opts.compflags & SRCOUT))) {
 		if (uopts && (uopts->flags & GV_USE_OUTGRAPH))
-		    addOutputGraph (state, uopts);
+		    addOutputGraph(gs->state, uopts);
 		else
-		    sfioWrite (state->outgraph, opts.outFile, state->dfltIO);
+		    sfioWrite(gs->state->outgraph, gs->opts.outFile, gs->state->dfltIO);
 	    }
 
 	    if (!incoreGraphs)
-		chkClose(state->curgraph);
-	    state->target = 0;
-	    state->outgraph = 0;
+		chkClose(gs->state->curgraph);
+	    gs->state->target = 0;
+	    gs->state->outgraph = 0;
 	
-	    if (opts.verbose) gvstart_timer ();
-	    if (!opts.readAhead)
-		nextg = nextGraph(ing);
-	    if (opts.verbose && nextg) fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
+	    if (gs->opts.verbose) gvstart_timer ();
+	    if (!gs->opts.readAhead)
+		nextg = nextGraph(gs->ing);
+	    if (gs->opts.verbose && nextg != NULL) {
+		fprintf(stderr, "Read graph: %.2f secs.\n", gvelapsed_sec());
+	    }
 	}
     }
 
 	/* do end */
-    state->curgraph = 0;
-    state->curobj = 0;
-    if (xprog->end_stmt)
-	exeval(xprog->prog, xprog->end_stmt, state);
+    gs->state->curgraph = 0;
+    gs->state->curobj = 0;
+    if (gs->xprog->end_stmt != NULL)
+	exeval(gs->xprog->prog, gs->xprog->end_stmt, gs->state);
 
-  finish:
-    /* free all allocated resources */
-    freeParseProg (prog);
-    freeCompileProg (xprog);
-    closeGPRState(state);
-    if (ing) closeIngraph (ing);
-    freeOpts(opts);
+    return 0;
+}
 
-    if (uopts) {
-	if (uopts->out) sfdisc (sfstdout, 0);
-	if (uopts->err) sfdisc (sfstderr, 0);
+/** main loop for gvpr
+ *
+ * \return 0 on success
+ */
+int gvpr(int argc, char *argv[], gvpropts *uopts) {
+  gvpr_state_t gvpr_state = {0};
+
+  // initialize opts to something that makes freeOpts() a no-op if we fail early
+  gvpr_state.opts.outFile = sfstdout;
+
+  int rv = gvpr_core(argc, argv, uopts, &gvpr_state);
+
+  // free all allocated resources
+  freeParseProg(gvpr_state.prog);
+  freeCompileProg(gvpr_state.xprog);
+  closeGPRState(gvpr_state.state);
+  if (gvpr_state.ing != NULL) {
+    closeIngraph(gvpr_state.ing);
+  }
+  freeOpts(gvpr_state.opts);
+
+  if (uopts != NULL) {
+    if (uopts->out != NULL) {
+      sfdisc(sfstdout, 0);
     }
+    if (uopts->err != NULL) {
+      sfdisc(sfstderr, 0);
+    }
+  }
 
-    return rv;
+  return rv;
 }
 
 /**
