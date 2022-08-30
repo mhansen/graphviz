@@ -43,6 +43,6 @@ const GraphvizEdge &GraphvizGraph::edge(std::string_view edgeop) const {
       return edge;
     }
   }
-  throw std::runtime_error("Unknown edge '" + std::string{edgeop} +
-                           "' in graph " + m_graph_id);
+  throw std::runtime_error{
+      fmt::format("Unknown edge '{}' in graph '{}'", edgeop, m_graph_id)};
 }

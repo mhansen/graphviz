@@ -3,7 +3,6 @@
 #include <catch2/catch.hpp>
 #include <fmt/format.h>
 
-#include "graphviz_graph.h"
 #include "svg_analyzer.h"
 #include <cgraph++/AGraph.h>
 #include <gvc++/GVContext.h>
@@ -12,14 +11,12 @@
 
 #include "test_utilities.h"
 
-TEST_CASE(
-    "SvgAnalyzer",
-    "The SvgAnalyzer parses an SVG produced by Graphviz to an internal data "
-    "structure, supports retrieval of information about that graph and "
-    "recreation of the original SVG from that data structure") {
+TEST_CASE("SvgAnalyzer",
+          "Test that the SvgAnalyzer can parse an SVG produced by Graphviz to "
+          "an internal data structure and re-create the original SVG exactly "
+          "from that data structure") {
 
-  const auto shape_char_ptr = GENERATE(from_range(all_node_shapes));
-  const std::string shape{shape_char_ptr};
+  const auto shape = GENERATE(from_range(all_node_shapes));
   INFO(fmt::format("Shape: {}", shape));
 
   auto dot = fmt::format("digraph g1 {{node [shape={}]; a -> b}}", shape);
@@ -35,16 +32,16 @@ TEST_CASE(
 
   const auto result = layout.render("svg");
   const std::string original_svg{result.string_view()};
-  SVGAnalyzer svgAnalyzer{result.c_str()};
-  svgAnalyzer.set_graphviz_version(graphviz_version);
-  svgAnalyzer.set_graphviz_build_date(graphviz_build_date);
+  SVGAnalyzer svg_analyzer{result.c_str()};
+  svg_analyzer.set_graphviz_version(graphviz_version);
+  svg_analyzer.set_graphviz_build_date(graphviz_build_date);
 
   const std::size_t expected_num_graphs = 1;
   const std::size_t expected_num_nodes = 2;
   const std::size_t expected_num_edges = 1;
 
-  CHECK(svgAnalyzer.graphs().size() == expected_num_graphs);
-  for (const auto &graph : svgAnalyzer.graphs()) {
+  CHECK(svg_analyzer.graphs().size() == expected_num_graphs);
+  for (const auto &graph : svg_analyzer.graphs()) {
     CHECK(graph.svg_g_element().type == SVG::SVGElementType::Group);
     CHECK(graph.svg_g_element().attributes.class_ == "graph");
     CHECK(graph.svg_g_element().graphviz_id == "g1");
@@ -124,20 +121,20 @@ TEST_CASE(
     const std::size_t expected_num_texts =
         shape == "point" ? 0 : expected_num_nodes;
 
-    CHECK(svgAnalyzer.num_svgs() == expected_num_svgs);
-    CHECK(svgAnalyzer.num_groups() == expected_num_groups);
-    CHECK(svgAnalyzer.num_circles() == expected_num_circles);
-    CHECK(svgAnalyzer.num_ellipses() == expected_num_ellipses);
-    CHECK(svgAnalyzer.num_lines() == expected_num_lines);
-    CHECK(svgAnalyzer.num_paths() == expected_num_paths);
-    CHECK(svgAnalyzer.num_polygons() == expected_num_polygons);
-    CHECK(svgAnalyzer.num_polylines() == expected_num_polylines);
-    CHECK(svgAnalyzer.num_rects() == expected_num_rects);
-    CHECK(svgAnalyzer.num_titles() == expected_num_titles);
-    CHECK(svgAnalyzer.num_texts() == expected_num_texts);
+    CHECK(svg_analyzer.num_svgs() == expected_num_svgs);
+    CHECK(svg_analyzer.num_groups() == expected_num_groups);
+    CHECK(svg_analyzer.num_circles() == expected_num_circles);
+    CHECK(svg_analyzer.num_ellipses() == expected_num_ellipses);
+    CHECK(svg_analyzer.num_lines() == expected_num_lines);
+    CHECK(svg_analyzer.num_paths() == expected_num_paths);
+    CHECK(svg_analyzer.num_polygons() == expected_num_polygons);
+    CHECK(svg_analyzer.num_polylines() == expected_num_polylines);
+    CHECK(svg_analyzer.num_rects() == expected_num_rects);
+    CHECK(svg_analyzer.num_titles() == expected_num_titles);
+    CHECK(svg_analyzer.num_texts() == expected_num_texts);
 
     const auto indent_size = 0;
-    auto recreated_svg = svgAnalyzer.svg_string(indent_size);
+    auto recreated_svg = svg_analyzer.svg_string(indent_size);
 
     // compare the recreated SVG with the original SVG
     if (recreated_svg != original_svg) {

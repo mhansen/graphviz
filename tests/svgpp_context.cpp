@@ -12,54 +12,54 @@ static std::string to_color_string(SvgppContext::color_t color) {
                      (color >> 0) & 0xff);
 }
 
-SvgppContext::SvgppContext(ISVGAnalyzer *svgAnalyzer)
-    : m_svgAnalyzer(svgAnalyzer){};
+SvgppContext::SvgppContext(ISVGAnalyzer *svg_analyzer)
+    : m_svg_analyzer(svg_analyzer){};
 
 void SvgppContext::on_enter_element(svgpp::tag::element::svg) {
-  m_svgAnalyzer->on_enter_element_svg();
+  m_svg_analyzer->on_enter_element_svg();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::g) {
-  m_svgAnalyzer->on_enter_element_g();
+  m_svg_analyzer->on_enter_element_g();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::circle) {
-  m_svgAnalyzer->on_enter_element_circle();
+  m_svg_analyzer->on_enter_element_circle();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::ellipse) {
-  m_svgAnalyzer->on_enter_element_ellipse();
+  m_svg_analyzer->on_enter_element_ellipse();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::line) {
-  m_svgAnalyzer->on_enter_element_line();
+  m_svg_analyzer->on_enter_element_line();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::path) {
-  m_svgAnalyzer->on_enter_element_path();
+  m_svg_analyzer->on_enter_element_path();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::polygon) {
-  m_svgAnalyzer->on_enter_element_polygon();
+  m_svg_analyzer->on_enter_element_polygon();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::polyline) {
-  m_svgAnalyzer->on_enter_element_polyline();
+  m_svg_analyzer->on_enter_element_polyline();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::rect) {
-  m_svgAnalyzer->on_enter_element_rect();
+  m_svg_analyzer->on_enter_element_rect();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::text) {
-  m_svgAnalyzer->on_enter_element_text();
+  m_svg_analyzer->on_enter_element_text();
 }
 
 void SvgppContext::on_enter_element(svgpp::tag::element::title) {
-  m_svgAnalyzer->on_enter_element_title();
+  m_svg_analyzer->on_enter_element_title();
 }
 
-void SvgppContext::on_exit_element() { m_svgAnalyzer->on_exit_element(); }
+void SvgppContext::on_exit_element() { m_svg_analyzer->on_exit_element(); }
 
 void SvgppContext::path_move_to(double x, double y,
                                 svgpp::tag::coordinate::absolute c) {
@@ -67,7 +67,7 @@ void SvgppContext::path_move_to(double x, double y,
     throw std::runtime_error{
         "'path_move_to' using relative coordinates is not yet implemented"};
   }
-  m_svgAnalyzer->path_move_to(x, y);
+  m_svg_analyzer->path_move_to(x, y);
 }
 
 void SvgppContext::path_line_to(double, double,
@@ -83,7 +83,7 @@ void SvgppContext::path_cubic_bezier_to(double x1, double y1, double x2,
         "'path_cubic_bezier_to' using relative coordinates "
         "is not yet implemented"};
   }
-  m_svgAnalyzer->path_cubic_bezier_to(x1, y1, x2, y2, x, y);
+  m_svg_analyzer->path_cubic_bezier_to(x1, y1, x2, y2, x, y);
 }
 
 void SvgppContext::path_quadratic_bezier_to(double, double, double, double,
@@ -101,18 +101,18 @@ void SvgppContext::path_close_subpath() {
   throw std::runtime_error{"'path_close_subpath' is not yet implemented"};
 }
 
-void SvgppContext::path_exit() { m_svgAnalyzer->path_exit(); }
+void SvgppContext::path_exit() { m_svg_analyzer->path_exit(); }
 
 void SvgppContext::set(svgpp::tag::attribute::cy, const double v) {
-  m_svgAnalyzer->set_cy(v);
+  m_svg_analyzer->set_cy(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::cx, const double v) {
-  m_svgAnalyzer->set_cx(v);
+  m_svg_analyzer->set_cx(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::fill, svgpp::tag::value::none) {
-  m_svgAnalyzer->set_fill("none");
+  m_svg_analyzer->set_fill("none");
 }
 
 void SvgppContext::set(svgpp::tag::attribute::fill,
@@ -123,11 +123,11 @@ void SvgppContext::set(svgpp::tag::attribute::fill,
 
 void SvgppContext::set(svgpp::tag::attribute::fill, color_t color,
                        svgpp::tag::skip_icc_color) {
-  m_svgAnalyzer->set_fill(to_color_string(color));
+  m_svg_analyzer->set_fill(to_color_string(color));
 }
 
 void SvgppContext::set(svgpp::tag::attribute::stroke, svgpp::tag::value::none) {
-  m_svgAnalyzer->set_stroke("none");
+  m_svg_analyzer->set_stroke("none");
 }
 
 void SvgppContext::set(svgpp::tag::attribute::stroke,
@@ -139,7 +139,7 @@ void SvgppContext::set(svgpp::tag::attribute::stroke,
 void SvgppContext::set(svgpp::tag::attribute::stroke,
                        SvgppContext::color_t color,
                        svgpp::tag::skip_icc_color) {
-  m_svgAnalyzer->set_stroke(to_color_string(color));
+  m_svg_analyzer->set_stroke(to_color_string(color));
 }
 
 void SvgppContext::transform_matrix(const boost::array<double, 6> &matrix) {
@@ -149,7 +149,7 @@ void SvgppContext::transform_matrix(const boost::array<double, 6> &matrix) {
   double d = matrix.at(3);
   double e = matrix.at(4);
   double f = matrix.at(5);
-  m_svgAnalyzer->set_transform(a, b, c, d, e, f);
+  m_svg_analyzer->set_transform(a, b, c, d, e, f);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::r, const double) {
@@ -157,11 +157,11 @@ void SvgppContext::set(svgpp::tag::attribute::r, const double) {
 }
 
 void SvgppContext::set(svgpp::tag::attribute::rx, const double v) {
-  m_svgAnalyzer->set_rx(v);
+  m_svg_analyzer->set_rx(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::ry, const double v) {
-  m_svgAnalyzer->set_ry(v);
+  m_svg_analyzer->set_ry(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::x1, const double) {
@@ -181,7 +181,7 @@ void SvgppContext::set(svgpp::tag::attribute::y2, const double) {
 }
 
 void SvgppContext::set(svgpp::tag::attribute::x, const double v) {
-  m_svgAnalyzer->set_x(v);
+  m_svg_analyzer->set_x(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::x, const NumbersRange &range) {
@@ -189,11 +189,11 @@ void SvgppContext::set(svgpp::tag::attribute::x, const NumbersRange &range) {
     throw std::runtime_error{
         "Multiple value list for the 'x' attribute is not yet implemented"};
   }
-  m_svgAnalyzer->set_x(*range.begin());
+  m_svg_analyzer->set_x(*range.begin());
 }
 
 void SvgppContext::set(svgpp::tag::attribute::y, const double v) {
-  m_svgAnalyzer->set_y(v);
+  m_svg_analyzer->set_y(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::y, const NumbersRange &range) {
@@ -201,34 +201,34 @@ void SvgppContext::set(svgpp::tag::attribute::y, const NumbersRange &range) {
     throw std::runtime_error{
         "Multiple value list for the 'y' attribute is not yet implemented"};
   }
-  m_svgAnalyzer->set_y(*range.begin());
+  m_svg_analyzer->set_y(*range.begin());
 }
 
 void SvgppContext::set(svgpp::tag::attribute::width, const double v) {
-  m_svgAnalyzer->set_width(v);
+  m_svg_analyzer->set_width(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::height, const double v) {
-  m_svgAnalyzer->set_height(v);
+  m_svg_analyzer->set_height(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::id,
                        boost::iterator_range<const char *> v) {
-  m_svgAnalyzer->set_id({v.begin(), v.end()});
+  m_svg_analyzer->set_id({v.begin(), v.end()});
 }
 
 void SvgppContext::set(svgpp::tag::attribute::class_,
                        boost::iterator_range<const char *> v) {
-  m_svgAnalyzer->set_class({v.begin(), v.end()});
+  m_svg_analyzer->set_class({v.begin(), v.end()});
 }
 
 void SvgppContext::set(svgpp::tag::attribute::font_family,
                        boost::iterator_range<const char *> v) {
-  m_svgAnalyzer->set_font_family({v.begin(), v.end()});
+  m_svg_analyzer->set_font_family({v.begin(), v.end()});
 }
 
 void SvgppContext::set(svgpp::tag::attribute::font_size, const double v) {
-  m_svgAnalyzer->set_font_size(v);
+  m_svg_analyzer->set_font_size(v);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::font_size,
@@ -287,31 +287,31 @@ void SvgppContext::set(svgpp::tag::attribute::font_size,
 
 void SvgppContext::set(svgpp::tag::attribute::text_anchor,
                        svgpp::tag::value::start) {
-  m_svgAnalyzer->set_text_anchor("start");
+  m_svg_analyzer->set_text_anchor("start");
 }
 
 void SvgppContext::set(svgpp::tag::attribute::text_anchor,
                        svgpp::tag::value::middle) {
-  m_svgAnalyzer->set_text_anchor("middle");
+  m_svg_analyzer->set_text_anchor("middle");
 }
 
 void SvgppContext::set(svgpp::tag::attribute::text_anchor,
                        svgpp::tag::value::end) {
-  m_svgAnalyzer->set_text_anchor("end");
+  m_svg_analyzer->set_text_anchor("end");
 }
 
 void SvgppContext::set(svgpp::tag::attribute::viewBox, const double v1,
                        const double v2, const double v3, const double v4) {
-  m_svgAnalyzer->set_viewBox(v1, v2, v3, v4);
+  m_svg_analyzer->set_viewBox(v1, v2, v3, v4);
 }
 
 void SvgppContext::set(svgpp::tag::attribute::points,
                        const SvgppContext::PointsRange &range) {
   for (auto &it : range) {
-    m_svgAnalyzer->set_point(it);
+    m_svg_analyzer->set_point(it);
   }
 }
 
 void SvgppContext::set_text(boost::iterator_range<const char *> v) {
-  m_svgAnalyzer->set_text({v.begin(), v.end()});
+  m_svg_analyzer->set_text({v.begin(), v.end()});
 }

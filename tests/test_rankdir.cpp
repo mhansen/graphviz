@@ -17,7 +17,7 @@ TEST_CASE("Graph rankdir", "Test that the Graphviz `rankdir` attribute affects "
   const auto rankdir = GENERATE(from_range(all_rank_directions));
   INFO(fmt::format("Rankdir: {}", rankdir));
 
-  const auto shape = GENERATE_COPY(filter(
+  const auto shape = GENERATE(filter(
       [](std::string_view shape) {
         return !node_shapes_without_svg_shape.contains(shape);
       },
@@ -35,10 +35,10 @@ TEST_CASE("Graph rankdir", "Test that the Graphviz `rankdir` attribute affects "
   const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), "dot");
 
   const auto result = layout.render("svg");
-  SVGAnalyzer svgAnalyzer{result.c_str()};
+  SVGAnalyzer svg_analyzer{result.c_str()};
 
-  REQUIRE(svgAnalyzer.graphs().size() == 1);
-  const auto &graph = svgAnalyzer.graphs().back();
+  REQUIRE(svg_analyzer.graphs().size() == 1);
+  const auto &graph = svg_analyzer.graphs().back();
   const auto node_a = graph.node("a");
   const auto node_b = graph.node("b");
   const auto edge_ab = graph.edge("a->b");

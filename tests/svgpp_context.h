@@ -22,7 +22,7 @@ class ISVGAnalyzer;
 
 class SvgppContext {
 public:
-  SvgppContext(ISVGAnalyzer *svgAnalyzer);
+  SvgppContext(ISVGAnalyzer *svg_analyzer);
   void on_enter_element(svgpp::tag::element::svg e);
   void on_enter_element(svgpp::tag::element::g e);
   void on_enter_element(svgpp::tag::element::circle e);
@@ -194,5 +194,5 @@ public:
   void set_text(boost::iterator_range<const char *> v);
 
 private:
-  ISVGAnalyzer *m_svgAnalyzer = nullptr;
+  ISVGAnalyzer *m_svg_analyzer = nullptr;
 };
