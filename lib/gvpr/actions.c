@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/likely.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
@@ -968,8 +969,8 @@ static char* fullColor (char* prefix, char* str)
     size_t len = strlen (prefix) + strlen (str) + 3;
 
     if (len >= allocated) {
+	fulls = gv_realloc(fulls, allocated, len + 10);
 	allocated = len + 10;
-	fulls = newof(fulls, char, allocated, 0);
     }
     sprintf (fulls, "/%s/%s", prefix, str);
     return fulls;

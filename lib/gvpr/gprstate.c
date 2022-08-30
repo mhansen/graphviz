@@ -17,6 +17,7 @@
 #include <gvpr/gprstate.h>
 #include <ast/error.h>
 #include <ast/sfstr.h>
+#include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -101,7 +102,7 @@ void addBindings (Gpr_t* state, gvprbinding* bindings)
     }
 
     if (n == 0) return;
-    bufp = buf = newof(0, gvprbinding, n, 0);
+    bufp = buf = gv_calloc(n, sizeof(gvprbinding));
     bp = bindings;
     while (bp->name) {
         if (bp->fn) {

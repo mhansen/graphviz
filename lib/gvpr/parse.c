@@ -18,6 +18,7 @@
 #include <ast/sfstr.h>
 #include <ast/error.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <gvpr/parse.h>
 #include <stdbool.h>
@@ -389,7 +390,7 @@ parseCase(Sfio_t * str, char **guard, int *gline, char **action,
 static parse_block *addBlock (parse_block * last, char *stmt, int line,
 	int n_nstmts, case_info *nodelist, int n_estmts, case_info *edgelist)
 {
-    parse_block* item = newof(0, parse_block, 1, 0);
+    parse_block* item = gv_alloc(sizeof(parse_block));
 
     item->l_beging = line;
     item->begg_stmt = stmt;
@@ -410,8 +411,6 @@ static parse_block *addBlock (parse_block * last, char *stmt, int line,
 static case_info *addCase(case_info * last, char *guard, int gline,
 			  char *action, int line, int *cnt)
 {
-    case_info *item;
-
     if (!guard && !action) {
 	error(ERROR_WARNING,
 	      "Case with neither guard nor action, line %d - ignored", kwLine);
@@ -419,7 +418,7 @@ static case_info *addCase(case_info * last, char *guard, int gline,
     }
 
     ++(*cnt);
-    item = newof(0, case_info, 1, 0);
+    case_info *item = gv_alloc(sizeof(case_info));
     item->guard = guard;
     item->action = action;
     item->next = NULL;
