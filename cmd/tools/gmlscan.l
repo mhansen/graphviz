@@ -110,9 +110,9 @@ L_ID      [a-zA-Z_][_a-zA-Z0-9]*
 "fontSize"                  return (FONTSIZE);
 "fontName"                  return (FONTNAME);
 "color"                     return (COLOR);
-{L_INT}                     { gmllval.str = strdup(yytext); return (INTEGER); }
-{L_REAL}                    { gmllval.str = strdup(yytext); return (REAL); }
-{L_ID}                      { gmllval.str = strdup(yytext); return (NAME); }
+{L_INT}                     { gmllval.str = gv_strdup(yytext); return (INTEGER); }
+{L_REAL}                    { gmllval.str = gv_strdup(yytext); return (REAL); }
+{L_ID}                      { gmllval.str = gv_strdup(yytext); return (NAME); }
 ["]                         BEGIN(qstring); beginstr();
 
 <qstring>["]                BEGIN(INITIAL); endstr(); return (STRING);

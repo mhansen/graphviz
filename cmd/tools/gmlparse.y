@@ -23,10 +23,9 @@
 #include <gml2gv.h>
 #include <agxbuf.h>
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
-
-#define NEW(t)       malloc(sizeof(t))
 
 static gmlgraph* G;
 static gmlnode* N;
@@ -164,7 +163,7 @@ popG (void)
 static void
 pushG (void)
 {
-    gmlgraph* g = NEW(gmlgraph);
+    gmlgraph* g = gv_alloc(sizeof(gmlgraph));
 
     g->attrlist = dtopen(&attrDisc, Dtqueue);
     g->nodelist = dtopen(&nodeDisc, Dtqueue);
@@ -182,7 +181,7 @@ pushG (void)
 static gmlnode*
 mkNode (void)
 {
-    gmlnode* np = NEW(gmlnode);
+    gmlnode* np = gv_alloc(sizeof(gmlnode));
     np->attrlist = dtopen (&attrDisc, Dtqueue);
     np->id = NULL;
     return np;
@@ -191,7 +190,7 @@ mkNode (void)
 static gmledge*
 mkEdge (void)
 {
-    gmledge* ep = NEW(gmledge);
+    gmledge* ep = gv_alloc(sizeof(gmledge));
     ep->attrlist = dtopen (&attrDisc, Dtqueue);
     ep->source = NULL;
     ep->target = NULL;
@@ -200,11 +199,11 @@ mkEdge (void)
 
 static gmlattr *mkAttr(char* name, unsigned short sort, unsigned short kind,
                        char* str,  Dt_t* list) {
-    gmlattr* gp = NEW(gmlattr);
+    gmlattr* gp = gv_alloc(sizeof(gmlattr));
 
     assert (name || sort);
     if (!name)
-	name = strdup (sortToStr (sort));
+	name = gv_strdup (sortToStr (sort));
     gp->sort = sort;
     gp->kind = kind;
     gp->name = name;
@@ -298,7 +297,7 @@ glistitem : node { dtinsert (G->nodelist, $1); }
 		    YYABORT;
 		}
 	  }
-	  | ID INTEGER { dtinsert (G->attrlist, mkAttr (strdup("id"), 0, INTEGER, $2, 0)); }
+	  | ID INTEGER { dtinsert (G->attrlist, mkAttr(gv_strdup("id"), 0, INTEGER, $2, 0)); }
           | alistitem { dtinsert (G->attrlist, $1); }
           ;
 
@@ -322,7 +321,7 @@ elist : elist elistitem
 
 elistitem : SOURCE INTEGER { E->source = $2; }
           | TARGET INTEGER { E->target = $2; }
-	  | ID INTEGER { dtinsert (E->attrlist, mkAttr (strdup("id"), 0, INTEGER, $2, 0)); }
+	  | ID INTEGER { dtinsert (E->attrlist, mkAttr(gv_strdup("id"), 0, INTEGER, $2, 0)); }
           | alistitem { dtinsert (E->attrlist, $1); }
           ;
 

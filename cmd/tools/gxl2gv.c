@@ -20,7 +20,6 @@
 #include    <cgraph/exit.h>
 #include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
-#include    <common/memory.h>
 #include    <stdio.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
@@ -632,7 +631,7 @@ static void endElementHandler(void *userData, const char *name)
 	    if (len <= SMALLBUF) {
 		new_name = buf;
 	    } else {
-		new_name = dynbuf = gcalloc(len, sizeof(char));
+		new_name = dynbuf = gv_calloc(len, sizeof(char));
 		strcpy(new_name, GXL_COMP);
 	    }
 	    strcpy(new_name + sizeof(GXL_COMP) - 1,

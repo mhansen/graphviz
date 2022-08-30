@@ -11,11 +11,9 @@
 #include <sparse/SparseMatrix.h>
 #include "mmio.h"
 #include "matrix_market.h"
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
-#include <common/memory.h>
 #include <assert.h>
-#define MALLOC gmalloc
-#define REALLOC grealloc
 
 static int mm_get_type(MM_typecode typecode)
 {
@@ -69,8 +67,8 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
     }
     /* reseve memory for matrices */
 
-    I = MALLOC(nz * sizeof(int));
-    J = MALLOC(nz * sizeof(int));
+    I = gv_calloc(nz, sizeof(int));
+    J = gv_calloc(nz, sizeof(int));
 
 	/* NOTE: when reading in doubles, ANSI C requires the use of the "l"  */
 	/*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
@@ -78,7 +76,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	type = mm_get_type(matcode);
 	switch (type) {
 	case MATRIX_TYPE_REAL:
-	    val = malloc(nz * sizeof(double));
+	    val = gv_calloc(nz, sizeof(double));
 	    for (i = 0; i < nz; i++) {
 		int num = fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
 		(void)num;
@@ -87,9 +85,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		J[i]--;
 	    }
 	    if (mm_is_symmetric(matcode)) {
-		I = REALLOC(I, 2 * sizeof(int) * nz);
-		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 2 * sizeof(double) * nz);
+		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
+		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
+		val = gv_recalloc(val, nz, 2 * nz, sizeof(double));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
@@ -99,9 +97,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		    }
 		}
 	    } else if (mm_is_skew(matcode)) {
-		I = REALLOC(I, 2 * sizeof(int) * nz);
-		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 2 * sizeof(double) * nz);
+		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
+		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
+		val = gv_recalloc(val, nz, 2 * nz, sizeof(double));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -115,7 +113,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	    vp = val;
 	    break;
 	case MATRIX_TYPE_INTEGER:
-	    vali = malloc(nz * sizeof(int));
+	    vali = gv_calloc(nz, sizeof(int));
 	    for (i = 0; i < nz; i++) {
 		int num = fscanf(f, "%d %d %d\n", &I[i], &J[i], &vali[i]);
 		(void)num;
@@ -124,9 +122,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		J[i]--;
 	    }
 	    if (mm_is_symmetric(matcode)) {
-		I = REALLOC(I, 2 * sizeof(int) * nz);
-		J = REALLOC(J, 2 * sizeof(int) * nz);
-		vali = REALLOC(vali, 2 * sizeof(int) * nz);
+		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
+		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
+		vali = gv_recalloc(vali, nz, 2 * nz, sizeof(int));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
@@ -136,9 +134,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		    }
 		}
 	    } else if (mm_is_skew(matcode)) {
-		I = REALLOC(I, 2 * sizeof(int) * nz);
-		J = REALLOC(J, 2 * sizeof(int) * nz);
-		vali = REALLOC(vali, 2 * sizeof(int) * nz);
+		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
+		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
+		vali = gv_recalloc(vali, nz, 2 * nz, sizeof(int));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -160,8 +158,8 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		J[i]--;
 	    }
 	    if (mm_is_symmetric(matcode) || mm_is_skew(matcode)) {
-		I = REALLOC(I, 2 * sizeof(int) * nz);
-		J = REALLOC(J, 2 * sizeof(int) * nz);
+		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
+		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
@@ -174,7 +172,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	    }
 	    break;
 	case MATRIX_TYPE_COMPLEX:
-	    val = malloc(2 * nz * sizeof(double));
+	    val = gv_calloc(2 * nz, sizeof(double));
 	    v = val;
 	    for (i = 0; i < nz; i++) {
 		int num = fscanf(f, "%d %d %lg %lg\n", &I[i], &J[i], &v[0], &v[1]);
@@ -185,9 +183,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		J[i]--;
 	    }
 	    if (mm_is_symmetric(matcode)) {
-		I = REALLOC(I, 2 * sizeof(int) * nz);
-		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 4 * sizeof(double) * nz);
+		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
+		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
+		val = gv_recalloc(val, 2 * nz, 4 * nz, sizeof(double));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
@@ -199,9 +197,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		    }
 		}
 	    } else if (mm_is_skew(matcode)) {
-		I = REALLOC(I, 2 * sizeof(int) * nz);
-		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 4 * sizeof(double) * nz);
+		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
+		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
+		val = gv_recalloc(val, 2 * nz, 4 * nz, sizeof(double));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -213,9 +211,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 
 		}
 	    } else if (mm_is_hermitian(matcode)) {
-		I = REALLOC(I, 2 * sizeof(int) * nz);
-		J = REALLOC(J, 2 * sizeof(int) * nz);
-		val = REALLOC(val, 4 * sizeof(double) * nz);
+		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
+		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
+		val = gv_recalloc(val, 2 * nz, 4 * nz, sizeof(double));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
