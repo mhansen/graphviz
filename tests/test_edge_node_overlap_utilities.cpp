@@ -363,6 +363,32 @@ static void write_svg_files(SVGAnalyzer &svg_analyzer,
   }
 }
 
+const std::unordered_set<std::string_view>
+    polygon_shapes_with_left_or_right_corner_unknown_during_layout = {
+        // FIXME: These shapes are represented as a box during layout and do not
+        // get their final shape until the graph is rendered. They have a corner
+        // on their left or right side which the `poly_inside` function is
+        // unaware of.
+        // This causes a lager overlap since the outline of the box is half the
+        // penwidth outside the nominal box, whereas the miter point of the
+        // corner is further away.
+        "cds",       // corner on right side, unknown during layout
+        "rpromoter", // corner on right side, unknown during layout
+        "rarrow",    // corner on right side, unknown during layout
+        "lpromoter", // corner on left side, unknown during layout
+        "larrow"     // corner on left side, unknown during layout
+
+};
+
+static bool has_corner_in_rank_direction_unknown_during_layout(
+    const std::string_view shape, const std::string_view rankdir) {
+  if (rankdir == "LR" || rankdir == "RL") {
+    return polygon_shapes_with_left_or_right_corner_unknown_during_layout
+        .contains(shape);
+  }
+  return false;
+}
+
 /// generate DOT source based on given options
 static std::string generate_dot(const graph_options &graph_options) {
   // use a semi-transparent color to easily see overlaps
@@ -397,6 +423,16 @@ void test_edge_node_overlap(const graph_options &graph_options,
   const double graphviz_max_svg_rounding_error =
       std::pow(10, -graphviz_num_decimals_in_svg) / 2;
 
+  const auto extra_max_node_edge_overlap =
+      has_corner_in_rank_direction_unknown_during_layout(
+          graph_options.node_shape, graph_options.rankdir)
+          // the corner angle is roughly 90 degrees which gives a miter point
+          // penwidth / 2 * sqrt(2) from the nominal corner, i.e., penwidth / 2
+          // * (sqrt(2) - 1) from the outline bounding box which is only what
+          // the `poly_inside` function knows about during layout
+          ? graph_options.node_penwidth / 2 * (std::sqrt(2) - 1)
+          : 0;
+
   const check_options check_options = {
       .check_max_edge_node_overlap =
           tc_check_options.check_max_edge_node_overlap,
@@ -406,7 +442,8 @@ void test_edge_node_overlap(const graph_options &graph_options,
           tc_check_options.check_max_edge_stem_arrow_overlap,
       .check_min_edge_stem_arrow_overlap =
           tc_check_options.check_min_edge_stem_arrow_overlap,
-      .max_node_edge_overlap = graphviz_bezier_clip_margin,
+      .max_node_edge_overlap =
+          graphviz_bezier_clip_margin + extra_max_node_edge_overlap,
       .min_node_edge_overlap = 0,
       .max_edge_stem_arrow_overlap =
           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin,

@@ -13,7 +13,11 @@ TEST_CASE(
   const auto shape = GENERATE(from_range(node_shapes_consisting_of_polygon));
   INFO(fmt::format("Node shape: {}", shape));
 
+  const auto rankdir = GENERATE(from_range(all_rank_directions));
+  INFO(fmt::format("Rank direction: {}", rankdir));
+
   const graph_options graph_options = {
+      .rankdir = rankdir,
       .node_shape = shape,
       .node_penwidth = 2,
       .edge_penwidth = 2,
