@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
 
 #define MAX(a,b)	((a)>(b)?(a):(b))
@@ -44,7 +45,7 @@ char *aglasterr()
     fflush(agerrout);
     long endpos = ftell(agerrout);
     size_t len = (size_t)(endpos - aglast);
-    char *buf = malloc(len + 1);
+    char *buf = gv_alloc(len + 1);
     fseek(agerrout, aglast, SEEK_SET);
     len = fread(buf, sizeof(char), len, agerrout);
     buf[len] = '\0';
