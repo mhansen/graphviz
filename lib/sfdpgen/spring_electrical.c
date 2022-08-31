@@ -9,7 +9,8 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
+#include <cgraph/bitarray.h>
 #include <sparse/SparseMatrix.h>
 #include <sfdpgen/spring_electrical.h>
 #include <sparse/QuadTree.h>
@@ -30,7 +31,7 @@
 
 spring_electrical_control spring_electrical_control_new(){
   spring_electrical_control ctrl;
-  ctrl = MALLOC(sizeof(struct spring_electrical_control_struct));
+  ctrl = gv_alloc(sizeof(struct spring_electrical_control_struct));
   ctrl->p = AUTOP;/*a negativve number default to -1. repulsive force = dist^p */
   ctrl->q = 1;/*a positive number default to 1. Only apply to maxent.
 		attractive force = dist^q. Stress energy = (||x_i-x_j||-d_ij)^{q+1} */
@@ -38,13 +39,6 @@ spring_electrical_control spring_electrical_control_new(){
   ctrl->K = -1;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
   ctrl->C = 0.2;/* another parameter. f_a(i,j) = C*dist(i,j)^2/K * d_ij, f_r(i,j) = K^(3-p)/dist(i,j)^(-p). By default C = 0.2. */
   ctrl->multilevels = FALSE;/* if <=1, single level */
-
-  //ctrl->multilevel_coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET;
-  //ctrl->multilevel_coarsen_mode = COARSEN_MODE_GENTLE;
-
-  ctrl->multilevel_coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;  /* pass on to Multilevel_control->coarsen_scheme */
-  ctrl->multilevel_coarsen_mode = COARSEN_MODE_FORCEFUL;/*alternative: COARSEN_MODE_GENTLE. pass on to Multilevel_control->coarsen_mode */
-
 
   ctrl->quadtree_size = 45;/* cut off size above which quadtree approximation is used */
   ctrl->max_qtree_level = 10;/* max level of quadtree */
@@ -88,8 +82,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  repulsive and attractive exponents: %.03f %.03f\n", ctrl->p, ctrl->q);
   fprintf (stderr, "  random start %d seed %d\n", ctrl->random_start, ctrl->random_seed);
   fprintf (stderr, "  K : %.03f C : %.03f\n", ctrl->K, ctrl->C);
-  fprintf (stderr, "  max levels %d coarsen_scheme %d coarsen_node %d\n", ctrl->multilevels,
-    ctrl->multilevel_coarsen_scheme,ctrl->multilevel_coarsen_mode);
+  fprintf (stderr, "  max levels %d\n", ctrl->multilevels);
   fprintf (stderr, "  quadtree size %d max_level %d\n", ctrl->quadtree_size, ctrl->max_qtree_level);
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
   fprintf (stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool, ctrl->step, ctrl->adaptive_cooling);
@@ -107,7 +100,7 @@ void oned_optimizer_delete(oned_optimizer opt){
 
 oned_optimizer oned_optimizer_new(int i){
   oned_optimizer opt;
-  opt = MALLOC(sizeof(struct oned_optimizer_struct));
+  opt = gv_alloc(sizeof(struct oned_optimizer_struct));
   opt->i = i;
   opt->direction = OPT_INIT;
   return opt;
@@ -315,14 +308,14 @@ static double update_step(int adaptive_cooling, double step, double Fnorm, doubl
 
 static void check_real_array_size(double **a, int len, int *lenmax){
   if (len >= *lenmax){
-    *lenmax = len + MAX((int) 0.2*len, 10);
+    *lenmax = len + 10;
     *a = REALLOC(*a, sizeof(double)*(*lenmax));
   }
 
 }
 static void check_int_array_size(int **a, int len, int *lenmax){
   if (len >= *lenmax){
-    *lenmax = len + MAX((int) 0.2*len, 10);
+    *lenmax = len + 10;
     *a = REALLOC(*a, sizeof(int)*(*lenmax));
   }
 
@@ -380,21 +373,20 @@ static void beautify_leaves(int dim, SparseMatrix A, double *x){
 
   assert(!SparseMatrix_has_diagonal(A));
 
-  bool *checked = gcalloc(sizeof(bool), m);
-  angles = MALLOC(sizeof(double)*nangles_max);
-  leaves = MALLOC(sizeof(int)*nleaves_max);
-
+  bitarray_t checked = bitarray_new_or_exit(m);
+  angles = gv_calloc(nangles_max, sizeof(double));
+  leaves = gv_calloc(nleaves_max, sizeof(int));
 
   for (i = 0; i < m; i++){
     if (ia[i+1] - ia[i] != 1) continue;
-    if (checked[i]) continue;
+    if (bitarray_get(checked, i)) continue;
     p = ja[ia[i]];
-    if (!checked[p]){
-      checked[p] = true;
+    if (!bitarray_get(checked, p)) {
+      bitarray_set(&checked, p, true);
       dist = 0; nleaves = 0; nangles = 0;
       for (j = ia[p]; j < ia[p+1]; j++){
 	if (node_degree(ja[j]) == 1){
-	  checked[ja[j]] = TRUE;
+	  bitarray_set(&checked, ja[j], true);
 	  check_int_array_size(&leaves, nleaves, &nleaves_max);
 	  dist += distance(x, dim, p, ja[j]);
 	  leaves[nleaves] = ja[j];
@@ -437,8 +429,7 @@ ang1 = 0; ang2 = 2*PI; maxang = 2*PI;
     }
   }
 
-
-  free(checked);
+  bitarray_reset(&checked);
   free(angles);
   free(leaves);
 }
@@ -1916,7 +1907,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
     return;
   }
 
-  mctrl = Multilevel_control_new(ctrl->multilevel_coarsen_scheme, ctrl->multilevel_coarsen_mode);
+  mctrl = Multilevel_control_new();
   mctrl->maxlevel = ctrl->multilevels;
   grid0 = Multilevel_new(A, D, mctrl);
 
