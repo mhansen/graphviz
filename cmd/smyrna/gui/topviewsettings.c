@@ -13,7 +13,6 @@
 #include "gui.h"
 #include <common/colorprocs.h>
 #include "viewport.h"
-#include <common/memory.h>
 
 void color_change_request(GtkWidget * widget, gpointer user_data)
 {

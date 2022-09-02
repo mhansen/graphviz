@@ -24,7 +24,6 @@
 #include "glcompui.h"
 #include "gltemplate.h"
 #include <common/colorprocs.h>
-#include <common/memory.h>
 #include "topviewsettings.h"
 #include "arcball.h"
 #include "hotkeymap.h"
