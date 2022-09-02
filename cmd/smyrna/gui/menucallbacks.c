@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include "menucallbacks.h"
 #include "viewport.h"
 #include "tvnodes.h"
@@ -15,7 +16,6 @@
 #include "gvprpipe.h"
 #include "topviewsettings.h"
 #include "gltemplate.h"
-#include <common/memory.h>
 #include <common/const.h>
 #include <cgraph/agxbuf.h>
 #include <assert.h>
@@ -305,7 +305,7 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
 	argc++;
     } else
 	cloneGraph = 0;
-    argv = N_NEW(argc + 1, char *);
+    argv = gv_calloc(argc + 1, sizeof(char*));
     j = 0;
     argv[j++] = "smyrna";
     if (cloneGraph)
