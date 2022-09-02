@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <limits.h>
 #include "selectionfuncs.h"
 #include "topviewfuncs.h"
@@ -272,8 +273,9 @@ void add_selpoly(Agraph_t* g,glCompPoly* selPoly,glCompPoint pt)
 {
     if(!close_poly(selPoly,pt))
     {
+	selPoly->pts = gv_recalloc(selPoly->pts, selPoly->cnt, selPoly->cnt + 1,
+	                           sizeof(glCompPoint));
 	selPoly->cnt ++;
-	selPoly->pts=realloc(selPoly->pts,sizeof(glCompPoint)*selPoly->cnt);
 	selPoly->pts[selPoly->cnt-1].x=pt.x;
 	selPoly->pts[selPoly->cnt-1].y=pt.y;
 	selPoly->pts[selPoly->cnt-1].z=0;
