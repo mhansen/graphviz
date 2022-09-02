@@ -12,7 +12,6 @@
 #include "viewport.h"
 #include "topviewfuncs.h"
 #include <cgraph/alloc.h>
-#include <common/memory.h>
 #include <stdbool.h>
 
 typedef struct {
@@ -334,7 +333,7 @@ static void clearGrid(grid * g)
 
 static grid *initGrid(void)
 {
-    grid *gr = NEW(grid);
+    grid *gr = gv_alloc(sizeof(grid));
     gr->columns = NULL;
     gr->count = 0;
     gr->buf = 0;
