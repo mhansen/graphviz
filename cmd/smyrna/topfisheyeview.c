@@ -10,7 +10,6 @@
 #include "topfisheyeview.h"
 #include <cgraph/alloc.h>
 #include <math.h>
-#include <common/memory.h>
 #include "viewport.h"
 #include "viewportcamera.h"
 #include "draw.h"
@@ -126,8 +125,8 @@ static void refresh_old_values(topview * t)
  */
 void prepare_topological_fisheye(Agraph_t* g,topview * t)
 {
-    double *x_coords = N_NEW(t->Nodecount, double);	// initial x coordinates
-    double *y_coords = N_NEW(t->Nodecount, double);	// initial y coordinates
+    double *x_coords = gv_calloc(t->Nodecount, sizeof(double));	// initial x coordinates
+    double *y_coords = gv_calloc(t->Nodecount, sizeof(double));	// initial y coordinates
     focus_t *fs;
     int ne;
     int i;
