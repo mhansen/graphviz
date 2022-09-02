@@ -723,19 +723,17 @@ static colordata palette[] = {
 
 static colorschemaset *create_color_theme(int themeid)
 {
-    colorschemaset *s;
-
     if (themeid < 0 || (int)NUM_SCHEMES <= themeid) {
 	fprintf (stderr, "colorschemaset: illegal themeid %d\n", themeid);
 	return view->colschms;
     }
 
-    s = NEW(colorschemaset);
+    colorschemaset *s = gv_alloc(sizeof(colorschemaset));
     if (view->colschms)
 	clear_color_theme(view->colschms);
 
     s->schemacount = palette[themeid].cnt;
-    s->s = N_NEW(s->schemacount,colorschema);
+    s->s = gv_calloc(s->schemacount, sizeof(colorschema));
     set_color_theme_color(s, palette[themeid].colors);
 
     return s;
