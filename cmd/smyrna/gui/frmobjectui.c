@@ -23,6 +23,7 @@
 #include <ast/sfstr.h>
 #include "gvprpipe.h"
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 #include <string.h>
@@ -61,7 +62,7 @@ static void free_attr(attr_t *at) {
 }
 
 static attr_t *new_attr(void) {
-    attr_t *attr = malloc(sizeof(attr_t));
+    attr_t *attr = gv_alloc(sizeof(attr_t));
     attr->defValG = NULL;
     attr->defValN = NULL;
     attr->defValE = NULL;
