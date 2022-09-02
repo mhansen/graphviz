@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include "viewportcamera.h"
 #include "gui.h"
 #include <math.h>
@@ -19,7 +20,7 @@
 
 static viewport_camera *new_viewport_camera(ViewInfo * view)
 {
-    return NEW(viewport_camera);
+    return gv_alloc(sizeof(viewport_camera));
 }
 
 static viewport_camera *add_camera_to_viewport(ViewInfo * view)
