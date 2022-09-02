@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include "smyrnadefs.h"
 #include "hier.h"
 #include <math.h>
@@ -63,8 +64,8 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
     int i;
     int interval = 20;
     int counter = 0;		/* no. of active nodes */
-    double *x_coords = N_NEW(hp->nvtxs[0], double);
-    double *y_coords = N_NEW(hp->nvtxs[0], double);
+    double *x_coords = gv_calloc(hp->nvtxs[0], sizeof(double));
+    double *y_coords = gv_calloc(hp->nvtxs[0], sizeof(double));
     int max_level = hp->nlevels - 1;	// coarsest level
     double width = parms->width;
     double height = parms->height;
