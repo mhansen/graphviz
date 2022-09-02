@@ -355,7 +355,7 @@ void init_viewport(ViewInfo * view)
     view->fmg.active = 0;
     view->mouse.down = 0;
     view->activeGraph = -1;
-    view->Topview = GNEW(topview);
+    view->Topview = gv_alloc(sizeof(topview));
     view->Topview->fisheyeParams.fs = 0;
     view->Topview->xDot=NULL;
 
@@ -388,7 +388,7 @@ void init_viewport(ViewInfo * view)
     set_viewport_settings_from_template(view, view->systemGraphs.def_attrs);
     view->Topview->Graphdata.GraphFileName = NULL;
     view->colschms = NULL;
-    view->arcball = NEW(ArcBall_t);
+    view->arcball = gv_alloc(sizeof(ArcBall_t));
     view->keymap.down=0;
     load_mouse_actions (view);
     view->refresh.color=1;
