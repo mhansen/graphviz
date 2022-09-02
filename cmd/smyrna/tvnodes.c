@@ -312,7 +312,7 @@ static void add_column(grid * g, char *name, bool editable, GType g_type)
 	return;
     g->columns = gv_recalloc(g->columns, g->count, g->count + 1,
                              sizeof(gridCol*));
-    g->columns[g->count] = NEW(gridCol);
+    g->columns[g->count] = gv_alloc(sizeof(gridCol));
     g->columns[g->count]->editable = editable;
     g->columns[g->count]->name = name;
     g->columns[g->count]->type = g_type;
