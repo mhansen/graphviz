@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "polytess.h"
+#include <cgraph/alloc.h>
 #include <stddef.h>
 #include <xdot/xdot.h>
 tessPoly TP;
@@ -21,9 +22,8 @@ static void CALLBACK combineCallback(GLdouble coords[3], GLdouble *vertex_data[4
     (void)vertex_data;
     (void)weight;
 
-    GLdouble *vertex;
     int i;
-    vertex = malloc(6 * sizeof(GLdouble));
+    GLdouble *vertex = gv_calloc(6, sizeof(GLdouble));
     vertex[0] = coords[0];
     vertex[1] = coords[1];
     vertex[2] = coords[2];
