@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include "topviewfuncs.h"
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include "smyrna_utils.h"
 #include <common/colorprocs.h>
@@ -18,7 +19,6 @@
 #include <xdot/xdot.h>
 #include <glcomp/glutils.h>
 #include "selectionfuncs.h"
-#include <common/memory.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
@@ -556,16 +556,13 @@ static xdot* makeXDotSpline (char* pos)
     int v, have_s, have_e;
     size_t cnt;
     static const size_t sz = sizeof(sdot_op);
-    xdot* xd;
-    xdot_op* op;
-    xdot_point* pts;
 
     if (*pos == '\0') return NULL;
 
     pos = countPoints (pos, &have_s, &s, &have_e, &e, &cnt);
     if (pos == 0) return NULL;
 
-    pts = N_NEW(cnt,xdot_point);
+    xdot_point* pts = gv_calloc(cnt, sizeof(xdot_point));
     if (have_s) {
 	v = storePoints (pos, pts+3);
 	pts[0] = pts[1] = s;
@@ -583,13 +580,13 @@ static xdot* makeXDotSpline (char* pos)
 	pts[cnt-3] = pts[cnt-4];
     }
 
-    op = (xdot_op*)N_NEW(sz,char);
+    xdot_op* op = gv_calloc(sz, sizeof(char));
     op->kind = xd_unfilled_bezier;
     op->drawfunc = OpFns[xop_bezier];
     op->u.bezier.cnt = cnt; 
     op->u.bezier.pts = pts; 
 
-    xd = NEW(xdot);
+    xdot* xd = gv_alloc(sizeof(xdot));
     xd->cnt = 1;
     xd->sz = sz;
     xd->ops = op;
