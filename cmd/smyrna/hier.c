@@ -13,7 +13,6 @@
 #include "hier.h"
 #include <math.h>
 #include <neatogen/delaunay.h>
-#include <common/memory.h>
 
 /* scale_coords:
  */
@@ -195,10 +194,10 @@ Hierarchy *makeHier(int nn, int ne, v_data * graph, double *x_coords,
 
 focus_t *initFocus(int ncnt)
 {
-    focus_t *fs = NEW(focus_t);
+    focus_t *fs = gv_alloc(sizeof(focus_t));
     fs->num_foci = 0;
-    fs->foci_nodes = N_NEW(ncnt, int);
-    fs->x_foci = N_NEW(ncnt, double);
-    fs->y_foci = N_NEW(ncnt, double);
+    fs->foci_nodes = gv_calloc(ncnt, sizeof(int));
+    fs->x_foci = gv_calloc(ncnt, sizeof(double));
+    fs->y_foci = gv_calloc(ncnt, sizeof(double));
     return fs;
 }
