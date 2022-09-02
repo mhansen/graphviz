@@ -11,6 +11,7 @@
 #include "tvnodes.h"
 #include "viewport.h"
 #include "topviewfuncs.h"
+#include <cgraph/alloc.h>
 #include <common/memory.h>
 #include <stdbool.h>
 
@@ -309,8 +310,8 @@ static void add_column(grid * g, char *name, bool editable, GType g_type)
 {
     if (*name == '\0')
 	return;
-    g->columns = realloc(g->columns,
-			     sizeof(gridCol *) * (g->count + 1));
+    g->columns = gv_recalloc(g->columns, g->count, g->count + 1,
+                             sizeof(gridCol*));
     g->columns[g->count] = NEW(gridCol);
     g->columns[g->count]->editable = editable;
     g->columns[g->count]->name = name;
