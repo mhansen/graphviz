@@ -13,6 +13,7 @@
 #endif
 #include "viewport.h"
 #include "draw.h"
+#include <cgraph/alloc.h>
 #include <common/color.h>
 #include <glade/glade.h>
 #include "gui.h"
@@ -517,9 +518,9 @@ static void activate(int id)
 int add_graph_to_viewport(Agraph_t * graph, char *id)
 {
     if (graph) {
+	view->g = gv_recalloc(view->g, view->graphCount, view->graphCount + 1,
+	                      sizeof(Agraph_t*));
 	view->graphCount = view->graphCount + 1;
-	view->g = realloc(view->g,
-				  sizeof(Agraph_t *) * view->graphCount);
 	view->g[view->graphCount - 1] = graph;
 
 	gtk_combo_box_append_text(view->graphComboBox, id);
