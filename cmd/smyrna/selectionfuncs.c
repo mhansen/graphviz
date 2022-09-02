@@ -235,7 +235,8 @@ void deselect_all(Agraph_t* g)
 
 void clear_selpoly(glCompPoly* sp)
 {
-    sp->pts=realloc(sp->pts,0);
+    free(sp->pts);
+    sp->pts = NULL;
     sp->cnt=0;
 }
 static int close_poly(glCompPoly* selPoly,glCompPoint pt)
