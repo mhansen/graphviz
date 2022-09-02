@@ -292,7 +292,7 @@ static GtkTreeView *update_tree(GtkTreeView * tree, grid * g)
 
     }
     if (g->count > 0) {
-	types = N_NEW(g->count, GType);
+	types = gv_calloc(g->count, sizeof(GType));
 	for (id = 0; id < g->count; id++)
 	    types[id] = g->columns[id]->type;
 	store = update_tree_store(g->store, g->count, types);
