@@ -77,7 +77,7 @@ static void Set_Winding_Rule(GLUtesselator *tobj, GLenum winding_rule)
 
 static void Render_Contour2(GLUtesselator *tobj, sdot_op* p)
 {
-    GLdouble* d = calloc(p->op.u.polygon.cnt * 3, sizeof(GLdouble));
+    GLdouble *d = gv_calloc(p->op.u.polygon.cnt * 3, sizeof(GLdouble));
     for (size_t x = 0; x < p->op.u.polygon.cnt; x++)
     {
         d[x * 3] = p->op.u.polygon.pts[x].x;
