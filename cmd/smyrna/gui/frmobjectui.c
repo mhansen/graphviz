@@ -17,7 +17,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdk.h>
 #include "viewport.h"
-#include <common/memory.h>
 #include "frmobjectui.h"
 #include <assert.h>
 #include <ast/sfstr.h>
@@ -189,9 +188,10 @@ static void attr_list_add(attr_list *l, attr_t *a) {
 	return;
     l->attr_count++;
     if (l->attr_count == l->capacity) {
+	l->attributes = gv_recalloc(l->attributes, l->capacity,
+	                            l->capacity + EXPAND_CAPACITY_VALUE,
+	                            sizeof(attr_t *));
 	l->capacity = l->capacity + EXPAND_CAPACITY_VALUE;
-	l->attributes =
-	    realloc(l->attributes, l->capacity * sizeof(attr_t *));
     }
     l->attributes[l->attr_count - 1] = a;
     if (l->attr_count > 1)
