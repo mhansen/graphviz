@@ -11,7 +11,7 @@
 #include <gvc++/GVRenderData.h>
 
 SVGAnalyzer::SVGAnalyzer(char *text)
-    : m_svg(SVG::SVGElement(SVG::SVGElementType::Svg)) {
+    : m_original_svg(text), m_svg(SVG::SVGElement(SVG::SVGElementType::Svg)) {
   m_elements_in_process.push_back(&m_svg);
   SvgppContext context{this};
   traverseDocumentWithSvgpp(context, text);
@@ -258,6 +258,8 @@ SVGAnalyzer SVGAnalyzer::make_from_dot(const std::string &dot_source,
   const auto result = layout.render("svg");
   return SVGAnalyzer{result.c_str()};
 }
+
+std::string_view SVGAnalyzer::original_svg() const { return m_original_svg; }
 
 void SVGAnalyzer::set_transform(double a, double b, double c, double d,
                                 double e, double f) {

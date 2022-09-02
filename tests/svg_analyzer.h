@@ -72,6 +72,8 @@ public:
   std::size_t num_rects() const { return m_num_rects; };
   std::size_t num_texts() const { return m_num_texts; };
   std::size_t num_titles() const { return m_num_titles; };
+  /// Return a view of the original SVG
+  std::string_view original_svg() const;
   void set_graphviz_version(std::string_view version);
   void set_graphviz_build_date(std::string_view build_date);
   std::string svg_string(std::size_t indent_size = 2) const;
@@ -111,6 +113,8 @@ private:
   std::size_t m_num_titles = 0;
   /// A list of Graphviz recreated graphs
   std::vector<GraphvizGraph> m_graphs;
+  /// The original SVG document
+  std::string m_original_svg;
   /// The top level SVG `svg` element corresponding to the Graphviz graph
   SVG::SVGElement m_svg;
 };
