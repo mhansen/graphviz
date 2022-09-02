@@ -144,10 +144,10 @@ static void free_attr_list(attr_list *l) {
 // that uses quicksort
 static attr_list *attr_list_new(Agraph_t *g, int with_widgets) {
     int id;
-    attr_list *l = malloc(sizeof(attr_list));
+    attr_list *l = gv_alloc(sizeof(attr_list));
     l->attr_count = 0;
     l->capacity = DEFAULT_ATTR_LIST_CAPACITY;
-    l->attributes = malloc(DEFAULT_ATTR_LIST_CAPACITY * sizeof(attr_t *));
+    l->attributes = gv_calloc(DEFAULT_ATTR_LIST_CAPACITY, sizeof(attr_t*));
     l->with_widgets = with_widgets;
     /*create filter widgets */
 
