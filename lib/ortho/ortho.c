@@ -343,7 +343,7 @@ addChan (Dt_t* chdict, channel* cp, double j)
     chanItem* subd = dtmatch (chdict, &j);
 
     if (!subd) {
-	subd = NEW (chanItem);
+	subd = gv_alloc(sizeof(chanItem));
 	subd->v = j;
 	subd->chans = dtopen (&chanDisc, Dtoset);
 	dtinsert (chdict, subd);
