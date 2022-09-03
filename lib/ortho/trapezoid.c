@@ -18,14 +18,13 @@
 
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <string.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
 #include <common/geom.h>
-#include <common/memory.h>
 #include <common/types.h>
 #include <ortho/trap.h>
 
@@ -1028,7 +1027,7 @@ construct_trapezoids(int nseg, segment_t* seg, int* permute, int ntraps,
 
     QSIZE = 2*ntraps;
     TRSIZE = ntraps;
-    qs = N_NEW (2*ntraps, qnode_t);
+    qs = gv_calloc(2 * ntraps, sizeof(qnode_t));
     q_idx = tr_idx = 1;
     memset(tr, 0, ntraps*sizeof(trap_t));
 
