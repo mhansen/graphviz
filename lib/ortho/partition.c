@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <ortho/partition.h>
 #include <ortho/trap.h>
 #include <common/memory.h>
@@ -599,11 +599,11 @@ monotonate_trapezoids(int nsegs, segment_t*seg, trap_t* tr,
     int i, size;
     int tr_start;
     int tr_size = TRSIZE(nsegs);
-    int* visited = N_NEW(tr_size,int);
+    int* visited = gv_calloc(tr_size, sizeof(int));
 
-    mchain = N_NEW(tr_size, monchain_t);
-    vert = N_NEW(nsegs+1,vertexchain_t); 
-    mon = N_NEW(nsegs, int);    
+    mchain = gv_calloc(tr_size, sizeof(monchain_t));
+    vert = gv_calloc(nsegs + 1, sizeof(vertexchain_t));
+    mon = gv_calloc(nsegs, sizeof(int));
 
   /* First locate a trapezoid which lies inside the polygon */
   /* and which is triangular */
