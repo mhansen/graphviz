@@ -13,7 +13,6 @@
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <ortho/rawgraph.h>
-#include <common/memory.h>
 #include <common/intset.h>
 #include <stdbool.h>
 
@@ -78,8 +77,8 @@ typedef struct {
 static stack*
 mkStack (int i)
 {
-    stack* sp = NEW(stack);
-    sp->vals = N_NEW(i,int);
+    stack* sp = gv_alloc(sizeof(stack));
+    sp->vals = gv_calloc(i, sizeof(int));
     sp->top = -1;
     return sp;
 }
