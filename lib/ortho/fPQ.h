@@ -13,6 +13,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <ortho/sgraph.h>
 
 #define N_VAL(n) (n)->n_val
@@ -34,7 +35,7 @@ static void
 PQgen(int sz)
 {
   if (!pq) {
-    pq = N_NEW(sz+1,snode*);
+    pq = gv_calloc(sz + 1, sizeof(snode*));
     pq[0] = &guard;
     PQsize = sz;
   }
