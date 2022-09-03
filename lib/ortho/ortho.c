@@ -28,6 +28,7 @@
 #include <ortho/maze.h>
 #include <ortho/fPQ.h>
 #include <ortho/ortho.h>
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/unused.h>
 #include <common/memory.h>
@@ -160,7 +161,7 @@ convertSPtoRoute (sgraph* g, snode* fst, snode* lst)
     for (ptr = fst; ptr; ptr = N_DAD(ptr)) sz++;
     rte.n = 0;
     assert(sz >= 2);
-    rte.segs = N_NEW(sz-2, segment);  /* at most sz-2 segments */
+    rte.segs = gv_calloc(sz - 2, sizeof(segment));  /* at most sz-2 segments */
 
     seg.prev = seg.next = 0;
     ptr = prev = N_DAD(fst);
