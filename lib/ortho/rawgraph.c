@@ -11,7 +11,7 @@
  /* Implements graph.h  */
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <ortho/rawgraph.h>
 #include <common/memory.h>
 #include <common/intset.h>
@@ -25,9 +25,9 @@ rawgraph*
 make_graph(int n)
 {
     int i;
-    rawgraph* g = NEW(rawgraph);
+    rawgraph* g = gv_alloc(sizeof(rawgraph));
     g->nvs = n;
-    g->vertices = N_NEW(n, vertex);
+    g->vertices = gv_calloc(n, sizeof(vertex));
     for(i=0;i<n;i++) {
         g->vertices[i].adj_list = openIntSet ();
         g->vertices[i].color = UNSCANNED;
