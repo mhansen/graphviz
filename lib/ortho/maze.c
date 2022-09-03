@@ -20,7 +20,6 @@
 #include <ortho/maze.h>
 #include <ortho/partition.h>
 #include <ortho/trap.h>
-#include <common/memory.h>
 #include <common/arith.h>
 
 #define MARGIN 36;
@@ -467,7 +466,7 @@ chkSgraph (g);
 
 maze *mkMaze(graph_t *g) {
     node_t* n;
-    maze* mp = NEW(maze);
+    maze* mp = gv_alloc(sizeof(maze));
     boxf* rects;
     int i, nrect;
     cell* cp;
@@ -475,7 +474,7 @@ maze *mkMaze(graph_t *g) {
     boxf bb, BB;
 
     mp->ngcells = agnnodes(g);
-    cp = mp->gcells = N_NEW(mp->ngcells, cell);
+    cp = mp->gcells = gv_calloc(mp->ngcells, sizeof(cell));
 
     BB.LL.x = BB.LL.y = MAXDOUBLE;
     BB.UR.x = BB.UR.y = -MAXDOUBLE;
@@ -505,7 +504,7 @@ maze *mkMaze(graph_t *g) {
 #ifdef DEBUG
     if (odb_flags & ODB_MAZE) psdump (mp->gcells, mp->ngcells, BB, rects, nrect);
 #endif
-    mp->cells = N_NEW(nrect, cell);
+    mp->cells = gv_calloc(nrect, sizeof(cell));
     mp->ncells = nrect;
     for (i = 0; i < nrect; i++) {
 	mp->cells[i].bb = rects[i];
