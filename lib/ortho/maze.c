@@ -13,6 +13,7 @@
 
 #define DEBUG
 
+#include <cgraph/alloc.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -347,14 +348,14 @@ mkMazeGraph (maze* mp, boxf bb)
     sgraph* g = createSGraph (bound + 2);
     Dt_t* vdict = dtopen(&vdictDisc,Dtoset);
     Dt_t* hdict = dtopen(&hdictDisc,Dtoset);
-    snodeitem* ditems = N_NEW(bound, snodeitem);
+    snodeitem* ditems = gv_calloc(bound, sizeof(snodeitem));
     snode** sides;
 
     /* For each cell, create if necessary and attach a node in search
      * corresponding to each internal face. The node also gets
      * a pointer to the cell.
      */
-    sides = N_NEW(4*mp->ncells, snode*);
+    sides = gv_calloc(4 * mp->ncells, sizeof(snode*));
     for (i = 0; i < mp->ncells; i++) {
 	cell* cp = mp->cells+i;
         snode* np;
@@ -392,7 +393,7 @@ mkMazeGraph (maze* mp, boxf bb)
      * connect it to its corresponding search nodes.
      */
     maxdeg = 0;
-    sides = N_NEW(g->nnodes, snode*);
+    sides = gv_calloc(g->nnodes, sizeof(snode*));
     nsides = 0;
     for (i = 0; i < mp->ngcells; i++) {
 	cell* cp = mp->gcells+i;
