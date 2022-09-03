@@ -1163,7 +1163,7 @@ attachOrthoEdges(maze* mp, size_t n_edges, route* route_list, splineInfo *sinfo,
 	size_t npts = 1 + 3*rte.n;
 	if (npts > splsz) {
 		free (ispline);
-		ispline = N_GNEW(npts, pointf);
+		ispline = gv_calloc(npts, sizeof(pointf));
 		splsz = npts;
 	}
 	    
