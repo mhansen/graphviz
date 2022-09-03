@@ -31,7 +31,6 @@
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/unused.h>
-#include <common/memory.h>
 #include <common/geomprocs.h>
 #include <common/globals.h>
 #include <common/render.h>
@@ -1250,7 +1249,7 @@ orthoEdges (Agraph_t* g, int doLbls)
     Agedge_t* e;
     snode* sn;
     snode* dn;
-    epair_t* es = N_GNEW(agnedges(g), epair_t);
+    epair_t* es = gv_calloc(agnedges(g), sizeof(epair_t));
     cell* start;
     cell* dest;
     PointSet* ps = NULL;
@@ -1320,7 +1319,7 @@ orthoEdges (Agraph_t* g, int doLbls)
 	}
     }
 
-    route_list = N_NEW (n_edges, route);
+    route_list = gv_calloc(n_edges, sizeof(route));
 
     qsort(es, n_edges, sizeof(epair_t), (qsort_cmpf) edgecmp);
 
