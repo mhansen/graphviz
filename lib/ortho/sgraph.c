@@ -12,7 +12,6 @@
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <limits.h>
-#include <common/memory.h>
 #include <ortho/sgraph.h>
 #include <ortho/fPQ.h>
 
@@ -57,11 +56,11 @@ initSEdges (sgraph* g, int maxdeg)
 sgraph*
 createSGraph (int nnodes)
 {
-    sgraph* g = NEW(sgraph);
+    sgraph* g = gv_alloc(sizeof(sgraph));
 
 	/* create the nodes vector in the search graph */
     g->nnodes = 0;
-    g->nodes = N_NEW(nnodes, snode);
+    g->nodes = gv_calloc(nnodes, sizeof(snode));
     return g;
 }
 
