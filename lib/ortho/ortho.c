@@ -407,7 +407,7 @@ extractVChans (maze* mp)
 	    cp = nextcp;
 	}
 
-	chp = NEW(channel);
+	chp = gv_alloc(sizeof(channel));
 	chp->cp = cp;
 	chp->p.p1 = cp->bb.LL.y;
 
