@@ -1951,3 +1951,22 @@ def test_2258():
 
   for gradient in gradients:
     assert "G2" in gradient.get("id"), "ID was not applied to linear gradients"
+
+@pytest.mark.xfail(strict=True)
+def test_2270(tmp_path: Path):
+  """
+  `-O` should result in the expected output filename
+  https://gitlab.com/graphviz/graphviz/-/issues/2270
+  """
+
+  # write a simple graph
+  input = tmp_path / "hello.gv"
+  input.write_text("digraph { hello -> world }", encoding="utf-8")
+
+  # process it with Graphviz
+  subprocess.check_call(["dot", "-T", "plain:dot:core", "-O", "hello.gv"],
+                        cwd=tmp_path)
+
+  # it should have produced output in the expected location
+  output = tmp_path / "hello.gv.core.dot.plain"
+  assert output.exists(), "-O resulted in an unexpected output filename"
