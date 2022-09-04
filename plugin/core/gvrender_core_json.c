@@ -27,6 +27,7 @@
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
@@ -476,7 +477,7 @@ static int write_edges(Agraph_t * g, GVJ_t * job, int top, state_t* sp)
         return 0;
     }
 
-    Agedge_t **edges = gcalloc(count, sizeof(Agedge_t *));
+    Agedge_t **edges = gv_calloc(count, sizeof(Agedge_t *));
 
     size_t i = 0;
     for (Agnode_t *np = agfstnode(g); np; np = agnxtnode(g, np)) {
