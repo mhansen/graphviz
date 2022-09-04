@@ -29,6 +29,7 @@
 #include <common/color.h>
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <common/memory.h>
 #include <common/render.h>
@@ -55,7 +56,7 @@ typedef struct {
 } state_t;
 
 static void vrml_begin_job(GVJ_t *job) {
-  job->context = zmalloc(sizeof(state_t));
+  job->context = gv_alloc(sizeof(state_t));
 }
 
 static void vrml_end_job(GVJ_t *job) {
