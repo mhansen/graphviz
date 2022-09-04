@@ -17,7 +17,6 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
@@ -87,7 +86,7 @@ static void auto_output_filename(GVJ_t *job)
     static char *buf;
     static size_t bufsz;
     char gidx[100];  /* large enough for '.' plus any integer */
-    char *fn;
+    char *fn, *p, *q;
     size_t len;
 
     if (job->graph_index)
@@ -108,23 +107,14 @@ static void auto_output_filename(GVJ_t *job)
     strcpy(buf, fn);
     strcat(buf, gidx);
     strcat(buf, ".");
-
-    {
-        char *dst = buf + strlen(buf);
-        const char *src = job->output_langname;
-        const char *src_end = src + strlen(src);
-        for (const char *q = src_end; ; --q) {
-            if (*q == ':') {
-                sprintf(dst, "%.*s.", (int)(src_end - q - 1), q + 1);
-                dst += (size_t)(src_end - q - 1);
-                src_end = q;
-            }
-            if (q == src) {
-                sprintf(dst, "%.*s", (int)(src_end - src), src);
-                break;
-            }
-        }
+    p = strdup(job->output_langname);
+    while ((q = strrchr(p, ':'))) {
+        strcat(buf, q+1);
+        strcat(buf, ".");
+	*q = '\0';
     }
+    strcat(buf, p);
+    free(p);
 
     job->output_filename = buf;
 }

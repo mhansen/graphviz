@@ -1952,7 +1952,6 @@ def test_2258():
   for gradient in gradients:
     assert "G2" in gradient.get("id"), "ID was not applied to linear gradients"
 
-@pytest.mark.xfail(strict=True)
 def test_2270(tmp_path: Path):
   """
   `-O` should result in the expected output filename
