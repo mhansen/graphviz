@@ -23,7 +23,6 @@
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
-#include <common/memory.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 
