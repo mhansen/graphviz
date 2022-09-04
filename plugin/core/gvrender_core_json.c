@@ -34,8 +34,6 @@
 #include <gvc/gvio.h>
 #include <gvc/gvcint.h>
 
-#include <common/memory.h>
-
 typedef enum {
 	FORMAT_JSON,
 	FORMAT_JSON0,
@@ -615,7 +613,7 @@ static void insert (Dt_t* map, char* name, int v)
 	    agerr(AGWARN, "Duplicate cluster name \"%s\"\n", name);
 	return;
     }
-    ip = calloc(1, sizeof(intm));
+    ip = gv_alloc(sizeof(intm));
     ip->id = strdup(name);
     ip->v = v;
     dtinsert (map, ip);
