@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include "hotkeymap.h"
 
 static int get_mouse_mode(const char *s)
@@ -129,10 +130,10 @@ void load_mouse_actions(ViewInfo * v)
 		|| (strlen(line) == 0))
 		continue;
 
+	    v->mouse_actions = gv_recalloc(v->mouse_actions, v->mouse_action_count,
+	                                   v->mouse_action_count + 1,
+	                                   sizeof(mouse_action_t));
 	    v->mouse_action_count++;
-	    v->mouse_actions =
-		realloc(v->mouse_actions,
-			v->mouse_action_count * sizeof(mouse_action_t));
 	    v->mouse_actions[ind].action = get_mouse_mode(a);
 	    v->mouse_actions[ind].index = i;
 

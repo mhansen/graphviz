@@ -8,9 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 #include "topfisheyeview.h"
-
+#include <cgraph/alloc.h>
 #include <math.h>
-#include <common/memory.h>
 #include "viewport.h"
 #include "viewportcamera.h"
 #include "draw.h"
@@ -54,9 +53,9 @@ static v_data *makeGraph(Agraph_t* gg, int *nedges)
     int i;
     int ne = agnedges(gg);
     int nv = agnnodes(gg);
-    v_data *graph = N_NEW(nv, v_data);
-    int *edges = N_NEW(2 * ne + nv, int);	/* reserve space for self loops */
-    float *ewgts = N_NEW(2 * ne + nv, float);
+    v_data *graph = gv_calloc(nv, sizeof(v_data));
+    int *edges = gv_calloc(2 * ne + nv, sizeof(int));	/* reserve space for self loops */
+    float *ewgts = gv_calloc(2 * ne + nv, sizeof(float));
     Agnode_t *np;
     Agedge_t *ep;
     Agraph_t *g = NULL;
@@ -126,8 +125,8 @@ static void refresh_old_values(topview * t)
  */
 void prepare_topological_fisheye(Agraph_t* g,topview * t)
 {
-    double *x_coords = N_NEW(t->Nodecount, double);	// initial x coordinates
-    double *y_coords = N_NEW(t->Nodecount, double);	// initial y coordinates
+    double *x_coords = gv_calloc(t->Nodecount, sizeof(double));	// initial x coordinates
+    double *y_coords = gv_calloc(t->Nodecount, sizeof(double));	// initial y coordinates
     focus_t *fs;
     int ne;
     int i;

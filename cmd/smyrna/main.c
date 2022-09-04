@@ -24,8 +24,8 @@
 #include "support.h"
 #include "menucallbacks.h"
 #include "gltemplate.h"
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
-#include <common/memory.h>
 #include "gvprpipe.h"
 #include "frmobjectui.h"
 #ifdef ENABLE_NLS
@@ -52,7 +52,6 @@ static char *smyrnaGlade;
  */
 char *smyrnaPath(char *suffix)
 {
-    char *buf;
     static size_t baselen;
 #ifdef _WIN32
     char *pathSep = "\\";
@@ -65,7 +64,7 @@ char *smyrnaPath(char *suffix)
 	baselen = strlen(smyrnaDir) + 2;
     }
     size_t slen = strlen(suffix);
-    buf = N_NEW(baselen+slen, char);
+    char *buf = gv_calloc(baselen + slen, sizeof(char));
     sprintf(buf, "%s%s%s", smyrnaDir, pathSep, suffix);
     return buf;
 }
@@ -212,7 +211,7 @@ int main(int argc, char *argv[])
 	}
 	*s = '\0';
 
-	smyrnaDir = N_NEW(strlen(line)+sizeof(SMYRNA), char);
+	smyrnaDir = gv_calloc(strlen(line) + sizeof(SMYRNA), sizeof(char));
 	strcpy (smyrnaDir, line);
 	strcat(smyrnaDir, SMYRNA);
 #else
@@ -236,7 +235,7 @@ int main(int argc, char *argv[])
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
 #endif
-    view = NEW(ViewInfo);
+    view = gv_alloc(sizeof(ViewInfo));
     init_viewport(view);
     view->initFileName = parseArgs(argc, argv, view);
     if(view->initFileName)

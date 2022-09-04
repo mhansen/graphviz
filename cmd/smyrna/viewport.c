@@ -13,6 +13,7 @@
 #endif
 #include "viewport.h"
 #include "draw.h"
+#include <cgraph/alloc.h>
 #include <common/color.h>
 #include <glade/glade.h>
 #include "gui.h"
@@ -23,7 +24,6 @@
 #include "glcompui.h"
 #include "gltemplate.h"
 #include <common/colorprocs.h>
-#include <common/memory.h>
 #include "topviewsettings.h"
 #include "arcball.h"
 #include "hotkeymap.h"
@@ -354,7 +354,7 @@ void init_viewport(ViewInfo * view)
     view->fmg.active = 0;
     view->mouse.down = 0;
     view->activeGraph = -1;
-    view->Topview = GNEW(topview);
+    view->Topview = gv_alloc(sizeof(topview));
     view->Topview->fisheyeParams.fs = 0;
     view->Topview->xDot=NULL;
 
@@ -387,7 +387,7 @@ void init_viewport(ViewInfo * view)
     set_viewport_settings_from_template(view, view->systemGraphs.def_attrs);
     view->Topview->Graphdata.GraphFileName = NULL;
     view->colschms = NULL;
-    view->arcball = NEW(ArcBall_t);
+    view->arcball = gv_alloc(sizeof(ArcBall_t));
     view->keymap.down=0;
     load_mouse_actions (view);
     view->refresh.color=1;
@@ -517,9 +517,9 @@ static void activate(int id)
 int add_graph_to_viewport(Agraph_t * graph, char *id)
 {
     if (graph) {
+	view->g = gv_recalloc(view->g, view->graphCount, view->graphCount + 1,
+	                      sizeof(Agraph_t*));
 	view->graphCount = view->graphCount + 1;
-	view->g = realloc(view->g,
-				  sizeof(Agraph_t *) * view->graphCount);
 	view->g[view->graphCount - 1] = graph;
 
 	gtk_combo_box_append_text(view->graphComboBox, id);
@@ -722,19 +722,17 @@ static colordata palette[] = {
 
 static colorschemaset *create_color_theme(int themeid)
 {
-    colorschemaset *s;
-
     if (themeid < 0 || (int)NUM_SCHEMES <= themeid) {
 	fprintf (stderr, "colorschemaset: illegal themeid %d\n", themeid);
 	return view->colschms;
     }
 
-    s = NEW(colorschemaset);
+    colorschemaset *s = gv_alloc(sizeof(colorschemaset));
     if (view->colschms)
 	clear_color_theme(view->colschms);
 
     s->schemacount = palette[themeid].cnt;
-    s->s = N_NEW(s->schemacount,colorschema);
+    s->s = gv_calloc(s->schemacount, sizeof(colorschema));
     set_color_theme_color(s, palette[themeid].colors);
 
     return s;

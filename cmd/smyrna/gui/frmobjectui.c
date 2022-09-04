@@ -17,12 +17,12 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdk.h>
 #include "viewport.h"
-#include <common/memory.h>
 #include "frmobjectui.h"
 #include <assert.h>
 #include <ast/sfstr.h>
 #include "gvprpipe.h"
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 #include <string.h>
@@ -61,7 +61,7 @@ static void free_attr(attr_t *at) {
 }
 
 static attr_t *new_attr(void) {
-    attr_t *attr = malloc(sizeof(attr_t));
+    attr_t *attr = gv_alloc(sizeof(attr_t));
     attr->defValG = NULL;
     attr->defValN = NULL;
     attr->defValE = NULL;
@@ -100,7 +100,7 @@ static attr_t *new_attr_with_ref(Agsym_t * sym)
 
 static attr_t *new_attr_ref(attr_t * refAttr)
 {
-    attr_t *attr = malloc(sizeof(attr_t));
+    attr_t *attr = gv_alloc(sizeof(attr_t));
     *attr = *refAttr;
     attr->defValG = safestrdup(refAttr->defValG);
     attr->defValN = safestrdup(refAttr->defValN);
@@ -143,10 +143,10 @@ static void free_attr_list(attr_list *l) {
 // that uses quicksort
 static attr_list *attr_list_new(Agraph_t *g, int with_widgets) {
     int id;
-    attr_list *l = malloc(sizeof(attr_list));
+    attr_list *l = gv_alloc(sizeof(attr_list));
     l->attr_count = 0;
     l->capacity = DEFAULT_ATTR_LIST_CAPACITY;
-    l->attributes = malloc(DEFAULT_ATTR_LIST_CAPACITY * sizeof(attr_t *));
+    l->attributes = gv_calloc(DEFAULT_ATTR_LIST_CAPACITY, sizeof(attr_t*));
     l->with_widgets = with_widgets;
     /*create filter widgets */
 
@@ -188,9 +188,10 @@ static void attr_list_add(attr_list *l, attr_t *a) {
 	return;
     l->attr_count++;
     if (l->attr_count == l->capacity) {
+	l->attributes = gv_recalloc(l->attributes, l->capacity,
+	                            l->capacity + EXPAND_CAPACITY_VALUE,
+	                            sizeof(attr_t *));
 	l->capacity = l->capacity + EXPAND_CAPACITY_VALUE;
-	l->attributes =
-	    realloc(l->attributes, l->capacity * sizeof(attr_t *));
     }
     l->attributes[l->attr_count - 1] = a;
     if (l->attr_count > 1)

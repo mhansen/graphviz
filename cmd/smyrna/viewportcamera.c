@@ -8,10 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include "viewportcamera.h"
 #include "gui.h"
 #include <math.h>
-#include <common/memory.h>
 #include <glcomp/glcompbutton.h>
 #include <glcomp/glcomplabel.h>
 #include <glcomp/glcomppanel.h>
@@ -19,14 +19,15 @@
 
 static viewport_camera *new_viewport_camera(ViewInfo * view)
 {
-    return NEW(viewport_camera);
+    return gv_alloc(sizeof(viewport_camera));
 }
 
 static viewport_camera *add_camera_to_viewport(ViewInfo * view)
 {
+    view->cameras = gv_recalloc(view->cameras, view->camera_count,
+                                view->camera_count + 1,
+                                sizeof(viewport_camera*));
     view->camera_count++;
-    view->cameras =
-	RALLOC(view->camera_count, view->cameras, viewport_camera *);
     view->cameras[view->camera_count - 1] = new_viewport_camera(view);
     view->active_camera = view->camera_count - 1;
     return view->cameras[view->camera_count - 1];

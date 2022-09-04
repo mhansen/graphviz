@@ -8,11 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include "smyrnadefs.h"
 #include "hier.h"
 #include <math.h>
 #include <neatogen/delaunay.h>
-#include <common/memory.h>
 
 /* scale_coords:
  */
@@ -63,8 +63,8 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
     int i;
     int interval = 20;
     int counter = 0;		/* no. of active nodes */
-    double *x_coords = N_NEW(hp->nvtxs[0], double);
-    double *y_coords = N_NEW(hp->nvtxs[0], double);
+    double *x_coords = gv_calloc(hp->nvtxs[0], sizeof(double));
+    double *y_coords = gv_calloc(hp->nvtxs[0], sizeof(double));
     int max_level = hp->nlevels - 1;	// coarsest level
     double width = parms->width;
     double height = parms->height;
@@ -194,10 +194,10 @@ Hierarchy *makeHier(int nn, int ne, v_data * graph, double *x_coords,
 
 focus_t *initFocus(int ncnt)
 {
-    focus_t *fs = NEW(focus_t);
+    focus_t *fs = gv_alloc(sizeof(focus_t));
     fs->num_foci = 0;
-    fs->foci_nodes = N_NEW(ncnt, int);
-    fs->x_foci = N_NEW(ncnt, double);
-    fs->y_foci = N_NEW(ncnt, double);
+    fs->foci_nodes = gv_calloc(ncnt, sizeof(int));
+    fs->x_foci = gv_calloc(ncnt, sizeof(double));
+    fs->y_foci = gv_calloc(ncnt, sizeof(double));
     return fs;
 }

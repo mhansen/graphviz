@@ -11,7 +11,7 @@
 #include "tvnodes.h"
 #include "viewport.h"
 #include "topviewfuncs.h"
-#include <common/memory.h>
+#include <cgraph/alloc.h>
 #include <stdbool.h>
 
 typedef struct {
@@ -291,7 +291,7 @@ static GtkTreeView *update_tree(GtkTreeView * tree, grid * g)
 
     }
     if (g->count > 0) {
-	types = N_NEW(g->count, GType);
+	types = gv_calloc(g->count, sizeof(GType));
 	for (id = 0; id < g->count; id++)
 	    types[id] = g->columns[id]->type;
 	store = update_tree_store(g->store, g->count, types);
@@ -309,9 +309,9 @@ static void add_column(grid * g, char *name, bool editable, GType g_type)
 {
     if (*name == '\0')
 	return;
-    g->columns = realloc(g->columns,
-			     sizeof(gridCol *) * (g->count + 1));
-    g->columns[g->count] = NEW(gridCol);
+    g->columns = gv_recalloc(g->columns, g->count, g->count + 1,
+                             sizeof(gridCol*));
+    g->columns[g->count] = gv_alloc(sizeof(gridCol));
     g->columns[g->count]->editable = editable;
     g->columns[g->count]->name = name;
     g->columns[g->count]->type = g_type;
@@ -333,7 +333,7 @@ static void clearGrid(grid * g)
 
 static grid *initGrid(void)
 {
-    grid *gr = NEW(grid);
+    grid *gr = gv_alloc(sizeof(grid));
     gr->columns = NULL;
     gr->count = 0;
     gr->buf = 0;
