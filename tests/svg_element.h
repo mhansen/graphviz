@@ -2,9 +2,12 @@
 
 #include <cmath>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <vector>
+
+#include <fmt/format.h>
 
 namespace SVG {
 
@@ -57,6 +60,7 @@ struct SVGAttributes {
   double cx;
   double cy;
   std::string fill;
+  double fill_opacity = 1;
   std::string font_family;
   double font_size;
   double height;
@@ -65,6 +69,8 @@ struct SVGAttributes {
   double rx;
   double ry;
   std::string stroke;
+  double stroke_opacity = 1;
+  double stroke_width = 1;
   std::string text_anchor;
   std::optional<SVGMatrix> transform;
   SVGRect viewBox;
@@ -72,6 +78,8 @@ struct SVGAttributes {
   double x;
   double y;
 };
+
+std::string to_dot_color(const std::string &color, double opacity = 1.0);
 
 /**
  * @brief The SVGElement class represents an SVG element
@@ -82,6 +90,44 @@ public:
   SVGElement() = delete;
   explicit SVGElement(SVG::SVGElementType type);
 
+  /// \brief Return the value of an attribute retrieved from the element and its
+  /// children
+  ///
+  /// @param attribute_ptr pointer to a member of the `SVGAttributes` class.
+  /// @param predicate pointer to a member function of the `SVGElement` class
+  /// which returns `true` for elements on which the attribute exists.
+  /// @param default_value the value to return if the attribute does not exist
+  /// on any of the elements.
+  ///
+  /// Returns the value of the attribute if it has the same value on all
+  /// elements on which it exists and throws an exception if the value is not
+  /// consistent on those elements. Returns the default value if the attribute
+  /// does not exist on any of the elements.
+  template <typename T>
+  T attribute_from_subtree(T SVGAttributes::*attribute_ptr,
+                           bool (SVGElement::*predicate)() const,
+                           T default_value) const {
+    std::optional<T> attribute;
+    if ((this->*predicate)()) {
+      attribute = this->attributes.*attribute_ptr;
+    }
+    for (const auto &child : children) {
+      if (!(child.*predicate)()) {
+        continue;
+      }
+      const auto child_attribute = child.attributes.*attribute_ptr;
+      if (!attribute.has_value()) {
+        attribute = child_attribute;
+        continue;
+      }
+      if (attribute.value() != child_attribute) {
+        throw std::runtime_error{fmt::format(
+            "Inconsistent value of attribute: current {}: {}, child {}: {}",
+            tag(type), attribute.value(), tag(child.type), child_attribute)};
+      }
+    }
+    return attribute.value_or(default_value);
+  }
   /// Return the bounding box of the element and its children. The bounding box
   /// is calculated and stored the first time this function is called and later
   /// calls will return the already calculated value. If this function is called
@@ -89,6 +135,8 @@ public:
   /// throw an exception unless the `throw_if_bbox_not_defined` parameter is
   /// `false`.
   SVG::SVGRect bbox(bool throw_if_bbox_not_defined = true);
+  bool is_closed_shape_element() const;
+  bool is_shape_element() const;
   std::string to_string(std::size_t indent_size) const;
 
   SVGAttributes attributes;
@@ -116,8 +164,11 @@ private:
                         const std::string &attribute) const;
   std::string id_attribute_to_string() const;
   std::string fill_attribute_to_string() const;
+  std::string fill_opacity_attribute_to_string() const;
   std::string points_attribute_to_string() const;
   std::string stroke_attribute_to_string() const;
+  std::string stroke_opacity_attribute_to_string() const;
+  std::string stroke_width_attribute_to_string() const;
   std::string stroke_to_graphviz_color(const std::string &color) const;
   SVG::SVGRect text_bbox() const;
   void to_string_impl(std::string &output, std::size_t indent_size,

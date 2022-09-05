@@ -144,15 +144,49 @@ const std::unordered_set<std::string_view> all_node_shapes = {
     "lpromoter"        //
 };
 
-bool contains_polygon_shape(std::string_view shape) {
+static const std::unordered_set<std::string_view>
+    node_shapes_containing_multiple_same_shapes_with_different_fill = {
+        "cylinder",      // two paths
+        "doublecircle",  // two ellipses
+        "doubleoctagon", // two polygons
+        "tripleoctagon", // three polygons
+};
+
+bool contains_polygon_shape(const std::string_view shape) {
   return node_shapes_consisting_of_polygon.contains(shape) ||
          node_shapes_consisting_of_polygon_and_polyline.contains(shape);
 }
 
-bool contains_ellipse_shape(std::string_view shape) {
+bool contains_polyline_shape(const std::string_view shape) {
+  return node_shapes_consisting_of_ellipse_and_polyline.contains(shape) ||
+         node_shapes_consisting_of_polygon_and_polyline.contains(shape);
+}
+
+bool contains_ellipse_shape(const std::string_view shape) {
   return node_shapes_consisting_of_ellipse.contains(shape) ||
          node_shapes_consisting_of_ellipse_and_polyline.contains(shape);
 }
+
+bool contains_multiple_shapes_with_different_fill(
+    const std::string_view shape) {
+  return node_shapes_containing_multiple_same_shapes_with_different_fill
+             .contains(shape) ||
+         contains_polyline_shape(shape);
+}
+
+const std::unordered_set<std::string_view> primitive_polygon_arrow_shapes = {
+    "crow", "diamond", "inv", "normal", "vee"};
+
+const std::unordered_set<std::string_view>
+    primitive_polygon_and_polyline_arrow_shapes = {"box", "tee"};
+
+const std::unordered_set<std::string_view> all_primitive_arrow_shapes = {
+    "box", "crow", "curve",  "diamond", "dot", "icurve",
+    "inv", "none", "normal", "tee",     "vee"};
+
+const std::unordered_set<std::string_view>
+    primitive_arrow_shapes_without_closed_svg_shape = {"curve", "icurve",
+                                                       "none"};
 
 const std::unordered_set<std::string_view> all_rank_directions = {"TB", "BT",
                                                                   "LR", "RL"};

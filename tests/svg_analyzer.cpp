@@ -1,13 +1,20 @@
+#include <memory>
 #include <stdexcept>
 
+#include <boost/algorithm/string.hpp>
+#include <catch2/catch.hpp>
 #include <fmt/format.h>
 
 #include "svg_analyzer.h"
 #include "svgpp_context.h"
 #include "svgpp_document_traverser.h"
+#include <cgraph++/AGraph.h>
+#include <gvc++/GVContext.h>
+#include <gvc++/GVLayout.h>
+#include <gvc++/GVRenderData.h>
 
 SVGAnalyzer::SVGAnalyzer(char *text)
-    : m_svg(SVG::SVGElement(SVG::SVGElementType::Svg)) {
+    : m_original_svg(text), m_svg(SVG::SVGElement(SVG::SVGElementType::Svg)) {
   m_elements_in_process.push_back(&m_svg);
   SvgppContext context{this};
   traverseDocumentWithSvgpp(context, text);
@@ -174,6 +181,28 @@ void SVGAnalyzer::retrieve_graphviz_components_impl(
   }
 }
 
+void SVGAnalyzer::re_create_and_verify_svg() {
+
+  const auto indent_size = 0;
+  auto recreated_svg = svg_string(indent_size);
+
+  // compare the recreated SVG with the original SVG
+  if (recreated_svg != m_original_svg) {
+    std::vector<std::string> original_svg_lines;
+    boost::split(original_svg_lines, m_original_svg, boost::is_any_of("\n"));
+
+    std::vector<std::string> recreated_svg_lines;
+    boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
+
+    for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
+      REQUIRE(i < recreated_svg_lines.size());
+      REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);
+    }
+
+    REQUIRE(recreated_svg_lines.size() == original_svg_lines.size());
+  }
+}
+
 void SVGAnalyzer::set_cx(double cx) { current_element().attributes.cx = cx; }
 
 void SVGAnalyzer::set_cy(double cy) { current_element().attributes.cy = cy; }
@@ -190,12 +219,24 @@ void SVGAnalyzer::set_fill(std::string_view fill) {
   current_element().attributes.fill = fill;
 }
 
+void SVGAnalyzer::set_fill_opacity(double fill_opacity) {
+  current_element().attributes.fill_opacity = fill_opacity;
+}
+
 void SVGAnalyzer::set_height(double height) {
   current_element().attributes.height = height;
 }
 
 void SVGAnalyzer::set_stroke(std::string_view stroke) {
   current_element().attributes.stroke = stroke;
+}
+
+void SVGAnalyzer::set_stroke_opacity(double stroke_opacity) {
+  current_element().attributes.stroke_opacity = stroke_opacity;
+}
+
+void SVGAnalyzer::set_stroke_width(double stroke_width) {
+  current_element().attributes.stroke_width = stroke_width;
 }
 
 void SVGAnalyzer::set_id(std::string_view id) {
@@ -241,6 +282,28 @@ void SVGAnalyzer::set_width(double width) {
 void SVGAnalyzer::set_x(double x) { current_element().attributes.x = x; }
 
 void SVGAnalyzer::set_y(double y) { current_element().attributes.y = y; }
+
+SVGAnalyzer SVGAnalyzer::make_from_dot(const std::string &dot_source,
+                                       const std::string &engine) {
+  auto g = CGraph::AGraph{dot_source};
+
+  const auto demand_loading = false;
+  auto gvc =
+      std::make_shared<GVC::GVContext>(lt_preloaded_symbols, demand_loading);
+
+  const auto layout = GVC::GVLayout(gvc, std::move(g), engine);
+
+  const auto result = layout.render("svg");
+
+  auto svg_analyzer = SVGAnalyzer{result.c_str()};
+
+  svg_analyzer.set_graphviz_version(gvc->version());
+  svg_analyzer.set_graphviz_build_date(gvc->buildDate());
+
+  return svg_analyzer;
+}
+
+std::string_view SVGAnalyzer::original_svg() const { return m_original_svg; }
 
 void SVGAnalyzer::set_transform(double a, double b, double c, double d,
                                 double e, double f) {

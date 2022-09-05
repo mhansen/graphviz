@@ -19,9 +19,17 @@ public:
   SVG::SVGRect bbox() const;
   /// Return the center of the edge's bounding box
   SVG::SVGPoint center() const;
+  /// Return the edge's `color` attribute in RGB hex format if the opacity is
+  /// 100 % or in RGBA hex format otherwise.
+  std::string color() const;
   /// Return the 'edgeop' according to the DOT language specification. Note that
   /// this is not the same as the 'id' attribute of an edge.
   std::string_view edgeop() const;
+  /// Return the edge's `fillcolor` attribute in RGB hex format if the opacity
+  /// is 100 % or in RGBA hex format otherwise.
+  std::string fillcolor() const;
+  /// Return the edge's `penwidth` attribute
+  double penwidth() const;
   /// Return a non-mutable reference to the SVG `g` element corresponding to the
   /// edge
   const SVG::SVGElement &svg_g_element() const;

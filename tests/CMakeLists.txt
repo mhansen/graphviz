@@ -34,6 +34,7 @@ set_target_properties(test_common PROPERTIES CXX_STANDARD 20)
 set_target_properties(test_common PROPERTIES CXX_STANDARD_REQUIRED ON)
 target_include_directories(test_common PRIVATE
   ../lib
+  ../lib/cgraph++
 )
 target_include_directories(test_common SYSTEM PRIVATE
   ${Boost_INCLUDE_DIRS}
@@ -77,14 +78,23 @@ endmacro()
 
 CREATE_TEST(AGraph_construction)
 CREATE_TEST(clusters)
+CREATE_TEST(edge_color)
+CREATE_TEST(edge_fillcolor)
+CREATE_TEST(edge_penwidth)
 CREATE_TEST(engines)
 CREATE_TEST(GVContext_construction)
 CREATE_TEST(GVContext_render_svg)
 CREATE_TEST(GVLayout_construction)
 CREATE_TEST(GVLayout_render)
 CREATE_TEST(neatopack)
+CREATE_TEST(node_color)
+CREATE_TEST(node_fillcolor)
+CREATE_TEST(node_penwidth)
 CREATE_TEST(rankdir)
 CREATE_TEST(simple)
 CREATE_TEST(subgraph_layout)
 CREATE_TEST(subgraphs)
 CREATE_TEST(svg_analyzer)
+CREATE_TEST(svg_analyzer_color)
+CREATE_TEST(svg_analyzer_fillcolor)
+CREATE_TEST(svg_analyzer_penwidth)

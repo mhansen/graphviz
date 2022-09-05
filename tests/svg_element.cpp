@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include <limits>
 #include <stdexcept>
 
@@ -13,6 +14,33 @@ static double px_to_pt(double px) {
   // a `pt` is 0.75 `px`. See e.g.
   // https://oreillymedia.github.io/Using_SVG/guide/units.html
   return px * 3 / 4;
+}
+
+bool SVG::SVGElement::is_closed_shape_element() const {
+  switch (type) {
+  case SVG::SVGElementType::Circle:
+  case SVG::SVGElementType::Ellipse:
+  case SVG::SVGElementType::Polygon:
+  case SVG::SVGElementType::Rect:
+    return true;
+  default:
+    return false;
+  }
+}
+
+bool SVG::SVGElement::is_shape_element() const {
+  switch (type) {
+  case SVG::SVGElementType::Circle:
+  case SVG::SVGElementType::Ellipse:
+  case SVG::SVGElementType::Line:
+  case SVG::SVGElementType::Path:
+  case SVG::SVGElementType::Polygon:
+  case SVG::SVGElementType::Polyline:
+  case SVG::SVGElementType::Rect:
+    return true;
+  default:
+    return false;
+  }
 }
 
 static std::string xml_encode(const std::string &text) {
@@ -38,23 +66,47 @@ static std::string xml_encode(const std::string &text) {
   return out;
 }
 
-// convert a valid color specification to the flavor that Graphviz uses
+static std::string rgb_to_hex(const std::string &color, double opacity = 1.0) {
+  const auto comma1 = color.find_first_of(",");
+  const auto r = std::stoi(color.substr(4, comma1 - 1));
+  const auto comma2 = color.find_first_of(",", comma1 + 1);
+  const auto g = std::stoi(color.substr(comma1 + 1, comma2 - 1));
+  const auto close_par = color.find_first_of(")", comma2 + 1);
+  const auto b = std::stoi(color.substr(comma2 + 1, close_par - 1));
+  const auto opacity_int = std::lround(opacity * 255.0);
+  const auto opacity_hex_str =
+      opacity_int < 255 ? fmt::format("{:02x}", opacity_int) : "";
+  return fmt::format("#{:02x}{:02x}{:02x}{}", r, g, b, opacity_hex_str);
+}
+
+// convert a valid color specification to the flavor that Graphviz uses in the
+// SVG
 static std::string to_graphviz_color(const std::string &color) {
   if (color == "rgb(0,0,0)") {
     return "black";
   } else if (color == "rgb(255,255,255)") {
     return "white";
   } else if (color.starts_with("rgb")) {
-    const auto comma1 = color.find_first_of(",");
-    const auto r = std::stoi(color.substr(4, comma1 - 1));
-    const auto comma2 = color.find_first_of(",", comma1 + 1);
-    const auto g = std::stoi(color.substr(comma1 + 1, comma2 - 1));
-    const auto close_par = color.find_first_of(")", comma2 + 1);
-    const auto b = std::stoi(color.substr(comma2 + 1, close_par - 1));
-    return fmt::format("#{:02x}{:02x}{:02x}", r, g, b);
+    return rgb_to_hex(color);
   } else {
     return color;
   }
+}
+
+// convert a valid color specification to the RGB or RGBA type that Graphviz
+// uses in the DOT source
+std::string SVG::to_dot_color(const std::string &color, double opacity) {
+  if (color == "none") {
+    return "#00000000";
+  }
+  if (opacity < 1.0) {
+    if (!color.starts_with("rgb")) {
+      throw std::runtime_error{fmt::format(
+          "Cannot convert stroke={}, stroke_opacity={} to Graphviz color",
+          color, opacity)};
+    }
+  }
+  return rgb_to_hex(color, opacity);
 }
 
 SVG::SVGRect SVG::SVGElement::bbox(bool throw_if_bbox_not_defined) {
@@ -181,6 +233,21 @@ std::string SVG::SVGElement::id_attribute_to_string() const {
   return fmt::format(R"(id="{}")", attributes.id);
 }
 
+std::string SVG::SVGElement::fill_opacity_attribute_to_string() const {
+  if (attributes.fill_opacity == 1) {
+    // Graphviz doesn't set `fill-opacity` to 1 since that's the default
+    return "";
+  }
+
+  if (attributes.fill_opacity == 0) {
+    // Graphviz doesn't set `fill-opacity` to 0 since in that case it sets
+    // `fill` to "none" instead
+    return "";
+  }
+
+  return fmt::format(R"(fill-opacity="{}")", attributes.fill_opacity);
+}
+
 std::string SVG::SVGElement::points_attribute_to_string() const {
   std::string points_attribute_str = R"|(points=")|";
   const char *separator = "";
@@ -200,6 +267,30 @@ std::string SVG::SVGElement::stroke_attribute_to_string() const {
 
   return fmt::format(R"(stroke="{}")",
                      stroke_to_graphviz_color(attributes.stroke));
+}
+
+std::string SVG::SVGElement::stroke_opacity_attribute_to_string() const {
+  if (attributes.stroke_opacity == 1) {
+    // Graphviz doesn't set `stroke-opacity` to 1 since that's the default
+    return "";
+  }
+
+  if (attributes.stroke_opacity == 0) {
+    // Graphviz doesn't set `stroke-opacity` to 0 since in that case it sets
+    // `stroke` to "none" instead
+    return "";
+  }
+
+  return fmt::format(R"(stroke-opacity="{}")", attributes.stroke_opacity);
+}
+
+std::string SVG::SVGElement::stroke_width_attribute_to_string() const {
+  if (attributes.stroke_width == 1) {
+    // Graphviz doesn't set `stroke-width` to 1 since that's the default
+    return "";
+  }
+
+  return fmt::format(R"(stroke-width="{}")", attributes.stroke_width);
 }
 
 std::string SVG::SVGElement::to_string(std::size_t indent_size = 2) const {
@@ -241,7 +332,10 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   switch (type) {
   case SVG::SVGElementType::Ellipse:
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, fill_opacity_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, stroke_width_attribute_to_string());
+    append_attribute(attributes_str, stroke_opacity_attribute_to_string());
     attributes_str +=
         fmt::format(R"( cx="{}" cy="{}" rx="{}" ry="{}")", attributes.cx,
                     attributes.cy, attributes.rx, attributes.ry);
@@ -257,7 +351,10 @@ void SVG::SVGElement::to_string_impl(std::string &output,
     break;
   case SVG::SVGElementType::Path: {
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, fill_opacity_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, stroke_width_attribute_to_string());
+    append_attribute(attributes_str, stroke_opacity_attribute_to_string());
     attributes_str += R"|( d=")|";
     auto command = 'M';
     for (const auto &point : path_points) {
@@ -280,12 +377,17 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   }
   case SVG::SVGElementType::Polygon:
     append_attribute(attributes_str, fill_attribute_to_string());
+    append_attribute(attributes_str, fill_opacity_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, stroke_width_attribute_to_string());
+    append_attribute(attributes_str, stroke_opacity_attribute_to_string());
     append_attribute(attributes_str, points_attribute_to_string());
     break;
   case SVG::SVGElementType::Polyline:
     append_attribute(attributes_str, fill_attribute_to_string());
     append_attribute(attributes_str, stroke_attribute_to_string());
+    append_attribute(attributes_str, stroke_width_attribute_to_string());
+    append_attribute(attributes_str, stroke_opacity_attribute_to_string());
     append_attribute(attributes_str, points_attribute_to_string());
     break;
   case SVG::SVGElementType::Svg:

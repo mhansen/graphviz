@@ -19,7 +19,18 @@ extern const std::unordered_set<std::string_view>
 extern const std::unordered_set<std::string_view> node_shapes_without_svg_shape;
 
 bool contains_ellipse_shape(std::string_view shape);
+bool contains_multiple_shapes_with_different_fill(std::string_view shape);
 bool contains_polygon_shape(std::string_view shape);
+bool contains_polyline_shape(std::string_view shape);
+
+/// arrow shapes
+extern const std::unordered_set<std::string_view>
+    primitive_polygon_arrow_shapes;
+extern const std::unordered_set<std::string_view>
+    primitive_polygon_and_polyline_arrow_shapes;
+extern const std::unordered_set<std::string_view> all_primitive_arrow_shapes;
+extern const std::unordered_set<std::string_view>
+    primitive_arrow_shapes_without_closed_svg_shape;
 
 /// rank directions
 extern const std::unordered_set<std::string_view> all_rank_directions;

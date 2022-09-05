@@ -5,10 +5,6 @@
 
 #include "svg_analyzer.h"
 #include "test_utilities.h"
-#include <cgraph++/AGraph.h>
-#include <gvc++/GVContext.h>
-#include <gvc++/GVLayout.h>
-#include <gvc++/GVRenderData.h>
 
 TEST_CASE("Graph rankdir", "Test that the Graphviz `rankdir` attribute affects "
                            "the relative placement of nodes and edges "
@@ -27,15 +23,9 @@ TEST_CASE("Graph rankdir", "Test that the Graphviz `rankdir` attribute affects "
   auto dot = fmt::format(
       "digraph g1 {{rankdir={}; node [shape={} fontname=Courier]; a -> b}}",
       rankdir, shape);
-  auto g = CGraph::AGraph{dot};
 
-  const auto demand_loading = false;
-  auto gvc = GVC::GVContext{lt_preloaded_symbols, demand_loading};
-
-  const auto layout = GVC::GVLayout(std::move(gvc), std::move(g), "dot");
-
-  const auto result = layout.render("svg");
-  SVGAnalyzer svg_analyzer{result.c_str()};
+  const auto engine = "dot";
+  auto svg_analyzer = SVGAnalyzer::make_from_dot(dot, engine);
 
   REQUIRE(svg_analyzer.graphs().size() == 1);
   const auto &graph = svg_analyzer.graphs().back();

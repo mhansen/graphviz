@@ -40,12 +40,15 @@ public:
   void set_font_family(std::string_view font_family) override;
   void set_font_size(double font_size) override;
   void set_fill(std::string_view fill) override;
+  void set_fill_opacity(double fill_opacity) override;
   void set_height(double height) override;
   void set_id(std::string_view id) override;
   void set_rx(double rx) override;
   void set_ry(double ry) override;
   void set_class(std::string_view) override;
   void set_stroke(std::string_view stroke) override;
+  void set_stroke_opacity(double stroke_opacity) override;
+  void set_stroke_width(double stroke_width) override;
   void set_point(std::pair<double, double> point) override;
   void set_text(std::string_view text) override;
   void set_text_anchor(std::string_view text_anchor) override;
@@ -55,6 +58,12 @@ public:
   void set_width(double width) override;
   void set_x(double x) override;
   void set_y(double y) override;
+  /// Create an SVGAnalyzer from DOT source using the `engine` layout engine.
+  ///
+  /// \param dot_source The DOT source
+  /// \param engine The Graphviz layout engine
+  static SVGAnalyzer make_from_dot(const std::string &dot_source,
+                                   const std::string &engine = "dot");
   std::size_t num_svgs() const { return m_num_svgs; };
   std::size_t num_groups() const { return m_num_groups; };
   std::size_t num_circles() const { return m_num_circles; };
@@ -66,6 +75,11 @@ public:
   std::size_t num_rects() const { return m_num_rects; };
   std::size_t num_texts() const { return m_num_texts; };
   std::size_t num_titles() const { return m_num_titles; };
+  /// Return a view of the original SVG
+  std::string_view original_svg() const;
+  /// Re-create the SVG from the internal data structure and verify it against
+  /// the original SVG produced by Graphviz
+  void re_create_and_verify_svg();
   void set_graphviz_version(std::string_view version);
   void set_graphviz_build_date(std::string_view build_date);
   std::string svg_string(std::size_t indent_size = 2) const;
@@ -105,6 +119,8 @@ private:
   std::size_t m_num_titles = 0;
   /// A list of Graphviz recreated graphs
   std::vector<GraphvizGraph> m_graphs;
+  /// The original SVG document
+  std::string m_original_svg;
   /// The top level SVG `svg` element corresponding to the Graphviz graph
   SVG::SVGElement m_svg;
 };

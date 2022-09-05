@@ -126,6 +126,10 @@ void SvgppContext::set(svgpp::tag::attribute::fill, color_t color,
   m_svg_analyzer->set_fill(to_color_string(color));
 }
 
+void SvgppContext::set(svgpp::tag::attribute::fill_opacity, const double v) {
+  m_svg_analyzer->set_fill_opacity(v);
+}
+
 void SvgppContext::set(svgpp::tag::attribute::stroke, svgpp::tag::value::none) {
   m_svg_analyzer->set_stroke("none");
 }
@@ -140,6 +144,14 @@ void SvgppContext::set(svgpp::tag::attribute::stroke,
                        SvgppContext::color_t color,
                        svgpp::tag::skip_icc_color) {
   m_svg_analyzer->set_stroke(to_color_string(color));
+}
+
+void SvgppContext::set(svgpp::tag::attribute::stroke_opacity, const double v) {
+  m_svg_analyzer->set_stroke_opacity(v);
+}
+
+void SvgppContext::set(svgpp::tag::attribute::stroke_width, const double v) {
+  m_svg_analyzer->set_stroke_width(v);
 }
 
 void SvgppContext::transform_matrix(const boost::array<double, 6> &matrix) {
