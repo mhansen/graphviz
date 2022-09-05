@@ -15,7 +15,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
-#include <common/memory.h>
 
 LeafList_t *RTreeNewLeafList(Leaf_t * lp)
 {
