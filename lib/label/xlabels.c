@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
@@ -546,7 +547,7 @@ static int xlhdxload(XLabels_t * xlp)
 	HDict_t *hp;
 	point pi;
 
-	hp = NEW(HDict_t);
+	hp = gv_alloc(sizeof(HDict_t));
 
 	hp->d.data = &xlp->objs[i];
 	hp->d.rect = objplpmks(&xlp->objs[i]);
