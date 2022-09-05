@@ -23,6 +23,8 @@ void
 on_new1_activate                       (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     GtkWindow *window1;
     GVJ_t *job;
 
@@ -68,6 +70,8 @@ void
 on_open1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     GtkWindow *window1;
     gchar *filename;
 
@@ -106,6 +110,8 @@ void
 on_save1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     GtkWindow *window1;
     gchar *filename;
 
@@ -119,6 +125,8 @@ void
 on_save_as1_activate                   (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     GtkWindow *window1;
        
     window1 = GTK_WINDOW(menuitem);
@@ -130,6 +138,7 @@ void
 on_quit1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    (void)user_data;
     gtk_widget_destroy(GTK_WIDGET(gtk_widget_get_toplevel(GTK_WIDGET(menuitem))));
     gtk_main_quit();
 }
@@ -139,6 +148,8 @@ void
 on_cut1_activate                       (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    (void)menuitem;
+    (void)user_data;
     // I am thinking that we will annotate a node as to whether it is selected,
     // then retrieve a list of selected nodes for these operations
 }
@@ -148,7 +159,8 @@ void
 on_copy1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-
+  (void)menuitem;
+  (void)user_data;
 }
 
 
@@ -156,7 +168,8 @@ void
 on_paste1_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-
+  (void)menuitem;
+  (void)user_data;
 }
 
 
@@ -164,7 +177,8 @@ void
 on_delete1_activate                    (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-
+  (void)menuitem;
+  (void)user_data;
 }
 
 
@@ -172,6 +186,8 @@ void
 on_about1_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     static gchar *authors[] = {
 		"John Ellson", 
 		"Emden Gansner",
@@ -201,6 +217,9 @@ on_drawingarea1_expose_event           (GtkWidget       *widget,
                                         GdkEventExpose  *event,
                                         gpointer         user_data)
 {
+    (void)event;
+    (void)user_data;
+
     GVJ_t *job;
     cairo_t *cr;
 
@@ -238,6 +257,8 @@ on_drawingarea1_motion_notify_event    (GtkWidget       *widget,
                                         GdkEventMotion  *event,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     GVJ_t *job;
 
     job = (GVJ_t *)g_object_get_data(G_OBJECT(widget),"job");
@@ -254,6 +275,9 @@ on_drawingarea2_motion_notify_event    (GtkWidget       *widget,
                                         GdkEventMotion  *event,
                                         gpointer         user_data)
 {
+  (void)widget;
+  (void)event;
+  (void)user_data;
 
   return FALSE;
 }
@@ -265,6 +289,9 @@ on_drawingarea2_expose_event           (GtkWidget       *widget,
                                         GdkEventExpose  *event,
                                         gpointer         user_data)
 {
+    (void)event;
+    (void)user_data;
+
     GVJ_t *job;
     cairo_t *cr;
     double tmp;
@@ -295,6 +322,10 @@ on_window1_delete_event                (GtkWidget       *widget,
                                         GdkEvent        *event,
                                         gpointer         user_data)
 {
+    (void)widget;
+    (void)event;
+    (void)user_data;
+
     gtk_main_quit();
     return FALSE;
 }
@@ -305,6 +336,8 @@ on_drawingarea1_configure_event        (GtkWidget       *widget,
                                         GdkEventConfigure *event,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     GVJ_t *job;
     double zoom_to_fit;
 
@@ -341,6 +374,8 @@ on_drawingarea1_button_press_event     (GtkWidget       *widget,
                                         GdkEventButton  *event,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     GVJ_t *job;
     pointf pointer;
 
@@ -359,6 +394,8 @@ on_drawingarea1_button_release_event   (GtkWidget       *widget,
                                         GdkEventButton  *event,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     GVJ_t *job;
     pointf pointer;
 
@@ -376,6 +413,8 @@ on_drawingarea1_scroll_event           (GtkWidget       *widget,
                                         GdkEvent        *event,
                                         gpointer         user_data)
 {
+    (void)user_data;
+
     GVJ_t *job;
     pointf pointer;
 
@@ -403,6 +442,9 @@ on_button1_button_press_event          (GtkWidget       *widget,
                                         GdkEventButton  *event,
                                         gpointer         user_data)
 {
+  (void)widget;
+  (void)event;
+  (void)user_data;
 
 
 fprintf(stderr, "will delete selected object\n");
