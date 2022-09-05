@@ -32,7 +32,7 @@ on_new1_activate                       (GtkMenuItem     *menuitem,
     window1 = GTK_WINDOW(menuitem);
     job = g_object_get_data(G_OBJECT(window1), "job");
 
-    (job->callbacks->read)(job, NULL, "dot");
+    job->callbacks->read(job, NULL, "dot");
 
     // should there be specific menus for (un)directed graphs etc?
     //  - I think the directed flag only affects layout and rendering
@@ -58,7 +58,7 @@ ui_open_graph(GtkWindow *window1, gchar *filename)
 	filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
     gtk_widget_destroy(dialog);
     if (filename) {
-    	(job->callbacks->read)(job, filename, "dot");
+    	job->callbacks->read(job, filename, "dot");
 //	if (!file) // we'll probably want to create a error dialog function
 //	    fprintf(stderr, "Could not open file: %s\n", filename);
 //	else
@@ -100,7 +100,7 @@ ui_save_graph(GtkWindow *window1, gchar *filename)
 	filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
     gtk_widget_destroy(dialog);
     if (filename) {
-	(job->callbacks->render)(job, "dot", filename);
+	job->callbacks->render(job, "dot", filename);
 	g_object_set_data_full(G_OBJECT(window1),
 		"activefilename", filename, (GDestroyNotify)g_free);
     }
@@ -224,7 +224,7 @@ on_drawingarea1_expose_event           (GtkWidget       *widget,
     GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     cr = gdk_cairo_create(widget->window);
 
-    (job->callbacks->motion)(job, job->pointer);
+    job->callbacks->motion(job, job->pointer);
 
     job->context = cr;
     job->external_context = true;
@@ -233,10 +233,10 @@ on_drawingarea1_expose_event           (GtkWidget       *widget,
     assert(widget->allocation.height >= 0);
     job->height = (unsigned)widget->allocation.height;
     if (job->has_been_rendered) {
-    	(job->callbacks->refresh)(job);
+    	job->callbacks->refresh(job);
     }
     else {
-	(job->callbacks->refresh)(job);
+	job->callbacks->refresh(job);
 	
 // FIXME - copy image to keyhole
 //      the keyhole image is a fixed size and doesn;t need to be recomputed 
@@ -296,7 +296,7 @@ on_drawingarea2_expose_event           (GtkWidget       *widget,
     GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     cr = gdk_cairo_create(widget->window);
 
-    (job->callbacks->motion)(job, job->pointer);
+    job->callbacks->motion(job, job->pointer);
 
     job->context = cr;
     job->external_context = true;
@@ -308,7 +308,7 @@ on_drawingarea2_expose_event           (GtkWidget       *widget,
     tmp = job->zoom;
     job->zoom = MIN(job->width * POINTS_PER_INCH / (job->bb.UR.x * job->dpi.x),
                     job->height * POINTS_PER_INCH / (job->bb.UR.y * job->dpi.y));
-    (job->callbacks->refresh)(job);
+    job->callbacks->refresh(job);
     job->zoom = tmp;
 
     cairo_destroy(cr);
@@ -383,7 +383,7 @@ on_drawingarea1_button_press_event     (GtkWidget       *widget,
     pointer.x = event->x;
     pointer.y = event->y;
     assert(event->button <= INT_MAX);
-    (job->callbacks->button_press)(job, (int)event->button, pointer);
+    job->callbacks->button_press(job, (int)event->button, pointer);
     
     load_store_with_attrs(GTK_LIST_STORE(g_object_get_data(G_OBJECT(widget), "attr_store")));
     return FALSE;
@@ -403,7 +403,7 @@ on_drawingarea1_button_release_event   (GtkWidget       *widget,
     pointer.x = event->x;
     pointer.y = event->y;
     assert(event->button <= INT_MAX);
-    (job->callbacks->button_release)(job, (int)event->button, pointer);
+    job->callbacks->button_release(job, (int)event->button, pointer);
 
     return FALSE;
 }
@@ -423,10 +423,10 @@ on_drawingarea1_scroll_event           (GtkWidget       *widget,
     pointer.y = ((GdkEventScroll *)event)->y;
     switch (((GdkEventScroll *)event)->direction) {
 	case GDK_SCROLL_UP:
-	    (job->callbacks->button_press)(job, 4, pointer);
+	    job->callbacks->button_press(job, 4, pointer);
 	    break;
 	case GDK_SCROLL_DOWN:
-	    (job->callbacks->button_press)(job, 5, pointer);
+	    job->callbacks->button_press(job, 5, pointer);
 	    break;
 	case GDK_SCROLL_LEFT:
 	case GDK_SCROLL_RIGHT:
