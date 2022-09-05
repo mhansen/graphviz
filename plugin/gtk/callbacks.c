@@ -428,8 +428,7 @@ on_drawingarea1_scroll_event           (GtkWidget       *widget,
 	case GDK_SCROLL_DOWN:
 	    job->callbacks->button_press(job, 5, pointer);
 	    break;
-	case GDK_SCROLL_LEFT:
-	case GDK_SCROLL_RIGHT:
+	default: // do nothing
 	    break;
     }
     gtk_widget_queue_draw(widget);
