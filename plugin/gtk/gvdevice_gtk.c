@@ -33,23 +33,22 @@ attr_value_edited_cb(GtkCellRendererText *renderer, gchar *pathStr, gchar *newTe
 	(void)renderer;
 
 	GtkTreeModel *model = GTK_TREE_MODEL(data);
-	GtkTreePath *path;
 	GtkTreeIter iter;
 	gchar *old_attr;
 	
-	path = gtk_tree_path_new_from_string(pathStr);
+	GtkTreePath *treepath = gtk_tree_path_new_from_string(pathStr);
 	
 	// need to free old attr value in job and allocate new attr value - how?
 	
 	// free old attr value in model
-	gtk_tree_model_get_iter(model, &iter, path);
+	gtk_tree_model_get_iter(model, &iter, treepath);
 	gtk_tree_model_get(model, &iter, 1, &old_attr, -1);
 	g_free(old_attr);
 	
 	// set new attr value in model
 	gtk_list_store_set(GTK_LIST_STORE(model), &iter, 1, g_strdup(newText), -1);
 	
-	gtk_tree_path_free(path);
+	gtk_tree_path_free(treepath);
 }
 
 static void gtk_initialize(GVJ_t *firstjob)
