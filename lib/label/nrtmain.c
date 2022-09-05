@@ -11,9 +11,8 @@
 #include <errno.h>
 #include <stddef.h>
 #include <string.h>
-
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
-#include <common/memory.h>
 #include <gvc/gvc.h>
 #include <labels/xlabels.h>
 
@@ -128,8 +127,8 @@ int doxlabel(opts_t * opts)
     }
     n_objs = agnnodes(gp) + n_elbls;
     n_lbls = n_nlbls + n_elbls;
-    objp = objs = N_NEW(n_objs, object_t);
-    xlp = lbls = N_NEW(n_lbls, xlabel_t);
+    objp = objs = gv_calloc(n_objs, sizeof(object_t));
+    xlp = lbls = gv_calloc(n_lbls, sizeof(xlabel_t));
     bb.LL = pointfof(INT_MAX, INT_MAX);
     bb.UR = pointfof(-INT_MAX, -INT_MAX);
 
