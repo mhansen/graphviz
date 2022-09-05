@@ -248,7 +248,7 @@ on_drawingarea1_expose_event           (GtkWidget       *widget,
 
     load_store_with_attrs(GTK_LIST_STORE(g_object_get_data(G_OBJECT(widget), "attr_store")));
 
-    return FALSE;
+    return false;
 }
 
 
@@ -264,7 +264,7 @@ on_drawingarea1_motion_notify_event    (GtkWidget       *widget,
     job->pointer.y = event->y;
     gtk_widget_queue_draw(widget);
 
-    return FALSE;
+    return false;
 }
 
 
@@ -277,7 +277,7 @@ on_drawingarea2_motion_notify_event    (GtkWidget       *widget,
   (void)event;
   (void)user_data;
 
-  return FALSE;
+  return false;
 }
 
 
@@ -313,7 +313,7 @@ on_drawingarea2_expose_event           (GtkWidget       *widget,
 
     cairo_destroy(cr);
 
-    return FALSE;
+    return false;
 }
 
 gboolean
@@ -326,7 +326,7 @@ on_window1_delete_event                (GtkWidget       *widget,
     (void)user_data;
 
     gtk_main_quit();
-    return FALSE;
+    return false;
 }
 
 
@@ -366,7 +366,7 @@ on_drawingarea1_configure_event        (GtkWidget       *widget,
     job->height = (unsigned)event->height;
     job->needs_refresh = true;
 
-    return FALSE;
+    return false;
 }
 
 
@@ -386,7 +386,7 @@ on_drawingarea1_button_press_event     (GtkWidget       *widget,
     job->callbacks->button_press(job, (int)event->button, pointer);
     
     load_store_with_attrs(GTK_LIST_STORE(g_object_get_data(G_OBJECT(widget), "attr_store")));
-    return FALSE;
+    return false;
 }
 
 
@@ -405,7 +405,7 @@ on_drawingarea1_button_release_event   (GtkWidget       *widget,
     assert(event->button <= INT_MAX);
     job->callbacks->button_release(job, (int)event->button, pointer);
 
-    return FALSE;
+    return false;
 }
 
 
@@ -434,7 +434,7 @@ on_drawingarea1_scroll_event           (GtkWidget       *widget,
     }
     gtk_widget_queue_draw(widget);
 
-    return FALSE;
+    return false;
 }
 
 gboolean
@@ -449,6 +449,6 @@ on_button1_button_press_event          (GtkWidget       *widget,
 
 fprintf(stderr, "will delete selected object\n");
 
-  return FALSE;
+  return false;
 }
 
