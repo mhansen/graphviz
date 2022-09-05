@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <assert.h>
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
@@ -227,8 +227,10 @@ on_drawingarea1_expose_event           (GtkWidget       *widget,
 
     job->context = cr;
     job->external_context = true;
-    job->width = widget->allocation.width;
-    job->height = widget->allocation.height;
+    assert(widget->allocation.width >= 0);
+    job->width = (unsigned)widget->allocation.width;
+    assert(widget->allocation.height >= 0);
+    job->height = (unsigned)widget->allocation.height;
     if (job->has_been_rendered) {
     	(job->callbacks->refresh)(job);
     }
@@ -297,8 +299,10 @@ on_drawingarea2_expose_event           (GtkWidget       *widget,
 
     job->context = cr;
     job->external_context = true;
-    job->width = widget->allocation.width;
-    job->height = widget->allocation.height;
+    assert(widget->allocation.width >= 0);
+    job->width = (unsigned)widget->allocation.width;
+    assert(widget->allocation.height >= 0);
+    job->height = (unsigned)widget->allocation.height;
 
     tmp = job->zoom;
     job->zoom = MIN(job->width * POINTS_PER_INCH / (job->bb.UR.x * job->dpi.x),
@@ -352,10 +356,13 @@ on_drawingarea1_configure_event        (GtkWidget       *widget,
 			  (double) event->height / (double) job->height);
 	job->zoom *= zoom_to_fit;
     }
-    if (event->width > job->width || event->height > job->height)
+    if ((event->width >= 0 && (unsigned)event->width > job->width) ||
+        (event->height >= 0 && (unsigned)event->height > job->height))
 	job->has_grown = true;
-    job->width = event->width;
-    job->height = event->height;
+    assert(event->width >= 0);
+    job->width = (unsigned)event->width;
+    assert(event->height >= 0);
+    job->height = (unsigned)event->height;
     job->needs_refresh = true;
 
     return FALSE;
