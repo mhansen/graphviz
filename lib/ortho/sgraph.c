@@ -10,9 +10,8 @@
 
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <limits.h>
-#include <common/memory.h>
 #include <ortho/sgraph.h>
 #include <ortho/fPQ.h>
 
@@ -42,8 +41,8 @@ void
 initSEdges (sgraph* g, int maxdeg)
 {
     int i;
-    int* adj = N_NEW (6*g->nnodes + 2*maxdeg, int);
-    g->edges = N_NEW (3*g->nnodes + maxdeg, sedge);
+    int* adj = gv_calloc(6 * g->nnodes + 2 * maxdeg, sizeof(int));
+    g->edges = gv_calloc(3 * g->nnodes + maxdeg, sizeof(sedge));
     for (i = 0; i < g->nnodes; i++) {
 	g->nodes[i].adj_edge_list = adj;
 	adj += 6;
@@ -57,11 +56,11 @@ initSEdges (sgraph* g, int maxdeg)
 sgraph*
 createSGraph (int nnodes)
 {
-    sgraph* g = NEW(sgraph);
+    sgraph* g = gv_alloc(sizeof(sgraph));
 
 	/* create the nodes vector in the search graph */
     g->nnodes = 0;
-    g->nodes = N_NEW(nnodes, snode);
+    g->nodes = gv_calloc(nnodes, sizeof(snode));
     return g;
 }
 

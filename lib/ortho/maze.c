@@ -13,13 +13,13 @@
 
 #define DEBUG
 
+#include <cgraph/alloc.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <ortho/maze.h>
 #include <ortho/partition.h>
 #include <ortho/trap.h>
-#include <common/memory.h>
 #include <common/arith.h>
 
 #define MARGIN 36;
@@ -347,14 +347,14 @@ mkMazeGraph (maze* mp, boxf bb)
     sgraph* g = createSGraph (bound + 2);
     Dt_t* vdict = dtopen(&vdictDisc,Dtoset);
     Dt_t* hdict = dtopen(&hdictDisc,Dtoset);
-    snodeitem* ditems = N_NEW(bound, snodeitem);
+    snodeitem* ditems = gv_calloc(bound, sizeof(snodeitem));
     snode** sides;
 
     /* For each cell, create if necessary and attach a node in search
      * corresponding to each internal face. The node also gets
      * a pointer to the cell.
      */
-    sides = N_NEW(4*mp->ncells, snode*);
+    sides = gv_calloc(4 * mp->ncells, sizeof(snode*));
     for (i = 0; i < mp->ncells; i++) {
 	cell* cp = mp->cells+i;
         snode* np;
@@ -392,7 +392,7 @@ mkMazeGraph (maze* mp, boxf bb)
      * connect it to its corresponding search nodes.
      */
     maxdeg = 0;
-    sides = N_NEW(g->nnodes, snode*);
+    sides = gv_calloc(g->nnodes, sizeof(snode*));
     nsides = 0;
     for (i = 0; i < mp->ngcells; i++) {
 	cell* cp = mp->gcells+i;
@@ -466,7 +466,7 @@ chkSgraph (g);
 
 maze *mkMaze(graph_t *g) {
     node_t* n;
-    maze* mp = NEW(maze);
+    maze* mp = gv_alloc(sizeof(maze));
     boxf* rects;
     int i, nrect;
     cell* cp;
@@ -474,7 +474,7 @@ maze *mkMaze(graph_t *g) {
     boxf bb, BB;
 
     mp->ngcells = agnnodes(g);
-    cp = mp->gcells = N_NEW(mp->ngcells, cell);
+    cp = mp->gcells = gv_calloc(mp->ngcells, sizeof(cell));
 
     BB.LL.x = BB.LL.y = MAXDOUBLE;
     BB.UR.x = BB.UR.y = -MAXDOUBLE;
@@ -504,7 +504,7 @@ maze *mkMaze(graph_t *g) {
 #ifdef DEBUG
     if (odb_flags & ODB_MAZE) psdump (mp->gcells, mp->ngcells, BB, rects, nrect);
 #endif
-    mp->cells = N_NEW(nrect, cell);
+    mp->cells = gv_calloc(nrect, sizeof(cell));
     mp->ncells = nrect;
     for (i = 0; i < nrect; i++) {
 	mp->cells[i].bb = rects[i];

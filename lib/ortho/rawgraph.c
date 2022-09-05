@@ -11,9 +11,8 @@
  /* Implements graph.h  */
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <ortho/rawgraph.h>
-#include <common/memory.h>
 #include <common/intset.h>
 #include <stdbool.h>
 
@@ -25,9 +24,9 @@ rawgraph*
 make_graph(int n)
 {
     int i;
-    rawgraph* g = NEW(rawgraph);
+    rawgraph* g = gv_alloc(sizeof(rawgraph));
     g->nvs = n;
-    g->vertices = N_NEW(n, vertex);
+    g->vertices = gv_calloc(n, sizeof(vertex));
     for(i=0;i<n;i++) {
         g->vertices[i].adj_list = openIntSet ();
         g->vertices[i].color = UNSCANNED;
@@ -78,8 +77,8 @@ typedef struct {
 static stack*
 mkStack (int i)
 {
-    stack* sp = NEW(stack);
-    sp->vals = N_NEW(i,int);
+    stack* sp = gv_alloc(sizeof(stack));
+    sp->vals = gv_calloc(i, sizeof(int));
     sp->top = -1;
     return sp;
 }

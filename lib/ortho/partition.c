@@ -9,10 +9,9 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <ortho/partition.h>
 #include <ortho/trap.h>
-#include <common/memory.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -599,11 +598,11 @@ monotonate_trapezoids(int nsegs, segment_t*seg, trap_t* tr,
     int i, size;
     int tr_start;
     int tr_size = TRSIZE(nsegs);
-    int* visited = N_NEW(tr_size,int);
+    int* visited = gv_calloc(tr_size, sizeof(int));
 
-    mchain = N_NEW(tr_size, monchain_t);
-    vert = N_NEW(nsegs+1,vertexchain_t); 
-    mon = N_NEW(nsegs, int);    
+    mchain = gv_calloc(tr_size, sizeof(monchain_t));
+    vert = gv_calloc(nsegs + 1, sizeof(vertexchain_t));
+    mon = gv_calloc(nsegs, sizeof(int));
 
   /* First locate a trapezoid which lies inside the polygon */
   /* and which is triangular */
@@ -694,15 +693,15 @@ boxf*
 partition (cell* cells, int ncells, int* nrects, boxf bb)
 {
     int nsegs = 4*(ncells+1);
-    segment_t* segs = N_GNEW(nsegs+1, segment_t);
-    int* permute = N_NEW(nsegs+1, int);
+    segment_t* segs = gv_calloc(nsegs + 1, sizeof(segment_t));
+    int* permute = gv_calloc(nsegs + 1, sizeof(int));
     int hd_size, vd_size;
     int i, j, cnt = 0;
     boxf* rs;
     int ntraps = TRSIZE(nsegs);
-    trap_t* trs = N_GNEW(ntraps, trap_t);
-    boxf* hor_decomp = N_NEW(ntraps, boxf);
-    boxf* vert_decomp = N_NEW(ntraps, boxf);
+    trap_t* trs = gv_calloc(ntraps, sizeof(trap_t));
+    boxf* hor_decomp = gv_calloc(ntraps, sizeof(boxf));
+    boxf* vert_decomp = gv_calloc(ntraps, sizeof(boxf));
     int nt;
 
     if (DEBUG) {
@@ -733,13 +732,13 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     }
     vd_size = monotonate_trapezoids (nsegs, segs, trs, 1, vert_decomp);
 
-    rs = N_NEW (hd_size*vd_size, boxf);
+    rs = gv_calloc(hd_size * vd_size, sizeof(boxf));
     for (i=0; i<vd_size; i++) 
 	for (j=0; j<hd_size; j++)
 	    if (rectIntersect(&rs[cnt], &vert_decomp[i], &hor_decomp[j]))
 		cnt++;
 
-    rs = RALLOC (cnt, rs, boxf);
+    rs = gv_recalloc(rs, hd_size * vd_size, cnt, sizeof(boxf));
     free (segs);
     free (permute);
     free (trs);

@@ -28,9 +28,9 @@
 #include <ortho/maze.h>
 #include <ortho/fPQ.h>
 #include <ortho/ortho.h>
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/unused.h>
-#include <common/memory.h>
 #include <common/geomprocs.h>
 #include <common/globals.h>
 #include <common/render.h>
@@ -160,7 +160,7 @@ convertSPtoRoute (sgraph* g, snode* fst, snode* lst)
     for (ptr = fst; ptr; ptr = N_DAD(ptr)) sz++;
     rte.n = 0;
     assert(sz >= 2);
-    rte.segs = N_NEW(sz-2, segment);  /* at most sz-2 segments */
+    rte.segs = gv_calloc(sz - 2, sizeof(segment));  /* at most sz-2 segments */
 
     seg.prev = seg.next = 0;
     ptr = prev = N_DAD(fst);
@@ -342,7 +342,7 @@ addChan (Dt_t* chdict, channel* cp, double j)
     chanItem* subd = dtmatch (chdict, &j);
 
     if (!subd) {
-	subd = NEW (chanItem);
+	subd = gv_alloc(sizeof(chanItem));
 	subd->v = j;
 	subd->chans = dtopen (&chanDisc, Dtoset);
 	dtinsert (chdict, subd);
@@ -369,7 +369,7 @@ extractHChans (maze* mp)
 	    cp = nextcp;
 	}
 
-	chp = NEW(channel);
+	chp = gv_alloc(sizeof(channel));
 	chp->cp = cp;
 	chp->p.p1 = cp->bb.LL.x;
 
@@ -406,7 +406,7 @@ extractVChans (maze* mp)
 	    cp = nextcp;
 	}
 
-	chp = NEW(channel);
+	chp = gv_alloc(sizeof(channel));
 	chp->cp = cp;
 	chp->p.p1 = cp->bb.LL.y;
 
@@ -1162,7 +1162,7 @@ attachOrthoEdges(maze* mp, size_t n_edges, route* route_list, splineInfo *sinfo,
 	size_t npts = 1 + 3*rte.n;
 	if (npts > splsz) {
 		free (ispline);
-		ispline = N_GNEW(npts, pointf);
+		ispline = gv_calloc(npts, sizeof(pointf));
 		splsz = npts;
 	}
 	    
@@ -1249,7 +1249,7 @@ orthoEdges (Agraph_t* g, int doLbls)
     Agedge_t* e;
     snode* sn;
     snode* dn;
-    epair_t* es = N_GNEW(agnedges(g), epair_t);
+    epair_t* es = gv_calloc(agnedges(g), sizeof(epair_t));
     cell* start;
     cell* dest;
     PointSet* ps = NULL;
@@ -1319,7 +1319,7 @@ orthoEdges (Agraph_t* g, int doLbls)
 	}
     }
 
-    route_list = N_NEW (n_edges, route);
+    route_list = gv_calloc(n_edges, sizeof(route));
 
     qsort(es, n_edges, sizeof(epair_t), (qsort_cmpf) edgecmp);
 

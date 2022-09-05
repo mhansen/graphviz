@@ -11,7 +11,7 @@
 /* Priority Queue Code for shortest path in graph */
 
 #include "config.h"
-#include <common/memory.h>
+#include <cgraph/alloc.h>
 #include <assert.h>
 
 #include <ortho/fPQ.h>
@@ -25,7 +25,7 @@ void
 PQgen(int sz)
 {
   if (!pq) {
-    pq = N_NEW(sz+1,snode*);
+    pq = gv_calloc(sz + 1, sizeof(snode*));
     pq[0] = &guard;
     PQsize = sz;
   }
