@@ -27,13 +27,12 @@
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
 #include <gvc/gvcint.h>
-
-#include <common/memory.h>
 
 typedef enum {
 	FORMAT_JSON,
@@ -476,7 +475,7 @@ static int write_edges(Agraph_t * g, GVJ_t * job, int top, state_t* sp)
         return 0;
     }
 
-    Agedge_t **edges = gcalloc(count, sizeof(Agedge_t *));
+    Agedge_t **edges = gv_calloc(count, sizeof(Agedge_t *));
 
     size_t i = 0;
     for (Agnode_t *np = agfstnode(g); np; np = agnxtnode(g, np)) {
@@ -614,7 +613,7 @@ static void insert (Dt_t* map, char* name, int v)
 	    agerr(AGWARN, "Duplicate cluster name \"%s\"\n", name);
 	return;
     }
-    ip = calloc(1, sizeof(intm));
+    ip = gv_alloc(sizeof(intm));
     ip->id = strdup(name);
     ip->v = v;
     dtinsert (map, ip);

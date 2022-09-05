@@ -22,15 +22,12 @@
 
 #ifdef HAVE_GD_PNG
 
-/* for N_GNEW() */
-#include <common/memory.h>
-
 /* for gvcolor_t */
 #include <common/color.h>
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
-#include <common/memory.h>
 #include <common/render.h>
 
 /* for wind() */
@@ -55,7 +52,7 @@ typedef struct {
 } state_t;
 
 static void vrml_begin_job(GVJ_t *job) {
-  job->context = zmalloc(sizeof(state_t));
+  job->context = gv_alloc(sizeof(state_t));
 }
 
 static void vrml_end_job(GVJ_t *job) {
@@ -606,7 +603,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
     case NODE_OBJTYPE:
 	n = obj->u.n;
 	pen = set_penstyle(job, state->im, brush);
-	points = N_GGNEW(np, gdPoint);
+	points = gv_calloc(np, sizeof(gdPoint));
 	for (i = 0; i < np; i++) {
 	    mp = vrml_node_point(job, n, A[i]);
 	    points[i].x = ROUND(mp.x);
