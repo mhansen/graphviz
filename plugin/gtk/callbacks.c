@@ -191,9 +191,7 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
 		NULL);
 }
 
-static void
-load_store_with_attrs(GtkListStore *model, GVJ_t *job)
-{
+static void load_store_with_attrs(GtkListStore *model) {
         gtk_list_store_clear(model);
 }
 
@@ -229,7 +227,7 @@ on_drawingarea1_expose_event           (GtkWidget       *widget,
     }
     cairo_destroy(cr);
 
-    load_store_with_attrs(GTK_LIST_STORE(g_object_get_data(G_OBJECT(widget), "attr_store")), job);
+    load_store_with_attrs(GTK_LIST_STORE(g_object_get_data(G_OBJECT(widget), "attr_store")));
 
     return FALSE;
 }
@@ -351,7 +349,7 @@ on_drawingarea1_button_press_event     (GtkWidget       *widget,
     pointer.y = event->y;
     (job->callbacks->button_press)(job, event->button, pointer);
     
-    load_store_with_attrs(GTK_LIST_STORE(g_object_get_data(G_OBJECT(widget), "attr_store")), job);
+    load_store_with_attrs(GTK_LIST_STORE(g_object_get_data(G_OBJECT(widget), "attr_store")));
     return FALSE;
 }
 
