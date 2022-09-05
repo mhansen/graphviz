@@ -83,10 +83,9 @@ on_open1_activate                      (GtkMenuItem     *menuitem,
 static void
 ui_save_graph(GtkWindow *window1, gchar *filename)
 {
-    GVJ_t *job;
     GtkWidget *dialog;
 
-    job = (GVJ_t *)g_object_get_data(G_OBJECT(window1), "job");
+    GVJ_t *job = g_object_get_data(G_OBJECT(window1), "job");
 
     dialog = gtk_file_chooser_dialog_new(
 		"Save graph as", window1, GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -113,10 +112,9 @@ on_save1_activate                      (GtkMenuItem     *menuitem,
     (void)user_data;
 
     GtkWindow *window1;
-    gchar *filename;
 
     window1 = GTK_WINDOW(menuitem);
-    filename = (gchar *)g_object_get_data(G_OBJECT(window1), "activefilename");
+    gchar *filename = g_object_get_data(G_OBJECT(window1), "activefilename");
     ui_save_graph(window1, filename);
 }
 
@@ -220,10 +218,9 @@ on_drawingarea1_expose_event           (GtkWidget       *widget,
     (void)event;
     (void)user_data;
 
-    GVJ_t *job;
     cairo_t *cr;
 
-    job = (GVJ_t *)g_object_get_data(G_OBJECT(widget),"job");
+    GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     cr = gdk_cairo_create(widget->window);
 
     (job->callbacks->motion)(job, job->pointer);
@@ -259,9 +256,7 @@ on_drawingarea1_motion_notify_event    (GtkWidget       *widget,
 {
     (void)user_data;
 
-    GVJ_t *job;
-
-    job = (GVJ_t *)g_object_get_data(G_OBJECT(widget),"job");
+    GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     job->pointer.x = event->x;
     job->pointer.y = event->y;
     gtk_widget_queue_draw(widget);
@@ -292,11 +287,10 @@ on_drawingarea2_expose_event           (GtkWidget       *widget,
     (void)event;
     (void)user_data;
 
-    GVJ_t *job;
     cairo_t *cr;
     double tmp;
 
-    job = (GVJ_t *)g_object_get_data(G_OBJECT(widget),"job");
+    GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     cr = gdk_cairo_create(widget->window);
 
     (job->callbacks->motion)(job, job->pointer);
@@ -338,7 +332,6 @@ on_drawingarea1_configure_event        (GtkWidget       *widget,
 {
     (void)user_data;
 
-    GVJ_t *job;
     double zoom_to_fit;
 
 /*FIXME - should allow for margins */
@@ -347,7 +340,7 @@ on_drawingarea1_configure_event        (GtkWidget       *widget,
 /*      plugin/xlib/gvdevice_xlib.c */
 /*      lib/gvc/gvevent.c */
 
-    job = (GVJ_t *)g_object_get_data(G_OBJECT(widget),"job");
+    GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     if (! job->has_been_rendered) {
 	zoom_to_fit = MIN((double) event->width / (double) job->width,
 			  (double) event->height / (double) job->height);
@@ -376,10 +369,9 @@ on_drawingarea1_button_press_event     (GtkWidget       *widget,
 {
     (void)user_data;
 
-    GVJ_t *job;
     pointf pointer;
 
-    job = (GVJ_t *)g_object_get_data(G_OBJECT(widget),"job");
+    GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     pointer.x = event->x;
     pointer.y = event->y;
     (job->callbacks->button_press)(job, event->button, pointer);
@@ -396,10 +388,9 @@ on_drawingarea1_button_release_event   (GtkWidget       *widget,
 {
     (void)user_data;
 
-    GVJ_t *job;
     pointf pointer;
 
-    job = (GVJ_t *)g_object_get_data(G_OBJECT(widget),"job");
+    GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     pointer.x = event->x;
     pointer.y = event->y;
     (job->callbacks->button_release)(job, event->button, pointer);
@@ -415,10 +406,9 @@ on_drawingarea1_scroll_event           (GtkWidget       *widget,
 {
     (void)user_data;
 
-    GVJ_t *job;
     pointf pointer;
 
-    job = (GVJ_t *)g_object_get_data(G_OBJECT(widget),"job");
+    GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     pointer.x = ((GdkEventScroll *)event)->x;
     pointer.y = ((GdkEventScroll *)event)->y;
     switch (((GdkEventScroll *)event)->direction) {
