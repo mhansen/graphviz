@@ -11,6 +11,7 @@
 #include "config.h"
 #include <assert.h>
 #include <gtk/gtk.h>
+#include <limits.h>
 #include <stdbool.h>
 
 #include <gvc/gvplugin_device.h>
@@ -381,7 +382,8 @@ on_drawingarea1_button_press_event     (GtkWidget       *widget,
     GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     pointer.x = event->x;
     pointer.y = event->y;
-    (job->callbacks->button_press)(job, event->button, pointer);
+    assert(event->button <= INT_MAX);
+    (job->callbacks->button_press)(job, (int)event->button, pointer);
     
     load_store_with_attrs(GTK_LIST_STORE(g_object_get_data(G_OBJECT(widget), "attr_store")));
     return FALSE;
@@ -400,7 +402,8 @@ on_drawingarea1_button_release_event   (GtkWidget       *widget,
     GVJ_t *job = g_object_get_data(G_OBJECT(widget),"job");
     pointer.x = event->x;
     pointer.y = event->y;
-    (job->callbacks->button_release)(job, event->button, pointer);
+    assert(event->button <= INT_MAX);
+    (job->callbacks->button_release)(job, (int)event->button, pointer);
 
     return FALSE;
 }
