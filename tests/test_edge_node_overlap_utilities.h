@@ -1,5 +1,6 @@
 #include <string>
 #include <string_view>
+#include <unordered_map>
 
 #include "svg_analyzer.h"
 
@@ -30,8 +31,9 @@ struct check_options {
   double max_node_edge_overlap;
   /// minimum required overlap between edge and node
   double min_node_edge_overlap;
-  /// maximum allowed overlap between edge stem and arrow
-  double max_edge_stem_arrow_overlap;
+  /// map between primitive arrow shape and maximum allowed overlap between edge
+  /// stem and arrow
+  std::unordered_map<std::string_view, double> max_edge_stem_arrow_overlap;
   /// minimum required overlap between edge stem and arrow
   double min_edge_stem_arrow_overlap;
   /// rounding error caused by limited precision in SVG attribute values
@@ -44,6 +46,10 @@ struct graph_options {
   double node_penwidth = 1;
   std::string_view dir = "forward";
   double edge_penwidth = 1;
+  std::string_view primitive_arrowhead_shape = "normal";
+  std::string_view primitive_arrowtail_shape = "normal";
+  std::string_view arrowhead_modifier = "";
+  std::string_view arrowtail_modifier = "";
 };
 
 struct write_options {

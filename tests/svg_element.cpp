@@ -314,6 +314,7 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
         }
         break;
       }
+      // FIXME: this throws for the `curve` and `icurve` edge arrows
       throw std::runtime_error(
           "paths other than straight vertical, straight horizontal or the "
           "cylinder special case are currently not supported");
