@@ -20,12 +20,20 @@ struct SVGPoint {
   bool is_more_right_than(const SVGPoint &other) const;
 };
 
+struct SVGLine {
+  double x1;
+  double y1;
+  double x2;
+  double y2;
+};
+
 struct SVGRect {
   double x;
   double y;
   double width;
   double height;
   SVGPoint center() const;
+  SVGRect intersection(SVGRect other) const;
   void extend(const SVGPoint &point);
   void extend(const SVGRect &other);
 };
@@ -137,6 +145,12 @@ public:
   SVG::SVGRect bbox(bool throw_if_bbox_not_defined = true);
   bool is_closed_shape_element() const;
   bool is_shape_element() const;
+  /// Return the outline bounding box of the element. The outline bounding box
+  /// is the bounding box with penwidth taken into account. If this function is
+  /// called for an SVG element for which the bounding box is not defined, it
+  /// will throw an exception unless the `throw_if_bbox_not_defined` parameter
+  /// is `false`.
+  SVG::SVGRect outline_bbox(bool throw_if_bbox_not_defined = true);
   std::string to_string(std::size_t indent_size) const;
 
   SVGAttributes attributes;
@@ -162,9 +176,16 @@ private:
   /// handling space separation
   void append_attribute(std::string &output,
                         const std::string &attribute) const;
+  // Return true if the points of a polygon are defined clockwise
+  bool has_clockwise_points() const;
   std::string id_attribute_to_string() const;
   std::string fill_attribute_to_string() const;
   std::string fill_opacity_attribute_to_string() const;
+  /// Compute the stroke shape miter point according to
+  /// https://www.w3.org/TR/SVG2/painting.html#StrokeShape.
+  SVG::SVGPoint miter_point(SVG::SVGPoint segment_start,
+                            SVG::SVGPoint segment_end,
+                            SVG::SVGPoint following_segment_end) const;
   std::string points_attribute_to_string() const;
   std::string stroke_attribute_to_string() const;
   std::string stroke_opacity_attribute_to_string() const;
@@ -177,6 +198,7 @@ private:
   /// The bounding box of the element and its children. Stored the first time
   /// it's computed
   std::optional<SVG::SVGRect> m_bbox;
+  std::optional<SVG::SVGRect> m_outline_bbox;
 };
 
 } // namespace SVG

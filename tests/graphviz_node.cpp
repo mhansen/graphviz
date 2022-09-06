@@ -34,6 +34,10 @@ std::string_view GraphvizNode::node_id() const { return m_node_id; }
 
 SVG::SVGRect GraphvizNode::bbox() const { return m_svg_g_element.bbox(); }
 
+SVG::SVGRect GraphvizNode::outline_bbox() const {
+  return m_svg_g_element.outline_bbox();
+}
+
 const SVG::SVGElement &GraphvizNode::svg_g_element() const {
   return m_svg_g_element;
 }
