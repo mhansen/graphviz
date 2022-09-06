@@ -21,7 +21,6 @@
 #define N_DAD(n) (n)->n_dad
 #define N_EDGE(n) (n)->n_edge
 #define E_WT(e) (e->weight)
-#define E_INCR(e) (e->incr)
 
 #ifndef FPQ_H
 #define FPQ_H
