@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
@@ -17,7 +18,6 @@
 #include <string.h>
 #define XLABEL_INT
 #include <label/xlabels.h>
-#include <common/memory.h>
 
 extern int Verbose;
 
@@ -44,7 +44,7 @@ static int icompare(Dt_t * dt, void * v1, void * v2, Dtdisc_t * disc)
 static XLabels_t *xlnew(object_t * objs, int n_objs, xlabel_t * lbls,
                         int n_lbls, label_params_t * params)
 {
-    XLabels_t *xlp = NEW(XLabels_t);
+    XLabels_t *xlp = gv_alloc(sizeof(XLabels_t));
 
     /* used to load the rtree in hilbert space filling curve order */
     if (!(xlp->hdx = dtopen(&Hdisc, Dtobag))) {
@@ -546,7 +546,7 @@ static int xlhdxload(XLabels_t * xlp)
 	HDict_t *hp;
 	point pi;
 
-	hp = NEW(HDict_t);
+	hp = gv_alloc(sizeof(HDict_t));
 
 	hp->d.data = &xlp->objs[i];
 	hp->d.rect = objplpmks(&xlp->objs[i]);
