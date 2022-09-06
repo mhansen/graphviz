@@ -13,6 +13,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #include <cgraph/alloc.h>
 #include <ortho/sgraph.h>
 
@@ -21,9 +23,6 @@
 #define N_DAD(n) (n)->n_dad
 #define N_EDGE(n) (n)->n_edge
 #define E_WT(e) (e->weight)
-
-#ifndef FPQ_H
-#define FPQ_H
 
 void PQgen(int sz);
 void PQfree(void);
@@ -35,4 +34,3 @@ void PQdownheap (int k);
 snode* PQremove (void);
 void PQupdate (snode* n, int d);
 void PQprint (void);
-#endif
