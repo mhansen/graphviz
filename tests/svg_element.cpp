@@ -111,7 +111,7 @@ std::string SVG::to_dot_color(const std::string &color, double opacity) {
 
 SVG::SVGRect SVG::SVGElement::bbox(bool throw_if_bbox_not_defined) {
   if (!m_bbox.has_value()) {
-    // negative width and height bbox that will be imediately replaced by the
+    // negative width and height bbox that will be immediately replaced by the
     // first bbox found
     m_bbox = {.x = std::numeric_limits<double>::max() / 2,
               .y = std::numeric_limits<double>::max() / 2,
