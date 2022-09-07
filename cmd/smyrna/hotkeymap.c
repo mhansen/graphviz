@@ -113,7 +113,7 @@ static int get_drag(const char *s)
 
 void load_mouse_actions(ViewInfo * v)
 {
-    /*file parsing is temporarrily not available */
+    // file parsing is temporarily not available
     int i = 0;
     FILE *file;
     char linebuf[BUFSIZ];
