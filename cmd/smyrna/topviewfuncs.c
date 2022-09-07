@@ -798,7 +798,7 @@ static void cacheNodeLabels(Agraph_t * g,topview* t)
 }
 static void cacheEdgeLabels(Agraph_t * g,topview* t)
 {
-    if(t->cache.edgelabel_id!=-1)	/*clean existing cache*/
+    if (t->cache.edgelabel_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.edgelabel_id,1);
     t->cache.edgelabel_id=glGenLists(1);
     glNewList(t->cache.edgelabel_id,GL_COMPILE);

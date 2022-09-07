@@ -145,7 +145,7 @@ typedef struct
 	unsigned selnode_id;
 	unsigned seledge_id;
 	unsigned nodelabel_id;
-	int edgelabel_id;
+	unsigned edgelabel_id;
     }topviewcache;
 
     typedef struct {
