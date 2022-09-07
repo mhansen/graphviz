@@ -116,18 +116,17 @@ void load_mouse_actions(ViewInfo * v)
     /*file parsing is temporarrily not available */
     int i = 0;
     FILE *file;
-    char line[BUFSIZ];
+    char linebuf[BUFSIZ];
     char *a;
     char *action_file = smyrnaPath("mouse_actions.txt");
     file = fopen(action_file, "r");
     if (file != NULL) {
 	int ind = 0;
-	while (fgets(line, BUFSIZ, file) != NULL) {
+	while (fgets(linebuf, BUFSIZ, file) != NULL) {
 	    int idx = 0;
-	    a = strtok(line, ",");
+	    a = strtok(linebuf, ",");
 
-	    if ((line[0] == '#') || (line[0] == ' ')
-		|| (strlen(line) == 0))
+	    if (linebuf[0] == '#' || linebuf[0] == ' ' || strlen(linebuf) == 0)
 		continue;
 
 	    v->mouse_actions = gv_recalloc(v->mouse_actions, v->mouse_action_count,
