@@ -164,7 +164,6 @@ void load_mouse_actions(ViewInfo * v)
 
 int get_mode(ViewInfo * v)
 {
-    int ind = 0;
     glMouseButtonType curMouseType = v->mouse.t;
     int curDragging = ((v->mouse.dragX != 0) || (v->mouse.dragY != 0));
     smyrna_view_mode view_mode;
@@ -175,7 +174,7 @@ int get_mode(ViewInfo * v)
 	view_mode = smyrna_fisheye;
 
 
-    for (; ind < v->mouse_action_count; ind++) {
+    for (size_t ind = 0; ind < v->mouse_action_count; ind++) {
 
 	if ((v->mouse_actions[ind].hotkey == v->keymap.keyVal)
 	    && (v->mouse_actions[ind].type == curMouseType)

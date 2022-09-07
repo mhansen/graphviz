@@ -16,6 +16,7 @@
 #endif
 #endif
 
+#include <stddef.h>
 #include <xdot/xdot.h>
 #include <gtk/gtk.h>
 #include <glcomp/opengl.h>
@@ -436,7 +437,7 @@ typedef struct
 	ArcBall_t *arcball;
 	keymap_t keymap;
 	mouse_action_t* mouse_actions;	/*customizable moouse interraction list*/
-	int mouse_action_count;
+	size_t mouse_action_count;
 	refresh_filter refresh;
 	int edgerendertype;
 	float nodeScale;
