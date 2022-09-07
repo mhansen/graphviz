@@ -69,7 +69,6 @@ EXCLUDE = (
   "cmd/smyrna/gui/topviewsettings.c",
   "cmd/smyrna/gui/topviewsettings.h",
   "cmd/smyrna/gvprpipe.c",
-  "cmd/smyrna/gvprpipe.h",
   "cmd/smyrna/hier.c",
   "cmd/smyrna/hier.h",
   "cmd/smyrna/hotkeymap.c",

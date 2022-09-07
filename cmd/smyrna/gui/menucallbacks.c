@@ -275,7 +275,7 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     GtkTextIter startit;
     GtkTextIter endit;
     const char *args;
-    int j, argc, cloneGraph;
+    int cloneGraph;
     char **argv;
 
     args =
@@ -294,7 +294,7 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
 	return;
     }
 
-    argc = 1;
+    size_t argc = 1;
     if (*args != '\0')
 	argc += 2;
     if (*bf2 != '\0')
@@ -306,7 +306,7 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     } else
 	cloneGraph = 0;
     argv = gv_calloc(argc + 1, sizeof(char*));
-    j = 0;
+    size_t j = 0;
     argv[j++] = "smyrna";
     if (cloneGraph)
 	argv[j++] = "-C";

@@ -11,6 +11,7 @@
 #include "smyrnadefs.h"
 #include "gvprpipe.h"
 #include <common/const.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -36,8 +37,7 @@ static ssize_t outfn(void *sp, const char *buf, size_t nbyte, void *dp)
     return (ssize_t)nbyte;
 }
 
-int run_gvpr(Agraph_t * srcGraph, int argc, char *argv[])
-{
+int run_gvpr(Agraph_t * srcGraph, size_t argc, char *argv[]) {
     int i, rv = 1;
     gvpropts opts;
     Agraph_t *gs[2];
@@ -52,7 +52,8 @@ int run_gvpr(Agraph_t * srcGraph, int argc, char *argv[])
     opts.err = outfn;
     opts.flags = GV_USE_OUTGRAPH;
 
-    rv = gvpr(argc, argv, &opts);
+    assert(argc <= INT_MAX);
+    rv = gvpr((int)argc, argv, &opts);
 
     if (rv) {			/* error */
 	fprintf(stderr, "Error in gvpr\n");
