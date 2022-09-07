@@ -789,7 +789,7 @@ void cacheSelectedNodes(Agraph_t * g,topview* t)
 }
 static void cacheNodeLabels(Agraph_t * g,topview* t)
 {
-    if(t->cache.nodelabel_id!=-1)	/*clean existing cache*/
+    if (t->cache.nodelabel_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.nodelabel_id,1);
     t->cache.nodelabel_id=glGenLists(1);
     glNewList(t->cache.nodelabel_id,GL_COMPILE);
