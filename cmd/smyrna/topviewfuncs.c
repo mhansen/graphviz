@@ -293,7 +293,7 @@ static void renderSelectedNodes(Agraph_t * g)
 	{
 	    pos = ND_A(v);
 	    glColor4f(c.R, c.G,c.B, c.A);
-            glprintfglut(view->glutfont,pos.x,pos.y,pos.z+0.002,labelOf(g,v));
+	    glprintfglut(view->glutfont, pos.x, pos.y, pos.z + 0.002f, labelOf(g, v));
 	}
     }
 }
