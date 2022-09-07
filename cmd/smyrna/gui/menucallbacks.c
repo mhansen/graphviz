@@ -192,7 +192,7 @@ void mGraphPropertiesSlot(GtkWidget * widget, gpointer user_data)
 
     //there has to be an active graph to open the graph prop page
     if (view->activeGraph > -1) {
-	load_graph_properties(view->g[view->activeGraph]);	//load from graph to gui              
+	load_graph_properties();	//load from graph to gui
 	gtk_dialog_set_response_sensitive((GtkDialog *)
 					  glade_xml_get_widget(xml,
 							       "dlgOpenGraph"),

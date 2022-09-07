@@ -31,8 +31,7 @@ void Color_Widget_bg(char *colorstring, GtkWidget * widget)
     gtk_widget_modify_base(widget, GTK_STATE_NORMAL, &color);
 }
 
-void load_graph_properties(Agraph_t * graph)
-{
+void load_graph_properties(void) {
     //dlgOpenGraph , GtkDialog
     gtk_entry_set_text((GtkEntry *)
 		       glade_xml_get_widget(xml, "entryGraphFileName"),
