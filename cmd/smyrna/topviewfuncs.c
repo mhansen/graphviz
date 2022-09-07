@@ -780,7 +780,7 @@ void cacheSelectedEdges(Agraph_t * g,topview* t)
 }
 void cacheSelectedNodes(Agraph_t * g,topview* t)
 {
-    if(t->cache.selnode_id!=-1)	/*clean existing cache*/
+    if (t->cache.selnode_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.selnode_id,1);
     t->cache.selnode_id=glGenLists(1);
     glNewList(t->cache.selnode_id,GL_COMPILE);
@@ -864,7 +864,7 @@ void initSmGraph(Agraph_t * g,topview* rv)
 
     rv->fisheyeParams.active = 0;
     rv->cache.node_id = UINT_MAX;
-    rv->cache.selnode_id=-1;
+    rv->cache.selnode_id = UINT_MAX;
     rv->cache.edge_id = UINT_MAX;
     rv->cache.seledge_id=-1;
     rv->sel.selectEdges=0;
