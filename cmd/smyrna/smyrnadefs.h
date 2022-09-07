@@ -141,7 +141,7 @@ typedef struct
     typedef struct
     {
 	unsigned node_id;
-	int edge_id;
+	unsigned edge_id;
 	int selnode_id;
 	int seledge_id;
 	int nodelabel_id;
