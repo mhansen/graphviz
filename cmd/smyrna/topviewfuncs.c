@@ -22,6 +22,7 @@
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
+#include <limits.h>
 #include <float.h>
 #include <math.h>
 #include <stddef.h>
@@ -744,7 +745,7 @@ static void renderEdgeLabels(Agraph_t * g)
 
 static void cacheNodes(Agraph_t * g,topview* t)
 {
-    if(t->cache.node_id!=-1)	/*clean existing cache*/
+    if (t->cache.node_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.node_id,1);
     t->cache.node_id=glGenLists(1);
     glNewList(t->cache.node_id,GL_COMPILE);
@@ -862,7 +863,7 @@ void initSmGraph(Agraph_t * g,topview* rv)
     rv->fisheyeParams.h = NULL;
 
     rv->fisheyeParams.active = 0;
-    rv->cache.node_id=-1;
+    rv->cache.node_id = UINT_MAX;
     rv->cache.selnode_id=-1;
     rv->cache.edge_id=-1;
     rv->cache.seledge_id=-1;
