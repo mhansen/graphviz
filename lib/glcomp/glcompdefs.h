@@ -86,8 +86,6 @@ extern "C" {
 	    glFontVJustifyBottom, glFontVJustifyCenter } glCompVJustify;
     typedef enum { glFontHJustifyNone, glFontHJustifyLeft,
 	    glFontHJustifyRight, glFontHJustifyCenter } glCompHJustify;
-    typedef enum { glButtonGlyphLeft, glButtonGlyphRight, glButtonGlyphTop,
-	    glButtonGlyphBottom } glCompButtonGlyph;
     typedef enum { glBorderNone, glBorderSolid, glBorderBevel,
 	    glBorderCustom } glCompBorderType;
 
@@ -277,7 +275,6 @@ extern "C" {
 	int refStatus;		//0 not pressed 1 pressed;
 	int groupid;
 	glCompImage *image;	/*glyph */
-	glCompButtonGlyph glyphPos;
 	int data;
 
     };
