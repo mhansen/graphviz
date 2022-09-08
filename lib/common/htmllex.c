@@ -408,7 +408,7 @@ static int rowspanfn(htmlcell_t * p, char *v)
 	agerr(AGWARN, "ROWSPAN value cannot be 0 - ignored\n");
 	return 1;
     }
-    p->rspan = (unsigned short) u;
+    p->rowspan = (unsigned short) u;
     return 0;
 }
 
@@ -605,7 +605,7 @@ static htmlcell_t *mkCell(char **atts)
     htmlcell_t *cell = NEW(htmlcell_t);
 
     cell->colspan = 1;
-    cell->rspan = 1;
+    cell->rowspan = 1;
     doAttrs(cell, cell_items, sizeof(cell_items) / ISIZE, atts, "<TD>");
 
     return cell;

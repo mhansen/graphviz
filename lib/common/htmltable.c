@@ -479,7 +479,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
 	    rule_pt.y = pts.LL.y - cp->parent->data.space / 2;
-	} else if (cp->row + cp->rspan == cp->parent->row_count) { // bottom row
+	} else if (cp->row + cp->rowspan == cp->parent->row_count) { // bottom row
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
 	    rule_pt.y = pts.LL.y - cp->parent->data.space / 2 - base;
@@ -492,7 +492,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 	doSide(job, rule_pt, 0, rule_length);
     }
     //Determine the horizontal coordinate and length
-    if ((cp->ruled & HTML_HRULE) && cp->row + cp->rspan < cp->parent->row_count) {
+    if ((cp->ruled & HTML_HRULE) && cp->row + cp->rowspan < cp->parent->row_count) {
 	if (cp->col == 0) {	// first column 
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
@@ -1188,7 +1188,7 @@ static int findCol(PointSet * ps, int row, int col, htmlcell_t * cellp)
 	    notFound = 0;
     }
     for (j = col; j < col + cellp->colspan; j++) {
-	for (i = row; i < row + cellp->rspan; i++) {
+	for (i = row; i < row + cellp->rowspan; i++) {
 	    addPS(ps, j, i);
 	}
     }
@@ -1249,8 +1249,8 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    cellp->col = c;
 	    c += cellp->colspan;
 	    n_cols = MAX(c, n_cols);
-	    n_rows = MAX(r + cellp->rspan, n_rows);
-	    if (inIntSet(is, r + cellp->rspan))
+	    n_rows = MAX(r + cellp->rowspan, n_rows);
+	    if (inIntSet(is, r + cellp->rowspan))
 		cellp->ruled |= HTML_HRULE;
 	    cp = (pitem *)dtlink(cdict, cp);
 	}
@@ -1288,10 +1288,10 @@ static void sizeLinearArray(htmltbl_t * tbl)
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
-	if (cp->rspan == 1)
+	if (cp->rowspan == 1)
 	    ht = cp->data.box.UR.y;
 	else {
-	    ht = SPLIT(cp->data.box.UR.y, cp->rspan, tbl->data.space);
+	    ht = SPLIT(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
 	    ht = MAX(ht, 1);
 	}
 	if (cp->colspan == 1)
@@ -1300,7 +1300,7 @@ static void sizeLinearArray(htmltbl_t * tbl)
 	    wd = SPLIT(cp->data.box.UR.x, cp->colspan, tbl->data.space);
 	    wd = MAX(wd, 1);
 	}
-	for (i = cp->row; i < cp->row + cp->rspan; i++) {
+	for (i = cp->row; i < cp->row + cp->rowspan; i++) {
 	    y = tbl->heights[i];
 	    tbl->heights[i] = MAX(y, ht);
 	}
@@ -1427,7 +1427,7 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 
 	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->row);
 	t = agfindnode(rowg, value_buffer);
-	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->row + cp->rspan);
+	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->row + cp->rowspan);
 	h = agfindnode(rowg, value_buffer);
 	checkEdge (rowg, t, h, cp->data.box.UR.y);
     }
@@ -1757,13 +1757,13 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 		mask |= TOP;
 	    if (cp->col + cp->colspan == tbl->column_count)
 		mask |= RIGHT;
-	    if (cp->row + cp->rspan == tbl->row_count)
+	    if (cp->row + cp->rowspan == tbl->row_count)
 		mask |= BOTTOM;
 	}
 	cbox.LL.x = tbl->widths[cp->col];
 	cbox.UR.x = tbl->widths[cp->col + cp->colspan] - tbl->data.space;
 	cbox.UR.y = tbl->heights[cp->row];
-	cbox.LL.y = tbl->heights[cp->row + cp->rspan] + tbl->data.space;
+	cbox.LL.y = tbl->heights[cp->row + cp->rowspan] + tbl->data.space;
 	pos_html_cell(cp, cbox, sides & mask);
     }
 
@@ -1943,7 +1943,7 @@ static void printCell(htmlcell_t * cp, int ind)
 {
     indent(ind);
     fprintf(stderr, "cell %" PRIu16 " %d %" PRIu16 " %d ", cp->colspan,
-            cp->rspan, cp->col, cp->row);
+            cp->rowspan, cp->col, cp->row);
     printData(&cp->data);
     fputs("\n", stderr);
     switch (cp->child.kind) {
