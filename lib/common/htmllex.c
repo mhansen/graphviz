@@ -283,7 +283,7 @@ static int cellborderfn(htmltbl_t * p, char *v)
 
     if (doInt(v, "CELLBORDER", 0, SCHAR_MAX, &u))
 	return 1;
-    p->cb = (signed char)u;
+    p->cellborder = (signed char)u;
     return 0;
 }
 
@@ -615,7 +615,7 @@ static htmltbl_t *mkTbl(char **atts)
     htmltbl_t *tbl = NEW(htmltbl_t);
 
     tbl->rc = -1;		/* flag that table is a raw, parsed table */
-    tbl->cb = -1;		/* unset cell border attribute */
+    tbl->cellborder = -1; // unset cell border attribute
     doAttrs(tbl, tbl_items, sizeof(tbl_items) / ISIZE, atts, "<TABLE>");
 
     return tbl;

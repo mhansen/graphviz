@@ -108,7 +108,7 @@ extern "C" {
 		Dt_t *rows;	/* cells */
 	    } p;
 	} u;
-	signed char cb;		/* cell border */
+	signed char cellborder;
 	int *heights;		/* heights of the rows */
 	int *widths;		/* widths of the columns */
 	int rc;			/* number of rows */
