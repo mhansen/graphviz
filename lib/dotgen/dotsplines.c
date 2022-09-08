@@ -2379,8 +2379,8 @@ static edge_t *bot_bound(edge_t * e, int side)
 
 static int cl_vninside(graph_t * cl, node_t * n)
 {
-    return BETWEEN(GD_bb(cl).LL.x, (double)(ND_coord(n).x), GD_bb(cl).UR.x) &&
-	    BETWEEN(GD_bb(cl).LL.y, (double)(ND_coord(n).y), GD_bb(cl).UR.y);
+  return BETWEEN(GD_bb(cl).LL.x, ND_coord(n).x, GD_bb(cl).UR.x) &&
+         BETWEEN(GD_bb(cl).LL.y, ND_coord(n).y, GD_bb(cl).UR.y);
 }
 
 /* All nodes belong to some cluster, which may be the root graph.
