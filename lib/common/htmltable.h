@@ -11,6 +11,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -108,7 +109,7 @@ extern "C" {
 		Dt_t *rows;	/* cells */
 	    } p;
 	} u;
-	signed char cellborder;
+	int8_t cellborder;
 	int *heights;		/* heights of the rows */
 	int *widths;		/* widths of the columns */
 	int rc;			/* number of rows */

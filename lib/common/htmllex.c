@@ -23,6 +23,7 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef HAVE_EXPAT
 #ifdef _WIN32
@@ -281,9 +282,9 @@ static int cellborderfn(htmltbl_t * p, char *v)
 {
     long u;
 
-    if (doInt(v, "CELLBORDER", 0, SCHAR_MAX, &u))
+    if (doInt(v, "CELLBORDER", 0, INT8_MAX, &u))
 	return 1;
-    p->cellborder = (signed char)u;
+    p->cellborder = (int8_t)u;
     return 0;
 }
 
