@@ -1263,10 +1263,9 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     rightx = ND_coord(hn).x;
     leftx = ND_coord(tn).x;
     if (GD_flip(g)) {
-        node_t* n;
-        n = tn;
+        node_t *tmp = tn;
         tn = hn;
-        hn = n;
+        hn = tmp;
     }
     auxt = cloneNode(subg, tn);
     auxh = cloneNode(auxg, hn);
