@@ -2221,18 +2221,18 @@ void refineregularends(edge_t *left, edge_t *right, pathend_t *endp, int dir,
 static void adjustregularpath(path * P, int fb, int lb)
 {
     boxf *bp1, *bp2;
-    int i, x;
+    int i;
 
     for (i = fb-1; i < lb+1; i++) {
 	bp1 = &P->boxes[i];
 	if ((i - fb) % 2 == 0) {
 	    if (bp1->LL.x >= bp1->UR.x) {
-		x = (bp1->LL.x + bp1->UR.x) / 2;
+		double x = (bp1->LL.x + bp1->UR.x) / 2;
 		bp1->LL.x = x - HALFMINW, bp1->UR.x = x + HALFMINW;
 	    }
 	} else {
 	    if (bp1->LL.x + MINW > bp1->UR.x) {
-		x = (bp1->LL.x + bp1->UR.x) / 2;
+		double x = (bp1->LL.x + bp1->UR.x) / 2;
 		bp1->LL.x = x - HALFMINW, bp1->UR.x = x + HALFMINW;
 	    }
 	}
