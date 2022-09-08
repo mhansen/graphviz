@@ -62,7 +62,7 @@ static short		TFA_State;
 	char		c = C;																\
 	if (TFA_State >= 0) {															\
 		if (isupper(c))																\
-			c = tolower(c);															\
+			c = (char)tolower(c);															\
 		else if (! IN_MASK_RANGE(c)) {												\
 			TFA_State = -1;															\
 			goto TFA_done;															\
