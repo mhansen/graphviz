@@ -1969,3 +1969,22 @@ def test_2270(tmp_path: Path):
   # it should have produced output in the expected location
   output = tmp_path / "hello.gv.core.dot.plain"
   assert output.exists(), "-O resulted in an unexpected output filename"
+
+@pytest.mark.xfail()
+def test_2272():
+  """
+  using `agmemread` with an unterminated string should not fail assertions
+  https://gitlab.com/graphviz/graphviz/-/issues/2272
+  """
+
+  # FIXME: Remove skip when
+  # https://gitlab.com/graphviz/graphviz/-/issues/1777 is fixed
+  if os.getenv("build_system") == "msbuild":
+    pytest.skip("Windows MSBuild release does not contain any header files (#1777)")
+
+  # find co-located test source
+  c_src = (Path(__file__).parent / "2272.c").resolve()
+  assert c_src.exists(), "missing test case"
+
+  # run the test
+  run_c(c_src, link=["cgraph", "gvc"])
