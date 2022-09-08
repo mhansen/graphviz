@@ -263,7 +263,6 @@ extern "C" {
     typedef struct _glCompLabel {
 	glObjType objType;	/*always keep this here for each drawable object */
 	glCompCommon common;
-	int autosize;		/*if 1 label sized is calculated from font */
 	char *text;
 	int transparent;
     } glCompLabel;
