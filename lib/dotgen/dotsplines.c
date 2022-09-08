@@ -1671,9 +1671,7 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
     }
 }
 
-/* ccw:
- * Return true if p3 is to left of ray p1->p2
- */
+/// Return true if p3 is to left of ray p1->p2
 static bool leftOf(pointf p1, pointf p2, pointf p3) {
   return (p1.y - p2.y) * (p3.x - p2.x) - (p3.y - p2.y) * (p1.x - p2.x) > 0;
 }
