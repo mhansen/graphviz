@@ -422,18 +422,12 @@ static void _dot_splines(graph_t * g, int normalize)
 
 	if (et == EDGETYPE_CURVED) {
 	    int ii;
-	    edge_t* e0;
-	    edge_t** edgelist;
-	    if (cnt == 1)
-		edgelist = &e0;
-	    else
-		edgelist = gv_calloc(cnt, sizeof(edge_t*));
+	    edge_t** edgelist = gv_calloc(cnt, sizeof(edge_t*));
 	    edgelist[0] = getmainedge((edges+ind)[0]);
 	    for (ii = 1; ii < cnt; ii++)
 		edgelist[ii] = (edges+ind)[ii];
 	    makeStraightEdges (g, edgelist, cnt, et, &sinfo);
-	    if (cnt > 1)
-		free (edgelist);
+	    free(edgelist);
 	}
 	else if (agtail(e0) == aghead(e0)) {
 	    int b, r;
