@@ -197,9 +197,9 @@ static void emit_html_txt(GVJ_t * job, htmltxt_t * tp, htmlenv_t * env)
     if (tp->nspans < 1)
 	return;
 
-    halfwidth_x = ((double) (tp->box.UR.x - tp->box.LL.x)) / 2.0;
-    p.x = env->pos.x + ((double) (tp->box.UR.x + tp->box.LL.x)) / 2.0;
-    p.y = env->pos.y + ((double) (tp->box.UR.y + tp->box.LL.y)) / 2.0;
+    halfwidth_x = (tp->box.UR.x - tp->box.LL.x) / 2.0;
+    p.x = env->pos.x + (tp->box.UR.x + tp->box.LL.x) / 2.0;
+    p.y = env->pos.y + (tp->box.UR.y + tp->box.LL.y) / 2.0;
 
     emit_htextspans(job, tp->nspans, tp->spans, p, halfwidth_x, env->finfo,
 		    tp->box, tp->simple);
