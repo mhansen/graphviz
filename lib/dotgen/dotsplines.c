@@ -2216,8 +2216,7 @@ void refineregularends(edge_t *left, edge_t *right, pathend_t *endp, int dir,
  *
  * The second for loop was added by ek long ago, and apparently is intended
  * to guarantee an overlap between adjacent boxes of at least MINW.
- * It doesn't do this, and the ifdef'ed part has the potential of moving 
- * a box within a node for more complex paths.
+ * It doesn't do this.
  */
 static void adjustregularpath(path * P, int fb, int lb)
 {
