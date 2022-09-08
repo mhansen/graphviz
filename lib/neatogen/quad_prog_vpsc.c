@@ -611,14 +611,6 @@ DigColaLevel *assign_digcola_levels(int *ordering, int n, int *level_inds,
     }
     return l;
 }
-void delete_digcola_levels(DigColaLevel * l, int num_levels)
-{
-    int i;
-    for (i = 0; i < num_levels; i++) {
-	free(l[i].nodes);
-    }
-    free(l);
-}
 
 /*********************
 get number of separation constraints based on the number of nodes in each level
