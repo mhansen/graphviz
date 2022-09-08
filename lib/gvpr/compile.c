@@ -24,6 +24,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/itos.h>
+#include <cgraph/unreachable.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
 #include <ast/sfstr.h>
@@ -878,6 +879,8 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		case AGOUTEDGE :
 		    v.string = "E";
 		    break;
+		default:
+		    UNREACHABLE();
 	    }
 	    break;
 	case F_edge:
