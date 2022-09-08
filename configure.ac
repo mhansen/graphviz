@@ -2427,18 +2427,6 @@ AM_CONDITIONAL(WITH_IPSEPCOLA, [test "x$use_ipsepcola" = "xYes"])
 
 # -----------------------------------
 
-AC_MSG_CHECKING(if FILE struct contains _next)
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
-	]], [[FILE *f;
-	int i;
-	i=f->_next;
-	]])],[AC_MSG_RESULT(yes)
-	AC_DEFINE_UNQUOTED(HAVE_FILE_NEXT,1,Define if FILE structure provides _next)
-	],[AC_MSG_RESULT(no)
-	])
-
-# -----------------------------------
-
 AC_MSG_CHECKING(if FILE struct contains _IO_read_end)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
 	]], [[FILE *f;

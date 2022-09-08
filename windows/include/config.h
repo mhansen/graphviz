@@ -54,9 +54,6 @@
 /* Define if FILE structure provides _IO_read_end */
 /* #undef HAVE_FILE_IO_READ_END */
 
-/* Define if FILE structure provides _next */
-/* #undef HAVE_FILE_NEXT */
-
 /* Define if you have the fontconfig library */
 #define HAVE_FONTCONFIG 1
 
