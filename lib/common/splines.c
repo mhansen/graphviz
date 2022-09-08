@@ -1001,7 +1001,6 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
 	    showPoints (points, pointn);
 #endif
     }
-    return;
 }
 
 static void
