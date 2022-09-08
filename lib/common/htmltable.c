@@ -40,6 +40,7 @@
 #include <cgraph/itos.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
+#include <inttypes.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -1941,8 +1942,8 @@ void printTbl(htmltbl_t * tbl, int ind)
 static void printCell(htmlcell_t * cp, int ind)
 {
     indent(ind);
-    fprintf(stderr, "cell %d %d %d %d ", cp->colspan, cp->rspan, cp->col,
-	    cp->row);
+    fprintf(stderr, "cell %" PRIu16 " %d %d %d ", cp->colspan, cp->rspan,
+            cp->col, cp->row);
     printData(&cp->data);
     fputs("\n", stderr);
     switch (cp->child.kind) {
