@@ -133,7 +133,7 @@ extern "C" {
 	uint16_t colspan;
 	uint16_t rowspan;
 	uint16_t col;
-	unsigned short row;
+	uint16_t row;
 	htmllabel_t child;
 	htmltbl_t *parent;
 	unsigned char ruled;

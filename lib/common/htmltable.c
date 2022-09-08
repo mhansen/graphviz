@@ -1217,7 +1217,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 
     rp = (pitem *) dtflatten(rows);
     size_t cnt = 0;
-    unsigned short r = 0;
+    uint16_t r = 0;
     while (rp) {
 	cdict = rp->u.rp;
 	cp = (pitem *) dtflatten(cdict);
@@ -1425,9 +1425,9 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 	h = agfindnode(colg, value_buffer);
 	checkEdge (colg, t, h, cp->data.box.UR.x);
 
-	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->row);
+	snprintf(value_buffer, sizeof(value_buffer), "%" PRIu16, cp->row);
 	t = agfindnode(rowg, value_buffer);
-	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->row + cp->rowspan);
+	snprintf(value_buffer, sizeof(value_buffer), "%" PRIu16, cp->row + cp->rowspan);
 	h = agfindnode(rowg, value_buffer);
 	checkEdge (rowg, t, h, cp->data.box.UR.y);
     }
@@ -1942,8 +1942,8 @@ void printTbl(htmltbl_t * tbl, int ind)
 static void printCell(htmlcell_t * cp, int ind)
 {
     indent(ind);
-    fprintf(stderr, "cell %" PRIu16 " %" PRIu16 " %" PRIu16 " %d ", cp->colspan,
-            cp->rowspan, cp->col, cp->row);
+    fprintf(stderr, "cell %" PRIu16 " %" PRIu16 " %" PRIu16 " %" PRIu16 " ", cp->colspan,
+            cp->colspan, cp->rowspan, cp->col, cp->row);
     printData(&cp->data);
     fputs("\n", stderr);
     switch (cp->child.kind) {
