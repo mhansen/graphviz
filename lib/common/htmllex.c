@@ -422,7 +422,7 @@ static int colspanfn(htmlcell_t * p, char *v)
 	agerr(AGWARN, "COLSPAN value cannot be 0 - ignored\n");
 	return 1;
     }
-    p->cspan = (unsigned short) u;
+    p->colspan = (unsigned short) u;
     return 0;
 }
 
@@ -604,7 +604,7 @@ static htmlcell_t *mkCell(char **atts)
 {
     htmlcell_t *cell = NEW(htmlcell_t);
 
-    cell->cspan = 1;
+    cell->colspan = 1;
     cell->rspan = 1;
     doAttrs(cell, cell_items, sizeof(cell_items) / ISIZE, atts, "<TD>");
 

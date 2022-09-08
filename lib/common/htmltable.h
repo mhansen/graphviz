@@ -130,7 +130,7 @@ extern "C" {
 
     struct htmlcell_t {
 	htmldata_t data;
-	unsigned short cspan;
+	unsigned short colspan;
 	unsigned short rspan;
 	unsigned short col;
 	unsigned short row;
