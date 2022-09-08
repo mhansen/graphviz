@@ -87,7 +87,6 @@ extern "C" {
 #define C_DPI              16
 #define R_DPI              16
 
-    typedef enum { inverted_y, scientific_y } glCompOrientation;
     typedef enum { gluttext, pangotext } glCompFontType;
     typedef enum { glAlignNone, glAlignLeft, glAlignTop, glAlignBottom,
 	    glAlignRight, glAlignParent, glAlignCenter } glCompAlignment;
@@ -294,31 +293,6 @@ extern "C" {
     };
 
 /*texture based image*/
-
-/*track bar*/
-    typedef struct _glCompTrackBar {
-	glObjType objType;	/*always keep this here for each drawable object */
-	GLfloat width, height;
-	glCompPanel *outerpanel;
-	glCompPanel *trackline;
-	glCompPanel *indicator;
-
-	GLfloat bevel;
-	glCompColor color;
-	glCompColor shadowcolor;
-
-
-	float value;
-	float maxvalue;
-	float minvalue;
-	int enabled;
-	int visible;
-	void *parentset;	//parent compset
-	int data;
-	glCompFont *font;	//pointer to font to use
-	glCompOrientation orientation;
-
-    } glCompTrackBar;
 
 /*object prototype*/
     struct _glCompObj {
