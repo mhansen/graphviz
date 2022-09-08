@@ -1477,7 +1477,7 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
  */
 static void
 make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
-	ind, int cnt, edge_t* e, int use_splines)
+	ind, int cnt, edge_t* e, bool use_splines)
 {
     node_t *tn, *hn;
     int j, i, r;
