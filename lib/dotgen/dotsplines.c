@@ -65,7 +65,7 @@ static void adjustregularpath(path *, int, int);
 static Agedge_t *bot_bound(Agedge_t *, int);
 static bool pathscross(Agnode_t *, Agnode_t *, Agedge_t *, Agedge_t *);
 static Agraph_t *cl_bound(graph_t*, Agnode_t *, Agnode_t *);
-static int cl_vninside(Agraph_t *, Agnode_t *);
+static bool cl_vninside(Agraph_t *, Agnode_t *);
 static void completeregularpath(path *, Agedge_t *, Agedge_t *,
 				pathend_t *, pathend_t *, boxf *, int, int);
 static int edgecmp(Agedge_t **, Agedge_t **);
@@ -2377,8 +2377,7 @@ static edge_t *bot_bound(edge_t * e, int side)
 
 /* common routines */
 
-static int cl_vninside(graph_t * cl, node_t * n)
-{
+static bool cl_vninside(graph_t *cl, node_t *n) {
   return BETWEEN(GD_bb(cl).LL.x, ND_coord(n).x, GD_bb(cl).UR.x) &&
          BETWEEN(GD_bb(cl).LL.y, ND_coord(n).y, GD_bb(cl).UR.y);
 }
