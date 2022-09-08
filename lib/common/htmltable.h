@@ -112,7 +112,7 @@ extern "C" {
 	int8_t cellborder;
 	int *heights;		/* heights of the rows */
 	int *widths;		/* widths of the columns */
-	int rc;			/* number of rows */
+	int row_count; ///< number of rows
 	int cc;			/* number of columns */
 	textfont_t *font;	/* font info */
 	bool hrule:1; ///< horizontal rule

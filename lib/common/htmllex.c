@@ -615,7 +615,7 @@ static htmltbl_t *mkTbl(char **atts)
 {
     htmltbl_t *tbl = NEW(htmltbl_t);
 
-    tbl->rc = -1;		/* flag that table is a raw, parsed table */
+    tbl->row_count = -1; // flag that table is a raw, parsed table
     tbl->cellborder = -1; // unset cell border attribute
     doAttrs(tbl, tbl_items, sizeof(tbl_items) / ISIZE, atts, "<TABLE>");
 
