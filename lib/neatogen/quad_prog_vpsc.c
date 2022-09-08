@@ -619,19 +619,6 @@ void delete_digcola_levels(DigColaLevel * l, int num_levels)
     }
     free(l);
 }
-void print_digcola_levels(FILE * logfile, DigColaLevel * levels,
-			  int num_levels)
-{
-    int i, j;
-    fprintf(logfile, "levels:\n");
-    for (i = 0; i < num_levels; i++) {
-	fprintf(logfile, "  l[%d]:", i);
-	for (j = 0; j < levels[i].num_nodes; j++) {
-	    fprintf(logfile, "%d ", levels[i].nodes[j]);
-	}
-	fprintf(logfile, "\n");
-    }
-}
 
 /*********************
 get number of separation constraints based on the number of nodes in each level
