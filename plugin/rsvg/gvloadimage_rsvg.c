@@ -108,7 +108,7 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 			return NULL;
 		}
 
-		if (!rsvg_handle_write(rsvgh, (const guchar *)fileBuf, (gsize)fileSize, &err)) {
+		if (!rsvg_handle_write(rsvgh, fileBuf, (gsize)fileSize, &err)) {
 			fprintf(stderr, "rsvg_handle_write returned an error: %s\n", err->message);
 			free(fileBuf);
 #if HAVE_G_OBJECT_UNREF
