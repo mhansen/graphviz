@@ -57,9 +57,6 @@
 /* Define if FILE structure provides _next */
 /* #undef HAVE_FILE_NEXT */
 
-/* Define if FILE structure provides _r */
-/* #undef HAVE_FILE_R */
-
 /* Define if you have the fontconfig library */
 #define HAVE_FONTCONFIG 1
 
