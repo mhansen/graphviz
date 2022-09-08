@@ -321,7 +321,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
   double *a, amax = 0;
   int first = TRUE, jamax = 0;
   int *matched, nz, ncmax = 0, nz0, nzz,k ;
-  enum {UNMATCHED = -2, MATCHED = -1};
+  enum {MATCHED = -1};
 
   assert(A);
   assert(SparseMatrix_known_strucural_symmetric(A));
@@ -497,7 +497,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   double *a, amax = 0;
   int first = TRUE, jamax = 0;
   int *matched, nz, nz0;
-  enum {UNMATCHED = -2, MATCHED = -1};
+  enum {MATCHED = -1};
   int  nsuper, *super = NULL, *superp = NULL;
 
   assert(A);
@@ -640,7 +640,7 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
   (void)n;
   double *a;
   int *matched, nz,  nz0, nzz,k, nv;
-  enum {UNMATCHED = -2, MATCHED = -1};
+  enum {MATCHED = -1};
   double *vlist;
 
   assert(A);
