@@ -288,7 +288,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
     pointf* verts = NULL;
     pointf vs[4];
     pointf p;
-    pointf margin;
+    pointf margin = {0};
 
     switch (shapeOf(n)) {
     case SH_POLY:
@@ -299,7 +299,6 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	    isPoly = true;
 	    sides = 4;
 	    verts = vs;
-	    margin.x = margin.y = 0;
 		/* For fixedshape, we can't use the width and height, as this includes
 		 * the label. We only want to use the actual node shape.
 		 */
