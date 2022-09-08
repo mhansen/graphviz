@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Support for the Intel C Compiler in the Autotools build system has been
   removed. #2298
+* Fallback typedefs for `ssize_t` have been removed from the CMake build system.
 
 ### Fixed
 

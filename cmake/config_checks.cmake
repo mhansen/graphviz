@@ -26,13 +26,6 @@ check_function_exists( setmode          HAVE_SETMODE         )
 check_function_exists( sincos           HAVE_SINCOS          )
 check_function_exists( srand48          HAVE_SRAND48         )
 
-# Type checks
-# The function check_size_type also checks if the type exists
-# and sets HAVE_${VARIABLE} accordingly.
-include(CheckTypeSize)
-
-check_type_size( ssize_t     SSIZE_T     )
-
 # Library checks
 set( HAVE_ANN       ${ANN_FOUND}        )
 if(with_expat AND EXPAT_FOUND)
