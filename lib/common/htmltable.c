@@ -39,6 +39,7 @@
 #include <cgraph/exit.h>
 #include <cgraph/itos.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/unreachable.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -739,6 +740,8 @@ heightOfLbl (htmllabel_t * lp)
     case HTML_TEXT:
 	sz  = lp->u.txt->box.UR.y - lp->u.txt->box.LL.y;
 	break;
+    default:
+	UNREACHABLE();
     }
     return sz;
 }
