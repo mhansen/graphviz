@@ -1404,8 +1404,9 @@ tclGdWriteBufCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static void
 GdPtrTypeUpdate(struct Tcl_Obj *O)
 {
-    O->bytes = Tcl_Alloc(strlen(GdPtrType.name) + (sizeof(void *) + 1) * 2 + 1);
-    O->length = sprintf(O->bytes, "%s%p", GdPtrType.name, IMGPTR(O));
+  size_t len = strlen(GdPtrType.name) + (sizeof(void *) + 1) * 2 + 1;
+  O->bytes = Tcl_Alloc(len);
+  O->length = snprintf(O->bytes, len, "%s%p", GdPtrType.name, IMGPTR(O));
 }
 
 static int
