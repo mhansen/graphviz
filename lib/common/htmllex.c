@@ -21,6 +21,7 @@
 #include <cgraph/tokenize.h>
 #include <cgraph/unused.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 #ifdef HAVE_EXPAT
@@ -292,7 +293,7 @@ static int columnsfn(htmltbl_t * p, char *v)
 	agerr(AGWARN, "Unknown value %s for COLUMNS - ignored\n", v);
 	return 1;
     }
-    p->flags |= HTML_VRULE;
+    p->vrule = true;
     return 0;
 }
 
@@ -302,7 +303,7 @@ static int rowsfn(htmltbl_t * p, char *v)
 	agerr(AGWARN, "Unknown value %s for ROWS - ignored\n", v);
 	return 1;
     }
-    p->flags |= HTML_HRULE;
+    p->hrule = true;
     return 0;
 }
 

@@ -114,7 +114,8 @@ extern "C" {
 	int rc;			/* number of rows */
 	int cc;			/* number of columns */
 	textfont_t *font;	/* font info */
-	unsigned char flags;
+	bool hrule:1; ///< horizontal rule
+	bool vrule:1; ///< vertical rule
     };
 
     struct htmllabel_t {
