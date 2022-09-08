@@ -142,6 +142,8 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 
 static void gvloadimage_rsvg_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+    (void)filled;
+
     RsvgHandle* rsvgh = gvloadimage_rsvg_load(job, us);
 
     cairo_t *cr = job->context; /* target context */
