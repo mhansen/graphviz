@@ -2228,12 +2228,14 @@ static void adjustregularpath(path * P, int fb, int lb)
 	if ((i - fb) % 2 == 0) {
 	    if (bp1->LL.x >= bp1->UR.x) {
 		double x = (bp1->LL.x + bp1->UR.x) / 2;
-		bp1->LL.x = x - HALFMINW, bp1->UR.x = x + HALFMINW;
+		bp1->LL.x = x - HALFMINW;
+		bp1->UR.x = x + HALFMINW;
 	    }
 	} else {
 	    if (bp1->LL.x + MINW > bp1->UR.x) {
 		double x = (bp1->LL.x + bp1->UR.x) / 2;
-		bp1->LL.x = x - HALFMINW, bp1->UR.x = x + HALFMINW;
+		bp1->LL.x = x - HALFMINW;
+		bp1->UR.x = x + HALFMINW;
 	    }
 	}
     }
