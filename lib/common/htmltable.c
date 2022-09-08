@@ -37,7 +37,6 @@
 #include <cdt/cdt.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
-#include <cgraph/itos.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 #include <inttypes.h>
@@ -1386,12 +1385,12 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
     node_t *lastn;
     node_t *h;
     int i;
-    char value_buffer[CHARS_FOR_NUL_TERM_INT];
+    agxbuf value_buffer = {0};
 
     lastn = NULL;
     for (i = 0; i <= tbl->column_count; i++) {
-	snprintf(value_buffer, sizeof(value_buffer), "%d", i);
-	t = agnode(colg, value_buffer, 1);
+	agxbprint(&value_buffer, "%d", i);
+	t = agnode(colg, agxbuse(&value_buffer), 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	alloc_elist(tbl->row_count, ND_in(t));
 	alloc_elist(tbl->row_count, ND_out(t));
@@ -1404,8 +1403,8 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
     }
     lastn = NULL;
     for (i = 0; i <= tbl->row_count; i++) {
-	snprintf(value_buffer, sizeof(value_buffer), "%d", i);
-	t = agnode(rowg, value_buffer, 1);
+	agxbprint(&value_buffer, "%d", i);
+	t = agnode(rowg, agxbuse(&value_buffer), 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	alloc_elist(tbl->column_count, ND_in(t));
 	alloc_elist(tbl->column_count, ND_out(t));
@@ -1419,18 +1418,20 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
-	snprintf(value_buffer, sizeof(value_buffer), "%" PRIu16, cp->col);
-	t = agfindnode(colg, value_buffer);
-	snprintf(value_buffer, sizeof(value_buffer), "%" PRIu16, cp->col + cp->colspan);
-	h = agfindnode(colg, value_buffer);
+	agxbprint(&value_buffer, "%" PRIu16, cp->col);
+	t = agfindnode(colg, agxbuse(&value_buffer));
+	agxbprint(&value_buffer, "%" PRIu16, cp->col + cp->colspan);
+	h = agfindnode(colg, agxbuse(&value_buffer));
 	checkEdge (colg, t, h, cp->data.box.UR.x);
 
-	snprintf(value_buffer, sizeof(value_buffer), "%" PRIu16, cp->row);
-	t = agfindnode(rowg, value_buffer);
-	snprintf(value_buffer, sizeof(value_buffer), "%" PRIu16, cp->row + cp->rowspan);
-	h = agfindnode(rowg, value_buffer);
+	agxbprint(&value_buffer, "%" PRIu16, cp->row);
+	t = agfindnode(rowg, agxbuse(&value_buffer));
+	agxbprint(&value_buffer, "%" PRIu16, cp->row + cp->rowspan);
+	h = agfindnode(rowg, agxbuse(&value_buffer));
 	checkEdge (rowg, t, h, cp->data.box.UR.y);
     }
+
+    agxbfree(&value_buffer);
 
     /* Make sure that 0 <= 1 <= 2 ...k. This implies graph connected. */
     checkChain(colg);
