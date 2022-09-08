@@ -472,7 +472,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
     pts.UR.y += pos.y;
 
     //Determine vertical line coordinate and length
-    if ((cp->ruled & HTML_VRULE) && cp->col + cp->cspan < cp->parent->cc) {
+    if ((cp->ruled & HTML_VRULE) && cp->col + cp->cspan < cp->parent->column_count) {
 	if (cp->row == 0) {	// first row
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
@@ -495,13 +495,13 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
 	    rule_pt.x = pts.LL.x - base - cp->parent->data.space / 2;
-	    if (cp->col + cp->cspan == cp->parent->cc)	// also last column
+	    if (cp->col + cp->cspan == cp->parent->column_count)	// also last column
 		base *= 2;
 	    /* incomplete row of cells; extend line to end */
 	    else if (nextc && nextc->row != cp->row) {
 		base += cp->parent->data.box.UR.x + pos.x - (pts.UR.x + cp->parent->data.space / 2);
 	    }
-	} else if (cp->col + cp->cspan == cp->parent->cc) {	// last column
+	} else if (cp->col + cp->cspan == cp->parent->column_count) {	// last column
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
 	    rule_pt.x = pts.LL.x - cp->parent->data.space / 2;
@@ -1254,7 +1254,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	r++;
     }
     tbl->row_count = n_rows;
-    tbl->cc = n_cols;
+    tbl->column_count = n_cols;
     dtclose(rows);
     dtclose(is);
     freePS(ps);
@@ -1280,7 +1280,7 @@ static void sizeLinearArray(htmltbl_t * tbl)
     int wd, ht, i, x, y;
 
     tbl->heights = N_NEW(tbl->row_count + 1, int);
-    tbl->widths = N_NEW(tbl->cc + 1, int);
+    tbl->widths = N_NEW(tbl->column_count + 1, int);
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
@@ -1367,8 +1367,8 @@ checkEdge (graph_t* g, node_t* t, node_t* h, int sz)
 
 /* makeGraphs:
  * Generate dags modeling the row and column constraints.
- * If the table has cc columns, we create the graph
- *  0 -> 1 -> 2 -> ... -> cc
+ * If the table has column_count columns, we create the graph
+ *  0 -> 1 -> 2 -> ... -> column_count
  * and if a cell starts in column c with span cspan, with
  * width w, we add the edge c -> c+cspan [minlen = w].
  * Ditto for rows.
@@ -1385,7 +1385,7 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
     char value_buffer[CHARS_FOR_NUL_TERM_INT];
 
     lastn = NULL;
-    for (i = 0; i <= tbl->cc; i++) {
+    for (i = 0; i <= tbl->column_count; i++) {
 	snprintf(value_buffer, sizeof(value_buffer), "%d", i);
 	t = agnode(colg, value_buffer, 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
@@ -1403,8 +1403,8 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 	snprintf(value_buffer, sizeof(value_buffer), "%d", i);
 	t = agnode(rowg, value_buffer, 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
-	alloc_elist(tbl->cc, ND_in(t));
-	alloc_elist(tbl->cc, ND_out(t));
+	alloc_elist(tbl->column_count, ND_in(t));
+	alloc_elist(tbl->column_count, ND_out(t));
 	if (lastn) {
 	    ND_next(lastn) = t;
 	    lastn = t;
@@ -1477,13 +1477,13 @@ static void sizeArray(htmltbl_t * tbl)
 #endif
 
     /* Do the 1D cases by hand */
-    if (tbl->row_count == 1 || tbl->cc == 1) {
+    if (tbl->row_count == 1 || tbl->column_count == 1) {
 	sizeLinearArray(tbl);
 	return;
     }
 
     tbl->heights = N_NEW(tbl->row_count + 1, int);
-    tbl->widths = N_NEW(tbl->cc + 1, int);
+    tbl->widths = N_NEW(tbl->column_count + 1, int);
 
     rowg = agopen("rowg", dir, NULL);
     colg = agopen("colg", dir, NULL);
@@ -1728,9 +1728,9 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 
     /* change sizes to start positions and distribute extra space */
     x = pos.LL.x + tbl->data.border + tbl->data.space;
-    extra = delx / tbl->cc;
-    plus = ROUND(delx - extra * tbl->cc);
-    for (i = 0; i <= tbl->cc; i++) {
+    extra = delx / tbl->column_count;
+    plus = ROUND(delx - extra * tbl->column_count);
+    for (i = 0; i <= tbl->column_count; i++) {
 	delx = tbl->widths[i] + extra + (i < plus ? 1 : 0);
 	tbl->widths[i] = x;
 	x += delx + tbl->data.space;
@@ -1751,7 +1751,7 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 		mask |= LEFT;
 	    if (cp->row == 0)
 		mask |= TOP;
-	    if (cp->col + cp->cspan == tbl->cc)
+	    if (cp->col + cp->cspan == tbl->column_count)
 		mask |= RIGHT;
 	    if (cp->row + cp->rspan == tbl->row_count)
 		mask |= BOTTOM;
@@ -1794,9 +1794,9 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 
     sizeArray(tbl);
 
-    wd = (tbl->cc + 1) * tbl->data.space + 2 * tbl->data.border;
+    wd = (tbl->column_count + 1) * tbl->data.space + 2 * tbl->data.border;
     ht = (tbl->row_count + 1) * tbl->data.space + 2 * tbl->data.border;
-    for (i = 0; i < tbl->cc; i++)
+    for (i = 0; i < tbl->column_count; i++)
 	wd += tbl->widths[i];
     for (i = 0; i < tbl->row_count; i++)
 	ht += tbl->heights[i];
@@ -1928,7 +1928,7 @@ void printTbl(htmltbl_t * tbl, int ind)
 {
     htmlcell_t **cells = tbl->u.n.cells;
     indent(ind);
-    fprintf(stderr, "tbl (%p) %d %d ", tbl, tbl->cc, tbl->row_count);
+    fprintf(stderr, "tbl (%p) %d %d ", tbl, tbl->column_count, tbl->row_count);
     printData(&tbl->data);
     fputs("\n", stderr);
     while (*cells)
