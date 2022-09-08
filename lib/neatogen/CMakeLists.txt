@@ -82,8 +82,6 @@ set(SOURCES
 if(with_ipsepcola)
   list(APPEND ${SOURCES}
     constrained_majorization_ipsep.c
-    mosek_quad_solve.c
-    mosek_quad_solve.h
     quad_prog_vpsc.c
   )
 endif()

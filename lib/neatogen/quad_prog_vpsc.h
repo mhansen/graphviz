@@ -29,9 +29,6 @@ extern "C" {
 
 #include <neatogen/defs.h>
 #include <neatogen/digcola.h>
-#ifdef MOSEK
-#include <neatogen/mosek_quad_solve.h>
-#endif /* MOSEK */
 #include <stdbool.h>
 
 typedef struct CMajEnvVPSC {
@@ -50,9 +47,6 @@ typedef struct CMajEnvVPSC {
 	float *fArray1; /* utility arrays - reusable memory */
 	float *fArray2;
 	float *fArray3;
-#ifdef MOSEK
-	MosekEnv *mosekEnv;
-#endif /* MOSEK */
 } CMajEnvVPSC;
 
 extern CMajEnvVPSC* initCMajVPSC(int n, float *packedMat, vtx_data* graph, ipsep_options *opt, int diredges);

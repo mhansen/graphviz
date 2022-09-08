@@ -314,13 +314,6 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
     if (packedMat != NULL) {
 	e->A = unpackMatrix(packedMat, n);
     }
-#ifdef MOSEK
-    e->mosekEnv = NULL;
-    if (opt->mosek) {
-	e->mosekEnv =
-	    mosek_init_sep(e->packedMat, n, e->ndv, e->gcs, e->gm);
-    }
-#endif
 
     e->fArray1 = N_GNEW(n, float);
     e->fArray2 = N_GNEW(n, float);
@@ -352,11 +345,6 @@ void deleteCMajEnvVPSC(CMajEnvVPSC * e)
     free(e->fArray1);
     free(e->fArray2);
     free(e->fArray3);
-#ifdef MOSEK
-    if (e->mosekEnv) {
-	mosek_delete(e->mosekEnv);
-    }
-#endif				/* MOSEK */
     free(e);
 }
 
@@ -566,16 +554,6 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
     if (Verbose)
 	fprintf(stderr, "  generated %d constraints\n", e->m);
     e->vpsc = newIncVPSC(e->nv + e->nldv + e->ndv, e->vs, e->m, e->cs);
-#ifdef MOSEK
-    if (opt->mosek) {
-	if (e->mosekEnv != NULL) {
-	    mosek_delete(e->mosekEnv);
-	}
-	e->mosekEnv =
-	    mosek_init_sep(e->packedMat, e->nv + e->nldv, e->ndv, e->cs,
-			   e->m);
-    }
-#endif
     free (bb);
 }
 

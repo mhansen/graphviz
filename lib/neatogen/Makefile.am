@@ -23,8 +23,7 @@ noinst_HEADERS = adjust.h edges.h geometry.h heap.h hedges.h info.h mem.h \
 	quad_prog_vpsc.h delaunay.h sparsegraph.h multispline.h fPQ.h \
 	sgd.h randomkit.h
 
-IPSEPCOLA_SOURCES = constrained_majorization_ipsep.c \
-	mosek_quad_solve.c mosek_quad_solve.h quad_prog_vpsc.c
+IPSEPCOLA_SOURCES = constrained_majorization_ipsep.c quad_prog_vpsc.c
 
 if WITH_IPSEPCOLA
 WITH_IPSEPCOLA_SOURCES = $(IPSEPCOLA_SOURCES)

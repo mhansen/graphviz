@@ -412,12 +412,6 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 					  opt);
 	}
 	if (cMajEnvHor->m > 0) {
-#ifdef MOSEK
-	    if (opt->mosek) {
-		mosek_quad_solve_sep(cMajEnvHor->mosekEnv, n, b[0],
-				     coords[0]);
-	    } else
-#endif				/* MOSEK */
 		constrained_majorization_vpsc(cMajEnvHor, b[0], coords[0],
 					      localConstrMajorIterations);
 	} else {
@@ -435,12 +429,6 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 					  1, false, opt);
 	}
 	if (cMajEnvVrt->m > 0) {
-#ifdef MOSEK
-	    if (opt->mosek) {
-		mosek_quad_solve_sep(cMajEnvVrt->mosekEnv, n, b[1],
-				     coords[1]);
-	    } else
-#endif				/* MOSEK */
 		if (constrained_majorization_vpsc(cMajEnvVrt, b[1], coords[1],
 					      localConstrMajorIterations) < 0) {
 		iterations = -1;
