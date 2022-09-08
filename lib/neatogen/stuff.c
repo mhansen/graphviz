@@ -11,6 +11,7 @@
 
 #include "config.h"
 #include	<cgraph/alloc.h>
+#include	<math.h>
 #include	<neatogen/neato.h>
 #include	<neatogen/stress.h>
 #include	<time.h>
@@ -277,7 +278,7 @@ int scan_graph_mode(graph_t * G, int mode)
 
     str = agget(G, "defaultdist");
     if (str && str[0])
-	Initial_dist = MAX(Epsilon, atof(str));
+	Initial_dist = fmax(Epsilon, atof(str));
     else
 	Initial_dist = total_len / (nE > 0 ? nE : 1) * sqrt(nV) + 1;
 
