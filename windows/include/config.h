@@ -51,9 +51,6 @@
 /* Define to 1 if you have the <expat.h> header file. */
 #define HAVE_EXPAT_H 1
 
-/* Define if FILE structure provides _IO_read_end */
-/* #undef HAVE_FILE_IO_READ_END */
-
 /* Define if you have the fontconfig library */
 #define HAVE_FONTCONFIG 1
 
