@@ -1990,7 +1990,6 @@ int make_html_label(void *obj, textlabel_t * lp)
 {
     int rv;
     double wd2, ht2;
-    boxf box;
     graph_t *g;
     htmllabel_t *lbl;
     htmlenv_t env;
@@ -2047,18 +2046,18 @@ int make_html_label(void *obj, textlabel_t * lp)
 	rv |= size_html_tbl(g, lbl->u.tbl, NULL, &env);
 	wd2 = lbl->u.tbl->data.box.UR.x / 2;
 	ht2 = lbl->u.tbl->data.box.UR.y / 2;
-	box = (boxf){{-wd2, -ht2}, {wd2, ht2}};
-	pos_html_tbl(lbl->u.tbl, box, BOTTOM | RIGHT | TOP | LEFT);
-	lp->dimen.x = box.UR.x - box.LL.x;
-	lp->dimen.y = box.UR.y - box.LL.y;
+	boxf b = {{-wd2, -ht2}, {wd2, ht2}};
+	pos_html_tbl(lbl->u.tbl, b, BOTTOM | RIGHT | TOP | LEFT);
+	lp->dimen.x = b.UR.x - b.LL.x;
+	lp->dimen.y = b.UR.y - b.LL.y;
     } else {
 	rv |= size_html_txt(GD_gvc(g), lbl->u.txt, &env);
 	wd2 = lbl->u.txt->box.UR.x  / 2;
 	ht2 = lbl->u.txt->box.UR.y  / 2;
-	box = (boxf){{-wd2, -ht2}, {wd2, ht2}};
-	lbl->u.txt->box = box;
-	lp->dimen.x = box.UR.x - box.LL.x;
-	lp->dimen.y = box.UR.y - box.LL.y;
+	boxf b = {{-wd2, -ht2}, {wd2, ht2}};
+	lbl->u.txt->box = b;
+	lp->dimen.x = b.UR.x - b.LL.x;
+	lp->dimen.y = b.UR.y - b.LL.y;
     }
 
     lp->u.html = lbl;
