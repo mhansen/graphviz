@@ -2426,17 +2426,6 @@ fi
 AM_CONDITIONAL(WITH_IPSEPCOLA, [test "x$use_ipsepcola" = "xYes"])
 
 # -----------------------------------
-AC_MSG_CHECKING(if FILE struct contains _cnt)
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
-	]], [[FILE *f;
-	int i;
-	i=f->_cnt;
-	]])],[AC_MSG_RESULT(yes)
-	AC_DEFINE_UNQUOTED(HAVE_FILE_CNT,1,Define if FILE structure provides _cnt)
-	],[AC_MSG_RESULT(no)
-	])
-
-# -----------------------------------
 
 AC_MSG_CHECKING(if FILE struct contains _r)
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
