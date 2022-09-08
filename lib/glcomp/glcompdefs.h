@@ -78,9 +78,6 @@ extern "C" {
 #define	GLCOMP_DEFAULT_WIDTH	10.0f
 #define	GLCOMP_DEFAULT_HEIGHT	10.0f
 
-#define C_DPI              16
-#define R_DPI              16
-
     typedef enum { gluttext, pangotext } glCompFontType;
     typedef enum { glAlignNone, glAlignLeft, glAlignTop, glAlignBottom,
 	    glAlignRight, glAlignParent, glAlignCenter } glCompAlignment;
