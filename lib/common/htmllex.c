@@ -402,13 +402,13 @@ static int rowspanfn(htmlcell_t * p, char *v)
 {
     long u;
 
-    if (doInt(v, "ROWSPAN", 0, USHRT_MAX, &u))
+    if (doInt(v, "ROWSPAN", 0, UINT16_MAX, &u))
 	return 1;
     if (u == 0) {
 	agerr(AGWARN, "ROWSPAN value cannot be 0 - ignored\n");
 	return 1;
     }
-    p->rowspan = (unsigned short) u;
+    p->rowspan = (uint16_t)u;
     return 0;
 }
 

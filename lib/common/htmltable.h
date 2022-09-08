@@ -131,7 +131,7 @@ extern "C" {
     struct htmlcell_t {
 	htmldata_t data;
 	uint16_t colspan;
-	unsigned short rowspan;
+	uint16_t rowspan;
 	uint16_t col;
 	unsigned short row;
 	htmllabel_t child;

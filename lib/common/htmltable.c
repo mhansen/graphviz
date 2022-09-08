@@ -1942,7 +1942,7 @@ void printTbl(htmltbl_t * tbl, int ind)
 static void printCell(htmlcell_t * cp, int ind)
 {
     indent(ind);
-    fprintf(stderr, "cell %" PRIu16 " %d %" PRIu16 " %d ", cp->colspan,
+    fprintf(stderr, "cell %" PRIu16 " %" PRIu16 " %" PRIu16 " %d ", cp->colspan,
             cp->rowspan, cp->col, cp->row);
     printData(&cp->data);
     fputs("\n", stderr);
