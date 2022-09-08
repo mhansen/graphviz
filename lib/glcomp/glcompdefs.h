@@ -81,7 +81,6 @@ extern "C" {
 
 
 #define FONT_MAX_LEN                1024	/* maximum chars to draw to the screen, used for buffers also */
-#define FONT_TAB_SPACE              4	/* spaces to draw for a tab, make option? */
 
 #define C_DPI              16
 #define R_DPI              16
