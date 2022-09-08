@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Id attribute is not used in linearGradient. #2258
 - Graphviz 5.0.1 undocumented change of automatically generated output filename
   with -O flag (missing dot separator). This was a regression in 5.0.1. #2270
+- Assert fail in `aaglex` for multiple calls to `agmemread`. This was a
+  regression in 5.0.1. #2272
 
 ### Removed
 

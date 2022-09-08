@@ -1970,7 +1970,6 @@ def test_2270(tmp_path: Path):
   output = tmp_path / "hello.gv.core.dot.plain"
   assert output.exists(), "-O resulted in an unexpected output filename"
 
-@pytest.mark.xfail()
 def test_2272():
   """
   using `agmemread` with an unterminated string should not fail assertions
