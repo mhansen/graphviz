@@ -23,12 +23,10 @@
 %option noinput
 
 %{
-#include <assert.h>
 #include <grammar.h>
 #include <cghdr.h>
 #include <agxbuf.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -71,25 +69,40 @@ int gv_isatty_suppression;
 #endif
 
 /* buffer for arbitrary length strings (longer than BUFSIZ) */
-static agxbuf Sbuf;
-
+static char	*Sbuf,*Sptr,*Send;
 static void beginstr(void) {
-  // nothing required, but we should not have pending string data
-  assert(agxblen(&Sbuf) == 0 &&
-         "pending string data that was not consumed (missing "
-         "endstr()/endhtmlstr()?)");
+	if (Sbuf == NULL) {
+		Sbuf = malloc(BUFSIZ);
+		Send = Sbuf + BUFSIZ;
+	}
+	Sptr = Sbuf;
+	*Sptr = 0;
 }
 
 static void addstr(char *src) {
-  agxbput(&Sbuf, src);
+	char	c;
+	if (Sptr > Sbuf) Sptr--;
+	do {
+		do {c = *Sptr++ = *src++;} while (c && Sptr < Send);
+		if (c) {
+			long	sz = Send - Sbuf;
+			long	off = Sptr - Sbuf;
+			sz *= 2;
+			Sbuf = realloc(Sbuf,sz);
+			Send = Sbuf + sz;
+			Sptr = Sbuf + off;
+		}
+	} while (c);
 }
 
 static void endstr(void) {
-  aaglval.str = agstrdup(Ag_G_global, agxbuse(&Sbuf));
+	aaglval.str = agstrdup(Ag_G_global,Sbuf);
+	*Sbuf = 0;
 }
 
 static void endstr_html(void) {
-  aaglval.str = agstrdup_html(Ag_G_global, agxbuse(&Sbuf));
+	aaglval.str = agstrdup_html(Ag_G_global,Sbuf);
+	*Sbuf = 0;
 }
 
 static void
@@ -235,20 +248,20 @@ void aagerror(const char *str)
 	else switch (YYSTATE) {
 	case qstring :
 		agxbprint(&xb, " scanning a quoted string (missing endquote? longer than %d?)", YY_BUF_SIZE);
-		if (agxblen(&Sbuf) > 0) {
-			size_t len = agxblen(&Sbuf);
+		if (*Sbuf) {
+			size_t len = strlen(Sbuf);
 			if (len > 80)
-				len = 80;
-			agxbprint(&xb, "\nString starting:\"%.*s", (int)len, Sbuf.buf);
+				Sbuf[80] = '\0';
+			agxbprint (&xb, "\nString starting:\"%s", Sbuf);
 		}
 		break;
 	case hstring :
 		agxbprint(&xb, " scanning a HTML string (missing '>'? bad nesting? longer than %d?)", YY_BUF_SIZE);
-		if (agxblen(&Sbuf)) {
-			size_t len = agxblen(&Sbuf);
+		if (*Sbuf) {
+			size_t len = strlen(Sbuf);
 			if (len > 80)
-				len = 80;
-			agxbprint(&xb, "\nString starting:<%.*s", (int)len, Sbuf.buf);
+				Sbuf[80] = '\0';
+			agxbprint (&xb, "\nString starting:<%s", Sbuf);
 		}
 		break;
 	case comment :
