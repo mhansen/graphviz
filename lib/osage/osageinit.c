@@ -196,18 +196,17 @@ layout (Agraph_t* g, int depth)
     }
 
     if (GD_label(g)) {
-        pointf p;
         double d;
 
-        p = GD_label(g)->dimen;
+        pointf pt = GD_label(g)->dimen;
 	if (total == 0) {
             rootbb.LL.x = 0;
             rootbb.LL.y = 0;
-            rootbb.UR.x = p.x;
-            rootbb.UR.y = p.y;
+            rootbb.UR.x = pt.x;
+            rootbb.UR.y = pt.y;
 
 	}
-        d = p.x - (rootbb.UR.x - rootbb.LL.x);
+        d = pt.x - (rootbb.UR.x - rootbb.LL.x);
         if (d > 0) {            /* height of label is added below */
             d /= 2;
             rootbb.LL.x -= d;

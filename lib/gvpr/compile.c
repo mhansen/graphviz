@@ -24,6 +24,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/itos.h>
+#include <cgraph/unreachable.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
 #include <ast/sfstr.h>
@@ -195,7 +196,7 @@ static int posOf(Agnode_t* np, int idx, double* v)
     
 }
 
-#if DEBUG > 1
+#if defined(DEBUG) && DEBUG > 1
 static char *symName(Expr_t * ex, int op)
 {
     if (op >= MINNAME && op <= MAXNAME)
@@ -352,7 +353,7 @@ static void assignable (Agobj_t *objp, unsigned char* name) {
 
     TFA_Init();
     while (TFA_State >= 0 && (ch = *p)) {
-        TFA_Advance(ch > 127 ? 127 : ch);
+        TFA_Advance(ch > 127 ? 127 : (char)ch);
         p++;
     }
     rv = TFA_Definition();
@@ -878,6 +879,8 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		case AGOUTEDGE :
 		    v.string = "E";
 		    break;
+		default:
+		    UNREACHABLE();
 	    }
 	    break;
 	case F_edge:
