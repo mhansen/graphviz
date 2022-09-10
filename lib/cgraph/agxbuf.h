@@ -10,8 +10,10 @@
 
 #pragma once
 
+#include <assert.h>
 #include <cgraph/alloc.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -20,17 +22,46 @@
 typedef enum {
   AGXBUF_ON_HEAP = 0,  ///< buffer is dynamically allocated
   AGXBUF_ON_STACK = 1, ///< buffer is statically allocated
+  /// other values mean an inline buffer with size N - 2
+  AGXBUF_INLINE_SIZE_0 = 2,
 } agxbuf_loc_t;
 
-/* Extensible buffer:
- *  Malloc'ed memory is never released until agxbfree is called.
- */
+/// extensible buffer
+///
+/// Malloc'ed memory is never released until \p agxbdisown or \p agxbfree is
+/// called.
+///
+/// This has the following layout assuming x86-64.
+///
+///   ┌───────────────┬───────────────┬───────────────┬───────────────┐
+///   │      buf      │     size      │   capacity    │               │
+///   ├───────────────┴───────────────┴───────────────┤    located    │
+///   │                     store                     │               │
+///   └───────────────────────────────────────────────┴───────────────┘
+///   0               8               16              24              32
+///
+/// \p buf, \p size, and \p capacity are in use when \p located is
+/// \p AGXBUF_ON_HEAP or \p AGXBUF_ON_STACK. \p store is in use when \p located
+/// is > \p AGXBUF_ON_STACK.
 typedef struct {
-  char *buf;            ///< start of buffer
-  size_t size;          ///< number of characters in the buffer
-  size_t capacity;      ///< available bytes in the buffer
-  agxbuf_loc_t located; ///< where does the backing memory for this buffer live?
+  union {
+    struct {
+      char *buf;       ///< start of buffer
+      size_t size;     ///< number of characters in the buffer
+      size_t capacity; ///< available bytes in the buffer
+    };
+    char store[sizeof(char *) +
+               sizeof(size_t) * 2]; ///< inline storage used when \p located is
+                                    ///< > \p AGXBUF_ON_STACK
+  };
+  size_t located; ///< where does the backing memory for this buffer live?
 } agxbuf;
+
+static inline bool agxbuf_is_inline(const agxbuf *xb) {
+  assert(xb->located <= AGXBUF_INLINE_SIZE_0 + sizeof(xb->store) &&
+         "corrupted agxbuf type");
+  return xb->located > AGXBUF_ON_STACK;
+}
 
 /* agxbinit:
  * Initializes new agxbuf; caller provides memory.
@@ -59,10 +90,22 @@ static inline void agxbfree(agxbuf *xb) {
     free(xb->buf);
 }
 
+/* agxbstart
+ * Return pointer to beginning of buffer.
+ */
+static inline char *agxbstart(agxbuf *xb) {
+  return agxbuf_is_inline(xb) ? xb->store : xb->buf;
+}
+
 /* agxblen:
  * Return number of characters currently stored.
  */
-static inline size_t agxblen(const agxbuf *xb) { return xb->size; }
+static inline size_t agxblen(const agxbuf *xb) {
+  if (agxbuf_is_inline(xb)) {
+    return xb->located - AGXBUF_INLINE_SIZE_0;
+  }
+  return xb->size;
+}
 
 /// get the capacity of the backing memory of a buffer
 ///
@@ -71,15 +114,28 @@ static inline size_t agxblen(const agxbuf *xb) { return xb->size; }
 ///
 /// \param xb Buffer to operate on
 /// \return Number of usable bytes in the backing store
-static inline size_t agxbsizeof(const agxbuf *xb) { return xb->capacity; }
+static inline size_t agxbsizeof(const agxbuf *xb) {
+  if (agxbuf_is_inline(xb)) {
+    return sizeof(xb->store);
+  }
+  return xb->capacity;
+}
 
 /* agxbpop:
  * Removes last character added, if any.
  */
 static inline int agxbpop(agxbuf *xb) {
 
-  if (agxblen(xb) == 0) {
+  size_t len = agxblen(xb);
+  if (len == 0) {
     return -1;
+  }
+
+  if (agxbuf_is_inline(xb)) {
+    assert(xb->located > AGXBUF_INLINE_SIZE_0);
+    int c = xb->store[len - 1];
+    --xb->located;
+    return c;
   }
 
   int c = xb->buf[xb->size - 1];
@@ -101,15 +157,28 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
   if (size + ssz > nsize)
     nsize = size + ssz;
   cnt = agxblen(xb);
+
   if (xb->located == AGXBUF_ON_HEAP) {
     nbuf = (char *)gv_recalloc(xb->buf, size, nsize, sizeof(char));
-  } else {
+  } else if (xb->located == AGXBUF_ON_STACK) {
     nbuf = (char *)gv_calloc(nsize, sizeof(char));
     memcpy(nbuf, xb->buf, cnt);
-    xb->located = AGXBUF_ON_HEAP;
+  } else {
+    nbuf = (char *)gv_calloc(nsize, sizeof(char));
+    memcpy(nbuf, xb->store, cnt);
+    xb->size = cnt;
   }
   xb->buf = nbuf;
   xb->capacity = nsize;
+  xb->located = AGXBUF_ON_HEAP;
+}
+
+/* agxbnext
+ * Next position for writing.
+ */
+static inline char *agxbnext(agxbuf *xb) {
+  size_t len = agxblen(xb);
+  return agxbuf_is_inline(xb) ? &xb->store[len] : &xb->buf[len];
 }
 
 /* support for extra API misuse warnings if available */
@@ -154,10 +223,16 @@ static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
   }
 
   // we can now safely print into the buffer
-  result = vsnprintf(&xb->buf[xb->size], size, fmt, ap);
+  char *dst = agxbnext(xb);
+  result = vsnprintf(dst, size, fmt, ap);
   assert(result == (int)(size - 1) || result < 0);
   if (result > 0) {
-    xb->size += (size_t)result;
+    if (agxbuf_is_inline(xb)) {
+      xb->located += (size_t)result;
+      assert(agxblen(xb) <= sizeof(xb->store) && "agxbuf corruption");
+    } else {
+      xb->size += (size_t)result;
+    }
   }
 
   va_end(ap);
@@ -175,8 +250,15 @@ static inline size_t agxbput_n(agxbuf *xb, const char *s, size_t ssz) {
   }
   if (ssz > agxbsizeof(xb) - agxblen(xb))
     agxbmore(xb, ssz);
-  memcpy(&xb->buf[xb->size], s, ssz);
-  xb->size += ssz;
+  size_t len = agxblen(xb);
+  if (agxbuf_is_inline(xb)) {
+    memcpy(&xb->store[len], s, ssz);
+    xb->located += ssz;
+    assert(agxblen(xb) <= sizeof(xb->store) && "agxbuf corruption");
+  } else {
+    memcpy(&xb->buf[len], s, ssz);
+    xb->size += ssz;
+  }
   return ssz;
 }
 
@@ -197,15 +279,28 @@ static inline int agxbputc(agxbuf *xb, char c) {
   if (agxblen(xb) >= agxbsizeof(xb)) {
     agxbmore(xb, 1);
   }
-  xb->buf[xb->size] = c;
-  ++xb->size;
+  size_t len = agxblen(xb);
+  if (agxbuf_is_inline(xb)) {
+    xb->store[len] = c;
+    ++xb->located;
+    assert(agxblen(xb) <= sizeof(xb->store) && "agxbuf corruption");
+  } else {
+    xb->buf[len] = c;
+    ++xb->size;
+  }
   return 0;
 }
 
 /* agxbclear:
  * Resets pointer to data;
  */
-static inline void agxbclear(agxbuf *xb) { xb->size = 0; }
+static inline void agxbclear(agxbuf *xb) {
+  if (agxbuf_is_inline(xb)) {
+    xb->located = AGXBUF_INLINE_SIZE_0;
+  } else {
+    xb->size = 0;
+  }
+}
 
 /* agxbuse:
  * Null-terminates buffer; resets and returns pointer to data. The buffer is
@@ -216,7 +311,7 @@ static inline void agxbclear(agxbuf *xb) { xb->size = 0; }
 static inline char *agxbuse(agxbuf *xb) {
   (void)agxbputc(xb, '\0');
   agxbclear(xb);
-  return xb->buf;
+  return agxbstart(xb);
 }
 
 /* agxbdisown:
@@ -230,7 +325,11 @@ static inline char *agxbuse(agxbuf *xb) {
 static inline char *agxbdisown(agxbuf *xb) {
   char *buf;
 
-  if (xb->located == AGXBUF_ON_STACK) {
+  if (agxbuf_is_inline(xb)) {
+    // the string lives in `store`, so we need to copy its contents to heap
+    // memory
+    buf = gv_strndup(xb->store, agxblen(xb));
+  } else if (xb->located == AGXBUF_ON_STACK) {
     // the buffer is not dynamically allocated, so we need to copy its contents
     // to heap memory
 
