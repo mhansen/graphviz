@@ -34,10 +34,9 @@ void Multilevel_control_delete(Multilevel_control ctrl){
 }
 
 static Multilevel Multilevel_init(SparseMatrix A, SparseMatrix D, double *node_weights){
-  Multilevel grid;
   if (!A) return NULL;
   assert(A->m == A->n);
-  grid = GNEW(struct Multilevel_struct);
+  Multilevel grid = gv_alloc(sizeof(struct Multilevel_struct));
   grid->level = 0;
   grid->n = A->n;
   grid->A = A;
