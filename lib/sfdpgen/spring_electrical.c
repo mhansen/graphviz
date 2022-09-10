@@ -680,14 +680,14 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
   m = A->m, n = A->n;
   if (n <= 0 || dim <= 0) return;
-  force = MALLOC(sizeof(double)*n*dim);
+  force = gv_calloc(n *dim, sizeof(double));
 
   if (n >= ctrl->quadtree_size) {
     USE_QT = TRUE;
     qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
-    center = MALLOC(sizeof(double)*nsupermax*dim);
-    supernode_wgts = MALLOC(sizeof(double)*nsupermax);
-    distances = MALLOC(sizeof(double)*nsupermax);
+    center = gv_calloc(nsupermax * dim, sizeof(double));
+    supernode_wgts = gv_calloc(nsupermax, sizeof(double));
+    distances = gv_calloc(nsupermax, sizeof(double));
   }
   USE_QT = FALSE;
   *flag = 0;
@@ -724,8 +724,8 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   }
 #endif
 
-  f = MALLOC(sizeof(double)*dim);
-  xold = MALLOC(sizeof(double)*dim*n);
+  f = gv_calloc(dim, sizeof(double));
+  xold = gv_calloc(dim * n, sizeof(double));
   do {
     for (i = 0; i < dim*n; i++) force[i] = 0;
 
