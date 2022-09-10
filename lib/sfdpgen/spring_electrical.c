@@ -1582,9 +1582,9 @@ void print_matrix(double *x, int n, int dim){
 
 void interpolate_coord(int dim, SparseMatrix A, double *x){
   int i, j, k, *ia = A->ia, *ja = A->ja, nz;
-  double alpha = 0.5, beta, *y;
+  double alpha = 0.5, beta;
 
-  y = MALLOC(sizeof(double)*dim);
+  double *y = gv_calloc(dim, sizeof(double));
   for (i = 0; i < A->m; i++){
     for (k = 0; k < dim; k++) y[k] = 0;
     nz = 0;
