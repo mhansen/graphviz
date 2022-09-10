@@ -22,6 +22,7 @@
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
+#include <limits.h>
 #include <float.h>
 #include <math.h>
 #include <stddef.h>
@@ -293,7 +294,7 @@ static void renderSelectedNodes(Agraph_t * g)
 	{
 	    pos = ND_A(v);
 	    glColor4f(c.R, c.G,c.B, c.A);
-            glprintfglut(view->glutfont,pos.x,pos.y,pos.z+0.002,labelOf(g,v));
+	    glprintfglut(view->glutfont, pos.x, pos.y, pos.z + 0.002f, labelOf(g, v));
 	}
     }
 }
@@ -744,7 +745,7 @@ static void renderEdgeLabels(Agraph_t * g)
 
 static void cacheNodes(Agraph_t * g,topview* t)
 {
-    if(t->cache.node_id!=-1)	/*clean existing cache*/
+    if (t->cache.node_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.node_id,1);
     t->cache.node_id=glGenLists(1);
     glNewList(t->cache.node_id,GL_COMPILE);
@@ -757,7 +758,7 @@ static void cacheNodes(Agraph_t * g,topview* t)
 }
 static void cacheEdges(Agraph_t * g,topview* t)
 {
-    if(t->cache.edge_id!=-1)	/*clean existing cache*/
+    if (t->cache.edge_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.edge_id,1);
     t->cache.edge_id=glGenLists(1);
     glNewList(t->cache.edge_id,GL_COMPILE);
@@ -768,7 +769,7 @@ static void cacheEdges(Agraph_t * g,topview* t)
 }
 void cacheSelectedEdges(Agraph_t * g,topview* t)
 {
-    if(t->cache.seledge_id!=-1)	/*clean existing cache*/
+    if (t->cache.seledge_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.seledge_id,1);
     t->cache.seledge_id=glGenLists(1);
     glNewList(t->cache.seledge_id,GL_COMPILE);
@@ -779,7 +780,7 @@ void cacheSelectedEdges(Agraph_t * g,topview* t)
 }
 void cacheSelectedNodes(Agraph_t * g,topview* t)
 {
-    if(t->cache.selnode_id!=-1)	/*clean existing cache*/
+    if (t->cache.selnode_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.selnode_id,1);
     t->cache.selnode_id=glGenLists(1);
     glNewList(t->cache.selnode_id,GL_COMPILE);
@@ -788,7 +789,7 @@ void cacheSelectedNodes(Agraph_t * g,topview* t)
 }
 static void cacheNodeLabels(Agraph_t * g,topview* t)
 {
-    if(t->cache.nodelabel_id!=-1)	/*clean existing cache*/
+    if (t->cache.nodelabel_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.nodelabel_id,1);
     t->cache.nodelabel_id=glGenLists(1);
     glNewList(t->cache.nodelabel_id,GL_COMPILE);
@@ -797,7 +798,7 @@ static void cacheNodeLabels(Agraph_t * g,topview* t)
 }
 static void cacheEdgeLabels(Agraph_t * g,topview* t)
 {
-    if(t->cache.edgelabel_id!=-1)	/*clean existing cache*/
+    if (t->cache.edgelabel_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.edgelabel_id,1);
     t->cache.edgelabel_id=glGenLists(1);
     glNewList(t->cache.edgelabel_id,GL_COMPILE);
@@ -862,10 +863,10 @@ void initSmGraph(Agraph_t * g,topview* rv)
     rv->fisheyeParams.h = NULL;
 
     rv->fisheyeParams.active = 0;
-    rv->cache.node_id=-1;
-    rv->cache.selnode_id=-1;
-    rv->cache.edge_id=-1;
-    rv->cache.seledge_id=-1;
+    rv->cache.node_id = UINT_MAX;
+    rv->cache.selnode_id = UINT_MAX;
+    rv->cache.edge_id = UINT_MAX;
+    rv->cache.seledge_id = UINT_MAX;
     rv->sel.selectEdges=0;
     rv->sel.selectNodes=1;
 

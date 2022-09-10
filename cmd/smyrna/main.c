@@ -88,20 +88,19 @@ static char *Info[] = {
 };
 
 
-static char *parseArgs(int argc, char *argv[], ViewInfo * view)
-{
+static char *parseArgs(int argc, char *argv[], ViewInfo *viewinfo) {
     int c;
 
     while ((c = getopt(argc, argv, ":eKf:txvV?")) != -1) {
 	switch (c) {
 	case 'e':
-	    view->drawSplines = 1;
+	    viewinfo->drawSplines = 1;
 	    break;
 	case 'v': // FIXME: deprecate and remove -v in future
 	    break;
 	case 'f':
-	    view->guiMode=GUI_FULLSCREEN;
-	    view->optArg=optarg;
+	    viewinfo->guiMode=GUI_FULLSCREEN;
+	    viewinfo->optArg=optarg;
 	    break;
 
 	case 'V':

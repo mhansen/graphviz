@@ -16,6 +16,7 @@
 #endif
 #endif
 
+#include <stddef.h>
 #include <xdot/xdot.h>
 #include <gtk/gtk.h>
 #include <glcomp/opengl.h>
@@ -139,12 +140,12 @@ typedef struct
 
     typedef struct
     {
-	int node_id;
-	int edge_id;
-	int selnode_id;
-	int seledge_id;
-	int nodelabel_id;
-	int edgelabel_id;
+	unsigned node_id;
+	unsigned edge_id;
+	unsigned selnode_id;
+	unsigned seledge_id;
+	unsigned nodelabel_id;
+	unsigned edgelabel_id;
     }topviewcache;
 
     typedef struct {
@@ -436,7 +437,7 @@ typedef struct
 	ArcBall_t *arcball;
 	keymap_t keymap;
 	mouse_action_t* mouse_actions;	/*customizable moouse interraction list*/
-	int mouse_action_count;
+	size_t mouse_action_count;
 	refresh_filter refresh;
 	int edgerendertype;
 	float nodeScale;

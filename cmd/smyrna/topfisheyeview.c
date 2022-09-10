@@ -238,8 +238,7 @@ static void drawtopfishnodes(topview * t)
 		    max_visible_level = level;
 		color_interpolation(srcColor, tarColor, &color,
 				    max_visible_level, level);
-		glColor4f(color.R, color.G, color.B,
-			  (GLfloat) view->defaultnodealpha);
+		glColor4f(color.R, color.G, color.B, view->defaultnodealpha);
 
 		glVertex3f((GLfloat) x0, (GLfloat) y0, 0.0f);
 	    }
@@ -281,9 +280,7 @@ static void drawtopfishedges(topview * t)
 			max_visible_level = level;
 		    color_interpolation(srcColor, tarColor, &color,
 					max_visible_level, level);
-		    glColor4f(color.R, color.G, color.B,
-			      (GLfloat) view->defaultnodealpha);
-
+		    glColor4f(color.R, color.G, color.B, view->defaultnodealpha);
 
 		    if (get_temp_coords(t, level, n, &x, &y)) {
 			glVertex3f((GLfloat) x0, (GLfloat) y0, 0.0f);
