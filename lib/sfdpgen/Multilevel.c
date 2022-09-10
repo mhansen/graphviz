@@ -10,7 +10,6 @@
 
 #include <sfdpgen/Multilevel.h>
 #include <sfdpgen/PriorityQueue.h>
-#include <common/memory.h>
 #include <assert.h>
 #include <cgraph/alloc.h>
 #include <common/arith.h>
@@ -889,9 +888,9 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
 #endif
       goto RETURN;
     }
-    irn = N_GNEW(n,int);
-    jcn = N_GNEW(n,int);
-    val = N_GNEW(n,double);
+    irn = gv_calloc(n, sizeof(int));
+    jcn = gv_calloc(n, sizeof(int));
+    val = gv_calloc(n, sizeof(double));
     nzc = 0; 
     for (i = 0; i < ncluster; i++){
       for (j = clusterp[i]; j < clusterp[i+1]; j++){
@@ -942,9 +941,9 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
 #endif
       goto RETURN;
     }
-    irn = N_GNEW(n,int);
-    jcn = N_GNEW(n,int);
-    val = N_GNEW(n,double);
+    irn = gv_calloc(n, sizeof(int));
+    jcn = gv_calloc(n, sizeof(int));
+    val = gv_calloc(n, sizeof(double));
     nzc = 0; nc = 0;
     for (i = 0; i < n; i++){
       if (matching[i] >= 0){
@@ -1004,9 +1003,9 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
 #endif
       goto RETURN;
     }
-    irn = N_GNEW(nzc,int);
-    jcn = N_GNEW(nzc,int);
-    val = N_GNEW(nzc,double);
+    irn = gv_calloc(nzc, sizeof(int));
+    jcn = gv_calloc(nzc, sizeof(int));
+    val = gv_calloc(nzc, sizeof(double));
     nzc = 0; 
     for (i = 0; i < n; i++){
       if (vset[i] == MAX_IND_VTX_SET_F){
