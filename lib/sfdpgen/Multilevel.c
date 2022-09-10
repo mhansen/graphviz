@@ -135,7 +135,7 @@ static void maximal_independent_vertex_set_RS(SparseMatrix A, int randomize, int
   m = A->m;
   n = A->n;
   assert(n == m);
-  *vset = N_GNEW(m,int);
+  *vset = gv_calloc(m, sizeof(int));
   for (i = 0; i < m; i++) {
     (*vset)[i] = MAX_IND_VTX_SET_U;
   }
