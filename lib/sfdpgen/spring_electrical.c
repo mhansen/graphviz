@@ -1776,12 +1776,11 @@ static void attach_edge_label_coordinates(int dim, SparseMatrix A, int n_edge_la
 }
 
 static SparseMatrix shorting_edge_label_nodes(SparseMatrix A, int n_edge_label_nodes, int *edge_label_nodes){
-  int *mask;
   int i, id = 0, nz, j, jj, ii;
   int *ia = A->ia, *ja = A->ja, *irn = NULL, *jcn = NULL;
   SparseMatrix B;
 
-  mask = MALLOC(sizeof(int)*A->m);
+  int *mask = gv_calloc(A->m, sizeof(int));
 
   for (i = 0; i < A->m; i++) mask[i] = 1;
 
@@ -1809,8 +1808,8 @@ static SparseMatrix shorting_edge_label_nodes(SparseMatrix A, int n_edge_label_n
   }
 
   if (nz > 0) {
-    irn = MALLOC(sizeof(int)*nz);
-    jcn = MALLOC(sizeof(int)*nz);
+    irn = gv_calloc(nz, sizeof(int));
+    jcn = gv_calloc(nz, sizeof(int));
   }
 
   nz = 0;
