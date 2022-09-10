@@ -65,12 +65,13 @@ static inline size_t agxblen(const agxbuf *xb) {
  * Removes last character added, if any.
  */
 static inline int agxbpop(agxbuf *xb) {
-  int c;
-  if (xb->ptr > xb->buf) {
-    c = *xb->ptr--;
-    return c;
-  } else
+
+  if (agxblen(xb) == 0) {
     return -1;
+  }
+
+  int c = *xb->ptr--;
+  return c;
 }
 
 /* agxbmore:
@@ -86,7 +87,7 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
   nsize = size == 0 ? BUFSIZ : (2 * size);
   if (size + ssz > nsize)
     nsize = size + ssz;
-  cnt = (size_t)(xb->ptr - xb->buf);
+  cnt = agxblen(xb);
   if (!xb->stack_allocated) {
     nbuf = (char *)gv_recalloc(xb->buf, size, nsize, sizeof(char));
   } else {
