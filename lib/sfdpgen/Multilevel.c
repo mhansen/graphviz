@@ -400,7 +400,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
       }
     }
 
-    /* dan yi dian, wu ban */
     for (i = 0; i < m; i++){
       if (matched[i] == i){
 	(*cluster)[nz++] = i;
@@ -472,7 +471,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
       }
     }
 
-    /* dan yi dian, wu ban */
     for (i = 0; i < m; i++){
       if (matched[i] == i){
 	(*cluster)[nz++] = i;
@@ -562,7 +560,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
       }
     }
 
-    /* dan yi dian, wu ban */
     for (i = 0; i < m; i++){
       if (matched[i] == i){
 	(*cluster)[nz++] = i;
@@ -601,7 +598,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
       }
     }
 
-    /* dan yi dian, wu ban */
     for (i = 0; i < m; i++){
       if (matched[i] == i){
 	(*cluster)[nz++] = i;
@@ -716,7 +712,6 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
     }
   }
   
-  /* dan yi dian, wu ban */
   for (i = 0; i < m; i++){
     if (matched[i] == i){
       (*cluster)[nz++] = i;
