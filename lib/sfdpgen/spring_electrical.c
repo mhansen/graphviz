@@ -916,9 +916,9 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   if (n >= ctrl->quadtree_size) {
     USE_QT = TRUE;
     qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
-    center = MALLOC(sizeof(double)*nsupermax*dim);
-    supernode_wgts = MALLOC(sizeof(double)*nsupermax);
-    distances = MALLOC(sizeof(double)*nsupermax);
+    center = gv_calloc(nsupermax * dim, sizeof(double));
+    supernode_wgts = gv_calloc(nsupermax, sizeof(double));
+    distances = gv_calloc(nsupermax, sizeof(double));
   }
   *flag = 0;
   if (m != n) {
@@ -954,8 +954,8 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   }
 #endif
 
-  f = MALLOC(sizeof(double)*dim);
-  xold = MALLOC(sizeof(double)*dim*n);
+  f = gv_calloc(dim, sizeof(double));
+  xold = gv_calloc(dim * n, sizeof(double));
   do {
 
     //#define VIS_MULTILEVEL
