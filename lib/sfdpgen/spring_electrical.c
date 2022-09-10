@@ -1626,10 +1626,10 @@ static void prolongate(int dim, SparseMatrix A, SparseMatrix P, SparseMatrix R, 
 
 
 int power_law_graph(SparseMatrix A){
-  int *mask, m, max = 0, i, *ia = A->ia, *ja = A->ja, j, deg;
+  int m, max = 0, i, *ia = A->ia, *ja = A->ja, j, deg;
   int res = FALSE;
   m = A->m;
-  mask = MALLOC(sizeof(int)*(m+1));
+  int *mask = gv_calloc(m + 1, sizeof(int));
 
   for (i = 0; i < m + 1; i++){
     mask[i] = 0;
