@@ -21,10 +21,10 @@
 
 /// a description of where a buffer is located
 typedef enum {
-  AGXBUF_ON_HEAP = 0,  ///< buffer is dynamically allocated
-  AGXBUF_ON_STACK = 1, ///< buffer is statically allocated
-  /// other values mean an inline buffer with size N - 2
-  AGXBUF_INLINE_SIZE_0 = 2,
+  AGXBUF_INLINE_SIZE_0 = 0,
+  AGXBUF_ON_HEAP = 254,  ///< buffer is dynamically allocated
+  AGXBUF_ON_STACK = 255, ///< buffer is statically allocated
+  /// other values mean an inline buffer with size N
 } agxbuf_loc_t;
 
 /// extensible buffer
@@ -63,9 +63,10 @@ typedef struct {
 } agxbuf;
 
 static inline bool agxbuf_is_inline(const agxbuf *xb) {
-  assert(xb->located <= AGXBUF_INLINE_SIZE_0 + sizeof(xb->store) &&
+  assert((xb->located == AGXBUF_ON_HEAP || xb->located == AGXBUF_ON_STACK ||
+          xb->located <= sizeof(xb->store)) &&
          "corrupted agxbuf type");
-  return xb->located > AGXBUF_ON_STACK;
+  return xb->located < AGXBUF_ON_HEAP;
 }
 
 /* agxbinit:
@@ -77,11 +78,8 @@ static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
     xb->buf = init;
     xb->located = AGXBUF_ON_STACK;
   } else {
-    if (hint == 0) {
-      hint = BUFSIZ;
-    }
-    xb->located = AGXBUF_ON_HEAP;
-    xb->buf = (char *)gv_calloc(hint, sizeof(char));
+    memset(xb->store, 0, sizeof(agxbuf));
+    return;
   }
   xb->size = 0;
   xb->capacity = hint;
@@ -350,10 +348,7 @@ static inline char *agxbdisown(agxbuf *xb) {
   }
 
   // reset xb to a state where it is usable
-  xb->buf = NULL;
-  xb->size = 0;
-  xb->capacity = 0;
-  xb->located = AGXBUF_ON_HEAP;
+  agxbinit(xb, 0, NULL);
 
   return buf;
 }
