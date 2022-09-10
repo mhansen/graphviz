@@ -522,8 +522,8 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
 
-  xold = MALLOC(sizeof(double)*dim*n);
-  force = MALLOC(sizeof(double)*dim*n);
+  xold = gv_calloc(dim * n, sizeof(double));
+  force = gv_calloc(dim * n, sizeof(double));
 
   do {
 #ifdef TIME
