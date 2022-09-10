@@ -741,7 +741,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatri
   m = A->m;
   n = A->n;
   assert(n == m);
-  *matching = N_GNEW(m,int);
+  *matching = gv_calloc(m, sizeof(int));
   for (i = 0; i < m; i++) (*matching)[i] = i;
   *nmatch = n;
 
