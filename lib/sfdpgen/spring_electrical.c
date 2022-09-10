@@ -1732,12 +1732,11 @@ static void rotate(int n, int dim, double *x, double angle){
 }
 
 static void attach_edge_label_coordinates(int dim, SparseMatrix A, int n_edge_label_nodes, int *edge_label_nodes, double *x, double *x2){
-  int *mask;
   int i, ii, j, k;
   int nnodes = 0;
   double len;
 
-  mask = MALLOC(sizeof(int)*A->m);
+  int *mask = gv_calloc(A->m, sizeof(int));
 
   for (i = 0; i < A->m; i++) mask[i] = 1;
   for (i = 0; i < n_edge_label_nodes; i++) {
