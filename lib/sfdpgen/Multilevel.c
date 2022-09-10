@@ -12,14 +12,13 @@
 #include <sfdpgen/PriorityQueue.h>
 #include <common/memory.h>
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <common/arith.h>
 #include <stddef.h>
 #include <stdbool.h>
 
 Multilevel_control Multilevel_control_new(void) {
-  Multilevel_control ctrl;
-
-  ctrl = GNEW(struct Multilevel_control_struct);
+  Multilevel_control ctrl = gv_alloc(sizeof(struct Multilevel_control_struct));
   ctrl->minsize = 4;
   ctrl->min_coarsen_factor = 0.75;
   ctrl->maxlevel = 1<<30;
