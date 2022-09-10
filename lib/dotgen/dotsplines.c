@@ -987,6 +987,7 @@ static node_t *cloneNode(graph_t *g, node_t *orign) {
         char* buf = N_GNEW(lbllen+3,char);
         sprintf (buf, "{%s}", ND_label(orign)->text);
 	agset (n, "label", buf);
+        free(buf);
     }
 
     return n;
