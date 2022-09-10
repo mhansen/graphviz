@@ -18,7 +18,6 @@
 #include <sfdpgen/post_process.h>
 #include <neatogen/overlap.h>
 #include <common/types.h>
-#include <common/memory.h>
 #include <common/arith.h>
 #include <math.h>
 #include <common/globals.h>
@@ -1890,7 +1889,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
       && n_edge_label_nodes > 0){
     SparseMatrix A2;
 
-    double *x2 = MALLOC(sizeof(double)*(A->m)*dim);
+    double *x2 = gv_calloc(A->m * dim, sizeof(double));
     A2 = shorting_edge_label_nodes(A, n_edge_label_nodes, edge_label_nodes);
     multilevel_spring_electrical_embedding(dim, A2, NULL, ctrl, NULL, x2, 0, NULL, flag);
 
@@ -1913,7 +1912,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
   if (Multilevel_is_finest(grid)){
     xc = x;
   } else {
-    xc = MALLOC(sizeof(double)*grid->n*dim);
+    xc = gv_calloc(grid->n * dim, sizeof(double));
   }
 
   plg = power_law_graph(A);
@@ -1981,7 +1980,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
     if (Multilevel_is_finest(grid)){
       xf = x;
     } else {
-      xf = MALLOC(sizeof(double)*grid->n*dim);
+      xf = gv_calloc(grid->n * dim, sizeof(double));
     }
     prolongate(dim, grid->A, P, grid->R, xc, xf, coarsen_scheme_used, (ctrl->K)*0.001);
     free(xc);
