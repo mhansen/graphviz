@@ -54,6 +54,13 @@ static inline void agxbfree(agxbuf *xb) {
     free(xb->buf);
 }
 
+/* agxblen:
+ * Return number of characters currently stored.
+ */
+static inline size_t agxblen(const agxbuf *xb) {
+  return (size_t)(xb->ptr - xb->buf);
+}
+
 /* agxbpop:
  * Removes last character added, if any.
  */
@@ -191,13 +198,6 @@ static inline char *agxbuse(agxbuf *xb) {
   (void)agxbputc(xb, '\0');
   xb->ptr = xb->buf;
   return xb->ptr;
-}
-
-/* agxblen:
- * Return number of characters currently stored.
- */
-static inline size_t agxblen(const agxbuf *xb) {
-  return (size_t)(xb->ptr - xb->buf);
 }
 
 /* agxbclear:
