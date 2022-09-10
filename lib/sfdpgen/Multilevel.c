@@ -648,10 +648,10 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
   m = A->m;
   n = A->n;
   assert(n == m);
-  *cluster = N_GNEW(m,int);
-  *clusterp = N_GNEW((m+1),int);
-  matched = N_GNEW(m,int);
-  vlist = N_GNEW(2*m,double);
+  *cluster = gv_calloc(m, sizeof(int));
+  *clusterp = gv_calloc(m + 1, sizeof(int));
+  matched = gv_calloc(m, sizeof(int));
+  vlist = gv_calloc(2 * m, sizeof(double));
 
   for (i = 0; i < m; i++) matched[i] = i;
 
