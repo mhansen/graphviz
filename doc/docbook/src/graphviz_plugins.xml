@@ -252,7 +252,7 @@ available plugins for all the apis.
 	        /home/ellson/FIX/Linux.i686/lib/graphviz/config
 	                was successfully loaded.
  	render      :  canon cmap cmapx dia dot fig gd gd2 gif gtk
-			hpgl imap ismap jpeg jpg mif mp pcl pdf pic plain
+			imap ismap jpeg jpg mif mp pcl pdf pic plain
 			plain-ext png ps ps2 svg svgz vrml vtx wbmp xdot xlib
     	layout      :  circo dot fdp neato twopi
     	textlayout  :  cairo

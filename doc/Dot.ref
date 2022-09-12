@@ -687,7 +687,6 @@ The output format is specified with the -Tlang flag on the command line,
                     gd
                     gd2     GD/GD2 formats
                     gif     GIF
-                   hpgl     HP-GL/2
                    imap     Server-side imagemap
                    ismap    Server-side imagemap (deprecated)
                     jpg
@@ -737,8 +736,6 @@ gd2
      used by the gd library. The latter is compressed.
 gif
      Outputs GIF bitmap images.
-hpgl
-     Produces output in the HP-GL/2 vector graphic printer language.
 imap
 cmap
      Produces map files for server-side and client-side image maps,

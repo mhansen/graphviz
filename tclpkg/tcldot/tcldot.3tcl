@@ -432,7 +432,7 @@ in a specific
 .I format.
 Possible
 .I formats
-are: "ps" "mif" "hpgl" "plain" "dot" "gif" "ismap"
+are: "ps" "mif" "plain" "dot" "gif" "ismap"
 If the layout hasn't been already done, then it will be done as part
 of this operation using the same rules for selecting the layout engine
 as for the layout command.

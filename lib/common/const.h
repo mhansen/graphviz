@@ -126,7 +126,6 @@
 #define		CLST    3
 
 /* output languages */
-#define		HPGL		2	/* HP Graphics Language */
 #define		PCL		3	/* Printer Control Language */
 #define		MIF		4	/* Adobe FrameMaker */
 #define		PIC_format	5	/* symbol PIC is used by compilers for 
