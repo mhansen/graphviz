@@ -6492,26 +6492,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2DE0D49CFE5B46A891500CD7F148018A"
-            {
-            "SourcePath" = "8:..\\..\\release\\share\\graphviz\\doc\\fontfaq.txt"
-            "TargetName" = "8:fontfaq.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_EA2EA6B45DEE4C35ACA33AA91E799532"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2DF6F049D2504E52BE452D2180490446"
             {
             "SourcePath" = "8:..\\..\\release\\share\\man\\man1\\gvcolor.1"
