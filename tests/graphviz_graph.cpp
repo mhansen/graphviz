@@ -46,3 +46,30 @@ const GraphvizEdge &GraphvizGraph::edge(std::string_view edgeop) const {
   throw std::runtime_error{
       fmt::format("Unknown edge '{}' in graph '{}'", edgeop, m_graph_id)};
 }
+
+void GraphvizGraph::add_bboxes() {
+  for (auto &node : m_nodes) {
+    node.add_bbox();
+  }
+  for (auto &edge : m_edges) {
+    edge.add_bbox();
+  }
+}
+
+void GraphvizGraph::add_node_edge_outline_bbox_overlaps(
+    const double tolerance) {
+  for (auto &node : m_nodes) {
+    for (auto &edge : m_edges) {
+      edge.add_outline_overlap_bbox(node, tolerance);
+    }
+  }
+}
+
+void GraphvizGraph::add_outline_bboxes() {
+  for (auto &node : m_nodes) {
+    node.add_outline_bbox();
+  }
+  for (auto &edge : m_edges) {
+    edge.add_outline_bbox();
+  }
+}

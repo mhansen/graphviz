@@ -283,6 +283,24 @@ void SVGAnalyzer::set_x(double x) { current_element().attributes.x = x; }
 
 void SVGAnalyzer::set_y(double y) { current_element().attributes.y = y; }
 
+void SVGAnalyzer::add_bboxes() {
+  for (auto &graph : m_graphs) {
+    graph.add_bboxes();
+  }
+}
+
+void SVGAnalyzer::add_node_edge_outline_bbox_overlaps(double tolerance) {
+  for (auto &graph : m_graphs) {
+    graph.add_node_edge_outline_bbox_overlaps(tolerance);
+  }
+}
+
+void SVGAnalyzer::add_outline_bboxes() {
+  for (auto &graph : m_graphs) {
+    graph.add_outline_bboxes();
+  }
+}
+
 SVGAnalyzer SVGAnalyzer::make_from_dot(const std::string &dot_source,
                                        const std::string &engine) {
   auto g = CGraph::AGraph{dot_source};

@@ -3,6 +3,7 @@
 #include <string>
 #include <string_view>
 
+#include "graphviz_node.h"
 #include "svg_element.h"
 
 /**
@@ -15,6 +16,18 @@ public:
   GraphvizEdge() = delete;
   explicit GraphvizEdge(SVG::SVGElement &svg_g_element);
 
+  /// Add an SVG `rect` element to the edge's corresponding `g` element. The
+  /// `rect` is represes the bounding box of the edge.
+  void add_bbox();
+  /// Add an SVG `rect` element to the edge's corresponding `g` element. The
+  /// `rect` represents the outline bounding box of the edge. The outline
+  /// bounding box is the bounding box with penwidth taken into account.
+  void add_outline_bbox();
+  /// Add an SVG `rect` element representing the overlap between the outline
+  /// bounding box of the edge and the specified node, to the corresponding `g`
+  /// element. The outline bounding box is the bounding box with penwidth taken
+  /// into account.
+  void add_outline_overlap_bbox(const GraphvizNode &node, double tolerance = 0);
   /// Return the bounding box of the edge
   SVG::SVGRect bbox() const;
   /// Return the center of the edge's bounding box

@@ -1,5 +1,10 @@
+#include <filesystem>
+#include <fstream>
+#include <stdexcept>
 #include <string_view>
 #include <unordered_set>
+
+#include <fmt/format.h>
 
 #include "test_utilities.h"
 
@@ -190,3 +195,15 @@ const std::unordered_set<std::string_view>
 
 const std::unordered_set<std::string_view> all_rank_directions = {"TB", "BT",
                                                                   "LR", "RL"};
+void write_to_file(const std::filesystem::path &directory,
+                   const std::filesystem::path &filename,
+                   const std::string_view text) {
+  std::filesystem::create_directories(directory);
+  const std::filesystem::path test_artifacts_path = directory / filename;
+  std::ofstream outfile{test_artifacts_path};
+  if (!outfile.is_open()) {
+    throw std::runtime_error{fmt::format("Could not create output file \"{}\"",
+                                         test_artifacts_path.native())};
+  }
+  outfile << text;
+}
