@@ -104,8 +104,6 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
   parser.add_argument("--version", help="Override version number used to "
     "create a release. Without this, the contents of the GRAPHVIZ_VERSION file "
     "will be used.")
-  parser.add_argument("--force", action="store_true", help="Force creating a "
-    "Gitlab release, even if the version number does not match \\d+.\\d+.\\d+.")
   parser.add_argument("--verbose", action="store_true", help="Print more "
     "diagnostic information.")
   options = parser.parse_args(args[1:])
@@ -153,11 +151,10 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
   log.info(f"using generic package version {package_version}")
 
   # we only create Gitlab releases for stable version numbers
-  if not options.force:
-    if re.match(r"\d+\.\d+\.\d+$", options.version) is None:
-      log.warning(f"skipping release creation because {options.version} is not "
-        "of the form \\d+.\\d+.\\d+")
-      return 0
+  if re.match(r"\d+\.\d+\.\d+$", options.version) is None:
+    log.warning(f"skipping release creation because {options.version} is not "
+      "of the form \\d+.\\d+.\\d+")
+    return 0
 
   # list of assets we have uploaded
   assets: List[str] = []
@@ -226,7 +223,7 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
         webdata["windows"].append(webentry)
 
   # various release pages truncate the viewable artifacts to 100 or even 50
-  if not options.force and len(assets) > 50:
+  if len(assets) > 50:
     log.error(f"upload has {len(assets)} assets, which will result in some of "
               "them being unviewable in web page lists")
     return -1
