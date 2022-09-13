@@ -23,9 +23,9 @@
 %option noinput
 
 %{
+#include <assert.h>
 #include <grammar.h>
-#include <cghdr.h>
-#include <agxbuf.h>
+#include <cgraph/cghdr.h>
 #include <cgraph/agxbuf.h>
 #include <ctype.h>
 #include <stdbool.h>
@@ -69,40 +69,25 @@ int gv_isatty_suppression;
 #endif
 
 /* buffer for arbitrary length strings (longer than BUFSIZ) */
-static char	*Sbuf,*Sptr,*Send;
+static agxbuf Sbuf;
+
 static void beginstr(void) {
-	if (Sbuf == NULL) {
-		Sbuf = malloc(BUFSIZ);
-		Send = Sbuf + BUFSIZ;
-	}
-	Sptr = Sbuf;
-	*Sptr = 0;
+  // nothing required, but we should not have pending string data
+  assert(agxblen(&Sbuf) == 0 &&
+         "pending string data that was not consumed (missing "
+         "endstr()/endhtmlstr()?)");
 }
 
 static void addstr(char *src) {
-	char	c;
-	if (Sptr > Sbuf) Sptr--;
-	do {
-		do {c = *Sptr++ = *src++;} while (c && Sptr < Send);
-		if (c) {
-			long	sz = Send - Sbuf;
-			long	off = Sptr - Sbuf;
-			sz *= 2;
-			Sbuf = realloc(Sbuf,sz);
-			Send = Sbuf + sz;
-			Sptr = Sbuf + off;
-		}
-	} while (c);
+  agxbput(&Sbuf, src);
 }
 
 static void endstr(void) {
-	aaglval.str = agstrdup(Ag_G_global,Sbuf);
-	*Sbuf = 0;
+  aaglval.str = agstrdup(Ag_G_global, agxbuse(&Sbuf));
 }
 
 static void endstr_html(void) {
-	aaglval.str = agstrdup_html(Ag_G_global,Sbuf);
-	*Sbuf = 0;
+  aaglval.str = agstrdup_html(Ag_G_global, agxbuse(&Sbuf));
 }
 
 static void
@@ -246,24 +231,28 @@ void aagerror(const char *str)
 		agxbprint(&xb, " near '%s'", aagtext);
 	}
 	else switch (YYSTATE) {
-	case qstring :
+	case qstring: {
 		agxbprint(&xb, " scanning a quoted string (missing endquote? longer than %d?)", YY_BUF_SIZE);
-		if (*Sbuf) {
-			size_t len = strlen(Sbuf);
+		size_t len = agxblen(&Sbuf);
+		if (len > 0) {
 			if (len > 80)
-				Sbuf[80] = '\0';
-			agxbprint (&xb, "\nString starting:\"%s", Sbuf);
+				len = 80;
+			agxbprint(&xb, "\nString starting:\"%.*s", (int)len, Sbuf.buf);
 		}
+		agxbclear(&Sbuf);
 		break;
-	case hstring :
+	}
+	case hstring: {
 		agxbprint(&xb, " scanning a HTML string (missing '>'? bad nesting? longer than %d?)", YY_BUF_SIZE);
-		if (*Sbuf) {
-			size_t len = strlen(Sbuf);
+		size_t len = agxblen(&Sbuf);
+		if (len > 0) {
 			if (len > 80)
-				Sbuf[80] = '\0';
-			agxbprint (&xb, "\nString starting:<%s", Sbuf);
+				len = 80;
+			agxbprint(&xb, "\nString starting:<%.*s", (int)len, Sbuf.buf);
 		}
+		agxbclear(&Sbuf);
 		break;
+	}
 	case comment :
 		agxbprint(&xb, " scanning a /*...*/ comment (missing '*/? longer than %d?)", YY_BUF_SIZE);
 		break;
