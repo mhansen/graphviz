@@ -9,6 +9,13 @@ struct check_options {
   double svg_rounding_error;
 };
 
+struct graph_options {
+  std::string_view rankdir = "TB";
+  std::string_view node_shape = "polygon";
+  double node_penwidth = 1;
+  double edge_penwidth = 1;
+};
+
 struct write_options {
   std::string filename_base = "test_edge_node_overlap";
   bool write_svg_on_success = false;
@@ -19,5 +26,5 @@ struct write_options {
 
 /// generate an SVG graph from the `dot` source and check that edges don't
 /// overlap nodes
-void test_edge_node_overlap(const std::string &dot,
+void test_edge_node_overlap(const graph_options &graph_options = {},
                             const write_options &write_options = {});

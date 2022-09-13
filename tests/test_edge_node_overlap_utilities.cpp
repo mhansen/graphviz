@@ -1,3 +1,6 @@
+#include <cassert>
+#include <string>
+
 #include <catch2/catch.hpp>
 #include <cmath>
 #include <fmt/format.h>
@@ -8,7 +11,10 @@
 
 /// check that edges do not overlap nodes
 static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
+                               const graph_options &graph_options,
                                const check_options &check_options) {
+
+  const auto rankdir = graph_options.rankdir;
 
   REQUIRE(svg_analyzer.graphs().size() == 1);
   auto &recreated_graph = svg_analyzer.graphs().back();
@@ -39,6 +45,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
     INFO(fmt::format("  height: {:.3f}", overlap_bbox.height));
     // FIXME: add support for rank direction "LR" and "RL". For now assume
     // "TB" or "BT" and check only in the vertical direction
+    assert((rankdir == "TB" || rankdir == "BT") &&
+           "Only rankdir=TB or rankdir=BT is supported");
     const auto head_node_edge_overlap = overlap_bbox.height;
 
     // check maximum head node and edge overlap
@@ -56,6 +64,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
     INFO(fmt::format("  height: {:.6f}", overlap_bbox.height));
     // FIXME: add support for rank direction "LR" and "RL". For now assume
     // "TB" or "BT" and check only in the vertical direction
+    assert((rankdir == "TB" || rankdir == "BT") &&
+           "Only rankdir=TB or rankdir=BT is supported");
     const auto tail_node_edge_overlap = overlap_bbox.height;
 
     // check maximum tail node and edge overlap
@@ -104,8 +114,22 @@ static void write_svg_files(SVGAnalyzer &svg_analyzer,
   }
 }
 
-void test_edge_node_overlap(const std::string &dot,
+/// generate DOT source based on given options
+static std::string generate_dot(const graph_options &graph_options) {
+  return fmt::format("digraph g1 {{"
+                     "  graph [rankdir={}]"
+                     "  node [penwidth={} shape={} fontname=Courier]"
+                     "  edge [penwidth={}]"
+                     "  a -> b"
+                     "}}",
+                     graph_options.rankdir, graph_options.node_penwidth,
+                     graph_options.node_shape, graph_options.edge_penwidth);
+}
+
+void test_edge_node_overlap(const graph_options &graph_options,
                             const write_options &write_options) {
+  const auto dot = generate_dot(graph_options);
+
   auto svg_analyzer = SVGAnalyzer::make_from_dot(dot);
 
   // The binary search in the bezier_clip function in lib/common/splines.c has a
@@ -125,7 +149,8 @@ void test_edge_node_overlap(const std::string &dot,
       .svg_rounding_error = graphviz_max_svg_rounding_error,
   };
 
-  const auto success = check_analyzed_svg(svg_analyzer, check_options);
+  const auto success =
+      check_analyzed_svg(svg_analyzer, graph_options, check_options);
 
   if (!success || write_options.write_svg_on_success) {
     write_svg_files(svg_analyzer, check_options, write_options);

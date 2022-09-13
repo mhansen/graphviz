@@ -9,10 +9,13 @@ TEST_CASE(
     "Overlap",
     "[!shouldfail] An edge connected to a node shall not overlap that node") {
 
-  std::string dot =
-      "digraph {node[shape=polygon penwidth=2 fontname=Courier] a -> b}";
+  const graph_options graph_options = {
+      .node_shape = "polygon",
+      .node_penwidth = 2,
+      .edge_penwidth = 2,
+  };
 
   const auto filename_base = AUTO_NAME();
 
-  test_edge_node_overlap(dot, {.filename_base = filename_base});
+  test_edge_node_overlap(graph_options, {.filename_base = filename_base});
 }
