@@ -135,7 +135,6 @@ object frmSettings: TfrmSettings
         'gd'
         'gd2'
         'gif'
-        'hpgl'
         'imap'
         'jpg'
         'mif'

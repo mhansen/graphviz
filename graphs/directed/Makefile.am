@@ -76,10 +76,6 @@ gv dot:
 	for i in $(GRAPHS); do echo "dot $$i"; \
 		$(DOT) -Tgv -o$$i.gv $(top_srcdir)/graphs/directed/$$i; done
 
-hpgl:
-	for i in $(GRAPHS); do echo "dot $$i"; \
-		$(DOT) -Thpgl -o$$i.hpgl $(top_srcdir)/graphs/directed/$$i; done
-
 ismap:
 	for i in $(GRAPHS); do echo "dot $$i"; \
 		$(DOT) -Tismap -o$$i.ismap $(top_srcdir)/graphs/directed/$$i; done

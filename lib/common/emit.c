@@ -3111,7 +3111,7 @@ static void init_job_margin(GVJ_t *job)
         case GVRENDER_PLUGIN:
             job->margin = job->device.features->default_margin;
             break;
-        case HPGL: case PCL: case MIF: case METAPOST: case VTX: case QPDF:
+        case PCL: case MIF: case METAPOST: case VTX: case QPDF:
             job->margin.x = job->margin.y = DEFAULT_PRINT_MARGIN;
             break;
         default:

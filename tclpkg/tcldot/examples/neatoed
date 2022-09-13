@@ -643,8 +643,6 @@ menu .m.file.m.export
 	-command "saveFileAs gif"
 .m.file.m.export add command -label "ISMAP ..." -underline 0 \
 	-command "saveFileAs ismap"
-.m.file.m.export add command -label "HPGL ..." -underline 0 \
-	-command "saveFileAs hpgl"
 .m.file.m.export add command -label "MIF ..." -underline 0 \
 	-command "saveFileAs mif"
 .m.file.m.export add command -label "PCL ..." -underline 1 \

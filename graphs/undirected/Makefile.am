@@ -57,10 +57,6 @@ gv dot:
 	for i in $(GRAPHS); do echo "neato $$i"; \
 		$(DOT) -Kneato -Tgv -o$$i.gv $(top_srcdir)/graphs/undirected/$$i; done
 
-hpgl:
-	for i in $(GRAPHS); do echo "neato $$i"; \
-		$(DOT) -Kneato -Thpgl -o$$i.hpgl $(top_srcdir)/graphs/undirected/$$i; done
-
 ismap:
 	for i in $(GRAPHS); do echo "neato $$i"; \
 		$(DOT) -Kneato -Tismap -o$$i.ismap $(top_srcdir)/graphs/undirected/$$i; done

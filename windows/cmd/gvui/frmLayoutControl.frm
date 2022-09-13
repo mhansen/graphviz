@@ -556,7 +556,6 @@ Private Sub Form_Load()
     
     optOutputType.AddItem "ps"
     optOutputType.AddItem "ps2"
-    optOutputType.AddItem "hpgl"
     optOutputType.AddItem "pcl"
     optOutputType.AddItem "mif"
     optOutputType.AddItem "pic"
