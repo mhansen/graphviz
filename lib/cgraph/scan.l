@@ -25,8 +25,7 @@
 %{
 #include <assert.h>
 #include <grammar.h>
-#include <cghdr.h>
-#include <agxbuf.h>
+#include <cgraph/cghdr.h>
 #include <cgraph/agxbuf.h>
 #include <ctype.h>
 #include <stdbool.h>
