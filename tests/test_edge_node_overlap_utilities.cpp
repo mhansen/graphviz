@@ -122,14 +122,17 @@ static void write_svg_files(SVGAnalyzer &svg_analyzer,
 
 /// generate DOT source based on given options
 static std::string generate_dot(const graph_options &graph_options) {
+  // use a semi-transparent color to easily see overlaps
+  const auto color = "\"#00000060\"";
   return fmt::format("digraph g1 {{"
                      "  graph [rankdir={}]"
-                     "  node [penwidth={} shape={} fontname=Courier]"
-                     "  edge [penwidth={}]"
+                     "  node [penwidth={} shape={} color={} fontname=Courier]"
+                     "  edge [penwidth={} color={}]"
                      "  a -> b"
                      "}}",
                      graph_options.rankdir, graph_options.node_penwidth,
-                     graph_options.node_shape, graph_options.edge_penwidth);
+                     graph_options.node_shape, color,
+                     graph_options.edge_penwidth, color);
 }
 
 void test_edge_node_overlap(const graph_options &graph_options,
