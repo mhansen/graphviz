@@ -17,5 +17,5 @@ TEST_CASE(
 
   const auto filename_base = AUTO_NAME();
 
-  test_edge_node_overlap(graph_options, {.filename_base = filename_base});
+  test_edge_node_overlap(graph_options, {}, {.filename_base = filename_base});
 }

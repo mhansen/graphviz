@@ -2,7 +2,15 @@
 
 #include "svg_analyzer.h"
 
+/// check options that can be controlled from the test case
+struct tc_check_options {
+  /// whether to check that there is not too much overlap
+  bool check_max_edge_node_overlap = true;
+};
+
 struct check_options {
+  /// whether to check that there is not too much overlap
+  bool check_max_edge_node_overlap = true;
   /// maximum allowed overlap between edge and node
   double max_node_edge_overlap;
   /// rounding error caused by limited precision in SVG attribute values
@@ -27,4 +35,5 @@ struct write_options {
 /// generate an SVG graph from the `dot` source and check that edges don't
 /// overlap nodes
 void test_edge_node_overlap(const graph_options &graph_options = {},
+                            const tc_check_options &tc_check_options = {},
                             const write_options &write_options = {});

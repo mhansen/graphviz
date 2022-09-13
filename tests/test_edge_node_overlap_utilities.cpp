@@ -59,9 +59,11 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
         overlap_in_rank_direction(overlap_bbox, rankdir);
 
     // check maximum head node and edge overlap
-    DO_CHECK(head_node_edge_overlap <=
-             check_options.max_node_edge_overlap +
-                 check_options.svg_rounding_error * 2);
+    if (check_options.check_max_edge_node_overlap) {
+      DO_CHECK(head_node_edge_overlap <=
+               check_options.max_node_edge_overlap +
+                   check_options.svg_rounding_error * 2);
+    }
   }
 
   // check tail node and edge overlap
@@ -75,9 +77,11 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
         overlap_in_rank_direction(overlap_bbox, rankdir);
 
     // check maximum tail node and edge overlap
-    DO_CHECK(tail_node_edge_overlap <=
-             check_options.max_node_edge_overlap +
-                 check_options.svg_rounding_error * 2);
+    if (check_options.check_max_edge_node_overlap) {
+      DO_CHECK(tail_node_edge_overlap <=
+               check_options.max_node_edge_overlap +
+                   check_options.svg_rounding_error * 2);
+    }
   }
 
   return success;
@@ -136,6 +140,7 @@ static std::string generate_dot(const graph_options &graph_options) {
 }
 
 void test_edge_node_overlap(const graph_options &graph_options,
+                            const tc_check_options &tc_check_options,
                             const write_options &write_options) {
   const auto dot = generate_dot(graph_options);
 
@@ -154,6 +159,8 @@ void test_edge_node_overlap(const graph_options &graph_options,
       std::pow(10, -graphviz_num_decimals_in_svg) / 2;
 
   const check_options check_options = {
+      .check_max_edge_node_overlap =
+          tc_check_options.check_max_edge_node_overlap,
       .max_node_edge_overlap = graphviz_bezier_clip_margin,
       .svg_rounding_error = graphviz_max_svg_rounding_error,
   };
