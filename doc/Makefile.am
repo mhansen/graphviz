@@ -9,6 +9,6 @@ dist_pdf_DATA += smyrna/smyrna.pdf
 endif
 
 dist_html_DATA = build.html FAQ.html index.html winbuild.html pspdf.png char.html gdtclft.entities.example.png todo.html internal_todo.html
-dist_doc_DATA = Dot.ref latex_suggestions.txt fontfaq.txt addingLayout.txt
+dist_doc_DATA = Dot.ref latex_suggestions.txt addingLayout.txt
 
 EXTRA_DIST = schema/*.xml schema/*.xslt infosrc/*
