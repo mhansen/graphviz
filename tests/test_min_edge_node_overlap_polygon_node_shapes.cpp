@@ -20,6 +20,7 @@ TEST_CASE("Minimum edge and node overlap for polygon node shapes",
   const tc_check_options check_options = {
       .check_max_edge_node_overlap = false,
       .check_min_edge_node_overlap = true,
+      .check_max_edge_stem_arrow_overlap = false,
       .check_min_edge_stem_arrow_overlap = false,
   };
 

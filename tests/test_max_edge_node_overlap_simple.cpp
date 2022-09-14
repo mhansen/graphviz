@@ -15,10 +15,11 @@ TEST_CASE("Maximum edge node overlap",
       .edge_penwidth = 2,
   };
 
-  const tc_check_options check_options = {.check_max_edge_node_overlap = true,
-                                          .check_min_edge_node_overlap = false,
-                                          .check_min_edge_stem_arrow_overlap =
-                                              false};
+  const tc_check_options check_options = {
+      .check_max_edge_node_overlap = true,
+      .check_min_edge_node_overlap = false,
+      .check_max_edge_stem_arrow_overlap = false,
+      .check_min_edge_stem_arrow_overlap = false};
 
   const auto filename_base = AUTO_NAME();
 
