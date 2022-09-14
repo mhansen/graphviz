@@ -892,7 +892,7 @@ cloneGraph (graph_t* g, attr_state_t* attr_state)
 	auxg = agopen ("auxg",Agundirected, NULL);
     agbindrec(auxg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     agattr(auxg, AGRAPH, "rank", "");
-    GD_drawing(auxg) = NEW(layout_t);
+    GD_drawing(auxg) = gv_alloc(sizeof(layout_t));
     GD_drawing(auxg)->quantum = GD_drawing(g)->quantum; 
     GD_drawing(auxg)->dpi = GD_drawing(g)->dpi;
 
