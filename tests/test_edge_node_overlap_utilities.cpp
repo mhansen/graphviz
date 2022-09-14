@@ -305,12 +305,12 @@ static std::string generate_dot(const graph_options &graph_options) {
   return fmt::format("digraph g1 {{"
                      "  graph [rankdir={}]"
                      "  node [penwidth={} shape={} color={} fontname=Courier]"
-                     "  edge [penwidth={} color={}]"
+                     "  edge [penwidth={} color={} dir={}]"
                      "  a -> b"
                      "}}",
                      graph_options.rankdir, graph_options.node_penwidth,
                      graph_options.node_shape, color,
-                     graph_options.edge_penwidth, color);
+                     graph_options.edge_penwidth, color, graph_options.dir);
 }
 
 void test_edge_node_overlap(const graph_options &graph_options,

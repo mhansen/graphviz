@@ -28,6 +28,7 @@ struct graph_options {
   std::string_view rankdir = "TB";
   std::string_view node_shape = "polygon";
   double node_penwidth = 1;
+  std::string_view dir = "forward";
   double edge_penwidth = 1;
 };
 
