@@ -1317,7 +1317,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 	return;
     }
 
-    attrs = NEW(attr_state_t);
+    attrs = gv_alloc(sizeof(attr_state_t));
     auxg = cloneGraph (g, attrs);
     subg = agsubg (auxg, "xxx",1);
     agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
