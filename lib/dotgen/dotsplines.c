@@ -15,7 +15,6 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
-#include <common/memory.h>
 #include <dotgen/dot.h>
 #include <limits.h>
 #include <math.h>
@@ -1850,8 +1849,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     fwdedge.out.base.data = (Agrec_t*)&fwdedgei;
 
     if (!pointfs) {
-	pointfs = N_GNEW(NUMPTS, pointf);
-   	pointfs2 = N_GNEW(NUMPTS, pointf);
+	pointfs = gv_calloc(NUMPTS, sizeof(pointf));
+   	pointfs2 = gv_calloc(NUMPTS, sizeof(pointf));
 	numpts = NUMPTS;
 	numpts2 = NUMPTS;
     }
