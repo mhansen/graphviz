@@ -14,6 +14,7 @@
  */
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <common/memory.h>
 #include <dotgen/dot.h>
 #include <limits.h>
@@ -196,7 +197,7 @@ static void swap_bezier(bezier * old, bezier * new)
     int i, sz;
 
     sz = old->size;
-    list = N_GNEW(sz, pointf);
+    list = gv_calloc(sz, sizeof(pointf));
     lp = list;
     olp = old->list + (sz - 1);
     for (i = 0; i < sz; i++) {	/* reverse list of points */
