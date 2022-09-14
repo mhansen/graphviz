@@ -985,7 +985,7 @@ static node_t *cloneNode(graph_t *g, node_t *orign) {
     agcopyattr (orign, n);
     if (shapeOf(orign) == SH_RECORD) {
 	int lbllen = strlen(ND_label(orign)->text);
-        char* buf = N_GNEW(lbllen+3,char);
+        char* buf = gv_calloc(lbllen + 3, sizeof(char));
         sprintf (buf, "{%s}", ND_label(orign)->text);
 	agset (n, "label", buf);
         free(buf);
