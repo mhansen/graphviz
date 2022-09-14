@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <dotgen/dot.h>
 #include <stddef.h>
@@ -55,7 +56,7 @@ static void computeNodeGroups(graph_t * g)
 {
     node_t *n;
 
-    nodeGroups = N_GNEW(agnnodes(g), nodeGroup_t);
+    nodeGroups = gv_calloc(agnnodes(g), sizeof(nodeGroup_t));
 
     nNodeGroups = 0;
 
@@ -66,7 +67,7 @@ static void computeNodeGroups(graph_t * g)
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (ND_UF_size(n) == 0) {	/* no same ranking constraint */
-	    nodeGroups[nNodeGroups].nodes = NEW(node_t *);
+	    nodeGroups[nNodeGroups].nodes = gv_alloc(sizeof(node_t*));
 	    nodeGroups[nNodeGroups].nodes[0] = n;
 	    nodeGroups[nNodeGroups].nNodes = 1;
 	    nodeGroups[nNodeGroups].width = ND_width(n);
@@ -90,8 +91,7 @@ static void computeNodeGroups(graph_t * g)
 		ND_id(n) = index;
 	    } else		/* create a new group */
 	    {
-		nodeGroups[nNodeGroups].nodes =
-		    N_NEW(ND_UF_size(l), node_t *);
+		nodeGroups[nNodeGroups].nodes = gv_calloc(ND_UF_size(l), sizeof(node_t*));
 
 		if (l == n)	/* node n is the leader */
 		{
