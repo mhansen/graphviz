@@ -222,7 +222,7 @@ static void swap_spline(splines * s)
     int i, sz;
 
     sz = s->size;
-    list = N_GNEW(sz, bezier);
+    list = gv_calloc(sz, sizeof(bezier));
     lp = list;
     olp = s->list + (sz - 1);
     for (i = 0; i < sz; i++) {	/* reverse and swap list of beziers */
