@@ -195,11 +195,10 @@ static void computeLayerWidths(graph_t * g)
     /* allocate memory
      * the number of layers can go up to the number of node groups
      */
-    layerWidthInfo = N_NEW(nNodeGroups, layerWidthInfo_t);
+    layerWidthInfo = gv_calloc(nNodeGroups, sizeof(layerWidthInfo_t));
 
     for (i = 0; i < nNodeGroups; i++) {
-	layerWidthInfo[i].nodeGroupsInLayer =
-	    N_NEW(nNodeGroups, nodeGroup_t *);
+	layerWidthInfo[i].nodeGroupsInLayer = gv_calloc(nNodeGroups, sizeof(nodeGroup_t*));
 
 	assert(nNodeGroups >= 0);
 	layerWidthInfo[i].removed = bitarray_new_or_exit((size_t)nNodeGroups);
