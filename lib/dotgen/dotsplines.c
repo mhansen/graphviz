@@ -349,11 +349,11 @@ static void _dot_splines(graph_t * g, int normalize)
 
     mark_lowclusters(g);
     if (routesplinesinit()) return;
-    P = NEW(path);
+    P = gv_alloc(sizeof(path));
     /* FlatHeight = 2 * GD_nodesep(g); */
     sd.Splinesep = GD_nodesep(g) / 4;
     sd.Multisep = GD_nodesep(g);
-    edges = N_NEW(CHUNK, edge_t *);
+    edges = gv_calloc(CHUNK, sizeof(edge_t*));
 
     /* compute boundaries and list of splines */
     sd.LeftBound = sd.RightBound = 0;
@@ -425,8 +425,8 @@ static void _dot_splines(graph_t * g, int normalize)
     qsort(edges, n_edges, sizeof(edges[0]), (qsort_cmpf)edgecmp);
 
     /* FIXME: just how many boxes can there be? */
-    P->boxes = N_NEW(n_nodes + 20 * 2 * NSUB, boxf);
-    sd.Rank_box = N_NEW(i, boxf);
+    P->boxes = gv_calloc(n_nodes + 20 * 2 * NSUB, sizeof(boxf));
+    sd.Rank_box = gv_calloc(i, sizeof(boxf));
 
     if (et == EDGETYPE_LINE) {
     /* place regular edge labels */
@@ -480,7 +480,7 @@ static void _dot_splines(graph_t * g, int normalize)
 	    if (cnt == 1)
 		edgelist = &e0;
 	    else
-		edgelist = N_NEW(cnt, edge_t*);
+		edgelist = gv_calloc(cnt, sizeof(edge_t*));
 	    edgelist[0] = getmainedge((edges+ind)[0]);
 	    for (ii = 1; ii < cnt; ii++)
 		edgelist[ii] = (edges+ind)[ii];
