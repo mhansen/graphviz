@@ -290,7 +290,7 @@ setEdgeLabelPos (graph_t * g)
     for (n = GD_nlist(g); n; n = ND_next(n)) {
 	if (ND_node_type(n) == VIRTUAL) {
 	    if (ND_alg(n)) {   // label of non-adjacent flat edge
-		edge_t* fe = (edge_t*)ND_alg(n);
+		edge_t* fe = ND_alg(n);
 		l = ED_label(fe);
 		assert (l);
 		l->pos = ND_coord(n);
@@ -372,7 +372,7 @@ static void _dot_splines(graph_t * g, int normalize)
 		 * the label.
 		 */
 	    if (ND_alg(n)) {
-		edge_t* fe = (edge_t*)ND_alg(n);
+		edge_t* fe = ND_alg(n);
 		assert (ED_label(fe));
 		ED_label(fe)->pos = ND_coord(n);
 		ED_label(fe)->set = true;

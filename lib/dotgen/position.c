@@ -260,7 +260,7 @@ make_LR_constraints(graph_t * g)
 	    }
 
 	    /* constraints from labels of flat edges on previous rank */
-	    if ((e = (edge_t*)ND_alg(u))) {
+	    if ((e = ND_alg(u))) {
 		e0 = ND_save_out(u).list[0];
 		e1 = ND_save_out(u).list[1];
 		if (ND_order(aghead(e0)) > ND_order(aghead(e1))) {
