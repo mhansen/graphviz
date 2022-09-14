@@ -4,10 +4,9 @@
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
 
-TEST_CASE(
-    "Maximum edge and node overlap for polygon node shapes",
-    "[!shouldfail] Test that an edge connected to a polygon based node does "
-    "not overlap that node, regardless of the node shape") {
+TEST_CASE("Maximum edge and node overlap for polygon node shapes",
+          "Test that an edge connected to a polygon based node does not "
+          "overlap that node, regardless of the node shape") {
 
   const auto shape = GENERATE(from_range(node_shapes_consisting_of_polygon));
   INFO("Node shape: " << shape);

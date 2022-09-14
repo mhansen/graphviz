@@ -4002,10 +4002,16 @@ static bool star_inside(inside_t * inside_context, pointf p)
 	vertex = poly->vertices;
 	sides = poly->sides;
 
-	/* index to outer-periphery */
-	outp = (poly->peripheries - 1) * sides;
-	if (outp < 0)
-	    outp = 0;
+	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+	if (poly->peripheries >= 1 && penwidth > 0) {
+	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
+	    outp = (poly->peripheries + 1 - 1) * sides;
+	} else {
+	    /* index to outer-periphery */
+	    outp = (poly->peripheries - 1) * sides;
+	    if (outp < 0)
+		outp = 0;
+	}
 	lastn = n;
     }
 
