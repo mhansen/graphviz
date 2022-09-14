@@ -1,4 +1,3 @@
-#include <cassert>
 #include <string>
 
 #include <catch2/catch.hpp>
@@ -8,6 +7,19 @@
 #include "svg_analyzer.h"
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
+#include <cgraph/unreachable.h>
+
+/// return the overlap in the rank direction from an intersection rectangle
+static double overlap_in_rank_direction(SVG::SVGRect intersection,
+                                        const std::string_view rankdir) {
+  if (rankdir == "LR" || rankdir == "RL") {
+    return intersection.width;
+  }
+  if (rankdir == "TB" || rankdir == "BT") {
+    return intersection.height;
+  }
+  UNREACHABLE();
+}
 
 /// check that edges do not overlap nodes
 static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
@@ -43,11 +55,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
     INFO("Head node overlap:");
     INFO(fmt::format("  width:  {:.3f}", overlap_bbox.width));
     INFO(fmt::format("  height: {:.3f}", overlap_bbox.height));
-    // FIXME: add support for rank direction "LR" and "RL". For now assume
-    // "TB" or "BT" and check only in the vertical direction
-    assert((rankdir == "TB" || rankdir == "BT") &&
-           "Only rankdir=TB or rankdir=BT is supported");
-    const auto head_node_edge_overlap = overlap_bbox.height;
+    const auto head_node_edge_overlap =
+        overlap_in_rank_direction(overlap_bbox, rankdir);
 
     // check maximum head node and edge overlap
     DO_CHECK(head_node_edge_overlap <=
@@ -62,11 +71,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
     INFO("Tail node overlap:");
     INFO(fmt::format("  width:  {:.6f}", overlap_bbox.width));
     INFO(fmt::format("  height: {:.6f}", overlap_bbox.height));
-    // FIXME: add support for rank direction "LR" and "RL". For now assume
-    // "TB" or "BT" and check only in the vertical direction
-    assert((rankdir == "TB" || rankdir == "BT") &&
-           "Only rankdir=TB or rankdir=BT is supported");
-    const auto tail_node_edge_overlap = overlap_bbox.height;
+    const auto tail_node_edge_overlap =
+        overlap_in_rank_direction(overlap_bbox, rankdir);
 
     // check maximum tail node and edge overlap
     DO_CHECK(tail_node_edge_overlap <=
