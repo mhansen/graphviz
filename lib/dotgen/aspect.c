@@ -8,7 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
+#include <cgraph/bitarray.h>
 #include <dotgen/dot.h>
+#include <stddef.h>
 
 /*
  * Author: Mohammad T. Irfan
@@ -151,7 +154,7 @@ int countDummyNodes(graph_t * g)
 typedef struct layerWidthInfo_t {
     int layerNumber;
     nodeGroup_t **nodeGroupsInLayer;
-    int *removed;		/* is the node group removed? */
+    bitarray_t removed; // is the node group removed?
     int nNodeGroupsInLayer;
     int nDummyNodes;
     double width;
@@ -184,7 +187,7 @@ static void computeLayerWidths(graph_t * g)
 		}
 		free(layerWidthInfo[i].nodeGroupsInLayer);
 	    }
-	    free(layerWidthInfo[i].removed);
+	    bitarray_reset(&layerWidthInfo[i].removed);
 	}
 
 	free(layerWidthInfo);
@@ -198,7 +201,8 @@ static void computeLayerWidths(graph_t * g)
 	layerWidthInfo[i].nodeGroupsInLayer =
 	    N_NEW(nNodeGroups, nodeGroup_t *);
 
-	layerWidthInfo[i].removed = N_NEW(nNodeGroups, int);
+	assert(nNodeGroups >= 0);
+	layerWidthInfo[i].removed = bitarray_new_or_exit((size_t)nNodeGroups);
 
 	layerWidthInfo[i].layerNumber = i;
 	layerWidthInfo[i].nNodeGroupsInLayer = 0;
@@ -368,7 +372,7 @@ static void reduceMaxWidth2(graph_t * g)
     w = 0;
 
     for (i = 0; i < limit + rem; i++) {
-	if (layerWidthInfo[maxLayerIndex].removed[i]) {
+	if (bitarray_get(layerWidthInfo[maxLayerIndex].removed, i)) {
 	    rem++;
 	    continue;
 	}
@@ -409,7 +413,7 @@ static void reduceMaxWidth2(graph_t * g)
 	    /* the following code updates the layer width information. The 
 	     * update is not useful in the current version of the heuristic.
 	     */
-	    layerWidthInfo[maxLayerIndex].removed[i] = 1;
+	    bitarray_set(&layerWidthInfo[maxLayerIndex].removed, i, true);
 	    rem2++;
 	    layerWidthInfo[maxLayerIndex].nNodeGroupsInLayer--;
 	    /* SHOULD BE INCREASED BY THE SUM OF INDEG OF ALL NODES IN GROUP */
