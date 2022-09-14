@@ -137,10 +137,10 @@ static void mapGraphs(graph_t * g, graph_t * cg, distfn dist)
     int delta;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	tp = (nitem *) ND_alg(n);
+	tp = ND_alg(n);
 	t = tp->cnode;
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-	    hp = (nitem *) ND_alg(aghead(e));
+	    hp = ND_alg(aghead(e));
 	    delta = dist(&tp->bb, &hp->bb);
 	    h = hp->cnode;
 	    ce = agedge(cg, t, h, NULL, 1);

@@ -303,7 +303,7 @@ checkLabelOrder (graph_t* g)
 	rk = GD_rank(g)+r;
 	for (j = 0; j < rk->n; j++) {
 	    u = rk->v[j];
-	    if ((e = (edge_t*)ND_alg(u))) {
+	    if ((e = ND_alg(u))) {
 		if (!lg) lg = agopen ("lg", Agstrictdirected, 0);
 		snprintf(buf, sizeof(buf), "%d", j);
 		n = agnode(lg, buf, 1);

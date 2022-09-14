@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
 
@@ -353,7 +354,7 @@ void build_skeleton(graph_t * g, graph_t * subg)
     edge_t *e;
 
     prev = NULL;
-    GD_rankleader(subg) = N_NEW(GD_maxrank(subg) + 2, node_t *);
+    GD_rankleader(subg) = gv_calloc(GD_maxrank(subg) + 2, sizeof(node_t*));
     for (r = GD_minrank(subg); r <= GD_maxrank(subg); r++) {
 	v = GD_rankleader(subg)[r] = virtual_node(g);
 	ND_rank(v) = r;

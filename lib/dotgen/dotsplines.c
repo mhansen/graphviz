@@ -14,7 +14,7 @@
  */
 
 #include <assert.h>
-#include <common/memory.h>
+#include <cgraph/alloc.h>
 #include <dotgen/dot.h>
 #include <limits.h>
 #include <math.h>
@@ -196,7 +196,7 @@ static void swap_bezier(bezier * old, bezier * new)
     int i, sz;
 
     sz = old->size;
-    list = N_GNEW(sz, pointf);
+    list = gv_calloc(sz, sizeof(pointf));
     lp = list;
     olp = old->list + (sz - 1);
     for (i = 0; i < sz; i++) {	/* reverse list of points */
@@ -221,7 +221,7 @@ static void swap_spline(splines * s)
     int i, sz;
 
     sz = s->size;
-    list = N_GNEW(sz, bezier);
+    list = gv_calloc(sz, sizeof(bezier));
     lp = list;
     olp = s->list + (sz - 1);
     for (i = 0; i < sz; i++) {	/* reverse and swap list of beziers */
@@ -290,7 +290,7 @@ setEdgeLabelPos (graph_t * g)
     for (n = GD_nlist(g); n; n = ND_next(n)) {
 	if (ND_node_type(n) == VIRTUAL) {
 	    if (ND_alg(n)) {   // label of non-adjacent flat edge
-		edge_t* fe = (edge_t*)ND_alg(n);
+		edge_t* fe = ND_alg(n);
 		l = ED_label(fe);
 		assert (l);
 		l->pos = ND_coord(n);
@@ -348,11 +348,11 @@ static void _dot_splines(graph_t * g, int normalize)
 
     mark_lowclusters(g);
     if (routesplinesinit()) return;
-    P = NEW(path);
+    P = gv_alloc(sizeof(path));
     /* FlatHeight = 2 * GD_nodesep(g); */
     sd.Splinesep = GD_nodesep(g) / 4;
     sd.Multisep = GD_nodesep(g);
-    edges = N_NEW(CHUNK, edge_t *);
+    edges = gv_calloc(CHUNK, sizeof(edge_t*));
 
     /* compute boundaries and list of splines */
     sd.LeftBound = sd.RightBound = 0;
@@ -372,7 +372,7 @@ static void _dot_splines(graph_t * g, int normalize)
 		 * the label.
 		 */
 	    if (ND_alg(n)) {
-		edge_t* fe = (edge_t*)ND_alg(n);
+		edge_t* fe = ND_alg(n);
 		assert (ED_label(fe));
 		ED_label(fe)->pos = ND_coord(n);
 		ED_label(fe)->set = true;
@@ -424,8 +424,8 @@ static void _dot_splines(graph_t * g, int normalize)
     qsort(edges, n_edges, sizeof(edges[0]), (qsort_cmpf)edgecmp);
 
     /* FIXME: just how many boxes can there be? */
-    P->boxes = N_NEW(n_nodes + 20 * 2 * NSUB, boxf);
-    sd.Rank_box = N_NEW(i, boxf);
+    P->boxes = gv_calloc(n_nodes + 20 * 2 * NSUB, sizeof(boxf));
+    sd.Rank_box = gv_calloc(i, sizeof(boxf));
 
     if (et == EDGETYPE_LINE) {
     /* place regular edge labels */
@@ -479,7 +479,7 @@ static void _dot_splines(graph_t * g, int normalize)
 	    if (cnt == 1)
 		edgelist = &e0;
 	    else
-		edgelist = N_NEW(cnt, edge_t*);
+		edgelist = gv_calloc(cnt, sizeof(edge_t*));
 	    edgelist[0] = getmainedge((edges+ind)[0]);
 	    for (ii = 1; ii < cnt; ii++)
 		edgelist[ii] = (edges+ind)[ii];
@@ -891,7 +891,7 @@ cloneGraph (graph_t* g, attr_state_t* attr_state)
 	auxg = agopen ("auxg",Agundirected, NULL);
     agbindrec(auxg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     agattr(auxg, AGRAPH, "rank", "");
-    GD_drawing(auxg) = NEW(layout_t);
+    GD_drawing(auxg) = gv_alloc(sizeof(layout_t));
     GD_drawing(auxg)->quantum = GD_drawing(g)->quantum; 
     GD_drawing(auxg)->dpi = GD_drawing(g)->dpi;
 
@@ -983,8 +983,8 @@ static node_t *cloneNode(graph_t *g, node_t *orign) {
     agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
     agcopyattr (orign, n);
     if (shapeOf(orign) == SH_RECORD) {
-	int lbllen = strlen(ND_label(orign)->text);
-        char* buf = N_GNEW(lbllen+3,char);
+        size_t lbllen = strlen(ND_label(orign)->text);
+        char* buf = gv_calloc(lbllen + 3, sizeof(char));
         sprintf (buf, "{%s}", ND_label(orign)->text);
 	agset (n, "label", buf);
         free(buf);
@@ -1072,7 +1072,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
     double uminx, umaxx;
     double lminx=0.0, lmaxx=0.0;
 
-    edge_t** earray = N_NEW(cnt, edge_t*);
+    edge_t** earray = gv_calloc(cnt, sizeof(edge_t*));
 
     for (i = 0; i < cnt; i++) {
 	earray[i] = edges[ind + i];
@@ -1316,7 +1316,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 	return;
     }
 
-    attrs = NEW(attr_state_t);
+    attrs = gv_alloc(sizeof(attr_state_t));
     auxg = cloneGraph (g, attrs);
     subg = agsubg (auxg, "xxx",1);
     agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
@@ -1849,8 +1849,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     fwdedge.out.base.data = (Agrec_t*)&fwdedgei;
 
     if (!pointfs) {
-	pointfs = N_GNEW(NUMPTS, pointf);
-   	pointfs2 = N_GNEW(NUMPTS, pointf);
+	pointfs = gv_calloc(NUMPTS, sizeof(pointf));
+   	pointfs2 = gv_calloc(NUMPTS, sizeof(pointf));
 	numpts = NUMPTS;
 	numpts2 = NUMPTS;
     }

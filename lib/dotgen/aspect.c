@@ -8,7 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
+#include <cgraph/alloc.h>
+#include <cgraph/bitarray.h>
 #include <dotgen/dot.h>
+#include <stddef.h>
 
 /*
  * Author: Mohammad T. Irfan
@@ -52,7 +56,7 @@ static void computeNodeGroups(graph_t * g)
 {
     node_t *n;
 
-    nodeGroups = N_GNEW(agnnodes(g), nodeGroup_t);
+    nodeGroups = gv_calloc(agnnodes(g), sizeof(nodeGroup_t));
 
     nNodeGroups = 0;
 
@@ -63,7 +67,7 @@ static void computeNodeGroups(graph_t * g)
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (ND_UF_size(n) == 0) {	/* no same ranking constraint */
-	    nodeGroups[nNodeGroups].nodes = NEW(node_t *);
+	    nodeGroups[nNodeGroups].nodes = gv_alloc(sizeof(node_t*));
 	    nodeGroups[nNodeGroups].nodes[0] = n;
 	    nodeGroups[nNodeGroups].nNodes = 1;
 	    nodeGroups[nNodeGroups].width = ND_width(n);
@@ -87,8 +91,7 @@ static void computeNodeGroups(graph_t * g)
 		ND_id(n) = index;
 	    } else		/* create a new group */
 	    {
-		nodeGroups[nNodeGroups].nodes =
-		    N_NEW(ND_UF_size(l), node_t *);
+		nodeGroups[nNodeGroups].nodes = gv_calloc(ND_UF_size(l), sizeof(node_t*));
 
 		if (l == n)	/* node n is the leader */
 		{
@@ -151,7 +154,7 @@ int countDummyNodes(graph_t * g)
 typedef struct layerWidthInfo_t {
     int layerNumber;
     nodeGroup_t **nodeGroupsInLayer;
-    int *removed;		/* is the node group removed? */
+    bitarray_t removed; // is the node group removed?
     int nNodeGroupsInLayer;
     int nDummyNodes;
     double width;
@@ -184,7 +187,7 @@ static void computeLayerWidths(graph_t * g)
 		}
 		free(layerWidthInfo[i].nodeGroupsInLayer);
 	    }
-	    free(layerWidthInfo[i].removed);
+	    bitarray_reset(&layerWidthInfo[i].removed);
 	}
 
 	free(layerWidthInfo);
@@ -192,13 +195,13 @@ static void computeLayerWidths(graph_t * g)
     /* allocate memory
      * the number of layers can go up to the number of node groups
      */
-    layerWidthInfo = N_NEW(nNodeGroups, layerWidthInfo_t);
+    layerWidthInfo = gv_calloc(nNodeGroups, sizeof(layerWidthInfo_t));
 
     for (i = 0; i < nNodeGroups; i++) {
-	layerWidthInfo[i].nodeGroupsInLayer =
-	    N_NEW(nNodeGroups, nodeGroup_t *);
+	layerWidthInfo[i].nodeGroupsInLayer = gv_calloc(nNodeGroups, sizeof(nodeGroup_t*));
 
-	layerWidthInfo[i].removed = N_NEW(nNodeGroups, int);
+	assert(nNodeGroups >= 0);
+	layerWidthInfo[i].removed = bitarray_new_or_exit((size_t)nNodeGroups);
 
 	layerWidthInfo[i].layerNumber = i;
 	layerWidthInfo[i].nNodeGroupsInLayer = 0;
@@ -368,7 +371,7 @@ static void reduceMaxWidth2(graph_t * g)
     w = 0;
 
     for (i = 0; i < limit + rem; i++) {
-	if (layerWidthInfo[maxLayerIndex].removed[i]) {
+	if (bitarray_get(layerWidthInfo[maxLayerIndex].removed, i)) {
 	    rem++;
 	    continue;
 	}
@@ -409,7 +412,7 @@ static void reduceMaxWidth2(graph_t * g)
 	    /* the following code updates the layer width information. The 
 	     * update is not useful in the current version of the heuristic.
 	     */
-	    layerWidthInfo[maxLayerIndex].removed[i] = 1;
+	    bitarray_set(&layerWidthInfo[maxLayerIndex].removed, i, true);
 	    rem2++;
 	    layerWidthInfo[maxLayerIndex].nNodeGroupsInLayer--;
 	    /* SHOULD BE INCREASED BY THE SUM OF INDEG OF ALL NODES IN GROUP */
@@ -427,7 +430,7 @@ static void applyPacking2(graph_t * g)
 {
     int i;
 
-    sortedLayerIndex = N_NEW(agnnodes(g), int);
+    sortedLayerIndex = gv_calloc(agnnodes(g), sizeof(int));
 
     for (i = 0; i < agnnodes(g); i++) {
 	sortedLayerIndex[i] = i;
