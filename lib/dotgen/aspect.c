@@ -430,7 +430,7 @@ static void applyPacking2(graph_t * g)
 {
     int i;
 
-    sortedLayerIndex = N_NEW(agnnodes(g), int);
+    sortedLayerIndex = gv_calloc(agnnodes(g), sizeof(int));
 
     for (i = 0; i < agnnodes(g); i++) {
 	sortedLayerIndex[i] = i;
