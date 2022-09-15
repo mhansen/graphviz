@@ -83,7 +83,7 @@ SparseMatrix SparseMatrix_get_real_adjacency_matrix_symmetrized(SparseMatrix A);
 void SparseMatrix_multiply_dense(SparseMatrix A, double *v, double **res, int dim);
 SparseMatrix SparseMatrix_apply_fun(SparseMatrix A, double (*fun)(double x));/* for real only! */
 SparseMatrix SparseMatrix_copy(SparseMatrix A);
-int SparseMatrix_has_diagonal(SparseMatrix A);
+bool SparseMatrix_has_diagonal(SparseMatrix A);
 SparseMatrix SparseMatrix_make_undirected(SparseMatrix A);/* make it strictly low diag only, and set flag to undirected */
 void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reintialize_mask);
 void SparseMatrix_level_sets_khops(int khops, SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reintialize_mask);

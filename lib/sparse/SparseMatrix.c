@@ -1756,16 +1756,16 @@ SparseMatrix SparseMatrix_copy(SparseMatrix A){
   return B;
 }
 
-int SparseMatrix_has_diagonal(SparseMatrix A){
+bool SparseMatrix_has_diagonal(SparseMatrix A) {
 
   int i, j, m = A->m, *ia = A->ia, *ja = A->ja;
 
   for (i = 0; i < m; i++){
     for (j = ia[i]; j < ia[i+1]; j++){
-      if (i == ja[j]) return TRUE;
+      if (i == ja[j]) return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 static void SparseMatrix_level_sets_internal(int khops, SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reinitialize_mask){
