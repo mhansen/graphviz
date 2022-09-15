@@ -325,16 +325,16 @@ static SparseMatrix SparseMatrix_alloc(SparseMatrix A, int nz){
   A->a = NULL;
   switch (format){
   case FORMAT_COORD:
-    A->ia = MALLOC(sizeof(int)*nz_t);
-    A->ja = MALLOC(sizeof(int)*nz_t);
-    A->a = MALLOC(A->size*nz_t);
+    A->ia = gv_calloc(nz_t, sizeof(int));
+    A->ja = gv_calloc(nz_t, sizeof(int));
+    A->a = gv_calloc(nz_t, A->size);
     break;
   case FORMAT_CSR:
   case FORMAT_CSC:
   default:
-    A->ja = MALLOC(sizeof(int)*nz_t);
+    A->ja = gv_calloc(nz_t, sizeof(int));
     if (A->size > 0 && nz_t > 0) {
-      A->a = MALLOC(A->size*nz_t);
+      A->a = gv_calloc(nz_t, A->size);
     }
     break;
   }
