@@ -2013,10 +2013,10 @@ void SparseMatrix_decompose_to_supervariables(SparseMatrix A, int *ncluster, int
   int *ia = A->ia, *ja = A->ja, n = A->n, m = A->m;
   int *super = NULL, *nsuper = NULL, i, j, *mask = NULL, isup, *newmap, isuper;
 
-  super = MALLOC(sizeof(int)*((size_t)(n)));
-  nsuper = MALLOC(sizeof(int)*((size_t)(n+1)));
-  mask = MALLOC(sizeof(int)*((size_t)n));
-  newmap = MALLOC(sizeof(int)*((size_t)n));
+  super = gv_calloc((size_t)n, sizeof(int));
+  nsuper = gv_calloc((size_t)(n + 1), sizeof(int));
+  mask = gv_calloc((size_t)n, sizeof(int));
+  newmap = gv_calloc((size_t)n, sizeof(int));
   nsuper++;
 
   isup = 0;
