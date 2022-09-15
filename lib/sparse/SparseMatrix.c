@@ -1825,11 +1825,6 @@ void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel, int **levels
   return SparseMatrix_level_sets_internal(khops, A, root, nlevel, levelset_ptr, levelset, mask, reinitialize_mask);
 
 }
-void SparseMatrix_level_sets_khops(int khops, SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reinitialize_mask){
-
-  return SparseMatrix_level_sets_internal(khops, A, root, nlevel, levelset_ptr, levelset, mask, reinitialize_mask);
-
-}
 
 void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int **comps, int **comps_ptr){
   SparseMatrix A = A0;
