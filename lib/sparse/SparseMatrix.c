@@ -1782,8 +1782,8 @@ static void SparseMatrix_level_sets_internal(int khops, SparseMatrix A, int root
   int i, j, sta = 0, sto = 1, nz, ii;
   int m = A->m, *ia = A->ia, *ja = A->ja;
 
-  if (!(*levelset_ptr)) *levelset_ptr = MALLOC(sizeof(int)*((size_t)(m+2)));
-  if (!(*levelset)) *levelset = MALLOC(sizeof(int)*((size_t)m));
+  if (!(*levelset_ptr)) *levelset_ptr = gv_calloc((size_t)(m + 2), sizeof(int));
+  if (!(*levelset)) *levelset = gv_calloc((size_t)m, sizeof(int));
   if (!(*mask)) {
     *mask = gv_calloc((size_t)m, sizeof(int));
     for (i = 0; i < m; i++) (*mask)[i] = UNMASKED;
