@@ -1111,7 +1111,7 @@ SparseMatrix SparseMatrix_multiply(SparseMatrix A, SparseMatrix B){
   }
   type = A->type;
   
-  mask = MALLOC(sizeof(int)*((size_t)(B->n)));
+  mask = calloc((size_t)B->n, sizeof(int));
   if (!mask) return NULL;
 
   for (i = 0; i < B->n; i++) mask[i] = -1;
