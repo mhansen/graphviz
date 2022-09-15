@@ -2113,13 +2113,13 @@ SparseMatrix SparseMatrix_get_augmented(SparseMatrix A){
   SparseMatrix B = NULL;
   if (!A) return NULL;
   if (nz > 0){
-    irn = MALLOC(sizeof(int)*((size_t)nz)*2);
-    jcn = MALLOC(sizeof(int)*((size_t)nz)*2);
+    irn = gv_calloc((size_t)nz * 2, sizeof(int));
+    jcn = gv_calloc((size_t)nz * 2, sizeof(int));
   }
 
   if (A->a){
     assert(A->size != 0 && nz > 0);
-    val = MALLOC(A->size*2*((size_t)nz));
+    val = gv_calloc(2 * (size_t)nz, A->size);
     memcpy(val, A->a, A->size*((size_t)nz));
     memcpy(((char*) val) + ((size_t)nz)*A->size, A->a, A->size*((size_t)nz));
   }
