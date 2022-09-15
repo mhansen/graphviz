@@ -1840,7 +1840,7 @@ void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int *
   if (!SparseMatrix_is_symmetric(A, true)){
     A = SparseMatrix_symmetrize(A, true);
   }
-  if (!(*comps_ptr)) *comps_ptr = MALLOC(sizeof(int)*((size_t)(m+1)));
+  if (!(*comps_ptr)) *comps_ptr = gv_calloc((size_t)(m + 1), sizeof(int));
 
   *ncomp = 0;
   (*comps_ptr)[0] = 0;
