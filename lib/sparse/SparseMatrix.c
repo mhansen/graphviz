@@ -1010,7 +1010,7 @@ static void SparseMatrix_multiply_dense1(SparseMatrix A, double *v, double **res
   m = A->m;
   u = *res;
 
-  if (!u) u = MALLOC(sizeof(double)*((size_t) m)*((size_t) dim));
+  if (!u) u = gv_calloc((size_t)m * (size_t)dim, sizeof(double));
   for (i = 0; i < m; i++){
     for (k = 0; k < dim; k++) u[i*dim+k] = 0.;
     for (j = ia[i]; j < ia[i+1]; j++){
