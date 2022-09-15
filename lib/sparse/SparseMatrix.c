@@ -1992,14 +1992,6 @@ static int Dijkstra(SparseMatrix A, int root, double *dist, int *nlist, int *lis
   return Dijkstra_internal(A, root, dist, nlist, list, dist_max, NULL);
 }
 
-static int Dijkstra_masked(SparseMatrix A, int root, double *dist, int *nlist, int *list, double *dist_max, int *mask){
-  /* this makes the algorithm only consider nodes that are masked.
-     nodes are masked as 1, 2, ..., mask_max, which is (the number of hops from root)+1.
-     Only paths consists of nodes that are masked are allowed. */
-     
-  return Dijkstra_internal(A, root, dist, nlist, list, dist_max, mask);
-}
-
 void SparseMatrix_decompose_to_supervariables(SparseMatrix A, int *ncluster, int **cluster, int **clusterp){
   /* nodes for a super variable if they share exactly the same neighbors. This is know as modules in graph theory.
      We work on columns only and columns with the same pattern are grouped as a super variable
