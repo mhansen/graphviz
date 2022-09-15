@@ -800,7 +800,7 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
    *
    * The distance between P and P1 and between P and P2 is stroke-width / 2.
    *
-   * NOTE: This method only implements the 'miter' join and does not fallback to
+   * NOTE: This method only implements the 'miter' join, but falls back to
    * 'bevel' when stroke-miterlimit is exceeded.
    */
 
@@ -832,6 +832,27 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
   // angle between the A segment and the B segment in the reverse direction
   const auto beta_rev = beta - std::numbers::pi;
   const auto theta = beta_rev - alpha;
+
+  const auto miter_limit = 4.0;
+  const auto miter_length = stroke_width / std::sin(std::abs(theta) / 2.0);
+
+  if (miter_length > miter_limit * stroke_width) {
+    // fall back to bevel
+    const auto sinBeta = dyB / hypotB;
+    const auto sinBetaMinusPi = -sinBeta;
+    const auto cosBetaMinusPi = -cosBeta;
+    const SVG::SVGPoint P2 = {P.x + stroke_width / 2.0 * sinBetaMinusPi,
+                              P.y + stroke_width / 2.0 * cosBetaMinusPi};
+
+    // the bevel is the triangle formed from the three points P, P1 and P2 so
+    // a good enough approximation of the miter point in this case is the
+    // crossing of P-P3 with P1-P2 which is the same as the midpoint between
+    // P1 and P2
+    const SVG::SVGPoint Pbevel = {(P1.x + P2.x) / 2, (P1.y + P2.y) / 2};
+
+    // SVG has inverted y axis so invert the returned y value
+    return {Pbevel.x, -Pbevel.y};
+  }
 
   // length between P1 and P3 (and between P2 and P3)
   const auto l = stroke_width / 2.0 / std::tan(theta / 2.0);
