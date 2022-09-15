@@ -1277,7 +1277,7 @@ SparseMatrix SparseMatrix_multiply3(SparseMatrix A, SparseMatrix B, SparseMatrix
 
   assert(type == MATRIX_TYPE_REAL);
 
-  mask = MALLOC(sizeof(int)*((size_t)(C->n)));
+  mask = calloc((size_t)C->n, sizeof(int));
   if (!mask) return NULL;
 
   for (i = 0; i < C->n; i++) mask[i] = -1;
