@@ -2329,7 +2329,7 @@ SparseMatrix SparseMatrix_set_entries_to_real_one(SparseMatrix A){
   int i;
 
   free(A->a);
-  A->a = MALLOC(sizeof(double)*((size_t)A->nz));
+  A->a = gv_calloc((size_t)A->nz, sizeof(double));
   a = (double*) (A->a);
   for (i = 0; i < A->nz; i++) a[i] = 1.;
   A->type = MATRIX_TYPE_REAL;
