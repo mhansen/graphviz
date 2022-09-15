@@ -197,6 +197,9 @@ const std::unordered_set<std::string_view>
     primitive_arrow_shapes_without_closed_svg_shape = {"curve", "icurve",
                                                        "none"};
 
+const std::unordered_set<std::string_view> all_arrow_shape_modifiers = {
+    "", "o", "l", "r"};
+
 const std::unordered_set<std::string_view> all_rank_directions = {"TB", "BT",
                                                                   "LR", "RL"};
 
