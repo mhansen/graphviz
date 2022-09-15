@@ -12,6 +12,7 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <common/memory.h>
 #include <common/arith.h>
 #include <limits.h>
@@ -1787,7 +1788,7 @@ static void SparseMatrix_level_sets_internal(int khops, SparseMatrix A, int root
   if (!(*levelset_ptr)) *levelset_ptr = MALLOC(sizeof(int)*((size_t)(m+2)));
   if (!(*levelset)) *levelset = MALLOC(sizeof(int)*((size_t)m));
   if (!(*mask)) {
-    *mask = malloc(sizeof(int)*((size_t)m));
+    *mask = gv_calloc((size_t)m, sizeof(int));
     for (i = 0; i < m; i++) (*mask)[i] = UNMASKED;
   }
 
