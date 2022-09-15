@@ -106,7 +106,6 @@ SparseMatrix SparseMatrix_sort(SparseMatrix A);
 SparseMatrix SparseMatrix_set_entries_to_real_one(SparseMatrix A);
 
 int SparseMatrix_distance_matrix(SparseMatrix A, int weighted,  double **dist_matrix);
-SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix A, int weighted);
 
 SparseMatrix SparseMatrix_from_dense(int m, int n, double *x);
 
