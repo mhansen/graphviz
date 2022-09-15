@@ -5,14 +5,11 @@
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
 
-// FIXME: this test fails for the 'l' and 'r' arrow shape modifiers which do not
-// handle the miter point correctly yet
-
 TEST_CASE(
     "Edge node overlap for normal and inv arrow with all arrow shape modifiers",
-    "[!shouldfail] An edge connected to a node shall touch that node and not "
-    "overlap it too much, regardless of if the arrow shape is 'normal' or "
-    "'inv' and which arrrow shape modifier is used") {
+    "An edge connected to a node shall touch that node and not overlap it too "
+    "much, regardless of if the arrow shape is 'normal' or 'inv' and which "
+    "arrrow shape modifier is used") {
 
   std::string filename_base = AUTO_NAME();
 

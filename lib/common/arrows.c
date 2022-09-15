@@ -504,11 +504,10 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth, int flag, 
     q.x = p.x + u.x;
     q.y = p.y + u.y;
 
-    // FIXME: handle this correctly for ARR_MOD_LEFT and ARR_MOD_RIGHT when the
-    // angle of the arrow tip is half of the normal arrow
-
-    const pointf normal_left = {-v.x, -v.y};
-    const pointf normal_right = v;
+    const pointf origin = {0, 0};
+    const pointf v_inv = {-v.x, -v.y};
+    const pointf normal_left = flag & ARR_MOD_RIGHT ? origin : v_inv;
+    const pointf normal_right = flag & ARR_MOD_LEFT ? origin : v;
     const pointf base_left = flag & ARR_MOD_INV ? normal_right : normal_left;
     const pointf base_right = flag & ARR_MOD_INV ? normal_left : normal_right;
     const pointf normal_tip = {-u.x, -u.y};
