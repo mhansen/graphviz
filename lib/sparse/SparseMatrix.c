@@ -1349,7 +1349,7 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A){
   int *ia = A->ia, *ja = A->ja, type = A->type, n = A->n;
   int *mask = NULL, nz = 0, i, j, sta;
 
-  mask = MALLOC(sizeof(int)*((size_t)n));
+  mask = gv_calloc((size_t)n, sizeof(int));
   for (i = 0; i < n; i++) mask[i] = -1;
 
   switch (type){
