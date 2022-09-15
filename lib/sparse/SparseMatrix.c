@@ -1915,7 +1915,7 @@ static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist,
   switch (A->type){
   case MATRIX_TYPE_COMPLEX:
     aa = (double*) A->a;
-    a = MALLOC(sizeof(double)*((size_t)(A->nz)));
+    a = gv_calloc((size_t)A->nz, sizeof(double));
     for (i = 0; i < A->nz; i++) a[i] = aa[i*2];
     break;
   case MATRIX_TYPE_REAL:
@@ -1923,18 +1923,18 @@ static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist,
     break;
   case MATRIX_TYPE_INTEGER:
     ai = (int*) A->a;
-    a = MALLOC(sizeof(double)*((size_t)(A->nz)));
+    a = gv_calloc((size_t)A->nz, sizeof(double));
     for (i = 0; i < A->nz; i++) a[i] = (double) ai[i];
     break;
   case MATRIX_TYPE_PATTERN:
-    a = MALLOC(sizeof(double)*((size_t)A->nz));
+    a = gv_calloc((size_t)A->nz, sizeof(double));
     for (i = 0; i < A->nz; i++) a[i] = 1.;
     break;
   default:
     assert(0);/* no such matrix type */
   }
 
-  heap_ids = MALLOC(sizeof(int)*((size_t)m));
+  heap_ids = gv_calloc((size_t)m, sizeof(int));
   for (i = 0; i < m; i++) {
     dist[i] = -1;
     heap_ids[i] = UNVISITED;
@@ -1944,7 +1944,7 @@ static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist,
   assert(h);
 
   /* add root as the first item in the heap */
-  ndata = MALLOC(sizeof(struct nodedata_struct));
+  ndata = gv_alloc(sizeof(struct nodedata_struct));
   ndata->dist = 0;
   ndata->id = root;
   heap_ids[root] = BinaryHeap_insert(h, ndata);
@@ -1964,7 +1964,7 @@ static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist,
       if (jj == i || heap_id == FINISHED || (mask && mask[jj] < 0)) continue;
 
       if (heap_id == UNVISITED){
-	ndata = MALLOC(sizeof(struct nodedata_struct));
+	ndata = gv_alloc(sizeof(struct nodedata_struct));
 	ndata->dist = fabs(a[j]) + ndata_min->dist;
 	ndata->id = jj;
 	heap_ids[jj] = BinaryHeap_insert(h, ndata);
