@@ -885,7 +885,7 @@ SparseMatrix SparseMatrix_add(SparseMatrix A, SparseMatrix B){
   ic = C->ia;
   jc = C->ja;
 
-  mask = MALLOC(sizeof(int)*((size_t) n));
+  mask = gv_calloc((size_t)n, sizeof(int));
 
   for (i = 0; i < n; i++) mask[i] = -1;
 
