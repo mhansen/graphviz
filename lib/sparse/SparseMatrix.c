@@ -348,25 +348,25 @@ static SparseMatrix SparseMatrix_realloc(SparseMatrix A, int nz){
 
   switch (format){
   case FORMAT_COORD:
-    A->ia = REALLOC(A->ia, sizeof(int)*nz_t);
-    A->ja = REALLOC(A->ja, sizeof(int)*nz_t);
+    A->ia = gv_recalloc(A->ia, A->nzmax, nz_t, sizeof(int));
+    A->ja = gv_recalloc(A->ja, A->nzmax, nz_t, sizeof(int));
     if (A->size > 0) {
       if (A->a){
-	A->a = REALLOC(A->a, A->size*nz_t);
+	A->a = gv_recalloc(A->a, A->nzmax, nz_t, A->size);
       } else {
-	A->a = MALLOC(A->size*nz_t);
+	A->a = gv_calloc(nz_t, A->size);
       }
     } 
     break;
   case FORMAT_CSR:
   case FORMAT_CSC:
   default:
-    A->ja = REALLOC(A->ja, sizeof(int)*nz_t);
+    A->ja = gv_recalloc(A->ja, A->nzmax, nz_t, sizeof(int));
     if (A->size > 0) {
       if (A->a){
-	A->a = REALLOC(A->a, A->size*nz_t);
+	A->a = gv_recalloc(A->a, A->nzmax, nz_t, A->size);
       } else {
-	A->a = MALLOC(A->size*nz_t);
+	A->a = gv_calloc(nz_t, A->size);
       }
     }
     break;
