@@ -1175,9 +1175,6 @@ SparseMatrix SparseMatrix_multiply(SparseMatrix A, SparseMatrix B){
       double *a = (double*) A->a;
       double *b = (double*) B->a;
       double *c = (double*) C->a;
-      a = (double*) A->a;
-      b = (double*) B->a;
-      c = (double*) C->a;
       ic[0] = 0;
       for (i = 0; i < m; i++){
 	for (j = ia[i]; j < ia[i+1]; j++){
