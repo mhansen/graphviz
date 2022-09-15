@@ -197,7 +197,7 @@ int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only){
   jb = B->ja;
   m = A->m;
 
-  mask = MALLOC(sizeof(int)*((size_t) m));
+  mask = gv_calloc((size_t)m, sizeof(int));
   for (i = 0; i < m; i++) mask[i] = -1;
 
   type = A->type;
