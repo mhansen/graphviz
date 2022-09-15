@@ -1045,7 +1045,7 @@ void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res) {
   case MATRIX_TYPE_REAL:
     a = (double*) A->a;
     if (v){
-      if (!u) u = MALLOC(sizeof(double)*((size_t)m));
+      if (!u) u = gv_calloc((size_t)m, sizeof(double));
       for (i = 0; i < m; i++){
 	u[i] = 0.;
 	for (j = ia[i]; j < ia[i+1]; j++){
@@ -1054,7 +1054,7 @@ void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res) {
       }
     } else {
       /* v is assumed to be all 1's */
-      if (!u) u = MALLOC(sizeof(double)*((size_t)m));
+      if (!u) u = gv_calloc((size_t)m, sizeof(double));
       for (i = 0; i < m; i++){
 	u[i] = 0.;
 	for (j = ia[i]; j < ia[i+1]; j++){
@@ -1066,7 +1066,7 @@ void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res) {
   case MATRIX_TYPE_INTEGER:
     ai = (int*) A->a;
     if (v){
-      if (!u) u = MALLOC(sizeof(double)*((size_t)m));
+      if (!u) u = gv_calloc((size_t)m, sizeof(double));
       for (i = 0; i < m; i++){
 	u[i] = 0.;
 	for (j = ia[i]; j < ia[i+1]; j++){
@@ -1075,7 +1075,7 @@ void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res) {
       }
     } else {
       /* v is assumed to be all 1's */
-      if (!u) u = MALLOC(sizeof(double)*((size_t)m));
+      if (!u) u = gv_calloc((size_t)m, sizeof(double));
       for (i = 0; i < m; i++){
 	u[i] = 0.;
 	for (j = ia[i]; j < ia[i+1]; j++){
