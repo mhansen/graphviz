@@ -1712,7 +1712,7 @@ SparseMatrix SparseMatrix_get_real_adjacency_matrix_symmetrized(SparseMatrix A){
   A = SparseMatrix_symmetrize(B, true);
   SparseMatrix_delete(B);
   A = SparseMatrix_remove_diagonal(A);
-  A->a = MALLOC(sizeof(double)*((size_t)(A->nz)));
+  A->a = gv_calloc((size_t)A->nz, sizeof(double));
   a = (double*) A->a;
   for (i = 0; i < A->nz; i++) a[i] = 1.;
   A->type = MATRIX_TYPE_REAL;
