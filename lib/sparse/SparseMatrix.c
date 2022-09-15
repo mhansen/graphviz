@@ -2385,7 +2385,7 @@ int SparseMatrix_distance_matrix(SparseMatrix D0, int weighted, double **dist0){
 
   assert(m == n);
 
-  if (!(*dist0)) *dist0 = MALLOC(sizeof(double)*n*n);
+  if (!(*dist0)) *dist0 = gv_calloc(n * n, sizeof(double));
   for (i = 0; i < n*n; i++) (*dist0)[i] = -1;
 
   if (!weighted){
@@ -2399,7 +2399,7 @@ int SparseMatrix_distance_matrix(SparseMatrix D0, int weighted, double **dist0){
       }
      }
  } else {
-    list = MALLOC(sizeof(int)*n);
+    list = gv_calloc(n, sizeof(int));
     for (k = 0; k < n; k++){
       dist = &((*dist0)[k*n]);
       flag = Dijkstra(D, k, dist, &nlist, list, &dmax);
