@@ -291,10 +291,7 @@ int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only){
 }
 
 static SparseMatrix SparseMatrix_init(int m, int n, int type, size_t sz, int format){
-  SparseMatrix A;
-
-
-  A = MALLOC(sizeof(struct SparseMatrix_struct));
+  SparseMatrix A = gv_alloc(sizeof(struct SparseMatrix_struct));
   A->m = m;
   A->n = n;
   A->nz = 0;
@@ -308,7 +305,7 @@ static SparseMatrix SparseMatrix_init(int m, int n, int type, size_t sz, int for
   case FORMAT_CSC:
   case FORMAT_CSR:
   default:
-    A->ia = MALLOC(sizeof(int)*((size_t)(m+1)));
+    A->ia = gv_calloc((size_t)(m + 1), sizeof(int));
   }
   A->ja = NULL;
   A->a = NULL;
