@@ -2185,8 +2185,8 @@ SparseMatrix SparseMatrix_get_submatrix(SparseMatrix A, int nrow, int ncol, int 
 
   
 
-  rmask = MALLOC(sizeof(int)*((size_t)m));
-  cmask = MALLOC(sizeof(int)*((size_t)n));
+  rmask = gv_calloc((size_t)m, sizeof(int));
+  cmask = gv_calloc((size_t)n, sizeof(int));
   for (i = 0; i < m; i++) rmask[i] = -1;
   for (i = 0; i < n; i++) cmask[i] = -1;
 
@@ -2227,9 +2227,9 @@ SparseMatrix SparseMatrix_get_submatrix(SparseMatrix A, int nrow, int ncol, int 
   case MATRIX_TYPE_REAL:{
     double *a = (double*) A->a;
     double *val;
-    irn = MALLOC(sizeof(int)*((size_t)nz));
-    jcn = MALLOC(sizeof(int)*((size_t)nz));
-    val = MALLOC(sizeof(double)*((size_t)nz));
+    irn = gv_calloc((size_t)nz, sizeof(int));
+    jcn = gv_calloc((size_t)nz, sizeof(int));
+    val = gv_calloc((size_t)nz, sizeof(double));
 
     nz = 0;
     for (i = 0; i < m; i++){
@@ -2248,9 +2248,9 @@ SparseMatrix SparseMatrix_get_submatrix(SparseMatrix A, int nrow, int ncol, int 
     double *a = (double*) A->a;
     double *val;
 
-    irn = MALLOC(sizeof(int)*((size_t)nz));
-    jcn = MALLOC(sizeof(int)*((size_t)nz));
-    val = MALLOC(sizeof(double)*2*((size_t)nz));
+    irn = gv_calloc((size_t)nz, sizeof(int));
+    jcn = gv_calloc((size_t)nz, sizeof(int));
+    val = gv_calloc(2 * (size_t)nz, sizeof(double));
 
     nz = 0;
     for (i = 0; i < m; i++){
@@ -2271,9 +2271,9 @@ SparseMatrix SparseMatrix_get_submatrix(SparseMatrix A, int nrow, int ncol, int 
     int *a = (int*) A->a;
     int *val;
 
-    irn = MALLOC(sizeof(int)*((size_t)nz));
-    jcn = MALLOC(sizeof(int)*((size_t)nz));
-    val = MALLOC(sizeof(int)*((size_t)nz));
+    irn = gv_calloc((size_t)nz, sizeof(int));
+    jcn = gv_calloc((size_t)nz, sizeof(int));
+    val = gv_calloc((size_t)nz, sizeof(int));
 
     nz = 0;
     for (i = 0; i < m; i++){
@@ -2290,8 +2290,8 @@ SparseMatrix SparseMatrix_get_submatrix(SparseMatrix A, int nrow, int ncol, int 
     break;
   }
   case MATRIX_TYPE_PATTERN:
-    irn = MALLOC(sizeof(int)*((size_t)nz));
-    jcn = MALLOC(sizeof(int)*((size_t)nz));
+    irn = gv_calloc((size_t)nz, sizeof(int));
+    jcn = gv_calloc((size_t)nz, sizeof(int));
     nz = 0;
      for (i = 0; i < m; i++){
       if (rmask[i] < 0) continue;
