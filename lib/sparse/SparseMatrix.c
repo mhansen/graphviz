@@ -13,7 +13,6 @@
 #include <math.h>
 #include <assert.h>
 #include <cgraph/alloc.h>
-#include <common/memory.h>
 #include <common/arith.h>
 #include <limits.h>
 #include <sparse/SparseMatrix.h>
@@ -2452,8 +2451,8 @@ SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix D0, int 
       }
      }
   } else {
-    list = MALLOC(sizeof(int)*n);
-    dist = MALLOC(sizeof(double)*n);
+    list = gv_calloc(n, sizeof(int));
+    dist = gv_calloc(n, sizeof(double));
     /*
     Dijkstra_khops(khops, D, 60, dist, &nlist, list, &dmax);
     for (j = 0; j < nlist; j++){
