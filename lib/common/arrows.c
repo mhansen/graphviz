@@ -459,6 +459,28 @@ static pointf miter_point(pointf base_left, pointf P, pointf base_right,
   const double theta = beta_rev - alpha + (beta_rev - alpha <= -M_PI ? 2 * M_PI : 0);
   assert(theta >= 0 && theta <= M_PI && "theta out of range");
 
+  // check if the miter limit is exceeded according to
+  // https://www.w3.org/TR/SVG2/painting.html#StrokeMiterlimitProperty
+  const double stroke_miterlimit = 4.0;
+  const double normalized_miter_length = 1.0 / sin(theta / 2.0);
+
+  if (normalized_miter_length > stroke_miterlimit)  {
+    // fall back to bevel
+    const double sinBeta = dyB / hypotB;
+    const double sinBetaMinusPi = -sinBeta;
+    const double cosBetaMinusPi = -cosBeta;
+    const pointf P2 = {P.x + penwidth / 2.0 * sinBetaMinusPi,
+                       P.y - penwidth / 2.0 * cosBetaMinusPi};
+
+    // the bevel is the triangle formed from the three points P, P1 and P2 so
+    // a good anough approximation of the miter point in this case is the
+    // crossing of P-P3 with P1-P2 which is the same as the midpoint between
+    // P1 and P2
+    const pointf Pbevel = {(P1.x + P2.x) / 2, (P1.y + P2.y) / 2};
+
+    return Pbevel;
+  }
+
   // length between P1 and P3 (and between P2 and P3)
   const double l = penwidth / 2.0 / tan(theta / 2.0);
 
