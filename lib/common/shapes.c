@@ -2067,6 +2067,13 @@ static void poly_init(node_t * n)
     outp = peripheries;
     if (peripheries < 1)
 	outp = 1;
+
+    if (peripheries >= 1 && penwidth > 0) {
+        // allocate extra vertices representing the outline, i.e., the outermost
+        // periphery with penwidth taken into account
+        ++outp;
+    }
+
     if (sides < 3) {		/* ellipses */
 	sides = 2;
 	vertices = N_NEW(outp * sides, pointf);
@@ -2091,6 +2098,20 @@ static void poly_init(node_t * n)
 	    bb.y = 2. * P.y;
 	}
 	outline_bb = bb;
+	if (outp > peripheries) {
+	  // add an outline at half the penwidth outside the outermost periphery
+	  P.x += penwidth / 2;
+	  P.y += penwidth / 2;
+	  i = sides * peripheries;
+	  vertices[i].x = -P.x;
+	  vertices[i].y = -P.y;
+	  i++;
+	  vertices[i].x = P.x;
+	  vertices[i].y = P.y;
+	  i++;
+	  outline_bb.x = 2. * P.x;
+	  outline_bb.y = 2. * P.y;
+	}
     } else {
 
 /*
@@ -2105,12 +2126,6 @@ static void poly_init(node_t * n)
  *   It needs to find the point where the two lines, parallel to
  *   the current segments, and outside by GAP distance, intersect.   
  */
-
-	if (peripheries >= 1 && penwidth > 0) {
-	    // allocate extra vertices representing the outline, i.e., the outermost
-	    // periphery with penwidth taken into account
-	    ++outp;
-	}
 
 	vertices = N_NEW(outp * sides, pointf);
 	if (ND_shape(n)->polygon->vertices) {

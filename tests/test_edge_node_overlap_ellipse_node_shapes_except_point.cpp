@@ -7,10 +7,10 @@
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
 
-TEST_CASE("Overlap ellipse node shapes",
-          "[!shouldfail] Test that an edge connected to an ellipse based node "
-          "touches that node and does not overlap it too much, regardless of "
-          "the node shape") {
+TEST_CASE(
+    "Overlap ellipse node shapes",
+    "Test that an edge connected to an ellipse based node touches that "
+    "node and does not overlap it too much, regardless of the node shape") {
 
   const auto shape = GENERATE_COPY(
       filter([](const std::string_view shape) { return shape != "point"; },
