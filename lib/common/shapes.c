@@ -3062,6 +3062,12 @@ static void point_init(node_t * n)
     else
 	outp = peripheries;
     sides = 2;
+    const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+    if (peripheries >= 1 && penwidth > 0) {
+        // allocate extra vertices representing the outline, i.e., the outermost
+        // periphery with penwidth taken into account
+        ++outp;
+    }
     vertices = N_NEW(outp * sides, pointf);
     P.y = P.x = sz / 2.;
     vertices[0].x = -P.x;
@@ -3079,7 +3085,23 @@ static void point_init(node_t * n)
 	    i++;
 	}
 	sz = 2. * P.x;
+    } else {
+        i = sides;
     }
+
+    if (outp > peripheries) {
+      // add an outline at half the penwidth outside the outermost periphery
+      P.x += penwidth / 2;
+      P.y += penwidth / 2;
+      vertices[i].x = -P.x;
+      vertices[i].y = -P.y;
+      i++;
+      vertices[i].x = P.x;
+      vertices[i].y = P.y;
+      i++;
+    }
+    const double sz_outline = 2. * P.x;
+
     poly->regular = 1;
     poly->peripheries = peripheries;
     poly->sides = 2;
@@ -3089,6 +3111,7 @@ static void point_init(node_t * n)
     poly->vertices = vertices;
 
     ND_height(n) = ND_width(n) = PS2INCH(sz);
+    ND_outline_height(n) = ND_outline_width(n) = PS2INCH(sz_outline);
     ND_shape_info(n) = poly;
 }
 
@@ -3110,11 +3133,18 @@ static bool point_inside(inside_t * inside_context, pointf p)
     if (n != lastn) {
 	int outp;
 	polygon_t *poly = ND_shape_info(n);
+	const int sides = 2;
+	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
 
-	/* index to outer-periphery */
-	outp = 2 * (poly->peripheries - 1);
-	if (outp < 0)
-	    outp = 0;
+	if (poly->peripheries >= 1 && penwidth > 0) {
+	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
+	    outp = sides * (poly->peripheries + 1 - 1);
+	} else {
+	    /* index to outer-periphery */
+	    outp = sides * (poly->peripheries - 1);
+	    if (outp < 0)
+		outp = 0;
+	}
 
 	radius = poly->vertices[outp + 1].x;
 	lastn = n;
