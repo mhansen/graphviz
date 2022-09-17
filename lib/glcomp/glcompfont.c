@@ -14,7 +14,6 @@
 #include <glcomp/glpangofont.h>
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glutils.h>
-#include <common/memory.h>
 #include <GL/glut.h>
 #include <stddef.h>
 
@@ -81,7 +80,7 @@ glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c,glCompFontType
 glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 {
     glCompCommon *parent;
-    glCompFont *font = NEW(glCompFont);
+    glCompFont *font = gv_alloc(sizeof(glCompFont));
     parent = o->common.parent;
     if (parent) {
 	parent = o->common.parent;
