@@ -92,7 +92,7 @@ glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 
 	font->type = parent->font->type;
 	font->glutfont = parent->font->glutfont;
-	font->fontdesc = strdup(parent->font->fontdesc);
+	font->fontdesc = gv_strdup(parent->font->fontdesc);
 	font->size = parent->font->size;
 	font->transparent = parent->font->transparent;
 	font->justify.VJustify = parent->font->justify.VJustify;
