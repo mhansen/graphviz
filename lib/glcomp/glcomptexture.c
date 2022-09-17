@@ -12,8 +12,6 @@
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glpangofont.h>
 
-#include <common/memory.h>
-
 static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
 					 int height, unsigned char *data,
 					 int is2D)
@@ -136,8 +134,8 @@ glCompTex *glCompSetAddNewTexLabel(glCompSet * s, char *def, int fs,
 	return NULL;
     }
 
-    t->def = strdup(def);
-    t->text = strdup(text);
+    t->def = gv_strdup(def);
+    t->text = gv_strdup(text);
     t->type = glTexLabel;
     return t;
 }
