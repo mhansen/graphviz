@@ -8,17 +8,16 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <glcomp/glcompimage.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glcompset.h>
 #include <glcomp/glutils.h>
 #include <glcomp/glcomptexture.h>
-#include <common/memory.h>
 
 glCompImage *glCompImageNew(glCompObj * par, GLfloat x, GLfloat y)
 {
-    glCompImage *p;
-    p = NEW(glCompImage);
+    glCompImage *p = gv_alloc(sizeof(glCompImage));
     glCompInitCommon((glCompObj *) p, par, x, y);
     p->objType = glImageObj;
 
