@@ -8,17 +8,16 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <glcomp/glcomplabel.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glcompset.h>
 #include <glcomp/glutils.h>
-#include <common/memory.h>
 
 glCompLabel *glCompLabelNew(glCompObj * par, GLfloat x, GLfloat y,
 			    char *text)
 {
-    glCompLabel *p;
-    p = NEW(glCompLabel);
+    glCompLabel *p = gv_alloc(sizeof(glCompLabel));
     glCompInitCommon((glCompObj *) p, par, x, y);
     p->objType = glLabelObj;
     p->transparent=1;
