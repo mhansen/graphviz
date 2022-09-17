@@ -22,7 +22,7 @@ glCompLabel *glCompLabelNew(glCompObj * par, GLfloat x, GLfloat y,
     p->objType = glLabelObj;
     p->transparent=1;
 
-    p->text = strdup(text);
+    p->text = gv_strdup(text);
     p->common.font = glNewFontFromParent ((glCompObj*)p, text);
     p->common.functions.draw = (glcompdrawfunc_t)glCompLabelDraw;
 
