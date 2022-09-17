@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glcompset.h>
 #include <glcomp/glpangofont.h>
@@ -47,7 +48,7 @@ void glDeleteFont(glCompFont * f)
 
 glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c,glCompFontType type, char *fontdesc, int fs,int is2D)
 {
-    glCompFont *font = malloc(sizeof(glCompFont));
+    glCompFont *font = gv_alloc(sizeof(glCompFont));
     font->reference = 0;
     font->color.R = c->R;
     font->color.G = c->G;
@@ -63,7 +64,7 @@ glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c,glCompFontType
     else
 	font->glutfont = NULL;
 
-    font->fontdesc = strdup(fontdesc);
+    font->fontdesc = gv_strdup(fontdesc);
     font->size = fs;
     font->transparent = 1;
     font->optimize = GL_FONTOPTIMIZE;
