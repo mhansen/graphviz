@@ -219,8 +219,8 @@ glCompSet *glCompSetNew(int w, int h)
 
 void glCompSetAddObj(glCompSet * s, glCompObj * obj)
 {
+    s->obj = gv_recalloc(s->obj, s->objcnt, s->objcnt + 1, sizeof(glCompObj*));
     s->objcnt++;
-    s->obj = realloc(s->obj, sizeof(glCompObj *) * s->objcnt);
     s->obj[s->objcnt - 1] = obj;
     obj->common.compset = s;
 }
