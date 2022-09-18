@@ -23,7 +23,6 @@
 #include <math.h>
 #include <time.h>
 #include <assert.h>
-#include <common/memory.h>
 #include <common/arith.h>
 #include <topfish/hierarchy.h>
 
@@ -1197,7 +1196,6 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 				   int **np)
 {
     int numNeighbors = 0;
-    int *neighbors;
     int i, j;
     int level, node,active_level,found;
     v_data neighborsInLevel;
@@ -1215,9 +1213,9 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 
     neighborsInLevel = hierarchy->graphs[level][node];
     nAllocNeighbors = 2 * neighborsInLevel.nedges;
-    neighbors = N_NEW(nAllocNeighbors, int);
+    int *neighbors = gv_calloc(nAllocNeighbors, sizeof(int));
 
-    stack = N_NEW(5 * hierarchy->nlevels + 1, int);
+    stack = gv_calloc(5 * hierarchy->nlevels + 1, sizeof(int));
 
     for (i = 1; i < neighborsInLevel.nedges; i++) {
 	neighbor = neighborsInLevel.edges[i];
@@ -1226,8 +1224,9 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 	if (active_level == level) {
 	    // neighbor is active - add it
 	    if (numNeighbors >= nAllocNeighbors) {
+		neighbors = gv_recalloc(neighbors, nAllocNeighbors, 2 * nAllocNeighbors + 1,
+		                        sizeof(int));
 		nAllocNeighbors = 2 * nAllocNeighbors + 1;
-		neighbors = RALLOC(nAllocNeighbors, neighbors, int);
 	    }
 	    neighbors[numNeighbors] =
 		hierarchy->geom_graphs[level][neighbor].globalIndex;
@@ -1250,8 +1249,9 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 	    }
 	    if (!found) {
 		if (numNeighbors >= nAllocNeighbors) {
+		    neighbors = gv_recalloc(neighbors, nAllocNeighbors,
+		                            2 * nAllocNeighbors + 1, sizeof(int));
 		    nAllocNeighbors = 2 * nAllocNeighbors + 1;
-		    neighbors = RALLOC(nAllocNeighbors, neighbors, int);
 		}
 		neighbors[numNeighbors] =
 		    hierarchy->geom_graphs[neighborLevel][neighbor].
@@ -1272,9 +1272,9 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 		if (hierarchy->geom_graphs[neighborLevel][neighbor].
 		    active_level == neighborLevel) {
 		    if (numNeighbors >= nAllocNeighbors) {
+			neighbors = gv_recalloc(neighbors, nAllocNeighbors,
+			                        2 * nAllocNeighbors + 1, sizeof(int));
 			nAllocNeighbors = 2 * nAllocNeighbors + 1;
-			neighbors =
-			    RALLOC(nAllocNeighbors, neighbors, int);
 		    }
 		    neighbors[numNeighbors] =
 			hierarchy->geom_graphs[neighborLevel][neighbor].
