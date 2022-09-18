@@ -642,18 +642,16 @@ void release(Hierarchy * hierarchy)
 
 static v_data *cpGraph(v_data * graph, int n, int nedges)
 {
-    v_data *cpGraph;
-    int *edges;
     float *ewgts = NULL;
     int i, j;
 
     if (graph == NULL || n == 0) {
 	return NULL;
     }
-    cpGraph = N_NEW(n, v_data);
-    edges = N_NEW(2 * nedges + n, int);
+    v_data *cpGraph = gv_calloc(n, sizeof(v_data));
+    int *edges = gv_calloc(2 * nedges + n, sizeof(int));
     if (graph[0].ewgts != NULL) {
-	ewgts = N_NEW(2 * nedges + n, float);
+	ewgts = gv_calloc(2 * nedges + n, sizeof(float));
     }
 
     for (i = 0; i < n; i++) {
