@@ -801,8 +801,8 @@ set_active_levels(Hierarchy * hierarchy, int *foci_nodes, int num_foci,
     n = hierarchy->nvtxs[min_level];
 
     // compute distances from foci nodes
-    nodes = N_NEW(n, int);
-    distances = N_NEW(n, double);
+    nodes = gv_calloc(n, sizeof(int));
+    distances = gv_calloc(n, sizeof(double));
     for (i = 0; i < n; i++) {
 	nodes[i] = i;
 	distances[i] = dist_from_foci(graph, i, foci_nodes, num_foci);
