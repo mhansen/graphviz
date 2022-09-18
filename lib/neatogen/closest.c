@@ -289,9 +289,6 @@ static void construct_graph(int n, gv_stack_t *edges_stack,
     for (int i = 0; i < n; i++) {
 	new_graph[i].nedges = 1;
 	new_graph[i].ewgts = weights;
-#ifdef USE_STYLES
-	new_graph[i].styles = NULL;
-#endif
 	new_graph[i].edges = edges;
 	*edges = i;		/* self loop for Lap */
 	*weights = 0;		/* self loop weight for Lap */

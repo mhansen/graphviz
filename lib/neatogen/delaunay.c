@@ -911,9 +911,6 @@ void freeGraphData(vtx_data * graph)
     if (graph != NULL) {
 	free(graph[0].edges);
 	free(graph[0].ewgts);
-#ifdef USE_STYLES
-	free(graph[0].styles);
-#endif
 #ifdef DIGCOLA
 	free(graph[0].edists);
 #endif
