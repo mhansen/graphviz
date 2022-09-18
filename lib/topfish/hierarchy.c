@@ -982,7 +982,6 @@ init_ex_graph(v_data * graph1, v_data * graph2, int n,
 
     ex_vtx_data *geom_graph;
     int nedges1 = 0, nedges2 = 0;
-    int *edges;
     int nedges = 0;
     int i, j, k, l, first_nedges;
     int neighbor;
@@ -990,8 +989,8 @@ init_ex_graph(v_data * graph1, v_data * graph2, int n,
 	nedges1 += graph1[i].nedges;
 	nedges2 += graph2[i].nedges;
     }
-    edges = N_NEW(nedges1 + nedges2, int);
-    *gp = geom_graph = N_NEW(n, ex_vtx_data);
+    int *edges = gv_calloc(nedges1 + nedges2, sizeof(int));
+    *gp = geom_graph = gv_calloc(n, sizeof(ex_vtx_data));
 
     for (i = 0; i < n; i++) {
 	geom_graph[i].edges = edges;
