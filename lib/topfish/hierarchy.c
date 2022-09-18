@@ -16,6 +16,7 @@
 //                                   // 
 ///////////////////////////////////////
 
+#include <cgraph/alloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -154,12 +155,12 @@ maxmatch(v_data * graph,	/* array of vtx data for graph */
     int i, j;			/* loop counters */
     float max_norm_edge_weight;
     double inv_size;
-    double *matchability = N_NEW(nvtxs, double);
+    double *matchability = gv_calloc(nvtxs, sizeof(double));
     double min_edge_len;
     double closest_val = -1, val;
     int closest_neighbor;
-    float *vtx_vec = N_NEW(nvtxs, float);
-    float *weighted_vtx_vec = N_NEW(nvtxs, float);
+    float *vtx_vec = gv_calloc(nvtxs, sizeof(float));
+    float *weighted_vtx_vec = gv_calloc(nvtxs, sizeof(float));
 
     // gather statistics, to enable normalizing the values
     double avg_edge_len = 0, avg_deg_2 = 0;
@@ -199,7 +200,7 @@ maxmatch(v_data * graph,	/* array of vtx data for graph */
     }
 
     /* Now determine the order of the vertices. */
-    iptr = order = N_NEW(nvtxs, int);
+    iptr = order = gv_calloc(nvtxs, sizeof(int));
     jptr = mflag;
     for (i = 0; i < nvtxs; i++) {
 	*(iptr++) = i;
