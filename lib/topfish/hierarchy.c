@@ -588,7 +588,7 @@ coarsen_match (
     int cnvtxs;
 
     /* Allocate and initialize space. */
-    mflag = N_NEW(nvtxs, int);
+    mflag = gv_calloc(nvtxs, sizeof(int));
 
     /* Find a maximal matching in the graphs */
     nmerged = maxmatch(graph, geom_graph, nvtxs, mflag, dist2_limit);
@@ -599,8 +599,8 @@ coarsen_match (
 
     *cnp = cnvtxs = nvtxs - nmerged;
 
-    *v2cvp = v2cv = N_NEW(nvtxs, int);
-    *cv2vp = cv2v = N_NEW(2 * cnvtxs, int);
+    *v2cvp = v2cv = gv_calloc(nvtxs, sizeof(int));
+    *cv2vp = cv2v = gv_calloc(2 * cnvtxs, sizeof(int));
     makev2cv(mflag, nvtxs, v2cv, cv2v);
 
     free(mflag);
