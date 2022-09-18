@@ -353,10 +353,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
     int maxCnedges = nedges;	// do not subtract (nvtxs-cnvtxs) because we do not contract only along edges
     int *edges;
     float *eweights;
-#ifdef STYLES
-    int styled_edges;
-    Style *styles = NULL;
-#endif
 
     for (i = 0; i < cnvtxs; i++) {
 	index[i] = 0;
@@ -366,13 +362,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
     cgraph = N_NEW(cnvtxs, v_data);
     edges = N_NEW(2 * maxCnedges + cnvtxs, int);
     eweights = N_NEW(2 * maxCnedges + cnvtxs, float);
-#ifdef STYLES
-    styled_edges = (graph[0].styles != NULL);
-
-    if (styled_edges) {
-	styles = N_NEW(2 * maxCnedges + cnvtxs, Style);
-    }
-#endif
 
     if (graph[0].ewgts != NULL) {
 	// use edge weights
@@ -382,9 +371,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 
 	    cgraph[cv].edges = edges;
 	    cgraph[cv].ewgts = eweights;
-#ifdef STYLES
-	    cgraph[cv].styles = styles;
-#endif
 
 	    cv_nedges = 1;
 	    v = cv2v[2 * cv];
@@ -398,21 +384,9 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 		    index[neighbor] = cv_nedges;
 		    cgraph[cv].edges[cv_nedges] = neighbor;
 		    cgraph[cv].ewgts[cv_nedges] = graph[v].ewgts[j];
-#ifdef STYLES
-		    if (styled_edges) {
-			cgraph[cv].styles[cv_nedges] = graph[v].styles[j];
-		    }
-#endif
 		    cv_nedges++;
 		} else {
 		    cgraph[cv].ewgts[index[neighbor]] += graph[v].ewgts[j];
-#ifdef STYLES
-		    if (styled_edges
-			&& graph[v].styles[j] !=
-			cgraph[cv].styles[index[neighbor]]) {
-			cgraph[cv].styles[index[neighbor]] = regular;
-		    }
-#endif
 		}
 	    }
 
@@ -427,23 +401,10 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 			index[neighbor] = cv_nedges;
 			cgraph[cv].edges[cv_nedges] = neighbor;
 			cgraph[cv].ewgts[cv_nedges] = graph[v].ewgts[j];
-#ifdef STYLES
-			if (styled_edges) {
-			    cgraph[cv].styles[cv_nedges] =
-				graph[v].styles[j];
-			}
-#endif
 			cv_nedges++;
 		    } else {
 			cgraph[cv].ewgts[index[neighbor]] +=
 			    graph[v].ewgts[j];
-#ifdef STYLES
-			if (styled_edges
-			    && graph[v].styles[j] !=
-			    cgraph[cv].styles[index[neighbor]]) {
-			    cgraph[cv].styles[index[neighbor]] = regular;
-			}
-#endif
 		    }
 		}
 		cgraph[cv].ewgts[0] += graph[v].ewgts[0] + intra_weight;
@@ -453,11 +414,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 	    edges += cv_nedges;
 	    eweights += cv_nedges;
 	    cnedges += cv_nedges;
-#ifdef STYLES
-	    if (styled_edges) {
-		styles += cv_nedges;
-	    }
-#endif
 
 	    for (j = 1; j < cgraph[cv].nedges; j++)
 		index[cgraph[cv].edges[j]] = 0;
@@ -469,9 +425,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 
 	    cgraph[cv].edges = edges;
 	    cgraph[cv].ewgts = eweights;
-#ifdef STYLES
-	    cgraph[cv].styles = styles;
-#endif
 
 	    cv_nedges = 1;
 	    v = cv2v[2 * cv];
@@ -485,21 +438,9 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 		    index[neighbor] = cv_nedges;
 		    cgraph[cv].edges[cv_nedges] = neighbor;
 		    cgraph[cv].ewgts[cv_nedges] = -1;
-#ifdef STYLES
-		    if (styled_edges) {
-			cgraph[cv].styles[cv_nedges] = graph[v].styles[j];
-		    }
-#endif
 		    cv_nedges++;
 		} else {
 		    cgraph[cv].ewgts[index[neighbor]]--;
-#ifdef STYLES
-		    if (styled_edges
-			&& graph[v].styles[j] !=
-			cgraph[cv].styles[index[neighbor]]) {
-			cgraph[cv].styles[index[neighbor]] = regular;
-		    }
-#endif
 		}
 	    }
 	    cgraph[cv].ewgts[0] = (float) graph[v].edges[0];	// this is our trick to store the weights on the diag in an unweighted graph
@@ -512,22 +453,9 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 			index[neighbor] = cv_nedges;
 			cgraph[cv].edges[cv_nedges] = neighbor;
 			cgraph[cv].ewgts[cv_nedges] = -1;
-#ifdef STYLES
-			if (styled_edges) {
-			    cgraph[cv].styles[cv_nedges] =
-				graph[v].styles[j];
-			}
-#endif
 			cv_nedges++;
 		    } else {
 			cgraph[cv].ewgts[index[neighbor]]--;
-#ifdef STYLES
-			if (styled_edges
-			    && graph[v].styles[j] !=
-			    cgraph[cv].styles[index[neighbor]]) {
-			    cgraph[cv].styles[index[neighbor]] = regular;
-			}
-#endif
 		    }
 		}
 		// we subtract the weight of the intra-edge that was counted twice 
@@ -542,11 +470,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 	    edges += cv_nedges;
 	    eweights += cv_nedges;
 	    cnedges += cv_nedges;
-#ifdef STYLES
-	    if (styled_edges) {
-		styles += cv_nedges;
-	    }
-#endif
 
 	    for (j = 1; j < cgraph[cv].nedges; j++)
 		index[cgraph[cv].edges[j]] = 0;
@@ -729,9 +652,6 @@ static v_data *cpGraph(v_data * graph, int n, int nedges)
     v_data *cpGraph;
     int *edges;
     float *ewgts = NULL;
-#ifdef STYLES
-    Style *styles = NULL;
-#endif
     int i, j;
 
     if (graph == NULL || n == 0) {
@@ -742,19 +662,11 @@ static v_data *cpGraph(v_data * graph, int n, int nedges)
     if (graph[0].ewgts != NULL) {
 	ewgts = N_NEW(2 * nedges + n, float);
     }
-#ifdef STYLES
-    if (graph[0].styles != NULL) {
-	styles = N_NEW(2 * nedges + n, Style);
-    }
-#endif
 
     for (i = 0; i < n; i++) {
 	cpGraph[i] = graph[i];
 	cpGraph[i].edges = edges;
 	cpGraph[i].ewgts = ewgts;
-#ifdef STYLES
-	cpGraph[i].styles = styles;
-#endif
 	for (j = 0; j < graph[i].nedges; j++) {
 	    edges[j] = graph[i].edges[j];
 	}
@@ -765,14 +677,6 @@ static v_data *cpGraph(v_data * graph, int n, int nedges)
 	    }
 	    ewgts += graph[i].nedges;
 	}
-#ifdef STYLES
-	if (styles != NULL) {
-	    for (j = 0; j < graph[i].nedges; j++) {
-		styles[j] = graph[i].styles[j];
-	    }
-	    styles += graph[i].nedges;
-	}
-#endif
     }
     return cpGraph;
 }
