@@ -3,6 +3,7 @@
 #include <catch2/catch.hpp>
 
 #include "test_edge_node_overlap_utilities.h"
+#include "test_utilities.h"
 
 TEST_CASE(
     "Overlap",
@@ -11,5 +12,7 @@ TEST_CASE(
   std::string dot =
       "digraph {node[shape=polygon penwidth=2 fontname=Courier] a -> b}";
 
-  test_edge_node_overlap(dot);
+  const auto filename_base = AUTO_NAME();
+
+  test_edge_node_overlap(dot, {.filename_base = filename_base});
 }
