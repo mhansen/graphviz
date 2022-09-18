@@ -698,7 +698,7 @@ Hierarchy *create_hierarchy(v_data * graph, int nvtxs, int nedges,
 			    hierparms_t* parms)
 {
     int cur_level;
-    Hierarchy *hierarchy = NEW(Hierarchy);
+    Hierarchy *hierarchy = gv_alloc(sizeof(Hierarchy));
     int cngeom_edges = ngeom_edges;
     ex_vtx_data *geom_graph_level;
     int nodeIndex = 0;
@@ -706,12 +706,12 @@ Hierarchy *create_hierarchy(v_data * graph, int nvtxs, int nedges,
     int min_nvtxs = parms->min_nvtxs;
     int nlevels = MAX(5, 10 * (int) log((float) (nvtxs / min_nvtxs)));	// just an estimate
 
-    hierarchy->graphs = N_NEW(nlevels, v_data *);
-    hierarchy->geom_graphs = N_NEW(nlevels, ex_vtx_data *);
-    hierarchy->nvtxs = N_NEW(nlevels, int);
-    hierarchy->nedges = N_NEW(nlevels, int);
-    hierarchy->v2cv = N_NEW(nlevels, int *);
-    hierarchy->cv2v = N_NEW(nlevels, int *);
+    hierarchy->graphs = gv_calloc(nlevels, sizeof(v_data*));
+    hierarchy->geom_graphs = gv_calloc(nlevels, sizeof(ex_vtx_data*));
+    hierarchy->nvtxs = gv_calloc(nlevels, sizeof(int));
+    hierarchy->nedges = gv_calloc(nlevels, sizeof(int));
+    hierarchy->v2cv = gv_calloc(nlevels, sizeof(int*));
+    hierarchy->cv2v = gv_calloc(nlevels, sizeof(int*));
 
     hierarchy->graphs[0] = cpGraph(graph, nvtxs, nedges);
     hierarchy->geom_graphs[0] = cpExGraph(geom_graph, nvtxs, ngeom_edges);
@@ -722,15 +722,15 @@ Hierarchy *create_hierarchy(v_data * graph, int nvtxs, int nedges,
 	 hierarchy->nvtxs[cur_level] > min_nvtxs
 	 && cur_level < 50 /*nvtxs/10 */ ; cur_level++) {
 	if (cur_level == nlevels - 1) {	// we have to allocate more space
-	    nlevels *= 2;
 	    hierarchy->graphs =
-		RALLOC(nlevels, hierarchy->graphs, v_data *);
+		gv_recalloc(hierarchy->graphs, nlevels, nlevels * 2, sizeof(v_data*));
 	    hierarchy->geom_graphs =
-		RALLOC(nlevels, hierarchy->geom_graphs, ex_vtx_data *);
-	    hierarchy->nvtxs = RALLOC(nlevels, hierarchy->nvtxs, int);
-	    hierarchy->nedges = RALLOC(nlevels, hierarchy->nedges, int);
-	    hierarchy->v2cv = RALLOC(nlevels, hierarchy->v2cv, int *);
-	    hierarchy->cv2v = RALLOC(nlevels, hierarchy->cv2v, int *);
+		gv_recalloc(hierarchy->geom_graphs, nlevels, nlevels * 2, sizeof(ex_vtx_data*));
+	    hierarchy->nvtxs = gv_recalloc(hierarchy->nvtxs, nlevels, nlevels * 2, sizeof(int));
+	    hierarchy->nedges = gv_recalloc(hierarchy->nedges, nlevels, nlevels * 2, sizeof(int));
+	    hierarchy->v2cv = gv_recalloc(hierarchy->v2cv, nlevels, nlevels * 2, sizeof(int*));
+	    hierarchy->cv2v = gv_recalloc(hierarchy->cv2v, nlevels, nlevels * 2, sizeof(int*));
+	    nlevels *= 2;
 	}
 
 	ngeom_edges = cngeom_edges;
