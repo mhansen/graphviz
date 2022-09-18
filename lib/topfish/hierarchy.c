@@ -493,20 +493,16 @@ make_coarse_ex_graph (
 {
     int cnedges;		/* number of edges in coarsened graph */
     ex_vtx_data *cgraph;	/* coarsened version of graph */
-    int i, j, cv, v, neighbor, cv_nedges;
-    int *index = N_NEW(cnvtxs, int);
+    int j, cv, v, neighbor, cv_nedges;
+    int *index = gv_calloc(cnvtxs, sizeof(int));
     int *edges;
-
-    for (i = 0; i < cnvtxs; i++) {
-	index[i] = 0;
-    }
 
     /* An upper bound on the number of coarse graph edges. */
     cnedges = nedges;
 
     /* Now allocate space for the new graph.  Overeallocate and realloc later. */
-    cgraph = N_NEW(cnvtxs, ex_vtx_data);
-    edges = N_NEW(2 * cnedges + cnvtxs, int);
+    cgraph = gv_calloc(cnvtxs, sizeof(ex_vtx_data));
+    edges = gv_calloc(2 * cnedges + cnvtxs, sizeof(int));
 
     for (cv = 0; cv < cnvtxs; cv++) {
 
