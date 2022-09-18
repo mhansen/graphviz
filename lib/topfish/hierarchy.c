@@ -60,7 +60,7 @@ static void fill_neighbors_vec(v_data *graph, int vtx, float *vtx_vec) {
     int j;
     if (graph[0].ewgts != NULL) {
 	for (j = 0; j < graph[vtx].nedges; j++) {
-	    vtx_vec[graph[vtx].edges[j]] = (float) fabs(graph[vtx].ewgts[j]);	// use fabs for the self loop
+	    vtx_vec[graph[vtx].edges[j]] = fabsf(graph[vtx].ewgts[j]);	// use fabsf for the self loop
 	}
     } else {
 	for (j = 0; j < graph[vtx].nedges; j++) {
