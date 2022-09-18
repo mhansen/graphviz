@@ -345,24 +345,20 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 // This function takes the information about matched pairs
 // and use it to contract these pairs and build a coarse graph
 {
-    int i, j, cv, v, neighbor, cv_nedges;
+    int j, cv, v, neighbor, cv_nedges;
     int cnedges = 0;		/* number of edges in coarsened graph */
     v_data *cgraph;		/* coarsened version of graph */
-    int *index = N_NEW(cnvtxs, int);
+    int *index = gv_calloc(cnvtxs, sizeof(int));
     float intra_weight;
     /* An upper bound on the number of coarse graph edges. */
     int maxCnedges = nedges;	// do not subtract (nvtxs-cnvtxs) because we do not contract only along edges
     int *edges;
     float *eweights;
 
-    for (i = 0; i < cnvtxs; i++) {
-	index[i] = 0;
-    }
-
     /* Now allocate space for the new graph.  Overeallocate and realloc later. */
-    cgraph = N_NEW(cnvtxs, v_data);
-    edges = N_NEW(2 * maxCnedges + cnvtxs, int);
-    eweights = N_NEW(2 * maxCnedges + cnvtxs, float);
+    cgraph = gv_calloc(cnvtxs, sizeof(v_data));
+    edges = gv_calloc(2 * maxCnedges + cnvtxs, sizeof(int));
+    eweights = gv_calloc(2 * maxCnedges + cnvtxs, sizeof(float));
 
     if (graph[0].ewgts != NULL) {
 	// use edge weights
