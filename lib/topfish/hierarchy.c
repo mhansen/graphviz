@@ -674,15 +674,13 @@ static v_data *cpGraph(v_data * graph, int n, int nedges)
 
 static ex_vtx_data *cpExGraph(ex_vtx_data * graph, int n, int nedges)
 {
-    ex_vtx_data *cpGraph;
-    int *edges;
     int i, j;
 
     if (graph == NULL || n == 0) {
 	return NULL;
     }
-    cpGraph = N_NEW(n, ex_vtx_data);
-    edges = N_NEW(2 * nedges + n, int);
+    ex_vtx_data *cpGraph = gv_calloc(n, sizeof(ex_vtx_data));
+    int *edges = gv_calloc(2 * nedges + n, sizeof(int));
 
     for (i = 0; i < n; i++) {
 	cpGraph[i] = graph[i];
