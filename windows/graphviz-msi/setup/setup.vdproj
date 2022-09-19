@@ -9452,26 +9452,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_64B73DB0B6B84BDCA4A3233B8EB2441D"
-            {
-            "SourcePath" = "8:..\\..\\release\\share\\graphviz\\doc\\addingLayout.txt"
-            "TargetName" = "8:addingLayout.txt"
-            "Tag" = "8:"
-            "Folder" = "8:_EA2EA6B45DEE4C35ACA33AA91E799532"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_64D68BB5756241F3BFCC5C3D404F3D31"
             {
             "SourcePath" = "8:..\\..\\release\\share\\graphviz\\doc\\html\\info\\a_normal.gif"
