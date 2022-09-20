@@ -16,6 +16,10 @@ void GraphvizEdge::add_outline_overlap_bbox(const GraphvizNode &node,
   m_svg_g_element.add_outline_overlap_bbox(node.svg_g_element(), tolerance);
 }
 
+SVG::SVGElement &GraphvizEdge::arrow(const std::size_t index) const {
+  return m_svg_g_element.find_child(SVG::SVGElementType::Polygon, index);
+}
+
 std::string_view GraphvizEdge::edgeop() const { return m_edgeop; }
 
 std::string GraphvizEdge::fillcolor() const {
@@ -28,6 +32,10 @@ std::string GraphvizEdge::fillcolor() const {
     return "";
   }
   return SVG::to_dot_color(fill, fill_opacity);
+}
+
+SVG::SVGElement &GraphvizEdge::stem() const {
+  return m_svg_g_element.find_child(SVG::SVGElementType::Path);
 }
 
 const SVG::SVGElement &GraphvizEdge::svg_g_element() const {

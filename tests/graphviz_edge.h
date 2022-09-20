@@ -28,6 +28,11 @@ public:
   /// element. The outline bounding box is the bounding box with penwidth taken
   /// into account.
   void add_outline_overlap_bbox(const GraphvizNode &node, double tolerance = 0);
+  /// Return the edge arrowhead/arrowtail with the specified index. If there's
+  /// both an arrowhead and an arrowtail, the arrowtail is at index 0 and the
+  /// arrowhead is at index 1. If there's only one, it's at index 0. Throws an
+  /// exception if there's no arrow at the specified index.
+  SVG::SVGElement &arrow(std::size_t index = 0) const;
   /// Return the bounding box of the edge
   SVG::SVGRect bbox() const;
   /// Return the center of the edge's bounding box
@@ -44,6 +49,9 @@ public:
   /// Return the outline bounding box of the edge. The outline bounding box is
   /// the bounding box with penwidth taken into account.
   SVG::SVGRect outline_bbox() const;
+  /// Return the edge stem, i.e., the part of the edge that does not include any
+  /// arrowhead or arrowtail
+  SVG::SVGElement &stem() const;
   /// Return the edge's `penwidth` attribute
   double penwidth() const;
   /// Return a non-mutable reference to the SVG `g` element corresponding to the

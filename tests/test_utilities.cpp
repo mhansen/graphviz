@@ -179,6 +179,10 @@ bool contains_multiple_shapes_with_different_fill(
          contains_polyline_shape(shape);
 }
 
+bool is_polygon_shape(const std::string_view shape) {
+  return node_shapes_consisting_of_polygon.contains(shape);
+}
+
 const std::unordered_set<std::string_view> primitive_polygon_arrow_shapes = {
     "crow", "diamond", "inv", "normal", "vee"};
 
@@ -195,6 +199,10 @@ const std::unordered_set<std::string_view>
 
 const std::unordered_set<std::string_view> all_rank_directions = {"TB", "BT",
                                                                   "LR", "RL"};
+
+const std::unordered_set<std::string_view> all_edge_directions = {
+    "forward", "back", "both", "none"};
+
 void write_to_file(const std::filesystem::path &directory,
                    const std::filesystem::path &filename,
                    const std::string_view text) {
