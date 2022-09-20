@@ -83,10 +83,9 @@ SparseMatrix SparseMatrix_get_real_adjacency_matrix_symmetrized(SparseMatrix A);
 void SparseMatrix_multiply_dense(SparseMatrix A, double *v, double **res, int dim);
 SparseMatrix SparseMatrix_apply_fun(SparseMatrix A, double (*fun)(double x));/* for real only! */
 SparseMatrix SparseMatrix_copy(SparseMatrix A);
-int SparseMatrix_has_diagonal(SparseMatrix A);
+bool SparseMatrix_has_diagonal(SparseMatrix A);
 SparseMatrix SparseMatrix_make_undirected(SparseMatrix A);/* make it strictly low diag only, and set flag to undirected */
 void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reintialize_mask);
-void SparseMatrix_level_sets_khops(int khops, SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reintialize_mask);
 void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int **comps, int **comps_ptr);
 void SparseMatrix_decompose_to_supervariables(SparseMatrix A, int *ncluster, int **cluster, int **clusterp);
 SparseMatrix SparseMatrix_get_submatrix(SparseMatrix A, int nrow, int ncol, int *rindices, int *cindices);
@@ -106,7 +105,6 @@ SparseMatrix SparseMatrix_sort(SparseMatrix A);
 SparseMatrix SparseMatrix_set_entries_to_real_one(SparseMatrix A);
 
 int SparseMatrix_distance_matrix(SparseMatrix A, int weighted,  double **dist_matrix);
-SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix A, int weighted);
 
 SparseMatrix SparseMatrix_from_dense(int m, int n, double *x);
 
