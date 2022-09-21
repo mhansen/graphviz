@@ -945,10 +945,9 @@ putRects(int ng, boxf* bbs, pack_info* pinfo)
     if (pinfo->mode == l_node || pinfo->mode == l_clust) return NULL;
     if (pinfo->mode == l_graph)
 	return polyRects (ng, bbs, pinfo);
-    else if (pinfo->mode == l_array)
+    if (pinfo->mode == l_array)
 	return arrayRects (ng, bbs, pinfo);
-    else
-	return NULL;
+    return NULL;
 }
 
 /* packRects:
