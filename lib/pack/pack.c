@@ -577,8 +577,8 @@ static int ucmpf(const void *X, const void *Y)
     int dX = userVals[x->index];
     int dY = userVals[y->index];
     if (dX > dY) return 1;
-    else if (dX < dY) return -1;
-    else return 0;
+    if (dX < dY) return -1;
+    return 0;
 }
 
 /* acmpf;
