@@ -721,9 +721,6 @@ static point*
 polyRects(int ng, boxf* gs, pack_info * pinfo)
 {
     int stepSize;
-    ginfo *info;
-    ginfo **sinfo;
-    point *places;
     Dict_t *ps;
     int i;
     point center;
@@ -737,21 +734,21 @@ polyRects(int ng, boxf* gs, pack_info * pinfo)
 
     /* generate polyomino cover for the rectangles */
     center.x = center.y = 0;
-    info = N_NEW(ng, ginfo);
+    ginfo *info = gv_calloc(ng, sizeof(ginfo));
     for (i = 0; i < ng; i++) {
 	info[i].index = i;
 	genBox(gs[i], info + i, stepSize, pinfo->margin, center, "");
     }
 
     /* sort */
-    sinfo = N_NEW(ng, ginfo *);
+    ginfo **sinfo = gv_calloc(ng, sizeof(ginfo*));
     for (i = 0; i < ng; i++) {
 	sinfo[i] = info + i;
     }
     qsort(sinfo, ng, sizeof(ginfo *), cmpf);
 
     ps = newPS();
-    places = N_NEW(ng, point);
+    point *places = gv_calloc(ng, sizeof(point));
     for (i = 0; i < ng; i++)
 	placeGraph(i, sinfo[i], ps, places + sinfo[i]->index,
 		       stepSize, pinfo->margin, gs);
