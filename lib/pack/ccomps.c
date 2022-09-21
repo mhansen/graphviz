@@ -84,10 +84,10 @@ static size_t dfs(Agraph_t * g, Agnode_t * n, void *state, stk_t* stk)
 
 static int isLegal(char *p)
 {
-    unsigned char c;
+    char c;
 
-    while ((c = *(unsigned char *) p++)) {
-	if (c != '_' && !isalnum(c))
+    while ((c = *p++)) {
+	if (c != '_' && !isalnum((int)c))
 	    return 0;
     }
 
