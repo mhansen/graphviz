@@ -24,8 +24,7 @@ TEST_CASE("Minimum edge and node overlap for polygon node shapes",
       .check_min_edge_stem_arrow_overlap = false,
   };
 
-  const auto filename_base =
-      fmt::format("test_max_edge_node_overlap_polygon_node_shape_{}", shape);
+  const auto filename_base = fmt::format("{}_{}", AUTO_NAME(), shape);
 
   test_edge_node_overlap(graph_options, check_options,
                          {.filename_base = filename_base});
