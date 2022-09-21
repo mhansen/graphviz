@@ -16,6 +16,7 @@
 
 #include <math.h>
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <pack/pack.h>
 #include <common/pointset.h>
@@ -306,10 +307,9 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 
     if (pinfo->mode == l_clust) {
 	int i;
-	void **alg;
 
 	/* backup the alg data */
-	alg = N_GNEW(agnnodes(g), void *);
+	void **alg = gv_calloc(agnnodes(g), sizeof(void*));
 	for (i = 0, n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    alg[i++] = ND_alg(n);
 	    ND_alg(n) = 0;
