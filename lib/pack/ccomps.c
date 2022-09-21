@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <cgraph/alloc.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
 #include <common/render.h>
@@ -126,7 +127,7 @@ setPrefix (char* pfx, size_t* lenp, char* buf, size_t buflen)
     if (len + 25 <= buflen)
         name = buf;
     else {
-        name = gmalloc(len + 25);
+        name = gv_calloc(len + 25, sizeof(char));
     }
     strcpy(name, pfx);
     *lenp = len;
