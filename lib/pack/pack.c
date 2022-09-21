@@ -1230,33 +1230,24 @@ static const char*chkFlags(const char *p, pack_info *pinfo) {
     return p;
 }
 
-static char*
-mode2Str (pack_mode m)
-{
-    char *s;
+static const char *mode2Str(pack_mode m) {
 
     switch (m) {
     case l_clust:
-	s = "cluster";
-	break;
+	return "cluster";
     case l_node:
-	s = "node";
-	break;
+	return "node";
     case l_graph:
-	s = "graph";
-	break;
+	return "graph";
     case l_array:
-	s = "array";
-	break;
+	return "array";
     case l_aspect:
-	s = "aspect";
-	break;
+	return "aspect";
     case l_undef: 
     default:
-	s = "undefined";
 	break;
     }
-    return s;
+    return "undefined";
 }
 
 /* parsePackModeInfo;
