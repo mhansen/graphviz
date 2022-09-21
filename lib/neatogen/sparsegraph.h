@@ -16,9 +16,6 @@ extern "C" {
 
 #include "config.h"
 
-#ifdef USE_STYLES
-    typedef enum { regular, invisible } Style;
-#endif
     typedef struct {
 	int nedges;		/* no. of neighbors, including self */
 	int *edges;		/* edges[0..(nedges-1)] are neighbors; edges[0] is self */
@@ -30,9 +27,6 @@ extern "C" {
 	int *edges;		/* edges[0..(nedges-1)] are neighbors; edges[0] is self */
 	float *ewgts;		/* preferred edge lengths */
 	float *eweights;	/* edge weights */
-#ifdef USE_STYLES
-	Style *styles;
-#endif
 #ifdef DIGCOLA
 	float *edists; /* directed dist reflecting the direction of the edge */
 #endif

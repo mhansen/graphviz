@@ -16,13 +16,13 @@
 //                                   // 
 ///////////////////////////////////////
 
+#include <cgraph/alloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <time.h>
 #include <assert.h>
-#include <common/memory.h>
 #include <common/arith.h>
 #include <topfish/hierarchy.h>
 
@@ -60,7 +60,7 @@ static void fill_neighbors_vec(v_data *graph, int vtx, float *vtx_vec) {
     int j;
     if (graph[0].ewgts != NULL) {
 	for (j = 0; j < graph[vtx].nedges; j++) {
-	    vtx_vec[graph[vtx].edges[j]] = (float) fabs(graph[vtx].ewgts[j]);	// use fabs for the self loop
+	    vtx_vec[graph[vtx].edges[j]] = fabsf(graph[vtx].ewgts[j]);	// use fabsf for the self loop
 	}
     } else {
 	for (j = 0; j < graph[vtx].nedges; j++) {
@@ -154,12 +154,12 @@ maxmatch(v_data * graph,	/* array of vtx data for graph */
     int i, j;			/* loop counters */
     float max_norm_edge_weight;
     double inv_size;
-    double *matchability = N_NEW(nvtxs, double);
+    double *matchability = gv_calloc(nvtxs, sizeof(double));
     double min_edge_len;
     double closest_val = -1, val;
     int closest_neighbor;
-    float *vtx_vec = N_NEW(nvtxs, float);
-    float *weighted_vtx_vec = N_NEW(nvtxs, float);
+    float *vtx_vec = gv_calloc(nvtxs, sizeof(float));
+    float *weighted_vtx_vec = gv_calloc(nvtxs, sizeof(float));
 
     // gather statistics, to enable normalizing the values
     double avg_edge_len = 0, avg_deg_2 = 0;
@@ -199,7 +199,7 @@ maxmatch(v_data * graph,	/* array of vtx data for graph */
     }
 
     /* Now determine the order of the vertices. */
-    iptr = order = N_NEW(nvtxs, int);
+    iptr = order = gv_calloc(nvtxs, sizeof(int));
     jptr = mflag;
     for (i = 0; i < nvtxs; i++) {
 	*(iptr++) = i;
@@ -344,35 +344,20 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 // This function takes the information about matched pairs
 // and use it to contract these pairs and build a coarse graph
 {
-    int i, j, cv, v, neighbor, cv_nedges;
+    int j, cv, v, neighbor, cv_nedges;
     int cnedges = 0;		/* number of edges in coarsened graph */
     v_data *cgraph;		/* coarsened version of graph */
-    int *index = N_NEW(cnvtxs, int);
+    int *index = gv_calloc(cnvtxs, sizeof(int));
     float intra_weight;
     /* An upper bound on the number of coarse graph edges. */
     int maxCnedges = nedges;	// do not subtract (nvtxs-cnvtxs) because we do not contract only along edges
     int *edges;
     float *eweights;
-#ifdef STYLES
-    int styled_edges;
-    Style *styles = NULL;
-#endif
-
-    for (i = 0; i < cnvtxs; i++) {
-	index[i] = 0;
-    }
 
     /* Now allocate space for the new graph.  Overeallocate and realloc later. */
-    cgraph = N_NEW(cnvtxs, v_data);
-    edges = N_NEW(2 * maxCnedges + cnvtxs, int);
-    eweights = N_NEW(2 * maxCnedges + cnvtxs, float);
-#ifdef STYLES
-    styled_edges = (graph[0].styles != NULL);
-
-    if (styled_edges) {
-	styles = N_NEW(2 * maxCnedges + cnvtxs, Style);
-    }
-#endif
+    cgraph = gv_calloc(cnvtxs, sizeof(v_data));
+    edges = gv_calloc(2 * maxCnedges + cnvtxs, sizeof(int));
+    eweights = gv_calloc(2 * maxCnedges + cnvtxs, sizeof(float));
 
     if (graph[0].ewgts != NULL) {
 	// use edge weights
@@ -382,9 +367,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 
 	    cgraph[cv].edges = edges;
 	    cgraph[cv].ewgts = eweights;
-#ifdef STYLES
-	    cgraph[cv].styles = styles;
-#endif
 
 	    cv_nedges = 1;
 	    v = cv2v[2 * cv];
@@ -398,21 +380,9 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 		    index[neighbor] = cv_nedges;
 		    cgraph[cv].edges[cv_nedges] = neighbor;
 		    cgraph[cv].ewgts[cv_nedges] = graph[v].ewgts[j];
-#ifdef STYLES
-		    if (styled_edges) {
-			cgraph[cv].styles[cv_nedges] = graph[v].styles[j];
-		    }
-#endif
 		    cv_nedges++;
 		} else {
 		    cgraph[cv].ewgts[index[neighbor]] += graph[v].ewgts[j];
-#ifdef STYLES
-		    if (styled_edges
-			&& graph[v].styles[j] !=
-			cgraph[cv].styles[index[neighbor]]) {
-			cgraph[cv].styles[index[neighbor]] = regular;
-		    }
-#endif
 		}
 	    }
 
@@ -427,23 +397,10 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 			index[neighbor] = cv_nedges;
 			cgraph[cv].edges[cv_nedges] = neighbor;
 			cgraph[cv].ewgts[cv_nedges] = graph[v].ewgts[j];
-#ifdef STYLES
-			if (styled_edges) {
-			    cgraph[cv].styles[cv_nedges] =
-				graph[v].styles[j];
-			}
-#endif
 			cv_nedges++;
 		    } else {
 			cgraph[cv].ewgts[index[neighbor]] +=
 			    graph[v].ewgts[j];
-#ifdef STYLES
-			if (styled_edges
-			    && graph[v].styles[j] !=
-			    cgraph[cv].styles[index[neighbor]]) {
-			    cgraph[cv].styles[index[neighbor]] = regular;
-			}
-#endif
 		    }
 		}
 		cgraph[cv].ewgts[0] += graph[v].ewgts[0] + intra_weight;
@@ -453,11 +410,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 	    edges += cv_nedges;
 	    eweights += cv_nedges;
 	    cnedges += cv_nedges;
-#ifdef STYLES
-	    if (styled_edges) {
-		styles += cv_nedges;
-	    }
-#endif
 
 	    for (j = 1; j < cgraph[cv].nedges; j++)
 		index[cgraph[cv].edges[j]] = 0;
@@ -469,9 +421,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 
 	    cgraph[cv].edges = edges;
 	    cgraph[cv].ewgts = eweights;
-#ifdef STYLES
-	    cgraph[cv].styles = styles;
-#endif
 
 	    cv_nedges = 1;
 	    v = cv2v[2 * cv];
@@ -485,21 +434,9 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 		    index[neighbor] = cv_nedges;
 		    cgraph[cv].edges[cv_nedges] = neighbor;
 		    cgraph[cv].ewgts[cv_nedges] = -1;
-#ifdef STYLES
-		    if (styled_edges) {
-			cgraph[cv].styles[cv_nedges] = graph[v].styles[j];
-		    }
-#endif
 		    cv_nedges++;
 		} else {
 		    cgraph[cv].ewgts[index[neighbor]]--;
-#ifdef STYLES
-		    if (styled_edges
-			&& graph[v].styles[j] !=
-			cgraph[cv].styles[index[neighbor]]) {
-			cgraph[cv].styles[index[neighbor]] = regular;
-		    }
-#endif
 		}
 	    }
 	    cgraph[cv].ewgts[0] = (float) graph[v].edges[0];	// this is our trick to store the weights on the diag in an unweighted graph
@@ -512,22 +449,9 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 			index[neighbor] = cv_nedges;
 			cgraph[cv].edges[cv_nedges] = neighbor;
 			cgraph[cv].ewgts[cv_nedges] = -1;
-#ifdef STYLES
-			if (styled_edges) {
-			    cgraph[cv].styles[cv_nedges] =
-				graph[v].styles[j];
-			}
-#endif
 			cv_nedges++;
 		    } else {
 			cgraph[cv].ewgts[index[neighbor]]--;
-#ifdef STYLES
-			if (styled_edges
-			    && graph[v].styles[j] !=
-			    cgraph[cv].styles[index[neighbor]]) {
-			    cgraph[cv].styles[index[neighbor]] = regular;
-			}
-#endif
 		    }
 		}
 		// we subtract the weight of the intra-edge that was counted twice 
@@ -542,11 +466,6 @@ static int make_coarse_graph(v_data * graph,	/* array of vtx data for graph */
 	    edges += cv_nedges;
 	    eweights += cv_nedges;
 	    cnedges += cv_nedges;
-#ifdef STYLES
-	    if (styled_edges) {
-		styles += cv_nedges;
-	    }
-#endif
 
 	    for (j = 1; j < cgraph[cv].nedges; j++)
 		index[cgraph[cv].edges[j]] = 0;
@@ -573,20 +492,16 @@ make_coarse_ex_graph (
 {
     int cnedges;		/* number of edges in coarsened graph */
     ex_vtx_data *cgraph;	/* coarsened version of graph */
-    int i, j, cv, v, neighbor, cv_nedges;
-    int *index = N_NEW(cnvtxs, int);
+    int j, cv, v, neighbor, cv_nedges;
+    int *index = gv_calloc(cnvtxs, sizeof(int));
     int *edges;
-
-    for (i = 0; i < cnvtxs; i++) {
-	index[i] = 0;
-    }
 
     /* An upper bound on the number of coarse graph edges. */
     cnedges = nedges;
 
     /* Now allocate space for the new graph.  Overeallocate and realloc later. */
-    cgraph = N_NEW(cnvtxs, ex_vtx_data);
-    edges = N_NEW(2 * cnedges + cnvtxs, int);
+    cgraph = gv_calloc(cnvtxs, sizeof(ex_vtx_data));
+    edges = gv_calloc(2 * cnedges + cnvtxs, sizeof(int));
 
     for (cv = 0; cv < cnvtxs; cv++) {
 
@@ -672,7 +587,7 @@ coarsen_match (
     int cnvtxs;
 
     /* Allocate and initialize space. */
-    mflag = N_NEW(nvtxs, int);
+    mflag = gv_calloc(nvtxs, sizeof(int));
 
     /* Find a maximal matching in the graphs */
     nmerged = maxmatch(graph, geom_graph, nvtxs, mflag, dist2_limit);
@@ -683,8 +598,8 @@ coarsen_match (
 
     *cnp = cnvtxs = nvtxs - nmerged;
 
-    *v2cvp = v2cv = N_NEW(nvtxs, int);
-    *cv2vp = cv2v = N_NEW(2 * cnvtxs, int);
+    *v2cvp = v2cv = gv_calloc(nvtxs, sizeof(int));
+    *cv2vp = cv2v = gv_calloc(2 * cnvtxs, sizeof(int));
     makev2cv(mflag, nvtxs, v2cv, cv2v);
 
     free(mflag);
@@ -726,35 +641,22 @@ void release(Hierarchy * hierarchy)
 
 static v_data *cpGraph(v_data * graph, int n, int nedges)
 {
-    v_data *cpGraph;
-    int *edges;
     float *ewgts = NULL;
-#ifdef STYLES
-    Style *styles = NULL;
-#endif
     int i, j;
 
     if (graph == NULL || n == 0) {
 	return NULL;
     }
-    cpGraph = N_NEW(n, v_data);
-    edges = N_NEW(2 * nedges + n, int);
+    v_data *cpGraph = gv_calloc(n, sizeof(v_data));
+    int *edges = gv_calloc(2 * nedges + n, sizeof(int));
     if (graph[0].ewgts != NULL) {
-	ewgts = N_NEW(2 * nedges + n, float);
+	ewgts = gv_calloc(2 * nedges + n, sizeof(float));
     }
-#ifdef STYLES
-    if (graph[0].styles != NULL) {
-	styles = N_NEW(2 * nedges + n, Style);
-    }
-#endif
 
     for (i = 0; i < n; i++) {
 	cpGraph[i] = graph[i];
 	cpGraph[i].edges = edges;
 	cpGraph[i].ewgts = ewgts;
-#ifdef STYLES
-	cpGraph[i].styles = styles;
-#endif
 	for (j = 0; j < graph[i].nedges; j++) {
 	    edges[j] = graph[i].edges[j];
 	}
@@ -765,29 +667,19 @@ static v_data *cpGraph(v_data * graph, int n, int nedges)
 	    }
 	    ewgts += graph[i].nedges;
 	}
-#ifdef STYLES
-	if (styles != NULL) {
-	    for (j = 0; j < graph[i].nedges; j++) {
-		styles[j] = graph[i].styles[j];
-	    }
-	    styles += graph[i].nedges;
-	}
-#endif
     }
     return cpGraph;
 }
 
 static ex_vtx_data *cpExGraph(ex_vtx_data * graph, int n, int nedges)
 {
-    ex_vtx_data *cpGraph;
-    int *edges;
     int i, j;
 
     if (graph == NULL || n == 0) {
 	return NULL;
     }
-    cpGraph = N_NEW(n, ex_vtx_data);
-    edges = N_NEW(2 * nedges + n, int);
+    ex_vtx_data *cpGraph = gv_calloc(n, sizeof(ex_vtx_data));
+    int *edges = gv_calloc(2 * nedges + n, sizeof(int));
 
     for (i = 0; i < n; i++) {
 	cpGraph[i] = graph[i];
@@ -805,7 +697,7 @@ Hierarchy *create_hierarchy(v_data * graph, int nvtxs, int nedges,
 			    hierparms_t* parms)
 {
     int cur_level;
-    Hierarchy *hierarchy = NEW(Hierarchy);
+    Hierarchy *hierarchy = gv_alloc(sizeof(Hierarchy));
     int cngeom_edges = ngeom_edges;
     ex_vtx_data *geom_graph_level;
     int nodeIndex = 0;
@@ -813,12 +705,12 @@ Hierarchy *create_hierarchy(v_data * graph, int nvtxs, int nedges,
     int min_nvtxs = parms->min_nvtxs;
     int nlevels = MAX(5, 10 * (int) log((float) (nvtxs / min_nvtxs)));	// just an estimate
 
-    hierarchy->graphs = N_NEW(nlevels, v_data *);
-    hierarchy->geom_graphs = N_NEW(nlevels, ex_vtx_data *);
-    hierarchy->nvtxs = N_NEW(nlevels, int);
-    hierarchy->nedges = N_NEW(nlevels, int);
-    hierarchy->v2cv = N_NEW(nlevels, int *);
-    hierarchy->cv2v = N_NEW(nlevels, int *);
+    hierarchy->graphs = gv_calloc(nlevels, sizeof(v_data*));
+    hierarchy->geom_graphs = gv_calloc(nlevels, sizeof(ex_vtx_data*));
+    hierarchy->nvtxs = gv_calloc(nlevels, sizeof(int));
+    hierarchy->nedges = gv_calloc(nlevels, sizeof(int));
+    hierarchy->v2cv = gv_calloc(nlevels, sizeof(int*));
+    hierarchy->cv2v = gv_calloc(nlevels, sizeof(int*));
 
     hierarchy->graphs[0] = cpGraph(graph, nvtxs, nedges);
     hierarchy->geom_graphs[0] = cpExGraph(geom_graph, nvtxs, ngeom_edges);
@@ -829,15 +721,15 @@ Hierarchy *create_hierarchy(v_data * graph, int nvtxs, int nedges,
 	 hierarchy->nvtxs[cur_level] > min_nvtxs
 	 && cur_level < 50 /*nvtxs/10 */ ; cur_level++) {
 	if (cur_level == nlevels - 1) {	// we have to allocate more space
-	    nlevels *= 2;
 	    hierarchy->graphs =
-		RALLOC(nlevels, hierarchy->graphs, v_data *);
+		gv_recalloc(hierarchy->graphs, nlevels, nlevels * 2, sizeof(v_data*));
 	    hierarchy->geom_graphs =
-		RALLOC(nlevels, hierarchy->geom_graphs, ex_vtx_data *);
-	    hierarchy->nvtxs = RALLOC(nlevels, hierarchy->nvtxs, int);
-	    hierarchy->nedges = RALLOC(nlevels, hierarchy->nedges, int);
-	    hierarchy->v2cv = RALLOC(nlevels, hierarchy->v2cv, int *);
-	    hierarchy->cv2v = RALLOC(nlevels, hierarchy->cv2v, int *);
+		gv_recalloc(hierarchy->geom_graphs, nlevels, nlevels * 2, sizeof(ex_vtx_data*));
+	    hierarchy->nvtxs = gv_recalloc(hierarchy->nvtxs, nlevels, nlevels * 2, sizeof(int));
+	    hierarchy->nedges = gv_recalloc(hierarchy->nedges, nlevels, nlevels * 2, sizeof(int));
+	    hierarchy->v2cv = gv_recalloc(hierarchy->v2cv, nlevels, nlevels * 2, sizeof(int*));
+	    hierarchy->cv2v = gv_recalloc(hierarchy->cv2v, nlevels, nlevels * 2, sizeof(int*));
+	    nlevels *= 2;
 	}
 
 	ngeom_edges = cngeom_edges;
@@ -908,8 +800,8 @@ set_active_levels(Hierarchy * hierarchy, int *foci_nodes, int num_foci,
     n = hierarchy->nvtxs[min_level];
 
     // compute distances from foci nodes
-    nodes = N_NEW(n, int);
-    distances = N_NEW(n, double);
+    nodes = gv_calloc(n, sizeof(int));
+    distances = gv_calloc(n, sizeof(double));
     for (i = 0; i < n; i++) {
 	nodes[i] = i;
 	distances[i] = dist_from_foci(graph, i, foci_nodes, num_foci);
@@ -1089,7 +981,6 @@ init_ex_graph(v_data * graph1, v_data * graph2, int n,
 
     ex_vtx_data *geom_graph;
     int nedges1 = 0, nedges2 = 0;
-    int *edges;
     int nedges = 0;
     int i, j, k, l, first_nedges;
     int neighbor;
@@ -1097,8 +988,8 @@ init_ex_graph(v_data * graph1, v_data * graph2, int n,
 	nedges1 += graph1[i].nedges;
 	nedges2 += graph2[i].nedges;
     }
-    edges = N_NEW(nedges1 + nedges2, int);
-    *gp = geom_graph = N_NEW(n, ex_vtx_data);
+    int *edges = gv_calloc(nedges1 + nedges2, sizeof(int));
+    *gp = geom_graph = gv_calloc(n, sizeof(ex_vtx_data));
 
     for (i = 0; i < n; i++) {
 	geom_graph[i].edges = edges;
@@ -1305,7 +1196,6 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 				   int **np)
 {
     int numNeighbors = 0;
-    int *neighbors;
     int i, j;
     int level, node,active_level,found;
     v_data neighborsInLevel;
@@ -1323,9 +1213,9 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 
     neighborsInLevel = hierarchy->graphs[level][node];
     nAllocNeighbors = 2 * neighborsInLevel.nedges;
-    neighbors = N_NEW(nAllocNeighbors, int);
+    int *neighbors = gv_calloc(nAllocNeighbors, sizeof(int));
 
-    stack = N_NEW(5 * hierarchy->nlevels + 1, int);
+    stack = gv_calloc(5 * hierarchy->nlevels + 1, sizeof(int));
 
     for (i = 1; i < neighborsInLevel.nedges; i++) {
 	neighbor = neighborsInLevel.edges[i];
@@ -1334,8 +1224,9 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 	if (active_level == level) {
 	    // neighbor is active - add it
 	    if (numNeighbors >= nAllocNeighbors) {
+		neighbors = gv_recalloc(neighbors, nAllocNeighbors, 2 * nAllocNeighbors + 1,
+		                        sizeof(int));
 		nAllocNeighbors = 2 * nAllocNeighbors + 1;
-		neighbors = RALLOC(nAllocNeighbors, neighbors, int);
 	    }
 	    neighbors[numNeighbors] =
 		hierarchy->geom_graphs[level][neighbor].globalIndex;
@@ -1358,8 +1249,9 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 	    }
 	    if (!found) {
 		if (numNeighbors >= nAllocNeighbors) {
+		    neighbors = gv_recalloc(neighbors, nAllocNeighbors,
+		                            2 * nAllocNeighbors + 1, sizeof(int));
 		    nAllocNeighbors = 2 * nAllocNeighbors + 1;
-		    neighbors = RALLOC(nAllocNeighbors, neighbors, int);
 		}
 		neighbors[numNeighbors] =
 		    hierarchy->geom_graphs[neighborLevel][neighbor].
@@ -1380,9 +1272,9 @@ findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
 		if (hierarchy->geom_graphs[neighborLevel][neighbor].
 		    active_level == neighborLevel) {
 		    if (numNeighbors >= nAllocNeighbors) {
+			neighbors = gv_recalloc(neighbors, nAllocNeighbors,
+			                        2 * nAllocNeighbors + 1, sizeof(int));
 			nAllocNeighbors = 2 * nAllocNeighbors + 1;
-			neighbors =
-			    RALLOC(nAllocNeighbors, neighbors, int);
 		    }
 		    neighbors[numNeighbors] =
 			hierarchy->geom_graphs[neighborLevel][neighbor].

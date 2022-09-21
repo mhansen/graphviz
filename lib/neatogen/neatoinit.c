@@ -872,9 +872,6 @@ static vtx_data *makeGraphData(graph_t * g, int nv, int *nedges, int mode, int m
 
 	graph[i].nedges = i_nedges;
 	graph[i].edges[0] = i;
-#ifdef USE_STYLES
-	graph[i].styles = NULL;
-#endif
 	i++;
     }
 #ifdef DIGCOLA
