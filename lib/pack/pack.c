@@ -608,12 +608,8 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
     int nr = 0, nc;
     int r, c;
     ainfo *info;
-    ainfo *ip;
-    ainfo **sinfo;
-    double* widths;
-    double* heights;
     double v, wd, ht;
-    point* places = N_NEW(ng, point);
+    point *places = gv_calloc(ng, sizeof(point));
     boxf bb;
     int sz, rowMajor;
 
@@ -643,10 +639,10 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
     }
     if (Verbose)
 	fprintf (stderr, "array packing: %s %d rows %d columns\n", (rowMajor?"row major":"column major"), nr, nc);
-    widths = N_NEW(nc+1, double);
-    heights = N_NEW(nr+1, double);
+    double *widths = gv_calloc(nc + 1, sizeof(double));
+    double *heights = gv_calloc(nr + 1, sizeof(double));
 
-    ip = info = N_NEW(ng, ainfo);
+    ainfo *ip = info = gv_calloc(ng, sizeof(ainfo));
     for (i = 0; i < ng; i++, ip++) {
 	bb = gs[i];
 	ip->width = bb.UR.x - bb.LL.x + pinfo->margin;
@@ -654,7 +650,7 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
 	ip->index = i;
     }
 
-    sinfo = N_NEW(ng, ainfo*);
+    ainfo **sinfo = gv_calloc(ng, sizeof(ainfo*));
     for (i = 0; i < ng; i++) {
 	sinfo[i] = info + i;
     }
