@@ -153,7 +153,6 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
     char *name;
     Agraph_t *out = NULL;
     Agnode_t *n;
-    Agraph_t **ccs;
     size_t len;
     size_t bnd = 10;
     bool pin = false;
@@ -166,7 +165,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
     }
     name = setPrefix (pfx, &len, buffer, SMALLBUF);
 
-    ccs = N_GNEW(bnd, Agraph_t *);
+    Agraph_t **ccs = gv_calloc(bnd, sizeof(Agraph_t*));
 
     initStk(&stk, insertFn, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
@@ -202,8 +201,8 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 	    goto packerror;
 	}
 	if (c_cnt == bnd) {
+	    ccs = gv_recalloc(ccs, bnd, bnd * 2, sizeof(Agraph_t*));
 	    bnd *= 2;
-	    ccs = RALLOC(bnd, ccs, Agraph_t *);
 	}
 	ccs[c_cnt] = out;
 	c_cnt++;
@@ -221,7 +220,7 @@ packerror:
 	ccs = NULL;
     }
     else {
-	ccs = RALLOC(c_cnt, ccs, Agraph_t *);
+	ccs = gv_recalloc(ccs, bnd, c_cnt, sizeof(Agraph_t*));
 	*ncc = (int) c_cnt;
 	*pinned = pin;
     }
