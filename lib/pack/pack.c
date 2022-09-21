@@ -797,15 +797,12 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
 {
     int stepSize;
     ginfo *info;
-    ginfo **sinfo;
-    point *places;
     Dict_t *ps;
     int i;
     bool *fixed = pinfo->fixed;
     int fixed_cnt = 0;
     box bb, fixed_bb = { {0, 0}, {0, 0} };
     point center;
-    boxf* bbs;
 
     if (ng <= 0)
 	return 0;
@@ -834,7 +831,7 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
     }
 
     /* calculate grid size */
-    bbs = N_GNEW(ng, boxf);
+    boxf *bbs = gv_calloc(ng, sizeof(boxf));
     for (i = 0; i < ng; i++)
 	bbs[i] = GD_bb(gs[i]);
     stepSize = computeStep(ng, bbs, pinfo->margin);
@@ -849,7 +846,7 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
 	center.y = (fixed_bb.LL.y + fixed_bb.UR.y) / 2;
     } else
 	center.x = center.y = 0;
-    info = N_NEW(ng, ginfo);
+    info = gv_calloc(ng, sizeof(ginfo));
     for (i = 0; i < ng; i++) {
 	Agraph_t *g = gs[i];
 	info[i].index = i;
@@ -861,14 +858,14 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
     }
 
     /* sort */
-    sinfo = N_NEW(ng, ginfo *);
+    ginfo **sinfo = gv_calloc(ng, sizeof(ginfo*));
     for (i = 0; i < ng; i++) {
 	sinfo[i] = info + i;
     }
     qsort(sinfo, ng, sizeof(ginfo *), cmpf);
 
     ps = newPS();
-    places = N_NEW(ng, point);
+    point *places = gv_calloc(ng, sizeof(point));
     if (fixed) {
 	for (i = 0; i < ng; i++) {
 	    if (fixed[i])
