@@ -561,7 +561,6 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
     Agraph_t *dout;
     Agnode_t *dn;
     char buffer[SMALLBUF];
-    Agraph_t **ccs;
     stk_t stk;
     size_t len;
     int sz = (int) sizeof(ccgraphinfo_t);
@@ -581,7 +580,8 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
 
     dg = deriveGraph(g);
 
-    ccs = N_GNEW((size_t) agnnodes(dg), Agraph_t *);
+    size_t ccs_length = (size_t)agnnodes(dg);
+    Agraph_t **ccs = gv_calloc(ccs_length, sizeof(Agraph_t*));
     initStk(&stk, insertFn, clMarkFn);
 
     c_cnt = 0;
@@ -624,7 +624,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
     agclean (g, AGRAPH, GRECNAME);
     agclean (g, AGNODE, NRECNAME);
     freeStk (&stk);
-    ccs = RALLOC(c_cnt, ccs, Agraph_t *);
+    ccs = gv_recalloc(ccs, ccs_length, c_cnt, sizeof(Agraph_t*));
     if (name != buffer)
 	free(name);
     *ncc = (int) c_cnt;
