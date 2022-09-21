@@ -8,13 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <glcomp/glcompbutton.h>
 #include <glcomp/glcomplabel.h>
 #include <glcomp/glcompimage.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glutils.h>
 #include <glcomp/glcompset.h>
-#include <common/memory.h>
 #include <stddef.h>
 #include <string.h>
 #include <GL/glut.h>
@@ -23,8 +23,7 @@
 glCompButton *glCompButtonNew(glCompObj * par, GLfloat x, GLfloat y,
 			      GLfloat w, GLfloat h, char *caption)
 {
-    glCompButton *p;
-    p = NEW(glCompButton);
+    glCompButton *p = gv_alloc(sizeof(glCompButton));
     glCompInitCommon((glCompObj *) p, par, x, y);
     p->objType = glButtonObj;
     /*customize button color */

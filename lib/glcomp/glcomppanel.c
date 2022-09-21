@@ -8,18 +8,17 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <glcomp/glcomppanel.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glcompset.h>
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glutils.h>
-#include <common/memory.h>
 
 glCompPanel *glCompPanelNew(glCompObj * parentObj, GLfloat x, GLfloat y,
 			    GLfloat w, GLfloat h)
 {
-    glCompPanel *p;
-    p = NEW(glCompPanel);
+    glCompPanel *p = gv_alloc(sizeof(glCompPanel));
     glCompInitCommon((glCompObj *) p, parentObj, x, y);
 
     p->shadowcolor.R = GLCOMPSET_PANEL_SHADOW_COLOR_R;

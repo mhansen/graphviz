@@ -8,8 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <glcomp/glcompset.h>
-#include <common/memory.h>
 #include <glcomp/glcomppanel.h>
 #include <glcomp/glcomplabel.h>
 #include <glcomp/glcompbutton.h>
@@ -199,7 +199,7 @@ void glCompEmptyCommon(glCompCommon * c)
 
 glCompSet *glCompSetNew(int w, int h)
 {
-    glCompSet *s = NEW(glCompSet);
+    glCompSet *s = gv_alloc(sizeof(glCompSet));
     glCompInitCommon((glCompObj *) s, NULL, 0.0f, 0.0f);
     s->common.width = (GLfloat) w;
     s->common.height = (GLfloat) h;
@@ -219,8 +219,8 @@ glCompSet *glCompSetNew(int w, int h)
 
 void glCompSetAddObj(glCompSet * s, glCompObj * obj)
 {
+    s->obj = gv_recalloc(s->obj, s->objcnt, s->objcnt + 1, sizeof(glCompObj*));
     s->objcnt++;
-    s->obj = realloc(s->obj, sizeof(glCompObj *) * s->objcnt);
     s->obj[s->objcnt - 1] = obj;
     obj->common.compset = s;
 }

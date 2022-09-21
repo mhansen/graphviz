@@ -8,17 +8,15 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glpangofont.h>
-
-#include <common/memory.h>
 
 static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
 					 int height, unsigned char *data,
 					 int is2D)
 {
     int Er, offset, ind;
-    glCompTex *t;
     unsigned char *tarData;
     unsigned char *srcData;
 
@@ -26,7 +24,7 @@ static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
 	return NULL;
 
     Er = 0;
-    t = NEW(glCompTex);
+    glCompTex *t = gv_alloc(sizeof(glCompTex));
     if (!is2D) {		/*use opengl texture */
 	glEnable(GL_TEXTURE_2D);
 	glShadeModel(GL_FLAT);
@@ -51,7 +49,7 @@ static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
 	}
     }
     if (is2D && !Er) {
-	t->data = N_NEW(4 * width * height, unsigned char);
+	t->data = gv_calloc(4 * width * height, sizeof(unsigned char));
 	offset = 4;		//RGBA  mod,TO DO implement other modes 
 	/*data upside down because of pango gl coord system */
 	for (ind = 0; ind < height; ind++) {
@@ -71,9 +69,9 @@ static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
     t->height = (GLfloat) height;
     if(s)
     {
-	s->textureCount++;
 	s->textures =
-	realloc(s->textures, s->textureCount * sizeof(glCompTex *));
+	gv_recalloc(s->textures, s->textureCount, s->textureCount + 1, sizeof(glCompTex *));
+	s->textureCount++;
 	s->textures[s->textureCount - 1] = t;
     }
     return t;
@@ -136,8 +134,8 @@ glCompTex *glCompSetAddNewTexLabel(glCompSet * s, char *def, int fs,
 	return NULL;
     }
 
-    t->def = strdup(def);
-    t->text = strdup(text);
+    t->def = gv_strdup(def);
+    t->text = gv_strdup(text);
     t->type = glTexLabel;
     return t;
 }

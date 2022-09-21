@@ -8,12 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glcompset.h>
 #include <glcomp/glpangofont.h>
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glutils.h>
-#include <common/memory.h>
 #include <GL/glut.h>
 #include <stddef.h>
 
@@ -47,7 +47,7 @@ void glDeleteFont(glCompFont * f)
 
 glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c,glCompFontType type, char *fontdesc, int fs,int is2D)
 {
-    glCompFont *font = malloc(sizeof(glCompFont));
+    glCompFont *font = gv_alloc(sizeof(glCompFont));
     font->reference = 0;
     font->color.R = c->R;
     font->color.G = c->G;
@@ -63,7 +63,7 @@ glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c,glCompFontType
     else
 	font->glutfont = NULL;
 
-    font->fontdesc = strdup(fontdesc);
+    font->fontdesc = gv_strdup(fontdesc);
     font->size = fs;
     font->transparent = 1;
     font->optimize = GL_FONTOPTIMIZE;
@@ -80,7 +80,7 @@ glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c,glCompFontType
 glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 {
     glCompCommon *parent;
-    glCompFont *font = NEW(glCompFont);
+    glCompFont *font = gv_alloc(sizeof(glCompFont));
     parent = o->common.parent;
     if (parent) {
 	parent = o->common.parent;
@@ -92,7 +92,7 @@ glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 
 	font->type = parent->font->type;
 	font->glutfont = parent->font->glutfont;
-	font->fontdesc = strdup(parent->font->fontdesc);
+	font->fontdesc = gv_strdup(parent->font->fontdesc);
 	font->size = parent->font->size;
 	font->transparent = parent->font->transparent;
 	font->justify.VJustify = parent->font->justify.VJustify;
