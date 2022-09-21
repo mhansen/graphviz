@@ -591,8 +591,8 @@ static int acmpf(const void *X, const void *Y)
     double dX = x->height + x->width; 
     double dY = y->height + y->width; 
     if (dX < dY) return 1;
-    else if (dX > dY) return -1;
-    else return 0;
+    if (dX > dY) return -1;
+    return 0;
 }
 
 #define INC(m,c,r) \
