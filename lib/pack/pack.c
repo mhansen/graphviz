@@ -16,6 +16,7 @@
 
 #include <math.h>
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <pack/pack.h>
 #include <common/pointset.h>
@@ -306,10 +307,9 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 
     if (pinfo->mode == l_clust) {
 	int i;
-	void **alg;
 
 	/* backup the alg data */
-	alg = N_GNEW(agnnodes(g), void *);
+	void **alg = gv_calloc(agnnodes(g), sizeof(void*));
 	for (i = 0, n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    alg[i++] = ND_alg(n);
 	    ND_alg(n) = 0;
@@ -577,8 +577,8 @@ static int ucmpf(const void *X, const void *Y)
     int dX = userVals[x->index];
     int dY = userVals[y->index];
     if (dX > dY) return 1;
-    else if (dX < dY) return -1;
-    else return 0;
+    if (dX < dY) return -1;
+    return 0;
 }
 
 /* acmpf;
@@ -591,8 +591,8 @@ static int acmpf(const void *X, const void *Y)
     double dX = x->height + x->width; 
     double dY = y->height + y->width; 
     if (dX < dY) return 1;
-    else if (dX > dY) return -1;
-    else return 0;
+    if (dX > dY) return -1;
+    return 0;
 }
 
 #define INC(m,c,r) \
@@ -608,12 +608,8 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
     int nr = 0, nc;
     int r, c;
     ainfo *info;
-    ainfo *ip;
-    ainfo **sinfo;
-    double* widths;
-    double* heights;
     double v, wd, ht;
-    point* places = N_NEW(ng, point);
+    point *places = gv_calloc(ng, sizeof(point));
     boxf bb;
     int sz, rowMajor;
 
@@ -643,10 +639,10 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
     }
     if (Verbose)
 	fprintf (stderr, "array packing: %s %d rows %d columns\n", (rowMajor?"row major":"column major"), nr, nc);
-    widths = N_NEW(nc+1, double);
-    heights = N_NEW(nr+1, double);
+    double *widths = gv_calloc(nc + 1, sizeof(double));
+    double *heights = gv_calloc(nr + 1, sizeof(double));
 
-    ip = info = N_NEW(ng, ainfo);
+    ainfo *ip = info = gv_calloc(ng, sizeof(ainfo));
     for (i = 0; i < ng; i++, ip++) {
 	bb = gs[i];
 	ip->width = bb.UR.x - bb.LL.x + pinfo->margin;
@@ -654,7 +650,7 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
 	ip->index = i;
     }
 
-    sinfo = N_NEW(ng, ainfo*);
+    ainfo **sinfo = gv_calloc(ng, sizeof(ainfo*));
     for (i = 0; i < ng; i++) {
 	sinfo[i] = info + i;
     }
@@ -725,9 +721,6 @@ static point*
 polyRects(int ng, boxf* gs, pack_info * pinfo)
 {
     int stepSize;
-    ginfo *info;
-    ginfo **sinfo;
-    point *places;
     Dict_t *ps;
     int i;
     point center;
@@ -741,21 +734,21 @@ polyRects(int ng, boxf* gs, pack_info * pinfo)
 
     /* generate polyomino cover for the rectangles */
     center.x = center.y = 0;
-    info = N_NEW(ng, ginfo);
+    ginfo *info = gv_calloc(ng, sizeof(ginfo));
     for (i = 0; i < ng; i++) {
 	info[i].index = i;
 	genBox(gs[i], info + i, stepSize, pinfo->margin, center, "");
     }
 
     /* sort */
-    sinfo = N_NEW(ng, ginfo *);
+    ginfo **sinfo = gv_calloc(ng, sizeof(ginfo*));
     for (i = 0; i < ng; i++) {
 	sinfo[i] = info + i;
     }
     qsort(sinfo, ng, sizeof(ginfo *), cmpf);
 
     ps = newPS();
-    places = N_NEW(ng, point);
+    point *places = gv_calloc(ng, sizeof(point));
     for (i = 0; i < ng; i++)
 	placeGraph(i, sinfo[i], ps, places + sinfo[i]->index,
 		       stepSize, pinfo->margin, gs);
@@ -804,15 +797,12 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
 {
     int stepSize;
     ginfo *info;
-    ginfo **sinfo;
-    point *places;
     Dict_t *ps;
     int i;
     bool *fixed = pinfo->fixed;
     int fixed_cnt = 0;
     box bb, fixed_bb = { {0, 0}, {0, 0} };
     point center;
-    boxf* bbs;
 
     if (ng <= 0)
 	return 0;
@@ -841,7 +831,7 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
     }
 
     /* calculate grid size */
-    bbs = N_GNEW(ng, boxf);
+    boxf *bbs = gv_calloc(ng, sizeof(boxf));
     for (i = 0; i < ng; i++)
 	bbs[i] = GD_bb(gs[i]);
     stepSize = computeStep(ng, bbs, pinfo->margin);
@@ -856,7 +846,7 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
 	center.y = (fixed_bb.LL.y + fixed_bb.UR.y) / 2;
     } else
 	center.x = center.y = 0;
-    info = N_NEW(ng, ginfo);
+    info = gv_calloc(ng, sizeof(ginfo));
     for (i = 0; i < ng; i++) {
 	Agraph_t *g = gs[i];
 	info[i].index = i;
@@ -868,14 +858,14 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
     }
 
     /* sort */
-    sinfo = N_NEW(ng, ginfo *);
+    ginfo **sinfo = gv_calloc(ng, sizeof(ginfo*));
     for (i = 0; i < ng; i++) {
 	sinfo[i] = info + i;
     }
     qsort(sinfo, ng, sizeof(ginfo *), cmpf);
 
     ps = newPS();
-    places = N_NEW(ng, point);
+    point *places = gv_calloc(ng, sizeof(point));
     if (fixed) {
 	for (i = 0; i < ng; i++) {
 	    if (fixed[i])
@@ -911,7 +901,6 @@ point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
 		 pack_info * pinfo)
 {
     int i, v;
-    boxf* bbs;
     Agraph_t* g;
     point* pts = NULL;
     char* s;
@@ -921,7 +910,7 @@ point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
     if (pinfo->mode <= l_graph)
 	return polyGraphs (ng, gs, root, pinfo);
     
-    bbs = N_GNEW(ng, boxf);
+    boxf *bbs = gv_calloc(ng, sizeof(boxf));
 
     for (i = 0; i < ng; i++) {
 	g = gs[i];
@@ -931,7 +920,7 @@ point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
 
     if (pinfo->mode == l_array) {
 	if (pinfo->flags & PK_USER_VALS) {
-	    pinfo->vals = N_NEW(ng, packval_t);
+	    pinfo->vals = gv_calloc(ng, sizeof(packval_t));
 	    for (i = 0; i < ng; i++) {
 		s = agget (gs[i], "sortv");
 		if (s && sscanf(s, "%d", &v) > 0 && v >= 0)
@@ -956,10 +945,9 @@ putRects(int ng, boxf* bbs, pack_info* pinfo)
     if (pinfo->mode == l_node || pinfo->mode == l_clust) return NULL;
     if (pinfo->mode == l_graph)
 	return polyRects (ng, bbs, pinfo);
-    else if (pinfo->mode == l_array)
+    if (pinfo->mode == l_array)
 	return arrayRects (ng, bbs, pinfo);
-    else
-	return NULL;
+    return NULL;
 }
 
 /* packRects:
@@ -1242,33 +1230,24 @@ static const char*chkFlags(const char *p, pack_info *pinfo) {
     return p;
 }
 
-static char*
-mode2Str (pack_mode m)
-{
-    char *s;
+static const char *mode2Str(pack_mode m) {
 
     switch (m) {
     case l_clust:
-	s = "cluster";
-	break;
+	return "cluster";
     case l_node:
-	s = "node";
-	break;
+	return "node";
     case l_graph:
-	s = "graph";
-	break;
+	return "graph";
     case l_array:
-	s = "array";
-	break;
+	return "array";
     case l_aspect:
-	s = "aspect";
-	break;
+	return "aspect";
     case l_undef: 
     default:
-	s = "undefined";
 	break;
     }
-    return s;
+    return "undefined";
 }
 
 /* parsePackModeInfo;

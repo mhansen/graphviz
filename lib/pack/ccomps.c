@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <cgraph/alloc.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
 #include <common/render.h>
@@ -83,10 +84,10 @@ static size_t dfs(Agraph_t * g, Agnode_t * n, void *state, stk_t* stk)
 
 static int isLegal(char *p)
 {
-    unsigned char c;
+    char c;
 
-    while ((c = *(unsigned char *) p++)) {
-	if (c != '_' && !isalnum(c))
+    while ((c = *p++)) {
+	if (c != '_' && !isalnum((int)c))
 	    return 0;
     }
 
@@ -126,7 +127,7 @@ setPrefix (char* pfx, size_t* lenp, char* buf, size_t buflen)
     if (len + 25 <= buflen)
         name = buf;
     else {
-        name = gmalloc(len + 25);
+        name = gv_calloc(len + 25, sizeof(char));
     }
     strcpy(name, pfx);
     *lenp = len;
@@ -152,7 +153,6 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
     char *name;
     Agraph_t *out = NULL;
     Agnode_t *n;
-    Agraph_t **ccs;
     size_t len;
     size_t bnd = 10;
     bool pin = false;
@@ -165,7 +165,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
     }
     name = setPrefix (pfx, &len, buffer, SMALLBUF);
 
-    ccs = N_GNEW(bnd, Agraph_t *);
+    Agraph_t **ccs = gv_calloc(bnd, sizeof(Agraph_t*));
 
     initStk(&stk, insertFn, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
@@ -201,8 +201,8 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 	    goto packerror;
 	}
 	if (c_cnt == bnd) {
+	    ccs = gv_recalloc(ccs, bnd, bnd * 2, sizeof(Agraph_t*));
 	    bnd *= 2;
-	    ccs = RALLOC(bnd, ccs, Agraph_t *);
 	}
 	ccs[c_cnt] = out;
 	c_cnt++;
@@ -220,7 +220,7 @@ packerror:
 	ccs = NULL;
     }
     else {
-	ccs = RALLOC(c_cnt, ccs, Agraph_t *);
+	ccs = gv_recalloc(ccs, bnd, c_cnt, sizeof(Agraph_t*));
 	*ncc = (int) c_cnt;
 	*pinned = pin;
     }
@@ -243,7 +243,6 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
     char *name;
     Agraph_t *out;
     Agnode_t *n;
-    Agraph_t **ccs;
     size_t len;
     size_t bnd = 10;
     stk_t stk;
@@ -254,7 +253,7 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
     }
     name = setPrefix (pfx, &len, buffer, SMALLBUF);
 
-    ccs = N_GNEW(bnd, Agraph_t *);
+    Agraph_t **ccs = gv_calloc(bnd, sizeof(Agraph_t*));
     initStk(&stk, insertFn, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
 	UNMARK(&stk,n);
@@ -274,14 +273,14 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
 	    return NULL;
 	}
 	if (c_cnt == bnd) {
+	    ccs = gv_recalloc(ccs, bnd, bnd * 2, sizeof(Agraph_t*));
 	    bnd *= 2;
-	    ccs = RALLOC(bnd, ccs, Agraph_t *);
 	}
 	ccs[c_cnt] = out;
 	c_cnt++;
     }
     freeStk (&stk);
-    ccs = RALLOC(c_cnt, ccs, Agraph_t *);
+    ccs = gv_recalloc(ccs, bnd, c_cnt, sizeof(Agraph_t*));
     if (name != buffer)
 	free(name);
     *ncc = (int) c_cnt;
@@ -562,7 +561,6 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
     Agraph_t *dout;
     Agnode_t *dn;
     char buffer[SMALLBUF];
-    Agraph_t **ccs;
     stk_t stk;
     size_t len;
     int sz = (int) sizeof(ccgraphinfo_t);
@@ -582,7 +580,8 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
 
     dg = deriveGraph(g);
 
-    ccs = N_GNEW((size_t) agnnodes(dg), Agraph_t *);
+    size_t ccs_length = (size_t)agnnodes(dg);
+    Agraph_t **ccs = gv_calloc(ccs_length, sizeof(Agraph_t*));
     initStk(&stk, insertFn, clMarkFn);
 
     c_cnt = 0;
@@ -625,7 +624,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
     agclean (g, AGRAPH, GRECNAME);
     agclean (g, AGNODE, NRECNAME);
     freeStk (&stk);
-    ccs = RALLOC(c_cnt, ccs, Agraph_t *);
+    ccs = gv_recalloc(ccs, ccs_length, c_cnt, sizeof(Agraph_t*));
     if (name != buffer)
 	free(name);
     *ncc = (int) c_cnt;
