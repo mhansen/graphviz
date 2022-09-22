@@ -471,11 +471,13 @@ subtree_t *merge_trees(Agedge_t *e)   /* entering tree edge */
 
   if (t0->heap_index == -1) {   // move t0
     delta = SLACK(e);
-    tree_adjust(t0->rep,NULL,delta);
+    if (delta != 0)
+      tree_adjust(t0->rep,NULL,delta);
   }
   else {  // move t1
     delta = -SLACK(e);
-    tree_adjust(t1->rep,NULL,delta);
+    if (delta != 0)
+      tree_adjust(t1->rep,NULL,delta);
   }
   if (add_tree_edge(e) != 0) {
     return NULL;
