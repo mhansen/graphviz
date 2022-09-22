@@ -34,6 +34,7 @@
 #include <limits>
 #include <map>
 #include <pack/pack.h>
+#include <set>
 #include <stddef.h>
 #include <string>
 #include <utility>
@@ -373,13 +374,6 @@ static void cloneCluster(Agraph_t *old, Agraph_t *new_cluster) {
   GD_bb(new_cluster) = GD_bb(old);
 }
 
-/* freef:
- * Generic free function for dictionaries.
- */
-static void freef(Dt_t*, void *obj, Dtdisc_t*) {
-    free(obj);
-}
-
 namespace {
 /// a value of a graph attribute, possibly set multiple times
 struct AttributeValue {
@@ -458,6 +452,9 @@ static void cloneGraphAttr(Agraph_t * g, Agraph_t * ng)
     cloneDfltAttrs(g, ng, AGEDGE);
 }
 
+/// names that have already been used during generation
+using used_t = std::multiset<std::string>;
+
 /* xName:
  * Create a name for an object in the new graph using the
  * dictionary names and the old name. If the old name has not
@@ -465,17 +462,12 @@ static void cloneGraphAttr(Agraph_t * g, Agraph_t * ng)
  * create a new name using the old name and a number.
  * Note that returned string will immediately made into an agstring.
  */
-static std::string xName(Dt_t *names, char *oldname) {
-  auto p = reinterpret_cast<pair_t *>(dtmatch(names, oldname));
-  if (p) {
-    p->cnt++;
-    return std::string(oldname) + "_gv" + std::to_string(p->cnt);
+static std::string xName(used_t &names, char *oldname) {
+  size_t previous_instances = names.count(oldname);
+  names.insert(oldname);
+  if (previous_instances > 0) {
+    return std::string(oldname) + "_gv" + std::to_string(previous_instances);
   }
-
-  p = NEW(pair_t);
-  p->name = oldname;
-  dtinsert(names, p);
-
   return oldname;
 }
 
@@ -490,8 +482,7 @@ static std::string xName(Dt_t *names, char *oldname) {
  * and adding edges.
  */
 static void
-cloneSubg(Agraph_t * g, Agraph_t * ng, Agsym_t * G_bb, Dt_t * gnames)
-{
+cloneSubg(Agraph_t *g, Agraph_t *ng, Agsym_t *G_bb, used_t &gnames) {
     node_t *n;
     node_t *nn;
     edge_t *e;
@@ -563,18 +554,6 @@ static void cloneClusterTree(Agraph_t * g, Agraph_t * ng)
     }
 }
 
-static Dtdisc_t pairdisc = {
-    offsetof(pair_t, name),	/* key */
-    -1,				/* size */
-    offsetof(attr_t, link),	/* link */
-    (Dtmake_f) 0,
-    (Dtfree_f) freef,
-    (Dtcompar_f) 0,		/* use strcmp */
-    (Dthash_f) 0,
-    (Dtmemory_f) 0,
-    (Dtevent_f) 0
-};
-
 /* cloneGraph:
  * Create and return a new graph which is the logical union
  * of the graphs gs. 
@@ -584,8 +563,6 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
     Agraph_t *subg;
     Agnode_t *n;
     Agnode_t *np;
-    Dt_t *gnames;		/* dict of used subgraph names */
-    Dt_t *nnames;		/* dict of used node names */
     Agsym_t *G_bb;
     Agsym_t *rv;
     bool doWarn = true;
@@ -610,8 +587,8 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
     init_graph(root, false, gvc);
     State = GVSPLINES;
 
-    gnames = dtopen(&pairdisc, Dtoset);
-    nnames = dtopen(&pairdisc, Dtoset);
+    used_t gnames; // dict of used subgraph names
+    used_t nnames; // dict of used node names
     for (size_t i = 0; i < gs.size(); i++) {
 	Agraph_t *g = gs[i];
 	if (verbose)
@@ -640,8 +617,6 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 	agbindrec (subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(g, subg, G_bb, gnames);
     }
-    dtclose(gnames);
-    dtclose(nnames);
 
     /* set up cluster tree */
     if (GD_n_cluster(root)) {
