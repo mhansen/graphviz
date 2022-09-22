@@ -46,11 +46,7 @@ extern const std::unordered_set<std::string_view> all_edge_directions;
 /// misc utilities
 
 /// get the base name of the test case file without file extension
-#define AUTO_NAME()                                                            \
-  ({                                                                           \
-    std::string s_{strrchr(__FILE__, '/')};                                    \
-    s_.substr(1, s_.rfind('.') - 1);                                           \
-  })
+#define AUTO_NAME() std::filesystem::path(__FILE__).stem().string()
 
 void write_to_file(const std::filesystem::path &directory,
                    const std::filesystem::path &filename,
