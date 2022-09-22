@@ -32,9 +32,11 @@
 #include <ingraphs/ingraphs.h>
 #include <iostream>
 #include <limits>
+#include <map>
 #include <pack/pack.h>
 #include <stddef.h>
 #include <string>
+#include <utility>
 #include <vector>
 #include "openFile.h"
 
@@ -378,43 +380,33 @@ static void freef(Dt_t*, void *obj, Dtdisc_t*) {
     free(obj);
 }
 
-static Dtdisc_t attrdisc = {
-    offsetof(attr_t, name),	/* key */
-    -1,				/* size */
-    offsetof(attr_t, link),	/* link */
-    (Dtmake_f) 0,
-    (Dtfree_f) freef,
-    (Dtcompar_f) 0,		/* use strcmp */
-    (Dthash_f) 0,
-    (Dtmemory_f) 0,
-    (Dtevent_f) 0
+namespace {
+/// a value of a graph attribute, possibly set multiple times
+struct AttributeValue {
+  std::string value; ///< text of the value
+  size_t instances;  ///< number of times this attribute was seen
 };
+} // namespace
+
+/// attribute name → value collection of those we have seen
+using attr_map_t = std::map<std::string, AttributeValue>;
 
 /* fillDict:
  * Fill newdict with all the name-value attributes of
  * objp. If the attribute has already been defined and
  * has a different default, set default to "".
  */
-static void fillDict(Dt_t * newdict, Agraph_t* g, int kind)
-{
-    Agsym_t *a;
-    char *name;
-    char *value;
-    attr_t *rv;
+static void fillDict(attr_map_t &newdict, Agraph_t *g, int kind) {
 
-    for (a = agnxtattr(g,kind,0); a; a = agnxtattr(g,kind,a)) {
-	name = a->name;
-	value = a->defval;
-	rv = (attr_t*)dtmatch(newdict, name);
-	if (!rv) {
-	    rv = NEW(attr_t);
-	    rv->name = name;
-	    rv->value = value;
-	    rv->cnt = 1;
-	    dtinsert(newdict, rv);
-	} else if (!strcmp(value, rv->value))
-	    rv->cnt++;
-    }
+  for (Agsym_t *a = agnxtattr(g, kind, 0); a; a = agnxtattr(g, kind, a)) {
+    char *name = a->name;
+    char *value = a->defval;
+    auto it = newdict.find(name);
+    if (it == newdict.end()) {
+      newdict.insert({name, AttributeValue{value, 1}});
+    } else if (it->second.value == value)
+      ++it->second.instances;
+  }
 }
 
 /* fillGraph:
@@ -423,17 +415,18 @@ static void fillDict(Dt_t * newdict, Agraph_t* g, int kind)
  * For a non-empty default value, the attribute must be defined and the
  * same in all graphs.
  */
-static void
-fillGraph(Agraph_t * g, Dt_t * d,
-	  Agsym_t *(*setf)(Agraph_t*, char*, const char*), size_t cnt) {
-    attr_t *av;
-    for (av = (attr_t *) dtflatten(d); av;
-	 av = (attr_t *)dtlink(d, av)) {
-	if (cnt == av->cnt)
-	    setf(g, av->name, av->value);
-	else
-	    setf(g, av->name, "");
-    }
+static void fillGraph(Agraph_t *g, const attr_map_t &d,
+                      Agsym_t *(*setf)(Agraph_t *, char *, const char *),
+                      size_t cnt) {
+  for (const auto &kv : d) {
+    const std::string &name = kv.first;
+    const std::string &value = kv.second.value;
+    const size_t &attr_cnt = kv.second.instances;
+    if (cnt == attr_cnt)
+      setf(g, const_cast<char *>(name.c_str()), value.c_str());
+    else
+      setf(g, const_cast<char *>(name.c_str()), "");
+  }
 }
 
 /* initAttrs:
@@ -441,13 +434,9 @@ fillGraph(Agraph_t * g, Dt_t * d,
  * attributes in the graphs gs.
  */
 static void initAttrs(Agraph_t *root, std::vector<Agraph_t*> &gs) {
-    Dt_t *n_attrs;
-    Dt_t *e_attrs;
-    Dt_t *g_attrs;
-
-    n_attrs = dtopen(&attrdisc, Dtoset);
-    e_attrs = dtopen(&attrdisc, Dtoset);
-    g_attrs = dtopen(&attrdisc, Dtoset);
+    attr_map_t n_attrs;
+    attr_map_t e_attrs;
+    attr_map_t g_attrs;
 
     for (Agraph_t *g : gs) {
 	fillDict(g_attrs, g, AGRAPH);
@@ -458,10 +447,6 @@ static void initAttrs(Agraph_t *root, std::vector<Agraph_t*> &gs) {
     fillGraph(root, g_attrs, agraphattr, gs.size());
     fillGraph(root, n_attrs, agnodeattr, gs.size());
     fillGraph(root, e_attrs, agedgeattr, gs.size());
-
-    dtclose(n_attrs);
-    dtclose(e_attrs);
-    dtclose(g_attrs);
 }
 
 /* cloneGraphAttr:
