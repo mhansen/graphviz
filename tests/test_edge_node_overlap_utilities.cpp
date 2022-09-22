@@ -5,6 +5,7 @@
 #include <catch2/catch.hpp>
 #include <cmath>
 #include <fmt/format.h>
+#include <unordered_map>
 
 #include "svg_analyzer.h"
 #include "test_edge_node_overlap_utilities.h"
@@ -277,7 +278,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
     // check maximum overlap of edge stem and arrowhead
     if (check_options.check_max_edge_stem_arrow_overlap) {
       const auto max_edge_stem_arrowhead_overlap =
-          check_options.max_edge_stem_arrow_overlap;
+          check_options.max_edge_stem_arrow_overlap.at(
+              graph_options.primitive_arrowhead_shape);
       DO_CHECK(edge_stem_arrowhead_overlap <=
                max_edge_stem_arrowhead_overlap +
                    check_options.svg_rounding_error * 2);
@@ -307,7 +309,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
     // check maximum overlap of edge stem and arrowtail
     if (check_options.check_max_edge_stem_arrow_overlap) {
       const auto max_edge_stem_arrowtail_overlap =
-          check_options.max_edge_stem_arrow_overlap;
+          check_options.max_edge_stem_arrow_overlap.at(
+              graph_options.primitive_arrowtail_shape);
       DO_CHECK(edge_stem_arrowtail_overlap <=
                max_edge_stem_arrowtail_overlap +
                    check_options.svg_rounding_error * 2);
@@ -363,19 +366,50 @@ static void write_svg_files(SVGAnalyzer &svg_analyzer,
   }
 }
 
+const std::unordered_set<std::string_view>
+    polygon_shapes_with_left_or_right_corner_unknown_during_layout = {
+        // FIXME: These shapes are represented as a box during layout and do not
+        // get their final shape until the graph is rendered. They have a corner
+        // on their left or right side which the `poly_inside` function is
+        // unaware of.
+        // This causes a lager overlap since the outline of the box is half the
+        // penwidth outside the nominal box, whereas the miter point of the
+        // corner is further away.
+        "cds",       // corner on right side, unknown during layout
+        "rpromoter", // corner on right side, unknown during layout
+        "rarrow",    // corner on right side, unknown during layout
+        "lpromoter", // corner on left side, unknown during layout
+        "larrow"     // corner on left side, unknown during layout
+
+};
+
+static bool has_corner_in_rank_direction_unknown_during_layout(
+    const std::string_view shape, const std::string_view rankdir) {
+  if (rankdir == "LR" || rankdir == "RL") {
+    return polygon_shapes_with_left_or_right_corner_unknown_during_layout
+        .contains(shape);
+  }
+  return false;
+}
+
 /// generate DOT source based on given options
 static std::string generate_dot(const graph_options &graph_options) {
   // use a semi-transparent color to easily see overlaps
   const auto color = "\"#00000060\"";
-  return fmt::format("digraph g1 {{"
-                     "  graph [rankdir={}]"
-                     "  node [penwidth={} shape={} color={} fontname=Courier]"
-                     "  edge [penwidth={} color={} dir={}]"
-                     "  a -> b"
-                     "}}",
-                     graph_options.rankdir, graph_options.node_penwidth,
-                     graph_options.node_shape, color,
-                     graph_options.edge_penwidth, color, graph_options.dir);
+  const auto arrowhead = fmt::format("{}{}", graph_options.arrowhead_modifier,
+                                     graph_options.primitive_arrowhead_shape);
+  const auto arrowtail = fmt::format("{}{}", graph_options.arrowtail_modifier,
+                                     graph_options.primitive_arrowtail_shape);
+  return fmt::format(
+      "digraph g1 {{"
+      "  graph [rankdir={}]"
+      "  node [penwidth={} shape={} color={} fontname=Courier]"
+      "  edge [penwidth={} color={} dir={} arrowhead={} arrowtail={}]"
+      "  a -> b"
+      "}}",
+      graph_options.rankdir, graph_options.node_penwidth,
+      graph_options.node_shape, color, graph_options.edge_penwidth, color,
+      graph_options.dir, arrowhead, arrowtail);
 }
 
 void test_edge_node_overlap(const graph_options &graph_options,
@@ -397,6 +431,54 @@ void test_edge_node_overlap(const graph_options &graph_options,
   const double graphviz_max_svg_rounding_error =
       std::pow(10, -graphviz_num_decimals_in_svg) / 2;
 
+  const std::unordered_map<std::string_view, double>
+      max_edge_stem_arrow_overlap = {
+          {"box",
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+          {"crow",
+           // FIXME: adjust this when `crow` is fixed for penwidth
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+          {"curve",
+           // FIXME: adjust this when `curve` is fixed for penwidth
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+          {"diamond",
+           // FIXME: adjust this when `diamond` is fixed for penwidth
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+          {"dot",
+           // FIXME: adjust this when `dot` is fixed for penwidth
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+          {"icurve",
+           // FIXME: adjust this when `icurve` is fixed for penwidth
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+          {"inv",
+           [&]() { // FIXME: calculate this accurately for normal/inv arrow
+             const auto tip_scale = 2 * 1.5135442928; // empirical value
+             return graph_options.edge_penwidth / 2 * tip_scale +
+                    graphviz_bezier_clip_margin;
+           }()},
+          {"none",
+           // FIXME: adjust this when `none` is fixed for penwidth
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+          {"normal",
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+          {"tee",
+           // FIXME: adjust this when `tee` is fixed for penwidth
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+          {"vee",
+           // FIXME: adjust this when `vee` is fixed for penwidth
+           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+      };
+
+  const auto extra_max_node_edge_overlap =
+      has_corner_in_rank_direction_unknown_during_layout(
+          graph_options.node_shape, graph_options.rankdir)
+          // the corner angle is roughly 90 degrees which gives a miter point
+          // penwidth / 2 * sqrt(2) from the nominal corner, i.e., penwidth / 2
+          // * (sqrt(2) - 1) from the outline bounding box which is only what
+          // the `poly_inside` function knows about during layout
+          ? graph_options.node_penwidth / 2 * (std::sqrt(2) - 1)
+          : 0;
+
   const check_options check_options = {
       .check_max_edge_node_overlap =
           tc_check_options.check_max_edge_node_overlap,
@@ -406,10 +488,10 @@ void test_edge_node_overlap(const graph_options &graph_options,
           tc_check_options.check_max_edge_stem_arrow_overlap,
       .check_min_edge_stem_arrow_overlap =
           tc_check_options.check_min_edge_stem_arrow_overlap,
-      .max_node_edge_overlap = graphviz_bezier_clip_margin,
+      .max_node_edge_overlap =
+          graphviz_bezier_clip_margin + extra_max_node_edge_overlap,
       .min_node_edge_overlap = 0,
-      .max_edge_stem_arrow_overlap =
-          graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin,
+      .max_edge_stem_arrow_overlap = max_edge_stem_arrow_overlap,
       .min_edge_stem_arrow_overlap = 0,
       .svg_rounding_error = graphviz_max_svg_rounding_error,
   };
