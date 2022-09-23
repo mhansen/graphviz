@@ -17,11 +17,10 @@
 #include <math.h>
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/startswith.h>
 #include <common/render.h>
 #include <pack/pack.h>
 #include <common/pointset.h>
-
-#define strneq(a,b,n)		(!strncmp(a,b,n))
 
 #define C 100			/* Max. avg. polyomino size */
 
@@ -1182,10 +1181,6 @@ pack_graph(int ng, Agraph_t** gs, Agraph_t* root, bool *fixed)
     return ret;
 }
 
-#define ARRAY  "array"
-#define ASPECT "aspect"
-#define SLEN(s) (sizeof(s)/sizeof(char) - 1)
-
 static const char*chkFlags(const char *p, pack_info *pinfo) {
     int c, more;
 
@@ -1268,16 +1263,16 @@ parsePackModeInfo(const char* p, pack_mode dflt, pack_info* pinfo)
     if (p && *p) {
 	switch (*p) {
 	case 'a':
-	    if (strneq(p, ARRAY, SLEN(ARRAY))) {
+	    if (startswith(p, "array")) {
 		pinfo->mode = l_array;
-		p += SLEN(ARRAY);
+		p += strlen("array");
 		p = chkFlags (p, pinfo);
 		if ((sscanf (p, "%d", &i)>0) && (i > 0))
 		    pinfo->sz = i;
 	    }
-	    else if (strneq(p, ASPECT, SLEN(ASPECT))) {
+	    else if (startswith(p, "aspect")) {
 		pinfo->mode = l_aspect;
-		if (sscanf(p + SLEN(ASPECT), "%f", &v) > 0 && v > 0)
+		if (sscanf(p + strlen("aspect"), "%f", &v) > 0 && v > 0)
 		    pinfo->aspect = v;
 		else
 		    pinfo->aspect = 1;
