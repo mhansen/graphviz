@@ -1277,7 +1277,7 @@ parsePackModeInfo(const char* p, pack_mode dflt, pack_info* pinfo)
 	    }
 	    else if (strneq(p, ASPECT, SLEN(ASPECT))) {
 		pinfo->mode = l_aspect;
-		if (sscanf(p + SLEN(ARRAY), "%f", &v) > 0 && v > 0)
+		if (sscanf(p + SLEN(ASPECT), "%f", &v) > 0 && v > 0)
 		    pinfo->aspect = v;
 		else
 		    pinfo->aspect = 1;
