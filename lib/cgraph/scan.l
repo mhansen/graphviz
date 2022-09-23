@@ -27,6 +27,7 @@
 #include <grammar.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/startswith.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -114,7 +115,7 @@ static void ppDirective (void)
     char buf[2];
     char* s = aagtext + 1;  /* skip initial # */
 
-    if (strncmp(s, "line", 4) == 0) s += 4;
+    if (startswith(s, "line")) s += strlen("line");
     r = sscanf(s, "%d %1[\"]%n", &lineno, buf, &cnt);
     if (r > 0) { /* got line number */
 	line_num = lineno - 1;
