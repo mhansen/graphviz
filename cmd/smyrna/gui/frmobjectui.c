@@ -499,6 +499,16 @@ _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
     doApply();
 }
 
+_BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)
+{
+    filter_attributes((char *)
+		      gtk_entry_get_text((GtkEntry *)
+					 glade_xml_get_widget(xml,
+							      "txtAttr")),
+		      view->Topview);
+
+}
+
 /* This is the action attached to the publish button on the attributes
  * window. What should happen?
  */
