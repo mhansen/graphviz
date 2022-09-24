@@ -417,6 +417,8 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	double ht;
 	double lw;
 	double rw;
+	double outline_width;  /* width in points with penwidth taken into account */
+	double outline_height; /* height in points with penwidth taken into account */
 	textlabel_t *label;
 	textlabel_t *xlabel;
 	void *alg;
@@ -514,6 +516,8 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define ND_other(n) (((Agnodeinfo_t*)AGDATA(n))->other)
 #define ND_out(n) (((Agnodeinfo_t*)AGDATA(n))->out)
 #define ND_outleaf(n) (((Agnodeinfo_t*)AGDATA(n))->outleaf)
+#define ND_outline_width(n) (((Agnodeinfo_t*)AGDATA(n))->outline_width)
+#define ND_outline_height(n) (((Agnodeinfo_t*)AGDATA(n))->outline_height)
 #define ND_par(n) (((Agnodeinfo_t*)AGDATA(n))->par)
 #define ND_pinned(n) (((Agnodeinfo_t*)AGDATA(n))->pinned)
 #define ND_pos(n) (((Agnodeinfo_t*)AGDATA(n))->pos)
