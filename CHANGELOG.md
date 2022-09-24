@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Using `aspect` with a custom value in the `packmode` attribute is no longer
   misparsed.
+- Smyrna bounding box computation has been corrected. There was a regression in
+  4.0.0 that resulted in a degenerate bounding box being computed for any input
+  graph. See #2279 for details.
 
 ## [6.0.1] – 2022-09-11
 
