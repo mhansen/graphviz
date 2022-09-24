@@ -501,6 +501,9 @@ _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
 
 _BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     filter_attributes((char *)
 		      gtk_entry_get_text((GtkEntry *)
 					 glade_xml_get_widget(xml,
