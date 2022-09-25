@@ -703,7 +703,8 @@ void showAttrsWidget(topview * t)
     filter_attributes("", view->Topview);
 }
 
-static void gvpr_select(char *attrname, char *regex_str, int objType) {
+static void gvpr_select(const char *attrname, const char *regex_str,
+                        int objType) {
 
     char *bf2;
     int i, argc;
@@ -738,11 +739,9 @@ _BB void on_attrSearchBtn_clicked(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    char *attrname =
-	(char *) gtk_entry_get_text((GtkEntry *)
+    const char *attrname = gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtAttr"));
-    char *regex_str =
-	(char *) gtk_entry_get_text((GtkEntry *)
+    const char *regex_str = gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtValue"));
     gvpr_select(attrname, regex_str, get_object_type());
 
