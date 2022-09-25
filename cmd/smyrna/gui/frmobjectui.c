@@ -704,8 +704,7 @@ void showAttrsWidget(topview * t)
     filter_attributes("", view->Topview);
 }
 
-static void gvpr_select(char *attr, char *regex_str, int objType)
-{
+static void gvpr_select(char *attrname, char *regex_str, int objType) {
 
     char *bf2;
     int i, argc;
@@ -715,9 +714,9 @@ static void gvpr_select(char *attr, char *regex_str, int objType)
     agxbinit(&sf, 0, NULL);
 
     if (objType == AGNODE)
-	agxbprint(&sf, "N[%s==\"%s\"]{selected = \"1\"}", attr, regex_str);
+	agxbprint(&sf, "N[%s==\"%s\"]{selected = \"1\"}", attrname, regex_str);
     else if (objType == AGEDGE)
-	agxbprint(&sf, "E[%s==\"%s\"]{selected = \"1\"}", attr, regex_str);
+	agxbprint(&sf, "E[%s==\"%s\"]{selected = \"1\"}", attrname, regex_str);
 
     bf2 = agxbdisown(&sf);
 
