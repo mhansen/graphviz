@@ -710,8 +710,7 @@ static void gvpr_select(char *attrname, char *regex_str, int objType) {
     int i, argc;
     char **argv;
 
-    agxbuf sf;
-    agxbinit(&sf, 0, NULL);
+    agxbuf sf = {0};
 
     if (objType == AGNODE)
 	agxbprint(&sf, "N[%s==\"%s\"]{selected = \"1\"}", attrname, regex_str);
