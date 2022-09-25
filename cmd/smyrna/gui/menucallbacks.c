@@ -24,6 +24,9 @@
 
 void mAttributesSlot(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
+
     showAttrsWidget(view->Topview);
 }
 
