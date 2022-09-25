@@ -21,6 +21,7 @@ add_library(cgraph SHARED
   likely.h
   prisize_t.h
   stack.h
+  startswith.h
   strcasecmp.h
   strview.h
   tokenize.h

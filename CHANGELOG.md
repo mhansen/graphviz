@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (6.0.2)]
 
+### Fixed
+
+- Using `aspect` with a custom value in the `packmode` attribute is no longer
+  misparsed.
+
 ## [6.0.1] – 2022-09-11
 
 ### Changed
