@@ -25,7 +25,6 @@
 #include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
-#include <common/memory.h>
 #include <string.h>
 
 static int sel_node;
@@ -722,7 +721,7 @@ static void gvpr_select(char *attrname, char *regex_str, int objType) {
     argc = 1;
     if (*bf2 != '\0')
 	argc++;
-    argv = N_NEW(argc + 1, char *);
+    argv = gv_calloc(argc + 1, sizeof(char*));
     size_t j = 0;
     argv[j++] = "smyrna";
     argv[j++] = bf2;
