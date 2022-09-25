@@ -275,8 +275,7 @@ static attr_t *binarySearch(attr_list * l, char *searchKey)
     return NULL;
 }
 
-static attr_t *pBinarySearch(attr_list * l, char *searchKey)
-{
+static attr_t *pBinarySearch(attr_list *l, const char *searchKey) {
     int middle, low, high, res;
     low = 0;
     high = l->attr_count - 1;
@@ -296,8 +295,8 @@ static attr_t *pBinarySearch(attr_list * l, char *searchKey)
     return NULL;
 }
 
-static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
-{
+static void create_filtered_list(const char *prefix, attr_list *sl,
+                                 attr_list *tl) {
     int res;
     attr_t *at;
     int objKind = get_object_type();
@@ -324,8 +323,7 @@ static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
     }
 }
 
-static void filter_attributes(char *prefix, topview * t)
-{
+static void filter_attributes(const char *prefix, topview *t) {
     int ind;
     int tmp;
 
@@ -418,8 +416,7 @@ static void filter_attributes(char *prefix, topview * t)
 
 _BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data)
 {
-    filter_attributes((char *) gtk_entry_get_text((GtkEntry *) widget),
-		      view->Topview);
+  filter_attributes(gtk_entry_get_text((GtkEntry*)widget), view->Topview);
 }
 
 static void set_refresh_filters(ViewInfo * v, int type, char *name)
@@ -504,11 +501,8 @@ _BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    filter_attributes((char *)
-		      gtk_entry_get_text((GtkEntry *)
-					 glade_xml_get_widget(xml,
-							      "txtAttr")),
-		      view->Topview);
+    filter_attributes(gtk_entry_get_text((GtkEntry*)glade_xml_get_widget(xml,
+							      "txtAttr")), view->Topview);
 
 }
 
