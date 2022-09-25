@@ -708,7 +708,7 @@ static void gvpr_select(char *attr, char *regex_str, int objType)
 {
 
     char *bf2;
-    int i, j, argc;
+    int i, argc;
     char **argv;
 
     agxbuf sf;
@@ -725,7 +725,7 @@ static void gvpr_select(char *attr, char *regex_str, int objType)
     if (*bf2 != '\0')
 	argc++;
     argv = N_NEW(argc + 1, char *);
-    j = 0;
+    size_t j = 0;
     argv[j++] = "smyrna";
     argv[j++] = bf2;
 
