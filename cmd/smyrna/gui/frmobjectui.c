@@ -304,7 +304,7 @@ static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
 
     if (strlen(prefix) == 0)
 	return;
-    /*locate first occurance */
+    /*locate first occurrence */
     at = pBinarySearch(sl, prefix);
     if (!at)
 	return;
