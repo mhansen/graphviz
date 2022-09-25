@@ -735,6 +735,8 @@ static void gvpr_select(char *attrname, char *regex_str, int objType) {
 
 _BB void on_attrSearchBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
+    (void)widget;
+    (void)user_data;
 
     char *attr =
 	(char *) gtk_entry_get_text((GtkEntry *)
