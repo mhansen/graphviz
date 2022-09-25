@@ -738,12 +738,12 @@ _BB void on_attrSearchBtn_clicked(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    char *attr =
+    char *attrname =
 	(char *) gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtAttr"));
     char *regex_str =
 	(char *) gtk_entry_get_text((GtkEntry *)
 				    glade_xml_get_widget(xml, "txtValue"));
-    gvpr_select(attr, regex_str, get_object_type());
+    gvpr_select(attrname, regex_str, get_object_type());
 
 }
