@@ -54,7 +54,7 @@ static void set_boundaries(Agraph_t * g)
     Agnode_t *v;
     Agsym_t* pos_attr = GN_pos(g);
     glCompPoint pos;
-    float left = FLT_MAX, right = -FLT_MAX, top = FLT_MAX, bottom = -FLT_MAX;
+    float left = FLT_MAX, right = -FLT_MAX, top = -FLT_MAX, bottom = FLT_MAX;
 
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) 
     {

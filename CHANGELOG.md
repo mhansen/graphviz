@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Using `aspect` with a custom value in the `packmode` attribute is no longer
   misparsed.
+- Smyrna bounding box computation has been corrected. There was a regression in
+  4.0.0 that resulted in a degenerate bounding box being computed for any input
+  graph. See #2279 for details.
+- Smyrna warnings about the `on_attrRB0_clicked` and `on_attrSearchBtn_clicked`
+  handlers being not found have been fixed and the buttons to which they are
+  wired should be functional again. This was a regression in 2.50.0 See #2279
+  for details.
+- Smyrna warnings about the `mAttributesSlot` handler being not found have been
+  fixed and the button to which it is wired should be functional again. This was
+  a regression in 2.49.2 See #2279 for details.
 
 ## [6.0.1] – 2022-09-11
 

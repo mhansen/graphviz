@@ -275,8 +275,7 @@ static attr_t *binarySearch(attr_list * l, char *searchKey)
     return NULL;
 }
 
-static attr_t *pBinarySearch(attr_list * l, char *searchKey)
-{
+static attr_t *pBinarySearch(attr_list *l, const char *searchKey) {
     int middle, low, high, res;
     low = 0;
     high = l->attr_count - 1;
@@ -296,15 +295,15 @@ static attr_t *pBinarySearch(attr_list * l, char *searchKey)
     return NULL;
 }
 
-static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
-{
+static void create_filtered_list(const char *prefix, attr_list *sl,
+                                 attr_list *tl) {
     int res;
     attr_t *at;
     int objKind = get_object_type();
 
     if (strlen(prefix) == 0)
 	return;
-    /*locate first occurance */
+    /*locate first occurrence */
     at = pBinarySearch(sl, prefix);
     if (!at)
 	return;
@@ -324,8 +323,7 @@ static void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
     }
 }
 
-static void filter_attributes(char *prefix, topview * t)
-{
+static void filter_attributes(const char *prefix, topview *t) {
     int ind;
     int tmp;
 
@@ -418,8 +416,7 @@ static void filter_attributes(char *prefix, topview * t)
 
 _BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data)
 {
-    filter_attributes((char *) gtk_entry_get_text((GtkEntry *) widget),
-		      view->Topview);
+  filter_attributes(gtk_entry_get_text((GtkEntry*)widget), view->Topview);
 }
 
 static void set_refresh_filters(ViewInfo * v, int type, char *name)
@@ -497,6 +494,16 @@ _BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
     (void)user_data;
 
     doApply();
+}
+
+_BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)
+{
+    (void)widget;
+    (void)user_data;
+
+    filter_attributes(gtk_entry_get_text((GtkEntry*)glade_xml_get_widget(xml,
+							      "txtAttr")), view->Topview);
+
 }
 
 /* This is the action attached to the publish button on the attributes
@@ -688,4 +695,48 @@ void showAttrsWidget(topview * t)
 				  ATTR_NOTEBOOK_IDX);
     set_header_text();
     filter_attributes("", view->Topview);
+}
+
+static void gvpr_select(const char *attrname, const char *regex_str,
+                        int objType) {
+
+    char *bf2;
+    int i, argc;
+    char **argv;
+
+    agxbuf sf = {0};
+
+    if (objType == AGNODE)
+	agxbprint(&sf, "N[%s==\"%s\"]{selected = \"1\"}", attrname, regex_str);
+    else if (objType == AGEDGE)
+	agxbprint(&sf, "E[%s==\"%s\"]{selected = \"1\"}", attrname, regex_str);
+
+    bf2 = agxbdisown(&sf);
+
+    argc = 1;
+    if (*bf2 != '\0')
+	argc++;
+    argv = gv_calloc(argc + 1, sizeof(char*));
+    size_t j = 0;
+    argv[j++] = "smyrna";
+    argv[j++] = bf2;
+
+    run_gvpr(view->g[view->activeGraph], j, argv);
+    for (i = 1; i < argc; i++)
+	free(argv[i]);
+    free(argv);
+    set_header_text();
+}
+
+_BB void on_attrSearchBtn_clicked(GtkWidget * widget, gpointer user_data)
+{
+    (void)widget;
+    (void)user_data;
+
+    const char *attrname = gtk_entry_get_text((GtkEntry *)
+				    glade_xml_get_widget(xml, "txtAttr"));
+    const char *regex_str = gtk_entry_get_text((GtkEntry *)
+				    glade_xml_get_widget(xml, "txtValue"));
+    gvpr_select(attrname, regex_str, get_object_type());
+
 }
