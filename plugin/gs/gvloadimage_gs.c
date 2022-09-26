@@ -86,8 +86,8 @@ static void gs_error(GVJ_t * job, const char *name, const char *funstr, int err)
     else
 	errsrc = "Ghostscript internal error";
 
-    job->common->errorfn("%s: %s() returned: %d \"%s\" (%s)\n",
-		name, funstr, err, gs_error_names[-err - 1], errsrc);
+    job->common->errorfn("%s: %s() returned: %d (%s)\n",
+		name, funstr, err, errsrc);
 }
 
 static int gvloadimage_process_file(GVJ_t *job, usershape_t *us, void *instance)
