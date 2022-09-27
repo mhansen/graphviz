@@ -389,11 +389,14 @@ static void write_subg(Agraph_t * g, GVJ_t * job, state_t* sp)
     }
 }
 
-static int write_subgs(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
+/// write out subgraphs
+///
+/// \return True if the given graph has any subgraphs
+static bool write_subgs(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
     Agraph_t* sg;
 
     sg = agfstsubg(g);
-    if (!sg) return 0;
+    if (!sg) return false;
    
     gvputs(job, ",\n");
     indent(job, sp->Level++);
@@ -419,7 +422,7 @@ static int write_subgs(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
 	gvputs(job, "]");
     }
 
-    return 1;
+    return true;
 }
 
 static int agseqasc(Agedge_t **lhs, Agedge_t **rhs)
@@ -527,7 +530,7 @@ static void write_node(Agnode_t *n, GVJ_t *job, bool top, state_t *sp) {
     }
 }
 
-static int write_nodes(Agraph_t *g, GVJ_t *job, bool top, int has_subgs, state_t *sp) {
+static int write_nodes(Agraph_t *g, GVJ_t *job, bool top, bool has_subgs, state_t *sp) {
     Agnode_t* n;
 
     n = agfstnode(g);
@@ -636,7 +639,6 @@ static void write_graph(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
     int ncnt = 0;
     int ecnt = 0;
     int sgcnt = 0;
-    int has_subgs;
     Dt_t* map;
 
     if (top) {
@@ -672,7 +674,7 @@ static void write_graph(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
 	indent(job, sp->Level);
 	gvprintf(job, "\"_gvid\": %d", GD_gid(g));
     }
-    has_subgs = write_subgs(g, job, top, sp);
+    bool has_subgs = write_subgs(g, job, top, sp);
     write_nodes (g, job, top, has_subgs, sp);
     write_edges (g, job, top, sp);
     gvputs(job, "\n");
