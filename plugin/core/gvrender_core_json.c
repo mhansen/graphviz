@@ -360,8 +360,7 @@ static void write_attrs(Agobj_t * obj, GVJ_t * job, state_t* sp)
     }
 }
 
-static void write_hdr(Agraph_t * g, GVJ_t * job, int top, state_t* sp)
-{
+static void write_hdr(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
     char *name;
 
     name = agnameof(g);
@@ -377,21 +376,20 @@ static void write_hdr(Agraph_t * g, GVJ_t * job, int top, state_t* sp)
     }
 }
 
-static void write_graph(Agraph_t * g, GVJ_t * job, int top, state_t* sp);
+static void write_graph(Agraph_t *g, GVJ_t *job, bool top, state_t *sp);
 
 static void write_subg(Agraph_t * g, GVJ_t * job, state_t* sp)
 {
     Agraph_t* sg;
 
-    write_graph (g, job, FALSE, sp);
+    write_graph (g, job, false, sp);
     for (sg = agfstsubg(g); sg; sg = agnxtsubg(sg)) {
 	gvputs(job, ",\n");
 	write_subg(sg, job, sp);
     }
 }
 
-static int write_subgs(Agraph_t * g, GVJ_t * job, int top, state_t* sp)
-{
+static int write_subgs(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
     Agraph_t* sg;
 
     sg = agfstsubg(g);
@@ -440,8 +438,7 @@ static int agseqasc(Agedge_t **lhs, Agedge_t **rhs)
     }
 }
 
-static void write_edge(Agedge_t * e, GVJ_t * job, int top, state_t* sp)
-{
+static void write_edge(Agedge_t *e, GVJ_t *job, bool top, state_t *sp) {
     if (top) {
 	indent(job, sp->Level++);
 	gvputs(job, "{\n");
@@ -462,8 +459,7 @@ static void write_edge(Agedge_t * e, GVJ_t * job, int top, state_t* sp)
     }
 }
 
-static int write_edges(Agraph_t * g, GVJ_t * job, int top, state_t* sp)
-{
+static int write_edges(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
     size_t count = 0;
 
     for (Agnode_t *np = agfstnode(g); np; np = agnxtnode(g, np)) {
@@ -512,8 +508,7 @@ static int write_edges(Agraph_t * g, GVJ_t * job, int top, state_t* sp)
     return 1;
 }
 
-static void write_node(Agnode_t * n, GVJ_t * job, int top, state_t* sp)
-{
+static void write_node(Agnode_t *n, GVJ_t *job, bool top, state_t *sp) {
     if (top) {
 	indent(job, sp->Level++);
 	gvputs(job, "{\n");
@@ -532,8 +527,7 @@ static void write_node(Agnode_t * n, GVJ_t * job, int top, state_t* sp)
     }
 }
 
-static int write_nodes(Agraph_t * g, GVJ_t * job, int top, int has_subgs, state_t* sp)
-{
+static int write_nodes(Agraph_t *g, GVJ_t *job, bool top, int has_subgs, state_t *sp) {
     Agnode_t* n;
 
     n = agfstnode(g);
@@ -636,8 +630,7 @@ static int label_subgs(Agraph_t* g, int lbl, Dt_t* map)
 }
 
 
-static void write_graph(Agraph_t * g, GVJ_t * job, int top, state_t* sp)
-{
+static void write_graph(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
     Agnode_t* np; 
     Agedge_t* ep; 
     int ncnt = 0;
@@ -712,7 +705,7 @@ static void json_end_graph(GVJ_t *job)
     sp.Level = 0;
     sp.isLatin = GD_charset(g) == CHAR_LATIN1;
     sp.doXDot = job->render.id == FORMAT_JSON || job->render.id == FORMAT_XDOT_JSON;
-    write_graph(g, job, TRUE, &sp);
+    write_graph(g, job, true, &sp);
 }
 
 gvrender_engine_t json_engine = {
