@@ -28,6 +28,7 @@
 #include <gvc/gvplugin_device.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/startswith.h>
 #include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
@@ -57,7 +58,7 @@ typedef struct {
 #define ED_gid(n) (((gvid_t*)aggetrec(n, ID, FALSE))->id) 
 #define GD_gid(n) (((gvid_t*)aggetrec(n, ID, FALSE))->id) 
 
-#define IS_CLUSTER(s) (!strncmp(agnameof(s), "cluster", 7))
+#define IS_CLUSTER(s) startswith(agnameof(s), "cluster")
 
 static void json_begin_graph(GVJ_t *job)
 {
