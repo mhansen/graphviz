@@ -702,7 +702,6 @@ static void gvpr_select(const char *attrname, const char *regex_str,
 
     char *bf2;
     int i, argc;
-    char **argv;
 
     agxbuf sf = {0};
 
@@ -716,7 +715,7 @@ static void gvpr_select(const char *attrname, const char *regex_str,
     argc = 1;
     if (*bf2 != '\0')
 	argc++;
-    argv = gv_calloc(argc + 1, sizeof(char*));
+    char *argv[3] = {0};
     size_t j = 0;
     argv[j++] = "smyrna";
     argv[j++] = bf2;
@@ -724,7 +723,6 @@ static void gvpr_select(const char *attrname, const char *regex_str,
     run_gvpr(view->g[view->activeGraph], j, argv);
     for (i = 1; i < argc; i++)
 	free(argv[i]);
-    free(argv);
     set_header_text();
 }
 
