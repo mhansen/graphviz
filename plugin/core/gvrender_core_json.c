@@ -332,10 +332,9 @@ static void write_xdots (char * val, GVJ_t * job, state_t* sp)
 
 static int isXDot (char* name)
 {
-  return *name++ == '_' &&
-          (streq(name,"draw_") || streq(name,"ldraw_") ||
-          streq(name,"hdraw_") || streq(name,"tdraw_") ||
-          streq(name,"hldraw_") || streq(name,"tldraw_"));
+  return streq(name, "_draw_") || streq(name, "_ldraw_") ||
+         streq(name, "_hdraw_") || streq(name, "_tdraw_") ||
+         streq(name, "_hldraw_") || streq(name, "_tldraw_");
 }
 
 static void write_attrs(Agobj_t * obj, GVJ_t * job, state_t* sp)
