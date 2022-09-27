@@ -1987,3 +1987,20 @@ def test_2272():
 
   # run the test
   run_c(c_src, link=["cgraph", "gvc"])
+
+@pytest.mark.xfail(strict=True)
+def test_2282():
+  """
+  using the `fdp` layout with JSON output should result in valid JSON
+  https://gitlab.com/graphviz/graphviz/-/issues/2282
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "2282.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # translate this to JSON
+  output = dot("json", input)
+
+  # confirm this is valid JSON
+  json.loads(output)
