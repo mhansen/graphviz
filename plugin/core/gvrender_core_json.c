@@ -330,8 +330,7 @@ static void write_xdots (char * val, GVJ_t * job, state_t* sp)
     freeXDot(cmds);
 }
 
-static int isXDot (char* name)
-{
+static int isXDot(const char* name) {
   return streq(name, "_draw_") || streq(name, "_ldraw_") ||
          streq(name, "_hdraw_") || streq(name, "_tdraw_") ||
          streq(name, "_hldraw_") || streq(name, "_tldraw_");
