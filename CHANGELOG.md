@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Smyrna warnings about the `mAttributesSlot` handler being not found have been
   fixed and the button to which it is wired should be functional again. This was
   a regression in 2.49.2 See #2279 for details.
+- Graphviz no longer fails to load private Ghostscript symbols ("Could not load
+  `libgvplugin_gs.so.6`) #2280
 
 ## [6.0.1] – 2022-09-11
 
