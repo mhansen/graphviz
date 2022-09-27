@@ -58,7 +58,9 @@ typedef struct {
 #define ED_gid(n) (((gvid_t*)aggetrec(n, ID, FALSE))->id) 
 #define GD_gid(n) (((gvid_t*)aggetrec(n, ID, FALSE))->id) 
 
-#define IS_CLUSTER(s) startswith(agnameof(s), "cluster")
+static bool IS_CLUSTER(Agraph_t *s) {
+  return startswith(agnameof(s), "cluster");
+}
 
 static void json_begin_graph(GVJ_t *job)
 {
