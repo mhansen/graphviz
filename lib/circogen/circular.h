@@ -17,7 +17,6 @@ typedef struct {
     blocklist_t bl;
     int orderCount;
     int blockCount;
-    attrsym_t *N_artpos;
     attrsym_t *N_root;
     char *rootname;
     double min_dist;
