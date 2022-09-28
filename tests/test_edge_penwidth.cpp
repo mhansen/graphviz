@@ -10,10 +10,10 @@ TEST_CASE("Edge penwidth",
 
   const auto primitive_arrow_shape =
       GENERATE(from_range(all_primitive_arrow_shapes));
-  INFO(fmt::format("Primitive arrow shape: {}", primitive_arrow_shape));
+  INFO("Primitive arrow shape: " << primitive_arrow_shape);
 
   const auto edge_penwidth = GENERATE(0.5, 1.0, 2.0);
-  INFO(fmt::format("Edge penwidth: {}", edge_penwidth));
+  INFO("Edge penwidth: " << edge_penwidth);
 
   auto dot =
       fmt::format("digraph g1 {{edge [arrowhead={} penwidth={}]; a -> b}}",

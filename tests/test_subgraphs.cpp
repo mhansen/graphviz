@@ -23,7 +23,7 @@ TEST_CASE("subgraphs in directed and undirected graphs with different layout "
           : fmt::format(
                 "{} {{subgraph s0 {{a {} b}}; subgraph s1 {{c {} d }}}}",
                 graph_type, edge_op, edge_op);
-  INFO(fmt::format("DOT source: {}", dot));
+  INFO("DOT source: " << dot);
 
   auto g = agmemread(dot.c_str());
   REQUIRE(g != nullptr);
@@ -37,7 +37,7 @@ TEST_CASE("subgraphs in directed and undirected graphs with different layout "
                                       "osage",    //
                                       "patchwork" //
   );
-  INFO("Layout engine: " + engine);
+  INFO("Layout engine: " << engine);
 
   auto gvc = gvContextPlugins(lt_preloaded_symbols, false);
   {

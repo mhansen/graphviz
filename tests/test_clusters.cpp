@@ -24,7 +24,7 @@ TEST_CASE(
           : fmt::format("{} {{subgraph cluster_0 {{a {} b}}; subgraph "
                         "cluster_1 {{c {} d }}}}",
                         graph_type, edge_op, edge_op);
-  INFO(fmt::format("DOT source: {}", dot));
+  INFO("DOT source: " << dot);
 
   auto g = agmemread(dot.c_str());
   REQUIRE(g != nullptr);
@@ -38,7 +38,7 @@ TEST_CASE(
                                       "osage",    //
                                       "patchwork" //
   );
-  INFO("Layout engine: " + engine);
+  INFO("Layout engine: " << engine);
 
   auto gvc = gvContextPlugins(lt_preloaded_symbols, false);
 

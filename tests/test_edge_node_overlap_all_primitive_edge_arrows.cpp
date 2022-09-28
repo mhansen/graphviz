@@ -17,9 +17,9 @@ TEST_CASE("Edge node overlap for all primitive arrow shapes",
 
   const auto primitive_arrow_shape =
       GENERATE(from_range(all_primitive_arrow_shapes));
-  INFO(fmt::format("Edge primitive arrow shape: {}", primitive_arrow_shape));
+  INFO("Edge primitive arrow shape: " << primitive_arrow_shape);
 
-  INFO(fmt::format("Edge arrow shape: {}", primitive_arrow_shape));
+  INFO("Edge arrow shape: " << primitive_arrow_shape);
   filename_base += fmt::format("_arrow_shape{}", primitive_arrow_shape);
 
   const graph_options graph_options = {

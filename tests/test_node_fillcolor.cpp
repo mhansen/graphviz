@@ -16,14 +16,14 @@ TEST_CASE("Node fillcolor",
         return !node_shapes_without_svg_shape.contains(shape);
       },
       from_range(all_node_shapes)));
-  INFO(fmt::format("Shape: {}", shape));
+  INFO("Shape: " << shape);
 
   const auto node_rgb_fillcolor =
       GENERATE("#000000", "#ffffff", "#ff0000", "#aa0f55");
   const auto opacity = GENERATE(0, 200, 255);
   const auto node_rgba_fillcolor =
       fmt::format("{}{:02x}", node_rgb_fillcolor, opacity);
-  INFO(fmt::format("Node fillcolor: {}", node_rgba_fillcolor));
+  INFO("Node fillcolor: " << node_rgba_fillcolor);
 
   auto dot = fmt::format(
       "digraph g1 {{node [shape={} style=filled fillcolor=\"{}\"]; a -> b}}",

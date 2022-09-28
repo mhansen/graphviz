@@ -15,10 +15,10 @@ TEST_CASE("Node penwidth",
         return !node_shapes_without_svg_shape.contains(shape);
       },
       from_range(all_node_shapes)));
-  INFO(fmt::format("Shape: {}", shape));
+  INFO("Shape: " << shape);
 
   const auto node_penwidth = GENERATE(0.5, 1.0, 2.0);
-  INFO(fmt::format("Node penwidth: {}", node_penwidth));
+  INFO("Node penwidth: " << node_penwidth);
 
   auto dot = fmt::format("digraph g1 {{node [shape={} penwidth={}]; a -> b}}",
                          shape, node_penwidth);

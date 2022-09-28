@@ -10,10 +10,10 @@ TEST_CASE("SvgAnalyzer penwidth",
           "attribute is used for nodes and edges") {
 
   const auto shape = GENERATE(from_range(all_node_shapes));
-  INFO(fmt::format("Shape: {}", shape));
+  INFO("Shape: " << shape);
 
   const auto penwidth = GENERATE(0.5, 1.0, 2.0);
-  INFO(fmt::format("Node and edge penwidth: {}", penwidth));
+  INFO("Node and edge penwidth: " << penwidth);
 
   auto dot = fmt::format(
       "digraph g1 {{node [shape={} penwidth={}]; edge [penwidth={}]; a -> b}}",

@@ -11,14 +11,14 @@ TEST_CASE("Graph rankdir", "Test that the Graphviz `rankdir` attribute affects "
                            "correctly when the 'dot` layout engine is used") {
 
   const auto rankdir = GENERATE(from_range(all_rank_directions));
-  INFO(fmt::format("Rankdir: {}", rankdir));
+  INFO("Rankdir: " << rankdir);
 
   const auto shape = GENERATE(filter(
       [](std::string_view shape) {
         return !node_shapes_without_svg_shape.contains(shape);
       },
       from_range(all_node_shapes)));
-  INFO(fmt::format("Shape: {}", shape));
+  INFO("Shape: " << shape);
 
   auto dot = fmt::format(
       "digraph g1 {{rankdir={}; node [shape={} fontname=Courier]; a -> b}}",

@@ -9,7 +9,7 @@ TEST_CASE("Minimum edge and node overlap for polygon node shapes",
           "node, regardless of the node shape") {
 
   const auto shape = GENERATE(from_range(node_shapes_consisting_of_polygon));
-  INFO(fmt::format("Node shape: {}", shape));
+  INFO("Node shape: " << shape);
 
   const graph_options graph_options = {
       .node_shape = shape,

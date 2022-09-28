@@ -12,11 +12,11 @@ TEST_CASE("SvgAnalyzer fillcolor",
           "`fillcolor` attribute is used for nodes and edges ") {
 
   const auto shape = GENERATE(from_range(all_node_shapes));
-  INFO(fmt::format("Shape: {}", shape));
+  INFO("Shape: " << shape);
 
   const std::string_view fillcolor =
       GENERATE("", "\"#10204000\"", "\"#10204080\"", "\"#102040ff\"");
-  INFO(fmt::format("Fillcolor: {}", fillcolor));
+  INFO("Fillcolor: " << fillcolor);
   const auto fillcolor_attr =
       fillcolor.empty() ? "" : fmt::format(" fillcolor={}", fillcolor);
   const std::string_view node_style = fillcolor.empty() ? "" : "filled";

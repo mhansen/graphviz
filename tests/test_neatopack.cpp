@@ -24,7 +24,7 @@ TEST_CASE("take an input graph, compute its connected components, lay out each "
       num_subgraphs == 1
           ? fmt::format("{} {{a {} b}}", graph_type, edge_op)
           : fmt::format("{} {{a {} b; c {} d}}", graph_type, edge_op, edge_op);
-  INFO(fmt::format("DOT source: {}", dot));
+  INFO("DOT source: " << dot);
 
   auto *g = agmemread(dot.c_str());
   REQUIRE(g != nullptr);
