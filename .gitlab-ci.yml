@@ -796,6 +796,22 @@ centos7-cmake-build:
     variables:
       IMAGE: centos7
 
+fedora35-cmake-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_fedora35
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS=-Werror
+        - export CXXFLAGS=-Werror
+        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora35
+
 macos-cmake-build:
     <<: *macos_build_definition
     before_script:
