@@ -1050,7 +1050,7 @@ ubuntu-22.04-cmake-test:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu22.04-cmake-ASan-test-including-ctest:
+ubuntu-22.04-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
     before_script:
         - export build_system="cmake"
