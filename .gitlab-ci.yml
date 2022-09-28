@@ -292,7 +292,7 @@ fedora36-build:
     variables:
       IMAGE: fedora36
 
-ubuntu18-04-build:
+ubuntu-18.04-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-18.04
@@ -662,7 +662,7 @@ windows-cygwin-build-using-autogen:
     except:
         - tags
 
-ubuntu18-04-cmake-build:
+ubuntu-18.04-cmake-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-18.04
@@ -932,12 +932,12 @@ meta-data:
     except:
         - tags
 
-ubuntu18-04-test:
+ubuntu-18.04-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="autotools"
     needs:
-        - job: "ubuntu18-04-build"
+        - job: "ubuntu-18.04-build"
           artifacts: true
     tags:
         - linux
@@ -1024,13 +1024,13 @@ macos-autotools-test:
         variables:
           - $ENABLE_GRAPHVIZ_MACOS_CI
 
-ubuntu18-04-cmake-test:
+ubuntu-18.04-cmake-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="cmake"
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
-        - job: "ubuntu18-04-cmake-build"
+        - job: "ubuntu-18.04-cmake-build"
           artifacts: true
     tags:
         - linux
