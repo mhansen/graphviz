@@ -678,6 +678,22 @@ ubuntu-18.04-cmake-build:
     variables:
       IMAGE: ubuntu-18.04
 
+ubuntu-20.04-cmake-build:
+    <<: *deb_build_definition
+    needs:
+        - job: docker_build_ubuntu-20.04
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS=-Werror
+        - export CXXFLAGS=-Werror
+        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-20.04
+
 ubuntu-22.04-cmake-build:
     <<: *deb_build_definition
     needs:
