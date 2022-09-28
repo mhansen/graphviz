@@ -308,7 +308,7 @@ ubuntu-18.04-build:
     variables:
       IMAGE: ubuntu-18.04
 
-ubuntu20-04-debug-build:
+ubuntu-20.04-debug-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-20.04
@@ -323,7 +323,7 @@ ubuntu20-04-debug-build:
     variables:
       IMAGE: ubuntu-20.04
 
-ubuntu20-04-build:
+ubuntu-20.04-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-20.04
@@ -944,12 +944,12 @@ ubuntu-18.04-test:
     variables:
       IMAGE: ubuntu-18.04
 
-ubuntu20-04-test:
+ubuntu-20.04-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="autotools"
     needs:
-        - job: "ubuntu20-04-build"
+        - job: "ubuntu-20.04-build"
           artifacts: true
     tags:
         - linux
