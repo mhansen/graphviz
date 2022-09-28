@@ -1053,6 +1053,19 @@ ubuntu-18.04-cmake-test:
     variables:
       IMAGE: ubuntu-18.04
 
+ubuntu-20.04-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
+    needs:
+        - job: "ubuntu-20.04-cmake-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: ubuntu-20.04
+
 ubuntu-22.04-cmake-test:
     <<: *linux_test_definition
     before_script:
