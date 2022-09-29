@@ -292,7 +292,7 @@ fedora36-build:
     variables:
       IMAGE: fedora36
 
-ubuntu18-04-build:
+ubuntu-18.04-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-18.04
@@ -308,7 +308,7 @@ ubuntu18-04-build:
     variables:
       IMAGE: ubuntu-18.04
 
-ubuntu20-04-debug-build:
+ubuntu-20.04-debug-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-20.04
@@ -323,7 +323,7 @@ ubuntu20-04-debug-build:
     variables:
       IMAGE: ubuntu-20.04
 
-ubuntu20-04-build:
+ubuntu-20.04-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-20.04
@@ -335,7 +335,7 @@ ubuntu20-04-build:
     variables:
       IMAGE: ubuntu-20.04
 
-ubuntu22-04-build:
+ubuntu-22.04-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-22.04
@@ -347,7 +347,7 @@ ubuntu22-04-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu22-04-static-build:
+ubuntu-22.04-static-build:
     <<: *deb_build_definition
     before_script:
         - export CONFIGURE_OPTIONS="--disable-shared --enable-static"
@@ -662,7 +662,7 @@ windows-cygwin-build-using-autogen:
     except:
         - tags
 
-ubuntu18-04-cmake-build:
+ubuntu-18.04-cmake-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-18.04
@@ -678,7 +678,7 @@ ubuntu18-04-cmake-build:
     variables:
       IMAGE: ubuntu-18.04
 
-ubuntu22-04-cmake-build:
+ubuntu-22.04-cmake-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-22.04
@@ -695,7 +695,7 @@ ubuntu22-04-cmake-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu22-04-cmake-minimal-build:
+ubuntu-22.04-cmake-minimal-build:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-22.04
@@ -719,7 +719,7 @@ ubuntu22-04-cmake-minimal-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu22-04-cmake-ASan-build-for-ctest:
+ubuntu-22.04-cmake-ASan-build-for-ctest:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-22.04
@@ -932,36 +932,36 @@ meta-data:
     except:
         - tags
 
-ubuntu18-04-test:
+ubuntu-18.04-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="autotools"
     needs:
-        - job: "ubuntu18-04-build"
+        - job: "ubuntu-18.04-build"
           artifacts: true
     tags:
         - linux
     variables:
       IMAGE: ubuntu-18.04
 
-ubuntu20-04-test:
+ubuntu-20.04-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="autotools"
     needs:
-        - job: "ubuntu20-04-build"
+        - job: "ubuntu-20.04-build"
           artifacts: true
     tags:
         - linux
     variables:
       IMAGE: ubuntu-20.04
 
-ubuntu22-04-test:
+ubuntu-22.04-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="autotools"
     needs:
-        - job: "ubuntu22-04-build"
+        - job: "ubuntu-22.04-build"
           artifacts: true
     tags:
         - linux
@@ -1024,33 +1024,33 @@ macos-autotools-test:
         variables:
           - $ENABLE_GRAPHVIZ_MACOS_CI
 
-ubuntu18-04-cmake-test:
+ubuntu-18.04-cmake-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="cmake"
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
-        - job: "ubuntu18-04-cmake-build"
+        - job: "ubuntu-18.04-cmake-build"
           artifacts: true
     tags:
         - linux
     variables:
       IMAGE: ubuntu-18.04
 
-ubuntu22-04-cmake-test:
+ubuntu-22.04-cmake-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="cmake"
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
-        - job: "ubuntu22-04-cmake-build"
+        - job: "ubuntu-22.04-cmake-build"
           artifacts: true
     tags:
         - linux
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu22.04-cmake-ASan-test-including-ctest:
+ubuntu-22.04-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
     before_script:
         - export build_system="cmake"
@@ -1059,7 +1059,7 @@ ubuntu22.04-cmake-ASan-test-including-ctest:
         - export LDFLAGS=" -g -fsanitize=address,undefined"
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
-        - job: "ubuntu22-04-cmake-ASan-build-for-ctest"
+        - job: "ubuntu-22.04-cmake-ASan-build-for-ctest"
           artifacts: true
     tags:
         - linux
