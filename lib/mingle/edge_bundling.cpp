@@ -602,7 +602,6 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
   int k;
   double step0 = 0.1, start = 0.0;
   int maxit = 10;
-  int flag; 
 
   assert(A->n == ne);
   edges = (pedge*)MALLOC(sizeof(pedge)*ne);
@@ -626,8 +625,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
   } else if (method == METHOD_INK_AGGLOMERATE){
 #ifdef HAVE_ANN
     /* plan: merge a node with its neighbors if doing so improve. Form coarsening graph, repeat until no more ink saving */
-    edges = agglomerative_ink_bundling(dim, A, edges, nneighbor, max_recursion, angle_param, angle, &flag);
-    assert(!flag);
+    edges = agglomerative_ink_bundling(dim, A, edges, nneighbor, max_recursion, angle_param, angle);
 #else
     agerr (AGERR, "Graphviz built without approximate nearest neighbor library ANN; agglomerative inking not available\n");
     edges = edges;
