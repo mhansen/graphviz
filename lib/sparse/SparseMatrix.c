@@ -1626,7 +1626,6 @@ SparseMatrix SparseMatrix_remove_upper(SparseMatrix A){/* remove diag and upper 
   clear_flag(A->property, MATRIX_PATTERN_SYMMETRIC);
   clear_flag(A->property, MATRIX_SYMMETRIC);
   clear_flag(A->property, MATRIX_SKEW);
-  clear_flag(A->property, MATRIX_HERMITIAN);
   return A;
 }
 

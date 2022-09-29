@@ -242,8 +242,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	SparseMatrix_set_pattern_symmetric(A);
     } else if (mm_is_skew(matcode)) {
 	SparseMatrix_set_skew(A);
-    } else if (mm_is_hermitian(matcode)) {
-	SparseMatrix_set_hemitian(A);
     }
 
 

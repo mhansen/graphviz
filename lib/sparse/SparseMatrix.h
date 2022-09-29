@@ -21,7 +21,7 @@ extern "C" {
 #define SYMMETRY_EPSILON 0.0000001
 enum {FORMAT_CSC, FORMAT_CSR, FORMAT_COORD};
 enum {UNMASKED = -10, MASKED = 1};
-enum {MATRIX_PATTERN_SYMMETRIC = 1<<0, MATRIX_SYMMETRIC = 1<<1, MATRIX_SKEW = 1<<2, MATRIX_HERMITIAN = 1<<3, MATRIX_UNDIRECTED = 1<<4};
+enum {MATRIX_PATTERN_SYMMETRIC = 1<<0, MATRIX_SYMMETRIC = 1<<1, MATRIX_SKEW = 1<<2, MATRIX_UNDIRECTED = 1<<4};
 enum {BIPARTITE_RECT = 0, BIPARTITE_PATTERN_UNSYM, BIPARTITE_UNSYM, BIPARTITE_ALWAYS};
 
 
@@ -112,7 +112,6 @@ SparseMatrix SparseMatrix_from_dense(int m, int n, double *x);
 #define SparseMatrix_set_symmetric(A) set_flag((A)->property, MATRIX_SYMMETRIC)
 #define SparseMatrix_set_pattern_symmetric(A) set_flag((A)->property, MATRIX_PATTERN_SYMMETRIC)
 #define SparseMatrix_set_skew(A) set_flag((A)->property, MATRIX_SKEW)
-#define SparseMatrix_set_hemitian(A) set_flag((A)->property, MATRIX_HERMITIAN)
 
 
 #define SparseMatrix_known_undirected(A) test_flag((A)->property, MATRIX_UNDIRECTED)
