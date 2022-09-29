@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   a regression in 2.49.2 See #2279 for details.
 - Graphviz no longer fails to load private Ghostscript symbols ("Could not load
   `libgvplugin_gs.so.6`) #2280
+- trailing commas issue with fdp layout #2282
 
 ## [6.0.1] – 2022-09-11
 

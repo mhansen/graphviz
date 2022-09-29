@@ -1988,7 +1988,6 @@ def test_2272():
   # run the test
   run_c(c_src, link=["cgraph", "gvc"])
 
-@pytest.mark.xfail(strict=True)
 def test_2282():
   """
   using the `fdp` layout with JSON output should result in valid JSON
