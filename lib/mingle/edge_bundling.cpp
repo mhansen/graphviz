@@ -444,7 +444,7 @@ static void edge_attraction_force(double similarity, pedge e1, pedge e2,
 
 }
 
-static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int maxit, double step0, double K, int open_gl){
+static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int maxit, double step0, double K) {
   int i, j, ne = A->n, k;
   int *ia = A->ia, *ja = A->ja, iter = 0;
   double *a = (double*) A->a;
@@ -490,16 +490,6 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
     step = step*0.9;
   if (Verbose > 1)
     fprintf(stderr, "iter ==== %d cpu = %f npoints = %d\n",iter, ((double) (clock() - start))/CLOCKS_PER_SEC, np - 2);
-
-#ifdef OPENGL
-    if (open_gl){
-      edges_global = edges;
-      drawScene();
-    }
-#else
-    (void)open_gl;
-#endif
-
   }
 
   return edges;
@@ -604,7 +594,7 @@ static SparseMatrix check_compatibility(SparseMatrix A, int ne, pedge *edges, in
 }
 
 pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, double K, int method, int nneighbor, int compatibility_method,
-		     int max_recursion, double angle_param, double angle, int open_gl){
+		     int max_recursion, double angle_param, double angle){
   /* bundle edges. 
      A: edge graph
      x: edge i is at {p,q}, 
@@ -616,7 +606,6 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
      nneighbor: number of neighbors to be used in forming nearest neighbor graph. Used only in agglomerative method
      compatibility_method: which method to use to calculate compatibility. Used only in force directed.
      max_recursion: used only in agglomerative method. Specify how many level of recursion to do to bundle bundled edges again
-     open_gl: whether to plot in X.
 
   */
   int ne = A0->m;
@@ -651,7 +640,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
   } else if (method == METHOD_INK_AGGLOMERATE){
 #ifdef HAVE_ANN
     /* plan: merge a node with its neighbors if doing so improve. Form coarsening graph, repeat until no more ink saving */
-    edges = agglomerative_ink_bundling(dim, A, edges, nneighbor, max_recursion, angle_param, angle, open_gl, &flag);
+    edges = agglomerative_ink_bundling(dim, A, edges, nneighbor, max_recursion, angle_param, angle, &flag);
     assert(!flag);
 #else
     agerr (AGERR, "Graphviz built without approximate nearest neighbor library ANN; agglomerative inking not available\n");
@@ -668,7 +657,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
 	edges[i] = pedge_double(edges[i]);
       }
       step0 /= 2;
-      edges = force_directed_edge_bundling(B, edges, maxit, step0, K, open_gl);
+      edges = force_directed_edge_bundling(B, edges, maxit, step0, K);
     }
     
   } else if (method == METHOD_NONE){

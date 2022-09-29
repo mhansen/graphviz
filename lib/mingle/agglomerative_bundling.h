@@ -29,4 +29,4 @@ struct Agglomerative_Ink_Bundling_struct {
   int delete_top_level_A;/*whether the top level matrix should be deleted on garbage collecting the grid */
 };
 
-pedge* agglomerative_ink_bundling(int dim, SparseMatrix A, pedge* edges, int nneighbor, int max_recursion, double angle_param, double angle, int open_gl, int *flag);
+pedge* agglomerative_ink_bundling(int dim, SparseMatrix A, pedge* edges, int nneighbor, int max_recursion, double angle_param, double angle, int *flag);

@@ -24,7 +24,7 @@ struct pedge_struct {
 
 typedef struct pedge_struct* pedge;
 
-pedge* edge_bundling(SparseMatrix A, int dim, double *x, int maxit_outer, double K, int method, int nneighbor, int compatibility_method, int max_recursion, double angle_param, double angle, int open_gl);
+pedge* edge_bundling(SparseMatrix A, int dim, double *x, int maxit_outer, double K, int method, int nneighbor, int compatibility_method, int max_recursion, double angle_param, double angle);
 void pedge_delete(pedge e);
 pedge pedge_wgts_realloc(pedge e, int n);
 void pedge_export_gv(FILE *fp, int ne, pedge *edges);
