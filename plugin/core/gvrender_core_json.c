@@ -531,10 +531,17 @@ static void write_node(Agnode_t *n, GVJ_t *job, bool top, state_t *sp) {
 }
 
 static int write_nodes(Agraph_t *g, GVJ_t *job, bool top, bool has_subgs, state_t *sp) {
-    Agnode_t* n;
 
-    n = agfstnode(g);
-    if (!n) {
+    // is every subcomponent of this graph a cluster?
+    bool only_clusters = true;
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
+	if (!IS_CLUST_NODE(n)) {
+	    only_clusters = false;
+	    break;
+	}
+    }
+
+    if (only_clusters) {
 	if (has_subgs && top) {
 	    sp->Level--;
 	    gvputs(job, "\n");
@@ -556,7 +563,7 @@ static int write_nodes(Agraph_t *g, GVJ_t *job, bool top, bool has_subgs, state_
 	indent(job, sp->Level);
     }
     const char *separator = "";
-    for (; n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (IS_CLUST_NODE(n)) continue;
 	gvputs(job, separator);
 	write_node (n, job, top, sp);
