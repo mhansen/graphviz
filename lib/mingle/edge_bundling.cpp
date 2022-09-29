@@ -26,12 +26,6 @@
 
 #define SMALL 1.e-10
 
-#ifdef OPENGL
-#include <gl.h>
-extern pedge *edges_global;
-extern int *clusters_global;
-#endif
-
 static double norm(int n, double *x){
   double res = 0;
   int i;
@@ -514,10 +508,6 @@ static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* ed
   modularity_clustering(BB, TRUE, 0, use_value_for_clustering, &nclusters, &assignment, &modularity, &flag);
   SparseMatrix_delete(BB);
 
-#ifdef OPENGL
-  clusters_global = assignment;
-#endif
-
   assert(!flag);
   if (Verbose > 1) fprintf(stderr, "there are %d clusters, modularity = %f\n",nclusters, modularity);
   
@@ -549,10 +539,6 @@ static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* ed
 	e->x[3*dim+1] = e->x[4*dim+1];
 	e->npoints = 4;
       }
-#ifdef OPENGL
-      edges_global = edges;
-      drawScene();
-#endif
     }
   }
   SparseMatrix_delete(D);

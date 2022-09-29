@@ -21,12 +21,6 @@
 #include <string.h>
 #include <vector>
 
-#if OPENGL
-#include <gl.h>
-extern pedge *edges_global;
-extern int nedges_global;
-#endif
-
 enum {DEBUG=0};
 
 static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_init(SparseMatrix A, pedge *edges, int level){
