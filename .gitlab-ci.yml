@@ -796,6 +796,38 @@ centos7-cmake-build:
     variables:
       IMAGE: centos7
 
+fedora35-cmake-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_fedora35
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS=-Werror
+        - export CXXFLAGS=-Werror
+        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora35
+
+fedora36-cmake-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_fedora36
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS=-Werror
+        - export CXXFLAGS=-Werror
+        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora36
+
 macos-cmake-build:
     <<: *macos_build_definition
     before_script:
@@ -1109,6 +1141,32 @@ centos7-cmake-test:
         - linux
     variables:
       IMAGE: centos7
+
+fedora35-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
+    needs:
+        - job: "fedora35-cmake-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora35
+
+fedora36-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
+    needs:
+        - job: "fedora36-cmake-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora36
 
 macos-cmake-test:
     <<: *test_definition
