@@ -21,12 +21,6 @@
 #include <string.h>
 #include <vector>
 
-#if OPENGL
-#include <gl.h>
-extern pedge *edges_global;
-extern int nedges_global;
-#endif
-
 enum {DEBUG=0};
 
 static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_init(SparseMatrix A, pedge *edges, int level){
@@ -305,7 +299,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_new(SparseMatrix A0
   return grid;
 }
 
-static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge* edges, int nneighbors, int *recurse_level, int MAX_RECURSE_LEVEL, double angle_param, double angle, int open_gl, double *current_ink, double *ink00, int *flag){
+static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge* edges, int nneighbors, int *recurse_level, int MAX_RECURSE_LEVEL, double angle_param, double angle, double *current_ink, double *ink00) {
 
   int i, j, jj, k;
   int *ia, *ja;
@@ -322,8 +316,6 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
   if (Verbose > 1) fprintf(stderr, "agglomerative_ink_bundling_internal, recurse level ------- %d\n",*recurse_level);
 
   assert(A->m == A->n);
-
-  *flag = 0;
 
   start = clock();
   grid = Agglomerative_Ink_Bundling_new(A, edges, angle_param, angle);
@@ -431,7 +423,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 
     A_mid = nearest_neighbor_graph(ne, MIN(nneighbors, ne), xx.data(), eps);
 
-    agglomerative_ink_bundling_internal(dim, A_mid, mid_edges, nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, open_gl, current_ink, ink00, flag);
+    agglomerative_ink_bundling_internal(dim, A_mid, mid_edges, nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, current_ink, ink00);
     SparseMatrix_delete(A_mid);
     
     /* patching edges with the new mid-section */
@@ -471,28 +463,19 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 
   }
 
-
-#ifdef OPENGL
-  if (open_gl){
-    nedges_global = grid->n;
-    edges_global = edges;
-    drawScene();
-  }
-#endif
-
   Agglomerative_Ink_Bundling_delete(grid);
 
   return edges;
 }
 
 
-pedge* agglomerative_ink_bundling(int dim, SparseMatrix A, pedge* edges, int nneighbor, int MAX_RECURSE_LEVEL, double angle_param, double angle, int open_gl, int *flag){
+pedge* agglomerative_ink_bundling(int dim, SparseMatrix A, pedge* edges, int nneighbor, int MAX_RECURSE_LEVEL, double angle_param, double angle) {
   int recurse_level = 0;
   double current_ink = -1, ink0;
   pedge *edges2;
 
   ink_count = 0;
-  edges2 = agglomerative_ink_bundling_internal(dim, A, edges, nneighbor, &recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, open_gl, &current_ink, &ink0, flag);
+  edges2 = agglomerative_ink_bundling_internal(dim, A, edges, nneighbor, &recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, &current_ink, &ink0);
 
   
   if (Verbose > 1)

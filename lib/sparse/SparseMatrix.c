@@ -310,10 +310,6 @@ static SparseMatrix SparseMatrix_init(int m, int n, int type, size_t sz, int for
   A->a = NULL;
   A->format = format;
   A->property = 0;
-  clear_flag(A->property, MATRIX_PATTERN_SYMMETRIC);
-  clear_flag(A->property, MATRIX_SYMMETRIC);
-  clear_flag(A->property, MATRIX_SKEW);
-  clear_flag(A->property, MATRIX_HERMITIAN);
   return A;
 }
 
@@ -1629,8 +1625,6 @@ SparseMatrix SparseMatrix_remove_upper(SparseMatrix A){/* remove diag and upper 
 
   clear_flag(A->property, MATRIX_PATTERN_SYMMETRIC);
   clear_flag(A->property, MATRIX_SYMMETRIC);
-  clear_flag(A->property, MATRIX_SKEW);
-  clear_flag(A->property, MATRIX_HERMITIAN);
   return A;
 }
 

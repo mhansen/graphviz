@@ -466,9 +466,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	free(x);
 	x = xx.data();
 
-	dim = 2;
-
-	edges = edge_bundling(A, 2, x, opts->outer_iter, opts->K, opts->method, opts->nneighbors, opts->compatibility_method, opts->max_recursion, opts->angle_param, opts->angle, 0);
+	edges = edge_bundling(A, 2, x, opts->outer_iter, opts->K, opts->method, opts->nneighbors, opts->compatibility_method, opts->max_recursion, opts->angle_param, opts->angle);
 	
 	if (opts->fmt == FMT_GV) {
 	    	export_dot (outfile, A->m, edges, g);
