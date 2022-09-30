@@ -16,10 +16,10 @@ TEST_CASE("Overlap ellipse node shapes",
       filter([](const std::string_view shape) { return shape != "point"; },
              from_range(node_shapes_consisting_of_ellipse)));
 
-  INFO(fmt::format("Node shape: {}", shape));
+  INFO("Node shape: " << shape);
 
   const auto rankdir = GENERATE(from_range(all_rank_directions));
-  INFO(fmt::format("Rank direction: {}", rankdir));
+  INFO("Rank direction: " << rankdir);
 
   const graph_options graph_options = {
       .rankdir = rankdir,

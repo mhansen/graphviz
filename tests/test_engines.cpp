@@ -16,7 +16,7 @@ TEST_CASE(
   const std::string edge_op = directed_graph ? "->" : "--";
 
   std::string dot = fmt::format("{} {{a {} b}}", graph_type, edge_op);
-  INFO(fmt::format("DOT source: {}", dot));
+  INFO("DOT source: " << dot);
 
   auto g = agmemread(dot.c_str());
   REQUIRE(g != nullptr);
@@ -30,7 +30,7 @@ TEST_CASE(
                                       "osage",    //
                                       "patchwork" //
   );
-  INFO("Layout engine: " + engine);
+  INFO("Layout engine: " << engine);
 
   auto gvc = gvContextPlugins(lt_preloaded_symbols, false);
 

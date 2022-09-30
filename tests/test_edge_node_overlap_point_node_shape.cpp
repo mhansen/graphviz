@@ -2,7 +2,6 @@
 #include <string>
 
 #include <catch2/catch.hpp>
-#include <fmt/format.h>
 
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
@@ -12,10 +11,10 @@ TEST_CASE("Overlap point node shape",
           "touches that node and does not overlap it too much") {
 
   const auto shape = "point";
-  INFO(fmt::format("Node shape: {}", shape));
+  INFO("Node shape: " << shape);
 
   const auto rankdir = GENERATE(from_range(all_rank_directions));
-  INFO(fmt::format("Rank direction: {}", rankdir));
+  INFO("Rank direction: " << rankdir);
 
   const graph_options graph_options = {
       .rankdir = rankdir,

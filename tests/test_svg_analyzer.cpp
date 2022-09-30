@@ -11,7 +11,7 @@ TEST_CASE("SvgAnalyzer",
           "from that data structure") {
 
   const auto shape = GENERATE(from_range(all_node_shapes));
-  INFO(fmt::format("Shape: {}", shape));
+  INFO("Shape: " << shape);
 
   auto dot = fmt::format("digraph g1 {{node [shape={}]; a -> b}}", shape);
 

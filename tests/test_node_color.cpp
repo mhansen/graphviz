@@ -16,12 +16,12 @@ TEST_CASE("Node color",
         return !node_shapes_without_svg_shape.contains(shape);
       },
       from_range(all_node_shapes)));
-  INFO(fmt::format("Shape: {}", shape));
+  INFO("Shape: " << shape);
 
   const auto node_rgb_color = GENERATE("#000000", "#ffffff", "#5580aa");
   const auto opacity = GENERATE(0, 100, 255);
   const auto node_rgba_color = fmt::format("{}{:02x}", node_rgb_color, opacity);
-  INFO(fmt::format("Node color: {}", node_rgba_color));
+  INFO("Node color: " << node_rgba_color);
 
   auto dot = fmt::format("digraph g1 {{node [shape={} color=\"{}\"]; a -> b}}",
                          shape, node_rgba_color);

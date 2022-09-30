@@ -12,11 +12,11 @@ TEST_CASE("SvgAnalyzer color",
           "the Graphviz `color` attribute is used for nodes and edges ") {
 
   const auto shape = GENERATE(from_range(all_node_shapes));
-  INFO(fmt::format("Shape: {}", shape));
+  INFO("Shape: " << shape);
 
   const std::string_view color =
       GENERATE("", "\"#10204000\"", "\"#10204080\"", "\"#102040ff\"");
-  INFO(fmt::format("Color: {}", color));
+  INFO("Color: " << color);
   const auto color_attr = color.empty() ? "" : fmt::format(" color={}", color);
 
   auto dot = fmt::format("digraph g1 {{node [shape={}{}]; edge [{}]; a -> b}}",

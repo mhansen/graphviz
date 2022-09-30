@@ -11,12 +11,12 @@ TEST_CASE("Edge color",
 
   const auto primitive_arrow_shape =
       GENERATE(from_range(all_primitive_arrow_shapes));
-  INFO(fmt::format("Primitive arrow shape: {}", primitive_arrow_shape));
+  INFO("Primitive arrow shape: " << primitive_arrow_shape);
 
   const auto edge_rgb_color = GENERATE("#000000", "#ffffff", "#5580aa");
   const auto opacity = GENERATE(0, 100, 255);
   const auto edge_rgba_color = fmt::format("{}{:02x}", edge_rgb_color, opacity);
-  INFO(fmt::format("Edge color: {}", edge_rgba_color));
+  INFO("Edge color: " << edge_rgba_color);
 
   auto dot =
       fmt::format("digraph g1 {{edge [arrowhead={} color=\"{}\"]; a -> b}}",

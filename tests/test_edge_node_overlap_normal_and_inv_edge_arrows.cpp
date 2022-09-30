@@ -14,7 +14,7 @@ TEST_CASE("Edge node overlap for normal and inv arrow",
 
   const std::string_view primitive_arrow_shape = GENERATE("normal", "inv");
 
-  INFO(fmt::format("Edge arrowhead: {}", primitive_arrow_shape));
+  INFO("Edge arrowhead: " << primitive_arrow_shape);
   filename_base += fmt::format("_arrow_shape_{}", primitive_arrow_shape);
 
   const graph_options graph_options = {
