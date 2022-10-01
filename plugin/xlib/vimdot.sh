@@ -9,8 +9,7 @@ fi
 error() { echo "$0: $*" >&2; exit 1; }
 
 # Try $EDITOR first, else try vim or vi
-editor="$EDITOR"
-[ -x "$editor" ] || editor="/usr/bin/vim"
+editor="$(which $EDITOR)" || editor="/usr/bin/vim"
 [ -x "$editor" ] || editor="/usr/bin/vi"
 [ -x "$editor" ] || error "EDITOR not found or not executable";
 
