@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `libgvplugin_gs.so.6`) #2280
 - trailing commas issue with fdp layout #2282
 - Missing `-S` in `sccmap` man page usage summary.
+- In `sccmap`, a `-v` option following a `-S` option now re-enables strongly
+  connected component output that the man page implied.
 
 ## [6.0.1] – 2022-09-11
 
