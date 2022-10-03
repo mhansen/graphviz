@@ -14,6 +14,7 @@
  *************************************************************************/
 
 #include "config.h"
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 
 #define STANDALONE
@@ -90,7 +91,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     int *ia = A->ia;
     int *ja = A->ja;
     double *val = A->a;
-    Agnode_t **arr = N_NEW(A->m, Agnode_t *);
+    Agnode_t **arr = gv_calloc(A->m, sizeof(Agnode_t*));
     double *color = NULL;
     char cstring[8];
 
@@ -138,7 +139,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 	sym2 = agattr(g, AGEDGE, "color", "");
 	sym3 = agattr(g, AGEDGE, "wt", "");
 	agattr(g, AGRAPH, "bgcolor", "black");
-	color = N_NEW(A->nz, double);
+	color = gv_calloc(A->nz, sizeof(double));
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    i = ND_id(n);
 	    if (A->type != MATRIX_TYPE_REAL) {

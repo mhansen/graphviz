@@ -126,7 +126,7 @@ static cairo_surface_t* gdk_loadimage(GVJ_t * job, usershape_t *us)
              us->data = NULL;
 #else /* HAVE_CAIRO_SURFACE_SET_MIME_DATA */
         if (us->datafree == gdk_freeimage) {
-	    cairo_image = cairo_surface_reference ((cairo_surface_t *)(us->data)); /* use cached data */
+	    cairo_image = cairo_surface_reference(us->data); /* use cached data */
 	} else {
 	    us->datafree(us);        /* free incompatible cache data */
 	    us->datafree = NULL;

@@ -26,15 +26,19 @@
 
 #include <assert.h>
 #include <gvc/gvc.h>
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <common/render.h>
 #include <neatogen/neatoprocs.h>
 #include <ingraphs/ingraphs.h>
 #include <iostream>
 #include <limits>
+#include <map>
 #include <pack/pack.h>
+#include <set>
 #include <stddef.h>
 #include <string>
+#include <utility>
 #include <vector>
 #include "openFile.h"
 
@@ -371,50 +375,33 @@ static void cloneCluster(Agraph_t *old, Agraph_t *new_cluster) {
   GD_bb(new_cluster) = GD_bb(old);
 }
 
-/* freef:
- * Generic free function for dictionaries.
- */
-static void freef(Dt_t*, void *obj, Dtdisc_t*) {
-    free(obj);
-}
-
-static Dtdisc_t attrdisc = {
-    offsetof(attr_t, name),	/* key */
-    -1,				/* size */
-    offsetof(attr_t, link),	/* link */
-    (Dtmake_f) 0,
-    (Dtfree_f) freef,
-    (Dtcompar_f) 0,		/* use strcmp */
-    (Dthash_f) 0,
-    (Dtmemory_f) 0,
-    (Dtevent_f) 0
+namespace {
+/// a value of a graph attribute, possibly set multiple times
+struct AttributeValue {
+  std::string value; ///< text of the value
+  size_t instances;  ///< number of times this attribute was seen
 };
+} // namespace
+
+/// attribute name → value collection of those we have seen
+using attr_map_t = std::map<std::string, AttributeValue>;
 
 /* fillDict:
  * Fill newdict with all the name-value attributes of
  * objp. If the attribute has already been defined and
  * has a different default, set default to "".
  */
-static void fillDict(Dt_t * newdict, Agraph_t* g, int kind)
-{
-    Agsym_t *a;
-    char *name;
-    char *value;
-    attr_t *rv;
+static void fillDict(attr_map_t &newdict, Agraph_t *g, int kind) {
 
-    for (a = agnxtattr(g,kind,0); a; a = agnxtattr(g,kind,a)) {
-	name = a->name;
-	value = a->defval;
-	rv = (attr_t*)dtmatch(newdict, name);
-	if (!rv) {
-	    rv = NEW(attr_t);
-	    rv->name = name;
-	    rv->value = value;
-	    rv->cnt = 1;
-	    dtinsert(newdict, rv);
-	} else if (!strcmp(value, rv->value))
-	    rv->cnt++;
-    }
+  for (Agsym_t *a = agnxtattr(g, kind, 0); a; a = agnxtattr(g, kind, a)) {
+    char *name = a->name;
+    char *value = a->defval;
+    auto it = newdict.find(name);
+    if (it == newdict.end()) {
+      newdict.insert({name, AttributeValue{value, 1}});
+    } else if (it->second.value == value)
+      ++it->second.instances;
+  }
 }
 
 /* fillGraph:
@@ -423,17 +410,18 @@ static void fillDict(Dt_t * newdict, Agraph_t* g, int kind)
  * For a non-empty default value, the attribute must be defined and the
  * same in all graphs.
  */
-static void
-fillGraph(Agraph_t * g, Dt_t * d,
-	  Agsym_t *(*setf)(Agraph_t*, char*, const char*), size_t cnt) {
-    attr_t *av;
-    for (av = (attr_t *) dtflatten(d); av;
-	 av = (attr_t *)dtlink(d, av)) {
-	if (cnt == av->cnt)
-	    setf(g, av->name, av->value);
-	else
-	    setf(g, av->name, "");
-    }
+static void fillGraph(Agraph_t *g, const attr_map_t &d,
+                      Agsym_t *(*setf)(Agraph_t *, char *, const char *),
+                      size_t cnt) {
+  for (const auto &kv : d) {
+    const std::string &name = kv.first;
+    const std::string &value = kv.second.value;
+    const size_t &attr_cnt = kv.second.instances;
+    if (cnt == attr_cnt)
+      setf(g, const_cast<char *>(name.c_str()), value.c_str());
+    else
+      setf(g, const_cast<char *>(name.c_str()), "");
+  }
 }
 
 /* initAttrs:
@@ -441,13 +429,9 @@ fillGraph(Agraph_t * g, Dt_t * d,
  * attributes in the graphs gs.
  */
 static void initAttrs(Agraph_t *root, std::vector<Agraph_t*> &gs) {
-    Dt_t *n_attrs;
-    Dt_t *e_attrs;
-    Dt_t *g_attrs;
-
-    n_attrs = dtopen(&attrdisc, Dtoset);
-    e_attrs = dtopen(&attrdisc, Dtoset);
-    g_attrs = dtopen(&attrdisc, Dtoset);
+    attr_map_t n_attrs;
+    attr_map_t e_attrs;
+    attr_map_t g_attrs;
 
     for (Agraph_t *g : gs) {
 	fillDict(g_attrs, g, AGRAPH);
@@ -458,10 +442,6 @@ static void initAttrs(Agraph_t *root, std::vector<Agraph_t*> &gs) {
     fillGraph(root, g_attrs, agraphattr, gs.size());
     fillGraph(root, n_attrs, agnodeattr, gs.size());
     fillGraph(root, e_attrs, agedgeattr, gs.size());
-
-    dtclose(n_attrs);
-    dtclose(e_attrs);
-    dtclose(g_attrs);
 }
 
 /* cloneGraphAttr:
@@ -473,6 +453,9 @@ static void cloneGraphAttr(Agraph_t * g, Agraph_t * ng)
     cloneDfltAttrs(g, ng, AGEDGE);
 }
 
+/// names that have already been used during generation
+using used_t = std::multiset<std::string>;
+
 /* xName:
  * Create a name for an object in the new graph using the
  * dictionary names and the old name. If the old name has not
@@ -480,17 +463,12 @@ static void cloneGraphAttr(Agraph_t * g, Agraph_t * ng)
  * create a new name using the old name and a number.
  * Note that returned string will immediately made into an agstring.
  */
-static std::string xName(Dt_t *names, char *oldname) {
-  auto p = reinterpret_cast<pair_t *>(dtmatch(names, oldname));
-  if (p) {
-    p->cnt++;
-    return std::string(oldname) + "_gv" + std::to_string(p->cnt);
+static std::string xName(used_t &names, char *oldname) {
+  size_t previous_instances = names.count(oldname);
+  names.insert(oldname);
+  if (previous_instances > 0) {
+    return std::string(oldname) + "_gv" + std::to_string(previous_instances);
   }
-
-  p = NEW(pair_t);
-  p->name = oldname;
-  dtinsert(names, p);
-
   return oldname;
 }
 
@@ -505,8 +483,7 @@ static std::string xName(Dt_t *names, char *oldname) {
  * and adding edges.
  */
 static void
-cloneSubg(Agraph_t * g, Agraph_t * ng, Agsym_t * G_bb, Dt_t * gnames)
-{
+cloneSubg(Agraph_t *g, Agraph_t *ng, Agsym_t *G_bb, used_t &gnames) {
     node_t *n;
     node_t *nn;
     edge_t *e;
@@ -569,7 +546,7 @@ static void cloneClusterTree(Agraph_t * g, Agraph_t * ng)
 
     if (GD_n_cluster(g)) {
 	GD_n_cluster(ng) = GD_n_cluster(g);
-	GD_clust(ng) = N_NEW(1 + GD_n_cluster(g), Agraph_t *);
+	GD_clust(ng) = reinterpret_cast<Agraph_t**>(gv_calloc(1 + GD_n_cluster(g), sizeof(Agraph_t*)));
 	for (i = 1; i <= GD_n_cluster(g); i++) {
 	    Agraph_t *c = GETCLUST(GD_clust(g)[i]);
 	    GD_clust(ng)[i] = c;
@@ -577,18 +554,6 @@ static void cloneClusterTree(Agraph_t * g, Agraph_t * ng)
 	}
     }
 }
-
-static Dtdisc_t pairdisc = {
-    offsetof(pair_t, name),	/* key */
-    -1,				/* size */
-    offsetof(attr_t, link),	/* link */
-    (Dtmake_f) 0,
-    (Dtfree_f) freef,
-    (Dtcompar_f) 0,		/* use strcmp */
-    (Dthash_f) 0,
-    (Dtmemory_f) 0,
-    (Dtevent_f) 0
-};
 
 /* cloneGraph:
  * Create and return a new graph which is the logical union
@@ -599,8 +564,6 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
     Agraph_t *subg;
     Agnode_t *n;
     Agnode_t *np;
-    Dt_t *gnames;		/* dict of used subgraph names */
-    Dt_t *nnames;		/* dict of used node names */
     Agsym_t *G_bb;
     Agsym_t *rv;
     bool doWarn = true;
@@ -625,8 +588,8 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
     init_graph(root, false, gvc);
     State = GVSPLINES;
 
-    gnames = dtopen(&pairdisc, Dtoset);
-    nnames = dtopen(&pairdisc, Dtoset);
+    used_t gnames; // dict of used subgraph names
+    used_t nnames; // dict of used node names
     for (size_t i = 0; i < gs.size(); i++) {
 	Agraph_t *g = gs[i];
 	if (verbose)
@@ -655,13 +618,11 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 	agbindrec (subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(g, subg, G_bb, gnames);
     }
-    dtclose(gnames);
-    dtclose(nnames);
 
     /* set up cluster tree */
     if (GD_n_cluster(root)) {
 	int j, idx;
-	GD_clust(root) = N_NEW(1 + GD_n_cluster(root), graph_t *);
+	GD_clust(root) = reinterpret_cast<graph_t**>(gv_calloc(1 + GD_n_cluster(root), sizeof(graph_t*)));
 
 	idx = 1;
 	for (Agraph_t *g : gs) {

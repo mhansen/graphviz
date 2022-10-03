@@ -67,7 +67,7 @@ static CGDataProviderCallbacks file_data_provider_callbacks = {
 
 static void quartz_freeimage(usershape_t *us)
 {
-	CGImageRelease((CGImageRef)us->data);
+	CGImageRelease(us->data);
 }
 
 static CGImageRef quartz_loadimage(GVJ_t * job, usershape_t *us)
@@ -152,7 +152,7 @@ static CGImageRef quartz_loadimage(GVJ_t * job, usershape_t *us)
 			
 		gvusershape_file_release(us);
     }
-    return (CGImageRef)(us->data);
+    return us->data;
 }
 
 static void quartz_loadimage_quartz(GVJ_t * job, usershape_t *us, boxf b, bool filled)
