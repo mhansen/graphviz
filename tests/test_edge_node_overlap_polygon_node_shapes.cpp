@@ -23,7 +23,8 @@ TEST_CASE(
       .edge_penwidth = 2,
   };
 
-  const auto filename_base = fmt::format("{}_{}", AUTO_NAME(), shape);
+  const auto filename_base =
+      fmt::format("{}_{}_rankdir_{}", AUTO_NAME(), shape, rankdir);
 
   test_edge_node_overlap(graph_options, {}, {.filename_base = filename_base});
 }
