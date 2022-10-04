@@ -20,6 +20,7 @@ void GraphvizEdge::add_outline_overlap_bbox(const GraphvizNode &node,
 
 static const std::unordered_set<std::string_view>
     supported_primitive_arrow_shapes = {
+        "box",    //
         "inv",    //
         "normal", //
 };
@@ -37,7 +38,13 @@ SVG::SVGRect GraphvizEdge::arrowhead_outline_bbox(
   const auto index = dir == "forward" ? 0 : 1;
   auto edge_arrowhead =
       m_svg_g_element.find_child(SVG::SVGElementType::Polygon, index);
-  const auto edge_arrowhead_bbox = edge_arrowhead.outline_bbox();
+  auto edge_arrowhead_bbox = edge_arrowhead.outline_bbox();
+  if (primitive_arrow_shape == "box") {
+    auto edge_arrowhead_stem =
+        m_svg_g_element.find_child(SVG::SVGElementType::Polyline, index);
+    auto edge_arrowhead_stem_bbox = edge_arrowhead_stem.outline_bbox();
+    edge_arrowhead_bbox.extend(edge_arrowhead_stem_bbox);
+  }
 
   return edge_arrowhead_bbox;
 }
