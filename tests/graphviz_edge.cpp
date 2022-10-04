@@ -44,6 +44,21 @@ SVG::SVGRect GraphvizEdge::arrowhead_outline_bbox(
   return edge_arrowhead_bbox;
 }
 
+SVG::SVGRect GraphvizEdge::arrowtail_outline_bbox(
+    std::string_view dir, std::string_view primitive_arrow_shape) const {
+  assert((dir == "back" || dir == "both") &&
+         "no arrowhead for this edge direction");
+  if (!supported_primitive_arrow_shapes.contains(primitive_arrow_shape)) {
+    throw std::runtime_error{
+        fmt::format("primitive arrow shape {} is not yet supported",
+                    primitive_arrow_shape)};
+  }
+  auto edge_arrowtail = arrow(0);
+  const auto edge_arrowtail_bbox = edge_arrowtail.outline_bbox();
+
+  return edge_arrowtail_bbox;
+}
+
 std::string_view GraphvizEdge::edgeop() const { return m_edgeop; }
 
 std::string GraphvizEdge::fillcolor() const {
