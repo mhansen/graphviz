@@ -7,10 +7,9 @@
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
 
-TEST_CASE(
-    "Overlap all node shapes",
-    "[!shouldfail] Test that an edge connected to a node touches that node and "
-    "does not overlap it too much, regardless of the node shape") {
+TEST_CASE("Overlap all node shapes",
+          "Test that an edge connected to a node touches that node and does "
+          "not overlap it too much, regardless of the node shape") {
 
   const auto shape = GENERATE(from_range(all_node_shapes));
   INFO("Node shape: " << shape);

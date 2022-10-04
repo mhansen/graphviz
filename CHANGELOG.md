@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   number greater than `INT_MAX` no longer causes an integer overflow. #1318
 - fdp cluster->cluster edges were correct but now drawn incorrectly. This was a
   regression in Graphviz 7.0.0. #2345
+- Failure of arrowhead and arrowtail to respect penwidth #372 \
+  Fixed also for the `cylinder`
+  [node shape](https://graphviz.org/doc/info/shapes.html#polygon).
+- Second periphery of a cylinder shaped node is not correct. #2297
 
 ### Removed
 
