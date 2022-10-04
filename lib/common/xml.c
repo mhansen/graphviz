@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief @ref xml_escape
+ */
+
 #include <cgraph/exit.h>
 #include <cgraph/unreachable.h>
 #include <common/types.h>
