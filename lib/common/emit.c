@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief graphics code generator
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -7,10 +12,6 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
-
-/*
- *  graphics code generator
- */
 
 #include "config.h"
 #include <assert.h>
