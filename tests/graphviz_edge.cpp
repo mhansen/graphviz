@@ -18,10 +18,6 @@ void GraphvizEdge::add_outline_overlap_bbox(const GraphvizNode &node,
   m_svg_g_element.add_outline_overlap_bbox(node.svg_g_element(), tolerance);
 }
 
-SVG::SVGElement &GraphvizEdge::arrow(const std::size_t index) const {
-  return m_svg_g_element.find_child(SVG::SVGElementType::Polygon, index);
-}
-
 static const std::unordered_set<std::string_view>
     supported_primitive_arrow_shapes = {
         "inv",    //
@@ -38,7 +34,9 @@ SVG::SVGRect GraphvizEdge::arrowhead_outline_bbox(
         fmt::format("primitive arrow shape {} is not yet supported",
                     primitive_arrow_shape)};
   }
-  auto edge_arrowhead = dir == "forward" ? arrow(0) : arrow(1);
+  const auto index = dir == "forward" ? 0 : 1;
+  auto edge_arrowhead =
+      m_svg_g_element.find_child(SVG::SVGElementType::Polygon, index);
   const auto edge_arrowhead_bbox = edge_arrowhead.outline_bbox();
 
   return edge_arrowhead_bbox;
@@ -53,7 +51,9 @@ SVG::SVGRect GraphvizEdge::arrowtail_outline_bbox(
         fmt::format("primitive arrow shape {} is not yet supported",
                     primitive_arrow_shape)};
   }
-  auto edge_arrowtail = arrow(0);
+  const auto index = 0;
+  auto edge_arrowtail =
+      m_svg_g_element.find_child(SVG::SVGElementType::Polygon, index);
   const auto edge_arrowtail_bbox = edge_arrowtail.outline_bbox();
 
   return edge_arrowtail_bbox;
