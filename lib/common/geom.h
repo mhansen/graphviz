@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @brief geometric types and macros (e.g. points and boxes)
+ *
+ * with application to, but no specific dependence on graphs
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -7,10 +14,6 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
-
-/* geometric types and macros (e.g. points and boxes) with application to, but
- * no specific dependence on graphs */
-
 #pragma once
 
 #include "arith.h"
