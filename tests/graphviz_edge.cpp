@@ -1,4 +1,6 @@
+#include <cassert>
 #include <string>
+#include <unordered_set>
 
 #include "graphviz_edge.h"
 #include "graphviz_node.h"
@@ -18,6 +20,28 @@ void GraphvizEdge::add_outline_overlap_bbox(const GraphvizNode &node,
 
 SVG::SVGElement &GraphvizEdge::arrow(const std::size_t index) const {
   return m_svg_g_element.find_child(SVG::SVGElementType::Polygon, index);
+}
+
+static const std::unordered_set<std::string_view>
+    supported_primitive_arrow_shapes = {
+        "inv",    //
+        "normal", //
+};
+
+SVG::SVGRect GraphvizEdge::arrowhead_outline_bbox(
+    std::string_view dir, std::string_view primitive_arrow_shape) const {
+  assert((dir == "forward" || dir == "both") &&
+         "no arrowhead for this edge direction");
+
+  if (!supported_primitive_arrow_shapes.contains(primitive_arrow_shape)) {
+    throw std::runtime_error{
+        fmt::format("primitive arrow shape {} is not yet supported",
+                    primitive_arrow_shape)};
+  }
+  auto edge_arrowhead = dir == "forward" ? arrow(0) : arrow(1);
+  const auto edge_arrowhead_bbox = edge_arrowhead.outline_bbox();
+
+  return edge_arrowhead_bbox;
 }
 
 std::string_view GraphvizEdge::edgeop() const { return m_edgeop; }

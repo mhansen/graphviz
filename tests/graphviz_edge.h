@@ -33,6 +33,11 @@ public:
   /// arrowhead is at index 1. If there's only one, it's at index 0. Throws an
   /// exception if there's no arrow at the specified index.
   SVG::SVGElement &arrow(std::size_t index = 0) const;
+  /// Return the outline bounding box of the edge arrowhead. The outline
+  /// bounding box is the bounding box with penwidth taken into account.
+  SVG::SVGRect
+  arrowhead_outline_bbox(std::string_view dir,
+                         std::string_view primitive_arrow_shape) const;
   /// Return the bounding box of the edge
   SVG::SVGRect bbox() const;
   /// Return the center of the edge's bounding box

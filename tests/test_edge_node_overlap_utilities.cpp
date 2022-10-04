@@ -182,6 +182,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
   const auto rankdir = graph_options.rankdir;
   const auto node_shape = graph_options.node_shape;
   const auto dir = graph_options.dir;
+  const auto primitive_arrowhead_shape =
+      graph_options.primitive_arrowhead_shape;
 
   REQUIRE(svg_analyzer.graphs().size() == 1);
   auto &recreated_graph = svg_analyzer.graphs().back();
@@ -266,8 +268,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
 
   // check overlap of edge stem and arrowhead
   if (dir == "forward" || dir == "both") {
-    auto edge_arrowhead = dir == "forward" ? edge.arrow(0) : edge.arrow(1);
-    const auto edge_arrowhead_bbox = edge_arrowhead.outline_bbox();
+    const auto edge_arrowhead_bbox =
+        edge.arrowhead_outline_bbox(dir, primitive_arrowhead_shape);
     const auto overlap_bbox = edge_stem_bbox.intersection(edge_arrowhead_bbox);
     INFO("Edge stem and arrowhead overlap:");
     INFO(fmt::format("  width:  {:.3f}", overlap_bbox.width));
