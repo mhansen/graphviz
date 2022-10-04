@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief lookup table for textspan
+ */
+
 #pragma once
 
 #include <stdbool.h>
