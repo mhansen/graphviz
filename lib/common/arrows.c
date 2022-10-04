@@ -701,6 +701,21 @@ static pointf arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, 
     m.y = p.y + u.y * 0.8;
     q.x = p.x + u.x;
     q.y = p.y + u.y;
+
+    const pointf P = {-u.x, -u.y};
+    // phi = angle of arrow
+    const double cosPhi = P.x / hypot(P.x, P.y);
+    const double sinPhi = P.y / hypot(P.x, P.y);
+    const pointf delta = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+
+    // move the arrow backwards to not visually overlap the node
+    p.x -= delta.x;
+    p.y -= delta.y;
+    m.x -= delta.x;
+    m.y -= delta.y;
+    q.x -= delta.x;
+    q.y -= delta.y;
+
     a[0].x = p.x + v.x;
     a[0].y = p.y + v.y;
     a[1].x = p.x - v.x;
@@ -720,6 +735,9 @@ static pointf arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, 
     a[0] = m;
     a[1] = q;
     gvrender_polyline(job, a, 2);
+
+    // A polyline doesn't extend visually beyond its starting point, so we
+    // return the starting point as it is, without taking penwidth into account
 
     return q;
 }
