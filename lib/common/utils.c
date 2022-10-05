@@ -1862,3 +1862,8 @@ findCluster (Dt_t* map, char* name)
     else
 	return NULL;
 }
+
+/**
+ * @dir lib/common
+ * @brief common code for layout engines
+ */
