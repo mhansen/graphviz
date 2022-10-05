@@ -10,6 +10,7 @@
 
 
 #include <assert.h>
+#include <common/geomprocs.h>
 #include <common/render.h>
 #include <math.h>
 #include <stdbool.h>
@@ -747,7 +748,6 @@ static pointf arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     (void)arrowsize;
-    (void)penwidth;
 
     pointf q, r, v, a[5];
 
@@ -757,12 +757,34 @@ static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsi
     r.y = p.y + u.y / 2.;
     q.x = p.x + u.x;
     q.y = p.y + u.y;
+
+    const pointf origin = {0, 0};
+    const pointf unmod_left = sub_pointf(scale(-0.5, u), v);
+    const pointf unmod_right = add_pointf(scale(-0.5, u), v);
+    const pointf base_left = flag & ARR_MOD_RIGHT ? origin : unmod_left;
+    const pointf base_right = flag & ARR_MOD_LEFT ? origin : unmod_right;
+    const pointf tip = scale(-1, u);
+    const pointf P = tip;
+
+    const pointf P3 = miter_point(base_left, P, base_right, penwidth);
+
+    const pointf delta = sub_pointf(P3, P);
+
+    // move the arrow backwards to not visually overlap the node
+    p = sub_pointf(p, delta);
+    r = sub_pointf(r, delta);
+    q = sub_pointf(q, delta);
+
     a[0] = a[4] = q;
     a[1].x = r.x + v.x;
     a[1].y = r.y + v.y;
     a[2] = p;
     a[3].x = r.x - v.x;
     a[3].y = r.y - v.y;
+
+    // return the visual starting point of the arrow outline
+    q = sub_pointf(q, delta);
+
     if (flag & ARR_MOD_LEFT)
 	gvrender_polygon(job, &a[2], 3, !(flag & ARR_MOD_OPEN));
     else if (flag & ARR_MOD_RIGHT)
