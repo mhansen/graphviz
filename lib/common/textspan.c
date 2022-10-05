@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief @ref textspan_size
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -70,6 +75,7 @@ static PostscriptAlias* translate_postscript_fontname(char* fontname)
 }
 
 pointf textspan_size(GVC_t *gvc, textspan_t * span)
+/// Estimates size of a textspan, in points.
 {
     char **fpp = NULL, *fontpath = NULL;
     textfont_t *font;

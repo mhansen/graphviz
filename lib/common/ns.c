@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief Network Simplex algorithm for ranking nodes of a DAG, @ref rank, @ref rank2
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -7,11 +12,6 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
-
-
-/* 
- * Network Simplex Algorithm for Ranking Nodes of a DAG
- */
 
 #include <common/render.h>
 #include <stdbool.h>

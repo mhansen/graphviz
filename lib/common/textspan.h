@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief @ref textspan_t, @ref textfont_t, @ref PostscriptAlias
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
