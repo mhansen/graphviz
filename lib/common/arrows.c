@@ -781,13 +781,28 @@ static pointf arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, 
     pointf AF[2];
 
     r = hypot(u.x, u.y) / 2.;
+
+    const pointf P = {-u.x, -u.y};
+    // phi = angle of arrow
+    const double cosPhi = P.x / hypot(P.x, P.y);
+    const double sinPhi = P.y / hypot(P.x, P.y);
+    const pointf delta = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+
+    // move the arrow backwards to not visually overlap the node
+    p.x -= delta.x;
+    p.y -= delta.y;
+
     AF[0].x = p.x + u.x / 2. - r;
     AF[0].y = p.y + u.y / 2. - r;
     AF[1].x = p.x + u.x / 2. + r;
     AF[1].y = p.y + u.y / 2. + r;
     gvrender_ellipse(job, AF, !(flag & ARR_MOD_OPEN));
 
-    const pointf q = {p.x + u.x, p.y + u.y};
+    pointf q = {p.x + u.x, p.y + u.y};
+
+    // return the visual starting point of the arrow outline
+    q.x -= delta.x;
+    q.y -= delta.y;
 
     return q;
 }
