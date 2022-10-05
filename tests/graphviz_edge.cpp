@@ -87,8 +87,10 @@ SVG::SVGRect GraphvizEdge::arrowtail_outline_bbox(
                     primitive_arrow_shape)};
   }
   const auto index = 0;
+  const auto main_svg_element_type =
+      edge_arrowhead_main_svg_element_type(primitive_arrow_shape);
   auto edge_arrowtail =
-      m_svg_g_element.find_child(SVG::SVGElementType::Polygon, index);
+      m_svg_g_element.find_child(main_svg_element_type, index);
   auto edge_arrowtail_bbox = edge_arrowtail.outline_bbox();
   if (primitive_arrow_shape == "box") {
     auto edge_arrowtail_stem =
