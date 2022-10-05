@@ -284,6 +284,7 @@ static void scanArgs(int argc, char **argv)
 	    break;
 	case 'v':
 	    Verbose = 1;
+	    Silent = 0;
 	    break;
 	case 'S':
 	    Verbose = 0;
