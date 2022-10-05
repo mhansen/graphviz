@@ -393,4 +393,19 @@ bool VPSC::blockGraphIsCyclic() {
 	}
 	return false;
 }
-
+/**
+ * @dir lib/vpsc
+ * @brief library for solving the
+ *        %Variable Placement with Separation Constraints problem
+ *        for lib/neatogen
+ *
+ * This is a quadratic programming problem in which the squared differences
+ * between a placement vector and some ideal placement are minimized subject
+ * to a set of separation constraints. This is very useful in a number of layout problems.
+ *
+ * References:
+ * - https://www.adaptagrams.org/documentation/libvpsc.html
+ * - Tim Dwyer, Kim Marriott, and Peter J. Stuckey. Fast node overlap removal.
+ *   In Proceedings 13th International Symposium on Graph Drawing (GD '05),
+ *   volume 3843 of LNCS, pages 153-164. Springer, 2006.
+ */
