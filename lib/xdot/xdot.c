@@ -998,3 +998,8 @@ void freeXDotColor (xdot_color* cp)
 	free (cp->u.ring.stops);
     }
 }
+
+/**
+ * @dir lib/xdot
+ * @brief API xdot/xdot.h
+ */
