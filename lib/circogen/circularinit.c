@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief API circogen/circo.h: @ref circo_init_graph, @ref circoLayout, @ref circo_layout, @ref circo_cleanup
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -7,20 +12,6 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
-
-
-/*
- * Circular layout. Biconnected components are put on circles.
- * block-cutnode tree is done recursively, with children placed
- * about parent block.
- * Based on:
- *   Six and Tollis, "A Framework for Circular Drawings of
- * Networks", GD '99, LNCS 1731, pp. 107-116;
- *   Six and Tollis, "Circular Drawings of Biconnected Graphs",
- * Proc. ALENEX '99, pp 57-73.
- *   Kaufmann and Wiese, "Maintaining the Mental Map for Circular
- * Drawings", GD '02, LNCS 2528, pp. 12-22.
- */
 
 #include    <cgraph/alloc.h>
 #include    <circogen/circular.h>
@@ -275,3 +266,25 @@ void circo_cleanup(graph_t * g)
     }
     free(GD_neato_nlist(g));
 }
+
+/**
+ * @dir lib/circogen
+ * @brief [circular layout](https://en.wikipedia.org/wiki/Circular_layout) engine, API circogen/circo.h
+ * @ingroup engines
+ *
+ * Biconnected components are put on circles.
+ * block-cutnode tree is done recursively, with children placed
+ * about parent block.
+ *
+ * [Circo layout user manual](https://graphviz.org/docs/layouts/circo/)
+ *
+ * Based on:
+ * - Six and Tollis, "A Framework for Circular Drawings of
+ *   Networks", GD '99, LNCS 1731, pp. 107-116;
+ * - Six and Tollis, "Circular Drawings of Biconnected Graphs",
+ *   Proc. ALENEX '99, pp 57-73.
+ * - Kaufmann and Wiese, "Maintaining the Mental Map for Circular
+ *   Drawings", GD '02, LNCS 2528, pp. 12-22.
+ *
+ * Other @ref engines
+ */
