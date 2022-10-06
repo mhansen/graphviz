@@ -658,7 +658,6 @@ static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 static pointf arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     (void)arrowsize;
-    (void)penwidth;
 
     pointf m, n, q, v, a[4];
 
@@ -670,6 +669,26 @@ static pointf arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, 
     m.y = p.y + u.y * 0.2;
     n.x = p.x + u.x * 0.6;
     n.y = p.y + u.y * 0.6;
+
+    const double length = hypot(u.x, u.y);
+    const double polygon_extend_over_polyline = penwidth / 2 - 0.2 * length;
+    if (polygon_extend_over_polyline > 0) {
+	// the polygon part of the 'tee' arrow will visually overlap the
+	// 'polyline' part so we need to move the whole arrow in order not to
+	// overlap the node
+	const pointf P = {-u.x, -u.y};
+	// phi = angle of arrow
+	const double cosPhi = P.x / hypot(P.x, P.y);
+	const double sinPhi = P.y / hypot(P.x, P.y);
+	const pointf delta = {polygon_extend_over_polyline * cosPhi, polygon_extend_over_polyline * sinPhi};
+
+	// move the arrow backwards to not visually overlap the node
+	p = sub_pointf(p, delta);
+	m = sub_pointf(m, delta);
+	n = sub_pointf(n, delta);
+	q = sub_pointf(q, delta);
+    }
+
     a[0].x = m.x + v.x;
     a[0].y = m.y + v.y;
     a[1].x = m.x - v.x;
@@ -689,6 +708,9 @@ static pointf arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, 
     a[0] = p;
     a[1] = q;
     gvrender_polyline(job, a, 2);
+
+    // A polyline doesn't extend visually beyond its starting point, so we
+    // return the starting point as it is, without taking penwidth into account
 
     return q;
 }
