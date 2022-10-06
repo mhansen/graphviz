@@ -745,11 +745,9 @@ static pointf arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, 
     return q;
 }
 
-static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_diamond0(pointf p, pointf u, double penwidth, int flag, pointf* a)
 {
-    (void)arrowsize;
-
-    pointf q, r, v, a[5];
+    pointf q, r, v;
 
     v.x = -u.y / 3.;
     v.y = u.x / 3.;
@@ -784,6 +782,16 @@ static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsi
 
     // return the visual starting point of the arrow outline
     q = sub_pointf(q, delta);
+
+    return q;
+}
+
+static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag) {
+    (void)arrowsize;
+
+    pointf a[5];
+
+    pointf q = arrow_type_diamond0(p, u, penwidth, flag, a);
 
     if (flag & ARR_MOD_LEFT)
 	gvrender_polygon(job, &a[2], 3, !(flag & ARR_MOD_OPEN));
