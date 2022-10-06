@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief API fdpgen/fdp.h: @ref fdp_init_node_edge, @ref fdp_cleanup
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -148,3 +153,13 @@ void fdp_cleanup(graph_t * g)
     }
     fdp_cleanup_graph(g);
 }
+
+/**
+ * @dir lib/fdpgen
+ * @brief [Force-Directed Placement](https://en.wikipedia.org/wiki/Force-directed_graph_drawing) layout engine, API fdpgen/fdp.h
+ * @ingroup engines
+ *
+ * [FDP layout user manual](https://graphviz.org/docs/layouts/fdp/)
+ *
+ * Other @ref engines
+ */
