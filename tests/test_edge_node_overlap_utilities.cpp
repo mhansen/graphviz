@@ -466,7 +466,6 @@ void test_edge_node_overlap(const graph_options &graph_options,
           {"normal",
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"tee",
-           // FIXME: adjust this when `tee` is fixed for penwidth
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"vee",
            // FIXME: adjust this when `vee` is fixed for penwidth
