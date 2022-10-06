@@ -1,3 +1,10 @@
+/**
+ * @file
+ * @brief API neatogen/neatoprocs.h:
+ * @ref neato_init_node, @ref user_pos, @ref neato_cleanup,
+ * @ref init_nop, @ref setSeed, @ref checkStart, @ref neato_layout
+ */
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
@@ -1491,3 +1498,13 @@ void neato_layout(Agraph_t * g)
     }
     PSinputscale = save_scale;
 }
+
+/**
+ * @dir lib/neatogen
+ * @brief "spring model" layout engine, API neatogen/neatoprocs.h
+ * @ingroup engines
+ *
+ * [Neato layout user manual](https://graphviz.org/docs/layouts/neato/)
+ *
+ * Other @ref engines
+ */
