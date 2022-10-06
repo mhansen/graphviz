@@ -126,6 +126,7 @@ static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 
 static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_normal(double lenfact, double arrowsize, double penwidth, int flag);
+static double arrow_length_tee(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_box(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_diamond(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_dot(double lenfact, double arrowsize, double penwidth, int flag);
@@ -133,7 +134,7 @@ static double arrow_length_dot(double lenfact, double arrowsize, double penwidth
 static const arrowtype_t Arrowtypes[] = {
     {ARR_TYPE_NORM, 1.0, arrow_type_normal, arrow_length_normal},
     {ARR_TYPE_CROW, 1.0, arrow_type_crow, arrow_length_generic},
-    {ARR_TYPE_TEE, 0.5, arrow_type_tee, arrow_length_generic},
+    {ARR_TYPE_TEE, 0.5, arrow_type_tee, arrow_length_tee},
     {ARR_TYPE_BOX, 1.0, arrow_type_box, arrow_length_box},
     {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond, arrow_length_diamond},
     {ARR_TYPE_DOT, 0.8, arrow_type_dot, arrow_length_dot},
@@ -1052,6 +1053,33 @@ static double arrow_length_normal(double lenfact, double arrowsize,
   // arrow length is the x value of the start point since the arrow points along
   // the positive x axis and ends at origin
   return full_length - overlap;
+}
+
+static double arrow_length_tee(double lenfact, double arrowsize,
+			       double penwidth, int flag) {
+    (void)flag;
+
+    // The `tee` arrow shape normally begins and ends with a polyline which
+    // doesn't extend visually beyond its starting point, so we only have to
+    // take penwidth into account if the polygon part visually extends the
+    // polyline part at the start or end points.
+
+    const double nominal_length = lenfact * arrowsize * ARROW_LENGTH;
+    double length = nominal_length;
+
+    // see the 'arrow_type_tee' function for the magical constants used below
+
+    const double polygon_extend_over_polyline_at_start = penwidth / 2 - (1 - 0.6) * nominal_length;
+    if (polygon_extend_over_polyline_at_start > 0) {
+	length += polygon_extend_over_polyline_at_start;
+    }
+
+    const double polygon_extend_over_polyline_at_end = penwidth / 2 - 0.2 * nominal_length;
+    if (polygon_extend_over_polyline_at_start > 0) {
+	length += polygon_extend_over_polyline_at_end;
+    }
+
+    return length;
 }
 
 static double arrow_length_box(double lenfact, double arrowsize,

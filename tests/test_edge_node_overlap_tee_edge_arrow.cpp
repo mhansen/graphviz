@@ -6,8 +6,8 @@
 #include "test_utilities.h"
 
 TEST_CASE("Edge node overlap for 'tee' arrow",
-          "[!shouldfail] An edge connected to a node shall touch that node and "
-          "not overlap it too much") {
+          "An edge connected to a node shall touch that node and not overlap "
+          "it too much") {
 
   const std::string_view primitive_arrow_shape = "tee";
 
