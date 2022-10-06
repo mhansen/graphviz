@@ -446,8 +446,11 @@ void test_edge_node_overlap(const graph_options &graph_options,
            // FIXME: adjust this when `curve` is fixed for penwidth
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"diamond",
-           // FIXME: adjust this when `diamond` is fixed for penwidth
-           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+           [&]() { // FIXME: calculate this accurately for diamond arrow
+             const auto tip_scale = 1.8027756377319939; // empirical value
+             return graph_options.edge_penwidth / 2 * tip_scale +
+                    graphviz_bezier_clip_margin;
+           }()},
           {"dot",
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"icurve",
