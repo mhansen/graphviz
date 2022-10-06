@@ -269,7 +269,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
   const auto edge_stem_bbox = edge_stem.outline_bbox();
 
   // check overlap of edge stem and arrowhead
-  if (dir == "forward" || dir == "both") {
+  if ((dir == "forward" || dir == "both") &&
+      primitive_arrowhead_shape != "none") {
     const auto edge_arrowhead_bbox =
         edge.arrowhead_outline_bbox(dir, primitive_arrowhead_shape);
     const auto overlap_bbox = edge_stem_bbox.intersection(edge_arrowhead_bbox);
@@ -300,7 +301,7 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
   }
 
   // check overlap of edge stem and arrowtail
-  if (dir == "back" || dir == "both") {
+  if ((dir == "back" || dir == "both") && primitive_arrowtail_shape != "none") {
     const auto edge_arrowtail_bbox =
         edge.arrowtail_outline_bbox(dir, primitive_arrowtail_shape);
     const auto overlap_bbox = edge_stem_bbox.intersection(edge_arrowtail_bbox);
@@ -462,9 +463,6 @@ void test_edge_node_overlap(const graph_options &graph_options,
              return graph_options.edge_penwidth / 2 * tip_scale +
                     graphviz_bezier_clip_margin;
            }()},
-          {"none",
-           // FIXME: adjust this when `none` is fixed for penwidth
-           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"normal",
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"tee",
