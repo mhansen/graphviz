@@ -125,6 +125,7 @@ static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_normal(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_box(double lenfact, double arrowsize, double penwidth, int flag);
+static double arrow_length_dot(double lenfact, double arrowsize, double penwidth, int flag);
 
 static const arrowtype_t Arrowtypes[] = {
     {ARR_TYPE_NORM, 1.0, arrow_type_normal, arrow_length_normal},
@@ -132,7 +133,7 @@ static const arrowtype_t Arrowtypes[] = {
     {ARR_TYPE_TEE, 0.5, arrow_type_tee, arrow_length_generic},
     {ARR_TYPE_BOX, 1.0, arrow_type_box, arrow_length_box},
     {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond, arrow_length_generic},
-    {ARR_TYPE_DOT, 0.8, arrow_type_dot, arrow_length_generic},
+    {ARR_TYPE_DOT, 0.8, arrow_type_dot, arrow_length_dot},
     {ARR_TYPE_CURVE, 1.0, arrow_type_curve, arrow_length_generic},
     {ARR_TYPE_GAP, 0.5, arrow_type_gap, arrow_length_generic},
 };
@@ -1009,4 +1010,11 @@ static double arrow_length_box(double lenfact, double arrowsize,
   // into account at the end point.
 
   return lenfact * arrowsize * ARROW_LENGTH + penwidth / 2;
+}
+
+static double arrow_length_dot(double lenfact, double arrowsize,
+			       double penwidth, int flag) {
+  (void)flag;
+
+  return lenfact * arrowsize * ARROW_LENGTH + penwidth;
 }
