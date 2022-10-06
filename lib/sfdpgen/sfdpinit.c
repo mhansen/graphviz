@@ -338,3 +338,12 @@ void sfdp_cleanup(graph_t * g)
     }
 }
  
+/**
+ * @dir lib/sfdpgen
+ * @brief scalable [Force-Directed Placement](https://en.wikipedia.org/wiki/Force-directed_graph_drawing) layout engine, API sfdpgen/sfdp.h
+ * @ingroup engines
+ *
+ * [SFDP layout user manual](https://graphviz.org/docs/layouts/sfdp/)
+ *
+ * Other @ref engines
+ */
