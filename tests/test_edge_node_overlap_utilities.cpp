@@ -449,7 +449,6 @@ void test_edge_node_overlap(const graph_options &graph_options,
            // FIXME: adjust this when `diamond` is fixed for penwidth
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"dot",
-           // FIXME: adjust this when `dot` is fixed for penwidth
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"icurve",
            // FIXME: adjust this when `icurve` is fixed for penwidth
