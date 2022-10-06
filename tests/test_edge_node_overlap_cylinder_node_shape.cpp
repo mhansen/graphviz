@@ -23,7 +23,7 @@ TEST_CASE("Overlap cylinder node shape",
       .edge_penwidth = 2,
   };
 
-  const auto filename_base = AUTO_NAME();
+  const auto filename_base = fmt::format("{}_rankdir_{}", AUTO_NAME(), rankdir);
 
   test_edge_node_overlap(graph_options, {}, {.filename_base = filename_base});
 }
