@@ -366,14 +366,13 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
 				    double *max_overlap, double *min_overlap,
 				    int edge_labeling_scheme, int n_constr_nodes, int *constr_nodes, SparseMatrix A_constr, int shrink
 				    ){
-  OverlapSmoother sm;
   int i, j, k, *iw, *jw, jdiag;
   SparseMatrix B;
-  double *lambda, *d, *w, diag_d, diag_w, dist;
+  double *d, *w, diag_d, diag_w, dist;
 
   assert((!A) || SparseMatrix_is_symmetric(A, false));
 
-  sm = GNEW(struct OverlapSmoother_struct);
+  OverlapSmoother sm = gv_alloc(sizeof(struct OverlapSmoother_struct));
   sm->scheme = SM_SCHEME_NORMAL;
   if (constr_nodes && n_constr_nodes > 0 && edge_labeling_scheme != ELSCHEME_NONE){
     sm->scheme = SM_SCHEME_NORMAL_ELABEL;
@@ -386,7 +385,7 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
   sm->tol_cg = 0.01;
   sm->maxit_cg = sqrt((double) A->m);
 
-  lambda = sm->lambda = N_GNEW(m,double);
+  double *lambda = sm->lambda = gv_calloc(m, sizeof(double));
   for (i = 0; i < m; i++) sm->lambda[i] = lambda0;
   
   B= call_tri(m, x);
