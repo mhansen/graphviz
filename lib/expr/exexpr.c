@@ -40,3 +40,8 @@ exexpr(Expr_t* ex, const char* name, Exid_t* sym, int type)
 	}
 	return 0;
 }
+
+/**
+ * @dir lib/expr
+ * @brief expression library for lib/gvpr/, API expr.h
+ */

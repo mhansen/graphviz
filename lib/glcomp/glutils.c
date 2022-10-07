@@ -390,3 +390,8 @@ int is_point_in_rectangle(float X, float Y, float RX, float RY, float RW,float R
     else
 	return 0;
 }
+
+/**
+ * @dir lib/glcomp
+ * @brief OpenGL GUI for cmd/smyrna
+ */

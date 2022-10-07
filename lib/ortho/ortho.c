@@ -1494,7 +1494,7 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 }
 
 /**
- * @brief dumps in dot format @ref cells and @ref edges of
+ * @brief dumps in dot format @ref snode::cells and @ref edges of
  * @ref sgraph for debugging
  *
  * The routine uses coordinates of @ref cells calculated
