@@ -69,7 +69,7 @@ static int _sfall(void)
  */
 int sfsync(Sfio_t * f)
 {
-    int local, rv, mode;
+    int local, rv;
     Sfio_t *origf;
 
     if (!(origf = f))
@@ -97,7 +97,7 @@ int sfsync(Sfio_t * f)
 	SFLOCK(f, local);
 
 	/* pretend that this stream is not on a stack */
-	mode = f->mode & SF_PUSH;
+	unsigned mode = f->mode & SF_PUSH;
 	f->mode &= ~SF_PUSH;
 
 	/* these streams do not need synchronization */
