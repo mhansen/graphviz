@@ -383,14 +383,13 @@ static Fmtpos_t *sffmtpos(Sfio_t * f, const char *form, va_list args,
 /* function to initialize conversion tables */
 static int sfcvinit(void)
 {
-    int d, l;
-
-    for (d = 0; d <= UCHAR_MAX; ++d) {
+    for (int d = 0; d <= UCHAR_MAX; ++d) {
 	_Sfcv36[d] = SF_RADIX;
 	_Sfcv64[d] = SF_RADIX;
     }
 
     /* [0-9] */
+    unsigned char d;
     for (d = 0; d < 10; ++d) {
 	_Sfcv36[(uchar) _Sfdigits[d]] = d;
 	_Sfcv64[(uchar) _Sfdigits[d]] = d;
@@ -403,7 +402,7 @@ static int sfcvinit(void)
     }
 
     /* [A-Z] */
-    for (l = 10; d < 62; ++l, ++d) {
+    for (unsigned char l = 10; d < 62; ++l, ++d) {
 	_Sfcv36[(uchar) _Sfdigits[d]] = l;
 	_Sfcv64[(uchar) _Sfdigits[d]] = d;
     }
