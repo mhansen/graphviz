@@ -68,6 +68,7 @@
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalDependencies>cgraph.lib;gvc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>4000000</StackReserveSize>
     </Link>
     <PostBuildEvent>
       <Command>$(OutDir)dot -c
@@ -98,6 +99,7 @@ copy /B /Y $(OutDir)dot.exe $(OutDir)twopi.exe</Command>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalDependencies>cgraph.lib;gvc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>4000000</StackReserveSize>
     </Link>
     <PostBuildEvent>
       <Command>$(OutDir)dot -c

@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   compiler does not support.
 - The `-ffast-math` compiler flag is no longer enabled by the Autotools build
   system.
+- Reserved stack size on Windows for the `dot.exe` binary has been increased
+  from the default 1MB to ~3.8MB.
 
 ### Fixed
 
