@@ -267,9 +267,8 @@ static void relative_position_constraints_delete(void *d){
 }
 
 static relative_position_constraints relative_position_constraints_new(SparseMatrix A_constr, int edge_labeling_scheme, int n_constr_nodes, int *constr_nodes){
-    relative_position_constraints data;
     assert(A_constr);
-    data = MALLOC(sizeof(struct relative_position_constraints_struct));
+    relative_position_constraints data = gv_alloc(sizeof(struct relative_position_constraints_struct));
     data->constr_penalty = 1;
     data->edge_labeling_scheme = edge_labeling_scheme;
     data->n_constr_nodes = n_constr_nodes;
