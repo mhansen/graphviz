@@ -19,7 +19,6 @@
 #include <rbtree/red_black_tree.h>
 #include <common/types.h>
 #include <math.h>
-#include <common/memory.h>
 #include <common/globals.h>
 #include <stdbool.h>
 #include <time.h>
@@ -507,11 +506,10 @@ static void scale_to_edge_length(int dim, SparseMatrix A, double *x, double avg_
 }
 
 static void print_bounding_box(int n, int dim, double *x){
-  double *xmin, *xmax;
   int i, k;
 
-  xmin = N_GNEW(dim,double);
-  xmax = N_GNEW(dim,double);
+  double *xmin = gv_calloc(dim, sizeof(double));
+  double *xmax = gv_calloc(dim, sizeof(double));
 
   for (i = 0; i < dim; i++) xmin[i]=xmax[i] = x[i];
 
