@@ -105,7 +105,7 @@ int sfsync(Sfio_t * f)
 	    goto next;
 
 	if ((f->mode & SF_WRITE) && (f->next > f->data || (f->bits & SF_HOLE))) {	/* sync the buffer, make sure pool don't move */
-	    int pool = f->mode & SF_POOL;
+	    unsigned pool = f->mode & SF_POOL;
 	    f->mode &= ~SF_POOL;
 	    if (f->next > f->data && (SFWRALL(f), SFFLSBUF(f, -1)) < 0)
 		rv = -1;
