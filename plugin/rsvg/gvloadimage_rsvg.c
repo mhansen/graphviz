@@ -22,7 +22,7 @@
 #ifndef RSVG_CAIRO_H
 #include <librsvg/rsvg-cairo.h>
 #endif
-#include <cairo/cairo-svg.h>
+#include <cairo-svg.h>
 
 typedef enum {
     FORMAT_SVG_CAIRO,
