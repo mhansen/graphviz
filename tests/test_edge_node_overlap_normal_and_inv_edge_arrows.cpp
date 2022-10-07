@@ -10,7 +10,7 @@ TEST_CASE("Edge node overlap for normal and inv arrow",
           "not overlap it too much, regardless of if the arrow shape is "
           "'normal' or 'inv'") {
 
-  std::string filename_base = "test_edge_node_overlap_all_edge_arrows";
+  std::string filename_base = AUTO_NAME();
 
   const std::string_view primitive_arrow_shape = GENERATE("normal", "inv");
 
