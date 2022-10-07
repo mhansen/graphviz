@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
+#include <cgraph/alloc.h>
 #include <neatogen/overlap.h>
 
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
@@ -125,7 +126,6 @@ static void InfoDest(void *a){
 
 static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, int check_overlap_only){
   /* if check_overlap_only = TRUE, we only check whether there is one overlap */
-  scan_point *scanpointsx, *scanpointsy;
   int i, k, neighbor;
   SparseMatrix A = NULL, B = NULL;
   rb_red_blk_node *newNode, *newNode0, *newNode2 = NULL;
@@ -134,7 +134,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
 
   A = SparseMatrix_new(n, n, 1, MATRIX_TYPE_REAL, FORMAT_COORD);
 
-  scanpointsx = N_GNEW(2*n,scan_point);
+  scan_point *scanpointsx = gv_calloc(2 * n, sizeof(scan_point));
   for (i = 0; i < n; i++){
     scanpointsx[2*i].node = i;
     scanpointsx[2*i].x = x[i*dim] - width[i*dim];
@@ -145,7 +145,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
   }
   qsort(scanpointsx, 2*n, sizeof(scan_point), comp_scan_points);
 
-  scanpointsy = N_GNEW(2*n,scan_point);
+  scan_point *scanpointsy = gv_calloc(2 * n, sizeof(scan_point));
   for (i = 0; i < n; i++){
     scanpointsy[i].node = i;
     scanpointsy[i].x = x[i*dim+1] - width[i*dim+1];
