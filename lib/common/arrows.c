@@ -235,8 +235,8 @@ void arrow_flags(Agedge_t * e, int *sflag, int *eflag)
 	/* pick up arrowhead of opposing edge */
 	f = agfindedge(agraphof(aghead(e)), aghead(e), agtail(e));
 	arrow_flags(f, &s0, &e0);
-	*eflag = *eflag | s0;
-	*sflag = *sflag | e0;
+	*eflag |= s0;
+	*sflag |= e0;
     }
 }
 
