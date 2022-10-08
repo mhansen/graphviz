@@ -80,7 +80,7 @@ static const arrowname_t Arrowmods[] = {
     {0}
 };
 
-static arrowname_t Arrownames[] = {
+static const arrowname_t Arrownames[] = {
     {"normal", ARR_TYPE_NORM},
     {"crow", ARR_TYPE_CROW},
     {"tee", ARR_TYPE_TEE},
