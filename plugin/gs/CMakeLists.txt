@@ -24,7 +24,7 @@ if(GS_FOUND AND PANGOCAIRO_FOUND)
 
   target_link_libraries(gvplugin_gs
     ${GS_LIBRARIES}
-    ${PANGOCAIRO_LIBRARIES}
+    ${PANGOCAIRO_LINK_LIBRARIES}
   )
 
   install(
