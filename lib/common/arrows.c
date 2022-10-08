@@ -77,7 +77,7 @@ static const arrowname_t Arrowmods[] = {
     /* deprecated alternates for backward compat */
     {"e", ARR_MOD_OPEN},	/* o  - needed for "ediamond" */
     {"half", ARR_MOD_LEFT},	/* l  - needed for "halfopen" */
-    {(char *) 0, ARR_TYPE_NONE}
+    {0}
 };
 
 static arrowname_t Arrownames[] = {
