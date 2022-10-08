@@ -55,7 +55,7 @@ static const arrowdir_t Arrowdirs[] = {
     {"back", ARR_TYPE_NORM, ARR_TYPE_NONE},
     {"both", ARR_TYPE_NORM, ARR_TYPE_NORM},
     {"none", ARR_TYPE_NONE, ARR_TYPE_NONE},
-    {(char *) 0, ARR_TYPE_NONE, ARR_TYPE_NONE}
+    {0}
 };
 
 typedef struct arrowname_t {
