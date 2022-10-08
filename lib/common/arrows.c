@@ -102,7 +102,7 @@ static const arrowname_t Arrownames[] = {
     {"mpty", ARR_TYPE_NORM},
     {"curve", ARR_TYPE_CURVE},
     {"icurve", (ARR_TYPE_CURVE | ARR_MOD_INV)},
-    {(char *) 0, ARR_TYPE_NONE}
+    {0}
 };
 
 typedef struct arrowtype_t {
