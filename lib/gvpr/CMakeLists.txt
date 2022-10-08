@@ -34,9 +34,11 @@ target_include_directories(gvpr PRIVATE
   ../expr
 )
 
-target_include_directories(gvpr SYSTEM PRIVATE
-  ${GETOPT_INCLUDE_DIRS}
-)
+if(GETOPT_FOUND)
+  target_include_directories(gvpr SYSTEM PRIVATE
+    ${GETOPT_INCLUDE_DIRS}
+  )
+endif()
 
 if(WIN32 AND NOT MINGW)
   target_include_directories(gvpr PRIVATE ../../windows/include/unistd)
