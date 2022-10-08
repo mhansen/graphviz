@@ -67,7 +67,7 @@ static const arrowname_t Arrowsynonyms[] = {
     /* synonyms for deprecated arrow names - included for backward compatibility */
     /*  evaluated before primary names else "invempty" would give different results */
     {"invempty", (ARR_TYPE_NORM | ARR_MOD_INV | ARR_MOD_OPEN)},	/* oinv     */
-    {(char *) 0, (ARR_TYPE_NONE)}
+    {0}
 };
 
 static arrowname_t Arrowmods[] = {
