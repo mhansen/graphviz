@@ -190,9 +190,9 @@ static void arrow_match_name(char *name, int *flag)
 	    agerr(AGWARN, "Arrow type \"%s\" unknown - ignoring\n", next);
 	    return;
 	}
-	if (f == ARR_TYPE_GAP && i == (NUMB_OF_ARROW_HEADS -1))
+	if (f == ARR_TYPE_GAP && i == NUMB_OF_ARROW_HEADS - 1)
 	    f = ARR_TYPE_NONE;
-	if ((f == ARR_TYPE_GAP) && (i == 0) && (*rest == '\0'))
+	if (f == ARR_TYPE_GAP && i == 0 && *rest == '\0')
 	    f = ARR_TYPE_NONE;
 	if (f != ARR_TYPE_NONE)
 	    *flag |= (f << (i++ * BITS_PER_ARROW));
@@ -343,7 +343,7 @@ void arrowOrthoClip(edge_t* e, pointf* ps, int startp, int endp, bezier* spl, in
     pointf p, q, r, s, t;
     double d, tlen, hlen, maxd;
 
-    if (sflag && eflag && (endp == startp)) { /* handle special case of two arrows on a single segment */
+    if (sflag && eflag && endp == startp) { /* handle special case of two arrows on a single segment */
 	p = ps[endp];
 	q = ps[endp+3];
 	tlen = arrow_length (e, sflag);
@@ -577,7 +577,7 @@ static pointf arrow_type_crow(GVJ_t * job, pointf p, pointf u, double arrowsize,
     double arrowwidth, shaftwidth;
 
     arrowwidth = 0.45;
-    if (penwidth > (4 * arrowsize) && (flag & ARR_MOD_INV))
+    if (penwidth > 4 * arrowsize && (flag & ARR_MOD_INV))
         arrowwidth *= penwidth / (4 * arrowsize);
 
     shaftwidth = 0;
@@ -836,7 +836,7 @@ static pointf arrow_gen_type(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 	if (f == arrowtype->type) {
 	    u.x *= arrowtype->lenfact * arrowsize;
 	    u.y *= arrowtype->lenfact * arrowsize;
-	    p = (arrowtype->gen) (job, p, u, arrowsize, penwidth, flag);
+	    p = arrowtype->gen(job, p, u, arrowsize, penwidth, flag);
 	    break;
 	}
     }
