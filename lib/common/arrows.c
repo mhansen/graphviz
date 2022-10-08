@@ -70,7 +70,7 @@ static const arrowname_t Arrowsynonyms[] = {
     {0}
 };
 
-static arrowname_t Arrowmods[] = {
+static const arrowname_t Arrowmods[] = {
     {"o", ARR_MOD_OPEN},
     {"r", ARR_MOD_RIGHT},
     {"l", ARR_MOD_LEFT},
