@@ -139,13 +139,13 @@ static const arrowtype_t Arrowtypes[] = {
 static const size_t Arrowtypes_size =
   sizeof(Arrowtypes) / sizeof(Arrowtypes[0]);
 
-static char *arrow_match_name_frag(char *name, arrowname_t * arrownames, int *flag)
-{
-    arrowname_t *arrowname;
+static char *arrow_match_name_frag(char *name, const arrowname_t *arrownames,
+                                   int *flag) {
     size_t namelen = 0;
     char *rest = name;
 
-    for (arrowname = arrownames; arrowname->name; arrowname++) {
+    for (const arrowname_t *arrowname = arrownames; arrowname->name;
+         arrowname++) {
 	namelen = strlen(arrowname->name);
 	if (strncmp(name, arrowname->name, namelen) == 0) {
 	    *flag |= arrowname->type;
