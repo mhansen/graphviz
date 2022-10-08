@@ -50,7 +50,7 @@ typedef struct arrowdir_t {
     int eflag;
 } arrowdir_t;
 
-static arrowdir_t Arrowdirs[] = {
+static const arrowdir_t Arrowdirs[] = {
     {"forward", ARR_TYPE_NONE, ARR_TYPE_NORM},
     {"back", ARR_TYPE_NORM, ARR_TYPE_NONE},
     {"both", ARR_TYPE_NORM, ARR_TYPE_NORM},
@@ -202,12 +202,11 @@ static void arrow_match_name(char *name, int *flag)
 void arrow_flags(Agedge_t * e, int *sflag, int *eflag)
 {
     char *attr;
-    arrowdir_t *arrowdir;
 
     *sflag = ARR_TYPE_NONE;
     *eflag = agisdirected(agraphof(e)) ? ARR_TYPE_NORM : ARR_TYPE_NONE;
     if (E_dir && ((attr = agxget(e, E_dir)))[0]) {
-	for (arrowdir = Arrowdirs; arrowdir->dir; arrowdir++) {
+	for (const arrowdir_t *arrowdir = Arrowdirs; arrowdir->dir; arrowdir++) {
 	    if (streq(attr, arrowdir->dir)) {
 		*sflag = arrowdir->sflag;
 		*eflag = arrowdir->eflag;
