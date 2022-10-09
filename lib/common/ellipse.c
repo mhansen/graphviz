@@ -161,10 +161,10 @@ static void computeBounds(ellipse_t * ep)
 	}
     }
 
-    etaXMin -= (TWOPI * floor((etaXMin - ep->eta1) / TWOPI));
-    etaYMin -= (TWOPI * floor((etaYMin - ep->eta1) / TWOPI));
-    etaXMax -= (TWOPI * floor((etaXMax - ep->eta1) / TWOPI));
-    etaYMax -= (TWOPI * floor((etaYMax - ep->eta1) / TWOPI));
+    etaXMin -= TWOPI * floor((etaXMin - ep->eta1) / TWOPI);
+    etaYMin -= TWOPI * floor((etaYMin - ep->eta1) / TWOPI);
+    etaXMax -= TWOPI * floor((etaXMax - ep->eta1) / TWOPI);
+    etaYMax -= TWOPI * floor((etaYMax - ep->eta1) / TWOPI);
 
     ep->xLeft = (etaXMin <= ep->eta2)
 	? (ep->cx + ep->a * cos(etaXMin) * ep->cosTheta -
@@ -205,7 +205,7 @@ initEllipse(ellipse_t * ep, double cx, double cy, double a, double b,
 
     // the preceding correction fails if we have exactly eta2 - eta1 = 2*PI
     // it reduces the interval to zero length
-    if ((lambda2 - lambda1 > M_PI) && (ep->eta2 - ep->eta1 < M_PI)) {
+    if (lambda2 - lambda1 > M_PI && ep->eta2 - ep->eta1 < M_PI) {
 	ep->eta2 += TWOPI;
     }
 
@@ -366,10 +366,10 @@ estimateError(ellipse_t * ep, int degree, double etaA, double etaB)
 	double (*coeffs)[4][4];
 	double *safety;
 	if (degree == 2) {
-	    coeffs = (x < 0.25) ? coeffs2Low : coeffs2High;
+	    coeffs = x < 0.25 ? coeffs2Low : coeffs2High;
 	    safety = safety2;
 	} else {
-	    coeffs = (x < 0.25) ? coeffs3Low : coeffs3High;
+	    coeffs = x < 0.25 ? coeffs3Low : coeffs3High;
 	    safety = safety3;
 	}
 
