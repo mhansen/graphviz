@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking**: An `outline_width` field has been added to the `Agnodeinfo_t` struct.
 - **Breaking**: An `outline_height` field has been added to the `Agnodeinfo_t` struct.
+- When using the CMake build system, the minimum requirement has been increased
+  from CMake 3.9 to CMake 3.10.2.
 
 ### Removed
 
