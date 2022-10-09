@@ -47,14 +47,13 @@
  */
 
 #include <cgraph/alloc.h>
+#include <math.h>
 #include <stdbool.h>
 #ifdef STANDALONE
 #include <limits.h>
-#include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MAX(a,b)        ((a)>(b)?(a):(b))
 #define MIN(a,b)        ((a)<(b)?(a):(b))
 
 typedef struct {
@@ -180,11 +179,11 @@ static void computeBounds(ellipse_t * ep)
     ep->width = ((etaXMax <= ep->eta2)
 		 ? (ep->cx + ep->a * cos(etaXMax) * ep->cosTheta -
 		    ep->b * sin(etaXMax) * ep->sinTheta)
-		 : MAX(ep->x1, ep->x2)) - ep->xLeft;
+		 : fmax(ep->x1, ep->x2)) - ep->xLeft;
     ep->height = ((etaYMax <= ep->eta2)
 		  ? (ep->cy + ep->a * cos(etaYMax) * ep->sinTheta +
 		     ep->b * sin(etaYMax) * ep->cosTheta)
-		  : MAX(ep->y1, ep->y2)) - ep->yUp;
+		  : fmax(ep->y1, ep->y2)) - ep->yUp;
 
 }
 
