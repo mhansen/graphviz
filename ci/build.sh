@@ -34,6 +34,7 @@ mkdir -p ${DIR}
 ARCH=$( uname -m )
 build_system=${build_system:-autotools}
 if [ "${build_system}" = "cmake" ]; then
+    cmake --version
     mkdir build
     pushd build
     cmake --log-level=VERBOSE ${CMAKE_OPTIONS:-} ..
