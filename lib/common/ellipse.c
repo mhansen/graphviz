@@ -54,8 +54,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MIN(a,b)        ((a)<(b)?(a):(b))
-
 typedef struct {
     double x, y;
 } pointf;
@@ -171,11 +169,11 @@ static void computeBounds(ellipse_t * ep)
     ep->xLeft = (etaXMin <= ep->eta2)
 	? (ep->cx + ep->a * cos(etaXMin) * ep->cosTheta -
 	   ep->b * sin(etaXMin) * ep->sinTheta)
-	: MIN(ep->x1, ep->x2);
+	: fmin(ep->x1, ep->x2);
     ep->yUp = (etaYMin <= ep->eta2)
 	? (ep->cy + ep->a * cos(etaYMin) * ep->sinTheta +
 	   ep->b * sin(etaYMin) * ep->cosTheta)
-	: MIN(ep->y1, ep->y2);
+	: fmin(ep->y1, ep->y2);
     ep->width = ((etaXMax <= ep->eta2)
 		 ? (ep->cx + ep->a * cos(etaXMax) * ep->cosTheta -
 		    ep->b * sin(etaXMax) * ep->sinTheta)
