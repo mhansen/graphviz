@@ -842,7 +842,7 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
     const auto sinBetaMinusPi = -sinBeta;
     const auto cosBetaMinusPi = -cosBeta;
     const SVG::SVGPoint P2 = {P.x + stroke_width / 2.0 * sinBetaMinusPi,
-                              P.y + stroke_width / 2.0 * cosBetaMinusPi};
+                              P.y - stroke_width / 2.0 * cosBetaMinusPi};
 
     // the bevel is the triangle formed from the three points P, P1 and P2 so
     // a good enough approximation of the miter point in this case is the
