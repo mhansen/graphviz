@@ -145,7 +145,9 @@ int openfiledlg(char **filename) {
     return rv;
 }
 
-int savefiledlg(agxbuf *xbuf) {
+int savefiledlg(char **filename) {
+    assert(filename != NULL);
+
     GtkWidget *dialog;
     int rv;
 
@@ -158,8 +160,7 @@ int savefiledlg(agxbuf *xbuf) {
 					 GTK_RESPONSE_ACCEPT, NULL);
 
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-	agxbput(xbuf,
-		gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
+	*filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 	rv = 1;
     } else
 	rv = 0;

@@ -396,15 +396,15 @@ void on_gvprbuttonsave_clicked(GtkWidget * widget, gpointer user_data)
     (void)user_data;
 
     FILE *output_file = NULL;
-    agxbuf xbuf = {0};
     GtkTextBuffer *gtkbuf;	/*GTK buffer from glade GUI */
     char *bf2;
     GtkTextIter startit;
     GtkTextIter endit;
 
-    /*file name should be returned in xbuf */
-    if (savefiledlg(&xbuf)) {
-	output_file = fopen(agxbuse(&xbuf), "w");
+    char *filename = NULL;
+    if (savefiledlg(&filename)) {
+	output_file = fopen(filename, "w");
+	g_free(filename);
 	if (output_file) {
 	    gtkbuf =
 		gtk_text_view_get_buffer((GtkTextView *)

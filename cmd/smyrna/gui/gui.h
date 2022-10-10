@@ -17,7 +17,6 @@
 #include <glade/glade.h>
 #include "callbacks.h"
 #include <cgraph/cgraph.h>
-#include <cgraph/agxbuf.h>
 
 #define MAXIMUM_WIDGET_COUNT	97
 
@@ -42,6 +41,11 @@
  * \return Non-zero on success.
  */
     int openfiledlg(char **filename);
-/*generic save file dialog*/
-    int savefiledlg(agxbuf * xbuf);
+/** generic save file dialog
+ *
+ * \param [out] filename Selected filename on success. Caller should \p g_free
+ *   this.
+ * \return Non-zero on success.
+ */
+    int savefiledlg(char **filename);
     void append_textview(GtkTextView * textv, const char *s, size_t bytes);
