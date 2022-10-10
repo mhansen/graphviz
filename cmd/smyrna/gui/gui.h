@@ -35,8 +35,13 @@
     void Color_Widget_bg(char *colorstring, GtkWidget * widget);
 /*generic warning pop up*/
     void show_gui_warning(char *str);
-/*generic open file dialog*/
-    int openfiledlg(agxbuf * xbuf);
+/** generic open file dialog
+ *
+ * \param [out] filename Selected filename on success. Caller should \p g_free
+ *   this.
+ * \return Non-zero on success.
+ */
+    int openfiledlg(char **filename);
 /*generic save file dialog*/
     int savefiledlg(int filtercnt, char **filters, agxbuf * xbuf);
     void append_textview(GtkTextView * textv, const char *s, size_t bytes);

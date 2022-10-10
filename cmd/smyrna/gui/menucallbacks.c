@@ -20,6 +20,7 @@
 #include <cgraph/agxbuf.h>
 #include <assert.h>
 #include <ctype.h>
+#include <glib.h>
 #include  "frmobjectui.h"
 
 void mAttributesSlot(GtkWidget * widget, gpointer user_data)
@@ -360,9 +361,10 @@ void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
 
     agxbinit(&xbuf, SMALLBUF, xbuffer);
 
-    /*file name should be returned in xbuf */
-    if (openfiledlg(&xbuf)) {
-	input_file = fopen(agxbuse(&xbuf), "r");
+    char *filename = NULL;
+    if (openfiledlg(&filename)) {
+	input_file = fopen(filename, "r");
+	g_free(filename);
 	if (input_file) {
 	    while (fgets(buf, BUFSIZ, input_file))
 		agxbput(&xbuf, buf);
