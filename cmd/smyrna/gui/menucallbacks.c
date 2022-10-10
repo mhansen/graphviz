@@ -21,6 +21,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <glib.h>
+#include <stdlib.h>
 #include  "frmobjectui.h"
 
 void mAttributesSlot(GtkWidget * widget, gpointer user_data)
@@ -414,6 +415,7 @@ void on_gvprbuttonsave_clicked(GtkWidget * widget, gpointer user_data)
 	    gtk_text_buffer_get_end_iter(gtkbuf, &endit);
 	    bf2 = gtk_text_buffer_get_text(gtkbuf, &startit, &endit, 0);
 	    fprintf(output_file, "%s", bf2);
+	    free(bf2);
 	    fclose(output_file);
 	}
 
