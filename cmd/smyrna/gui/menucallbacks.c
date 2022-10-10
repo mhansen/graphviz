@@ -388,7 +388,7 @@ void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
 }
 
 /*
-	opens a file open dialog and load a gvpr program to gvpr script text box
+	opens a file save dialog and save a gvpr program from gvpr script text box
 	if the current script is modified, user should be informed about it
 */
 void on_gvprbuttonsave_clicked(GtkWidget * widget, gpointer user_data)
