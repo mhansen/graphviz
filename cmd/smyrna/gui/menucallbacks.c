@@ -361,7 +361,7 @@ void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
     agxbinit(&xbuf, SMALLBUF, xbuffer);
 
     /*file name should be returned in xbuf */
-    if (openfiledlg(0, NULL, &xbuf)) {
+    if (openfiledlg(&xbuf)) {
 	input_file = fopen(agxbuse(&xbuf), "r");
 	if (input_file) {
 	    while (fgets(buf, BUFSIZ, input_file))

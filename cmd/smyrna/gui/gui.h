@@ -36,7 +36,7 @@
 /*generic warning pop up*/
     void show_gui_warning(char *str);
 /*generic open file dialog*/
-    int openfiledlg(int filtercnt, char **filters, agxbuf * xbuf);
+    int openfiledlg(agxbuf * xbuf);
 /*generic save file dialog*/
     int savefiledlg(int filtercnt, char **filters, agxbuf * xbuf);
     void append_textview(GtkTextView * textv, const char *s, size_t bytes);
