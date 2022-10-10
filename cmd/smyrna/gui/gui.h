@@ -43,5 +43,5 @@
  */
     int openfiledlg(char **filename);
 /*generic save file dialog*/
-    int savefiledlg(int filtercnt, char **filters, agxbuf * xbuf);
+    int savefiledlg(agxbuf * xbuf);
     void append_textview(GtkTextView * textv, const char *s, size_t bytes);

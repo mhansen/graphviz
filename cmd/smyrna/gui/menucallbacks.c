@@ -403,7 +403,7 @@ void on_gvprbuttonsave_clicked(GtkWidget * widget, gpointer user_data)
     GtkTextIter endit;
 
     /*file name should be returned in xbuf */
-    if (savefiledlg(0, NULL, &xbuf)) {
+    if (savefiledlg(&xbuf)) {
 	output_file = fopen(agxbuse(&xbuf), "w");
 	if (output_file) {
 	    gtkbuf =
