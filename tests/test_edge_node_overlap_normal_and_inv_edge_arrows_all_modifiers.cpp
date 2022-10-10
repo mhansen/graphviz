@@ -14,7 +14,7 @@ TEST_CASE(
     "overlap it too much, regardless of if the arrow shape is 'normal' or "
     "'inv' and which arrrow shape modifier is used") {
 
-  std::string filename_base = "test_edge_node_overlap_all_edge_arrows";
+  std::string filename_base = AUTO_NAME();
 
   const std::string_view primitive_arrow_shape = GENERATE("normal", "inv");
   INFO("Edge primitive arrow shape: " << primitive_arrow_shape);
