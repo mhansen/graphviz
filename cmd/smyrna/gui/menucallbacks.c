@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include "menucallbacks.h"
 #include "viewport.h"
 #include "tvnodes.h"
@@ -286,7 +285,6 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     GtkTextIter endit;
     const char *args;
     int cloneGraph;
-    char **argv;
 
     args =
 	gtk_entry_get_text((GtkEntry *)
@@ -315,7 +313,8 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
 	argc++;
     } else
 	cloneGraph = 0;
-    argv = gv_calloc(argc + 1, sizeof(char*));
+    assert(argc <= 5);
+    char *argv[6] = {0};
     size_t j = 0;
     argv[j++] = "smyrna";
     if (cloneGraph)
@@ -339,7 +338,6 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     assert(j == argc);
 
     run_gvpr(view->g[view->activeGraph], argc, argv);
-    free(argv);
     g_free(bf2);
 }
 
