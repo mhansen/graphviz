@@ -859,11 +859,6 @@ tclGdStyleCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 	    return TCL_ERROR;
 
     colors = (int *) Tcl_Alloc(ncolor * sizeof(int));
-    if (colors == NULL) {
-	Tcl_SetResult(interp, "Memory allocation failed", TCL_STATIC);
-	retval = TCL_ERROR;
-	goto out;
-    }
     /* Get the color values. */
     for (i = 0; i < ncolor; i++)
 	if (Tcl_GetIntFromObj(interp, colorObjv[i], &colors[i]) != TCL_OK) {
@@ -875,7 +870,6 @@ tclGdStyleCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
     if (retval == TCL_OK)
 	gdImageSetStyle(im, colors, ncolor);
 
-  out:
     /* Free the colors. */
     if (colors != NULL)
 	Tcl_Free((char *) colors);
@@ -1066,11 +1060,6 @@ tclGdPolygonCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
     }
 
     points = (gdPointPtr) Tcl_Alloc(npoints * sizeof(gdPoint));
-    if (points == NULL) {
-	Tcl_SetResult(interp, "Memory allocation failed", TCL_STATIC);
-	retval = TCL_ERROR;
-	goto out;
-    }
 
     /* Get the point values. */
     for (i = 0; i < npoints; i++)
@@ -1404,8 +1393,9 @@ tclGdWriteBufCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 static void
 GdPtrTypeUpdate(struct Tcl_Obj *O)
 {
-    O->bytes = Tcl_Alloc(strlen(GdPtrType.name) + (sizeof(void *) + 1) * 2 + 1);
-    O->length = sprintf(O->bytes, "%s%p", GdPtrType.name, IMGPTR(O));
+  size_t len = strlen(GdPtrType.name) + (sizeof(void *) + 1) * 2 + 1;
+  O->bytes = Tcl_Alloc(len);
+  O->length = snprintf(O->bytes, len, "%s%p", GdPtrType.name, IMGPTR(O));
 }
 
 static int

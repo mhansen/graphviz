@@ -27,7 +27,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
     gctx_t *gctx = (gctx_t *)clientData;
     ictx_t *ictx = gctx->ictx;
     Agsym_t *a;
-    char buf[256], **argv2;
+    char buf[12], **argv2;
     int i, j, argc2;
     GVC_t *gvc = ictx->gvc;
     GVJ_t *job = gvc->job;
@@ -108,12 +108,12 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("countnodes", argv[1]) == 0) {
-	sprintf(buf, "%d", agnnodes(g));
+	snprintf(buf, sizeof(buf), "%d", agnnodes(g));
 	Tcl_AppendResult(interp, buf, NULL);
 	return TCL_OK;
 
     } else if (strcmp("countedges", argv[1]) == 0) {
-	sprintf(buf, "%d", agnedges(g));
+	snprintf(buf, sizeof(buf), "%d", agnedges(g));
 	Tcl_AppendResult(interp, buf, NULL);
 	return TCL_OK;
 
