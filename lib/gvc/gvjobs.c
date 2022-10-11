@@ -117,12 +117,6 @@ void gv_argvlist_reset(gv_argvlist_t *list)
     list->argc = 0;
 }
 
-void gv_argvlist_free(gv_argvlist_t *list)
-{
-    free(list->argv);
-    free(list);
-}
-
 void gvjobs_delete(GVC_t * gvc)
 {
     GVJ_t *job, *j;

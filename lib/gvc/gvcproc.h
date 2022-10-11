@@ -126,4 +126,3 @@
 /* argvlist */
     void gv_argvlist_set_item(gv_argvlist_t *list, int index, char *item);
     void gv_argvlist_reset(gv_argvlist_t *list);
-    void gv_argvlist_free(gv_argvlist_t *list);
