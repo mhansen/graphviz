@@ -47,17 +47,12 @@
  */
 
 #include <cgraph/alloc.h>
+#include <math.h>
 #include <stdbool.h>
 #ifdef STANDALONE
 #include <limits.h>
-#include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#define MAX(a,b)        ((a)>(b)?(a):(b))
-#define MIN(a,b)        ((a)<(b)?(a):(b))
-
-#define PI            3.14159265358979323846
 
 typedef struct {
     double x, y;
@@ -166,27 +161,27 @@ static void computeBounds(ellipse_t * ep)
 	}
     }
 
-    etaXMin -= (TWOPI * floor((etaXMin - ep->eta1) / TWOPI));
-    etaYMin -= (TWOPI * floor((etaYMin - ep->eta1) / TWOPI));
-    etaXMax -= (TWOPI * floor((etaXMax - ep->eta1) / TWOPI));
-    etaYMax -= (TWOPI * floor((etaYMax - ep->eta1) / TWOPI));
+    etaXMin -= TWOPI * floor((etaXMin - ep->eta1) / TWOPI);
+    etaYMin -= TWOPI * floor((etaYMin - ep->eta1) / TWOPI);
+    etaXMax -= TWOPI * floor((etaXMax - ep->eta1) / TWOPI);
+    etaYMax -= TWOPI * floor((etaYMax - ep->eta1) / TWOPI);
 
     ep->xLeft = (etaXMin <= ep->eta2)
 	? (ep->cx + ep->a * cos(etaXMin) * ep->cosTheta -
 	   ep->b * sin(etaXMin) * ep->sinTheta)
-	: MIN(ep->x1, ep->x2);
+	: fmin(ep->x1, ep->x2);
     ep->yUp = (etaYMin <= ep->eta2)
 	? (ep->cy + ep->a * cos(etaYMin) * ep->sinTheta +
 	   ep->b * sin(etaYMin) * ep->cosTheta)
-	: MIN(ep->y1, ep->y2);
+	: fmin(ep->y1, ep->y2);
     ep->width = ((etaXMax <= ep->eta2)
 		 ? (ep->cx + ep->a * cos(etaXMax) * ep->cosTheta -
 		    ep->b * sin(etaXMax) * ep->sinTheta)
-		 : MAX(ep->x1, ep->x2)) - ep->xLeft;
+		 : fmax(ep->x1, ep->x2)) - ep->xLeft;
     ep->height = ((etaYMax <= ep->eta2)
 		  ? (ep->cy + ep->a * cos(etaYMax) * ep->sinTheta +
 		     ep->b * sin(etaYMax) * ep->cosTheta)
-		  : MAX(ep->y1, ep->y2)) - ep->yUp;
+		  : fmax(ep->y1, ep->y2)) - ep->yUp;
 
 }
 
@@ -210,7 +205,7 @@ initEllipse(ellipse_t * ep, double cx, double cy, double a, double b,
 
     // the preceding correction fails if we have exactly eta2 - eta1 = 2*PI
     // it reduces the interval to zero length
-    if ((lambda2 - lambda1 > M_PI) && (ep->eta2 - ep->eta1 < M_PI)) {
+    if (lambda2 - lambda1 > M_PI && ep->eta2 - ep->eta1 < M_PI) {
 	ep->eta2 += TWOPI;
     }
 
@@ -371,10 +366,10 @@ estimateError(ellipse_t * ep, int degree, double etaA, double etaB)
 	double (*coeffs)[4][4];
 	double *safety;
 	if (degree == 2) {
-	    coeffs = (x < 0.25) ? coeffs2Low : coeffs2High;
+	    coeffs = x < 0.25 ? coeffs2Low : coeffs2High;
 	    safety = safety2;
 	} else {
-	    coeffs = (x < 0.25) ? coeffs3Low : coeffs3High;
+	    coeffs = x < 0.25 ? coeffs3Low : coeffs3High;
 	    safety = safety3;
 	}
 
