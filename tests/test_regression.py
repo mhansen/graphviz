@@ -43,20 +43,11 @@ def is_ndebug_defined() -> bool:
 # saying "== Failed ==" which thus is not counted as a failure at the
 # end.
 
-def test_regression_subset_differences():
-  """
-  First run a subset of all the tests that produces equal output files
-  for all platforms and fail the test if there are differences.
-  """
-
-  os.chdir(Path(__file__).resolve().parent)
-  subprocess.check_call([sys.executable, "rtest.py", "tests_subset.txt"])
-
 def test_regression_failure():
   """
-  Secondly, run all tests but ignore differences and fail the test
-  only if there is a crash. This will leave the differences for png
-  output in tests/nhtml/index.html for review.
+  Run all tests but ignore differences and fail the test only if there is a
+  crash. This will leave the differences for png output in
+  tests/nhtml/index.html for review.
   """
 
   os.chdir(Path(__file__).resolve().parent)

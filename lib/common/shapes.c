@@ -1840,6 +1840,7 @@ bool isPolygon(node_t * n)
 static void poly_init(node_t * n)
 {
     pointf dimen, min_bb, bb;
+    pointf outline_bb;
     point imagesize;
     pointf *vertices;
     char *p, *sfile, *fxd;
@@ -2061,9 +2062,18 @@ static void poly_init(node_t * n)
 	ND_label(n)->space.y = dimen.y + temp;
     }
 
+    const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+
     outp = peripheries;
     if (peripheries < 1)
 	outp = 1;
+
+    if (peripheries >= 1 && penwidth > 0) {
+        // allocate extra vertices representing the outline, i.e., the outermost
+        // periphery with penwidth taken into account
+        ++outp;
+    }
+
     if (sides < 3) {		/* ellipses */
 	sides = 2;
 	vertices = N_NEW(outp * sides, pointf);
@@ -2086,6 +2096,21 @@ static void poly_init(node_t * n)
 	    }
 	    bb.x = 2. * P.x;
 	    bb.y = 2. * P.y;
+	}
+	outline_bb = bb;
+	if (outp > peripheries) {
+	  // add an outline at half the penwidth outside the outermost periphery
+	  P.x += penwidth / 2;
+	  P.y += penwidth / 2;
+	  i = sides * peripheries;
+	  vertices[i].x = -P.x;
+	  vertices[i].y = -P.y;
+	  i++;
+	  vertices[i].x = P.x;
+	  vertices[i].y = P.y;
+	  i++;
+	  outline_bb.x = 2. * P.x;
+	  outline_bb.y = 2. * P.y;
 	}
     } else {
 
@@ -2168,6 +2193,8 @@ static void poly_init(node_t * n)
 	ymax *= 2.;
 	bb.x = MAX(width, xmax);
 	bb.y = MAX(height, ymax);
+	outline_bb = bb;
+
 	scalex = bb.x / xmax;
 	scaley = bb.y / ymax;
 
@@ -2178,7 +2205,7 @@ static void poly_init(node_t * n)
 	    vertices[i] = P;
 	}
 
-	if (peripheries > 1) {
+	if (outp > 1) {
 	    pointf Q = vertices[(sides - 1)];
 	    pointf R = vertices[0];
 	    beta = atan2(R.y - Q.y, R.x - Q.x);
@@ -2207,11 +2234,20 @@ static void poly_init(node_t * n)
 		    Q.y += sinx;
 		    vertices[i + j * sides] = Q;
 		}
+		if (outp > peripheries) {
+		    // add an outline at half the penwidth outside the outermost periphery
+		    Q.x += cosx * penwidth / 2 / GAP;
+		    Q.y += sinx * penwidth / 2 / GAP;
+		    vertices[i + peripheries * sides] = Q;
+		}
 	    }
 	    for (i = 0; i < sides; i++) {
 		pointf P = vertices[i + (peripheries - 1) * sides];
 		bb.x = MAX(2. * fabs(P.x), bb.x);
 		bb.y = MAX(2. * fabs(P.y), bb.y);
+		pointf Q = vertices[i + (outp - 1) * sides];
+		outline_bb.x = MAX(2. * fabs(Q.x), outline_bb.x);
+		outline_bb.y = MAX(2. * fabs(Q.y), outline_bb.y);
 	    }
 	}
     }
@@ -2227,9 +2263,13 @@ static void poly_init(node_t * n)
 	/* set width and height to reflect label and shape */
 	ND_width(n) = PS2INCH(MAX(dimen.x,bb.x));
 	ND_height(n) = PS2INCH(MAX(dimen.y,bb.y));
+	ND_outline_width(n) = PS2INCH(MAX(dimen.x, outline_bb.x));
+	ND_outline_height(n) = PS2INCH(MAX(dimen.y, outline_bb.y));
     } else {
 	ND_width(n) = PS2INCH(bb.x);
 	ND_height(n) = PS2INCH(bb.y);
+	ND_outline_width(n) = PS2INCH(outline_bb.x);
+	ND_outline_height(n) = PS2INCH(outline_bb.y);
     }
     ND_shape_info(n) = poly;
 }
@@ -2283,6 +2323,8 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 
     if (n != lastn) {
 	double n_width, n_height;
+	double n_outline_width;
+	double n_outline_height;
 	poly = ND_shape_info(n);
 	vertex = poly->vertices;
 	sides = poly->sides;
@@ -2291,6 +2333,8 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	   boxf bb = polyBB(poly); 
 	    n_width = bb.UR.x - bb.LL.x;
 	    n_height = bb.UR.y - bb.LL.y;
+	    n_outline_width = n_width;
+	    n_outline_height = n_height;
 	    /* get point and node size adjusted for rankdir=LR */
 	    if (GD_flip(agraphof(n))) {
 		ysize = n_width;
@@ -2310,6 +2354,8 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	    }
 	    n_width = POINTS(ND_width(n));
 	    n_height = POINTS(ND_height(n));
+	    n_outline_width = INCH2PS(ND_outline_width(n));
+	    n_outline_height = INCH2PS(ND_outline_height(n));
 	}
 
 	/* scale */
@@ -2319,13 +2365,19 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	    ysize = 1.0;
 	scalex = n_width / xsize;
 	scaley = n_height / ysize;
-	box_URx = n_width / 2.0;
-	box_URy = n_height / 2.0;
+	box_URx = n_outline_width / 2.0;
+	box_URy = n_outline_height / 2.0;
 
-	/* index to outer-periphery */
-	outp = (poly->peripheries - 1) * sides;
-	if (outp < 0)
-	    outp = 0;
+	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+	if (poly->peripheries >= 1 && penwidth > 0) {
+	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
+	    outp = (poly->peripheries + 1 - 1) * sides;
+	} else {
+	    /* index to outer-periphery */
+	    outp = (poly->peripheries - 1) * sides;
+	    if (outp < 0)
+		outp = 0;
+	}
 	lastn = n;
     }
 
@@ -3010,6 +3062,12 @@ static void point_init(node_t * n)
     else
 	outp = peripheries;
     sides = 2;
+    const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+    if (peripheries >= 1 && penwidth > 0) {
+        // allocate extra vertices representing the outline, i.e., the outermost
+        // periphery with penwidth taken into account
+        ++outp;
+    }
     vertices = N_NEW(outp * sides, pointf);
     P.y = P.x = sz / 2.;
     vertices[0].x = -P.x;
@@ -3027,7 +3085,23 @@ static void point_init(node_t * n)
 	    i++;
 	}
 	sz = 2. * P.x;
+    } else {
+        i = sides;
     }
+
+    if (outp > peripheries) {
+      // add an outline at half the penwidth outside the outermost periphery
+      P.x += penwidth / 2;
+      P.y += penwidth / 2;
+      vertices[i].x = -P.x;
+      vertices[i].y = -P.y;
+      i++;
+      vertices[i].x = P.x;
+      vertices[i].y = P.y;
+      i++;
+    }
+    const double sz_outline = 2. * P.x;
+
     poly->regular = 1;
     poly->peripheries = peripheries;
     poly->sides = 2;
@@ -3037,6 +3111,7 @@ static void point_init(node_t * n)
     poly->vertices = vertices;
 
     ND_height(n) = ND_width(n) = PS2INCH(sz);
+    ND_outline_height(n) = ND_outline_width(n) = PS2INCH(sz_outline);
     ND_shape_info(n) = poly;
 }
 
@@ -3058,11 +3133,18 @@ static bool point_inside(inside_t * inside_context, pointf p)
     if (n != lastn) {
 	int outp;
 	polygon_t *poly = ND_shape_info(n);
+	const int sides = 2;
+	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
 
-	/* index to outer-periphery */
-	outp = 2 * (poly->peripheries - 1);
-	if (outp < 0)
-	    outp = 0;
+	if (poly->peripheries >= 1 && penwidth > 0) {
+	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
+	    outp = sides * (poly->peripheries + 1 - 1);
+	} else {
+	    /* index to outer-periphery */
+	    outp = sides * (poly->peripheries - 1);
+	    if (outp < 0)
+		outp = 0;
+	}
 
 	radius = poly->vertices[outp + 1].x;
 	lastn = n;
@@ -3965,10 +4047,16 @@ static bool star_inside(inside_t * inside_context, pointf p)
 	vertex = poly->vertices;
 	sides = poly->sides;
 
-	/* index to outer-periphery */
-	outp = (poly->peripheries - 1) * sides;
-	if (outp < 0)
-	    outp = 0;
+	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+	if (poly->peripheries >= 1 && penwidth > 0) {
+	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
+	    outp = (poly->peripheries + 1 - 1) * sides;
+	} else {
+	    /* index to outer-periphery */
+	    outp = (poly->peripheries - 1) * sides;
+	    if (outp < 0)
+		outp = 0;
+	}
 	lastn = n;
     }
 

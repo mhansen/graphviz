@@ -73,6 +73,8 @@
 #define		DEFAULT_NODEWIDTH	0.75
 #define		MIN_NODEWIDTH		0.01
 #define		DEFAULT_NODESHAPE	"ellipse"
+#define		DEFAULT_NODEPENWIDTH	1.0
+#define		MIN_NODEPENWIDTH	0.0
 
 #define		NODENAME_ESC		"\\N"
 

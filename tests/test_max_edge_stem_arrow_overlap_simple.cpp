@@ -6,7 +6,7 @@
 #include "test_utilities.h"
 
 TEST_CASE("Maximum edge stem and arrow overlap",
-          "An edge stem shall touch overlap it's arrow heads too much") {
+          "Test that an edge stem doesn't overlap its arrow heads too much") {
 
   const graph_options graph_options = {
       .node_shape = "polygon",

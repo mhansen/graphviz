@@ -5,9 +5,8 @@
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
 
-TEST_CASE("Edge node overlap",
-          "[!shouldfail] An edge connected to a node shall touch that node and "
-          "not overlap it too much") {
+TEST_CASE("Edge node overlap", "An edge connected to a node shall touch that "
+                               "node and not overlap it too much") {
 
   const graph_options graph_options = {
       .node_shape = "polygon",

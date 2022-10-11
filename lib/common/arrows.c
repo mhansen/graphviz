@@ -9,6 +9,7 @@
  *************************************************************************/
 
 
+#include <assert.h>
 #include <common/render.h>
 #include <math.h>
 #include <stdbool.h>
@@ -107,28 +108,32 @@ static arrowname_t Arrownames[] = {
 typedef struct arrowtype_t {
     int type;
     double lenfact;		/* ratio of length of this arrow type to standard arrow */
-    void (*gen) (GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);	/* generator function for type */
+    pointf (*gen) (GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);	/* generator function for type */
+    double (*len) (double lenfact, double arrowsize, double penwidth, int flag);	/* penwidth dependent length */
 } arrowtype_t;
 
 /* forward declaration of functions used in Arrowtypes[] */
-static void arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
-static void arrow_type_crow(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
-static void arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
-static void arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
-static void arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
-static void arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
-static void arrow_type_curve(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
-static void arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
+static pointf arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
+static pointf arrow_type_crow(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
+static pointf arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
+static pointf arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
+static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
+static pointf arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
+static pointf arrow_type_curve(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
+static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);
+
+static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, int flag);
+static double arrow_length_normal(double lenfact, double arrowsize, double penwidth, int flag);
 
 static const arrowtype_t Arrowtypes[] = {
-    {ARR_TYPE_NORM, 1.0, arrow_type_normal},
-    {ARR_TYPE_CROW, 1.0, arrow_type_crow},
-    {ARR_TYPE_TEE, 0.5, arrow_type_tee},
-    {ARR_TYPE_BOX, 1.0, arrow_type_box},
-    {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond},
-    {ARR_TYPE_DOT, 0.8, arrow_type_dot},
-    {ARR_TYPE_CURVE, 1.0, arrow_type_curve},
-    {ARR_TYPE_GAP, 0.5, arrow_type_gap},
+    {ARR_TYPE_NORM, 1.0, arrow_type_normal, arrow_length_normal},
+    {ARR_TYPE_CROW, 1.0, arrow_type_crow, arrow_length_generic},
+    {ARR_TYPE_TEE, 0.5, arrow_type_tee, arrow_length_generic},
+    {ARR_TYPE_BOX, 1.0, arrow_type_box, arrow_length_generic},
+    {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond, arrow_length_generic},
+    {ARR_TYPE_DOT, 0.8, arrow_type_dot, arrow_length_generic},
+    {ARR_TYPE_CURVE, 1.0, arrow_type_curve, arrow_length_generic},
+    {ARR_TYPE_GAP, 0.5, arrow_type_gap, arrow_length_generic},
 };
 
 static const size_t Arrowtypes_size =
@@ -238,8 +243,11 @@ void arrow_flags(Agedge_t * e, int *sflag, int *eflag)
 
 static double arrow_length(edge_t * e, int flag)
 {
-    double lenfact = 0.0;
+    double length = 0.0;
     int f, i;
+
+    const double penwidth = late_double(e, E_penwidth, 1.0, 0.0);
+    const double arrowsize = late_double(e, E_arrowsz, 1.0, 0.0);
 
     for (i = 0; i < NUMB_OF_ARROW_HEADS; i++) {
         /* we don't simply index with flag because arrowtypes are not necessarily sorted */
@@ -247,14 +255,13 @@ static double arrow_length(edge_t * e, int flag)
         for (size_t j = 0; j < Arrowtypes_size; ++j) {
 	    const arrowtype_t *arrowtype = &Arrowtypes[j];
 	    if (f == arrowtype->type) {
-	        lenfact += arrowtype->lenfact;
+		const int arrow_flag = (flag >> (i * BITS_PER_ARROW)) & ((1 << BITS_PER_ARROW) - 1);
+		length += (arrowtype->len)(arrowtype->lenfact, arrowsize, penwidth, arrow_flag);
 	        break;
 	    }
         }
     }
-    /* The original was missing the factor E_arrowsz, but I believe it
-       should be here for correct arrow clipping */
-    return ARROW_LENGTH * lenfact * late_double(e, E_arrowsz, 1.0, 0.0);
+    return length;
 }
 
 /* inside function for calls to bezier_clip */
@@ -424,11 +431,68 @@ void arrowOrthoClip(edge_t* e, pointf* ps, int startp, int endp, bezier* spl, in
     }
 }
 
-static void arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
-{
-    (void)arrowsize;
+// See https://www.w3.org/TR/SVG2/painting.html#TermLineJoinShape for the
+// terminology
 
-    pointf q, v, a[5];
+static pointf miter_point(pointf base_left, pointf P, pointf base_right,
+                          double penwidth) {
+  const pointf A[] = {base_left, P};
+  const double dxA = A[1].x - A[0].x;
+  const double dyA = A[1].y - A[0].y;
+  const double hypotA = hypot(dxA, dyA);
+  const double cosAlpha = dxA / hypotA;
+  const double sinAlpha = dyA / hypotA;
+  const double alpha = dyA > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+
+  const pointf P1 = {P.x - penwidth / 2.0 * sinAlpha,
+                     P.y + penwidth / 2.0 * cosAlpha};
+
+  const pointf B[] = {P, base_right};
+  const double dxB = B[1].x - B[0].x;
+  const double dyB = B[1].y - B[0].y;
+  const double hypotB = hypot(dxB, dyB);
+  const double cosBeta = dxB / hypotB;
+  const double beta = dyB > 0 ? acos(cosBeta) : -acos(cosBeta);
+
+  // angle between the A segment and the B segment in the reverse direction
+  const double beta_rev = beta - M_PI;
+  const double theta = beta_rev - alpha + (beta_rev - alpha <= -M_PI ? 2 * M_PI : 0);
+  assert(theta >= 0 && theta <= M_PI && "theta out of range");
+
+  // check if the miter limit is exceeded according to
+  // https://www.w3.org/TR/SVG2/painting.html#StrokeMiterlimitProperty
+  const double stroke_miterlimit = 4.0;
+  const double normalized_miter_length = 1.0 / sin(theta / 2.0);
+
+  if (normalized_miter_length > stroke_miterlimit)  {
+    // fall back to bevel
+    const double sinBeta = dyB / hypotB;
+    const double sinBetaMinusPi = -sinBeta;
+    const double cosBetaMinusPi = -cosBeta;
+    const pointf P2 = {P.x + penwidth / 2.0 * sinBetaMinusPi,
+                       P.y - penwidth / 2.0 * cosBetaMinusPi};
+
+    // the bevel is the triangle formed from the three points P, P1 and P2 so
+    // a good anough approximation of the miter point in this case is the
+    // crossing of P-P3 with P1-P2 which is the same as the midpoint between
+    // P1 and P2
+    const pointf Pbevel = {(P1.x + P2.x) / 2, (P1.y + P2.y) / 2};
+
+    return Pbevel;
+  }
+
+  // length between P1 and P3 (and between P2 and P3)
+  const double l = penwidth / 2.0 / tan(theta / 2.0);
+
+  const pointf P3 = {P1.x + l * cosAlpha,
+                     P1.y + l * sinAlpha};
+
+  return P3;
+}
+
+static pointf arrow_type_normal0(pointf p, pointf u, double penwidth, int flag, pointf* a)
+{
+    pointf q, v;
     double arrowwidth;
 
     arrowwidth = 0.35;
@@ -439,30 +503,76 @@ static void arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize,
     v.y = u.x * arrowwidth;
     q.x = p.x + u.x;
     q.y = p.y + u.y;
+
+    const pointf origin = {0, 0};
+    const pointf v_inv = {-v.x, -v.y};
+    const pointf normal_left = flag & ARR_MOD_RIGHT ? origin : v_inv;
+    const pointf normal_right = flag & ARR_MOD_LEFT ? origin : v;
+    const pointf base_left = flag & ARR_MOD_INV ? normal_right : normal_left;
+    const pointf base_right = flag & ARR_MOD_INV ? normal_left : normal_right;
+    const pointf normal_tip = {-u.x, -u.y};
+    const pointf inv_tip = u;
+    const pointf P = flag & ARR_MOD_INV ? inv_tip : normal_tip ;
+
+    const pointf P3 = miter_point(base_left, P, base_right, penwidth);
+
+    const pointf delta_tip = {P3.x - P.x, P3.y - P.y};
+
+    // phi = angle of arrow
+    const double cosPhi = P.x / hypot(P.x, P.y);
+    const double sinPhi = P.y / hypot(P.x, P.y);
+    const pointf delta_base = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+
     if (flag & ARR_MOD_INV) {
+	p.x += delta_base.x;
+	p.y += delta_base.y;
+	q.x += delta_base.x;
+	q.y += delta_base.y;
 	a[0] = a[4] = p;
 	a[1].x = p.x - v.x;
 	a[1].y = p.y - v.y;
 	a[2] = q;
 	a[3].x = p.x + v.x;
 	a[3].y = p.y + v.y;
+	q.x += delta_tip.x;
+	q.y += delta_tip.y;
     } else {
+	p.x -= delta_tip.x;
+	p.y -= delta_tip.y;
+	q.x -= delta_tip.x;
+	q.y -= delta_tip.y;
 	a[0] = a[4] = q;
 	a[1].x = q.x - v.x;
 	a[1].y = q.y - v.y;
 	a[2] = p;
 	a[3].x = q.x + v.x;
 	a[3].y = q.y + v.y;
+	q.x -= delta_base.x;
+	q.y -= delta_base.y;
     }
+
+    return q;
+}
+
+static pointf arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+{
+    (void)arrowsize;
+
+    pointf a[5];
+
+    pointf q = arrow_type_normal0(p, u, penwidth, flag, a);
+
     if (flag & ARR_MOD_LEFT)
 	gvrender_polygon(job, a, 3, !(flag & ARR_MOD_OPEN));
     else if (flag & ARR_MOD_RIGHT)
 	gvrender_polygon(job, &a[2], 3, !(flag & ARR_MOD_OPEN));
     else
 	gvrender_polygon(job, &a[1], 3, !(flag & ARR_MOD_OPEN));
+
+    return q;
 }
 
-static void arrow_type_crow(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_crow(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     pointf m, q, v, w, a[9];
     double arrowwidth, shaftwidth;
@@ -520,9 +630,11 @@ static void arrow_type_crow(GVJ_t * job, pointf p, pointf u, double arrowsize, d
 	gvrender_polygon(job, &a[3], 6, 1);
     else
 	gvrender_polygon(job, a, 9, 1);
+
+    return q;
 }
 
-static void arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     (void)arrowsize;
     (void)penwidth;
@@ -535,9 +647,11 @@ static void arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, do
     a[0] = p;
     a[1] = q;
     gvrender_polyline(job, a, 2);
+
+    return q;
 }
 
-static void arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     (void)arrowsize;
     (void)penwidth;
@@ -571,9 +685,11 @@ static void arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, do
     a[0] = p;
     a[1] = q;
     gvrender_polyline(job, a, 2);
+
+    return q;
 }
 
-static void arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     (void)arrowsize;
     (void)penwidth;
@@ -605,9 +721,11 @@ static void arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, do
     a[0] = m;
     a[1] = q;
     gvrender_polyline(job, a, 2);
+
+    return q;
 }
 
-static void arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     (void)arrowsize;
     (void)penwidth;
@@ -632,9 +750,11 @@ static void arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize
 	gvrender_polygon(job, a, 3, !(flag & ARR_MOD_OPEN));
     else
 	gvrender_polygon(job, a, 4, !(flag & ARR_MOD_OPEN));
+
+    return q;
 }
 
-static void arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     (void)arrowsize;
     (void)penwidth;
@@ -648,13 +768,17 @@ static void arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, do
     AF[1].x = p.x + u.x / 2. + r;
     AF[1].y = p.y + u.y / 2. + r;
     gvrender_ellipse(job, AF, !(flag & ARR_MOD_OPEN));
+
+    const pointf q = {p.x + u.x, p.y + u.y};
+
+    return q;
 }
 
 
 /* Draw a concave semicircle using a single cubic bezier curve that touches p at its midpoint.
  * See http://digerati-illuminatus.blogspot.com.au/2008/05/approximating-semicircle-with-cubic.html for details.
  */
-static void arrow_type_curve(GVJ_t* job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_curve(GVJ_t* job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
 {
     (void)arrowsize;
 
@@ -698,6 +822,8 @@ static void arrow_type_curve(GVJ_t* job, pointf p, pointf u, double arrowsize, d
     else if (flag & ARR_MOD_RIGHT)
 	Bezier(AF, 3, 0.5, AF, NULL);
     gvrender_beziercurve(job, AF, sizeof(AF) / sizeof(pointf), FALSE, FALSE, FALSE);
+
+    return q;
 }
 
 
@@ -711,9 +837,7 @@ static pointf arrow_gen_type(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 	if (f == arrowtype->type) {
 	    u.x *= arrowtype->lenfact * arrowsize;
 	    u.y *= arrowtype->lenfact * arrowsize;
-	    (arrowtype->gen) (job, p, u, arrowsize, penwidth, flag);
-	    p.x = p.x + u.x;
-	    p.y = p.y + u.y;
+	    p = (arrowtype->gen) (job, p, u, arrowsize, penwidth, flag);
 	    break;
 	}
     }
@@ -793,4 +917,52 @@ void arrow_gen(GVJ_t * job, emit_state_t emit_state, pointf p, pointf u, double 
     }
 
     obj->emit_state = old_emit_state;
+}
+
+static double arrow_length_generic(double lenfact, double arrowsize,
+                                   double penwidth, int flag) {
+  (void)penwidth;
+  (void)flag;
+
+  return lenfact * arrowsize * ARROW_LENGTH;
+}
+
+static double arrow_length_normal(double lenfact, double arrowsize,
+                                  double penwidth, int flag) {
+  pointf a[5];
+  // set arrow end point at origin
+  const pointf p = {0, 0};
+  // generate an arrowhead vector along x-axis
+  const pointf u = {lenfact * arrowsize * ARROW_LENGTH, 0};
+
+  // arrow start point
+  pointf q = arrow_type_normal0(p, u, penwidth, flag, a);
+
+  const pointf base1 = a[1];
+  const pointf base2 = a[3];
+  const pointf tip = a[2];
+  const double full_length = q.x;
+  assert(full_length > 0 && "non-positive full length");
+  const double nominal_length = fabs(base1.x - tip.x);
+  const double nominal_base_width = base2.y - base1.y;
+  assert(nominal_base_width > 0 && "non-positive nominal base width");
+  // the full base width is proportionally scaled with the length
+  const double full_base_width =
+      nominal_base_width * full_length / nominal_length;
+  assert(full_base_width > 0 && "non-positive full base width");
+
+  // we want a small overlap between the edge path (stem) and the arrow to avoid
+  // gaps beetween them in case the arrow has a sharp corner towards the edge
+  // path
+  const double overlap_at_base = penwidth / 2;
+  // overlap the tip to a point where its width is equal to the penwidth.
+  const double length_where_width_is_penwidth =
+      full_length * penwidth / full_base_width;
+  const double overlap_at_tip = length_where_width_is_penwidth;
+
+  const double overlap = flag & ARR_MOD_INV ? overlap_at_tip : overlap_at_base;
+
+  // arrow length is the x value of the start point since the arrow points along
+  // the positive x axis and ends at origin
+  return full_length - overlap;
 }

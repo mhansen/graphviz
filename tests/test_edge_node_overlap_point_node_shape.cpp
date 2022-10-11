@@ -7,8 +7,8 @@
 #include "test_utilities.h"
 
 TEST_CASE("Overlap point node shape",
-          "[!shouldfail] Test that an edge connected to a 'point' shaped node "
-          "touches that node and does not overlap it too much") {
+          "Test that an edge connected to a 'point' shaped node touches that "
+          "node and does not overlap it too much") {
 
   const auto shape = "point";
   INFO("Node shape: " << shape);

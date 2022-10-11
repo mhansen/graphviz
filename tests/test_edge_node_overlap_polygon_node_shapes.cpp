@@ -6,9 +6,8 @@
 
 TEST_CASE(
     "Overlap polygon node shapes",
-    "[!shouldfail] Test that an edge connected to a polygon based node touches "
-    "that node and does not overlap it too much, regardless of the node "
-    "shape") {
+    "Test that an edge connected to a polygon based node touches that node and "
+    "does not overlap it too much, regardless of the node shape") {
 
   const auto shape = GENERATE(from_range(node_shapes_consisting_of_polygon));
   INFO("Node shape: " << shape);

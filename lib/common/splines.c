@@ -135,10 +135,10 @@ void bezier_clip(inside_t * inside_context,
 	pt = Bezier(sp, 3, t, left, right);
 	if (inside(inside_context, pt)) {
 	    *idir = t;
-	} else {
 	    for (i = 0; i < 4; i++)
 		best[i] = seg[i];
 	    found = true;
+	} else {
 	    *odir = t;
 	}
     } while (fabs(opt.x - pt.x) > .5 || fabs(opt.y - pt.y) > .5);
