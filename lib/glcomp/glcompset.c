@@ -179,7 +179,7 @@ void glCompInitCommon(glCompObj * childObj, glCompObj * parentObj,
 	c->color = parent->color;
 	c->layer = parent->layer + 1;
 	c->pos.z = parent->pos.z;
-	glCompSetAddObj((glCompSet *) parent->compset, childObj);
+	glCompSetAddObj(parent->compset, childObj);
     } else {
 	c->parent = NULL;
 	c->color.R = GLCOMPSET_PANEL_COLOR_R;
@@ -209,7 +209,7 @@ glCompSet *glCompSetNew(int w, int h)
     s->textureCount = 0;
     s->textures = NULL;
     s->common.font = glNewFontFromParent((glCompObj *) s, NULL);
-    s->common.compset = (glCompSet *) s;
+    s->common.compset = s;
     s->common.functions.mouseover = (glcompmouseoverfunc_t)glCompMouseMove;
     s->common.functions.mousedown = (glcompmousedownfunc_t)glCompSetMouseDown;
     s->common.functions.mouseup = (glcompmouseupfunc_t)glCompSetMouseUp;

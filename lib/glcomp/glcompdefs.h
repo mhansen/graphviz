@@ -75,19 +75,9 @@ extern "C" {
 #define GLCOMPSET_PANEL_BORDERWIDTH				3.0f
 #define GLCOMPSET_BUTTON_BEVEL				5.0f
 #define	GLCOMPSET_BEVEL_DIFF				0.001f
-#define GLCOMPSET_DEFAULT_PAD		3.0f
 #define	GLCOMP_DEFAULT_WIDTH	10.0f
 #define	GLCOMP_DEFAULT_HEIGHT	10.0f
 
-
-
-#define FONT_MAX_LEN                1024	/* maximum chars to draw to the screen, used for buffers also */
-#define FONT_TAB_SPACE              4	/* spaces to draw for a tab, make option? */
-
-#define C_DPI              16
-#define R_DPI              16
-
-    typedef enum { inverted_y, scientific_y } glCompOrientation;
     typedef enum { gluttext, pangotext } glCompFontType;
     typedef enum { glAlignNone, glAlignLeft, glAlignTop, glAlignBottom,
 	    glAlignRight, glAlignParent, glAlignCenter } glCompAlignment;
@@ -96,8 +86,6 @@ extern "C" {
 	    glFontVJustifyBottom, glFontVJustifyCenter } glCompVJustify;
     typedef enum { glFontHJustifyNone, glFontHJustifyLeft,
 	    glFontHJustifyRight, glFontHJustifyCenter } glCompHJustify;
-    typedef enum { glButtonGlyphLeft, glButtonGlyphRight, glButtonGlyphTop,
-	    glButtonGlyphBottom } glCompButtonGlyph;
     typedef enum { glBorderNone, glBorderSolid, glBorderBevel,
 	    glBorderCustom } glCompBorderType;
 
@@ -273,7 +261,6 @@ extern "C" {
     typedef struct _glCompLabel {
 	glObjType objType;	/*always keep this here for each drawable object */
 	glCompCommon common;
-	int autosize;		/*if 1 label sized is calculated from font */
 	char *text;
 	int transparent;
     } glCompLabel;
@@ -288,37 +275,11 @@ extern "C" {
 	int refStatus;		//0 not pressed 1 pressed;
 	int groupid;
 	glCompImage *image;	/*glyph */
-	glCompButtonGlyph glyphPos;
 	int data;
 
     };
 
 /*texture based image*/
-
-/*track bar*/
-    typedef struct _glCompTrackBar {
-	glObjType objType;	/*always keep this here for each drawable object */
-	GLfloat width, height;
-	glCompPanel *outerpanel;
-	glCompPanel *trackline;
-	glCompPanel *indicator;
-
-	GLfloat bevel;
-	glCompColor color;
-	glCompColor shadowcolor;
-
-
-	float value;
-	float maxvalue;
-	float minvalue;
-	int enabled;
-	int visible;
-	void *parentset;	//parent compset
-	int data;
-	glCompFont *font;	//pointer to font to use
-	glCompOrientation orientation;
-
-    } glCompTrackBar;
 
 /*object prototype*/
     struct _glCompObj {

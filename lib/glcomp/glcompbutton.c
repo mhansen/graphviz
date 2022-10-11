@@ -61,7 +61,6 @@ glCompButton *glCompButtonNew(glCompObj * par, GLfloat x, GLfloat y,
     p->label->common.align = glAlignParent;
     /*image */
     p->image = NULL;
-    p->glyphPos = glButtonGlyphLeft;
     return p;
 }
 
