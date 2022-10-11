@@ -383,14 +383,13 @@ static Fmtpos_t *sffmtpos(Sfio_t * f, const char *form, va_list args,
 /* function to initialize conversion tables */
 static int sfcvinit(void)
 {
-    int d, l;
-
-    for (d = 0; d <= UCHAR_MAX; ++d) {
+    for (int d = 0; d <= UCHAR_MAX; ++d) {
 	_Sfcv36[d] = SF_RADIX;
 	_Sfcv64[d] = SF_RADIX;
     }
 
     /* [0-9] */
+    unsigned char d;
     for (d = 0; d < 10; ++d) {
 	_Sfcv36[(uchar) _Sfdigits[d]] = d;
 	_Sfcv64[(uchar) _Sfdigits[d]] = d;
@@ -403,7 +402,7 @@ static int sfcvinit(void)
     }
 
     /* [A-Z] */
-    for (l = 10; d < 62; ++l, ++d) {
+    for (unsigned char l = 10; d < 62; ++l, ++d) {
 	_Sfcv36[(uchar) _Sfdigits[d]] = l;
 	_Sfcv64[(uchar) _Sfdigits[d]] = d;
     }
@@ -428,13 +427,11 @@ static int sfcvinit(void)
 
 /* table for floating point and integer conversions */
 Sftab_t _Sftable = {
-    {1e1, 1e2, 1e4, 1e8, 1e16, 1e32}
-    ,				/* _Sfpos10     */
+    .sf_pos10 = {1e1, 1e2, 1e4, 1e8, 1e16, 1e32},
+    .sf_neg10 = {1e-1, 1e-2, 1e-4, 1e-8, 1e-16, 1e-32},
 
-    {1e-1, 1e-2, 1e-4, 1e-8, 1e-16, 1e-32}
-    ,				/* _Sfneg10     */
-
-    {'0', '0', '0', '1', '0', '2', '0', '3', '0', '4',	/* _Sfdec       */
+    .sf_dec =
+    {'0', '0', '0', '1', '0', '2', '0', '3', '0', '4',
      '0', '5', '0', '6', '0', '7', '0', '8', '0', '9',
      '1', '0', '1', '1', '1', '2', '1', '3', '1', '4',
      '1', '5', '1', '6', '1', '7', '1', '8', '1', '9',
@@ -454,12 +451,11 @@ Sftab_t _Sftable = {
      '8', '5', '8', '6', '8', '7', '8', '8', '8', '9',
      '9', '0', '9', '1', '9', '2', '9', '3', '9', '4',
      '9', '5', '9', '6', '9', '7', '9', '8', '9', '9',
-     }
-    ,
+     },
 
-    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@_",
+    .sf_digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@_",
 
-    sfcvinit, 0,
-    sffmtpos,
-    sffmtint
+    .sf_cvinitf = sfcvinit,
+    .sf_fmtposf = sffmtpos,
+    .sf_fmtintf = sffmtint
 };

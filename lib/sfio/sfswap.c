@@ -22,7 +22,7 @@
 Sfio_t *sfswap(Sfio_t * f1, Sfio_t * f2)
 {
     Sfio_t tmp;
-    int f1pool, f2pool, f1mode, f1flags, f2flags;
+    int f1pool, f2pool, f1flags, f2flags;
     unsigned f2mode;
 
     if (!f1 || (f1->mode & SF_AVAIL)
@@ -33,7 +33,7 @@ Sfio_t *sfswap(Sfio_t * f1, Sfio_t * f2)
     if (f1 == f2)
 	return f2;
 
-    f1mode = f1->mode;
+    unsigned f1mode = f1->mode;
     SFLOCK(f1, 0);
     f1->mode |= SF_PUSH;	/* make sure there is no recursion on f1 */
 
