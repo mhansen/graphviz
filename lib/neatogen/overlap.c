@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
+#include <cgraph/alloc.h>
 #include <neatogen/overlap.h>
 
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
@@ -18,7 +19,6 @@
 #include <rbtree/red_black_tree.h>
 #include <common/types.h>
 #include <math.h>
-#include <common/memory.h>
 #include <common/globals.h>
 #include <stdbool.h>
 #include <time.h>
@@ -125,7 +125,6 @@ static void InfoDest(void *a){
 
 static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, int check_overlap_only){
   /* if check_overlap_only = TRUE, we only check whether there is one overlap */
-  scan_point *scanpointsx, *scanpointsy;
   int i, k, neighbor;
   SparseMatrix A = NULL, B = NULL;
   rb_red_blk_node *newNode, *newNode0, *newNode2 = NULL;
@@ -134,7 +133,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
 
   A = SparseMatrix_new(n, n, 1, MATRIX_TYPE_REAL, FORMAT_COORD);
 
-  scanpointsx = N_GNEW(2*n,scan_point);
+  scan_point *scanpointsx = gv_calloc(2 * n, sizeof(scan_point));
   for (i = 0; i < n; i++){
     scanpointsx[2*i].node = i;
     scanpointsx[2*i].x = x[i*dim] - width[i*dim];
@@ -145,7 +144,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
   }
   qsort(scanpointsx, 2*n, sizeof(scan_point), comp_scan_points);
 
-  scanpointsy = N_GNEW(2*n,scan_point);
+  scan_point *scanpointsy = gv_calloc(2 * n, sizeof(scan_point));
   for (i = 0; i < n; i++){
     scanpointsy[i].node = i;
     scanpointsy[i].x = x[i*dim+1] - width[i*dim+1];
@@ -267,9 +266,8 @@ static void relative_position_constraints_delete(void *d){
 }
 
 static relative_position_constraints relative_position_constraints_new(SparseMatrix A_constr, int edge_labeling_scheme, int n_constr_nodes, int *constr_nodes){
-    relative_position_constraints data;
     assert(A_constr);
-    data = MALLOC(sizeof(struct relative_position_constraints_struct));
+    relative_position_constraints data = gv_alloc(sizeof(struct relative_position_constraints_struct));
     data->constr_penalty = 1;
     data->edge_labeling_scheme = edge_labeling_scheme;
     data->n_constr_nodes = n_constr_nodes;
@@ -367,14 +365,13 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
 				    double *max_overlap, double *min_overlap,
 				    int edge_labeling_scheme, int n_constr_nodes, int *constr_nodes, SparseMatrix A_constr, int shrink
 				    ){
-  OverlapSmoother sm;
   int i, j, k, *iw, *jw, jdiag;
   SparseMatrix B;
-  double *lambda, *d, *w, diag_d, diag_w, dist;
+  double *d, *w, diag_d, diag_w, dist;
 
   assert((!A) || SparseMatrix_is_symmetric(A, false));
 
-  sm = GNEW(struct OverlapSmoother_struct);
+  OverlapSmoother sm = gv_alloc(sizeof(struct OverlapSmoother_struct));
   sm->scheme = SM_SCHEME_NORMAL;
   if (constr_nodes && n_constr_nodes > 0 && edge_labeling_scheme != ELSCHEME_NONE){
     sm->scheme = SM_SCHEME_NORMAL_ELABEL;
@@ -387,7 +384,7 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
   sm->tol_cg = 0.01;
   sm->maxit_cg = sqrt((double) A->m);
 
-  lambda = sm->lambda = N_GNEW(m,double);
+  double *lambda = sm->lambda = gv_calloc(m, sizeof(double));
   for (i = 0; i < m; i++) sm->lambda[i] = lambda0;
   
   B= call_tri(m, x);
@@ -509,11 +506,10 @@ static void scale_to_edge_length(int dim, SparseMatrix A, double *x, double avg_
 }
 
 static void print_bounding_box(int n, int dim, double *x){
-  double *xmin, *xmax;
   int i, k;
 
-  xmin = N_GNEW(dim,double);
-  xmax = N_GNEW(dim,double);
+  double *xmin = gv_calloc(dim, sizeof(double));
+  double *xmax = gv_calloc(dim, sizeof(double));
 
   for (i = 0; i < dim; i++) xmin[i]=xmax[i] = x[i];
 
