@@ -50,12 +50,12 @@ typedef struct arrowdir_t {
     int eflag;
 } arrowdir_t;
 
-static arrowdir_t Arrowdirs[] = {
+static const arrowdir_t Arrowdirs[] = {
     {"forward", ARR_TYPE_NONE, ARR_TYPE_NORM},
     {"back", ARR_TYPE_NORM, ARR_TYPE_NONE},
     {"both", ARR_TYPE_NORM, ARR_TYPE_NORM},
     {"none", ARR_TYPE_NONE, ARR_TYPE_NONE},
-    {(char *) 0, ARR_TYPE_NONE, ARR_TYPE_NONE}
+    {0}
 };
 
 typedef struct arrowname_t {
@@ -63,24 +63,24 @@ typedef struct arrowname_t {
     int type;
 } arrowname_t;
 
-static arrowname_t Arrowsynonyms[] = {
+static const arrowname_t Arrowsynonyms[] = {
     /* synonyms for deprecated arrow names - included for backward compatibility */
     /*  evaluated before primary names else "invempty" would give different results */
     {"invempty", (ARR_TYPE_NORM | ARR_MOD_INV | ARR_MOD_OPEN)},	/* oinv     */
-    {(char *) 0, (ARR_TYPE_NONE)}
+    {0}
 };
 
-static arrowname_t Arrowmods[] = {
+static const arrowname_t Arrowmods[] = {
     {"o", ARR_MOD_OPEN},
     {"r", ARR_MOD_RIGHT},
     {"l", ARR_MOD_LEFT},
     /* deprecated alternates for backward compat */
     {"e", ARR_MOD_OPEN},	/* o  - needed for "ediamond" */
     {"half", ARR_MOD_LEFT},	/* l  - needed for "halfopen" */
-    {(char *) 0, ARR_TYPE_NONE}
+    {0}
 };
 
-static arrowname_t Arrownames[] = {
+static const arrowname_t Arrownames[] = {
     {"normal", ARR_TYPE_NORM},
     {"crow", ARR_TYPE_CROW},
     {"tee", ARR_TYPE_TEE},
@@ -102,7 +102,7 @@ static arrowname_t Arrownames[] = {
     {"mpty", ARR_TYPE_NORM},
     {"curve", ARR_TYPE_CURVE},
     {"icurve", (ARR_TYPE_CURVE | ARR_MOD_INV)},
-    {(char *) 0, ARR_TYPE_NONE}
+    {0}
 };
 
 typedef struct arrowtype_t {
@@ -139,13 +139,13 @@ static const arrowtype_t Arrowtypes[] = {
 static const size_t Arrowtypes_size =
   sizeof(Arrowtypes) / sizeof(Arrowtypes[0]);
 
-static char *arrow_match_name_frag(char *name, arrowname_t * arrownames, int *flag)
-{
-    arrowname_t *arrowname;
+static char *arrow_match_name_frag(char *name, const arrowname_t *arrownames,
+                                   int *flag) {
     size_t namelen = 0;
     char *rest = name;
 
-    for (arrowname = arrownames; arrowname->name; arrowname++) {
+    for (const arrowname_t *arrowname = arrownames; arrowname->name;
+         arrowname++) {
 	namelen = strlen(arrowname->name);
 	if (strncmp(name, arrowname->name, namelen) == 0) {
 	    *flag |= arrowname->type;
@@ -190,9 +190,9 @@ static void arrow_match_name(char *name, int *flag)
 	    agerr(AGWARN, "Arrow type \"%s\" unknown - ignoring\n", next);
 	    return;
 	}
-	if (f == ARR_TYPE_GAP && i == (NUMB_OF_ARROW_HEADS -1))
+	if (f == ARR_TYPE_GAP && i == NUMB_OF_ARROW_HEADS - 1)
 	    f = ARR_TYPE_NONE;
-	if ((f == ARR_TYPE_GAP) && (i == 0) && (*rest == '\0'))
+	if (f == ARR_TYPE_GAP && i == 0 && *rest == '\0')
 	    f = ARR_TYPE_NONE;
 	if (f != ARR_TYPE_NONE)
 	    *flag |= (f << (i++ * BITS_PER_ARROW));
@@ -202,12 +202,11 @@ static void arrow_match_name(char *name, int *flag)
 void arrow_flags(Agedge_t * e, int *sflag, int *eflag)
 {
     char *attr;
-    arrowdir_t *arrowdir;
 
     *sflag = ARR_TYPE_NONE;
     *eflag = agisdirected(agraphof(e)) ? ARR_TYPE_NORM : ARR_TYPE_NONE;
     if (E_dir && ((attr = agxget(e, E_dir)))[0]) {
-	for (arrowdir = Arrowdirs; arrowdir->dir; arrowdir++) {
+	for (const arrowdir_t *arrowdir = Arrowdirs; arrowdir->dir; arrowdir++) {
 	    if (streq(attr, arrowdir->dir)) {
 		*sflag = arrowdir->sflag;
 		*eflag = arrowdir->eflag;
@@ -236,8 +235,8 @@ void arrow_flags(Agedge_t * e, int *sflag, int *eflag)
 	/* pick up arrowhead of opposing edge */
 	f = agfindedge(agraphof(aghead(e)), aghead(e), agtail(e));
 	arrow_flags(f, &s0, &e0);
-	*eflag = *eflag | s0;
-	*sflag = *sflag | e0;
+	*eflag |= s0;
+	*sflag |= e0;
     }
 }
 
@@ -344,7 +343,7 @@ void arrowOrthoClip(edge_t* e, pointf* ps, int startp, int endp, bezier* spl, in
     pointf p, q, r, s, t;
     double d, tlen, hlen, maxd;
 
-    if (sflag && eflag && (endp == startp)) { /* handle special case of two arrows on a single segment */
+    if (sflag && eflag && endp == startp) { /* handle special case of two arrows on a single segment */
 	p = ps[endp];
 	q = ps[endp+3];
 	tlen = arrow_length (e, sflag);
@@ -578,7 +577,7 @@ static pointf arrow_type_crow(GVJ_t * job, pointf p, pointf u, double arrowsize,
     double arrowwidth, shaftwidth;
 
     arrowwidth = 0.45;
-    if (penwidth > (4 * arrowsize) && (flag & ARR_MOD_INV))
+    if (penwidth > 4 * arrowsize && (flag & ARR_MOD_INV))
         arrowwidth *= penwidth / (4 * arrowsize);
 
     shaftwidth = 0;
@@ -837,7 +836,7 @@ static pointf arrow_gen_type(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 	if (f == arrowtype->type) {
 	    u.x *= arrowtype->lenfact * arrowsize;
 	    u.y *= arrowtype->lenfact * arrowsize;
-	    p = (arrowtype->gen) (job, p, u, arrowsize, penwidth, flag);
+	    p = arrowtype->gen(job, p, u, arrowsize, penwidth, flag);
 	    break;
 	}
     }
