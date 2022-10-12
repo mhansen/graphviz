@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   no longer suppresses `-ffast-math`. Users relying on this are encouraged to
   investigate what in their build environment is appending a flag their C
   compiler does not support.
+- The `-ffast-math` compiler flag is no longer enabled by the Autotools build
+  system.
+
+### Fixed
+
+- Issues with GCC 8, `-O3` and `-ffast-math` #1412
+- Problem building Graphviz-5.0.1: undefined symbols `__*_finite` #2296
 
 ### Removed
 

@@ -396,10 +396,10 @@ else
 	        LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names"
 	        ;;
 	    *-freebsd* )
-	        CFLAGS="${CFLAGS} -Wstrict-prototypes -Wpointer-arith -Wall -ffast-math"
+	        CFLAGS="${CFLAGS} -Wstrict-prototypes -Wpointer-arith -Wall"
 		    ;;
 	    * )
-	        CFLAGS="${CFLAGS} -Wno-unknown-pragmas -Wstrict-prototypes -Wpointer-arith -Wall -ffast-math"
+	        CFLAGS="${CFLAGS} -Wno-unknown-pragmas -Wstrict-prototypes -Wpointer-arith -Wall"
 	        ;;
 	    esac
 	    ;;
