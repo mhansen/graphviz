@@ -8,7 +8,6 @@ RUN apt-get update -y \
 && apt-get install --no-install-recommends -y \
 # Development tools
 build-essential \
-cmake \
 git \
 pkg-config \
 autoconf \
@@ -80,8 +79,13 @@ tcl-dev \
 ksh \
 python3-pip \
 python3-setuptools \
+wget \
 # install Python dependencies
 && python3 -m pip install --user --upgrade pip \
 && python3 -m pip install --user --requirement requirements.txt \
+&& wget https://github.com/Kitware/CMake/releases/download/v3.24.2/cmake-3.24.2-linux-x86_64.sh \
+&& mkdir -p /opt/cmake \
+&& /bin/sh ./cmake-3.24.2-linux-x86_64.sh --exclude-subdir --prefix=/opt/cmake --skip-license \
+&& rm cmake-3.24.2-linux-x86_64.sh \
 # Clean up
 && rm -rf /var/lib/apt/lists/*
