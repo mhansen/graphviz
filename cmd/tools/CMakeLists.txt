@@ -54,9 +54,11 @@ function(add_simple_tool name)
     ../../lib/pathplan
   )
 
-  target_include_directories(${name} SYSTEM PRIVATE
-    ${GETOPT_INCLUDE_DIRS}
-  )
+  if(GETOPT_FOUND)
+    target_include_directories(${name} SYSTEM PRIVATE
+      ${GETOPT_INCLUDE_DIRS}
+    )
+  endif()
 
   target_link_libraries(${name}
     cgraph
@@ -97,9 +99,11 @@ target_include_directories(dijkstra PRIVATE
   ../../lib/pathplan
 )
 
-target_include_directories(dijkstra SYSTEM PRIVATE
-  ${GETOPT_INCLUDE_DIRS}
-)
+if(GETOPT_FOUND)
+  target_include_directories(dijkstra SYSTEM PRIVATE
+    ${GETOPT_INCLUDE_DIRS}
+  )
+endif()
 
 target_link_libraries(dijkstra
   cgraph
@@ -140,9 +144,11 @@ target_include_directories(gml2gv PRIVATE
   ../../lib/pathplan
 )
 
-target_include_directories(gml2gv SYSTEM PRIVATE
-  ${GETOPT_INCLUDE_DIRS}
-)
+if(GETOPT_FOUND)
+  target_include_directories(gml2gv SYSTEM PRIVATE
+    ${GETOPT_INCLUDE_DIRS}
+  )
+endif()
 
 target_link_libraries(gml2gv
   cgraph
@@ -159,9 +165,11 @@ target_include_directories(gv2gml PRIVATE
   ../../lib/gvc
   ../../lib/pathplan
 )
-target_include_directories(gv2gml SYSTEM PRIVATE
-  ${GETOPT_INCLUDE_DIRS}
-)
+if(GETOPT_FOUND)
+  target_include_directories(gv2gml SYSTEM PRIVATE
+    ${GETOPT_INCLUDE_DIRS}
+  )
+endif()
 target_link_libraries(gv2gml cgraph gvc ingraphs)
 if(NOT HAVE_GETOPT_H)
   target_link_libraries(gv2gml ${GETOPT_LINK_LIBRARIES})
@@ -190,8 +198,13 @@ if(EXPAT_FOUND)
 
   target_include_directories(graphml2gv SYSTEM PRIVATE
     ${EXPAT_INCLUDE_DIRS}
-    ${GETOPT_INCLUDE_DIRS}
   )
+
+  if(GETOPT_FOUND)
+    target_include_directories(graphml2gv SYSTEM PRIVATE
+      ${GETOPT_INCLUDE_DIRS}
+    )
+  endif()
 
   target_link_libraries(graphml2gv
     cgraph
@@ -224,9 +237,11 @@ target_include_directories(gvcolor PRIVATE
   ../../lib/pathplan
 )
 
-target_include_directories(gvcolor SYSTEM PRIVATE
-  ${GETOPT_INCLUDE_DIRS}
-)
+if(GETOPT_FOUND)
+  target_include_directories(gvcolor SYSTEM PRIVATE
+    ${GETOPT_INCLUDE_DIRS}
+  )
+endif()
 
 target_link_libraries(gvcolor
   cgraph
@@ -254,9 +269,11 @@ target_include_directories(gvgen PRIVATE
   ../../lib/pathplan
 )
 
-target_include_directories(gvgen SYSTEM PRIVATE
-  ${GETOPT_INCLUDE_DIRS}
-)
+if (GETOPT_FOUND)
+  target_include_directories(gvgen SYSTEM PRIVATE
+    ${GETOPT_INCLUDE_DIRS}
+  )
+endif()
 
 target_link_libraries(gvgen cgraph)
 
@@ -284,9 +301,11 @@ target_include_directories(gvpack PRIVATE
   ../../lib/pathplan
 )
 
-target_include_directories(gvpack SYSTEM PRIVATE
-  ${GETOPT_INCLUDE_DIRS}
-)
+if(GETOPT_FOUND)
+  target_include_directories(gvpack SYSTEM PRIVATE
+    ${GETOPT_INCLUDE_DIRS}
+  )
+endif()
 
 target_link_libraries(gvpack
   cgraph
@@ -321,8 +340,12 @@ if(EXPAT_FOUND)
 
   target_include_directories(gxl2gv SYSTEM PRIVATE
     ${EXPAT_INCLUDE_DIRS}
-    ${GETOPT_INCLUDE_DIRS}
   )
+  if(GETOPT_FOUND)
+    target_include_directories(gxl2gv SYSTEM PRIVATE
+      ${GETOPT_INCLUDE_DIRS}
+    )
+  endif()
 
   target_link_libraries(gxl2gv
     cgraph
@@ -379,9 +402,11 @@ target_include_directories(mm2gv PRIVATE
   ../../lib/pathplan
 )
 
-target_include_directories(mm2gv SYSTEM PRIVATE
-  ${GETOPT_INCLUDE_DIRS}
-)
+if(GETOPT_FOUND)
+  target_include_directories(mm2gv SYSTEM PRIVATE
+    ${GETOPT_INCLUDE_DIRS}
+  )
+endif()
 
 target_link_libraries(mm2gv
   sparse
@@ -409,9 +434,11 @@ target_include_directories(sccmap PRIVATE
   ../../lib/pathplan
 )
 
-target_include_directories(sccmap SYSTEM PRIVATE
-  ${GETOPT_INCLUDE_DIRS}
-)
+if(GETOPT_FOUND)
+  target_include_directories(sccmap SYSTEM PRIVATE
+    ${GETOPT_INCLUDE_DIRS}
+  )
+endif()
 
 target_link_libraries(sccmap
   cgraph

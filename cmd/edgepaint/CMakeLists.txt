@@ -9,9 +9,11 @@ if(with_sfdp)
     ../../lib/cdt
   )
 
-  target_include_directories(edgepaint SYSTEM PRIVATE
-    ${GETOPT_INCLUDE_DIRS}
-  )
+  if(GETOPT_FOUND)
+    target_include_directories(edgepaint SYSTEM PRIVATE
+      ${GETOPT_INCLUDE_DIRS}
+    )
+  endif()
 
   target_link_libraries(edgepaint PRIVATE
     cdt
