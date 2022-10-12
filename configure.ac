@@ -405,11 +405,6 @@ else
 	    ;;
     esac
 fi
-# -ffast-math is incompatible with FP error trapping
-#     ref: https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=175793
-if `echo ${CFLAGS} | $EGREP ffast-math >/dev/null`; then
-    AC_DEFINE_UNQUOTED(NO_FPERR,1,[Define if no fpu error exception handling is required.])
-fi
 
 AM_CONDITIONAL(RC_IS_RC, [test "x$RC" = "xrc"])
 AM_CONDITIONAL(RC_IS_WINDRES, [test "x$RC" = "xwindres"])
