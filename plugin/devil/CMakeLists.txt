@@ -19,12 +19,12 @@ if(PANGOCAIRO_FOUND AND DevIL_FOUND)
 
   target_include_directories(gvplugin_devil SYSTEM PRIVATE
     ${PANGOCAIRO_INCLUDE_DIRS}
-    ${DevIL_INCLUDE_DIRS}
+    ${IL_INCLUDE_DIRS}
   )
 
   target_link_libraries(gvplugin_devil
     ${PANGOCAIRO_LIBRARIES}
-    ${DevIL_LIBRARIES}
+    ${IL_LIBRARIES}
   )
 
   install(
