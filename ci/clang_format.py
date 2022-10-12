@@ -440,8 +440,6 @@ EXCLUDE = (
   "lib/neatogen/matrix_ops.h",
   "lib/neatogen/mem.h",
   "lib/neatogen/memory.c",
-  "lib/neatogen/mosek_quad_solve.c",
-  "lib/neatogen/mosek_quad_solve.h",
   "lib/neatogen/multispline.c",
   "lib/neatogen/multispline.h",
   "lib/neatogen/neato.h",

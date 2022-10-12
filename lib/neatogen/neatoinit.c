@@ -1167,9 +1167,6 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
 	    cluster_data *cs = cluster_map(mg,g);
 	    nsize = N_GNEW(nv, pointf);
             opt.edge_gap = lgap;
-#ifdef MOSEK
-            opt.mosek = 0;
-#endif /* MOSEK */
             opt.nsize = nsize;
             opt.clusters = cs;
             str = agget(g, "diredgeconstraints");
@@ -1193,14 +1190,6 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
                     fprintf(stderr,"Removing overlaps as postprocess...\n");
             }
             else opt.noverlap = 0;
-#ifdef MOSEK
-            str = agget(g, "mosek");
-            if(str && !strncmp(str,"true",4)) {
-                opt.mosek = 1;
-                if(Verbose)
-                    fprintf(stderr,"Using Mosek for constraint optimization...\n");
-            }
-#endif /* MOSEK */
 	    margin = sepFactor (g);
  	    /* Multiply by 2 since opt.gap is the gap size, not the margin */
 	    if (margin.doAdd) {

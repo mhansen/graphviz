@@ -34,9 +34,6 @@ typedef struct ipsep_options {
     pointf* nsize;      /* node widths and heights */
     cluster_data* clusters;
                         /* list of node indices for each cluster */
-#ifdef MOSEK
-    int mosek;          /* use Mosek as constraint optimization engine */
-#endif /* MOSEK */
 } ipsep_options;
 
  /* stress majorization, for Constraint Layout */

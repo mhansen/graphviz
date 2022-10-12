@@ -72,9 +72,6 @@
     <ClInclude Include="mem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mosek_quad_solve.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="multispline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -189,9 +186,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="memory.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="mosek_quad_solve.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="multispline.c">

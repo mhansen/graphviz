@@ -103,7 +103,6 @@
     <ClInclude Include="kkutils.h" />
     <ClInclude Include="matrix_ops.h" />
     <ClInclude Include="mem.h" />
-    <ClInclude Include="mosek_quad_solve.h" />
     <ClInclude Include="multispline.h" />
     <ClInclude Include="neato.h" />
     <ClInclude Include="neatoprocs.h" />
@@ -144,7 +143,6 @@
     <ClCompile Include="matinv.c" />
     <ClCompile Include="matrix_ops.c" />
     <ClCompile Include="memory.c" />
-    <ClCompile Include="mosek_quad_solve.c" />
     <ClCompile Include="multispline.c" />
     <ClCompile Include="neatoinit.c" />
     <ClCompile Include="neatosplines.c" />
