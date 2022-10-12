@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   struct.
 - When using the CMake build system, the minimum requirement has been increased
   from CMake 3.9 to CMake 3.10.2.
+- When compiling Graphviz with the Intel C Compiler, the Autotools build system
+  no longer suppresses `-ffast-math`. Users relying on this are encouraged to
+  investigate what in their build environment is appending a flag their C
+  compiler does not support.
 
 ### Removed
 
