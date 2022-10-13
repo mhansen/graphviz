@@ -78,9 +78,6 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 		
 		if (rsvgh == NULL) {
 			fprintf(stderr, "rsvg_handle_new_from_file returned an error: %s\n", err->message);
-#ifndef HAVE_SVG_2_36
-			rsvg_term();
-#endif
 			return NULL;
 		} 
 
@@ -96,9 +93,6 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 #else
 			rsvg_handle_free(rsvgh);
 #endif
-#ifndef HAVE_SVG_2_36
-                        rsvg_term();
-#endif
 			return NULL;
 		}
 	
@@ -111,22 +105,16 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 #else
 			rsvg_handle_free(rsvgh);
 #endif
-#ifndef HAVE_SVG_2_36
-                        rsvg_term();
-#endif
 			return NULL;
 		}
 
-		if (rsvg_handle_write(rsvgh, (const guchar *)fileBuf, (gsize)fileSize, &err) == FALSE) {
+		if (!rsvg_handle_write(rsvgh, fileBuf, (gsize)fileSize, &err)) {
 			fprintf(stderr, "rsvg_handle_write returned an error: %s\n", err->message);
 			free(fileBuf);
 #if HAVE_G_OBJECT_UNREF
 			g_object_unref(rsvgh);
 #else
 			rsvg_handle_free(rsvgh);
-#endif
-#ifndef HAVE_SVG_2_36
-                        rsvg_term();
 #endif
 			return NULL;
 		} 
@@ -154,6 +142,8 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 
 static void gvloadimage_rsvg_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
+    (void)filled;
+
     RsvgHandle* rsvgh = gvloadimage_rsvg_load(job, us);
 
     cairo_t *cr = job->context; /* target context */
@@ -168,7 +158,7 @@ static void gvloadimage_rsvg_cairo(GVJ_t * job, usershape_t *us, boxf b, bool fi
 
         cairo_set_source_surface(cr, surface, 0, 0);
 	cairo_translate(cr, b.LL.x, -b.UR.y);
-	cairo_scale(cr, (b.UR.x - b.LL.x)/(us->w), (b.UR.y - b.LL.y)/(us->h)); 
+	cairo_scale(cr, (b.UR.x - b.LL.x) / us->w, (b.UR.y - b.LL.y) / us->h);
 	rsvg_handle_render_cairo(rsvgh, cr);
 
         cairo_paint (cr);
