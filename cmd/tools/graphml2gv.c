@@ -15,7 +15,6 @@
 
 
 #include    "convert.h"
-#include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
 #include    <cgraph/likely.h>
@@ -86,7 +85,6 @@ static void freeString(gv_stack_t *stk) {
 }
 
 typedef struct {
-    agxbuf composite_buffer;
     char* gname;
     gv_stack_t elements;
     int closedElementType;
@@ -144,7 +142,6 @@ static userdata_t *genUserdata(char* dfltname)
 static void freeUserdata(userdata_t * ud)
 {
     dtclose(ud->nameMap);
-    agxbfree(&(ud->composite_buffer));
     freeString(&ud->elements);
     free(ud);
 }
