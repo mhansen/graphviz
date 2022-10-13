@@ -382,8 +382,6 @@ else
 	    CFLAGS="${CFLAGS} -wd269"
 	    # icc doesn't like -pipe
 	    CFLAGS=`echo ${CFLAGS} | sed 's/ -pipe//'`
-	    # icc doesn't like -ffast-math
-	    CFLAGS=`echo ${CFLAGS} | sed 's/ -ffast-math//'`
 	    ;;
 	* )
 	    case "${build}" in
@@ -398,19 +396,14 @@ else
 	        LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names"
 	        ;;
 	    *-freebsd* )
-	        CFLAGS="${CFLAGS} -Wstrict-prototypes -Wpointer-arith -Wall -ffast-math"
+	        CFLAGS="${CFLAGS} -Wstrict-prototypes -Wpointer-arith -Wall"
 		    ;;
 	    * )
-	        CFLAGS="${CFLAGS} -Wno-unknown-pragmas -Wstrict-prototypes -Wpointer-arith -Wall -ffast-math"
+	        CFLAGS="${CFLAGS} -Wno-unknown-pragmas -Wstrict-prototypes -Wpointer-arith -Wall"
 	        ;;
 	    esac
 	    ;;
     esac
-fi
-# -ffast-math is incompatible with FP error trapping
-#     ref: https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=175793
-if `echo ${CFLAGS} | $EGREP ffast-math >/dev/null`; then
-    AC_DEFINE_UNQUOTED(NO_FPERR,1,[Define if no fpu error exception handling is required.])
 fi
 
 AM_CONDITIONAL(RC_IS_RC, [test "x$RC" = "xrc"])

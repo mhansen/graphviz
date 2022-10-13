@@ -472,7 +472,7 @@ static pointf miter_point(pointf base_left, pointf P, pointf base_right,
                        P.y - penwidth / 2.0 * cosBetaMinusPi};
 
     // the bevel is the triangle formed from the three points P, P1 and P2 so
-    // a good anough approximation of the miter point in this case is the
+    // a good enough approximation of the miter point in this case is the
     // crossing of P-P3 with P1-P2 which is the same as the midpoint between
     // P1 and P2
     const pointf Pbevel = {(P1.x + P2.x) / 2, (P1.y + P2.y) / 2};
