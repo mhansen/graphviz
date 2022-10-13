@@ -86,7 +86,6 @@ static void freeString(gv_stack_t *stk) {
 }
 
 typedef struct {
-    agxbuf xml_attr_value;
     agxbuf composite_buffer;
     char* gname;
     gv_stack_t elements;
@@ -145,7 +144,6 @@ static userdata_t *genUserdata(char* dfltname)
 static void freeUserdata(userdata_t * ud)
 {
     dtclose(ud->nameMap);
-    agxbfree(&(ud->xml_attr_value));
     agxbfree(&(ud->composite_buffer));
     freeString(&ud->elements);
     free(ud);
@@ -483,10 +481,9 @@ static void endElementHandler(void *userData, const char *name)
 	ud->edgeinverted = FALSE;
     } else if (strcmp(name, "attr") == 0) {
 	char *name = "";
-	char *value;
+	char *value = "";
 
 	ud->closedElementType = TAG_NONE;
-	value = agxbuse(&ud->xml_attr_value);
 
 	setAttr(name, value, ud);
     } 
