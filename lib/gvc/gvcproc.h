@@ -124,7 +124,5 @@
     int gvlayout_select(GVC_t * gvc, const char *str);
 
 /* argvlist */
-    gv_argvlist_t *gvNEWargvlist(void);
     void gv_argvlist_set_item(gv_argvlist_t *list, int index, char *item);
     void gv_argvlist_reset(gv_argvlist_t *list);
-    void gv_argvlist_free(gv_argvlist_t *list);

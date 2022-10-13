@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include	<string.h>
+#include <unistd.h>
 
 #ifdef ENABLE_LTDL
 #ifdef HAVE_DL_ITERATE_PHDR
@@ -552,7 +553,7 @@ void gvconfig(GVC_t * gvc, bool rescan)
 {
 #ifdef ENABLE_LTDL
     int rc;
-    struct stat config_st, libdir_st;
+    struct stat config_st;
     FILE *f = NULL;
     char *config_text = NULL;
     char *libdir;
@@ -568,8 +569,7 @@ void gvconfig(GVC_t * gvc, bool rescan)
     if (gvc->common.demand_loading) {
         /* see if there are any new plugins */
         libdir = gvconfig_libdir(gvc);
-        rc = stat(libdir, &libdir_st);
-        if (rc == -1) {
+        if (access(libdir, F_OK) < 0) {
 	    gvtextlayout_select(gvc);   /* choose best available textlayout plugin immediately */
     	    /* if we fail to stat it then it probably doesn't exist so just fail silently */
 	    return;

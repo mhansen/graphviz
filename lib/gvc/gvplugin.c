@@ -13,8 +13,7 @@
 #include	<stdbool.h>
 #include	<stddef.h>
 #include	<string.h>
-#include        <sys/types.h>
-#include        <sys/stat.h>
+#include	<unistd.h>
 
 #ifdef ENABLE_LTDL
 #include	<ltdl.h>
@@ -159,7 +158,6 @@ gvplugin_library_t *gvplugin_library_load(GVC_t * gvc, char *path)
     static size_t lenp;
     char *libdir;
     char *suffix = "_LTX_library";
-    struct stat sb;
 
     if (!gvc->common.demand_loading)
         return NULL;
@@ -188,7 +186,7 @@ gvplugin_library_t *gvplugin_library_load(GVC_t * gvc, char *path)
     }
     hndl = lt_dlopen(p);
     if (!hndl) {
-        if (stat(p, &sb) == 0) {
+        if (access(p, R_OK) == 0) {
             agerr(AGWARN, "Could not load \"%s\" - %s\n", p, "It was found, so perhaps one of its dependents was not.  Try ldd.");
         }
         else {

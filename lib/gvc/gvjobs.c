@@ -100,11 +100,6 @@ GVJ_t *gvjobs_next(GVC_t * gvc)
     return (gvc->job = job);
 }
 
-gv_argvlist_t *gvNEWargvlist(void)
-{
-    return zmalloc(sizeof(gv_argvlist_t));
-}
-
 void gv_argvlist_set_item(gv_argvlist_t *list, int index, char *item)
 {
     if (index >= list->alloc) {
@@ -120,12 +115,6 @@ void gv_argvlist_reset(gv_argvlist_t *list)
     list->argv = NULL;
     list->alloc = 0;
     list->argc = 0;
-}
-
-void gv_argvlist_free(gv_argvlist_t *list)
-{
-    free(list->argv);
-    free(list);
 }
 
 void gvjobs_delete(GVC_t * gvc)
