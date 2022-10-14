@@ -26,7 +26,6 @@
 
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
-#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
 #include <cgraph/unreachable.h>
@@ -87,7 +86,6 @@ static void json_begin_graph(GVJ_t *job)
 static void stoj(char *ins, state_t *sp, GVJ_t *job) {
     char* s;
     char* input;
-    static agxbuf xb;
     char c;
 
     if (sp->isLatin)
@@ -95,44 +93,42 @@ static void stoj(char *ins, state_t *sp, GVJ_t *job) {
     else
 	input = ins;
 
-    if (xb.buf == NULL)
-	agxbinit(&xb, BUFSIZ, NULL);
+    gvputc(job, '"');
     for (s = input; (c = *s); s++) {
 	switch (c) {
 	case '"' :
-	    agxbput(&xb, "\\\"");
+	    gvputs(job, "\\\"");
 	    break;
 	case '\\' :
-	    agxbput(&xb, "\\\\");
+	    gvputs(job, "\\\\");
 	    break;
 	case '/' :
-	    agxbput(&xb, "\\/");
+	    gvputs(job, "\\/");
 	    break;
 	case '\b' :
-	    agxbput(&xb, "\\b");
+	    gvputs(job, "\\b");
 	    break;
 	case '\f' :
-	    agxbput(&xb, "\\f");
+	    gvputs(job, "\\f");
 	    break;
 	case '\n' :
-	    agxbput(&xb, "\\n");
+	    gvputs(job, "\\n");
 	    break;
 	case '\r' :
-	    agxbput(&xb, "\\r");
+	    gvputs(job, "\\r");
 	    break;
 	case '\t' :
-	    agxbput(&xb, "\\t");
+	    gvputs(job, "\\t");
 	    break;
 	default :
-	    agxbputc(&xb, c);
+	    gvputc(job, c);
 	    break;
 	}
     }
-    s = agxbuse(&xb);
+    gvputc(job, '"');
 
     if (sp->isLatin)
 	free (input);
-    gvprintf(job, "\"%s\"", s);
 }
 
 static void indent(GVJ_t * job, int level)
