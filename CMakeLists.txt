@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 project(Graphviz)
 
 include(FeatureSummary)
@@ -143,14 +143,7 @@ endif()
 
 # ============================ Set Graphviz version ============================
 
-if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
-  find_program(Python3_EXECUTABLE NAMES python3 python3.exe python.exe)
-else()
-  find_package(Python3 COMPONENTS Interpreter)
-endif()
-if(NOT Python3_EXECUTABLE)
-  message(FATAL_ERROR "Python 3 not found")
-endif()
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 if(DEFINED VERSION)
   set(GRAPHVIZ_VERSION_STRING "${VERSION}")
@@ -246,11 +239,7 @@ endif()
 
 if(use_coverage)
   add_compile_options("-coverage")
-  if(${CMAKE_VERSION} VERSION_LESS "3.13.0")
-    link_libraries("-coverage")
-  else()
-    add_link_options("-coverage")
-  endif()
+  add_link_options("-coverage")
 endif()
 
 # ============================ Packaging information ===========================

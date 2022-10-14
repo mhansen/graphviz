@@ -80,13 +80,6 @@ else()
   find_package(PkgConfig)
   pkg_check_modules(PANGOCAIRO pangocairo)
 
-  # prior to CMake 3.12, PkgConfig does not set *_LINK_LIBRARIES, so do it
-  # manually
-  if(${CMAKE_VERSION} VERSION_LESS 3.12)
-    find_library(PANGOCAIRO_LINK_LIBRARIES pangocairo-1.0
-      PATHS ENV LIBRARY_PATH)
-  endif()
-
   find_package_handle_standard_args(PANGOCAIRO DEFAULT_MSG
     PANGOCAIRO_INCLUDE_DIRS
     PANGOCAIRO_LIBRARIES

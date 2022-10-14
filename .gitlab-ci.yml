@@ -669,6 +669,7 @@ ubuntu-18.04-cmake-build:
           artifacts: false
     before_script:
         - export build_system="cmake"
+        - export PATH=/opt/cmake/bin:${PATH}
         # fail on any compiler warnings
         - export CFLAGS=-Werror
         - export CXXFLAGS=-Werror
@@ -1076,6 +1077,7 @@ ubuntu-18.04-cmake-test:
     <<: *linux_test_definition
     before_script:
         - export build_system="cmake"
+        - export PATH=/opt/cmake/bin:${PATH}
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu-18.04-cmake-build"
