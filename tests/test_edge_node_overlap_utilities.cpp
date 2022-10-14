@@ -182,6 +182,10 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
   const auto rankdir = graph_options.rankdir;
   const auto node_shape = graph_options.node_shape;
   const auto dir = graph_options.dir;
+  const auto primitive_arrowhead_shape =
+      graph_options.primitive_arrowhead_shape;
+  const auto primitive_arrowtail_shape =
+      graph_options.primitive_arrowtail_shape;
 
   REQUIRE(svg_analyzer.graphs().size() == 1);
   auto &recreated_graph = svg_analyzer.graphs().back();
@@ -266,8 +270,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
 
   // check overlap of edge stem and arrowhead
   if (dir == "forward" || dir == "both") {
-    auto edge_arrowhead = dir == "forward" ? edge.arrow(0) : edge.arrow(1);
-    const auto edge_arrowhead_bbox = edge_arrowhead.outline_bbox();
+    const auto edge_arrowhead_bbox =
+        edge.arrowhead_outline_bbox(dir, primitive_arrowhead_shape);
     const auto overlap_bbox = edge_stem_bbox.intersection(edge_arrowhead_bbox);
     INFO("Edge stem and arrowhead overlap:");
     INFO(fmt::format("  width:  {:.3f}", overlap_bbox.width));
@@ -297,8 +301,8 @@ static bool check_analyzed_svg(SVGAnalyzer &svg_analyzer,
 
   // check overlap of edge stem and arrowtail
   if (dir == "back" || dir == "both") {
-    auto edge_arrowtail = edge.arrow(0);
-    const auto edge_arrowtail_bbox = edge_arrowtail.outline_bbox();
+    const auto edge_arrowtail_bbox =
+        edge.arrowtail_outline_bbox(dir, primitive_arrowtail_shape);
     const auto overlap_bbox = edge_stem_bbox.intersection(edge_arrowtail_bbox);
     INFO("Edge stem and arrowtail overlap:");
     INFO(fmt::format("  width:  {:.3f}", overlap_bbox.width));

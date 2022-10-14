@@ -32,7 +32,14 @@ public:
   /// both an arrowhead and an arrowtail, the arrowtail is at index 0 and the
   /// arrowhead is at index 1. If there's only one, it's at index 0. Throws an
   /// exception if there's no arrow at the specified index.
-  SVG::SVGElement &arrow(std::size_t index = 0) const;
+  SVG::SVGRect
+  arrowhead_outline_bbox(std::string_view dir,
+                         std::string_view primitive_arrow_shape) const;
+  /// Return the outline bounding box of the edge arrowtail. The outline
+  /// bounding box is the bounding box with penwidth taken into account.
+  SVG::SVGRect
+  arrowtail_outline_bbox(std::string_view dir,
+                         std::string_view primitive_arrow_shape) const;
   /// Return the bounding box of the edge
   SVG::SVGRect bbox() const;
   /// Return the center of the edge's bounding box
