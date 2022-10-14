@@ -2015,7 +2015,7 @@ int make_html_label(void *obj, textlabel_t * lp)
 	char buf[SMALLBUF];
 	agxbinit(&xb, SMALLBUF, buf);
 	lp->html = false;
-	lp->text = strdup(nameOf(obj, &xb));
+	lp->text = gv_strdup(nameOf(obj, &xb));
 	switch (lp->charset) {
 	case CHAR_LATIN1:
 	    s = latin1ToUTF8(lp->text);
@@ -2033,7 +2033,7 @@ int make_html_label(void *obj, textlabel_t * lp)
 
     if (lbl->kind == HTML_TBL) {
 	if (!lbl->u.tbl->data.pencolor && getPenColor(obj))
-	    lbl->u.tbl->data.pencolor = strdup(getPenColor(obj));
+	    lbl->u.tbl->data.pencolor = gv_strdup(getPenColor(obj));
 	rv |= size_html_tbl(g, lbl->u.tbl, NULL, &env);
 	wd2 = lbl->u.tbl->data.box.UR.x / 2;
 	ht2 = lbl->u.tbl->data.box.UR.y / 2;
@@ -2058,7 +2058,7 @@ int make_html_label(void *obj, textlabel_t * lp)
      */
     if (lbl->kind == HTML_TBL) {
 	free(lp->text);
-	lp->text = strdup("<TABLE>");
+	lp->text = gv_strdup("<TABLE>");
     }
 
     return rv;
