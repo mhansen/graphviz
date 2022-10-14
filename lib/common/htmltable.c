@@ -1680,7 +1680,7 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 
     if (tbl->u.n.parent && tbl->u.n.parent->data.pencolor
 	&& !tbl->data.pencolor)
-	tbl->data.pencolor = strdup(tbl->u.n.parent->data.pencolor);
+	tbl->data.pencolor = gv_strdup(tbl->u.n.parent->data.pencolor);
 
     oldsz = tbl->data.box.UR.x;
     delx = pos.UR.x - pos.LL.x - oldsz;
