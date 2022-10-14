@@ -77,11 +77,14 @@ static void json_begin_graph(GVJ_t *job)
 
 #define LOCALNAMEPREFIX		'%'
 
-/* stoj:
- * Convert dot string to a valid json string embedded in double quotes.
+/** Convert dot string to a valid json string embedded in double quotes and
+ *   output
+ *
+ * \param ins Input string
+ * \param sp State, used to determine encoding of the input string
+ * \param job Output job
  */
-static char* stoj (char* ins, state_t* sp)
-{
+static void stoj(char *ins, state_t *sp, GVJ_t *job) {
     char* s;
     char* input;
     static agxbuf xb;
@@ -129,7 +132,7 @@ static char* stoj (char* ins, state_t* sp)
 
     if (sp->isLatin)
 	free (input);
-    return s;
+    gvprintf(job, "\"%s\"", s);
 }
 
 static void indent(GVJ_t * job, int level)
@@ -178,8 +181,9 @@ static void write_stops (GVJ_t * job, int n_stops, xdot_color_stop* stp, state_t
     gvprintf(job, "\"stops\": [");
     for (i = 0; i < n_stops; i++) {
 	if (i > 0) gvprintf(job, ",");
-	gvprintf(job, "{\"frac\": %.03f, \"color\": \"%s\"}",
-	    stp[i].frac, stoj(stp[i].color, sp));
+	gvprintf(job, "{\"frac\": %.03f, \"color\": ", stp[i].frac);
+	stoj(stp[i].color, sp, job);
+	gvputc(job, '}');
     }
     gvprintf(job, "]\n");
 } 
@@ -246,7 +250,9 @@ static void write_xdot (xdot_op * op, GVJ_t * job, state_t* sp)
  	indent(job, sp->Level);
 	gvprintf(job, "\"width\": %.03f,\n", op->u.text.width); 
  	indent(job, sp->Level);
-	gvprintf(job, "\"text\": \"%s\"\n", stoj(op->u.text.text, sp));
+	gvputs(job, "\"text\": ");
+	stoj(op->u.text.text, sp, job);
+	gvputc(job, '\n');
 	break;
     case xd_fill_color :
     case xd_pen_color :
@@ -254,7 +260,9 @@ static void write_xdot (xdot_op * op, GVJ_t * job, state_t* sp)
  	indent(job, sp->Level);
 	gvprintf(job, "\"grad\": \"none\",\n"); 
  	indent(job, sp->Level);
-	gvprintf(job, "\"color\": \"%s\"\n", stoj(op->u.color, sp));
+	gvputs(job, "\"color\": ");
+	stoj(op->u.color, sp, job);
+	gvputc(job, '\n');
 	break;
     case xd_grad_pen_color :
     case xd_grad_fill_color :
@@ -263,8 +271,9 @@ static void write_xdot (xdot_op * op, GVJ_t * job, state_t* sp)
 	if (op->u.grad_color.type == xd_none) {
 	    gvprintf(job, "\"grad\": \"none\",\n"); 
  	    indent(job, sp->Level);
-	    gvprintf(job, "\"color\": \"%s\"\n", 
-		stoj(op->u.grad_color.u.clr, sp));
+	    gvputs(job, "\"color\": ");
+	    stoj(op->u.grad_color.u.clr, sp, job);
+	    gvputc(job, '\n');
 	}
 	else {
 	    if (op->u.grad_color.type == xd_linear) {
@@ -284,12 +293,16 @@ static void write_xdot (xdot_op * op, GVJ_t * job, state_t* sp)
  	indent(job, sp->Level);
 	gvprintf(job, "\"size\": %.03f,\n", op->u.font.size); 
  	indent(job, sp->Level);
-	gvprintf(job, "\"face\": \"%s\"\n", stoj(op->u.font.name, sp)); 
+	gvputs(job, "\"face\": ");
+	stoj(op->u.font.name, sp, job);
+	gvputc(job, '\n');
 	break;
     case xd_style :
 	gvprintf(job, "\"op\": \"S\",\n");
  	indent(job, sp->Level);
-	gvprintf(job, "\"style\": \"%s\"\n", stoj(op->u.style, sp));
+	gvputs(job, "\"style\": ");
+	stoj(op->u.style, sp, job);
+	gvputc(job, '\n');
 	break;
     case xd_image :
 	break;
@@ -352,11 +365,12 @@ static void write_attrs(Agobj_t * obj, GVJ_t * job, state_t* sp)
 	if (*attrval == '\0' && !streq(sym->name, "label")) continue;
 	gvputs(job, ",\n");
 	indent(job, sp->Level);
-	gvprintf(job, "\"%s\": ", stoj(sym->name, sp));
+	stoj(sym->name, sp, job);
+	gvputs(job, ": ");
 	if (sp->doXDot && isXDot(sym->name))
 	    write_xdots(agxget(obj, sym), job, sp);
 	else
-	    gvprintf(job, "\"%s\"", stoj(agxget(obj, sym), sp));
+	    stoj(agxget(obj, sym), sp, job);
     }
 }
 
@@ -365,7 +379,8 @@ static void write_hdr(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
 
     name = agnameof(g);
     indent(job, sp->Level);
-    gvprintf(job, "\"name\": \"%s\"", stoj (name, sp));
+    gvputs(job, "\"name\": ");
+    stoj(name, sp, job);
 
     if (top) {
 	gvputs(job, ",\n");
@@ -518,7 +533,8 @@ static void write_node(Agnode_t *n, GVJ_t *job, bool top, state_t *sp) {
 	indent(job, sp->Level);
 	gvprintf(job, "\"_gvid\": %d,\n", ND_gid(n));
 	indent(job, sp->Level);
-	gvprintf(job, "\"name\": \"%s\"", stoj (agnameof(n), sp));
+	gvputs(job, "\"name\": ");
+	stoj(agnameof(n), sp, job);
     	write_attrs((Agobj_t*)n, job, sp);
 	gvputs(job, "\n");
 	sp->Level--;
