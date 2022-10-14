@@ -15,7 +15,6 @@
 
 
 #include    "convert.h"
-#include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
 #include    <cgraph/likely.h>
@@ -86,9 +85,6 @@ static void freeString(gv_stack_t *stk) {
 }
 
 typedef struct {
-    agxbuf xml_attr_name;
-    agxbuf xml_attr_value;
-    agxbuf composite_buffer;
     char* gname;
     gv_stack_t elements;
     int closedElementType;
@@ -146,9 +142,6 @@ static userdata_t *genUserdata(char* dfltname)
 static void freeUserdata(userdata_t * ud)
 {
     dtclose(ud->nameMap);
-    agxbfree(&(ud->xml_attr_name));
-    agxbfree(&(ud->xml_attr_value));
-    agxbfree(&(ud->composite_buffer));
     freeString(&ud->elements);
     free(ud);
 }
@@ -484,12 +477,10 @@ static void endElementHandler(void *userData, const char *name)
 	ud->closedElementType = TAG_EDGE;
 	ud->edgeinverted = FALSE;
     } else if (strcmp(name, "attr") == 0) {
-	char *name;
-	char *value;
+	char *name = "";
+	char *value = "";
 
 	ud->closedElementType = TAG_NONE;
-	name = agxbuse(&ud->xml_attr_name);
-	value = agxbuse(&ud->xml_attr_value);
 
 	setAttr(name, value, ud);
     } 

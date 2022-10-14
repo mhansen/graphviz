@@ -18,6 +18,7 @@
 
 %{
 
+#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <common/htmllex.h>
@@ -207,7 +208,7 @@ appendFLineList (int v)
     else {
 	ln->lp.items = NEW(textspan_t);
 	ln->lp.nitems = 1;
-	ln->lp.items[0].str = strdup("");
+	ln->lp.items[0].str = gv_strdup("");
 	ln->lp.items[0].font = HTMLstate.fontstack->cfont;
     }
 
