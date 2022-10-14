@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <limits.h>
@@ -137,13 +138,13 @@ textlabel_t *make_label(void *obj, char *str, int kind, double fontsize, char *f
     rv->fontsize = fontsize;
     rv->charset = GD_charset(g);
     if (kind & LT_RECD) {
-	rv->text = strdup(str);
+	rv->text = gv_strdup(str);
         if (kind & LT_HTML) {
 	    rv->html = true;
 	}
     }
     else if (kind == LT_HTML) {
-	rv->text = strdup(str);
+	rv->text = gv_strdup(str);
 	rv->html = true;
 	if (make_html_label(obj, rv)) {
 	    switch (agobjkind(obj)) {
