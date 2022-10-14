@@ -1530,7 +1530,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
     boxf cbox;
 
     if (!cp->data.pencolor && cp->parent->data.pencolor)
-	cp->data.pencolor = strdup(cp->parent->data.pencolor);
+	cp->data.pencolor = gv_strdup(cp->parent->data.pencolor);
 
     /* If fixed, align cell */
     if (cp->data.flags & FIXED_FLAG) {
