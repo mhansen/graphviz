@@ -194,11 +194,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/graphviz_version.h DESTINATION ${HEADE
 
 message(STATUS "Graphviz version: ${GRAPHVIZ_VERSION_FULL}")
 
-find_package(PkgConfig)
-if(PkgConfig_FOUND)
-  pkg_check_modules(SVG_2_36 librsvg-2.0>=2.36.0 cairo>=1.0.0)
-endif()
-
 include(config_checks)
 if(NOT HAVE_GETOPT_H)
   find_package(GETOPT REQUIRED)
