@@ -35,6 +35,7 @@
 #include <common/pointset.h>
 #include <common/intset.h>
 #include <cdt/cdt.h>
+#include <cgraph/alloc.h>
 #include <cgraph/itos.h>
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
@@ -391,7 +392,7 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
     if (!id || !*id) {		/* no external id, so use the internal one */
 	agxbinit(&xb, SMALLBUF, buf);
 	if (!env->objid) {
-	    env->objid = strdup(getObjId(job, obj->u.n, &xb));
+	    env->objid = gv_strdup(getObjId(job, obj->u.n, &xb));
 	    env->objid_set = true;
 	}
 	agxbprint(&xb, "%s_%d", env->objid, anchorId++);
