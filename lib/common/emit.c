@@ -2381,7 +2381,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 		tmplist[j].y = pf3.y - numc2 * offlist[j].y;
 	    }
 	    lastcolor = headcolor = tailcolor = color;
-	    colors = strdup(color);
+	    colors = gv_strdup(color);
 	    for (cnum = 0, color = strtok(colors, ":"); color;
 		cnum++, color = strtok(0, ":")) {
 		if (!color[0])
