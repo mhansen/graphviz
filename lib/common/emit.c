@@ -1147,7 +1147,7 @@ static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
 
     ntok = 0;
     sz = 0;
-    gvc->layers = strdup(p);
+    gvc->layers = gv_strdup(p);
 
     for (tok = strtok(gvc->layers, gvc->layerDelims); tok;
          tok = strtok(NULL, gvc->layerDelims)) {
