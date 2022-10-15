@@ -3272,7 +3272,7 @@ static void emit_colors(GVJ_t * job, graph_t * g)
 	    gvrender_set_fillcolor(job, str);
 	if (((str = agget(n, "fillcolor")) != 0) && str[0]) {
 	    if (strchr(str, ':')) {
-		colors = strdup(str);
+		colors = gv_strdup(str);
 		for (str = strtok(colors, ":"); str;
 		    str = strtok(0, ":")) {
 		    if (str[0])
@@ -3289,7 +3289,7 @@ static void emit_colors(GVJ_t * job, graph_t * g)
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    if (((str = agget(e, "color")) != 0) && str[0]) {
 		if (strchr(str, ':')) {
-		    colors = strdup(str);
+		    colors = gv_strdup(str);
 		    for (str = strtok(colors, ":"); str;
 			str = strtok(0, ":")) {
 			if (str[0])
