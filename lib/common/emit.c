@@ -475,7 +475,7 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 {
     colorsegs_t* segs = NEW(colorsegs_t);
     colorseg_t* s;
-    char* colors = strdup (clrs);
+    char* colors = gv_strdup(clrs);
     char* color;
     int cnum = 0;
     double v, left = 1;
