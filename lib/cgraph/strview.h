@@ -9,6 +9,7 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -128,7 +129,7 @@ static inline bool strview_str_contains(strview_t haystack,
     }
 
     // is it a match?
-    if (strncmp(candidate, needle, strlen(needle)) == 0) {
+    if (startswith(candidate, needle)) {
       return true;
     }
 
