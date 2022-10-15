@@ -24,6 +24,7 @@
 #include <math.h>
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
@@ -169,7 +170,7 @@ initMapData (GVJ_t* job, char* lbl, char* url, char* tooltip, char* target, char
 	    assigned = 1;
         }
         else if (obj->label) {
-            obj->tooltip = strdup(obj->label);
+            obj->tooltip = gv_strdup(obj->label);
 	    assigned = 1;
         }
     }
