@@ -3985,7 +3985,7 @@ void gv_fixLocale (int set)
     if (set) {
 	cnt++;
 	if (cnt == 1) {
-	    save_locale = strdup (setlocale (LC_NUMERIC, NULL));
+	    save_locale = gv_strdup(setlocale (LC_NUMERIC, NULL));
 	    setlocale (LC_NUMERIC, "C");
 	}
     }
