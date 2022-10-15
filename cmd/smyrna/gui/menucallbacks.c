@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include "menucallbacks.h"
 #include "viewport.h"
 #include "tvnodes.h"
@@ -20,6 +19,8 @@
 #include <cgraph/agxbuf.h>
 #include <assert.h>
 #include <ctype.h>
+#include <glib.h>
+#include <stdlib.h>
 #include  "frmobjectui.h"
 
 void mAttributesSlot(GtkWidget * widget, gpointer user_data)
@@ -284,7 +285,6 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     GtkTextIter endit;
     const char *args;
     int cloneGraph;
-    char **argv;
 
     args =
 	gtk_entry_get_text((GtkEntry *)
@@ -313,7 +313,8 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
 	argc++;
     } else
 	cloneGraph = 0;
-    argv = gv_calloc(argc + 1, sizeof(char*));
+    assert(argc <= 5);
+    char *argv[6] = {0};
     size_t j = 0;
     argv[j++] = "smyrna";
     if (cloneGraph)
@@ -337,7 +338,6 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     assert(j == argc);
 
     run_gvpr(view->g[view->activeGraph], argc, argv);
-    free(argv);
     g_free(bf2);
 }
 
@@ -360,9 +360,10 @@ void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
 
     agxbinit(&xbuf, SMALLBUF, xbuffer);
 
-    /*file name should be returned in xbuf */
-    if (openfiledlg(0, NULL, &xbuf)) {
-	input_file = fopen(agxbuse(&xbuf), "r");
+    char *filename = NULL;
+    if (openfiledlg(&filename)) {
+	input_file = fopen(filename, "r");
+	g_free(filename);
 	if (input_file) {
 	    while (fgets(buf, BUFSIZ, input_file))
 		agxbput(&xbuf, buf);
@@ -385,7 +386,7 @@ void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
 }
 
 /*
-	opens a file open dialog and load a gvpr program to gvpr script text box
+	opens a file save dialog and save a gvpr program from gvpr script text box
 	if the current script is modified, user should be informed about it
 */
 void on_gvprbuttonsave_clicked(GtkWidget * widget, gpointer user_data)
@@ -394,15 +395,15 @@ void on_gvprbuttonsave_clicked(GtkWidget * widget, gpointer user_data)
     (void)user_data;
 
     FILE *output_file = NULL;
-    agxbuf xbuf = {0};
     GtkTextBuffer *gtkbuf;	/*GTK buffer from glade GUI */
     char *bf2;
     GtkTextIter startit;
     GtkTextIter endit;
 
-    /*file name should be returned in xbuf */
-    if (savefiledlg(0, NULL, &xbuf)) {
-	output_file = fopen(agxbuse(&xbuf), "w");
+    char *filename = NULL;
+    if (savefiledlg(&filename)) {
+	output_file = fopen(filename, "w");
+	g_free(filename);
 	if (output_file) {
 	    gtkbuf =
 		gtk_text_view_get_buffer((GtkTextView *)
@@ -411,7 +412,8 @@ void on_gvprbuttonsave_clicked(GtkWidget * widget, gpointer user_data)
 	    gtk_text_buffer_get_start_iter(gtkbuf, &startit);
 	    gtk_text_buffer_get_end_iter(gtkbuf, &endit);
 	    bf2 = gtk_text_buffer_get_text(gtkbuf, &startit, &endit, 0);
-	    fprintf(output_file, "%s", bf2);
+	    fputs(bf2, output_file);
+	    free(bf2);
 	    fclose(output_file);
 	}
 

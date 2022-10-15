@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "gui.h"
@@ -120,17 +121,11 @@ void show_gui_warning(char *str)
 Generic Open File dialog, if a file is selected and return value is 1, else 0
 file name is copied to char* filename,which should be allocated before using the function
 */
-int openfiledlg(int filtercnt, char **filters, agxbuf * xbuf)
-{
+int openfiledlg(char **filename) {
+    assert(filename != NULL);
+
     GtkWidget *dialog;
-    GtkFileFilter *filter;
-    int id, rv;
-    filter = gtk_file_filter_new();
-    if (filtercnt >= 1) {
-	for (id = 0; id < filtercnt; id++) {
-	    gtk_file_filter_add_pattern(filter, filters[id]);
-	}
-    }
+    int rv;
 
     dialog = gtk_file_chooser_dialog_new("Open File",
 					 NULL,
@@ -140,11 +135,8 @@ int openfiledlg(int filtercnt, char **filters, agxbuf * xbuf)
 					 GTK_STOCK_OPEN,
 					 GTK_RESPONSE_ACCEPT, NULL);
 
-    if (filtercnt >= 1)
-	gtk_file_chooser_set_filter((GtkFileChooser *) dialog, filter);
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-	agxbput(xbuf,
-		gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
+	*filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 	rv = 1;
     } else
 	rv = 0;
@@ -153,17 +145,11 @@ int openfiledlg(int filtercnt, char **filters, agxbuf * xbuf)
     return rv;
 }
 
-int savefiledlg(int filtercnt, char **filters, agxbuf * xbuf)
-{
+int savefiledlg(char **filename) {
+    assert(filename != NULL);
+
     GtkWidget *dialog;
-    GtkFileFilter *filter;
-    int id, rv;
-    filter = gtk_file_filter_new();
-    if (filtercnt >= 1) {
-	for (id = 0; id < filtercnt; id++) {
-	    gtk_file_filter_add_pattern(filter, filters[id]);
-	}
-    }
+    int rv;
 
     dialog = gtk_file_chooser_dialog_new("Save File",
 					 NULL,
@@ -173,11 +159,8 @@ int savefiledlg(int filtercnt, char **filters, agxbuf * xbuf)
 					 GTK_STOCK_OPEN,
 					 GTK_RESPONSE_ACCEPT, NULL);
 
-    if (filtercnt >= 1)
-	gtk_file_chooser_set_filter((GtkFileChooser *) dialog, filter);
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-	agxbput(xbuf,
-		gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog)));
+	*filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 	rv = 1;
     } else
 	rv = 0;

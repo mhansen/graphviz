@@ -17,7 +17,6 @@
 #include <glade/glade.h>
 #include "callbacks.h"
 #include <cgraph/cgraph.h>
-#include <cgraph/agxbuf.h>
 
 #define MAXIMUM_WIDGET_COUNT	97
 
@@ -35,8 +34,18 @@
     void Color_Widget_bg(char *colorstring, GtkWidget * widget);
 /*generic warning pop up*/
     void show_gui_warning(char *str);
-/*generic open file dialog*/
-    int openfiledlg(int filtercnt, char **filters, agxbuf * xbuf);
-/*generic save file dialog*/
-    int savefiledlg(int filtercnt, char **filters, agxbuf * xbuf);
+/** generic open file dialog
+ *
+ * \param [out] filename Selected filename on success. Caller should \p g_free
+ *   this.
+ * \return Non-zero on success.
+ */
+    int openfiledlg(char **filename);
+/** generic save file dialog
+ *
+ * \param [out] filename Selected filename on success. Caller should \p g_free
+ *   this.
+ * \return Non-zero on success.
+ */
+    int savefiledlg(char **filename);
     void append_textview(GtkTextView * textv, const char *s, size_t bytes);
