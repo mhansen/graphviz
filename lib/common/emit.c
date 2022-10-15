@@ -2983,7 +2983,7 @@ boxf xdotBB (Agraph_t* g)
 	    break;
 	case xd_text :
 	    op->span = NEW(textspan_t);
-	    op->span->str = strdup (op->op.u.text.text);
+	    op->span->str = gv_strdup (op->op.u.text.text);
 	    op->span->just = adjust [op->op.u.text.align];
 	    tf.name = fontname;
 	    tf.size = fontsize;
