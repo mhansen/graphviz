@@ -3539,7 +3539,7 @@ int emit_once(char *str)
     if (strings == 0)
 	strings = dtopen(&stringdict, Dtoset);
     if (!dtsearch(strings, str)) {
-	dtinsert(strings, strdup(str));
+	dtinsert(strings, gv_strdup(str));
 	return TRUE;
     }
     return FALSE;
