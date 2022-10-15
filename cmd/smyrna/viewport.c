@@ -436,7 +436,7 @@ static Agraph_t *loadGraph(char *filename)
 	agclose (g);
 	return 0;
     }
-    view->Topview->Graphdata.GraphFileName = strdup(filename);
+    view->Topview->Graphdata.GraphFileName = gv_strdup(filename);
     return g;
 }
 
