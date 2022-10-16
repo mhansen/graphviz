@@ -313,7 +313,6 @@ extern "C" {
 
 /* grain size for buffer increment */
 #define SF_GRAIN	1024
-#define SF_PAGE		((ssize_t)(SF_GRAIN*sizeof(int)*2))
 
 /* when the buffer is empty, certain io requests may be better done directly
    on the given application buffers. The below condition determines when.
