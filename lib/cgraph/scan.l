@@ -255,6 +255,8 @@ void aagerror(const char *str)
 	case comment :
 		agxbprint(&xb, " scanning a /*...*/ comment (missing '*/? longer than %d?)", YY_BUF_SIZE);
 		break;
+	default: // nothing extra to note
+		break;
 	}
 	agxbputc (&xb, '\n');
 	agerr(AGERR, "%s", agxbuse(&xb));
