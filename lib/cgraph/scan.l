@@ -91,10 +91,8 @@ static void endstr_html(void) {
   aaglval.str = agstrdup_html(Ag_G_global, agxbuse(&Sbuf));
 }
 
-static void
-storeFileName (char* fname, int len)
-{
-    static int cnt;
+static void storeFileName(char* fname, size_t len) {
+    static size_t cnt;
     static char* buf;
 
     if (len > cnt) {
@@ -125,7 +123,7 @@ static void ppDirective (void)
 	    while (*e && *e != '"') e++;
 	    if (e != p && *e == '"') {
  		*e = '\0';
-		storeFileName (p, e-p);
+		storeFileName(p, (size_t)(e - p));
 	    }
 	}
     }
