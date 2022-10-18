@@ -21,9 +21,34 @@ void GraphvizEdge::add_outline_overlap_bbox(const GraphvizNode &node,
 static const std::unordered_set<std::string_view>
     supported_primitive_arrow_shapes = {
         "box",    //
+        "dot",    //
         "inv",    //
         "normal", //
 };
+
+static const std::unordered_set<std::string_view>
+    polygon_based_primitive_arrow_shapes = {
+        "box",    //
+        "inv",    //
+        "normal", //
+};
+
+static const std::unordered_set<std::string_view>
+    ellipse_based_primitive_arrow_shapes = {
+        "dot", //
+};
+
+static SVG::SVGElementType
+edge_arrowhead_main_svg_element_type(std::string_view primitive_arrow_shape) {
+  if (polygon_based_primitive_arrow_shapes.contains(primitive_arrow_shape)) {
+    return SVG::SVGElementType::Polygon;
+  } else if (ellipse_based_primitive_arrow_shapes.contains(
+                 primitive_arrow_shape)) {
+    return SVG::SVGElementType::Ellipse;
+  } else {
+    assert(false && "unsupported primitive arrow shape");
+  }
+}
 
 SVG::SVGRect GraphvizEdge::arrowhead_outline_bbox(
     std::string_view dir, std::string_view primitive_arrow_shape) const {
@@ -36,8 +61,11 @@ SVG::SVGRect GraphvizEdge::arrowhead_outline_bbox(
                     primitive_arrow_shape)};
   }
   const auto index = dir == "forward" ? 0 : 1;
+
+  const auto main_svg_element_type =
+      edge_arrowhead_main_svg_element_type(primitive_arrow_shape);
   auto edge_arrowhead =
-      m_svg_g_element.find_child(SVG::SVGElementType::Polygon, index);
+      m_svg_g_element.find_child(main_svg_element_type, index);
   auto edge_arrowhead_bbox = edge_arrowhead.outline_bbox();
   if (primitive_arrow_shape == "box") {
     auto edge_arrowhead_stem =
@@ -59,8 +87,10 @@ SVG::SVGRect GraphvizEdge::arrowtail_outline_bbox(
                     primitive_arrow_shape)};
   }
   const auto index = 0;
+  const auto main_svg_element_type =
+      edge_arrowhead_main_svg_element_type(primitive_arrow_shape);
   auto edge_arrowtail =
-      m_svg_g_element.find_child(SVG::SVGElementType::Polygon, index);
+      m_svg_g_element.find_child(main_svg_element_type, index);
   auto edge_arrowtail_bbox = edge_arrowtail.outline_bbox();
   if (primitive_arrow_shape == "box") {
     auto edge_arrowtail_stem =

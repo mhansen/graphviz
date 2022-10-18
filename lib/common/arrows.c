@@ -125,6 +125,7 @@ static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_normal(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_box(double lenfact, double arrowsize, double penwidth, int flag);
+static double arrow_length_dot(double lenfact, double arrowsize, double penwidth, int flag);
 
 static const arrowtype_t Arrowtypes[] = {
     {ARR_TYPE_NORM, 1.0, arrow_type_normal, arrow_length_normal},
@@ -132,7 +133,7 @@ static const arrowtype_t Arrowtypes[] = {
     {ARR_TYPE_TEE, 0.5, arrow_type_tee, arrow_length_generic},
     {ARR_TYPE_BOX, 1.0, arrow_type_box, arrow_length_box},
     {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond, arrow_length_generic},
-    {ARR_TYPE_DOT, 0.8, arrow_type_dot, arrow_length_generic},
+    {ARR_TYPE_DOT, 0.8, arrow_type_dot, arrow_length_dot},
     {ARR_TYPE_CURVE, 1.0, arrow_type_curve, arrow_length_generic},
     {ARR_TYPE_GAP, 0.5, arrow_type_gap, arrow_length_generic},
 };
@@ -781,13 +782,28 @@ static pointf arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, 
     pointf AF[2];
 
     r = hypot(u.x, u.y) / 2.;
+
+    const pointf P = {-u.x, -u.y};
+    // phi = angle of arrow
+    const double cosPhi = P.x / hypot(P.x, P.y);
+    const double sinPhi = P.y / hypot(P.x, P.y);
+    const pointf delta = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+
+    // move the arrow backwards to not visually overlap the node
+    p.x -= delta.x;
+    p.y -= delta.y;
+
     AF[0].x = p.x + u.x / 2. - r;
     AF[0].y = p.y + u.y / 2. - r;
     AF[1].x = p.x + u.x / 2. + r;
     AF[1].y = p.y + u.y / 2. + r;
     gvrender_ellipse(job, AF, !(flag & ARR_MOD_OPEN));
 
-    const pointf q = {p.x + u.x, p.y + u.y};
+    pointf q = {p.x + u.x, p.y + u.y};
+
+    // return the visual starting point of the arrow outline
+    q.x -= delta.x;
+    q.y -= delta.y;
 
     return q;
 }
@@ -987,11 +1003,18 @@ static double arrow_length_normal(double lenfact, double arrowsize,
 
 static double arrow_length_box(double lenfact, double arrowsize,
 			       double penwidth, int flag) {
-    (void)flag;
+  (void)flag;
 
-    // The `box` arrow shape begins with a polyline which doesn't extend
-    // visually beyond its starting point, so we only have to take penwidth
-    // into account at the end point.
+  // The `box` arrow shape begins with a polyline which doesn't extend
+  // visually beyond its starting point, so we only have to take penwidth
+  // into account at the end point.
 
-    return lenfact * arrowsize * ARROW_LENGTH + penwidth / 2;
+  return lenfact * arrowsize * ARROW_LENGTH + penwidth / 2;
+}
+
+static double arrow_length_dot(double lenfact, double arrowsize,
+			       double penwidth, int flag) {
+  (void)flag;
+
+  return lenfact * arrowsize * ARROW_LENGTH + penwidth;
 }
