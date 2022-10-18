@@ -987,11 +987,11 @@ static double arrow_length_normal(double lenfact, double arrowsize,
 
 static double arrow_length_box(double lenfact, double arrowsize,
 			       double penwidth, int flag) {
-    (void)flag;
+  (void)flag;
 
-    // The `box` arrow shape begins with a polyline which doesn't extend
-    // visually beyond its starting point, so we only have to take penwidth
-    // into account at the end point.
+  // The `box` arrow shape begins with a polyline which doesn't extend
+  // visually beyond its starting point, so we only have to take penwidth
+  // into account at the end point.
 
-    return lenfact * arrowsize * ARROW_LENGTH + penwidth / 2;
+  return lenfact * arrowsize * ARROW_LENGTH + penwidth / 2;
 }
