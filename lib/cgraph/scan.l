@@ -91,10 +91,8 @@ static void endstr_html(void) {
   aaglval.str = agstrdup_html(Ag_G_global, agxbuse(&Sbuf));
 }
 
-static void
-storeFileName (char* fname, int len)
-{
-    static int cnt;
+static void storeFileName(char* fname, size_t len) {
+    static size_t cnt;
     static char* buf;
 
     if (len > cnt) {
@@ -125,7 +123,7 @@ static void ppDirective (void)
 	    while (*e && *e != '"') e++;
 	    if (e != p && *e == '"') {
  		*e = '\0';
-		storeFileName (p, e-p);
+		storeFileName(p, (size_t)(e - p));
 	    }
 	}
     }
@@ -218,6 +216,7 @@ ID		({NAME}|{NUMBER})
 .						return aagtext[0];
 %%
 
+void aagerror(const char *str);
 void aagerror(const char *str)
 {
 	char	xbuf[BUFSIZ];
@@ -256,6 +255,8 @@ void aagerror(const char *str)
 	}
 	case comment :
 		agxbprint(&xb, " scanning a /*...*/ comment (missing '*/? longer than %d?)", YY_BUF_SIZE);
+		break;
+	default: // nothing extra to note
 		break;
 	}
 	agxbputc (&xb, '\n');
