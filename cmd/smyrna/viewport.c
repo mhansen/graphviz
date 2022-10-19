@@ -246,7 +246,7 @@ static gboolean gl_main_expose(gpointer data)
 static void get_data_dir(void)
 {
     free(view->template_file);
-    view->template_file = strdup(smyrnaPath("template.dot"));
+    view->template_file = gv_strdup(smyrnaPath("template.dot"));
 }
 
 void init_viewport(ViewInfo * view)
@@ -436,7 +436,7 @@ static Agraph_t *loadGraph(char *filename)
 	agclose (g);
 	return 0;
     }
-    view->Topview->Graphdata.GraphFileName = strdup(filename);
+    view->Topview->Graphdata.GraphFileName = gv_strdup(filename);
     return g;
 }
 

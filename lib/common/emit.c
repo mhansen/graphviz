@@ -24,6 +24,7 @@
 #include <math.h>
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
@@ -169,7 +170,7 @@ initMapData (GVJ_t* job, char* lbl, char* url, char* tooltip, char* target, char
 	    assigned = 1;
         }
         else if (obj->label) {
-            obj->tooltip = strdup(obj->label);
+            obj->tooltip = gv_strdup(obj->label);
 	    assigned = 1;
         }
     }
@@ -474,7 +475,7 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 {
     colorsegs_t* segs = NEW(colorsegs_t);
     colorseg_t* s;
-    char* colors = strdup (clrs);
+    char* colors = gv_strdup(clrs);
     char* color;
     int cnum = 0;
     double v, left = 1;
@@ -1146,7 +1147,7 @@ static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
 
     ntok = 0;
     sz = 0;
-    gvc->layers = strdup(p);
+    gvc->layers = gv_strdup(p);
 
     for (tok = strtok(gvc->layers, gvc->layerDelims); tok;
          tok = strtok(NULL, gvc->layerDelims)) {
@@ -2380,7 +2381,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 		tmplist[j].y = pf3.y - numc2 * offlist[j].y;
 	    }
 	    lastcolor = headcolor = tailcolor = color;
-	    colors = strdup(color);
+	    colors = gv_strdup(color);
 	    for (cnum = 0, color = strtok(colors, ":"); color;
 		cnum++, color = strtok(0, ":")) {
 		if (!color[0])
@@ -2555,23 +2556,23 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	if (((s = agget(e, "edgehref")) && s[0]) || ((s = agget(e, "edgeURL")) && s[0]))
             obj->url = strdup_and_subst_obj(s, e);
 	else if (dflt_url)
-	    obj->url = strdup(dflt_url);
+	    obj->url = gv_strdup(dflt_url);
 	if (((s = agget(e, "labelhref")) && s[0]) || ((s = agget(e, "labelURL")) && s[0]))
             obj->labelurl = strdup_and_subst_obj(s, e);
 	else if (dflt_url)
-	    obj->labelurl = strdup(dflt_url);
+	    obj->labelurl = gv_strdup(dflt_url);
 	if (((s = agget(e, "tailhref")) && s[0]) || ((s = agget(e, "tailURL")) && s[0])) {
             obj->tailurl = strdup_and_subst_obj(s, e);
             obj->explicit_tailurl = true;
 	}
 	else if (dflt_url)
-	    obj->tailurl = strdup(dflt_url);
+	    obj->tailurl = gv_strdup(dflt_url);
 	if (((s = agget(e, "headhref")) && s[0]) || ((s = agget(e, "headURL")) && s[0])) {
             obj->headurl = strdup_and_subst_obj(s, e);
             obj->explicit_headurl = true;
 	}
 	else if (dflt_url)
-	    obj->headurl = strdup(dflt_url);
+	    obj->headurl = gv_strdup(dflt_url);
     } 
 
     if (flags & GVRENDER_DOES_TARGETS) {
@@ -2582,23 +2583,23 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
             obj->target = strdup_and_subst_obj(s, e);
 	}
 	else if (dflt_target)
-	    obj->target = strdup(dflt_target);
+	    obj->target = gv_strdup(dflt_target);
         if ((s = agget(e, "labeltarget")) && s[0])
             obj->labeltarget = strdup_and_subst_obj(s, e);
 	else if (dflt_target)
-	    obj->labeltarget = strdup(dflt_target);
+	    obj->labeltarget = gv_strdup(dflt_target);
         if ((s = agget(e, "tailtarget")) && s[0]) {
             obj->tailtarget = strdup_and_subst_obj(s, e);
 	    obj->explicit_tailtarget = true;
 	}
 	else if (dflt_target)
-	    obj->tailtarget = strdup(dflt_target);
+	    obj->tailtarget = gv_strdup(dflt_target);
         if ((s = agget(e, "headtarget")) && s[0]) {
 	    obj->explicit_headtarget = true;
             obj->headtarget = strdup_and_subst_obj(s, e);
 	}
 	else if (dflt_target)
-	    obj->headtarget = strdup(dflt_target);
+	    obj->headtarget = gv_strdup(dflt_target);
     } 
 
     if (flags & GVRENDER_DOES_TOOLTIPS) {
@@ -2610,7 +2611,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    obj->explicit_tooltip = true;
 	}
 	else if (obj->label)
-	    obj->tooltip = strdup(obj->label);
+	    obj->tooltip = gv_strdup(obj->label);
 
         if ((s = agget(e, "labeltooltip")) && s[0]) {
 	    char* tooltip = preprocessTooltip (s, e);
@@ -2619,7 +2620,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    obj->explicit_labeltooltip = true;
 	}
 	else if (obj->label)
-	    obj->labeltooltip = strdup(obj->label);
+	    obj->labeltooltip = gv_strdup(obj->label);
 
         if ((s = agget(e, "tailtooltip")) && s[0]) {
 	    char* tooltip = preprocessTooltip (s, e);
@@ -2628,7 +2629,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    obj->explicit_tailtooltip = true;
 	}
 	else if (obj->taillabel)
-	    obj->tailtooltip = strdup(obj->taillabel);
+	    obj->tailtooltip = gv_strdup(obj->taillabel);
 
         if ((s = agget(e, "headtooltip")) && s[0]) {
 	    char* tooltip = preprocessTooltip (s, e);
@@ -2637,7 +2638,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    obj->explicit_headtooltip = true;
 	}
 	else if (obj->headlabel)
-	    obj->headtooltip = strdup(obj->headlabel);
+	    obj->headtooltip = gv_strdup(obj->headlabel);
     } 
     
     free (dflt_url);
@@ -2982,7 +2983,7 @@ boxf xdotBB (Agraph_t* g)
 	    break;
 	case xd_text :
 	    op->span = NEW(textspan_t);
-	    op->span->str = strdup (op->op.u.text.text);
+	    op->span->str = gv_strdup (op->op.u.text.text);
 	    op->span->just = adjust [op->op.u.text.align];
 	    tf.name = fontname;
 	    tf.size = fontsize;
@@ -3271,7 +3272,7 @@ static void emit_colors(GVJ_t * job, graph_t * g)
 	    gvrender_set_fillcolor(job, str);
 	if (((str = agget(n, "fillcolor")) != 0) && str[0]) {
 	    if (strchr(str, ':')) {
-		colors = strdup(str);
+		colors = gv_strdup(str);
 		for (str = strtok(colors, ":"); str;
 		    str = strtok(0, ":")) {
 		    if (str[0])
@@ -3288,7 +3289,7 @@ static void emit_colors(GVJ_t * job, graph_t * g)
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    if (((str = agget(e, "color")) != 0) && str[0]) {
 		if (strchr(str, ':')) {
-		    colors = strdup(str);
+		    colors = gv_strdup(str);
 		    for (str = strtok(colors, ":"); str;
 			str = strtok(0, ":")) {
 			if (str[0])
@@ -3538,7 +3539,7 @@ int emit_once(char *str)
     if (strings == 0)
 	strings = dtopen(&stringdict, Dtoset);
     if (!dtsearch(strings, str)) {
-	dtinsert(strings, strdup(str));
+	dtinsert(strings, gv_strdup(str));
 	return TRUE;
     }
     return FALSE;
@@ -3984,7 +3985,7 @@ void gv_fixLocale (int set)
     if (set) {
 	cnt++;
 	if (cnt == 1) {
-	    save_locale = strdup (setlocale (LC_NUMERIC, NULL));
+	    save_locale = gv_strdup(setlocale (LC_NUMERIC, NULL));
 	    setlocale (LC_NUMERIC, "C");
 	}
     }
