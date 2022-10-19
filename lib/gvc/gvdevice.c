@@ -205,14 +205,8 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
     if (job->flags & GVDEVICE_COMPRESSED_FORMAT) {
 #ifdef HAVE_LIBZ
 	z_streamp z = &z_strm;
-	size_t dflen;
 
-#ifdef HAVE_DEFLATEBOUND
-	dflen = deflateBound(z, len);
-#else
-	/* deflateBound() is not available in older libz, e.g. from centos3 */
-	dflen = 2 * len  + dfallocated - z->avail_out;
-#endif
+	size_t dflen = deflateBound(z, len);
 	if (dfallocated < dflen) {
 	    dfallocated = (dflen + 1 + PAGE_ALIGN) & ~PAGE_ALIGN;
 	    df = realloc(df, dfallocated);

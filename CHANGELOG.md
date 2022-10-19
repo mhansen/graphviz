@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.1)]
 
+### Changed
+
+- When built with zlib support, Graphviz will unconditionally use
+  `deflateBound`. The only user-visible effect should be slightly decreased
+  memory usage when using a zlib-compressed output format.
+
 ### Fixed
 
 - Failure of arrowhead and arrowtail to respect penwidth #372 \
