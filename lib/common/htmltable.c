@@ -35,6 +35,7 @@
 #include <common/pointset.h>
 #include <common/intset.h>
 #include <cdt/cdt.h>
+#include <cgraph/alloc.h>
 #include <cgraph/itos.h>
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
@@ -391,7 +392,7 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
     if (!id || !*id) {		/* no external id, so use the internal one */
 	agxbinit(&xb, SMALLBUF, buf);
 	if (!env->objid) {
-	    env->objid = strdup(getObjId(job, obj->u.n, &xb));
+	    env->objid = gv_strdup(getObjId(job, obj->u.n, &xb));
 	    env->objid_set = true;
 	}
 	agxbprint(&xb, "%s_%d", env->objid, anchorId++);
@@ -1529,7 +1530,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
     boxf cbox;
 
     if (!cp->data.pencolor && cp->parent->data.pencolor)
-	cp->data.pencolor = strdup(cp->parent->data.pencolor);
+	cp->data.pencolor = gv_strdup(cp->parent->data.pencolor);
 
     /* If fixed, align cell */
     if (cp->data.flags & FIXED_FLAG) {
@@ -1679,7 +1680,7 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 
     if (tbl->u.n.parent && tbl->u.n.parent->data.pencolor
 	&& !tbl->data.pencolor)
-	tbl->data.pencolor = strdup(tbl->u.n.parent->data.pencolor);
+	tbl->data.pencolor = gv_strdup(tbl->u.n.parent->data.pencolor);
 
     oldsz = tbl->data.box.UR.x;
     delx = pos.UR.x - pos.LL.x - oldsz;
@@ -2014,7 +2015,7 @@ int make_html_label(void *obj, textlabel_t * lp)
 	char buf[SMALLBUF];
 	agxbinit(&xb, SMALLBUF, buf);
 	lp->html = false;
-	lp->text = strdup(nameOf(obj, &xb));
+	lp->text = gv_strdup(nameOf(obj, &xb));
 	switch (lp->charset) {
 	case CHAR_LATIN1:
 	    s = latin1ToUTF8(lp->text);
@@ -2032,7 +2033,7 @@ int make_html_label(void *obj, textlabel_t * lp)
 
     if (lbl->kind == HTML_TBL) {
 	if (!lbl->u.tbl->data.pencolor && getPenColor(obj))
-	    lbl->u.tbl->data.pencolor = strdup(getPenColor(obj));
+	    lbl->u.tbl->data.pencolor = gv_strdup(getPenColor(obj));
 	rv |= size_html_tbl(g, lbl->u.tbl, NULL, &env);
 	wd2 = lbl->u.tbl->data.box.UR.x / 2;
 	ht2 = lbl->u.tbl->data.box.UR.y / 2;
@@ -2057,7 +2058,7 @@ int make_html_label(void *obj, textlabel_t * lp)
      */
     if (lbl->kind == HTML_TBL) {
 	free(lp->text);
-	lp->text = strdup("<TABLE>");
+	lp->text = gv_strdup("<TABLE>");
     }
 
     return rv;
