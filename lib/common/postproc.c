@@ -124,11 +124,11 @@ void translate_bb(graph_t * g, int rankdir)
 
     bb = GD_bb(g);
     if (rankdir == RANKDIR_LR || rankdir == RANKDIR_BT) {
-	new_bb.LL = map_point(pointfof(bb.LL.x, bb.UR.y));
-	new_bb.UR = map_point(pointfof(bb.UR.x, bb.LL.y));
+	new_bb.LL = map_point((pointf){bb.LL.x, bb.UR.y});
+	new_bb.UR = map_point((pointf){bb.UR.x, bb.LL.y});
     } else {
-	new_bb.LL = map_point(pointfof(bb.LL.x, bb.LL.y));
-	new_bb.UR = map_point(pointfof(bb.UR.x, bb.UR.y));
+	new_bb.LL = map_point((pointf){bb.LL.x, bb.LL.y});
+	new_bb.UR = map_point((pointf){bb.UR.x, bb.UR.y});
     }
     GD_bb(g) = new_bb;
     if (GD_label(g)) {
@@ -476,8 +476,8 @@ static void addXLabels(Agraph_t * gp)
     n_objs = agnnodes(gp) + n_set_lbls + n_clbls + n_elbls;
     objp = objs = N_NEW(n_objs, object_t);
     xlp = lbls = N_NEW(n_lbls, xlabel_t);
-    bb.LL = pointfof(INT_MAX, INT_MAX);
-    bb.UR = pointfof(-INT_MAX, -INT_MAX);
+    bb.LL = (pointf){INT_MAX, INT_MAX};
+    bb.UR = (pointf){-INT_MAX, -INT_MAX};
 
     for (np = agfstnode(gp); np; np = agnxtnode(gp, np)) {
 
@@ -663,13 +663,13 @@ void gv_postprocess(Agraph_t * g, int allowTranslation)
 	    Offset = GD_bb(g).LL;
 	    break;
 	case RANKDIR_LR:
-	    Offset = pointfof(-GD_bb(g).UR.y, GD_bb(g).LL.x);
+	    Offset = (pointf){-GD_bb(g).UR.y, GD_bb(g).LL.x};
 	    break;
 	case RANKDIR_BT:
-	    Offset = pointfof(GD_bb(g).LL.x, -GD_bb(g).UR.y);
+	    Offset = (pointf){GD_bb(g).LL.x, -GD_bb(g).UR.y};
 	    break;
 	case RANKDIR_RL:
-	    Offset = pointfof(GD_bb(g).LL.y, GD_bb(g).LL.x);
+	    Offset = (pointf){GD_bb(g).LL.y, GD_bb(g).LL.x};
 	    break;
 	default:
 	    UNREACHABLE();

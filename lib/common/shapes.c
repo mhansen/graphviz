@@ -2601,7 +2601,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
 
     if (bp) {
 	b = *bp;
-	p = pointfof((b.LL.x + b.UR.x) / 2, (b.LL.y + b.UR.y) / 2);
+	p = (pointf){(b.LL.x + b.UR.x) / 2, (b.LL.y + b.UR.y) / 2};
 	defined = true;
     } else {
 	p.x = p.y = 0.;
@@ -3506,9 +3506,9 @@ static void resize_reclbl(field_t * f, pointf sz, int nojustify_p)
 	    sf = f->fld[i];
 	    amt = (int)((i + 1) * inc) - (int)(i * inc);
 	    if (f->LR)
-		newsz = pointfof(sf->size.x + amt, sz.y);
+		newsz = (pointf){sf->size.x + amt, sz.y};
 	    else
-		newsz = pointfof(sz.x, sf->size.y + amt);
+		newsz = (pointf){sz.x, sf->size.y + amt};
 	    resize_reclbl(sf, newsz, nojustify_p);
 	}
     }
@@ -3524,8 +3524,8 @@ static void pos_reclbl(field_t *f, pointf ul, unsigned char sides) {
     unsigned char mask;
 
     f->sides = sides;
-    f->b.LL = pointfof(ul.x, ul.y - f->size.y);
-    f->b.UR = pointfof(ul.x + f->size.x, ul.y);
+    f->b.LL = (pointf){ul.x, ul.y - f->size.y};
+    f->b.UR = (pointf){ul.x + f->size.x, ul.y};
     last = f->n_flds - 1;
     for (i = 0; i <= last; i++) {
 	if (sides) {
@@ -3596,7 +3596,7 @@ static void dumpL(field_t * info, int level)
 static void record_init(node_t * n)
 {
     field_t *info;
-    pointf ul, sz;
+    pointf sz;
     int flip;
     size_t len;
     char *textbuf;		/* temp buffer for storing labels */
@@ -3633,7 +3633,7 @@ static void record_init(node_t * n)
     }
     resize_reclbl(info, sz,
                   mapbool(late_string(n, N_nojustify, "false")) ? TRUE : FALSE);
-    ul = pointfof(-sz.x / 2., sz.y / 2.);	/* FIXME - is this still true:    suspected to introduce ronding error - see Kluge below */
+    pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce ronding error - see Kluge below */
     pos_reclbl(info, ul, sides);
     ND_width(n) = PS2INCH(info->size.x);
     ND_height(n) = PS2INCH(info->size.y + 1);	/* Kluge!!  +1 to fix rounding diff between layout and rendering 
