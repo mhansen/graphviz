@@ -4,7 +4,14 @@
 
 #include <boost/range/any_range.hpp>
 #include <boost/range/iterator_range_core.hpp>
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#endif
 #include <svgpp/svgpp.hpp>
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 class ISVGAnalyzer;
 
