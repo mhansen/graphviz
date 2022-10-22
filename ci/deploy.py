@@ -101,9 +101,6 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
 
   # parse command line arguments
   parser = argparse.ArgumentParser(description="Graphviz deployment script")
-  parser.add_argument("--version", help="Override version number used to "
-    "create a release. Without this, the contents of the GRAPHVIZ_VERSION file "
-    "will be used.")
   parser.add_argument("--verbose", action="store_true", help="Print more "
     "diagnostic information.")
   options = parser.parse_args(args[1:])
@@ -131,28 +128,23 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
 
   # retrieve version name left by prior CI tasks
   log.info("reading GRAPHVIZ_VERSION")
-  gv_version = Path("GRAPHVIZ_VERSION").read_text(encoding="utf-8").strip()
-  log.info(f"GRAPHVIZ_VERSION == {gv_version}")
-
-  # if we were not passed an explicit version, use the one from the
-  # GRAPHVIZ_VERSION file
-  if options.version is None:
-    options.version = gv_version
+  version = Path("GRAPHVIZ_VERSION").read_text(encoding="utf-8").strip()
+  log.info(f"GRAPHVIZ_VERSION == {version}")
 
   # the generic package version has to be \d+.\d+.\d+ but it does not need to
   # correspond to the release version (which may not conform to this pattern if
   # this is a dev release)
-  if re.match(r"\d+\.\d+\.\d+$", options.version) is None:
+  if re.match(r"\d+\.\d+\.\d+$", version) is None:
     # generate a compliant version
     package_version = f'0.0.{int(os.environ["CI_COMMIT_SHA"], 16)}'
   else:
     # we can use a version corresponding to the release version
-    package_version = options.version
+    package_version = version
   log.info(f"using generic package version {package_version}")
 
   # we only create Gitlab releases for stable version numbers
-  if re.match(r"\d+\.\d+\.\d+$", options.version) is None:
-    log.warning(f"skipping release creation because {options.version} is not "
+  if re.match(r"\d+\.\d+\.\d+$", version) is None:
+    log.warning(f"skipping release creation because {version} is not "
       "of the form \\d+.\\d+.\\d+")
     return 0
 
@@ -161,13 +153,13 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
 
   # data for the website’s download page
   webdata = {
-    "version": f"graphviz-{options.version}",
+    "version": f"graphviz-{version}",
     "sources": [],
     "windows": [],
   }
 
-  for tarball in (Path(f"graphviz-{gv_version}.tar.gz"),
-                  Path(f"graphviz-{gv_version}.tar.xz")):
+  for tarball in (Path(f"graphviz-{version}.tar.gz"),
+                  Path(f"graphviz-{version}.tar.xz")):
 
     if not tarball.exists():
       log.error(f"source {tarball} not found")
@@ -229,8 +221,8 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
     return -1
 
   # construct a command to create the release itself
-  cmd = ["release-cli", "create", "--name", options.version, "--tag-name",
-    options.version, "--description", "See the [CHANGELOG](https://gitlab.com/"
+  cmd = ["release-cli", "create", "--name", version, "--tag-name",
+    version, "--description", "See the [CHANGELOG](https://gitlab.com/"
     "graphviz/graphviz/-/blob/main/CHANGELOG.md)."]
   for a in assets:
     name = os.path.basename(a)
@@ -241,8 +233,8 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
   subprocess.check_call(cmd)
 
   # output JSON data for the website
-  log.info(f"dumping {webdata} to graphviz-{options.version}.json")
-  with open(f"graphviz-{options.version}.json", "wt", encoding="utf-8") as f:
+  log.info(f"dumping {webdata} to graphviz-{version}.json")
+  with open(f"graphviz-{version}.json", "wt", encoding="utf-8") as f:
     json.dump(webdata, f, indent=2)
 
   return 0
