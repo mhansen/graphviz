@@ -1994,3 +1994,19 @@ def test_2282():
 
   # confirm this is valid JSON
   json.loads(output)
+
+@pytest.mark.skipif(shutil.which("gxl2gv") is None,
+                    reason="gxl2gv not available")
+@pytest.mark.xfail()
+def test_2300_1():
+  """
+  translating GXL with an attribute `name` should not crash
+  https://gitlab.com/graphviz/graphviz/-/issues/2300
+  """
+
+  # locate our associated test case containing a node attribute `name`
+  input = Path(__file__).parent / "2300.gxl"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # ask `gxl2gv` to process this
+  subprocess.check_call(["gxl2gv", input])
