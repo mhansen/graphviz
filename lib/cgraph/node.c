@@ -242,8 +242,7 @@ int agrelabel_node(Agnode_t * n, char *newname)
     if (agmapnametoid(g, AGNODE, newname, &new_id, TRUE)) {
 	if (agfindnode_by_id(agroot(g), new_id) == NULL) {
 	    agfreeid(g, AGNODE, AGID(n));
-	    agapply(g, (Agobj_t *) n, (agobjfn_t) dict_relabel,
-		    (void *) &new_id, FALSE);
+	    agapply(g, (Agobj_t*)n, (agobjfn_t)dict_relabel, &new_id, FALSE);
 	    return SUCCESS;
 	} else {
 	    agfreeid(g, AGNODE, new_id);	/* couldn't use it after all */
