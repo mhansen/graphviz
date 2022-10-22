@@ -179,7 +179,39 @@ profiler like Linux Perf.
 
 #### [Linux Perf](https://perf.wiki.kernel.org/index.php/Main_Page)
 
-TODO
+https://www.markhansen.co.nz/profiling-graphviz/ gives a good introduction. If
+you need more, an alternative step-by-step follows.
+
+First, compile Graphviz with debugging symbols enabled (`-ggdb` in the `CFLAGS`
+and `CXXFLAGS` lists in the commands described above). Without this, `perf` will
+struggle to give you helpful information.
+
+Record a trace of Graphviz:
+
+```sh
+perf record -g --call-graph=dwarf --freq=max --events=cycles:u \
+  dot -Tsvg test.dot
+```
+
+Some things to keep in mind:
+
+* `--freq=max`: this will give you the most accurate profile, but can sometimes
+  exceed the I/O capacity of your system. `perf record` will tell you when this
+  occurs, but then it will also often corrupt the profile data it is writing.
+  This will later cause `perf report` to lock up or crash. To work around this,
+  you will need to reduce the frequency.
+* `--events=cycles:u`: this will record user-level cycles. This is often what
+  you are interested in, but there are many other events you can read about in
+  the `perf` man page. `--events=duration_time` may be a more intuitive metric.
+
+Now, examine the trace you recorded:
+
+```sh
+perf report -g --children
+```
+
+The reporting interface relies on a series of terse keyboard shortcuts. So hit
+`?` if you are stuck.
 
 ## How to make a release
 
