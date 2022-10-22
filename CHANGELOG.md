@@ -27,6 +27,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Issues with GCC 8, `-O3` and `-ffast-math` #1412
 - Problem building Graphviz-5.0.1: undefined symbols `__*_finite` #2296
+- Failure of arrowhead and arrowtail to respect penwidth #372 \
+  Fixed for all
+  [polygon-based node shapes](https://graphviz.org/doc/info/shapes.html#polygon)
+  (except for the `cylinder` node shape) and for the
+  [edge arrow shapes](https://graphviz.org/doc/info/arrows.html)
+  `normal`, `inv`, `box` and `dot`
 
 ### Removed
 
