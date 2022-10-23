@@ -124,7 +124,6 @@ int sfclose(Sfio_t * f)
 	    free(f);
 	else {
 	    f->disc = NULL;
-	    f->stdio = NULL;
 	    f->mode = SF_AVAIL;
 	}
     }
