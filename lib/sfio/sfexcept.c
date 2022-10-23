@@ -33,7 +33,7 @@ int _sfexcept(Sfio_t * f, int type, ssize_t io, Sfdisc_t * disc)
     lock = f->mode & SF_LOCK;
 
     if (local && io <= 0)
-	f->flags |= io < 0 ? SF_ERROR : SF_EOF;
+	f->flags |= io < 0 ? 0 : SF_EOF;
 
     if (disc && disc->exceptf) {	/* let the stream be generally accessible for this duration */
 	if (local && lock)
@@ -89,7 +89,7 @@ int _sfexcept(Sfio_t * f, int type, ssize_t io, Sfdisc_t * disc)
 
 	/* a normal interrupt, we can continue */
 	errno = 0;
-	f->flags &= (unsigned short)~(SF_EOF | SF_ERROR);
+	f->flags &= (unsigned short)~SF_EOF;
 	SFMTXRETURN(f, SF_ECONT);
     }
 

@@ -125,7 +125,7 @@ ssize_t sfwr(Sfio_t * f, const void * buf, size_t n,
 	    SFMTXRETURN(f, (ssize_t) 0);
 
 	/* clear current error states */
-	f->flags &= (unsigned short)~(SF_EOF | SF_ERROR);
+	f->flags &= (unsigned short)~SF_EOF;
 
 	dc = disc;
 	if (f->flags & SF_STRING)	/* total required buffer */
@@ -139,7 +139,6 @@ ssize_t sfwr(Sfio_t * f, const void * buf, size_t n,
 		if ((rv = _sfexcept(f, SF_WRITE, n, dc)) > 0)
 		    n = rv;
 		else if (rv < 0) {
-		    f->flags |= SF_ERROR;
 		    SFMTXRETURN(f, rv);
 		}
 	    }

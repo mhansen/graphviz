@@ -127,7 +127,6 @@ extern "C" {
 #define SF_LINE		0000040	/* line buffering                       */
 #define SF_SHARE	0000100	/* stream with shared file descriptor   */
 #define SF_EOF		0000200	/* eof was detected                     */
-#define SF_ERROR	0000400	/* an error happened                    */
 #define SF_STATIC	0001000	/* a stream that cannot be freed        */
 #define SF_IOCHECK	0002000	/* call exceptf before doing IO         */
 #define SF_PUBLIC	0004000	/* SF_SHARE and follow physical seek    */

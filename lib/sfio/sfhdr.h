@@ -550,13 +550,6 @@ extern "C" {
     extern int _sfsetpool(Sfio_t *);
     extern char *_sfcvt(void *, int, int *, int *, int);
 
-#ifdef _WIN32
-#undef SF_ERROR
-#include <io.h>
-#define SF_ERROR	0000400	/* an error happened                    */
-#else
-#endif /* _WIN32 */
-
 #ifdef __cplusplus
 }
 #endif
