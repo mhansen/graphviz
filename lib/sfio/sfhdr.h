@@ -542,7 +542,7 @@ extern "C" {
     extern Sfextern_t _Sfextern;
     extern Sftab_t _Sftable;
 
-    extern int _sfpopen(Sfio_t *, int, int, int);
+    extern int _sfpopen(Sfio_t *, int, int);
     extern int _sfpclose(Sfio_t *);
     extern int _sfmode(Sfio_t *, int, int);
     extern int _sfexcept(Sfio_t *, int, ssize_t, Sfdisc_t *);

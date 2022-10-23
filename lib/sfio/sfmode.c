@@ -160,10 +160,8 @@ Sfrsrv_t *_sfrsrv(Sfio_t * f, ssize_t size)
  * @param f
  * @param fd
  * @param pid
- * @param stdio stdio popen() does not reset SIGPIPE handler
  */
-int _sfpopen(Sfio_t * f, int fd, int pid, int stdio)
-{
+int _sfpopen(Sfio_t *f, int fd, int pid) {
     Sfproc_t *p;
 
     if (f->proc)
@@ -176,7 +174,7 @@ int _sfpopen(Sfio_t * f, int fd, int pid, int stdio)
     p->size = p->ndata = 0;
     p->rdata = NULL;
     p->file = fd;
-    p->sigp = (!stdio && pid >= 0 && (f->flags & SF_WRITE)) ? 1 : 0;
+    p->sigp = (pid >= 0 && (f->flags & SF_WRITE)) ? 1 : 0;
 
 #ifdef SIGPIPE			/* protect from broken pipe signal */
     if (p->sigp) {

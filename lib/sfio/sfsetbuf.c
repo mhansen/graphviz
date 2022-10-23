@@ -179,7 +179,7 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
 
 		/* initialize side buffer for r+w unseekable streams */
 		if (!f->proc && (f->bits & SF_BOTH))
-		    (void) _sfpopen(f, -1, -1, 0);
+		    (void) _sfpopen(f, -1, -1);
 	    }
 	}
 
