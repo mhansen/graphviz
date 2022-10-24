@@ -33,7 +33,6 @@ extern "C" {
 	struct _sfdisc_s*	disc;	/* discipline			*/ \
 	struct _sfpool_s*	pool;	/* the pool containing this	*/ \
 	struct _sfrsrv_s*	rsrv;	/* reserved buffer		*/ \
-	struct _sfproc_s*	proc;	/* coprocess id, etc.		*/ \
 	Sfoff_t			lpos;	/* last seek position		*/ \
 	size_t			iosz;	/* prefer size for I/O          */
 
@@ -69,7 +68,6 @@ extern "C" {
 	  (struct _sfdisc_s*)(disc),			/* disc		*/ \
 	  (struct _sfpool_s*)0,				/* pool		*/ \
 	  (struct _sfrsrv_s*)0,				/* rsrv		*/ \
-	  (struct _sfproc_s*)0,				/* proc		*/ \
 	  (Sfoff_t)0,					/* lpos		*/ \
 	  (size_t)0					/* iosz		*/ \
 	}
@@ -95,7 +93,6 @@ extern "C" {
 	  (f)->disc = (struct _sfdisc_s*)0,		/* disc		*/ \
 	  (f)->pool = (struct _sfpool_s*)0,		/* pool		*/ \
 	  (f)->rsrv = (struct _sfrsrv_s*)0,		/* rsrv		*/ \
-	  (f)->proc = (struct _sfproc_s*)0,		/* proc		*/ \
 	  (f)->lpos = (Sfoff_t)0,			/* lpos		*/ \
 	  (f)->iosz = (size_t)0				/* iosz		*/ \
 	)

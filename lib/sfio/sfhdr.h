@@ -192,17 +192,6 @@ extern "C" {
 	uchar data[1];		/* data buffer                  */
     };
 
-/* co-process structure */
-    typedef struct _sfproc_s Sfproc_t;
-    struct _sfproc_s {
-	int pid;		/* process id                   */
-	uchar *rdata;		/* read data being cached       */
-	int ndata;		/* size of cached data          */
-	int size;		/* buffer size                  */
-	int file;		/* saved file descriptor        */
-	int sigp;		/* sigpipe protection needed    */
-    };
-
 /* extensions to sfvprintf/sfvscanf */
 #define FP_SET(fp,fn)	(fp < 0 ? (fn += 1) : (fn = fp) )
 #define FP_WIDTH	0
@@ -541,8 +530,6 @@ extern "C" {
     extern Sfextern_t _Sfextern;
     extern Sftab_t _Sftable;
 
-    extern int _sfpopen(Sfio_t *, int, int);
-    extern int _sfpclose(Sfio_t *);
     extern int _sfmode(Sfio_t *, int, int);
     extern int _sfexcept(Sfio_t *, int, ssize_t, Sfdisc_t *);
     extern Sfrsrv_t *_sfrsrv(Sfio_t *, ssize_t);

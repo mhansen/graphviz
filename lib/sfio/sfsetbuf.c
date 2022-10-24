@@ -84,11 +84,6 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
     else {
 	int rv;
 
-	/* make sure there is no hidden read data */
-	if (f->proc && (f->flags & SF_READ) && (f->mode & SF_WRITE) &&
-	    _sfmode(f, SF_READ, local) < 0)
-	    SFMTXRETURN(f, NULL);
-
 	/* synchronize first */
 	SFLOCK(f, local);
 	rv = SFSYNC(f);
@@ -189,10 +184,6 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
 #endif
 		    errno = oerrno;
 		}
-
-		/* initialize side buffer for r+w unseekable streams */
-		if (!f->proc && (f->bits & SF_BOTH))
-		    (void) _sfpopen(f, -1, -1);
 	    }
 	}
 

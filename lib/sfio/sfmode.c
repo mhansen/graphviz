@@ -11,9 +11,6 @@
 #include	<sfio/sfhdr.h>
 #include	<stddef.h>
 #include <stdint.h>
-#ifndef _WIN32
-#include <sys/wait.h>
-#endif
 
 /*	Functions to set a given stream to some desired mode
 **
@@ -33,13 +30,6 @@
 **		09/09/1999 (thread-safe)
 **		02/01/2001 (adaptive buffering)
 */
-
-/* the below is for protecting the application from SIGPIPE */
-#include		<signal.h>
-typedef void (*Sfsignal_f) (int);
-#ifdef SIGPIPE
-static int _Sfsigp = 0;		/* # of streams needing SIGPIPE protection */
-#endif
 
 /* done at exiting time */
 static void _sfcleanup(void)
@@ -154,122 +144,6 @@ Sfrsrv_t *_sfrsrv(Sfio_t * f, ssize_t size)
 	rsrv->slen = 0;
 
     return size >= 0 ? rsrv : NULL;
-}
-
-/**
- * @param f
- * @param fd
- * @param pid
- */
-int _sfpopen(Sfio_t *f, int fd, int pid) {
-    Sfproc_t *p;
-
-    if (f->proc)
-	return 0;
-
-    if (!(p = f->proc = malloc(sizeof(Sfproc_t))))
-	return -1;
-
-    p->pid = pid;
-    p->size = p->ndata = 0;
-    p->rdata = NULL;
-    p->file = fd;
-    p->sigp = (pid >= 0 && (f->flags & SF_WRITE)) ? 1 : 0;
-
-#ifdef SIGPIPE			/* protect from broken pipe signal */
-    if (p->sigp) {
-	Sfsignal_f handler;
-
-	if ((handler = signal(SIGPIPE, SIG_IGN)) != SIG_DFL && handler != SIG_IGN)
-	    signal(SIGPIPE, handler);	/* honor user handler */
-	_Sfsigp += 1;
-    }
-#endif
-
-    return 0;
-}
-
-/**
- * @param f stream to close
- */
-int _sfpclose(Sfio_t * f)
-{
-    Sfproc_t *p;
-    int pid = 0, status;
-
-    if (!(p = f->proc))
-	return -1;
-    f->proc = NULL;
-
-    free(p->rdata);
-
-    if (p->pid < 0)
-	status = 0;
-    else {			/* close the associated stream */
-	if (p->file >= 0)
-	    CLOSE(p->file);
-
-	/* wait for process termination */
-#ifndef _WIN32
-	while ((pid = waitpid(p->pid, &status, 0)) == -1
-	       && errno == EINTR);
-#endif
-	if (pid < 0)
-	    status = -1;
-
-#ifdef SIGPIPE
-	if (p->sigp && (_Sfsigp -= 1) <= 0) {
-	    Sfsignal_f handler;
-	    if ((handler = signal(SIGPIPE, SIG_DFL)) != SIG_DFL && handler != SIG_IGN)
-		signal(SIGPIPE, handler);	/* honor user handler */
-	    _Sfsigp = 0;
-	}
-#endif
-    }
-
-    free(p);
-    return status;
-}
-
-static int _sfpmode(Sfio_t * f, int type)
-{
-    Sfproc_t *p;
-
-    if (!(p = f->proc))
-	return -1;
-
-    if (type == SF_WRITE) {	/* save unread data */
-	p->ndata = f->endb - f->next;
-	if (p->ndata > p->size) {
-	    free(p->rdata);
-	    if ((p->rdata = malloc(p->ndata)))
-		p->size = p->ndata;
-	    else {
-		p->size = 0;
-		return -1;
-	    }
-	}
-	if (p->ndata > 0)
-	    memcpy(p->rdata, f->next, p->ndata);
-	f->endb = f->data;
-    } else {			/* restore read data */
-	if (p->ndata > f->size)	/* may lose data!!! */
-	    p->ndata = f->size;
-	if (p->ndata > 0) {
-	    memcpy(f->data, p->rdata, p->ndata);
-	    f->endb = f->data + p->ndata;
-	    p->ndata = 0;
-	}
-    }
-
-    /* switch file descriptor */
-    if (p->pid >= 0) {
-	type = f->file;
-	f->file = p->file;
-	p->file = type;
-    }
-
-    return 0;
 }
 
 /**
@@ -390,10 +264,6 @@ int _sfmode(Sfio_t * f, int wanted, int local)
 	f->next = f->endr = f->endw = f->endb = f->data;
 	f->mode = SF_READ | SF_LOCK;
 
-	/* restore saved read data for coprocess */
-	if (f->proc && _sfpmode(f, wanted) < 0)
-	    goto err_notify;
-
 	break;
 
     case (SF_READ | SF_SYNCED):	/* a previously sync-ed read stream */
@@ -427,10 +297,6 @@ int _sfmode(Sfio_t * f, int wanted, int local)
 	    f->mode = SF_WRITE | SF_LOCK;
 	    break;
 	}
-
-	/* save unread data before switching mode */
-	if (f->proc && _sfpmode(f, wanted) < 0)
-	    goto err_notify;
 
 	/* reset buffer and seek pointer */
 	if (!(f->mode & SF_SYNCED)) {
