@@ -186,14 +186,16 @@ gv_perl.cpp: gv.i
 	$(SWIG) -c++ $(SWIG_PERL_OPT) -o $@ $(srcdir)/gv.i
 
 pkgphpdir = $(pkglibdir)/php
-PHP_data = gv.php
+PHP_data = $(SWIG_PHP_DATA)
 nodist_libgv_php_la_SOURCES = gv_php.cpp php_gv.h
 libgv_php_la_SOURCES = $(BASESOURCES) gv_php_init.c
 libgv_php_la_LIBADD = $(BASELIBS) $(PHP_LIBS)
 libgv_php_la_LDFLAGS = -module -avoid-version
 libgv_php_la_CPPFLAGS = $(BASECPPFLAGS) $(PHP_INCLUDES:-I%=-isystem%)
 libgv_php_la_CXXFLAGS = $(AM_CXXFLAGS) -Wno-unused-label -Wno-unused-parameter
+if WITH_SWIG_PHP_DATA
 gv.php: gv_php.cpp
+endif
 php_gv.h: gv_php.cpp
 gv_php.cpp: gv.i
 	$(SWIG) -c++ $(SWIG_PHP_OPT) -o $@ $(srcdir)/gv.i

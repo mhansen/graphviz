@@ -558,6 +558,13 @@ else
         fi
       fi
     fi
+    AX_COMPARE_VERSION([$SWIG_VERSION], [lt], [4.1.0], [
+      SWIG_PHP_DATA=gv.php
+    ], [
+      # SWIG ≥ 4.1.0 no longer generates any PHP code for the bindings
+      SWIG_PHP_DATA=
+    ])
+    AC_SUBST([SWIG_PHP_DATA])
     if test "x$SWIG" = "x"; then
       AC_MSG_WARN([The version of swig is too old.])
       use_swig="No (swig too old)"
@@ -567,6 +574,8 @@ else
   fi
 fi
 AM_CONDITIONAL(WITH_SWIG, [test "x$SWIG" != "x"])
+AM_CONDITIONAL(WITH_SWIG_PHP_DATA,
+               [test "x$SWIG" != "x" -a "x$SWIG_PHP_DATA" != "x"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for C#

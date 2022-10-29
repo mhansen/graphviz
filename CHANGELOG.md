@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.1)]
 
+### Added
+
+- SWIG 4.1.0 is now supported in the Autotools build system. #2277, #2303
+
 ### Changed
 
 - When built with zlib support, Graphviz will unconditionally use
