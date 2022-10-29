@@ -898,7 +898,6 @@ else
 	        for l in "$lua_suffix" "" "53" "5.3" "52" "5.2" "51" "5.1" "50" "5.0" ; do
 	            pkgconfig_lua_found=`$PKG_CONFIG --exists lua$l 2>/dev/null`
 	            if test "x$?" = "x0" ; then
-		        LUA_VERSION=`$PKG_CONFIG --modversion lua$l`
                         LUA_INCLUDES="$LUA_CFLAGS "`$PKG_CONFIG --cflags lua$l`
                         LUA_LIBS="$LUA_LFLAGS "`$PKG_CONFIG --libs lua$l`
 		        LUA_INSTALL_DIR="/usr/lib$LIBPOSTFIX/lua/`$PKG_CONFIG --variable=V lua`"
@@ -922,7 +921,6 @@ else
 	        echo
                 LUA_INCLUDES=`$LUACONFIG --include`
                 LUA_LIBS=`$LUACONFIG --libs`
-	        LUA_VERSION="5.0.x"
 	        LUA_INSTALL_DIR="/usr/lib$LIBPOSTFIX/lua/5.0"
             fi
         fi
@@ -938,8 +936,6 @@ else
             for l in "$lua_suffix" "" "52" "5.2" "51" "5.1" "50" "5.0" ; do
                 AC_CHECK_LIB(lua$l,lua_call,ac_found_lua_lib="yes",ac_found_lua_lib="no")
                 if test "x$ac_found_lua_lib" = "xyes" ; then
-	            LUA_VERSION=">=5.1.0"
-
 	            LUA_LIBS="$LDFLAGS -llua$l -lm"
 
 		    ac2_save_LDFLAGS="$LDFLAGS"
@@ -951,8 +947,6 @@ else
 
 		    AC_CHECK_LIB(lualib$l,luaL_openlib,ac_found_liblua_lib="yes",ac_found_liblua_lib="no")
 		    if test "x$ac_found_liblua_lib" = "xyes" ; then
-		       LUA_VERSION="5.0.x"
-
 		       LUA_LIBS="$LUA_LFLAGS -llualib$l"
 
 		       if echo "$host_os" | grep "^linux" 1>/dev/null 2>&1 ; then
