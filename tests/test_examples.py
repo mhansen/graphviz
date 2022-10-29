@@ -3,13 +3,12 @@
 import os
 from pathlib import Path
 import platform
-import shutil
 import subprocess
 import sys
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import run_c #pylint: disable=wrong-import-position
+from gvtest import run_c, which #pylint: disable=wrong-import-position
 
 @pytest.mark.parametrize("src", ["demo.c", "dot.c", "example.c", "neatopack.c",
   "simple.c"])
@@ -43,7 +42,7 @@ def test_compile_example(src):
   "addranks", "anon", "bb", "chkclusters", "cliptree", "col", "color",
   "dechain", "deledges", "delnodes", "dijkstra", "get-layers-list", "knbhd",
   "maxdeg", "rotate", "scalexy", "topon"])
-@pytest.mark.skipif(shutil.which("gvpr") is None, reason="GVPR not available")
+@pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
 def test_gvpr_example(src):
   """check GVPR can parse the given example"""
 
@@ -64,7 +63,7 @@ def test_gvpr_example(src):
   # run GVPR with the given script
   subprocess.check_call(["gvpr", "-f", path], stdin=subprocess.DEVNULL, cwd=wd)
 
-@pytest.mark.skipif(shutil.which("gvpr") is None, reason="GVPR not available")
+@pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
 # FIXME: Remove skip when
 # https://gitlab.com/graphviz/graphviz/-/issues/1882 is fixed
 @pytest.mark.skipif(

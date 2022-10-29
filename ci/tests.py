@@ -7,14 +7,13 @@ test cases that are only relevant to run in CI
 import os
 from pathlib import Path
 import platform
-import shutil
 import subprocess
 import sys
 from typing import Dict
 import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../tests"))
-from gvtest import dot, is_cmake, is_mingw \
+from gvtest import dot, is_cmake, is_mingw, which \
   #pylint: disable=wrong-import-position
 
 def _freedesktop_os_release() -> Dict[str, str]:
@@ -177,13 +176,13 @@ def test_existence(binary: str):
     check_that_tool_does_not_exist(binary, os_id)
     pytest.skip(f"{binary} is not installed on Windows")
 
-  assert shutil.which(binary) is not None
+  assert which(binary) is not None
 
 def check_that_tool_does_not_exist(tool, os_id):
   """
   validate that the given tool does *not* exist
   """
-  assert shutil.which(tool) is None, f"{tool} has been resurrected in the " \
+  assert which(tool) is None, f"{tool} has been resurrected in the " \
     f'{os.getenv("build_system")} build on {os_id}. Please remove skip.'
 
 @pytest.mark.xfail(is_cmake() and not is_centos()

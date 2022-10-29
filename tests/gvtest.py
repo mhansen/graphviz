@@ -104,8 +104,7 @@ def dot(T: str, source_file: Optional[Path] = None, source: Optional[str] = None
 def gvpr(program: Path) -> str:
   """run a GVPR program on empty input"""
 
-  assert shutil.which("gvpr") is not None, \
-    "attempt to run GVPR without it available"
+  assert which("gvpr") is not None, "attempt to run GVPR without it available"
 
   return subprocess.check_output(["gvpr", "-f", program],
                                  stdin=subprocess.DEVNULL,
@@ -167,3 +166,33 @@ def run_c(src: Path, args: List[str] = None, input: str = "",
     p.check_returncode()
 
     return p.stdout, p.stderr
+
+def which(cmd: str) -> Optional[Path]:
+  """
+  `shutil.which` but only return results that are adjacent to the main Graphviz
+  executable.
+
+  Graphviz has numerous optional components. So if you choose to e.g. disable
+  `mingle` during compilation and installation, you may find that a naive
+  `shutil.which("mingle")` after this returns the `mingle` from a prior
+  system-wide installation of the full Graphviz. This is undesirable during
+  testing, as this older `mingle` will then load shared libraries from the
+  installation you just created, most likely crashing.
+  """
+
+  # try a straightforward lookup of the command
+  abs_cmd = shutil.which(cmd)
+  if abs_cmd is None:
+    return None
+  abs_cmd = Path(abs_cmd)
+
+  # where does the main Graphviz program live?
+  abs_dot = shutil.which("dot")
+  assert abs_dot is not None, "dot not in $PATH"
+  abs_dot = Path(abs_dot)
+
+  # discard the result we found if it does not live in the same directory
+  if abs_cmd.parent != abs_dot.parent:
+    return None
+
+  return abs_cmd
