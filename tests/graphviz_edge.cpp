@@ -20,17 +20,19 @@ void GraphvizEdge::add_outline_overlap_bbox(const GraphvizNode &node,
 
 static const std::unordered_set<std::string_view>
     supported_primitive_arrow_shapes = {
-        "box",    //
-        "dot",    //
-        "inv",    //
-        "normal", //
+        "box",     //
+        "diamond", //
+        "dot",     //
+        "inv",     //
+        "normal",  //
 };
 
 static const std::unordered_set<std::string_view>
     polygon_based_primitive_arrow_shapes = {
-        "box",    //
-        "inv",    //
-        "normal", //
+        "box",     //
+        "diamond", //
+        "inv",     //
+        "normal",  //
 };
 
 static const std::unordered_set<std::string_view>

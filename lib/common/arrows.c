@@ -10,6 +10,7 @@
 
 
 #include <assert.h>
+#include <common/geomprocs.h>
 #include <common/render.h>
 #include <math.h>
 #include <stdbool.h>
@@ -125,6 +126,7 @@ static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, 
 static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_normal(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_box(double lenfact, double arrowsize, double penwidth, int flag);
+static double arrow_length_diamond(double lenfact, double arrowsize, double penwidth, int flag);
 static double arrow_length_dot(double lenfact, double arrowsize, double penwidth, int flag);
 
 static const arrowtype_t Arrowtypes[] = {
@@ -132,7 +134,7 @@ static const arrowtype_t Arrowtypes[] = {
     {ARR_TYPE_CROW, 1.0, arrow_type_crow, arrow_length_generic},
     {ARR_TYPE_TEE, 0.5, arrow_type_tee, arrow_length_generic},
     {ARR_TYPE_BOX, 1.0, arrow_type_box, arrow_length_box},
-    {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond, arrow_length_generic},
+    {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond, arrow_length_diamond},
     {ARR_TYPE_DOT, 0.8, arrow_type_dot, arrow_length_dot},
     {ARR_TYPE_CURVE, 1.0, arrow_type_curve, arrow_length_generic},
     {ARR_TYPE_GAP, 0.5, arrow_type_gap, arrow_length_generic},
@@ -744,12 +746,9 @@ static pointf arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, 
     return q;
 }
 
-static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag)
+static pointf arrow_type_diamond0(pointf p, pointf u, double penwidth, int flag, pointf* a)
 {
-    (void)arrowsize;
-    (void)penwidth;
-
-    pointf q, r, v, a[5];
+    pointf q, r, v;
 
     v.x = -u.y / 3.;
     v.y = u.x / 3.;
@@ -757,12 +756,44 @@ static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsi
     r.y = p.y + u.y / 2.;
     q.x = p.x + u.x;
     q.y = p.y + u.y;
+
+    const pointf origin = {0, 0};
+    const pointf unmod_left = sub_pointf(scale(-0.5, u), v);
+    const pointf unmod_right = add_pointf(scale(-0.5, u), v);
+    const pointf base_left = flag & ARR_MOD_RIGHT ? origin : unmod_left;
+    const pointf base_right = flag & ARR_MOD_LEFT ? origin : unmod_right;
+    const pointf tip = scale(-1, u);
+    const pointf P = tip;
+
+    const pointf P3 = miter_point(base_left, P, base_right, penwidth);
+
+    const pointf delta = sub_pointf(P3, P);
+
+    // move the arrow backwards to not visually overlap the node
+    p = sub_pointf(p, delta);
+    r = sub_pointf(r, delta);
+    q = sub_pointf(q, delta);
+
     a[0] = a[4] = q;
     a[1].x = r.x + v.x;
     a[1].y = r.y + v.y;
     a[2] = p;
     a[3].x = r.x - v.x;
     a[3].y = r.y - v.y;
+
+    // return the visual starting point of the arrow outline
+    q = sub_pointf(q, delta);
+
+    return q;
+}
+
+static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag) {
+    (void)arrowsize;
+
+    pointf a[5];
+
+    pointf q = arrow_type_diamond0(p, u, penwidth, flag, a);
+
     if (flag & ARR_MOD_LEFT)
 	gvrender_polygon(job, &a[2], 3, !(flag & ARR_MOD_OPEN));
     else if (flag & ARR_MOD_RIGHT)
@@ -986,8 +1017,7 @@ static double arrow_length_normal(double lenfact, double arrowsize,
   assert(full_base_width > 0 && "non-positive full base width");
 
   // we want a small overlap between the edge path (stem) and the arrow to avoid
-  // gaps beetween them in case the arrow has a sharp corner towards the edge
-  // path
+  // gaps beetween them in case the arrow has a corner towards the edge path
   const double overlap_at_base = penwidth / 2;
   // overlap the tip to a point where its width is equal to the penwidth.
   const double length_where_width_is_penwidth =
@@ -1010,6 +1040,47 @@ static double arrow_length_box(double lenfact, double arrowsize,
   // into account at the end point.
 
   return lenfact * arrowsize * ARROW_LENGTH + penwidth / 2;
+}
+
+static double arrow_length_diamond(double lenfact, double arrowsize,
+				   double penwidth, int flag) {
+  pointf a[5];
+  // set arrow end point at origin
+  const pointf p = {0, 0};
+  // generate an arrowhead vector along x-axis
+  const pointf u = {lenfact * arrowsize * ARROW_LENGTH, 0};
+
+  // arrow start point
+  pointf q = arrow_type_diamond0(p, u, penwidth, flag, a);
+
+  // calculate overlap using a triangle with its base at the left and right
+  // corners of the diamond and its tip at the end point
+  const pointf base1 = a[3];
+  const pointf base2 = a[1];
+  const pointf tip = a[2];
+  const double full_length = q.x / 2;
+  assert(full_length > 0 && "non-positive full length");
+  const double nominal_length = fabs(base1.x - tip.x);
+  const double nominal_base_width = base2.y - base1.y;
+  assert(nominal_base_width > 0 && "non-positive nominal base width");
+  // the full base width is proportionally scaled with the length
+  const double full_base_width =
+      nominal_base_width * full_length / nominal_length;
+  assert(full_base_width > 0 && "non-positive full base width");
+
+  // we want a small overlap between the edge path (stem) and the arrow to avoid
+  // gaps beetween them in case the arrow has a corner towards the edge path
+
+  // overlap the tip to a point where its width is equal to the penwidth
+  const double length_where_width_is_penwidth =
+      full_length * penwidth / full_base_width;
+  const double overlap_at_tip = length_where_width_is_penwidth;
+
+  const double overlap = overlap_at_tip;
+
+  // arrow length is the x value of the start point since the arrow points along
+  // the positive x axis and ends at origin
+  return 2 * full_length - overlap;
 }
 
 static double arrow_length_dot(double lenfact, double arrowsize,

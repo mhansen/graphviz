@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.1)]
 
+### Fixed
+
+- Failure of arrowhead and arrowtail to respect penwidth #372 \
+  Fixed also for the `diamond` [edge arrow shape](https://graphviz.org/doc/info/arrows.html#primitive-shapes).
+
 ## [7.0.0] – 2022-10-22
 
 ### Changed
