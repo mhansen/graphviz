@@ -27,7 +27,6 @@ if(with_smyrna)
       smyrna.glade
       template.dot
       zoom.png
-      zoom.png
       zoom.raw
       zoom_in.png
       zoom_out.png
