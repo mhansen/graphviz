@@ -1,7 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
 AM_CPPFLAGS = \
-	-DSMYRNA_PATH='"$(pkgdatadir)/smyrna"' \
 	-I$(top_srcdir)/lib \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt \

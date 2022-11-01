@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Failure of arrowhead and arrowtail to respect penwidth #372 \
   Fixed also for the `diamond` [edge arrow shape](https://graphviz.org/doc/info/arrows.html#primitive-shapes).
+- The CMake build system no longer uses the final install location as the
+  staging area for example graphs and templates during `cpack`. This bug was
+  introduced in Graphviz 4.0.0. #2232
 
 ## [7.0.0] – 2022-10-22
 
