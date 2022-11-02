@@ -89,7 +89,6 @@ typedef struct {
     gv_stack_t elements;
     int closedElementType;
     int edgeinverted;
-    Dt_t *nameMap;
 } userdata_t;
 
 static Agraph_t *root;		/* root graph */
@@ -100,34 +99,6 @@ static Agedge_t *E;		/* Set if Current_class == TAG_EDGE */
 
 static gv_stack_t Gstack;
 
-typedef struct {
-    Dtlink_t link;
-    char *name;
-    char *unique_name;
-} namev_t;
-
-static namev_t *make_nitem(Dt_t * d, namev_t * objp, Dtdisc_t * disc)
-{
-    namev_t *np = gv_alloc(sizeof(*np));
-    np->name = objp->name;
-    np->unique_name = 0;
-    return np;
-}
-
-static void free_nitem(Dt_t * d, namev_t * np, Dtdisc_t * disc)
-{
-    free(np->unique_name);
-    free(np);
-}
-
-static Dtdisc_t nameDisc = {
-    .key = offsetof(namev_t, name),
-    .size = -1,
-    .link = offsetof(namev_t, link),
-    .makef = (Dtmake_f)make_nitem,
-    .freef = (Dtfree_f)free_nitem,
-};
-
 static userdata_t *genUserdata(char* dfltname)
 {
     userdata_t *user = gv_alloc(sizeof(*user));
@@ -135,34 +106,13 @@ static userdata_t *genUserdata(char* dfltname)
     user->closedElementType = TAG_NONE;
     user->edgeinverted = FALSE;
     user->gname = dfltname;
-    user->nameMap = dtopen(&nameDisc, Dtoset);
     return user;
 }
 
 static void freeUserdata(userdata_t * ud)
 {
-    dtclose(ud->nameMap);
     freeString(&ud->elements);
     free(ud);
-}
-
-static void addToMap(Dt_t * map, char *name, char *uniqueName)
-{
-    namev_t obj;
-    namev_t *objp;
-
-    obj.name = name;
-    objp = dtinsert(map, &obj);
-    assert(objp->unique_name == 0);
-    objp->unique_name = gv_strdup(uniqueName);
-}
-
-static char *mapLookup(Dt_t *nm, const char *name) {
-    namev_t *objp = dtmatch(nm, name);
-    if (objp)
-	return objp->unique_name;
-    else
-	return 0;
 }
 
 static int isAnonGraph(const char *name) {
@@ -234,34 +184,7 @@ static int get_xml_attr(char *attrname, const char **atts)
     return -1;
 }
 
-static void setName(Dt_t * names, Agobj_t * n, char *value)
-{
-    Agsym_t *ap;
-    char *oldName;
-
-    ap = agattr(root, AGTYPE(n), GRAPHML_ID, "");
-    agxset(n, ap, agnameof(n));
-    oldName = agxget(n, ap);	/* set/get gives us new copy */
-    addToMap(names, oldName, value);
-    agrename(n, value);
-}
-
 static char *defval = "";
-
-static void
-setNodeAttr(Agnode_t * np, char *name, char *value, userdata_t * ud)
-{
-    Agsym_t *ap;
-
-    if (strcmp(name, "name") == 0) {
-	setName(ud->nameMap, (Agobj_t *) np, value);
-    } else {
-	ap = agattr(root, AGNODE, name, 0);
-	if (!ap)
-	    ap = agattr(root, AGNODE, name, defval);
-	agxset(np, ap, value);
-    }
-}
 
 static void
 setEdgeAttr(Agedge_t * ep, char *name, char *value, userdata_t * ud)
@@ -292,43 +215,6 @@ setEdgeAttr(Agedge_t * ep, char *name, char *value, userdata_t * ud)
 	if (!ap)
 	    ap = agattr(root, AGEDGE, name, defval);
 	agxset(ep, ap, value);
-    }
-}
-
-static void
-setGraphAttr(Agraph_t * g, char *name, char *value, userdata_t * ud)
-{
-    Agsym_t *ap;
-
-    if ((g == root) && !strcmp(name, "strict") && !strcmp(value, "true")) {
-	g->desc.strict = 1;
-    } else if (strcmp(name, "name") == 0)
-	setName(ud->nameMap, (Agobj_t *) g, value);
-    else {
-	ap = agattr(root, AGRAPH, name, 0);
-	if (ap)
-	    agxset(g, ap, value);
-	else if (g == root)
-	    agattr(root, AGRAPH, name, value);
-	else {
-	    ap = agattr(root, AGRAPH, name, defval);
-	    agxset(g, ap, value);
-	}
-    }
-}
-
-static void setAttr(char *name, char *value, userdata_t * ud)
-{
-    switch (Current_class) {
-    case TAG_GRAPH:
-	setGraphAttr(G, name, value, ud);
-	break;
-    case TAG_NODE:
-	setNodeAttr(N, name, value, ud);
-	break;
-    case TAG_EDGE:
-	setEdgeAttr(E, name, value, ud);
-	break;
     }
 }
 
@@ -418,14 +304,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	if (pos > 0)
 	    head = atts[pos];
 
-	tname = mapLookup(ud->nameMap, tail);
-	if (tname)
-	    tail = tname;
-
-	tname = mapLookup(ud->nameMap, head);
-	if (tname)
-	    head = tname;
-
         if (G == 0)
             fprintf(stderr,"edge source %s target %s outside graph, ignored\n",tail,head);
         else {
@@ -476,14 +354,7 @@ static void endElementHandler(void *userData, const char *name)
 	E = 0;
 	ud->closedElementType = TAG_EDGE;
 	ud->edgeinverted = FALSE;
-    } else if (strcmp(name, "attr") == 0) {
-	char *name = "";
-	char *value = "";
-
-	ud->closedElementType = TAG_NONE;
-
-	setAttr(name, value, ud);
-    } 
+    }
 }
 
 static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
