@@ -4,7 +4,14 @@
 
 #include <rapidxml_ns/rapidxml_ns.hpp>
 #include <svgpp/policy/xml/rapidxml_ns.hpp>
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated"
+#endif
 #include <svgpp/svgpp.hpp>
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 #include "svgpp_context.h"
 #include "svgpp_document_traverser.h"
