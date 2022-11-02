@@ -165,8 +165,8 @@ layout (Agraph_t* g, int depth)
     pts = putRects (total, gs, &pinfo);
     free (pinfo.vals);
 
-    rootbb.LL = pointfof(INT_MAX, INT_MAX);
-    rootbb.UR = pointfof(-INT_MAX, -INT_MAX);
+    rootbb.LL = (pointf){INT_MAX, INT_MAX};
+    rootbb.UR = (pointf){-INT_MAX, -INT_MAX};
 
     /* reposition children relative to GD_bb(g) */
     for (j = 0; j < total; j++) {

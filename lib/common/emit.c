@@ -2007,8 +2007,8 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
 	return;
 
     sz = lp->dimen;
-    AF[0] = pointfof(lp->pos.x + sz.x / 2., lp->pos.y - sz.y / 2.);
-    AF[1] = pointfof(AF[0].x - sz.x, AF[0].y);
+    AF[0] = (pointf){lp->pos.x + sz.x / 2., lp->pos.y - sz.y / 2.};
+    AF[1] = (pointf){AF[0].x - sz.x, AF[0].y};
     AF[2] = dotneato_closest(spl, lp->pos);
     /* Don't use edge style to draw attachment */
     gvrender_set_style(job, job->gvc->defaultlinestyle);

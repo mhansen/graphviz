@@ -1238,19 +1238,19 @@ makeSimpleFlat (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et
 	pointn = 0;
 	if (et == EDGETYPE_SPLINE || et == EDGETYPE_LINE) {
 	    points[pointn++] = tp;
-	    points[pointn++] = pointfof((2 * tp.x + hp.x) / 3, dy);
-	    points[pointn++] = pointfof((2 * hp.x + tp.x) / 3, dy);
+	    points[pointn++] = (pointf){(2 * tp.x + hp.x) / 3, dy};
+	    points[pointn++] = (pointf){(2 * hp.x + tp.x) / 3, dy};
 	    points[pointn++] = hp;
 	}
 	else {   /* EDGETYPE_PLINE */
 	    points[pointn++] = tp;
 	    points[pointn++] = tp;
-	    points[pointn++] = pointfof((2 * tp.x + hp.x) / 3, dy);
-	    points[pointn++] = pointfof((2 * tp.x + hp.x) / 3, dy);
-	    points[pointn++] = pointfof((2 * tp.x + hp.x) / 3, dy);
-	    points[pointn++] = pointfof((2 * hp.x + tp.x) / 3, dy);
-	    points[pointn++] = pointfof((2 * hp.x + tp.x) / 3, dy);
-	    points[pointn++] = pointfof((2 * hp.x + tp.x) / 3, dy);
+	    points[pointn++] = (pointf){(2 * tp.x + hp.x) / 3, dy};
+	    points[pointn++] = (pointf){(2 * tp.x + hp.x) / 3, dy};
+	    points[pointn++] = (pointf){(2 * tp.x + hp.x) / 3, dy};
+	    points[pointn++] = (pointf){(2 * hp.x + tp.x) / 3, dy};
+	    points[pointn++] = (pointf){(2 * hp.x + tp.x) / 3, dy};
+	    points[pointn++] = (pointf){(2 * hp.x + tp.x) / 3, dy};
 	    points[pointn++] = hp;
 	    points[pointn++] = hp;
 	}

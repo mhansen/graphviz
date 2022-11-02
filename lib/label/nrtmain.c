@@ -20,15 +20,6 @@ static char *progname;
 static int Verbose;
 extern pointf edgeMidpoint(graph_t * g, edge_t * e);
 
-static inline pointf pointfof(double x, double y)
-{
-    pointf r;
-
-    r.x = x;
-    r.y = y;
-    return r;
-}
-
 typedef struct {
     GVC_t *gvc;
     char *infname;
@@ -129,8 +120,8 @@ int doxlabel(opts_t * opts)
     n_lbls = n_nlbls + n_elbls;
     objp = objs = gv_calloc(n_objs, sizeof(object_t));
     xlp = lbls = gv_calloc(n_lbls, sizeof(xlabel_t));
-    bb.LL = pointfof(INT_MAX, INT_MAX);
-    bb.UR = pointfof(-INT_MAX, -INT_MAX);
+    bb.LL = (pointf){INT_MAX, INT_MAX};
+    bb.UR = (pointf){-INT_MAX, -INT_MAX};
 
     for (np = agfstnode(gp); np; np = agnxtnode(gp, np)) {
 	/* Add an obstacle per node */

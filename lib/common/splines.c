@@ -867,11 +867,11 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
         dx += sgn * stepx;
         pointn = 0;
         points[pointn++] = tp;
-        points[pointn++] = pointfof(tp.x + dx, tp.y - ty / 3);
-        points[pointn++] = pointfof(tp.x + dx, np.y - dy);
-        points[pointn++] = pointfof((tp.x+hp.x)/2, np.y - dy);
-        points[pointn++] = pointfof(hp.x - dx, np.y - dy);
-        points[pointn++] = pointfof(hp.x - dx, hp.y - hy / 3);
+        points[pointn++] = (pointf){tp.x + dx, tp.y - ty / 3};
+        points[pointn++] = (pointf){tp.x + dx, np.y - dy};
+        points[pointn++] = (pointf){(tp.x + hp.x) / 2, np.y - dy};
+        points[pointn++] = (pointf){hp.x - dx, np.y - dy};
+        points[pointn++] = (pointf){hp.x - dx, hp.y - hy / 3};
         points[pointn++] = hp;
         if (ED_label(e)) {
 	if (GD_flip(agraphof(agtail(e)))) {
@@ -977,11 +977,11 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
         dx += sgn * stepx;
         pointn = 0;
         points[pointn++] = tp;
-        points[pointn++] = pointfof(tp.x + dx, tp.y + ty / 3);
-        points[pointn++] = pointfof(tp.x + dx, np.y + dy);
-        points[pointn++] = pointfof((tp.x+hp.x)/2, np.y + dy);
-        points[pointn++] = pointfof(hp.x - dx, np.y + dy);
-        points[pointn++] = pointfof(hp.x - dx, hp.y + hy / 3);
+        points[pointn++] = (pointf){tp.x + dx, tp.y + ty / 3};
+        points[pointn++] = (pointf){tp.x + dx, np.y + dy};
+        points[pointn++] = (pointf){(tp.x + hp.x) / 2, np.y + dy};
+        points[pointn++] = (pointf){hp.x - dx, np.y + dy};
+        points[pointn++] = (pointf){hp.x - dx, hp.y + hy / 3};
         points[pointn++] = hp;
         if (ED_label(e)) {
 	    if (GD_flip(agraphof(agtail(e)))) {
@@ -1051,11 +1051,11 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
         dy += sgn * stepy;
         pointn = 0;
         points[pointn++] = tp;
-        points[pointn++] = pointfof(tp.x + tx / 3, tp.y + dy);
-        points[pointn++] = pointfof(np.x + dx, tp.y + dy);
-        points[pointn++] = pointfof(np.x + dx, (tp.y+hp.y)/2);
-        points[pointn++] = pointfof(np.x + dx, hp.y - dy);
-        points[pointn++] = pointfof(hp.x + hx / 3, hp.y - dy);
+        points[pointn++] = (pointf){tp.x + tx / 3, tp.y + dy};
+        points[pointn++] = (pointf){np.x + dx, tp.y + dy};
+        points[pointn++] = (pointf){np.x + dx, (tp.y + hp.y) / 2};
+        points[pointn++] = (pointf){np.x + dx, hp.y - dy};
+        points[pointn++] = (pointf){hp.x + hx / 3, hp.y - dy};
         points[pointn++] = hp;
         if (ED_label(e)) {
 	    if (GD_flip(agraphof(agtail(e)))) {
@@ -1128,11 +1128,11 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
         dy += sgn * stepy;
         pointn = 0;
         points[pointn++] = tp;
-        points[pointn++] = pointfof(tp.x - tx / 3, tp.y + dy);
-        points[pointn++] = pointfof(np.x - dx, tp.y + dy);
-        points[pointn++] = pointfof(np.x - dx, (tp.y+hp.y)/2);
-        points[pointn++] = pointfof(np.x - dx, hp.y - dy);
-        points[pointn++] = pointfof(hp.x - hx / 3, hp.y - dy);
+        points[pointn++] = (pointf){tp.x - tx / 3, tp.y + dy};
+        points[pointn++] = (pointf){np.x - dx, tp.y + dy};
+        points[pointn++] = (pointf){np.x - dx, (tp.y + hp.y) / 2};
+        points[pointn++] = (pointf){np.x - dx, hp.y - dy};
+        points[pointn++] = (pointf){hp.x - hx / 3, hp.y - dy};
 
         points[pointn++] = hp;
         if (ED_label(e)) {
