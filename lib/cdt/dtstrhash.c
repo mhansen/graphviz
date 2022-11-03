@@ -1,4 +1,7 @@
+#include	<assert.h>
 #include	<cdt/dthdr.h>
+#include	<limits.h>
+#include	<string.h>
 
 /* Hashing a string into an unsigned integer.
 ** The basic method is to continuingly accumulate bytes and multiply
@@ -20,7 +23,8 @@ uint dtstrhash(uint h, void* args, int n)
 	if(n <= 0)
 	{	for(; *s != 0; s += s[1] ? 2 : 1)
 			h = (h + ((unsigned)s[0] << 8u) + (unsigned)s[1]) * DT_PRIME;
-		n = s - (unsigned char*)args;
+		assert(strlen(args) <= INT_MAX);
+		n = (int)(s - (unsigned char*)args);
 	}
 	else
 	{	unsigned char*	ends;
