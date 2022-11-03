@@ -175,7 +175,7 @@ static char *arrow_match_shape(char *name, int *flag)
     }
     if (f && !(f & ((1 << BITS_PER_ARROW_TYPE) - 1)))
 	f |= ARR_TYPE_NORM;
-    *flag |= f;
+    *flag = f;
     return rest;
 }
 
