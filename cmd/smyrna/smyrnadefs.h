@@ -121,14 +121,6 @@ typedef struct
     } colorschemaset;
 
     typedef enum {
-	GVE_NONE = -1,
-	GVE_GRAPH,
-	GVE_CLUSTER,
-	GVE_NODE,
-	GVE_EDGE		/* keep last */
-    } gve_element;
-
-    typedef enum {
 	GVK_NONE = -1,
 	GVK_DOT,
 	GVK_NEATO,

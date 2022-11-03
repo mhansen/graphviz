@@ -222,8 +222,7 @@ void mNodeFindSlot(GtkWidget * widget, gpointer user_data)
   (void)user_data;
 }
 
-static void mPropertiesSlot(gve_element element)
-{
+static void mPropertiesSlot(void) {
     if (view->activeGraph >= 0)
 	gtk_widget_hide(glade_xml_get_widget(xml, "frmObject"));
     gtk_widget_show(glade_xml_get_widget(xml, "frmObject"));
@@ -234,7 +233,7 @@ void mClusterPropertiesSlot(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    mPropertiesSlot(GVE_CLUSTER);
+    mPropertiesSlot();
 }
 
 void mNodePropertiesSlot(GtkWidget * widget, gpointer user_data)
@@ -242,7 +241,7 @@ void mNodePropertiesSlot(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    mPropertiesSlot(GVE_NODE);
+    mPropertiesSlot();
 }
 
 void mEdgePropertiesSlot(GtkWidget * widget, gpointer user_data)
@@ -250,7 +249,7 @@ void mEdgePropertiesSlot(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    mPropertiesSlot(GVE_EDGE);
+    mPropertiesSlot();
 }
 
 void mShowCodeSlot(GtkWidget * widget, gpointer user_data)
