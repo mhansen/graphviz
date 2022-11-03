@@ -45,7 +45,7 @@
 #define ARR_MOD_RIGHT     (1<<(BITS_PER_ARROW_TYPE+3))
 /* No spares */
 
-typedef struct arrowdir_t {
+typedef struct {
     char *dir;
     int sflag;
     int eflag;
@@ -59,7 +59,7 @@ static const arrowdir_t Arrowdirs[] = {
     {0}
 };
 
-typedef struct arrowname_t {
+typedef struct {
     char *name;
     int type;
 } arrowname_t;
@@ -106,7 +106,7 @@ static const arrowname_t Arrownames[] = {
     {0}
 };
 
-typedef struct arrowtype_t {
+typedef struct {
     int type;
     double lenfact;		/* ratio of length of this arrow type to standard arrow */
     pointf (*gen) (GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);	/* generator function for type */
