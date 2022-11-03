@@ -33,5 +33,6 @@ uint dtstrhash(uint h, void* args, int n)
 		if(s <= ends)
 			h = (h + ((unsigned)s[0] << 8u)) * DT_PRIME;
 	}
-	return (h+n)*DT_PRIME;
+	assert(n >= 0);
+	return (h + (unsigned)n) * DT_PRIME;
 }
