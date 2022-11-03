@@ -540,24 +540,19 @@ else
   else
     SWIG_VERSION=`$SWIG -version 2>&1 | $EGREP Version | cut -d ' ' -f 3`
     AC_SUBST([SWIG_VERSION])
-    SWIG_VERSION_MAJOR=`echo $SWIG_VERSION | cut -d '.' -f 1`
-    SWIG_VERSION_MINOR=`echo $SWIG_VERSION | cut -d '.' -f 2`
-    SWIG_VERSION_MICRO=`echo $SWIG_VERSION | cut -d '.' -f 3`
-    if test $SWIG_VERSION_MAJOR -lt 2; then
-      if test $SWIG_VERSION_MAJOR -lt 1; then
-        SWIG=
-      else
-        if test $SWIG_VERSION_MINOR -lt 3; then
-          SWIG=
-        else
-          # EL5 has swig-1.3.29 which does not define SWIGJAVA
-          if test $SWIG_VERSION_MICRO -lt 40; then
-            SWIGJAVA_CPPFLAGS=-DSWIGJAVA
-            AC_SUBST([SWIGJAVA_CPPFLAGS])
-          fi
-        fi
-      fi
-    fi
+    AX_COMPARE_VERSION([$SWIG_VERSION], [lt], [1.3.0], [SWIG=])
+    AX_COMPARE_VERSION([$SWIG_VERSION], [lt], [1.3.40], [
+      # EL5 has swig-1.3.29 which does not define SWIGJAVA
+      SWIGJAVA_CPPFLAGS=-DSWIGJAVA
+      AC_SUBST([SWIGJAVA_CPPFLAGS])
+    ])
+    AX_COMPARE_VERSION([$SWIG_VERSION], [lt], [4.1.0], [
+      SWIG_PHP_DATA=gv.php
+    ], [
+      # SWIG ≥ 4.1.0 no longer generates any PHP code for the bindings
+      SWIG_PHP_DATA=
+    ])
+    AC_SUBST([SWIG_PHP_DATA])
     if test "x$SWIG" = "x"; then
       AC_MSG_WARN([The version of swig is too old.])
       use_swig="No (swig too old)"
@@ -567,6 +562,8 @@ else
   fi
 fi
 AM_CONDITIONAL(WITH_SWIG, [test "x$SWIG" != "x"])
+AM_CONDITIONAL(WITH_SWIG_PHP_DATA,
+               [test "x$SWIG" != "x" -a "x$SWIG_PHP_DATA" != "x"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for C#
@@ -691,15 +688,8 @@ else
         GUILE_VERSION_MAJOR=`echo $GUILE_VERSION | cut -d '.' -f 1`
         GUILE_VERSION_MINOR=`echo $GUILE_VERSION | cut -d '.' -f 2`
         AC_CHECK_PROGS(GUILE,guile$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR guile$GUILE_VERSION_MAJOR guile)
-        if test 0$GUILE_VERSION_MAJOR -lt 2; then
-          if test 0$GUILE_VERSION_MAJOR -lt 1; then
-            GUILE_CONFIG=
-          else
-            if test 0$GUILE_VERSION_MINOR -lt 4; then
-	      GUILE_CONFIG=
-            fi
-          fi
-        fi
+        AX_COMPARE_VERSION([0$GUILE_VERSION_MAJOR.0$GUILE_VERSION_MINOR], [lt],
+                           [1.4], [GUILE_CONFIG=])
         if test "x$GUILE_CONFIG" = "x"; then
 	  use_guile="No (guile is too old)"
         else
@@ -908,7 +898,6 @@ else
 	        for l in "$lua_suffix" "" "53" "5.3" "52" "5.2" "51" "5.1" "50" "5.0" ; do
 	            pkgconfig_lua_found=`$PKG_CONFIG --exists lua$l 2>/dev/null`
 	            if test "x$?" = "x0" ; then
-		        LUA_VERSION=`$PKG_CONFIG --modversion lua$l`
                         LUA_INCLUDES="$LUA_CFLAGS "`$PKG_CONFIG --cflags lua$l`
                         LUA_LIBS="$LUA_LFLAGS "`$PKG_CONFIG --libs lua$l`
 		        LUA_INSTALL_DIR="/usr/lib$LIBPOSTFIX/lua/`$PKG_CONFIG --variable=V lua`"
@@ -932,7 +921,6 @@ else
 	        echo
                 LUA_INCLUDES=`$LUACONFIG --include`
                 LUA_LIBS=`$LUACONFIG --libs`
-	        LUA_VERSION="5.0.x"
 	        LUA_INSTALL_DIR="/usr/lib$LIBPOSTFIX/lua/5.0"
             fi
         fi
@@ -948,8 +936,6 @@ else
             for l in "$lua_suffix" "" "52" "5.2" "51" "5.1" "50" "5.0" ; do
                 AC_CHECK_LIB(lua$l,lua_call,ac_found_lua_lib="yes",ac_found_lua_lib="no")
                 if test "x$ac_found_lua_lib" = "xyes" ; then
-	            LUA_VERSION=">=5.1.0"
-
 	            LUA_LIBS="$LDFLAGS -llua$l -lm"
 
 		    ac2_save_LDFLAGS="$LDFLAGS"
@@ -961,8 +947,6 @@ else
 
 		    AC_CHECK_LIB(lualib$l,luaL_openlib,ac_found_liblua_lib="yes",ac_found_liblua_lib="no")
 		    if test "x$ac_found_liblua_lib" = "xyes" ; then
-		       LUA_VERSION="5.0.x"
-
 		       LUA_LIBS="$LUA_LFLAGS -llualib$l"
 
 		       if echo "$host_os" | grep "^linux" 1>/dev/null 2>&1 ; then
@@ -1178,10 +1162,7 @@ else
         if test "x$PYTHON_VERSION" = "x"; then
           PYTHON=
         else
-          PYTHON_VERSION_MAJOR=`echo $PYTHON_VERSION | cut -d '.' -f 1`
-          if test $PYTHON_VERSION_MAJOR -lt 3; then
-            PYTHON=
-          fi
+          AX_COMPARE_VERSION([$PYTHON_VERSION], [lt], [3], [PYTHON=])
         fi
       fi
       if test "x$PYTHON" = "x"; then
@@ -2183,29 +2164,11 @@ if test "x$use_gd" = "x"; then
          GD_FEATURES=`$GDLIB_CONFIG --features`
 
          # GD version check >= 2.0.33  -- centos-5.8 has gd-2.0.33
-         GDLIB_VERSION_MAJOR=`echo $GDLIB_VERSION | cut -d '.' -f 1`
-         GDLIB_VERSION_MINOR=`echo $GDLIB_VERSION | cut -d '.' -f 2`
-         GDLIB_VERSION_MICRO=`echo $GDLIB_VERSION | cut -d '.' -f 3`
-         REQ_GDLIB_VERSION_MAJOR=2
-         REQ_GDLIB_VERSION_MINOR=0
-         REQ_GDLIB_VERSION_MICRO=33
-         if test $GDLIB_VERSION_MAJOR -lt $REQ_GDLIB_VERSION_MAJOR; then
-            use_gd="No (major version too old)"
-         else
-            if test $GDLIB_VERSION_MAJOR -eq $REQ_GDLIB_VERSION_MAJOR; then
-              if test $GDLIB_VERSION_MINOR -lt $REQ_GDLIB_VERSION_MINOR; then
-                 use_gd="No (minor version too old)"
-              else
-                 if test $GDLIB_VERSION_MINOR -eq $REQ_GDLIB_VERSION_MINOR; then
-		            if test $GDLIB_VERSION_MICRO -lt $REQ_GDLIB_VERSION_MICRO; then
-                       use_gd="No (revision too old)"
-		            fi
-	             fi
-	          fi
-           fi
-        fi
+         AX_COMPARE_VERSION([$GDLIB_VERSION], [lt], [2.0.33], [
+           use_gd="No (version too old)"
+         ])
         if test "x$use_gd" != "x"; then
-            AC_MSG_WARN(GD library version $GDLIB_VERSION_MAJOR.$GDLIB_VERSION_MINOR.$GDLIB_VERSION_MICRO < $REQ_GDLIB_VERSION_MAJOR.$REQ_GDLIB_VERSION_MINOR.$REQ_GDLIB_VERSION_MICRO)
+            AC_MSG_WARN(GD library version $GDLIB_VERSION < 2.0.33)
         fi
      else
         AC_MSG_WARN(GD neither gdlib pkgconfig nor gdlib-config was found)
