@@ -107,7 +107,6 @@ static void sameport(node_t * u, elist * l)
     int i;
     double x = 0, y = 0, x1, y1, x2, y2, r;
     port prt;
-    int sflag, eflag;
 
     /* Compute the direction vector (x,y) of the average direction. We compute
        with direction vectors instead of angles because else we have to first
@@ -167,7 +166,6 @@ static void sameport(node_t * u, elist * l)
     /* assign one of the ports to every edge */
     for (i = 0; i < l->size; i++) {
 	e = l->list[i];
-	arrow_flags(e, &sflag, &eflag);
 	for (; e; e = ED_to_virt(e)) {	/* assign to all virt edges of e */
 	    for (f = e; f;
 		 f = ED_edge_type(f) == VIRTUAL &&
