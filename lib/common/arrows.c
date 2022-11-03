@@ -10,6 +10,7 @@
 
 
 #include <assert.h>
+#include <cgraph/startswith.h>
 #include <common/geomprocs.h>
 #include <common/render.h>
 #include <math.h>
@@ -151,7 +152,7 @@ static char *arrow_match_name_frag(char *name, const arrowname_t *arrownames,
     for (const arrowname_t *arrowname = arrownames; arrowname->name;
          arrowname++) {
 	namelen = strlen(arrowname->name);
-	if (strncmp(name, arrowname->name, namelen) == 0) {
+	if (startswith(name, arrowname->name)) {
 	    *flag |= arrowname->type;
 	    rest += namelen;
 	    break;
