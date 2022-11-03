@@ -10,7 +10,6 @@ import os
 from pathlib import Path
 import platform
 import re
-import shutil
 import signal
 import stat
 import subprocess
@@ -21,7 +20,7 @@ import xml.etree.ElementTree as ET
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import dot, gvpr, ROOT, remove_xtype_warnings, run_c \
+from gvtest import dot, gvpr, ROOT, remove_xtype_warnings, run_c, which \
   #pylint: disable=wrong-import-position
 
 def is_ndebug_defined() -> bool:
@@ -120,7 +119,7 @@ def test_131():
   # ask Graphviz to process this to PIC
   pic = dot("pic", source=src)
 
-  if shutil.which("gpic") is None:
+  if which("gpic") is None:
     pytest.skip("GNU PIC not available")
 
   # ask GNU PIC to process the Graphviz output
@@ -316,8 +315,7 @@ def test_358():
     assert m is not None, \
       f"font characteristic {1 << i} not enabled in xdot 1.7"
 
-@pytest.mark.skipif(shutil.which("gv2gxl") is None or
-                    shutil.which("gxl2gv") is None,
+@pytest.mark.skipif(which("gv2gxl") is None or which("gxl2gv") is None,
                     reason="GXL tools not available")
 def test_517():
   """
@@ -429,8 +427,7 @@ def test_1221():
   # process this with dot
   dot("svg", input)
 
-@pytest.mark.skipif(shutil.which("gv2gml") is None,
-                    reason="gv2gml not available")
+@pytest.mark.skipif(which("gv2gml") is None, reason="gv2gml not available")
 def test_1276():
   """
   quotes within a label should be escaped in translation to GML
@@ -574,7 +571,7 @@ def test_1449():
 
   assert stderr.strip() == "", "SVG color scheme use caused warnings"
 
-@pytest.mark.skipif(shutil.which("gvpr") is None, reason="GVPR not available")
+@pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
 def test_1594():
   """
   GVPR should give accurate line numbers in error messages
@@ -685,7 +682,7 @@ def test_1767():
   #                  "cluster_2 contains 3 nodes\n" \
   #                  "cluster_3 contains 3 nodes\n"
 
-@pytest.mark.skipif(shutil.which("gvpr") is None, reason="GVPR not available")
+@pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
 @pytest.mark.skipif(platform.system() != "Windows",
   reason="only relevant on Windows")
 def test_1780():
@@ -717,7 +714,7 @@ def test_1783():
 
   assert ret != -signal.SIGSEGV, "Graphviz segfaulted"
 
-@pytest.mark.skipif(shutil.which("gvedit") is None, reason="Gvedit not available")
+@pytest.mark.skipif(which("gvedit") is None, reason="Gvedit not available")
 def test_1813():
   """
   gvedit -? should show usage
@@ -797,7 +794,7 @@ def test_1856():
 
   assert all(y >= top_of_five for y in waypoints_y), "edge dips below 5"
 
-@pytest.mark.skipif(shutil.which("fdp") is None, reason="fdp not available")
+@pytest.mark.skipif(which("fdp") is None, reason="fdp not available")
 def test_1865():
   """
   fdp should not read out of bounds when processing node names
@@ -813,10 +810,8 @@ def test_1865():
   # fdp should not crash when processing this file
   subprocess.check_call(["fdp", "-o", os.devnull, input])
 
-@pytest.mark.skipif(shutil.which("gv2gml") is None,
-                    reason="gv2gml not available")
-@pytest.mark.skipif(shutil.which("gml2gv") is None,
-                    reason="gml2gv not available")
+@pytest.mark.skipif(which("gv2gml") is None, reason="gv2gml not available")
+@pytest.mark.skipif(which("gml2gv") is None, reason="gml2gv not available")
 @pytest.mark.parametrize("penwidth", ("1.0", "1"))
 def test_1871(penwidth: str):
   """
@@ -839,7 +834,7 @@ def test_1871(penwidth: str):
   assert has_1 or has_1_0, \
     f"incorrect penwidth from round tripping through GML (output {gml})"
 
-@pytest.mark.skipif(shutil.which("fdp") is None, reason="fdp not available")
+@pytest.mark.skipif(which("fdp") is None, reason="fdp not available")
 def test_1876():
   """
   fdp should not rename nodes with internal names
@@ -859,7 +854,7 @@ def test_1876():
   # we should not see any internal names like "%3"
   assert "%" not in output, "internal name in fdp output"
 
-@pytest.mark.skipif(shutil.which("fdp") is None, reason="fdp not available")
+@pytest.mark.skipif(which("fdp") is None, reason="fdp not available")
 def test_1877():
   """
   fdp should not fail an assertion when processing cluster edges
@@ -962,7 +957,7 @@ def test_1855():
   assert len(y) > 4, "insufficient precision in y scale"
 
 @pytest.mark.parametrize("variant", [1, 2])
-@pytest.mark.skipif(shutil.which("gml2gv") is None, reason="gml2gv not available")
+@pytest.mark.skipif(which("gml2gv") is None, reason="gml2gv not available")
 def test_1869(variant: int):
   """
   gml2gv should be able to parse the style, outlineStyle, width and
@@ -1037,7 +1032,7 @@ def test_1906():
 
   assert "area too large" in stderr, "missing/incorrect error message"
 
-@pytest.mark.skipif(shutil.which("twopi") is None, reason="twopi not available")
+@pytest.mark.skipif(which("twopi") is None, reason="twopi not available")
 def test_1907():
   """
   SVG edges should have title elements that match their names
@@ -1054,7 +1049,7 @@ def test_1907():
   assert "<title>A&#45;&gt;B</title>" in output, \
     "element title not found in SVG"
 
-@pytest.mark.skipif(shutil.which("gvpr") is None, reason="gvpr not available")
+@pytest.mark.skipif(which("gvpr") is None, reason="gvpr not available")
 def test_1909():
   """
   GVPR should not output internal names
@@ -1180,7 +1175,7 @@ def test_1931():
   assert "line 3\nline 4" in xdot
   assert "line 5\nline 6" in xdot
 
-@pytest.mark.skipif(shutil.which("edgepaint") is None,
+@pytest.mark.skipif(which("edgepaint") is None,
                     reason="edgepaint not available")
 def test_1971():
   """
@@ -1343,8 +1338,7 @@ def test_2089_2():
   # run it
   _, _ = run_c(c_src, link=["cgraph"])
 
-@pytest.mark.skipif(shutil.which("dot2gxl") is None,
-                    reason="dot2gxl not available")
+@pytest.mark.skipif(which("dot2gxl") is None, reason="dot2gxl not available")
 def test_2092():
   """
   an empty node ID should not cause a dot2gxl NULL pointer dereference
@@ -1357,8 +1351,7 @@ def test_2092():
 
   assert p.returncode == 1, "dot2gxl crashed"
 
-@pytest.mark.skipif(shutil.which("dot2gxl") is None,
-                    reason="dot2gxl not available")
+@pytest.mark.skipif(which("dot2gxl") is None, reason="dot2gxl not available")
 def test_2093():
   """
   dot2gxl should handle elements with no ID
@@ -1387,8 +1380,7 @@ def test_2095():
   # ask Graphviz to process it
   dot("pdf", input)
 
-@pytest.mark.skipif(shutil.which("gv2gml") is None,
-                    reason="gv2gml not available")
+@pytest.mark.skipif(which("gv2gml") is None, reason="gv2gml not available")
 def test_2131():
   """
   gv2gml should be able to process basic Graphviz input
@@ -1405,8 +1397,7 @@ def test_2131():
   except subprocess.CalledProcessError as e:
     raise RuntimeError("gv2gml rejected a basic graph") from e
 
-@pytest.mark.skipif(shutil.which("gvpr") is None,
-                    reason="gvpr not available")
+@pytest.mark.skipif(which("gvpr") is None, reason="gvpr not available")
 @pytest.mark.parametrize("examine", ("indices", "tokens"))
 def test_2138(examine: str):
   """
@@ -1488,7 +1479,7 @@ def test_2179_1():
   assert "Warning: no hard-coded metrics for" not in stderr, \
     "incorrect warning triggered"
 
-@pytest.mark.skipif(shutil.which("nop") is None, reason="nop not available")
+@pytest.mark.skipif(which("nop") is None, reason="nop not available")
 def test_2184_1():
   """
   nop should not reposition labelled graph nodes
@@ -1652,7 +1643,7 @@ def test_2193():
   new = dot("canon", source=canonical)
   assert canonical == new, "canonical translation is not stable"
 
-@pytest.mark.skipif(shutil.which("gvpr") is None, reason="GVPR not available")
+@pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
 def test_2211():
   """
   GVPR’s `index` function should return correct results
@@ -1819,7 +1810,7 @@ def test_vcxproj_inclusive(vcxproj: Path):
       "mismatch between sources in {str(vcxproj)} and {str(filters)}"
 
 @pytest.mark.xfail() # FIXME: fails on CentOS 7/8, macOS Autotools, MSBuild
-@pytest.mark.skipif(shutil.which("gvmap") is None, reason="gvmap not available")
+@pytest.mark.skipif(which("gvmap") is None, reason="gvmap not available")
 def test_gvmap_fclose():
   """
   gvmap should not attempt to fclose(NULL). This example will trigger a crash if
@@ -1851,7 +1842,7 @@ def test_gvmap_fclose():
   # pass this through gvmap
   subprocess.run(["gvmap"], input=input.encode("utf-8"), check=True)
 
-@pytest.mark.skipif(shutil.which("gvpr") is None, reason="gvpr not available")
+@pytest.mark.skipif(which("gvpr") is None, reason="gvpr not available")
 def test_gvpr_usage():
   """
   gvpr usage information should be included when erroring on a malformed command
@@ -1995,8 +1986,7 @@ def test_2282():
   # confirm this is valid JSON
   json.loads(output)
 
-@pytest.mark.skipif(shutil.which("gxl2gv") is None,
-                    reason="gxl2gv not available")
+@pytest.mark.skipif(which("gxl2gv") is None, reason="gxl2gv not available")
 @pytest.mark.xfail()
 def test_2300_1():
   """

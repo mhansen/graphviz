@@ -9,13 +9,12 @@ property of one of the tools has been broken.
 import os
 import platform
 import re
-import shutil
 import subprocess
 import sys
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import is_cmake, remove_xtype_warnings \
+from gvtest import is_cmake, remove_xtype_warnings, which \
   #pylint: disable=wrong-import-position
 
 @pytest.mark.parametrize("tool", [
@@ -65,7 +64,7 @@ def test_tools(tool):
   check the help/usage output of the given tool looks correct
   """
 
-  if shutil.which(tool) is None:
+  if which(tool) is None:
     pytest.skip(f"{tool} not available")
 
   # FIXME: Remove skip when
@@ -117,7 +116,7 @@ def test_tools(tool):
 
   assert returncode != 0, f"{tool} accepted unsupported option -$"
 
-@pytest.mark.skipif(shutil.which("edgepaint") is None,
+@pytest.mark.skipif(which("edgepaint") is None,
                     reason="edgepaint not available")
 @pytest.mark.parametrize("arg", ("-accuracy=0.01", "-angle=15",
                                  "-random_seed=42", "-random_seed=-42",
