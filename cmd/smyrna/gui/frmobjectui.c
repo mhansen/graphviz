@@ -686,8 +686,7 @@ static void set_header_text(void)
     Color_Widget_bg("white", glade_xml_get_widget(xml, "fixed6"));
 }
 
-void showAttrsWidget(topview * t)
-{
+void showAttrsWidget(void) {
     gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
     gtk_widget_show(glade_xml_get_widget(xml, "dlgSettings"));
     gtk_notebook_set_current_page((GtkNotebook *)
