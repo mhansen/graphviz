@@ -119,9 +119,9 @@ struct _dt_s
 struct _dtstat_s
 {	int	dt_meth;	/* method type				*/
 	int	dt_size;	/* number of elements			*/
-	int	dt_n;		/* number of chains or levels		*/
-	int	dt_max;		/* max size of a chain or a level	*/
-	int*	dt_count;	/* counts of chains or levels by size	*/
+	size_t dt_n; // number of chains or levels
+	size_t dt_max; // max size of a chain or a level
+	size_t* dt_count; // counts of chains or levels by size
 };
 
 /* flag set if the last search operation actually found the object */
