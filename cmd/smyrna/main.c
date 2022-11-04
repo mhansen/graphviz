@@ -36,7 +36,23 @@
 #include "glutrender.h"
 
 #include <getopt.h>
-#include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
+
+#ifdef __FreeBSD__
+#include <sys/sysctl.h>
+#include <sys/types.h>
+#endif
+
+#if !defined(__APPLE__) && !defined(_WIN32)
+#include <unistd.h>
+#endif
 
 static char *smyrnaDir;		/* path to directory containin smyrna data files */
 static char *smyrnaGlade;
@@ -168,54 +184,153 @@ static void windowedMode(int argc, char *argv[])
 	gtk_main();
 }
 
+#if !defined(__APPLE__) && !defined(_WIN32)
+/// read the given symlink in the /proc file system
+static char *read_proc(const char *path) {
 
+  char buf[PATH_MAX + 1] = {0};
+  if (readlink(path, buf, sizeof(buf)) < 0)
+    return NULL;
 
+  // was the path too long?
+  if (buf[sizeof(buf) - 1] != '\0')
+    return NULL;
+
+  return gv_strdup(buf);
+}
+#endif
+
+/// find an absolute path to the current executable
+static char *find_me(void) {
+
+  // macOS
+#ifdef __APPLE__
+  {
+    // determine how many bytes we will need to allocate
+    uint32_t buf_size = 0;
+    int rc = _NSGetExecutablePath(NULL, &buf_size);
+    assert(rc != 0);
+    assert(buf_size > 0);
+
+    path = gv_alloc(buf_size);
+
+    // retrieve the actual path
+    if (_NSGetExecutablePath(path, &buf_size) < 0) {
+      fprintf(stderr, "failed to get path for executable.\n");
+      graphviz_exit(EXIT_FAILURE);
+    }
+
+    // try to resolve any levels of symlinks if possible
+    while (true) {
+      char buf[PATH_MAX + 1] = {0};
+      if (readlink(path, buf, sizeof(buf)) < 0)
+        return path;
+
+      free(path);
+      path = gv_strdup(buf);
+    }
+  }
+#elif defined(_WIN32)
+  {
+    char *path = NULL;
+    size_t path_size = 0;
+    int rc = 0;
+
+    do {
+      size_t size = path_size == 0 ? 1024 : (path_size * 2);
+      path = gv_realloc(path, path_size, size);
+      path_size = size;
+
+      rc = GetModuleFileName(NULL, path, path_size);
+      if (rc == 0) {
+        fprintf(stderr, "failed to get path for executable.\n");
+        graphviz_exit(EXIT_FAILURE);
+      }
+
+    } while (rc == path_size);
+
+    return path;
+  }
+#else
+
+  // Linux
+  char *path = read_proc("/proc/self/exe");
+  if (path != NULL)
+    return path;
+
+  // DragonFly BSD, FreeBSD
+  path = read_proc("/proc/curproc/file");
+  if (path != NULL)
+    return path;
+
+  // NetBSD
+  path = read_proc("/proc/curproc/exe");
+  if (path != NULL)
+    return path;
+
+// /proc-less FreeBSD
+#ifdef __FreeBSD__
+  {
+    int mib[] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
+    static const size_t MIB_LENGTH = sizeof(mib) / sizeof(mib[0]);
+    char buf[PATH_MAX + 1] = {0};
+    size_t buf_size = sizeof(buf);
+    if (sysctl(mib, MIB_LENGTH, buf, &buf_size, NULL, 0) == 0)
+      return gv_strdup(buf);
+  }
+#endif
+#endif
+
+  fprintf(stderr, "failed to get path for executable.\n");
+  graphviz_exit(EXIT_FAILURE);
+}
+
+/// find an absolute path to where Smyrna auxiliary files are stored
+static char *find_share(void) {
+
+#ifdef _WIN32
+  const char PATH_SEPARATOR = '\\';
+#else
+  const char PATH_SEPARATOR = '/';
+#endif
+
+  // find the path to the `smyrna` binary
+  char *smyrna_exe = find_me();
+
+  // assume it is of the form …/bin/smyrna[.exe] and construct
+  // …/share/graphviz/smyrna
+
+  char *slash = strrchr(smyrna_exe, PATH_SEPARATOR);
+  if (slash == NULL) {
+    fprintf(stderr, "no path separator in path to self, %s\n", smyrna_exe);
+    free(smyrna_exe);
+    graphviz_exit(EXIT_FAILURE);
+  }
+
+  *slash = '\0';
+  slash = strrchr(smyrna_exe, PATH_SEPARATOR);
+  if (slash == NULL) {
+    fprintf(stderr, "no path separator in directory containing self, %s\n",
+            smyrna_exe);
+    free(smyrna_exe);
+    graphviz_exit(EXIT_FAILURE);
+  }
+
+  *slash = '\0';
+  size_t share_len = strlen(smyrna_exe) + strlen("/share/graphviz/smyrna") + 1;
+  char *share = gv_alloc(share_len);
+  snprintf(share, share_len, "%s%cshare%cgraphviz%csmyrna", smyrna_exe,
+           PATH_SEPARATOR, PATH_SEPARATOR, PATH_SEPARATOR);
+  free(smyrna_exe);
+
+  return share;
+}
 
 int main(int argc, char *argv[])
 {
     smyrnaDir = getenv("SMYRNA_PATH");
     if (!smyrnaDir) {
-#ifdef _WIN32
-#define BSZ 1024
-#define SMYRNA "\\share\\graphviz\\smyrna"
-
-	int r;
-	char line[BSZ];
-	char* s;
-	MEMORY_BASIC_INFORMATION mbi;
-
-	if (VirtualQuery (&main, &mbi, sizeof(mbi)) == 0) {
-	    fprintf (stderr,"failed to get handle for executable.\n");
-	    graphviz_exit(1);
-	}
-	r = GetModuleFileName ((HMODULE)mbi.AllocationBase, line, BSZ);
-	if (!r || (r == BSZ)) {
-	    fprintf (stderr,"failed to get path for executable.\n");
-	    graphviz_exit(1);
-	}
-
-	/* line contains path to smyrna: "$GVROOT\bin\smyrna.exe" 
-	 * We want to obtain $GVROOT. We find the second rightmost '\'
-	 * and store a '\0' there.
- 	 */
-	s = strrchr(line,'\\');
-	if (!s) {
-	    fprintf (stderr,"no backslash in path %s.\n", line);
-	    graphviz_exit(1);
-	}
-	while ((s != line) && (*(--s) != '\\')) ;
-	if (s == line) {
-	    fprintf (stderr,"no backslash in path %s.\n", line);
-	    graphviz_exit(1);
-	}
-	*s = '\0';
-
-	smyrnaDir = gv_calloc(strlen(line) + sizeof(SMYRNA), sizeof(char));
-	strcpy (smyrnaDir, line);
-	strcat(smyrnaDir, SMYRNA);
-#else
-	smyrnaDir = SMYRNA_PATH;
-#endif
+	smyrnaDir = find_share();
     }
     load_attributes();
 
