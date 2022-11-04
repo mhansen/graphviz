@@ -25,6 +25,7 @@ static const std::unordered_set<std::string_view>
         "dot",     //
         "inv",     //
         "normal",  //
+        "tee",     //
 };
 
 static const std::unordered_set<std::string_view>
@@ -33,11 +34,18 @@ static const std::unordered_set<std::string_view>
         "diamond", //
         "inv",     //
         "normal",  //
+        "tee",     //
 };
 
 static const std::unordered_set<std::string_view>
     ellipse_based_primitive_arrow_shapes = {
         "dot", //
+};
+
+static const std::unordered_set<std::string_view>
+    primitive_arrow_shapes_containing_polyline = {
+        "box", //
+        "tee", //
 };
 
 static SVG::SVGElementType
@@ -69,7 +77,8 @@ SVG::SVGRect GraphvizEdge::arrowhead_outline_bbox(
   auto edge_arrowhead =
       m_svg_g_element.find_child(main_svg_element_type, index);
   auto edge_arrowhead_bbox = edge_arrowhead.outline_bbox();
-  if (primitive_arrow_shape == "box") {
+  if (primitive_arrow_shapes_containing_polyline.contains(
+          primitive_arrow_shape)) {
     auto edge_arrowhead_stem =
         m_svg_g_element.find_child(SVG::SVGElementType::Polyline, index);
     auto edge_arrowhead_stem_bbox = edge_arrowhead_stem.outline_bbox();
@@ -94,7 +103,8 @@ SVG::SVGRect GraphvizEdge::arrowtail_outline_bbox(
   auto edge_arrowtail =
       m_svg_g_element.find_child(main_svg_element_type, index);
   auto edge_arrowtail_bbox = edge_arrowtail.outline_bbox();
-  if (primitive_arrow_shape == "box") {
+  if (primitive_arrow_shapes_containing_polyline.contains(
+          primitive_arrow_shape)) {
     auto edge_arrowtail_stem =
         m_svg_g_element.find_child(SVG::SVGElementType::Polyline, index);
     auto edge_arrowtail_stem_bbox = edge_arrowtail_stem.outline_bbox();

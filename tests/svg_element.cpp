@@ -348,21 +348,43 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
       throw std::runtime_error{"Too few points for 'polyline' element"};
     }
 
-    // handle first and last point which may not be part of a corner
-    const SVG::SVGRect first_point_bbox = {
-        points.front().x - attributes.stroke_width / 2,
-        points.front().y - attributes.stroke_width / 2,
-        attributes.stroke_width,
-        attributes.stroke_width,
-    };
-    m_bbox->extend(first_point_bbox);
-    const SVG::SVGRect last_point_bbox = {
-        points.back().x - attributes.stroke_width / 2,
-        points.back().y - attributes.stroke_width / 2,
-        attributes.stroke_width,
-        attributes.stroke_width,
-    };
-    m_bbox->extend(last_point_bbox);
+    // handle first point which may not be part of a corner
+    {
+      const auto first_point = points.front();
+      const auto next_point = points[1];
+      const auto dx = first_point.x - next_point.x;
+      const auto dy = first_point.y - next_point.y;
+      const auto hypot = std::hypot(dx, dy);
+      const auto cosAlpha = dx / hypot;
+      const auto sinAlpha = dy / hypot;
+      // a polyline extends with half the stroke width in both perpendicular
+      // directions, but not along the line at its endpoints
+      const auto x_extension = std::abs(attributes.stroke_width / 2 * sinAlpha);
+      const auto y_extension = std::abs(attributes.stroke_width / 2 * cosAlpha);
+      const SVG::SVGRect first_point_bbox = {points.front().x - x_extension,
+                                             points.front().y - y_extension,
+                                             x_extension * 2, y_extension * 2};
+      m_bbox->extend(first_point_bbox);
+    }
+
+    // handle last point which may not be part of a corner
+    {
+      const auto last_point = points.back();
+      const auto prev_point = *(points.cend() - 2);
+      const auto dx = last_point.x - prev_point.x;
+      const auto dy = last_point.y - prev_point.y;
+      const auto hypot = std::hypot(dx, dy);
+      const auto cosAlpha = dx / hypot;
+      const auto sinAlpha = dy / hypot;
+      // a polyline extends with half the stroke width in both perpendicular
+      // directions, but not along the line at its endpoints
+      const auto x_extension = std::abs(attributes.stroke_width / 2 * sinAlpha);
+      const auto y_extension = std::abs(attributes.stroke_width / 2 * cosAlpha);
+      const SVG::SVGRect last_point_bbox = {points.back().x - x_extension,
+                                            points.back().y - y_extension,
+                                            x_extension * 2, y_extension * 2};
+      m_bbox->extend(last_point_bbox);
+    }
 
     if (points.size() >= 3) {
       // at least one corner
