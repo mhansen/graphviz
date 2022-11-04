@@ -10,6 +10,7 @@
 
 
 #include <assert.h>
+#include <cgraph/startswith.h>
 #include <common/geomprocs.h>
 #include <common/render.h>
 #include <math.h>
@@ -45,7 +46,7 @@
 #define ARR_MOD_RIGHT     (1<<(BITS_PER_ARROW_TYPE+3))
 /* No spares */
 
-typedef struct arrowdir_t {
+typedef struct {
     char *dir;
     int sflag;
     int eflag;
@@ -59,7 +60,7 @@ static const arrowdir_t Arrowdirs[] = {
     {0}
 };
 
-typedef struct arrowname_t {
+typedef struct {
     char *name;
     int type;
 } arrowname_t;
@@ -106,7 +107,7 @@ static const arrowname_t Arrownames[] = {
     {0}
 };
 
-typedef struct arrowtype_t {
+typedef struct {
     int type;
     double lenfact;		/* ratio of length of this arrow type to standard arrow */
     pointf (*gen) (GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, int flag);	/* generator function for type */
@@ -151,7 +152,7 @@ static char *arrow_match_name_frag(char *name, const arrowname_t *arrownames,
     for (const arrowname_t *arrowname = arrownames; arrowname->name;
          arrowname++) {
 	namelen = strlen(arrowname->name);
-	if (strncmp(name, arrowname->name, namelen) == 0) {
+	if (startswith(name, arrowname->name)) {
 	    *flag |= arrowname->type;
 	    rest += namelen;
 	    break;
@@ -175,7 +176,7 @@ static char *arrow_match_shape(char *name, int *flag)
     }
     if (f && !(f & ((1 << BITS_PER_ARROW_TYPE) - 1)))
 	f |= ARR_TYPE_NORM;
-    *flag |= f;
+    *flag = f;
     return rest;
 }
 

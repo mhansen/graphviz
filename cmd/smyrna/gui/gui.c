@@ -42,7 +42,7 @@ void load_graph_properties(void) {
 void load_attributes(void)
 {
     FILE *file;
-    char line[BUFSIZ];
+    char buffer[BUFSIZ];
     char *pch;
     static char *smyrna_attrs;
 
@@ -52,8 +52,9 @@ void load_attributes(void)
     //loads attributes from a text file
     file = fopen(smyrna_attrs, "r");
     if (file != NULL) {
-	for (int attrcount = 0; fgets(line, sizeof line, file) != NULL; ++attrcount) {
-	    pch = strtok(line, ",");
+	for (int attrcount = 0; fgets(buffer, sizeof(buffer), file) != NULL;
+	     ++attrcount) {
+	    pch = strtok(buffer, ",");
 	    for (int ind = 0; pch != NULL; ++ind) {
 		strview_t ss = strview(pch, '\0');
 		pch = strtok(NULL, ",");

@@ -577,7 +577,7 @@ attr_list *load_attr_list(Agraph_t * g)
     attr_list *l;
     FILE *file;
     Agsym_t *sym;		/*cgraph atttribute */
-    char line[BUFSIZ];
+    char buffer[BUFSIZ];
     static char *smyrna_attrs;
     char *a;
 
@@ -588,10 +588,10 @@ attr_list *load_attr_list(Agraph_t * g)
     file = fopen(smyrna_attrs, "r");
     if (file != NULL) {
 	int i = 0;
-	while (fgets(line, BUFSIZ, file) != NULL) {
+	while (fgets(buffer, sizeof(buffer), file) != NULL) {
 	    int idx = 0;
 	    attr = new_attr();
-	    a = strtok(line, ",");
+	    a = strtok(buffer, ",");
 	    attr->index = i;
 	    attr->type = get_attr_data_type(a[0]);
 	    while ((a = strtok(NULL, ","))) {
@@ -686,8 +686,7 @@ static void set_header_text(void)
     Color_Widget_bg("white", glade_xml_get_widget(xml, "fixed6"));
 }
 
-void showAttrsWidget(topview * t)
-{
+void showAttrsWidget(void) {
     gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
     gtk_widget_show(glade_xml_get_widget(xml, "dlgSettings"));
     gtk_notebook_set_current_page((GtkNotebook *)

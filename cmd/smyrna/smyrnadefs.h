@@ -25,6 +25,7 @@
 #include <glcomp/glcompset.h>
 #include "hier.h"
 #include <glcomp/glutils.h>
+#include <stddef.h>
 
 #ifdef	_WIN32			//this is needed on _WIN32 to get libglade see the callback
 #define _BB  __declspec(dllexport)
@@ -119,14 +120,6 @@ typedef struct
 	int smooth;            /* if true, interpolate */
 	colorschema *s;
     } colorschemaset;
-
-    typedef enum {
-	GVE_NONE = -1,
-	GVE_GRAPH,
-	GVE_CLUSTER,
-	GVE_NODE,
-	GVE_EDGE		/* keep last */
-    } gve_element;
 
     typedef enum {
 	GVK_NONE = -1,
@@ -289,7 +282,7 @@ typedef struct
 	char *Default;
 	char Engine[GVK_FDP + 1];
 	char **ComboValues;
-	int ComboValuesCount;
+	size_t ComboValuesCount;
 	GtkWidget *attrWidget;
 
     } attribute;

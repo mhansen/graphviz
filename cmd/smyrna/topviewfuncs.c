@@ -280,9 +280,9 @@ static void renderSelectedNodes(Agraph_t * g)
 	nodeSize = ND_size(v);
 
 	if (defaultNodeShape == 0) 
-	    glVertex3f(pos.x,pos.y,pos.z+0.001);
+	    glVertex3f(pos.x, pos.y, pos.z + 0.001f);
 	else if (defaultNodeShape == 1) 
-	    drawCircle(pos.x,pos.y,nodeSize,pos.z+0.001);
+	    drawCircle(pos.x, pos.y, nodeSize, pos.z + 0.001f);
     }
     if(defaultNodeShape==0)
 	glEnd();

@@ -183,7 +183,7 @@ static void attrList(glCompObj *obj, GLfloat x, GLfloat y, glMouseButtonType t)
 	(void)y;
 	(void)t;
 
-	showAttrsWidget(view->Topview);
+	showAttrsWidget();
 }
 
 static void glCompMouseMove(glCompObj *obj, GLfloat x, GLfloat y)
