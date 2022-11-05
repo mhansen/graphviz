@@ -21,7 +21,7 @@
 #include "generic_list.h"
 
 /* structure to hold an attribute specified on the commandline */
-typedef struct strattr_s {
+typedef struct {
     char *n;
     char *v;
 } strattr_t;
