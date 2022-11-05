@@ -14,7 +14,7 @@
 #include <ctype.h>
 
 #include <getopt.h>
-
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
@@ -254,13 +254,8 @@ Agraph_t *gread(FILE * fp)
 generic_list_t *addattr(generic_list_t * l, char *a)
 {
     char *p;
-    strattr_t *sp;
 
-    sp = malloc(sizeof(strattr_t));
-    if (sp == NULL) {
-	perror("[addattr()->malloc()]");
-	graphviz_exit(EXIT_FAILURE);
-    }
+    strattr_t *sp = gv_alloc(sizeof(strattr_t));
 
     /* Split argument spec. at first '=' */
     p = strchr(a, '=');
@@ -271,18 +266,10 @@ generic_list_t *addattr(generic_list_t * l, char *a)
     *(p++) = '\0';
 
     /* pointer to argument name */
-    sp->n = strdup(a);
-    if (sp->n == NULL) {
-	perror("[addattr()->strdup()]");
-	graphviz_exit(EXIT_FAILURE);
-    }
+    sp->n = gv_strdup(a);
 
     /* pointer to argument value */
-    sp->v = strdup(p);
-    if (sp->v == NULL) {
-	perror("[addattr()->strdup()]");
-	graphviz_exit(EXIT_FAILURE);
-    }
+    sp->v = gv_strdup(p);
 
     return add_to_generic_list(l, (gl_data) sp);
 }
@@ -290,13 +277,7 @@ generic_list_t *addattr(generic_list_t * l, char *a)
 /* add element to node list */
 generic_list_t *addnode(generic_list_t * l, char *n)
 {
-    char *sp;
-
-    sp = strdup(n);
-    if (sp == NULL) {
-	perror("[addnode()->strdup()]");
-	graphviz_exit(EXIT_FAILURE);
-    }
+    char *sp = gv_strdup(n);
 
     return add_to_generic_list(l, (gl_data) sp);
 }

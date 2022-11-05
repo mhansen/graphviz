@@ -8,11 +8,9 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-
-#include <stdio.h>
+#include <cgraph/alloc.h>
 #include <stdlib.h>
 #include <inttypes.h>
-#include <errno.h>
 
 #include "generic_list.h"
 
@@ -20,24 +18,11 @@
 
 generic_list_t *new_generic_list(uint64_t size)
 {
-    generic_list_t *list;
-
-    list = malloc(sizeof(generic_list_t));
-    if (list == NULL) {
-	perror("[new_generic_list()] Error allocating memory:");
-	return NULL;
-    }
+    generic_list_t *list = gv_alloc(sizeof(generic_list_t));
     if (size != 0) {
-	list->data = malloc(size * sizeof(gl_data));
-	if (list->data == NULL) {
-	    perror("[new_generic_list()] Error allocating memory:");
-	    free(list);
-	    return NULL;
-	}
-    } else
-	list->data = NULL;
+	list->data = gv_calloc(size, sizeof(gl_data));
+    }
     list->size = size;
-    list->used = 0;
     return list;
 }
 
@@ -52,7 +37,6 @@ void free_generic_list(generic_list_t * list)
 generic_list_t *add_to_generic_list(generic_list_t * list, gl_data element)
 {
     uint64_t new_size;
-    gl_data *new_data;
 
     if (list->size == list->used) {
 	if (list->size == 0) {
@@ -60,11 +44,8 @@ generic_list_t *add_to_generic_list(generic_list_t * list, gl_data element)
 	} else {
 	    new_size = list->size * 2;
 	}
-	new_data = realloc(list->data, new_size * sizeof(gl_data));
-	if (new_data == NULL) {
-	    perror("[add_to_generic_list()] Error allocating memory:");
-	    return NULL;
-	}
+	gl_data *new_data = gv_recalloc(list->data, list->size, new_size,
+	                                sizeof(gl_data));
 	list->data = new_data;
 	list->size = new_size;
     }
