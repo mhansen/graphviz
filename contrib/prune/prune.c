@@ -29,8 +29,8 @@ typedef struct strattr_s {
 int remove_child(Agraph_t * graph, Agnode_t * node);
 void help_message(const char *progname);
 
-generic_list_t *addattr(generic_list_t * l, char *a);
-generic_list_t *addnode(generic_list_t * l, char *n);
+void addattr(generic_list_t * l, char *a);
+void addnode(generic_list_t * l, char *n);
 
 int verbose = 0;		/* Flag to indicate verbose message output */
 
@@ -88,12 +88,12 @@ int main(int argc, char **argv)
 	switch (c) {
 	case 'N':
 	    {
-		attr_list = addattr(attr_list, optarg);
+		addattr(attr_list, optarg);
 		break;
 	    }
 	case 'n':
 	    {
-		node_list = addnode(node_list, optarg);
+		addnode(node_list, optarg);
 		break;
 	    }
 	case 'h':
@@ -251,8 +251,7 @@ Agraph_t *gread(FILE * fp)
 }
 
 /* add element to attribute list */
-generic_list_t *addattr(generic_list_t * l, char *a)
-{
+void addattr(generic_list_t * l, char *a) {
     char *p;
 
     strattr_t *sp = gv_alloc(sizeof(strattr_t));
@@ -271,13 +270,12 @@ generic_list_t *addattr(generic_list_t * l, char *a)
     /* pointer to argument value */
     sp->v = gv_strdup(p);
 
-    return add_to_generic_list(l, (gl_data) sp);
+    add_to_generic_list(l, (gl_data) sp);
 }
 
 /* add element to node list */
-generic_list_t *addnode(generic_list_t * l, char *n)
-{
+void addnode(generic_list_t *l, char *n) {
     char *sp = gv_strdup(n);
 
-    return add_to_generic_list(l, (gl_data) sp);
+    add_to_generic_list(l, (gl_data) sp);
 }

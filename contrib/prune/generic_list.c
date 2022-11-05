@@ -34,8 +34,7 @@ void free_generic_list(generic_list_t * list)
     free(list);
 }
 
-generic_list_t *add_to_generic_list(generic_list_t * list, gl_data element)
-{
+void add_to_generic_list(generic_list_t *list, gl_data element) {
     uint64_t new_size;
 
     if (list->size == list->used) {
@@ -50,5 +49,4 @@ generic_list_t *add_to_generic_list(generic_list_t * list, gl_data element)
 	list->size = new_size;
     }
     list->data[list->used++] = element;
-    return list;
 }
