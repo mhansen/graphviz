@@ -14,6 +14,7 @@
 #include "topviewfuncs.h"
 #include <cgraph/alloc.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef struct {
     GType type;
@@ -205,13 +206,13 @@ static void populate_data(Agraph_t * g, grid * grid)
 
 	for (id = 0; id < grid->count; id++) {
 	    cp = grid->columns[id];
-	    if (cp->name == ID) continue;
+	    if (strcmp(cp->name, ID) == 0) continue;
 
-	    if (cp->name == Name)
+	    if (strcmp(cp->name, Name) == 0)
 		bf = agnameof(v);
 	    else
 		bf = agget(v, cp->name);
-	    if ((!bf) && (cp->name != Visible))
+	    if (!bf && strcmp(cp->name, Visible) != 0)
 		continue;
 
 	    g_value_init(&value, cp->type);
@@ -224,7 +225,7 @@ static void populate_data(Agraph_t * g, grid * grid)
 		    else
 			g_value_set_boolean(&value, 0);
 		} else {
-		    if (cp->name == Visible)
+		    if (strcmp(cp->name, Visible) == 0)
 			g_value_set_boolean(&value, 1);
 		}
 		break;
@@ -314,7 +315,7 @@ static void add_column(grid * g, char *name, bool editable, GType g_type)
                              sizeof(gridCol*));
     g->columns[g->count] = gv_alloc(sizeof(gridCol));
     g->columns[g->count]->editable = editable;
-    g->columns[g->count]->name = name;
+    g->columns[g->count]->name = gv_strdup(name);
     g->columns[g->count]->type = g_type;
     g->count++;
 }
@@ -323,6 +324,7 @@ static void clearGrid(grid * g)
 {
     int id;
     for (id = 0; id < g->count; id++) {
+	free(g->columns[id]->name);
 	free(g->columns[id]);
     }
     free(g->columns);
