@@ -23,7 +23,7 @@ typedef struct {
 } gridCol;
 typedef struct {
     int count;
-    gridCol **columns;
+    gridCol *columns;
     GtkTreeStore *store;
     char *flds;
     char *buf;
@@ -197,7 +197,6 @@ static void populate_data(Agraph_t * g, grid * grid)
     GtkTreeIter iter;
     GValue value = {0};
     char* bf;
-    gridCol* cp;
 
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	if (!ND_selected(v))
@@ -205,7 +204,7 @@ static void populate_data(Agraph_t * g, grid * grid)
 	gtk_tree_store_append(grid->store, &iter, NULL);
 
 	for (id = 0; id < grid->count; id++) {
-	    cp = grid->columns[id];
+	    gridCol *cp = &grid->columns[id];
 	    if (strcmp(cp->name, ID) == 0) continue;
 
 	    if (strcmp(cp->name, Name) == 0)
@@ -216,7 +215,7 @@ static void populate_data(Agraph_t * g, grid * grid)
 		continue;
 
 	    g_value_init(&value, cp->type);
-	    switch (grid->columns[id]->type) {
+	    switch (grid->columns[id].type) {
 	    case G_TYPE_BOOLEAN:
 		if (bf) {
 		    if ((strcmp(bf, "1") == 0) || (strcmp(bf, "true") == 0)
@@ -294,13 +293,13 @@ static GtkTreeView *update_tree(GtkTreeView * tree, grid * g)
     if (g->count > 0) {
 	types = gv_calloc((size_t)g->count, sizeof(GType));
 	for (id = 0; id < g->count; id++)
-	    types[id] = g->columns[id]->type;
+	    types[id] = g->columns[id].type;
 	store = update_tree_store(g->store, g->count, types);
 	free (types);
 	gtk_tree_view_set_model(tree, (GtkTreeModel *) store);
 	/*insert columns */
 	for (id = 0; id < g->count; id++)
-	    create_column(g->columns[id], tree, id);
+	    create_column(&g->columns[id], tree, id);
     }
     g->store = store;
     return tree;
@@ -312,11 +311,10 @@ static void add_column(grid * g, char *name, bool editable, GType g_type)
 	return;
     assert(g->count >= 0);
     g->columns = gv_recalloc(g->columns, (size_t)g->count, (size_t)g->count + 1,
-                             sizeof(gridCol*));
-    g->columns[g->count] = gv_alloc(sizeof(gridCol));
-    g->columns[g->count]->editable = editable;
-    g->columns[g->count]->name = gv_strdup(name);
-    g->columns[g->count]->type = g_type;
+                             sizeof(gridCol));
+    g->columns[g->count].editable = editable;
+    g->columns[g->count].name = gv_strdup(name);
+    g->columns[g->count].type = g_type;
     g->count++;
 }
 
@@ -324,8 +322,7 @@ static void clearGrid(grid * g)
 {
     int id;
     for (id = 0; id < g->count; id++) {
-	free(g->columns[id]->name);
-	free(g->columns[id]);
+	free(g->columns[id].name);
     }
     free(g->columns);
     free(g->buf);
