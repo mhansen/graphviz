@@ -29,7 +29,7 @@ typedef struct {
     GtkTreeStore *store;
     char *flds;
     char *buf;
-} grid;
+} grid_t;
 
 static char* ID = "ID";
 static char* Name = "Name";
@@ -192,8 +192,7 @@ static void create_toggle_column(char *Title, GtkTreeView * tree, int asso,
 
 }
 
-static void populate_data(Agraph_t * g, grid * grid)
-{
+static void populate_data(Agraph_t *g, grid_t *grid) {
     Agnode_t *v;
     int id = 0;
     GtkTreeIter iter;
@@ -271,8 +270,7 @@ static void create_column(gridCol * c, GtkTreeView * tree, int id)
     }
 }
 
-static GtkTreeView *update_tree(GtkTreeView * tree, grid * g)
-{
+static GtkTreeView *update_tree(GtkTreeView *tree, grid_t *g) {
 
     GtkTreeStore *store = NULL;
     GtkTreeViewColumn *column;
@@ -307,7 +305,7 @@ static GtkTreeView *update_tree(GtkTreeView * tree, grid * g)
     return tree;
 }
 
-static void add_column(grid *g, strview_t name, bool editable, GType g_type) {
+static void add_column(grid_t *g, strview_t name, bool editable, GType g_type) {
     if (strview_str_eq(name, ""))
 	return;
     assert(g->count >= 0);
@@ -319,8 +317,7 @@ static void add_column(grid *g, strview_t name, bool editable, GType g_type) {
     g->count++;
 }
 
-static void clearGrid(grid * g)
-{
+static void clearGrid(grid_t * g) {
     int id;
     for (id = 0; id < g->count; id++) {
 	free(g->columns[id].name);
@@ -332,17 +329,15 @@ static void clearGrid(grid * g)
     g->flds = 0;
 }
 
-static grid *initGrid(void)
-{
-    grid *gr = gv_alloc(sizeof(grid));
+static grid_t *initGrid(void) {
+    grid_t *gr = gv_alloc(sizeof(grid_t));
     gr->columns = NULL;
     gr->count = 0;
     gr->buf = 0;
     return gr;
 }
 
-static grid *update_columns(grid * g, char *str)
-{
+static grid_t *update_columns(grid_t *g, char *str) {
     if (g) {
 	if (g->flds != str)
 	    clearGrid(g);
@@ -370,7 +365,7 @@ void setup_tree(Agraph_t * g)
        G_TYPE_BOOLEAN:
      */
     static GtkTreeView *tree;
-    static grid *gr;
+    static grid_t *gr;
     char *buf = agget(g, "datacolumns");
 
     gr = update_columns(gr, buf);
