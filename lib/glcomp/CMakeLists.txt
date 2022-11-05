@@ -42,7 +42,7 @@ if(with_smyrna)
 
   target_include_directories(glcomp SYSTEM PRIVATE
     ${FREETYPE_INCLUDE_DIRS}
-    ${GLUT_INCLUDE_DIRS}
+    ${GLUT_INCLUDE_DIR}
     ${GTK2_INCLUDE_DIRS}
     ${PANGOCAIRO_INCLUDE_DIRS}
     ${XRENDER_INCLUDE_DIRS}
