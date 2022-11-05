@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include "tvnodes.h"
 #include "viewport.h"
 #include "topviewfuncs.h"
@@ -254,8 +255,7 @@ static GtkTreeStore *update_tree_store(GtkTreeStore * store, int ncolumns,
 
 static void create_column(gridCol * c, GtkTreeView * tree, int id)
 {
-    if (!c)
-	return;
+    assert(c != NULL);
     switch (c->type) {
     case G_TYPE_STRING:
     case G_TYPE_INT:
