@@ -67,9 +67,6 @@ int main(int argc, char **argv)
 
     char **files;
 
-    generic_list_t *attr_list;
-    generic_list_t *node_list;
-
     unsigned long i, j;
 
     opterr = 0;
@@ -81,16 +78,16 @@ int main(int argc, char **argv)
 	progname++;		/* character after last '/' */
     }
 
-    attr_list = new_generic_list(16);
-    node_list = new_generic_list(16);
+    generic_list_t attr_list = new_generic_list(16);
+    generic_list_t node_list = new_generic_list(16);
 
     while ((c = getopt(argc, argv, "hvn:N:")) != -1) {
 	switch (c) {
 	case 'N':
-		addattr(attr_list, optarg);
+		addattr(&attr_list, optarg);
 		break;
 	case 'n':
-		addnode(node_list, optarg);
+		addnode(&node_list, optarg);
 		break;
 	case 'h':
 		help_message(progname);
@@ -138,17 +135,16 @@ int main(int argc, char **argv)
 	aginit(graph, AGNODE, NDNAME, sizeof(ndata), 1);
 
 	/* prune all nodes specified on the commandline */
-	for (i = 0; i < node_list->used; i++) {
+	for (i = 0; i < node_list.used; i++) {
 	    if (verbose == 1)
-		fprintf(stderr, "Pruning node %s\n",
-			(char *) node_list->data[i]);
+		fprintf(stderr, "Pruning node %s\n", (char*)node_list.data[i]);
 
 	    /* check whether a node of that name exists at all */
-	    node = agnode(graph, (char *) node_list->data[i], 0);
+	    node = agnode(graph, (char*)node_list.data[i], 0);
 	    if (node == NULL) {
 		fprintf(stderr,
 			"*** Warning: No such node: %s -- gracefully skipping this one\n",
-			(char *) node_list->data[i]);
+			(char*)node_list.data[i]);
 	    } else {
 		MARK(node);	/* Avoid cycles */
 		/* Iterate over all outgoing edges */
@@ -165,26 +161,24 @@ int main(int argc, char **argv)
 		UNMARK(node);	/* Unmark so that it can be removed in later passes */
 
 		/* Change attribute (e.g. border style) to show that node has been pruneed */
-		for (j = 0; j < attr_list->used; j++) {
+		for (j = 0; j < attr_list.used; j++) {
 		    /* create attribute if it doesn't exist and set it */
 		    attr =
-			agattr(graph, AGNODE,
-			       ((strattr_t *) attr_list->data[j])->n, "");
+			agattr(graph, AGNODE, ((strattr_t*)attr_list.data[j])->n, "");
 		    if (attr == NULL) {
 			fprintf(stderr, "Couldn't create attribute: %s\n",
-				((strattr_t *) attr_list->data[j])->n);
+				((strattr_t*)attr_list.data[j])->n);
 			graphviz_exit(EXIT_FAILURE);
 		    }
-		    agxset(node, attr,
-			   ((strattr_t *) attr_list->data[j])->v);
+		    agxset(node, attr, ((strattr_t*)attr_list.data[j])->v);
 		}
 	    }
 	}
 	agwrite(graph, stdout);
 	agclose(graph);
     }
-    free_generic_list(attr_list);
-    free_generic_list(node_list);
+    free_generic_list(&attr_list);
+    free_generic_list(&node_list);
     graphviz_exit(EXIT_SUCCESS);
 }
 

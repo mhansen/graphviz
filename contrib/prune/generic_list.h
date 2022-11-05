@@ -18,7 +18,7 @@
 	gl_data *data;		/* pointer to first element */
     } generic_list_t;
 
-    extern generic_list_t *new_generic_list(uint64_t size);
+    extern generic_list_t new_generic_list(uint64_t size);
     extern void add_to_generic_list(generic_list_t * list,
 					       gl_data element);
     extern void free_generic_list(generic_list_t * list);

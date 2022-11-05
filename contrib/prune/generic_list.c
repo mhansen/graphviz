@@ -16,13 +16,13 @@
 
 #define DFLT_SIZE 100
 
-generic_list_t *new_generic_list(uint64_t size)
+generic_list_t new_generic_list(uint64_t size)
 {
-    generic_list_t *list = gv_alloc(sizeof(generic_list_t));
+    generic_list_t list = {0};
     if (size != 0) {
-	list->data = gv_calloc(size, sizeof(gl_data));
+	list.data = gv_calloc(size, sizeof(gl_data));
     }
-    list->size = size;
+    list.size = size;
     return list;
 }
 
@@ -31,7 +31,6 @@ void free_generic_list(generic_list_t * list)
     if (list->size > 0) {
 	free(list->data);
     }
-    free(list);
 }
 
 void add_to_generic_list(generic_list_t *list, gl_data element) {
