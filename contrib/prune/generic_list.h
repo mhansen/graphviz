@@ -8,8 +8,7 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#ifndef GENERIC_LIST_H
-#define GENERIC_LIST_H
+#pragma once
 
     typedef void *gl_data;
 
@@ -23,5 +22,3 @@
     extern generic_list_t *add_to_generic_list(generic_list_t * list,
 					       gl_data element);
     extern void free_generic_list(generic_list_t * list);
-
-#endif				/* GENERIC_LIST_H */
