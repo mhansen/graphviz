@@ -12,7 +12,7 @@
 
     typedef void *gl_data;
 
-    typedef struct generic_list_s {
+    typedef struct {
 	uint64_t used;	/* number of elements in the list */
 	uint64_t size;	/* number of elements that the list can hold */
 	gl_data *data;		/* pointer to first element */
