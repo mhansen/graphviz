@@ -14,7 +14,7 @@
 #include <inttypes.h>
 #include <errno.h>
 
-#include <generic_list.h>
+#include "generic_list.h"
 
 #define DFLT_SIZE 100
 

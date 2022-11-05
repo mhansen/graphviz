@@ -15,9 +15,9 @@
 
 #include <getopt.h>
 
-#include "cgraph.h"
-#include "exit.h"
-#include "ingraphs.h"
+#include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
+#include <ingraphs/ingraphs.h>
 #include "generic_list.h"
 
 /* structure to hold an attribute specified on the commandline */
