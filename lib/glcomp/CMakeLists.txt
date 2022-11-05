@@ -41,7 +41,7 @@ if(with_smyrna)
   )
 
   target_include_directories(glcomp SYSTEM PRIVATE
-    ${Freetype_INCLUDE_DIRS}
+    ${FREETYPE_INCLUDE_DIRS}
     ${GLUT_INCLUDE_DIRS}
     ${GTK2_INCLUDE_DIRS}
     ${PANGOCAIRO_INCLUDE_DIRS}
@@ -53,7 +53,7 @@ if(with_smyrna)
   endif()
 
   target_link_libraries(glcomp PRIVATE
-    ${Freetype_LIBRARIES}
+    ${FREETYPE_LIBRARIES}
     ${GLUT_LIBRARIES}
     ${GTK2_LIBRARIES}
     ${PANGOCAIRO_LIBRARIES}

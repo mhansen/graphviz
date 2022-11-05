@@ -26,7 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The CMake build system no longer uses the final install location as the
   staging area for example graphs and templates during `cpack`. This bug was
   introduced in Graphviz 4.0.0. #2232
-- The CMake build system uses a corrected path to DevIL headers when discovered.
+- The CMake build system uses corrected paths to DevIL and FreeType headers and
+  libraries when discovered.
 
 ## [7.0.0] – 2022-10-22
 
