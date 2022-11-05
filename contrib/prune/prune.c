@@ -87,26 +87,18 @@ int main(int argc, char **argv)
     while ((c = getopt(argc, argv, "hvn:N:")) != -1) {
 	switch (c) {
 	case 'N':
-	    {
 		addattr(attr_list, optarg);
 		break;
-	    }
 	case 'n':
-	    {
 		addnode(node_list, optarg);
 		break;
-	    }
 	case 'h':
-	    {
 		help_message(progname);
 		graphviz_exit(EXIT_SUCCESS);
 		break;
-	    }
 	case 'v':
-	    {
 		verbose = 1;
 		break;
-	    }
 	case '?':
 	    if (optopt == '?') {
 		help_message(progname);
