@@ -140,7 +140,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Pruning node %s\n", (char*)node_list.data[i]);
 
 	    /* check whether a node of that name exists at all */
-	    node = agnode(graph, (char*)node_list.data[i], 0);
+	    node = agnode(graph, node_list.data[i], 0);
 	    if (node == NULL) {
 		fprintf(stderr,
 			"*** Warning: No such node: %s -- gracefully skipping this one\n",
@@ -253,12 +253,12 @@ static void addattr(generic_list_t * l, char *a) {
     /* pointer to argument value */
     sp->v = gv_strdup(p);
 
-    add_to_generic_list(l, (gl_data) sp);
+    add_to_generic_list(l, sp);
 }
 
 /* add element to node list */
 static void addnode(generic_list_t *l, char *n) {
     char *sp = gv_strdup(n);
 
-    add_to_generic_list(l, (gl_data) sp);
+    add_to_generic_list(l, sp);
 }
