@@ -183,8 +183,8 @@ int main(int argc, char **argv)
 	agwrite(graph, stdout);
 	agclose(graph);
     }
-    free(attr_list);
-    free(node_list);
+    free_generic_list(attr_list);
+    free_generic_list(node_list);
     graphviz_exit(EXIT_SUCCESS);
 }
 
