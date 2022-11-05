@@ -26,16 +26,16 @@ typedef struct {
     char *v;
 } strattr_t;
 
-int remove_child(Agraph_t * graph, Agnode_t * node);
-void help_message(const char *progname);
+static int remove_child(Agraph_t * graph, Agnode_t * node);
+static void help_message(const char *progname);
 
-void addattr(generic_list_t * l, char *a);
-void addnode(generic_list_t * l, char *n);
+static void addattr(generic_list_t * l, char *a);
+static void addnode(generic_list_t * l, char *n);
 
 int verbose = 0;		/* Flag to indicate verbose message output */
 
 /* wrapper to match libcgraph conventions with libingraph */
-Agraph_t *gread(FILE * fp);
+static Agraph_t *gread(FILE *fp);
 
 #define NDNAME "mk"
 
@@ -182,8 +182,7 @@ int main(int argc, char **argv)
     graphviz_exit(EXIT_SUCCESS);
 }
 
-int remove_child(Agraph_t * graph, Agnode_t * node)
-{
+static int remove_child(Agraph_t *graph, Agnode_t *node) {
     Agedge_t *edge;
     Agedge_t *nexte;
 
@@ -215,8 +214,7 @@ int remove_child(Agraph_t * graph, Agnode_t * node)
     return 1;
 }
 
-void help_message(const char *progname)
-{
+static void help_message(const char *progname) {
     fprintf(stderr, "\
 Usage: %s [options] [<files>]\n\
 \n\
@@ -231,13 +229,12 @@ Both options `-n' and `-N' can be used multiple times on the command line.\n", p
 }
 
 /* wrapper to match libcgraph conventions with libingraph */
-Agraph_t *gread(FILE * fp)
-{
+static Agraph_t *gread(FILE *fp) {
     return agread(fp, NULL);
 }
 
 /* add element to attribute list */
-void addattr(generic_list_t * l, char *a) {
+static void addattr(generic_list_t * l, char *a) {
     char *p;
 
     strattr_t *sp = gv_alloc(sizeof(strattr_t));
@@ -260,7 +257,7 @@ void addattr(generic_list_t * l, char *a) {
 }
 
 /* add element to node list */
-void addnode(generic_list_t *l, char *n) {
+static void addnode(generic_list_t *l, char *n) {
     char *sp = gv_strdup(n);
 
     add_to_generic_list(l, (gl_data) sp);
