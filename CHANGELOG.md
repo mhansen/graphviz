@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When built with zlib support, Graphviz will unconditionally use
   `deflateBound`. The only user-visible effect should be slightly decreased
   memory usage when using a zlib-compressed output format.
-- The test suite only detects Graphviz componanion programs adjacent to the
-  irst `dot` found in `$PATH` #2201
+- The test suite only detects Graphviz companion programs adjacent to the first
+  `dot` found in `$PATH` #2201
 
 ### Fixed
 
