@@ -103,7 +103,6 @@ def test_existence(binary: str):
     "gv2gxl",
     "gvedit",
     "gxl2dot",
-    "prune",
   ]
 
   tools_not_built_with_msbuild = [
