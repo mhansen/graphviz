@@ -13,6 +13,8 @@
 #include "viewport.h"
 #include "topviewfuncs.h"
 #include <cgraph/alloc.h>
+#include <cgraph/strview.h>
+#include <cgraph/tokenize.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -305,15 +307,14 @@ static GtkTreeView *update_tree(GtkTreeView * tree, grid * g)
     return tree;
 }
 
-static void add_column(grid * g, char *name, bool editable, GType g_type)
-{
-    if (*name == '\0')
+static void add_column(grid *g, strview_t name, bool editable, GType g_type) {
+    if (strview_str_eq(name, ""))
 	return;
     assert(g->count >= 0);
     g->columns = gv_recalloc(g->columns, (size_t)g->count, (size_t)g->count + 1,
                              sizeof(gridCol));
     g->columns[g->count].editable = editable;
-    g->columns[g->count].name = gv_strdup(name);
+    g->columns[g->count].name = strview_str(name);
     g->columns[g->count].type = g_type;
     g->count++;
 }
@@ -342,10 +343,6 @@ static grid *initGrid(void)
 
 static grid *update_columns(grid * g, char *str)
 {
-    /*free existing memory if necessary */
-    char *a;
-    char *buf;
-
     if (g) {
 	if (g->flds != str)
 	    clearGrid(g);
@@ -353,16 +350,15 @@ static grid *update_columns(grid * g, char *str)
 	    return g;
     } else
 	g = initGrid();
-    add_column(g, Name, false, G_TYPE_STRING);
+    add_column(g, strview(Name, '\0'), false, G_TYPE_STRING);
     if (!str)
 	return g;
 
     g->flds = str;
-    buf = strdup (str);  /* need to dup because str is actual graph attribute value */
-    a = strtok(buf, ",");
-    add_column(g, a, true, G_TYPE_STRING);
-    while ((a = strtok(NULL, ",")))
+    for (tok_t t = tok(str, ","); !tok_end(&t); tok_next(&t)) {
+	strview_t a = tok_get(&t);
 	add_column(g, a, true, G_TYPE_STRING);
+    }
     return g;
 }
 
