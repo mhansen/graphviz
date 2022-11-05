@@ -449,14 +449,14 @@ tool_defaults(sccmap)
 
 # ===================== Install third party DLLs on Windows ====================
 
-if(WIN32 AND install_win_dependency_dlls AND EXPAT_FOUND)
+if(WIN32 AND NOT MINGW AND install_win_dependency_dlls AND EXPAT_FOUND)
   install(
     FILES ${EXPAT_RUNTIME_LIBRARIES}
     DESTINATION ${BINARY_INSTALL_DIR}
   )
 endif()
 
-if(WIN32 AND install_win_dependency_dlls)
+if(WIN32 AND NOT MINGW AND install_win_dependency_dlls)
   install(
     FILES ${GETOPT_RUNTIME_LIBRARIES}
     DESTINATION ${BINARY_INSTALL_DIR}
