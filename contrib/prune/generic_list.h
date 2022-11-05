@@ -8,11 +8,6 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 #ifndef GENERIC_LIST_H
 #define GENERIC_LIST_H
 
@@ -30,7 +25,3 @@ extern "C" {
     extern void free_generic_list(generic_list_t * list);
 
 #endif				/* GENERIC_LIST_H */
-
-#ifdef __cplusplus
-}
-#endif
