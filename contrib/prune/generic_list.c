@@ -10,14 +10,12 @@
 
 #include <cgraph/alloc.h>
 #include <stdlib.h>
-#include <inttypes.h>
 
 #include "generic_list.h"
 
 #define DFLT_SIZE 100
 
-generic_list_t new_generic_list(uint64_t size)
-{
+generic_list_t new_generic_list(size_t size) {
     generic_list_t list = {0};
     if (size != 0) {
 	list.data = gv_calloc(size, sizeof(gl_data));
@@ -34,7 +32,7 @@ void free_generic_list(generic_list_t * list)
 }
 
 void add_to_generic_list(generic_list_t *list, gl_data element) {
-    uint64_t new_size;
+    size_t new_size;
 
     if (list->size == list->used) {
 	if (list->size == 0) {
