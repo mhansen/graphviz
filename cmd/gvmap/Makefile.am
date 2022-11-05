@@ -21,8 +21,6 @@ gvmap_SOURCES = gvmap.c make_map.c power.c country_graph_coloring.c
 
 cluster_SOURCES = cluster.c make_map.c power.c country_graph_coloring.c
 
-gvmap_CPPFLAGS = $(AM_CPPFLAGS)
-
 gvmap_LDADD = \
 	$(top_builddir)/lib/edgepaint/libedgepaint_C.la \
 	$(top_builddir)/lib/sfdpgen/libsfdpgen_C.la \
