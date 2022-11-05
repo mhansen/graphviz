@@ -108,9 +108,11 @@ target_include_directories(common_obj PRIVATE
   ../xdot
 )
 
-target_include_directories(common_obj SYSTEM PRIVATE
-  ${EXPAT_INCLUDE_DIRS}
-)
+if(EXPAT_FOUND)
+  target_include_directories(common_obj SYSTEM PRIVATE
+    ${EXPAT_INCLUDE_DIRS}
+  )
+endif()
 
 if(WIN32)
   target_include_directories(common_obj
