@@ -291,7 +291,7 @@ static GtkTreeView *update_tree(GtkTreeView * tree, grid * g)
 
     }
     if (g->count > 0) {
-	types = gv_calloc(g->count, sizeof(GType));
+	types = gv_calloc((size_t)g->count, sizeof(GType));
 	for (id = 0; id < g->count; id++)
 	    types[id] = g->columns[id]->type;
 	store = update_tree_store(g->store, g->count, types);
@@ -309,7 +309,8 @@ static void add_column(grid * g, char *name, bool editable, GType g_type)
 {
     if (*name == '\0')
 	return;
-    g->columns = gv_recalloc(g->columns, g->count, g->count + 1,
+    assert(g->count >= 0);
+    g->columns = gv_recalloc(g->columns, (size_t)g->count, (size_t)g->count + 1,
                              sizeof(gridCol*));
     g->columns[g->count] = gv_alloc(sizeof(gridCol));
     g->columns[g->count]->editable = editable;
