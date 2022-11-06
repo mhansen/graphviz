@@ -518,6 +518,13 @@ int agsafeset(void *obj, char *name, const char *value, const char *def) {
     return agxset(obj, a, value);
 }
 
+static void agraphattr_init_wrapper(Agraph_t *g, Agobj_t *ignored1,
+                                    void *ignored2) {
+  (void)ignored1;
+  (void)ignored2;
+
+  agraphattr_init(g);
+}
 
 /*
  * attach attributes to the already created graph objs.
@@ -531,8 +538,7 @@ static void init_all_attrs(Agraph_t * g)
     Agedge_t *e;
 
     root = agroot(g);
-    agapply(root, (Agobj_t *) root, (agobjfn_t) agraphattr_init,
-	    NULL, TRUE);
+    agapply(root, (Agobj_t*)root, agraphattr_init_wrapper, NULL, TRUE);
     for (n = agfstnode(root); n; n = agnxtnode(root, n)) {
 	agnodeattr_init(g, n);
 	for (e = agfstout(root, n); e; e = agnxtout(root, e)) {
