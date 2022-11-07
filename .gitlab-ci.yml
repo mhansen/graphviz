@@ -765,10 +765,10 @@ ubuntu-22.04-cmake-minimal-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-22.04-cmake-ASan-build-for-ctest:
+ubuntu-22.10-cmake-ASan-build-for-ctest:
     <<: *deb_build_definition
     needs:
-        - job: docker_build_ubuntu-22.04
+        - job: docker_build_ubuntu-22.10
           artifacts: false
     before_script:
         - export build_system="cmake"
@@ -809,7 +809,7 @@ ubuntu-22.04-cmake-ASan-build-for-ctest:
     tags:
         - linux
     variables:
-      IMAGE: ubuntu-22.04
+      IMAGE: ubuntu-22.10
 
 centos7-cmake-build:
     <<: *rpm_build_definition
@@ -1167,7 +1167,7 @@ ubuntu-22.10-cmake-test:
     variables:
       IMAGE: ubuntu-22.10
 
-ubuntu-22.04-cmake-ASan-test-including-ctest:
+ubuntu-22.10-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
     before_script:
         - export build_system="cmake"
@@ -1176,12 +1176,12 @@ ubuntu-22.04-cmake-ASan-test-including-ctest:
         - export LDFLAGS=" -g -fsanitize=address,undefined"
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
-        - job: "ubuntu-22.04-cmake-ASan-build-for-ctest"
+        - job: "ubuntu-22.10-cmake-ASan-build-for-ctest"
           artifacts: true
     tags:
         - linux
     variables:
-      IMAGE: ubuntu-22.04
+      IMAGE: ubuntu-22.10
 
 centos7-cmake-test:
     <<: *linux_test_definition
@@ -1443,10 +1443,10 @@ docker_push_ubuntu-22.10:
     - docker_build_ubuntu-22.10
 
 lint_clang_format:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-22.10:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-22.04
+    - docker_build_ubuntu-22.10
   script:
     # output some info into the logs for debugging
     - clang-format --version
@@ -1458,30 +1458,30 @@ lint_clang_format:
     - tags
 
 lint_cmake_format:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-22.10:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-22.04
+    - docker_build_ubuntu-22.10
   script:
     - git ls-files -z -- '**/CMakeLists.txt' '**/*.cmake' '**/*.cmake.in' | xargs -0 -- python3 -m cmakelang.lint
   except:
     - tags
 
 lint_html:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-22.10:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-22.04
+    - docker_build_ubuntu-22.10
   script:
     - git ls-files -z -- '**/*.html' | xargs -0 -- xmllint --nonet --noout --html --valid
   except:
     - tags
 
 lint_pylint:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-22.10:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-22.04
+    - docker_build_ubuntu-22.10
   script:
     - python3 -m pylint --rcfile=.pylintrc --disable=fixme `find . -name '*.py' | xargs`
   except:
