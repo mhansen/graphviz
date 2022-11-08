@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <fcntl.h>
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
@@ -243,7 +244,7 @@ static void gdgen_missingfont(char *fontreq) {
 	    p = DEFAULT_FONTPATH;
 #endif
 	free(lastmissing);
-	lastmissing = strdup(fontreq);
+	lastmissing = gv_strdup(fontreq);
 	n_errors++;
     }
 }
@@ -488,7 +489,7 @@ static void gdgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
 
     if (pen_ok || fill_ok) {
         if (n > 0 && (size_t)n > points_allocated) {
-	    points = realloc(points, (size_t)n * sizeof(gdPoint));
+	    points = gv_recalloc(points, points_allocated, (size_t)n, sizeof(gdPoint));
 	    points_allocated = (size_t)n;
 	}
         for (i = 0; i < n; i++) {
