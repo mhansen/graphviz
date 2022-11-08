@@ -396,7 +396,7 @@ char *gvplugin_list(GVC_t * gvc, api_t api, const char *str)
  */
 char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, const char *str)
 {
-    int api;
+    size_t api;
     const gvplugin_available_t *pnext, *plugin;
     int cnt = 0;
     char **list = NULL;
@@ -447,7 +447,7 @@ void gvplugin_write_status(GVC_t * gvc)
     }
 #endif
 
-    for (api = 0; api < ARRAY_SIZE(api_names); api++) {
+    for (api = 0; api < (int)ARRAY_SIZE(api_names); api++) {
         if (gvc->common.verbose >= 2)
             fprintf(stderr, "    %s\t: %s\n", api_names[api], gvplugin_list(gvc, api, ":"));
         else
@@ -465,7 +465,7 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
     gvplugin_package_t *package;
     const gvplugin_available_t *pnext;
     char bufa[100], *buf1, *buf2, bufb[100], *p, *q, *lq, *t;
-    int api, neededge_loadimage, neededge_device;
+    int neededge_loadimage, neededge_device;
 
     g = agopen("G", Agdirected, NULL);
     agattr(g, AGRAPH, "label", "");
@@ -498,7 +498,7 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
         strcpy(bufa, package->name);
         strcat(bufa, "_");
         buf1 = bufa + strlen(bufa);
-        for (api = 0; api < ARRAY_SIZE(api_names); api++) {
+        for (size_t api = 0; api < ARRAY_SIZE(api_names); api++) {
             strcpy(buf1, api_names[api]);
             ssg = agsubg(sg, bufa, 1);
             a = agfindgraphattr(ssg, "rank");
@@ -677,7 +677,7 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
         strcpy(bufa, package->name);
         strcat(bufa, "_");
         buf1 = bufa + strlen(bufa);
-        for (api = 0; api < ARRAY_SIZE(api_names); api++) {
+        for (size_t api = 0; api < ARRAY_SIZE(api_names); api++) {
             strcpy(buf1, api_names[api]);
             strcat(buf1, "_");
             buf2 = bufa + strlen(bufa);
