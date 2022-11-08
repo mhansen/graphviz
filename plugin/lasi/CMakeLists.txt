@@ -23,13 +23,13 @@ if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
   )
 
   target_include_directories(gvplugin_lasi SYSTEM PRIVATE
-    ${Freetype_INCLUDE_DIRS}
+    ${FREETYPE_INCLUDE_DIRS}
     ${LASI_INCLUDE_DIRS}
     ${PANGOCAIRO_INCLUDE_DIRS}
   )
 
   target_link_libraries(gvplugin_lasi
-    ${Freetype_LIBRARIES}
+    ${FREETYPE_LIBRARIES}
     ${LASI_LIBRARIES}
     ${PANGOCAIRO_LIBRARIES}
   )

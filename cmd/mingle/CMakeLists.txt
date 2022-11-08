@@ -12,10 +12,12 @@ if(with_sfdp AND ANN_FOUND)
       ../../lib/common
   )
 
-  target_include_directories(mingle
-    SYSTEM PRIVATE
-      ${GETOPT_INCLUDE_DIRS}
-  )
+  if(GETOPT_FOUND)
+    target_include_directories(mingle
+      SYSTEM PRIVATE
+        ${GETOPT_INCLUDE_DIRS}
+    )
+  endif()
 
   target_link_libraries(mingle
     cdt

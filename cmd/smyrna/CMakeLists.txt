@@ -87,8 +87,8 @@ if(with_smyrna)
   target_include_directories(smyrna SYSTEM PRIVATE
     ${EXPAT_INCLUDE_DIRS}
     ${FONTCONFIG_INCLUDE_DIRS}
-    ${Freetype_INCLUDE_DIRS}
-    ${GLUT_INCLUDE_DIRS}
+    ${FREETYPE_INCLUDE_DIRS}
+    ${GLUT_INCLUDE_DIR}
     ${GTK2_INCLUDE_DIRS}
     ${GTKGLEXT_INCLUDE_DIRS}
     ${GTS_INCLUDE_DIRS}
@@ -109,7 +109,7 @@ if(with_smyrna)
     xdot
     ${EXPAT_LIBRARIES}
     ${FONTCONFIG_LIBRARIES}
-    ${Freetype_LIBRARIES}
+    ${FREETYPE_LIBRARIES}
     ${GLUT_LIBRARIES}
     ${GTK2_LIBRARIES}
     ${GTKGLEXT_LIBRARIES}

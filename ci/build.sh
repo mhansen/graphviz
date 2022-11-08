@@ -37,7 +37,8 @@ if [ "${build_system}" = "cmake" ]; then
     cmake --version
     mkdir build
     pushd build
-    cmake --log-level=VERBOSE ${CMAKE_OPTIONS:-} ..
+    cmake --log-level=VERBOSE --warn-uninitialized -Werror=dev \
+      ${CMAKE_OPTIONS:-} ..
     cmake --build .
     cpack
     popd

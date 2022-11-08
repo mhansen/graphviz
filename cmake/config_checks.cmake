@@ -37,9 +37,13 @@ check_type_size( intptr_t    INTPTR_T    )
 
 # Library checks
 set( HAVE_ANN       ${ANN_FOUND}        )
-set( HAVE_EXPAT     ${EXPAT_FOUND}      )
+if(with_expat AND EXPAT_FOUND)
+  set(HAVE_EXPAT 1)
+endif()
 set( HAVE_LIBGD     ${GD_FOUND}         )
-set( HAVE_ZLIB      ${ZLIB_FOUND}       )
+if(with_zlib AND ZLIB_FOUND)
+  set(HAVE_ZLIB 1)
+endif()
 
 if(LTDL_FOUND)
   set(ENABLE_LTDL 1)
