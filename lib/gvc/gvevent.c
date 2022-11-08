@@ -370,18 +370,18 @@ static void gvevent_button_press(GVJ_t * job, int button, pointf pointer)
 	gvevent_find_current_obj(job, pointer);
 	gvevent_select_current_obj(job);
         job->click = true;
-	job->button = button;
+	job->button = (unsigned char)button;
 	job->needs_refresh = true;
 	break;
     case 2: /* pan */
         job->click = true;
-	job->button = button;
+	job->button = (unsigned char)button;
 	job->needs_refresh = true;
 	break;
     case 3: /* insert node or edge */
 	gvevent_find_current_obj(job, pointer);
         job->click = true;
-	job->button = button;
+	job->button = (unsigned char)button;
 	job->needs_refresh = true;
 	break;
     case 4:
