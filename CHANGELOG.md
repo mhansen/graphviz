@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (7.0.1)]
+## [7.0.1] – 2022-11-09
 
 ### Added
 
@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When built with zlib support, Graphviz will unconditionally use
   `deflateBound`. The only user-visible effect should be slightly decreased
   memory usage when using a zlib-compressed output format.
-- The test suite only detects Graphviz componanion programs adjacent to the
-  irst `dot` found in `$PATH` #2201
+- The test suite only detects Graphviz companion programs adjacent to the first
+  `dot` found in `$PATH` #2201
 
 ### Fixed
 
@@ -1892,7 +1892,7 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (7.0.1)]: https://gitlab.com/graphviz/graphviz/compare/7.0.0...main
+[7.0.1]: https://gitlab.com/graphviz/graphviz/compare/7.0.0...7.0.1
 [7.0.0]: https://gitlab.com/graphviz/graphviz/compare/6.0.2...7.0.0
 [6.0.2]: https://gitlab.com/graphviz/graphviz/compare/6.0.1...6.0.2
 [6.0.1]: https://gitlab.com/graphviz/graphviz/compare/5.0.1...6.0.1
