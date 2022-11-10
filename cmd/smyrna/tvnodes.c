@@ -8,11 +8,15 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include "tvnodes.h"
 #include "viewport.h"
 #include "topviewfuncs.h"
 #include <cgraph/alloc.h>
+#include <cgraph/strview.h>
+#include <cgraph/tokenize.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef struct {
     GType type;
@@ -21,11 +25,11 @@ typedef struct {
 } gridCol;
 typedef struct {
     int count;
-    gridCol **columns;
+    gridCol *columns;
     GtkTreeStore *store;
     char *flds;
     char *buf;
-} grid;
+} grid_t;
 
 static char* ID = "ID";
 static char* Name = "Name";
@@ -188,14 +192,12 @@ static void create_toggle_column(char *Title, GtkTreeView * tree, int asso,
 
 }
 
-static void populate_data(Agraph_t * g, grid * grid)
-{
+static void populate_data(Agraph_t *g, grid_t *grid) {
     Agnode_t *v;
     int id = 0;
     GtkTreeIter iter;
     GValue value = {0};
     char* bf;
-    gridCol* cp;
 
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	if (!ND_selected(v))
@@ -203,18 +205,18 @@ static void populate_data(Agraph_t * g, grid * grid)
 	gtk_tree_store_append(grid->store, &iter, NULL);
 
 	for (id = 0; id < grid->count; id++) {
-	    cp = grid->columns[id];
-	    if (cp->name == ID) continue;
+	    gridCol *cp = &grid->columns[id];
+	    if (strcmp(cp->name, ID) == 0) continue;
 
-	    if (cp->name == Name)
+	    if (strcmp(cp->name, Name) == 0)
 		bf = agnameof(v);
 	    else
 		bf = agget(v, cp->name);
-	    if ((!bf) && (cp->name != Visible))
+	    if (!bf && strcmp(cp->name, Visible) != 0)
 		continue;
 
 	    g_value_init(&value, cp->type);
-	    switch (grid->columns[id]->type) {
+	    switch (grid->columns[id].type) {
 	    case G_TYPE_BOOLEAN:
 		if (bf) {
 		    if ((strcmp(bf, "1") == 0) || (strcmp(bf, "true") == 0)
@@ -223,7 +225,7 @@ static void populate_data(Agraph_t * g, grid * grid)
 		    else
 			g_value_set_boolean(&value, 0);
 		} else {
-		    if (cp->name == Visible)
+		    if (strcmp(cp->name, Visible) == 0)
 			g_value_set_boolean(&value, 1);
 		}
 		break;
@@ -254,8 +256,7 @@ static GtkTreeStore *update_tree_store(GtkTreeStore * store, int ncolumns,
 
 static void create_column(gridCol * c, GtkTreeView * tree, int id)
 {
-    if (!c)
-	return;
+    assert(c != NULL);
     switch (c->type) {
     case G_TYPE_STRING:
     case G_TYPE_INT:
@@ -269,8 +270,7 @@ static void create_column(gridCol * c, GtkTreeView * tree, int id)
     }
 }
 
-static GtkTreeView *update_tree(GtkTreeView * tree, grid * g)
-{
+static GtkTreeView *update_tree(GtkTreeView *tree, grid_t *g) {
 
     GtkTreeStore *store = NULL;
     GtkTreeViewColumn *column;
@@ -291,38 +291,36 @@ static GtkTreeView *update_tree(GtkTreeView * tree, grid * g)
 
     }
     if (g->count > 0) {
-	types = gv_calloc(g->count, sizeof(GType));
+	types = gv_calloc((size_t)g->count, sizeof(GType));
 	for (id = 0; id < g->count; id++)
-	    types[id] = g->columns[id]->type;
+	    types[id] = g->columns[id].type;
 	store = update_tree_store(g->store, g->count, types);
 	free (types);
 	gtk_tree_view_set_model(tree, (GtkTreeModel *) store);
 	/*insert columns */
 	for (id = 0; id < g->count; id++)
-	    create_column(g->columns[id], tree, id);
+	    create_column(&g->columns[id], tree, id);
     }
     g->store = store;
     return tree;
 }
 
-static void add_column(grid * g, char *name, bool editable, GType g_type)
-{
-    if (*name == '\0')
+static void add_column(grid_t *g, strview_t name, bool editable, GType g_type) {
+    if (strview_str_eq(name, ""))
 	return;
-    g->columns = gv_recalloc(g->columns, g->count, g->count + 1,
-                             sizeof(gridCol*));
-    g->columns[g->count] = gv_alloc(sizeof(gridCol));
-    g->columns[g->count]->editable = editable;
-    g->columns[g->count]->name = name;
-    g->columns[g->count]->type = g_type;
+    assert(g->count >= 0);
+    g->columns = gv_recalloc(g->columns, (size_t)g->count, (size_t)g->count + 1,
+                             sizeof(gridCol));
+    g->columns[g->count].editable = editable;
+    g->columns[g->count].name = strview_str(name);
+    g->columns[g->count].type = g_type;
     g->count++;
 }
 
-static void clearGrid(grid * g)
-{
+static void clearGrid(grid_t * g) {
     int id;
     for (id = 0; id < g->count; id++) {
-	free(g->columns[id]);
+	free(g->columns[id].name);
     }
     free(g->columns);
     free(g->buf);
@@ -331,21 +329,15 @@ static void clearGrid(grid * g)
     g->flds = 0;
 }
 
-static grid *initGrid(void)
-{
-    grid *gr = gv_alloc(sizeof(grid));
+static grid_t *initGrid(void) {
+    grid_t *gr = gv_alloc(sizeof(grid_t));
     gr->columns = NULL;
     gr->count = 0;
     gr->buf = 0;
     return gr;
 }
 
-static grid *update_columns(grid * g, char *str)
-{
-    /*free existing memory if necessary */
-    char *a;
-    char *buf;
-
+static grid_t *update_columns(grid_t *g, char *str) {
     if (g) {
 	if (g->flds != str)
 	    clearGrid(g);
@@ -353,16 +345,15 @@ static grid *update_columns(grid * g, char *str)
 	    return g;
     } else
 	g = initGrid();
-    add_column(g, Name, false, G_TYPE_STRING);
+    add_column(g, strview(Name, '\0'), false, G_TYPE_STRING);
     if (!str)
 	return g;
 
     g->flds = str;
-    buf = strdup (str);  /* need to dup because str is actual graph attribute value */
-    a = strtok(buf, ",");
-    add_column(g, a, true, G_TYPE_STRING);
-    while ((a = strtok(NULL, ",")))
+    for (tok_t t = tok(str, ","); !tok_end(&t); tok_next(&t)) {
+	strview_t a = tok_get(&t);
 	add_column(g, a, true, G_TYPE_STRING);
+    }
     return g;
 }
 
@@ -374,7 +365,7 @@ void setup_tree(Agraph_t * g)
        G_TYPE_BOOLEAN:
      */
     static GtkTreeView *tree;
-    static grid *gr;
+    static grid_t *gr;
     char *buf = agget(g, "datacolumns");
 
     gr = update_columns(gr, buf);
