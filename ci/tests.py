@@ -99,9 +99,7 @@ def test_existence(binary: str):
 
   tools_not_built_with_cmake = [
     "dot_builtins",
-    "gv2gxl",
     "gvedit",
-    "gxl2dot",
   ]
 
   tools_not_built_with_msbuild = [

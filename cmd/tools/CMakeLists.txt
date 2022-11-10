@@ -356,29 +356,36 @@ if(EXPAT_FOUND)
 
   tool_defaults(gxl2gv)
 
-  set(DOT2GXL "${CMAKE_CURRENT_BINARY_DIR}/dot2gxl${CMAKE_EXECUTABLE_SUFFIX}")
-  if(WIN32 OR CYGWIN)
-    # copy instead of symlink to avoid
-    # https://gitlab.com/graphviz/graphviz/-/issues/2123
-    add_custom_command(
-      TARGET gxl2gv
-      POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:gxl2gv> ${DOT2GXL}
-      COMMENT "Copying gxl2gv to ${DOT2GXL}")
-    install(
-      PROGRAMS ${DOT2GXL}
-      DESTINATION ${BINARY_INSTALL_DIR})
-  else()
-    add_custom_command(
-      TARGET gxl2gv
-      POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:gxl2gv>
-        ${DOT2GXL}
-      COMMENT "Linking gxl2gv as ${DOT2GXL}")
-    install(
-      FILES ${DOT2GXL}
-      DESTINATION ${BINARY_INSTALL_DIR})
-  endif()
+  list(APPEND gxl2gv_aliases dot2gxl gv2gxl gxl2dot)
+  foreach(cmd_alias IN LISTS gxl2gv_aliases)
+    set(GXL2GV_COPY
+        "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}${CMAKE_EXECUTABLE_SUFFIX}")
+    if(WIN32 OR CYGWIN)
+      # copy instead of symlink to avoid
+      # https://gitlab.com/graphviz/graphviz/-/issues/2123
+      add_custom_command(
+        TARGET gxl2gv
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:gxl2gv> ${GXL2GV_COPY}
+        COMMENT "Copying gxl2gv to ${GXL2GV_COPY}"
+      )
+      install(
+        PROGRAMS ${GXL2GV_COPY}
+        DESTINATION ${BINARY_INSTALL_DIR}
+      )
+    else()
+      add_custom_command(
+        TARGET gxl2gv
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE_NAME:gxl2gv>
+          ${cmd_alias}
+        COMMENT "Linking gxl2gv as ${cmd_alias}")
+      install(
+        FILES ${GXL2GV_COPY}
+        DESTINATION ${BINARY_INSTALL_DIR}
+      )
+    endif()
+  endforeach()
 
 endif()
 
