@@ -28,18 +28,6 @@
 #include <sparse/DotIO.h>
 #include <sparse/colorutil.h>
 
-#ifdef _WIN32 /*dependencies*/
-    #pragma comment( lib, "cgraph.lib" )
-    #pragma comment( lib, "gvc.lib" )
-    #pragma comment( lib, "ingraphs.lib" )
-    #pragma comment( lib, "sparse.lib" )
-    #pragma comment( lib, "sfdp.lib" )
-    #pragma comment( lib, "edgepaintlib.lib" )
-    #pragma comment( lib, "neatogen.lib" )
-    #pragma comment( lib, "rbtree.lib" )
-    #pragma comment( lib, "cdt.lib" )
-#endif   /* not _WIN32 */
-
 typedef struct {
   FILE* outfp;
   char** infiles;

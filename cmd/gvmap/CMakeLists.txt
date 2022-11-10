@@ -1,5 +1,68 @@
 if(with_sfdp)
 
+  add_executable(cluster
+    cluster.c
+    country_graph_coloring.c
+    make_map.c
+    power.c
+  )
+
+  target_include_directories(cluster PRIVATE
+    ../../lib
+    ../../lib/cdt
+    ../../lib/cgraph
+    ../../lib/common
+  )
+
+  if(GETOPT_FOUND)
+    target_include_directories(cluster SYSTEM PRIVATE
+      ${GETOPT_INCLUDE_DIRS}
+    )
+  endif()
+
+  target_link_libraries(cluster PRIVATE
+    cgraph
+    edgepaintlib
+    gvc
+    ingraphs
+    neatogen
+    rbtree
+    sfdpgen
+    sparse
+  )
+
+  if(NOT HAVE_GETOPT_H)
+    target_link_libraries(cluster PRIVATE ${GETOPT_LINK_LIBRARIES})
+  endif()
+
+  find_program(GZIP gzip)
+  if(GZIP)
+    add_custom_target(man-cluster ALL DEPENDS cluster.1.gz
+                      COMMENT "cluster man page")
+    add_custom_command(
+      OUTPUT cluster.1.gz
+      COMMAND ${GZIP} -9 --no-name --to-stdout cluster.1
+        >"${CMAKE_CURRENT_BINARY_DIR}/cluster.1.gz"
+      MAIN_DEPENDENCY cluster.1
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMENT "compress cluster man page")
+    install(
+      FILES ${CMAKE_CURRENT_BINARY_DIR}/cluster.1.gz
+      DESTINATION ${MAN_INSTALL_DIR}/man1)
+  else()
+    install(
+      FILES cluster.1
+      DESTINATION ${MAN_INSTALL_DIR}/man1
+    )
+  endif()
+
+  install(
+    TARGETS cluster
+    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+  )
+
   add_executable(gvmap
     country_graph_coloring.c
     country_graph_coloring.h
