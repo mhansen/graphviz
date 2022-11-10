@@ -7,7 +7,6 @@ This is based on Gitlab’s generic package example,
 https://gitlab.com/gitlab-org/release-cli/-/tree/master/docs/examples/release-assets-as-generic-package
 """
 
-import argparse
 import hashlib
 import json
 import logging
@@ -91,22 +90,14 @@ def get_format(path: Path) -> str:
     return "ZIP archive"
   return path.suffix[1:].lower()
 
-def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
+def main() -> int: # pylint: disable=missing-function-docstring
 
   # setup logging to print to stderr
   global log
   ch = logging.StreamHandler()
   log = logging.getLogger("deploy.py")
   log.addHandler(ch)
-
-  # parse command line arguments
-  parser = argparse.ArgumentParser(description="Graphviz deployment script")
-  parser.add_argument("--verbose", action="store_true", help="Print more "
-    "diagnostic information.")
-  options = parser.parse_args(args[1:])
-
-  if options.verbose:
-    log.setLevel(logging.INFO)
+  log.setLevel(logging.INFO)
 
   if os.environ.get("CI") is None:
     log.error("CI environment variable unset; refusing to run")
@@ -240,4 +231,4 @@ def main(args: List[str]) -> int: # pylint: disable=missing-function-docstring
   return 0
 
 if __name__ == "__main__":
-  sys.exit(main(sys.argv))
+  sys.exit(main())
