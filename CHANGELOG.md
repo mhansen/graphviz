@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.2)]
 
+### Added
+
+- The `prune` utility is now included in the CMake build system. #1836
+
 ## [7.0.1] – 2022-11-09
 
 ### Added

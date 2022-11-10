@@ -14,28 +14,28 @@
 #include <ctype.h>
 
 #include <getopt.h>
-
-#include "cgraph.h"
-#include "exit.h"
-#include "ingraphs.h"
+#include <cgraph/alloc.h>
+#include <cgraph/cgraph.h>
+#include <cgraph/exit.h>
+#include <ingraphs/ingraphs.h>
 #include "generic_list.h"
 
 /* structure to hold an attribute specified on the commandline */
-typedef struct strattr_s {
+typedef struct {
     char *n;
     char *v;
 } strattr_t;
 
-int remove_child(Agraph_t * graph, Agnode_t * node);
-void help_message(const char *progname);
+static int remove_child(Agraph_t * graph, Agnode_t * node);
+static void help_message(const char *progname);
 
-generic_list_t *addattr(generic_list_t * l, char *a);
-generic_list_t *addnode(generic_list_t * l, char *n);
+static void addattr(generic_list_t * l, char *a);
+static void addnode(generic_list_t * l, char *n);
 
 int verbose = 0;		/* Flag to indicate verbose message output */
 
 /* wrapper to match libcgraph conventions with libingraph */
-Agraph_t *gread(FILE * fp);
+static Agraph_t *gread(FILE *fp);
 
 #define NDNAME "mk"
 
@@ -67,9 +67,6 @@ int main(int argc, char **argv)
 
     char **files;
 
-    generic_list_t *attr_list;
-    generic_list_t *node_list;
-
     unsigned long i, j;
 
     opterr = 0;
@@ -81,32 +78,24 @@ int main(int argc, char **argv)
 	progname++;		/* character after last '/' */
     }
 
-    attr_list = new_generic_list(16);
-    node_list = new_generic_list(16);
+    generic_list_t attr_list = new_generic_list(16);
+    generic_list_t node_list = new_generic_list(16);
 
     while ((c = getopt(argc, argv, "hvn:N:")) != -1) {
 	switch (c) {
 	case 'N':
-	    {
-		attr_list = addattr(attr_list, optarg);
+		addattr(&attr_list, optarg);
 		break;
-	    }
 	case 'n':
-	    {
-		node_list = addnode(node_list, optarg);
+		addnode(&node_list, optarg);
 		break;
-	    }
 	case 'h':
-	    {
 		help_message(progname);
 		graphviz_exit(EXIT_SUCCESS);
 		break;
-	    }
 	case 'v':
-	    {
 		verbose = 1;
 		break;
-	    }
 	case '?':
 	    if (optopt == '?') {
 		help_message(progname);
@@ -146,17 +135,16 @@ int main(int argc, char **argv)
 	aginit(graph, AGNODE, NDNAME, sizeof(ndata), 1);
 
 	/* prune all nodes specified on the commandline */
-	for (i = 0; i < node_list->used; i++) {
+	for (i = 0; i < node_list.used; i++) {
 	    if (verbose == 1)
-		fprintf(stderr, "Pruning node %s\n",
-			(char *) node_list->data[i]);
+		fprintf(stderr, "Pruning node %s\n", (char*)node_list.data[i]);
 
 	    /* check whether a node of that name exists at all */
-	    node = agnode(graph, (char *) node_list->data[i], 0);
+	    node = agnode(graph, node_list.data[i], 0);
 	    if (node == NULL) {
 		fprintf(stderr,
 			"*** Warning: No such node: %s -- gracefully skipping this one\n",
-			(char *) node_list->data[i]);
+			(char*)node_list.data[i]);
 	    } else {
 		MARK(node);	/* Avoid cycles */
 		/* Iterate over all outgoing edges */
@@ -173,31 +161,28 @@ int main(int argc, char **argv)
 		UNMARK(node);	/* Unmark so that it can be removed in later passes */
 
 		/* Change attribute (e.g. border style) to show that node has been pruneed */
-		for (j = 0; j < attr_list->used; j++) {
+		for (j = 0; j < attr_list.used; j++) {
 		    /* create attribute if it doesn't exist and set it */
 		    attr =
-			agattr(graph, AGNODE,
-			       ((strattr_t *) attr_list->data[j])->n, "");
+			agattr(graph, AGNODE, ((strattr_t*)attr_list.data[j])->n, "");
 		    if (attr == NULL) {
 			fprintf(stderr, "Couldn't create attribute: %s\n",
-				((strattr_t *) attr_list->data[j])->n);
+				((strattr_t*)attr_list.data[j])->n);
 			graphviz_exit(EXIT_FAILURE);
 		    }
-		    agxset(node, attr,
-			   ((strattr_t *) attr_list->data[j])->v);
+		    agxset(node, attr, ((strattr_t*)attr_list.data[j])->v);
 		}
 	    }
 	}
 	agwrite(graph, stdout);
 	agclose(graph);
     }
-    free(attr_list);
-    free(node_list);
+    free_generic_list(&attr_list);
+    free_generic_list(&node_list);
     graphviz_exit(EXIT_SUCCESS);
 }
 
-int remove_child(Agraph_t * graph, Agnode_t * node)
-{
+static int remove_child(Agraph_t *graph, Agnode_t *node) {
     Agedge_t *edge;
     Agedge_t *nexte;
 
@@ -229,8 +214,7 @@ int remove_child(Agraph_t * graph, Agnode_t * node)
     return 1;
 }
 
-void help_message(const char *progname)
-{
+static void help_message(const char *progname) {
     fprintf(stderr, "\
 Usage: %s [options] [<files>]\n\
 \n\
@@ -245,22 +229,15 @@ Both options `-n' and `-N' can be used multiple times on the command line.\n", p
 }
 
 /* wrapper to match libcgraph conventions with libingraph */
-Agraph_t *gread(FILE * fp)
-{
+static Agraph_t *gread(FILE *fp) {
     return agread(fp, NULL);
 }
 
 /* add element to attribute list */
-generic_list_t *addattr(generic_list_t * l, char *a)
-{
+static void addattr(generic_list_t * l, char *a) {
     char *p;
-    strattr_t *sp;
 
-    sp = malloc(sizeof(strattr_t));
-    if (sp == NULL) {
-	perror("[addattr()->malloc()]");
-	graphviz_exit(EXIT_FAILURE);
-    }
+    strattr_t *sp = gv_alloc(sizeof(strattr_t));
 
     /* Split argument spec. at first '=' */
     p = strchr(a, '=');
@@ -271,32 +248,17 @@ generic_list_t *addattr(generic_list_t * l, char *a)
     *(p++) = '\0';
 
     /* pointer to argument name */
-    sp->n = strdup(a);
-    if (sp->n == NULL) {
-	perror("[addattr()->strdup()]");
-	graphviz_exit(EXIT_FAILURE);
-    }
+    sp->n = gv_strdup(a);
 
     /* pointer to argument value */
-    sp->v = strdup(p);
-    if (sp->v == NULL) {
-	perror("[addattr()->strdup()]");
-	graphviz_exit(EXIT_FAILURE);
-    }
+    sp->v = gv_strdup(p);
 
-    return add_to_generic_list(l, (gl_data) sp);
+    add_to_generic_list(l, sp);
 }
 
 /* add element to node list */
-generic_list_t *addnode(generic_list_t * l, char *n)
-{
-    char *sp;
+static void addnode(generic_list_t *l, char *n) {
+    char *sp = gv_strdup(n);
 
-    sp = strdup(n);
-    if (sp == NULL) {
-	perror("[addnode()->strdup()]");
-	graphviz_exit(EXIT_FAILURE);
-    }
-
-    return add_to_generic_list(l, (gl_data) sp);
+    add_to_generic_list(l, sp);
 }

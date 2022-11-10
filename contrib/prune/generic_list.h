@@ -8,29 +8,19 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#pragma once
 
-
-#ifndef GENERIC_LIST_H
-#define GENERIC_LIST_H
+#include <stddef.h>
 
     typedef void *gl_data;
 
-    typedef struct generic_list_s {
-	uint64_t used;	/* number of elements in the list */
-	uint64_t size;	/* number of elements that the list can hold */
+    typedef struct {
+	size_t used;	/* number of elements in the list */
+	size_t size;	/* number of elements that the list can hold */
 	gl_data *data;		/* pointer to first element */
     } generic_list_t;
 
-    extern generic_list_t *new_generic_list(uint64_t size);
-    extern generic_list_t *add_to_generic_list(generic_list_t * list,
+    extern generic_list_t new_generic_list(size_t size);
+    extern void add_to_generic_list(generic_list_t * list,
 					       gl_data element);
     extern void free_generic_list(generic_list_t * list);
-
-#endif				/* GENERIC_LIST_H */
-
-#ifdef __cplusplus
-}
-#endif
