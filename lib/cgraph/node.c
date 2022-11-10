@@ -217,8 +217,9 @@ int agdelnode(Agraph_t * g, Agnode_t * n)
 	return FAILURE;
 }
 
-static void dict_relabel(Agnode_t * n, void *arg)
-{
+static void dict_relabel(Agraph_t *ignored, Agnode_t *n, void *arg) {
+    (void)ignored;
+
     Agraph_t *g;
     uint64_t new_id;
 

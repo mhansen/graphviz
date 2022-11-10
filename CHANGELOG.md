@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `cluster` and `prune` utilities is now included in the CMake build
   system. #1836
 
+### Fixed
+
+- `gxl2gv`, when dealing with `name` attributes, may be less likely to crash. We
+  say “may be less likely” because a bug remains that makes a crash still
+  the most likely outcome. #2300
+
 ## [7.0.1] – 2022-11-09
 
 ### Added
