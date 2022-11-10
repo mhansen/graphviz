@@ -61,9 +61,6 @@ ssize_t sfwrite(Sfio_t * f, const void * buf, size_t n)
 	    f->endb = f->data + n;
 	    f->here += n;
 	}
-
-	if ((f->mode & SF_READ) && f->proc)
-	    f->next += n;
     }
 
     s = begs = (uchar *) buf;

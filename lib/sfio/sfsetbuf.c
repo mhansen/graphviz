@@ -10,10 +10,23 @@
 
 #include <stddef.h>
 #include	<sfio/sfhdr.h>
+#include <unistd.h>
 
-#ifdef HAVE_GETPAGESIZE
-	extern int getpagesize(void);
+#ifdef _WIN32
+#include <windows.h>
+#include <sysinfoapi.h>
 #endif
+
+static ssize_t get_page_size(void) {
+#ifdef _WIN32
+  SYSTEM_INFO info;
+  GetSystemInfo(&info);
+  return (ssize_t)info.dwPageSize;
+#else
+  return (ssize_t)sysconf(_SC_PAGESIZE);
+#endif
+}
+
 /*	Set a (new) buffer for a stream.
 **	If size < 0, it is assigned a suitable value depending on the
 **	kind of stream. The actual buffer size allocated is dependent
@@ -70,11 +83,6 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
 	f->mode = (f->mode & SF_RDWR) | SF_LOCK;
     else {
 	int rv;
-
-	/* make sure there is no hidden read data */
-	if (f->proc && (f->flags & SF_READ) && (f->mode & SF_WRITE) &&
-	    _sfmode(f, SF_READ, local) < 0)
-	    SFMTXRETURN(f, NULL);
 
 	/* synchronize first */
 	SFLOCK(f, local);
@@ -176,19 +184,12 @@ void *sfsetbuf(Sfio_t * f, void * buf, size_t size)
 #endif
 		    errno = oerrno;
 		}
-
-		/* initialize side buffer for r+w unseekable streams */
-		if (!f->proc && (f->bits & SF_BOTH))
-		    (void) _sfpopen(f, -1, -1, 0);
 	    }
 	}
 
 	/* set page size, this is also the desired default buffer size */
 	if (_Sfpage <= 0) {
-#ifdef HAVE_GETPAGESIZE
-	    if ((_Sfpage = (size_t) getpagesize()) <= 0)
-#endif
-		_Sfpage = SF_PAGE;
+		_Sfpage = get_page_size();
 	}
     }
 

@@ -110,10 +110,6 @@ int sfclose(Sfio_t * f)
     free(f->rsrv);
     f->rsrv = NULL;
 
-    /* delete any associated sfpopen-data */
-    if (f->proc)
-	rv = _sfpclose(f);
-
     if (!local) {
 	if (f->disc && (ex = SFRAISE(f, SF_FINAL, NULL)) != 0) {
 	    rv = ex;
@@ -124,7 +120,6 @@ int sfclose(Sfio_t * f)
 	    free(f);
 	else {
 	    f->disc = NULL;
-	    f->stdio = NULL;
 	    f->mode = SF_AVAIL;
 	}
     }

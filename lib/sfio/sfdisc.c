@@ -26,10 +26,7 @@ Sfdisc_t *sfdisc(Sfio_t * f, Sfdisc_t * disc)
 
     SFMTXSTART(f, NULL);
 
-    if ((f->flags & SF_READ) && f->proc && (f->mode & SF_WRITE)) {	/* make sure in read mode to check for read-ahead data */
-	if (_sfmode(f, SF_READ, 0) < 0)
-	    SFMTXRETURN(f, NULL);
-    } else if ((f->mode & SF_RDWR) != f->mode && _sfmode(f, 0, 0) < 0)
+    if ((f->mode & SF_RDWR) != f->mode && _sfmode(f, 0, 0) < 0)
 	SFMTXRETURN(f, NULL);
 
     SFLOCK(f, 0);
