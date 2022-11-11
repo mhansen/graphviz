@@ -116,16 +116,20 @@ static int imagetype (usershape_t *us)
     return FT_NULL;
 }
     
-static bool get_int_lsb_first(FILE *f, size_t sz, unsigned int *val) {
+static bool get_int_lsb_first(FILE *f, size_t sz, int *val) {
     int ch;
 
-    *val = 0;
+    unsigned value = 0;
     for (size_t i = 0; i < sz; i++) {
 	ch = fgetc(f);
 	if (feof(f))
 	    return false;
-	*val |= (unsigned)ch << 8 * i;
+	value |= (unsigned)ch << 8 * i;
     }
+    if (value > INT_MAX) {
+	return false;
+    }
+    *val = (int)value;
     return true;
 }
 	
@@ -291,7 +295,7 @@ static void ico_size (usershape_t *us)
 
 static void webp_size (usershape_t *us)
 {
-    unsigned int w, h;
+    int w, h;
 
     us->dpi = 0;
     fseek(us->f, 15, SEEK_SET);
@@ -313,7 +317,7 @@ static void webp_size (usershape_t *us)
 
 static void gif_size (usershape_t *us)
 {
-    unsigned int w, h;
+    int w, h;
 
     us->dpi = 0;
     fseek(us->f, 6, SEEK_SET);
@@ -324,7 +328,7 @@ static void gif_size (usershape_t *us)
 }
 
 static void bmp_size (usershape_t *us) {
-    unsigned int size_x_msw, size_x_lsw, size_y_msw, size_y_lsw;
+    int size_x_msw, size_x_lsw, size_y_msw, size_y_lsw;
 
     us->dpi = 0;
     fseek (us->f, 16, SEEK_SET);
