@@ -72,6 +72,7 @@ if(LTDL_FOUND)
 endif()
 
 if(ZLIB_FOUND)
+  target_include_directories(gvc SYSTEM PRIVATE ${ZLIB_INCLUDE_DIRS})
   target_link_libraries(gvc PUBLIC ${ZLIB_LIBRARIES})
 endif()
 
