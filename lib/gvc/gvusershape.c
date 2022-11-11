@@ -143,8 +143,7 @@ static bool get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
     return true;
 }
 
-static unsigned int svg_units_convert(double n, char *u)
-{
+static int svg_units_convert(double n, char *u) {
     if (strcmp(u, "in") == 0)
 	return ROUND(n * POINTS_PER_INCH);
     if (strcmp(u, "px") == 0)
@@ -203,7 +202,7 @@ static int find_attribute(const char *s, match_t *result) {
 
 static void svg_size (usershape_t *us)
 {
-    unsigned int w = 0, h = 0;
+    int w = 0, h = 0;
     double n, x0, y0, x1, y1;
     char u[10];
     char *attribute, *value, *re_string;
