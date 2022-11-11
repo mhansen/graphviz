@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -116,35 +116,42 @@ static int imagetype (usershape_t *us)
     return FT_NULL;
 }
     
-static bool get_int_lsb_first(FILE *f, size_t sz, unsigned int *val) {
+static bool get_int_lsb_first(FILE *f, size_t sz, int *val) {
     int ch;
 
-    *val = 0;
+    unsigned value = 0;
     for (size_t i = 0; i < sz; i++) {
 	ch = fgetc(f);
 	if (feof(f))
 	    return false;
-	*val |= (unsigned)ch << 8 * i;
+	value |= (unsigned)ch << 8 * i;
     }
+    if (value > INT_MAX) {
+	return false;
+    }
+    *val = (int)value;
     return true;
 }
 	
-static bool get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
+static bool get_int_msb_first(FILE *f, size_t sz, int *val) {
     int ch;
 
-    *val = 0;
+    unsigned value = 0;
     for (size_t i = 0; i < sz; i++) {
 	ch = fgetc(f);
 	if (feof(f))
 	    return false;
-        *val <<= 8;
-	*val |= (unsigned)ch;
+        value <<= 8;
+	value |= (unsigned)ch;
     }
+    if (value > INT_MAX) {
+	return false;
+    }
+    *val = (int)value;
     return true;
 }
 
-static unsigned int svg_units_convert(double n, char *u)
-{
+static int svg_units_convert(double n, char *u) {
     if (strcmp(u, "in") == 0)
 	return ROUND(n * POINTS_PER_INCH);
     if (strcmp(u, "px") == 0)
@@ -203,7 +210,7 @@ static int find_attribute(const char *s, match_t *result) {
 
 static void svg_size (usershape_t *us)
 {
-    unsigned int w = 0, h = 0;
+    int w = 0, h = 0;
     double n, x0, y0, x1, y1;
     char u[10];
     char *attribute, *value, *re_string;
@@ -264,7 +271,7 @@ static void svg_size (usershape_t *us)
 
 static void png_size (usershape_t *us)
 {
-    unsigned int w, h;
+    int w, h;
 
     us->dpi = 0;
     fseek(us->f, 16, SEEK_SET);
@@ -276,7 +283,7 @@ static void png_size (usershape_t *us)
 
 static void ico_size (usershape_t *us)
 {
-    unsigned int w, h;
+    int w, h;
 
     us->dpi = 0;
     fseek(us->f, 6, SEEK_SET);
@@ -288,7 +295,7 @@ static void ico_size (usershape_t *us)
 
 static void webp_size (usershape_t *us)
 {
-    unsigned int w, h;
+    int w, h;
 
     us->dpi = 0;
     fseek(us->f, 15, SEEK_SET);
@@ -310,7 +317,7 @@ static void webp_size (usershape_t *us)
 
 static void gif_size (usershape_t *us)
 {
-    unsigned int w, h;
+    int w, h;
 
     us->dpi = 0;
     fseek(us->f, 6, SEEK_SET);
@@ -321,7 +328,7 @@ static void gif_size (usershape_t *us)
 }
 
 static void bmp_size (usershape_t *us) {
-    unsigned int size_x_msw, size_x_lsw, size_y_msw, size_y_lsw;
+    int size_x_msw, size_x_lsw, size_y_msw, size_y_lsw;
 
     us->dpi = 0;
     fseek (us->f, 16, SEEK_SET);
@@ -335,7 +342,7 @@ static void bmp_size (usershape_t *us) {
 }
 
 static void jpeg_size (usershape_t *us) {
-    unsigned int marker, length, size_x, size_y;
+    int marker, length, size_x, size_y;
 
     /* These are the markers that follow 0xff in the file.
      * Other markers implicitly have a 2-byte length field that follows.
@@ -368,7 +375,7 @@ static void jpeg_size (usershape_t *us) {
          */
 
         /* A stand-alone... */
-        if (memchr(standalone_markers, (int)marker, sizeof(standalone_markers)))
+        if (memchr(standalone_markers, marker, sizeof(standalone_markers)))
             continue;
 
         /* Incase of a 0xc0 marker: */
