@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -129,17 +129,21 @@ static bool get_int_lsb_first(FILE *f, size_t sz, unsigned int *val) {
     return true;
 }
 	
-static bool get_int_msb_first(FILE *f, size_t sz, unsigned int *val) {
+static bool get_int_msb_first(FILE *f, size_t sz, int *val) {
     int ch;
 
-    *val = 0;
+    unsigned value = 0;
     for (size_t i = 0; i < sz; i++) {
 	ch = fgetc(f);
 	if (feof(f))
 	    return false;
-        *val <<= 8;
-	*val |= (unsigned)ch;
+        value <<= 8;
+	value |= (unsigned)ch;
     }
+    if (value > INT_MAX) {
+	return false;
+    }
+    *val = (int)value;
     return true;
 }
 
@@ -263,7 +267,7 @@ static void svg_size (usershape_t *us)
 
 static void png_size (usershape_t *us)
 {
-    unsigned int w, h;
+    int w, h;
 
     us->dpi = 0;
     fseek(us->f, 16, SEEK_SET);
@@ -275,7 +279,7 @@ static void png_size (usershape_t *us)
 
 static void ico_size (usershape_t *us)
 {
-    unsigned int w, h;
+    int w, h;
 
     us->dpi = 0;
     fseek(us->f, 6, SEEK_SET);
@@ -334,7 +338,7 @@ static void bmp_size (usershape_t *us) {
 }
 
 static void jpeg_size (usershape_t *us) {
-    unsigned int marker, length, size_x, size_y;
+    int marker, length, size_x, size_y;
 
     /* These are the markers that follow 0xff in the file.
      * Other markers implicitly have a 2-byte length field that follows.
@@ -367,7 +371,7 @@ static void jpeg_size (usershape_t *us) {
          */
 
         /* A stand-alone... */
-        if (memchr(standalone_markers, (int)marker, sizeof(standalone_markers)))
+        if (memchr(standalone_markers, marker, sizeof(standalone_markers)))
             continue;
 
         /* Incase of a 0xc0 marker: */
