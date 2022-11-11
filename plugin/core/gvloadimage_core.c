@@ -247,8 +247,7 @@ static void core_loadimage_vml(GVJ_t * job, usershape_t *us, boxf b, bool filled
 {
     (void)filled;
 
-    unsigned int  graphHeight;
-    graphHeight =(int)(job->bb.UR.y - job->bb.LL.y);
+    int  graphHeight = (int)(job->bb.UR.y - job->bb.LL.y);
     gvprintf (job, "<v:image src=\"%s\" style=\" position:absolute; width:%.2f; height:%.2f; left:%.2f ; top:%.2f\"",
            us->name,  b.UR.x - b.LL.x, b.UR.y - b.LL.y, b.LL.x, graphHeight-b.UR.y);
     gvputs(job, " />\n");

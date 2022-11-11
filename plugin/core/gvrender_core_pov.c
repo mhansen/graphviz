@@ -104,7 +104,7 @@
     "rotate   "POV_VECTOR3"\n"
 
 #define POV_TRANSLATE \
-    "translate"POV_VECTOR3"\n"
+    "translate<%9.3f, %9.3f, %d.000>\n"
 
 #define END \
     "}\n"
@@ -312,8 +312,8 @@ typedef enum { FORMAT_POV, } format_type;
 
 static char *pov_knowncolors[] = { POV_COLORS };
 
-static float layerz = 0;
-static float z = 0;
+static int layerz = 0;
+static int z = 0;
 
 static char *el(GVJ_t* job, char *template, ...)
 {
@@ -500,7 +500,7 @@ static void pov_begin_edge(GVJ_t * job)
 	gvputs(job, "//*** begin_edge\n");
 	layerz -= 5;
 #ifdef DEBUG
-	gvprintf(job, "// layerz = %.3f\n", layerz);
+	gvprintf(job, "// layerz = %d.000\n", layerz);
 #endif
 }
 
@@ -509,7 +509,7 @@ static void pov_end_edge(GVJ_t * job)
 	gvputs(job, "//*** end_edge\n");
 	layerz += 5;
 #ifdef DEBUG
-	gvprintf(job, "// layerz = %.3f\n", layerz);
+	gvprintf(job, "// layerz = %d.000\n", layerz);
 #endif
 }
 
@@ -555,7 +555,7 @@ static void pov_textspan(GVJ_t * job, pointf c, textspan_t * span)
 
 #ifdef DEBUG
 	GV_OBJ_EXT("Text", pov, span->str);
-	gvprintf(job, "sphere{<0, 0, 0>, 2\ntranslate<%f, %f, %f>\n"
+	gvprintf(job, "sphere{<0, 0, 0>, 2\ntranslate<%f, %f, %d>\n"
 		 "pigment{color Red}\nno_shadow\n}\n", x, y, z - 1);
 #else
 	gvputs(job, pov);
@@ -594,7 +594,7 @@ static void pov_ellipse(GVJ_t * job, pointf * A, int filled)
 
 #ifdef DEBUG
 	GV_OBJ_EXT("Torus", pov, "");
-	gvprintf(job, "sphere{<0, 0, 0>, 2\ntranslate<%f, %f, %f>\n"
+	gvprintf(job, "sphere{<0, 0, 0>, 2\ntranslate<%f, %f, %d>\n"
 		 "pigment{color Green}\nno_shadow\n}\n", cx, cy, z - 1);
 #else
 	gvputs(job, pov);
@@ -664,7 +664,7 @@ static void pov_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
 			pov = x;
 		}
 #ifdef DEBUG
-		gvprintf(job, "sphere{<0, 0, 0>, 2\ntranslate<%f, %f, %f>\n"
+		gvprintf(job, "sphere{<0, 0, 0>, 2\ntranslate<%f, %f, %d>\n"
 			 "pigment{color Yellow}\nno_shadow\n}\n",
 			 (A[i].x + job->translation.x) * job->scale.x,
 			 (A[i].y + job->translation.y) * job->scale.y, z - 2);
