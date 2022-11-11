@@ -35,11 +35,11 @@ list(APPEND dot_aliases circo fdp neato osage patchwork sfdp twopi)
 # We use copying instead of symlinking for Cygwin to avoid
 # https://gitlab.com/graphviz/graphviz/-/issues/2123
 
-if(WIN32 OR CYGWIN)
-  # Copy dot executable to each alias name then install copies to bindir
-  foreach(cmd_alias IN LISTS dot_aliases)
-    set(DOTCOPY
-        "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}${CMAKE_EXECUTABLE_SUFFIX}")
+foreach(cmd_alias IN LISTS dot_aliases)
+  set(DOTCOPY
+      "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}${CMAKE_EXECUTABLE_SUFFIX}")
+  if(WIN32 OR CYGWIN)
+    # Copy dot executable to each alias name then install copies to bindir
     add_custom_command(
       TARGET dot
       POST_BUILD
@@ -50,16 +50,13 @@ if(WIN32 OR CYGWIN)
       PROGRAMS ${DOTCOPY}
       DESTINATION ${BINARY_INSTALL_DIR}
     )
-  endforeach()
-else()
-  # For not-WIN32, install symlinks from dot_aliases -> dot_executable in
-  # bindir. Note: This may be brittle. This builds a symlink from
-  # ./cmd_alias -> ./dot in ${CMAKE_CURRENT_BINARY_DIR}, then installs that
-  # symlink into ${BINARY_INSTALL_DIR}. This presumes
-  # ${CMAKE_CURRENT_BINARY_DIR}/dot is installed to ${BINARY_INSTALL_DIR}/dot.
-  # There is a (small?) risk of dangling symlinks
-  foreach(cmd_alias IN LISTS dot_aliases)
-    set(DOTLINK "${CMAKE_CURRENT_BINARY_DIR}/${cmd_alias}")
+  else()
+    # For not-WIN32, install symlinks from dot_aliases -> dot_executable in
+    # bindir. Note: This may be brittle. This builds a symlink from
+    # ./cmd_alias -> ./dot in ${CMAKE_CURRENT_BINARY_DIR}, then installs that
+    # symlink into ${BINARY_INSTALL_DIR}. This presumes
+    # ${CMAKE_CURRENT_BINARY_DIR}/dot is installed to ${BINARY_INSTALL_DIR}/dot.
+    # There is a (small?) risk of dangling symlinks
     add_custom_command(
       TARGET dot
       POST_BUILD
@@ -69,11 +66,11 @@ else()
       COMMENT "Linking dot as ${cmd_alias}"
     )
     install(
-      FILES ${DOTLINK}
+      FILES ${DOTCOPY}
       DESTINATION ${BINARY_INSTALL_DIR}
     )
-  endforeach()
-endif()
+  endif()
+endforeach()
 
 # Specify man pages to be installed
 if(GZIP)

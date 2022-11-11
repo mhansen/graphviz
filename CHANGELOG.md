@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- The `cluster` and `prune` utilities is now included in the CMake build
-  system. #1836
+- The `cluster`, `dot2gxl`, `gv2gxl`, and `prune` utilities are now included in
+  the CMake build system. #1836
 
 ### Fixed
 
