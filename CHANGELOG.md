@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.3)]
 
+### Fixed
+
+- The CMake build system no longer builds auxiliary tools beyond `gvpack` with
+  demand loading disabled.
+
 ## [7.0.2] – 2022-11-18
 
 ### Added

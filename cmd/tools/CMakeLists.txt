@@ -282,12 +282,12 @@ tool_defaults(gvgen)
 # =================================== gvpack ===================================
 # TODO add gvpack_static
 
-add_definitions(-DDEMAND_LOADING=0)
-
 add_executable(gvpack
   # Source files
   gvpack.cpp
 )
+
+target_compile_definitions(gvpack PRIVATE DEMAND_LOADING=0)
 
 target_include_directories(gvpack PRIVATE
   ../../lib
