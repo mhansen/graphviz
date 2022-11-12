@@ -72,13 +72,6 @@ def test_tools(tool):
   if tool == "smyrna" and os.getenv("build_system") == "msbuild":
     pytest.skip("smyrna fails to start because of missing DLLs in Windows MSBuild builds (#1829)")
 
-  # FIXME: Remove skip when
-  # https://gitlab.com/graphviz/graphviz/-/issues/1838 is fixed
-  if tool == "gvpack" and platform.system() != "Windows":
-    if os.getenv("build_system") == "cmake":
-      pytest.skip("gvpack does not find libgvplugin_neato_layout.so.6"
-                  "when built with CMake (#1838)")
-
   # Ensure that X fails to open display
   environ_copy = os.environ.copy()
   environ_copy.pop("DISPLAY", None)

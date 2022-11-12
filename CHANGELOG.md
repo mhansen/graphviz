@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The CMake build system no longer builds auxiliary tools beyond `gvpack` with
   demand loading disabled.
+- `gvpack` built with the CMake build system can now find plugins correctly at
+  run time. #1838
 
 ## [7.0.2] – 2022-11-18
 

@@ -287,6 +287,15 @@ add_executable(gvpack
   gvpack.cpp
 )
 
+# teach gvpack how to find plugins at run time
+if(APPLE)
+  set_target_properties(gvpack PROPERTIES
+    INSTALL_RPATH "@executable_path/../${PLUGIN_INSTALL_DIR}")
+else()
+  set_target_properties(gvpack PROPERTIES
+    INSTALL_RPATH "\$ORIGIN/../${PLUGIN_INSTALL_DIR}")
+endif()
+
 target_compile_definitions(gvpack PRIVATE DEMAND_LOADING=0)
 
 target_include_directories(gvpack PRIVATE
