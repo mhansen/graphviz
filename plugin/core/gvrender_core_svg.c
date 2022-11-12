@@ -188,7 +188,9 @@ static void svg_grstyle(GVJ_t * job, int filled, int gid)
     }
     gvputs(job, "\" stroke=\"");
     svg_print_paint(job, obj->pencolor);
-    if (obj->penwidth != PENWIDTH_NORMAL) {
+    // will `gvprintdouble` output something different from `PENWIDTH_NORMAL`?
+    const double GVPRINT_DOUBLE_THRESHOLD = 0.005;
+    if (!(fabs(obj->penwidth - PENWIDTH_NORMAL) < GVPRINT_DOUBLE_THRESHOLD)) {
 	gvputs(job, "\" stroke-width=\"");
         gvprintdouble(job, obj->penwidth);
     }
