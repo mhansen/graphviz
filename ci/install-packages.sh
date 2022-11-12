@@ -38,7 +38,7 @@ if [ "${build_system}" = "cmake" ]; then
         unzip ${DIR}/Graphviz-${GV_VERSION}-Darwin.zip
         cp -rp Graphviz-${GV_VERSION}-Darwin/* /usr/local
     else
-        rpm --install --force ${DIR}/graphviz-${GV_VERSION}-cmake.rpm
+        rpm --install --force -vv ${DIR}/graphviz-${GV_VERSION}-cmake.rpm
     fi
 else
     if [ "${ID_LIKE:-}" = "debian" ]; then
@@ -51,6 +51,6 @@ else
         cp -rp build/* /usr/local
     else
         tar xvf ${DIR}/graphviz-${GV_VERSION}-rpms.tar.xz
-        rpm --install --force graphviz-*${GV_VERSION}*.rpm
+        rpm --install --force -vv graphviz-*${GV_VERSION}*.rpm
     fi
 fi
