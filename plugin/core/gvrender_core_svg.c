@@ -534,9 +534,9 @@ static void svg_textspan(GVJ_t * job, pointf p, textspan_t * span)
 
 static void svg_print_stop(GVJ_t * job, double offset, gvcolor_t color)
 {
-    if (offset == 0.0)
+    if (fabs(offset - 0.0) < 0.0005)
 	gvputs(job, "<stop offset=\"0\" style=\"stop-color:");
-    else if (offset == 1.0)
+    else if (fabs(offset - 1.0) < 0.0005)
 	gvputs(job, "<stop offset=\"1\" style=\"stop-color:");
     else
 	gvprintf(job, "<stop offset=\"%.03f\" style=\"stop-color:", offset);
