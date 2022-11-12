@@ -163,9 +163,19 @@ static void svg_grstyle(GVJ_t * job, int filled, int gid)
 
     gvputs(job, " fill=\"");
     if (filled == GRADIENT) {
-	gvprintf(job, "url(#l_%d)", gid);
+	gvputs(job, "url(#");
+	if (obj->id != NULL) {
+	    gvputs_xml(job, obj->id);
+	    gvputc(job, '_');
+	}
+	gvprintf(job, "l_%d)", gid);
     } else if (filled == RGRADIENT) {
-	gvprintf(job, "url(#r_%d)", gid);
+	gvputs(job, "url(#");
+	if (obj->id != NULL) {
+	    gvputs_xml(job, obj->id);
+	    gvputc(job, '_');
+	}
+	gvprintf(job, "r_%d)", gid);
     } else if (filled) {
 	svg_print_paint(job, obj->fillcolor);
 	if (obj->fillcolor.type == RGBA_BYTE

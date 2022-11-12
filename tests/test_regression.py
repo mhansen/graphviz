@@ -2001,7 +2001,6 @@ def test_2300_1():
   # ask `gxl2gv` to process this
   subprocess.check_call(["gxl2gv", input])
 
-@pytest.mark.xfail(strict=True)
 def test_2307():
   """
   'id' attribute should be propagated to 'url' links in SVG output
