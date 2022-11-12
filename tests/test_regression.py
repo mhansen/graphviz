@@ -2000,3 +2000,32 @@ def test_2300_1():
 
   # ask `gxl2gv` to process this
   subprocess.check_call(["gxl2gv", input])
+
+@pytest.mark.xfail(strict=True)
+def test_2307():
+  """
+  'id' attribute should be propagated to 'url' links in SVG output
+  https://gitlab.com/graphviz/graphviz/-/issues/2307
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "2258.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # translate this to SVG
+  svg = dot("svg", input)
+
+  # load this as XML
+  root = ET.fromstring(svg)
+
+  # the output is expected to contain a number of polygons, any of which have
+  # `url` fills should include the ID “G2”
+  polygons = root.findall(".//{http://www.w3.org/2000/svg}polygon")
+  assert len(polygons) > 0, "no polygons in output"
+
+  for polygon in polygons:
+    m = re.match(r"url\((?P<url>.*)\)$", polygon.get("fill"))
+    if m is None:
+      continue
+    assert re.search(r"\bG2_", m.group("url")) is not None, \
+      "ID G2 was not applied to polygon fill url"
