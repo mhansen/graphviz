@@ -12,7 +12,7 @@
 
 #include <gvc/gvplugin.h>
 
-#if defined(GVDLL) && !defined(ENABLE_LTDL)
+#if defined(GVDLL)
 #define IMPORT	__declspec(dllimport)
 #else
 #define IMPORT /* nothing */
