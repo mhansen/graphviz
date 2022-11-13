@@ -60,7 +60,8 @@ static size_t pnln;
 static int pnll;
 
 static triangle_t *tris;
-static int trin, tril;
+static size_t trin;
+static int tril;
 
 static deque_t dq;
 
@@ -83,7 +84,7 @@ static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(long, Ppoint_t *);
 
 static int growpnls(size_t);
-static int growtris(int);
+static int growtris(size_t);
 static int growdq(int);
 static int growops(int);
 
@@ -356,7 +357,7 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
     int ei;
 
     /* make space */
-    if (tril >= trin) {
+    if (tril >= 0 && (size_t)tril >= trin) {
 	if (growtris(trin + 20) != 0)
 		return -1;
     }
@@ -513,8 +514,7 @@ static int growpnls(size_t newpnln) {
     return 0;
 }
 
-static int growtris(int newtrin)
-{
+static int growtris(size_t newtrin) {
     tris = realloc(tris, TRIANGLESIZE * newtrin);
     if (tris == NULL) {
 	prerror("cannot realloc tris");
