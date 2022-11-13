@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `gxl2gv`, when dealing with `name` attributes, may be less likely to crash. We
   say “may be less likely” because a bug remains that makes a crash still
   the most likely outcome. #2300
+- Gradient URL references in SVG output once again align with their targets
+  (linear or radial gradients) when `id` attributes are in use. This was
+  arguably a regression in Graphviz 6.0.1. #2307
 
 ## [7.0.1] – 2022-11-09
 
