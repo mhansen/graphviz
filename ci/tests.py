@@ -98,7 +98,6 @@ def test_existence(binary: str):
   """
 
   tools_not_built_with_cmake = [
-    "dot_builtins",
     "gvedit",
   ]
 

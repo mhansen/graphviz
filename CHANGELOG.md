@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- The `cluster`, `dot2gxl`, `gv2gxl`, and `prune` utilities are now included in
-  the CMake build system. #1836
+- The `cluster`, `dot_builtins`, `dot2gxl`, `gv2gxl`, and `prune` utilities are
+  now included in the CMake build system. #1836
 
 ### Fixed
 
@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Gradient URL references in SVG output once again align with their targets
   (linear or radial gradients) when `id` attributes are in use. This was
   arguably a regression in Graphviz 6.0.1. #2307
+- The CMake build system’s interactions with a Zlib installed in a non-system
+  location has been improved.
 
 ## [7.0.1] – 2022-11-09
 

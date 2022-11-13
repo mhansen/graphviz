@@ -29,6 +29,76 @@ install(
   ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
 )
 
+add_executable(dot_builtins
+  dot.c
+  dot_builtins.cpp
+)
+
+# teach dot_builtins how to find plugins at run time
+if(APPLE)
+  set_target_properties(dot_builtins PROPERTIES
+    INSTALL_RPATH "@executable_path/../${PLUGIN_INSTALL_DIR}")
+else()
+  set_target_properties(dot_builtins PROPERTIES
+    INSTALL_RPATH "\$ORIGIN/../${PLUGIN_INSTALL_DIR}")
+endif()
+
+target_link_libraries(dot_builtins PRIVATE
+  cdt
+  cgraph
+  gvc
+  gvplugin_core
+  gvplugin_dot_layout
+  gvplugin_neato_layout
+  pathplan
+  xdot
+)
+
+if(EXPAT_FOUND)
+  target_include_directories(dot_builtins SYSTEM PRIVATE ${EXPAT_INCLUDE_DIRS})
+  target_link_libraries(dot_builtins PRIVATE ${EXPAT_LIBRARIES})
+endif()
+
+if(GD_FOUND)
+  target_link_libraries(dot_builtins PRIVATE gvplugin_gd)
+endif()
+
+find_package(PkgConfig)
+if(PkgConfig_FOUND)
+  pkg_check_modules(GTS gts)
+  if(GTS_FOUND)
+    target_include_directories(dot_builtins SYSTEM PRIVATE ${GTS_INCLUDE_DIRS})
+    target_link_libraries(dot_builtins PRIVATE ${GTS_LIBRARIES})
+  endif()
+
+  pkg_check_modules(LASI lasi)
+  if(LASI_FOUND)
+    target_link_libraries(dot_builtins PRIVATE gvplugin_lasi)
+  endif()
+endif()
+
+if(PANGOCAIRO_FOUND)
+  target_link_libraries(dot_builtins PRIVATE gvplugin_pango)
+  if(PkgConfig_FOUND)
+    pkg_check_modules(WEBP libwebp)
+    if(WEBP_FOUND)
+      target_link_libraries(dot_builtins PRIVATE gvplugin_webp)
+    endif()
+  endif()
+endif()
+
+find_library(SOCKET socket)
+if(SOCKET)
+  target_link_libraries(dot_builtins PRIVATE ${SOCKET})
+endif()
+
+install(
+  TARGETS dot_builtins
+  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+  LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+)
+
 # Aliases to the dot executable (not including '.exe' suffix)
 list(APPEND dot_aliases circo fdp neato osage patchwork sfdp twopi)
 
