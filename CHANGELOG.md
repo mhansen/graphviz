@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Do not try to install `gv.php` if using SWIG-4.1.0. Graphviz 7.0.1 changes
   listed SWIG 4.1.0 as supported, but there was an oversight that is fixed in
   7.0.2. Complete #2277, #2303
+- Several compilation errors when building Smyrna on macOS have been fixed. This
+  was a regression in Graphviz 7.0.1.
 
 ## [7.0.1] – 2022-11-09
 

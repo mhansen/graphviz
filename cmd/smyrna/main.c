@@ -50,7 +50,7 @@
 #include <sys/types.h>
 #endif
 
-#if !defined(__APPLE__) && !defined(_WIN32)
+#if !defined(_WIN32)
 #include <unistd.h>
 #endif
 
