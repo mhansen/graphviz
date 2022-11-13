@@ -249,7 +249,9 @@ static int splinefits(Pedge_t * edges, int edgen, Ppoint_t pa,
 #endif
 	    return 1;
 	}
-	if (a == 0) {
+	// is `a` 0, accounting for the precision with which it was computed (on the
+	// last loop iteration) below?
+	if (a < 0.005) {
 	    if (forceflag) {
 		if (growops(opl + 4) < 0) {
 		    return -1;
