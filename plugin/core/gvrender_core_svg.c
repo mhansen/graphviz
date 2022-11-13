@@ -182,7 +182,7 @@ static void svg_grstyle(GVJ_t * job, int filled, int gid)
 	    && obj->fillcolor.u.rgba[3] > 0
 	    && obj->fillcolor.u.rgba[3] < 255)
 	    gvprintf(job, "\" fill-opacity=\"%f",
-		     ((float) obj->fillcolor.u.rgba[3] / 255.0));
+		     (float)obj->fillcolor.u.rgba[3] / 255.0);
     } else {
 	gvputs(job, "none");
     }
@@ -202,7 +202,7 @@ static void svg_grstyle(GVJ_t * job, int filled, int gid)
     if (obj->pencolor.type == RGBA_BYTE && obj->pencolor.u.rgba[3] > 0
 	&& obj->pencolor.u.rgba[3] < 255)
 	gvprintf(job, "\" stroke-opacity=\"%f",
-		 ((float) obj->pencolor.u.rgba[3] / 255.0));
+		 (float)obj->pencolor.u.rgba[3] / 255.0);
 
     gvputc(job, '"');
 }
@@ -475,29 +475,29 @@ static void svg_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    gvprintf(job, " font-style=\"%s\"", style);
     } else
 	gvprintf(job, " font-family=\"%s\"", span->font->name);
-    if ((span->font) && (flags = span->font->flags)) {
+    if (span->font && (flags = span->font->flags)) {
 	if ((flags & HTML_BF) && !weight)
 	    gvputs(job, " font-weight=\"bold\"");
 	if ((flags & HTML_IF) && !style)
 	    gvputs(job, " font-style=\"italic\"");
-	if ((flags & (HTML_UL|HTML_S|HTML_OL))) {
+	if (flags & (HTML_UL|HTML_S|HTML_OL)) {
 	    int comma = 0;
 	    gvputs(job, " text-decoration=\"");
 	    if ((flags & HTML_UL)) {
 		gvputs(job, "underline");
 		comma = 1;
 	    }
-	    if ((flags & HTML_OL)) {
+	    if (flags & HTML_OL) {
 		gvprintf(job, "%soverline", (comma?",":""));
 		comma = 1;
 	    }
-	    if ((flags & HTML_S))
+	    if (flags & HTML_S)
 		gvprintf(job, "%sline-through", (comma?",":""));
 	    gvputc(job, '"');
 	}
-	if ((flags & HTML_SUP))
+	if (flags & HTML_SUP)
 	    gvputs(job, " baseline-shift=\"super\"");
-	if ((flags & HTML_SUB))
+	if (flags & HTML_SUB)
 	    gvputs(job, " baseline-shift=\"sub\"");
     }
 
@@ -512,7 +512,7 @@ static void svg_textspan(GVJ_t * job, pointf p, textspan_t * span)
 		 obj->pencolor.u.rgba[0], obj->pencolor.u.rgba[1],
 		 obj->pencolor.u.rgba[2]);
 	if (obj->pencolor.u.rgba[3] < 255)
-	    gvprintf(job, " fill-opacity=\"%f\"", ((float) obj->pencolor.u.rgba[3] / 255.0));
+	    gvprintf(job, " fill-opacity=\"%f\"", (float)obj->pencolor.u.rgba[3] / 255.0);
 	break;
     default:
 	UNREACHABLE(); // internal error
@@ -543,7 +543,7 @@ static void svg_print_stop(GVJ_t * job, double offset, gvcolor_t color)
     svg_print_gradient_color(job, color);
     gvputs(job, ";stop-opacity:");
     if (color.type == RGBA_BYTE && color.u.rgba[3] < 255)
-	gvprintf(job, "%f", ((float) color.u.rgba[3] / 255.0));
+	gvprintf(job, "%f", (float)color.u.rgba[3] / 255.0);
     else if (color.type == COLOR_STRING && !strcmp(color.u.string, transparent))
 	gvputs(job, "0");
     else
@@ -629,7 +629,7 @@ static void svg_ellipse(GVJ_t * job, pointf * A, int filled)
     /* A[] contains 2 points: the center and corner. */
     if (filled == GRADIENT) {
 	gid = svg_gradstyle(job, A, 2);
-    } else if (filled == (RGRADIENT)) {
+    } else if (filled == RGRADIENT) {
 	gid = svg_rgradstyle(job);
     }
     gvputs(job, "<ellipse");
@@ -657,7 +657,7 @@ svg_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
   
     if (filled == GRADIENT) {
 	gid = svg_gradstyle(job, A, n);
-    } else if (filled == (RGRADIENT)) {
+    } else if (filled == RGRADIENT) {
 	gid = svg_rgradstyle(job);
     }
     gvputs(job, "<path");
@@ -677,7 +677,7 @@ static void svg_polygon(GVJ_t * job, pointf * A, int n, int filled)
     int i, gid = 0;
     if (filled == GRADIENT) {
 	gid = svg_gradstyle(job, A, n);
-    } else if (filled == (RGRADIENT)) {
+    } else if (filled == RGRADIENT) {
 	gid = svg_rgradstyle(job);
     }
     gvputs(job, "<polygon");
