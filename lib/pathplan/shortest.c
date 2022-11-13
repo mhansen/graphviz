@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,7 +56,8 @@ typedef struct deque_t {
 } deque_t;
 
 static pointnlink_t *pnls, **pnlps;
-static int pnln, pnll;
+static size_t pnln;
+static int pnll;
 
 static triangle_t *tris;
 static int trin, tril;
@@ -80,7 +82,7 @@ static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(long, Ppoint_t *);
 
-static int growpnls(int);
+static int growpnls(size_t);
 static int growtris(int);
 static int growdq(int);
 static int growops(int);
@@ -105,7 +107,8 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 #endif
 
     /* make space */
-    if (growpnls(polyp->pn) != 0)
+    assert(polyp->pn >= 0);
+    if (growpnls((size_t)polyp->pn) != 0)
 	return -2;
     pnll = 0;
     tril = 0;
@@ -493,8 +496,7 @@ static int pointintri(long trii, Ppoint_t *pp) {
     return sum == 3 || sum == 0;
 }
 
-static int growpnls(int newpnln)
-{
+static int growpnls(size_t newpnln) {
     if (newpnln <= pnln)
 	return 0;
     pnls = realloc(pnls, POINTNLINKSIZE * newpnln);
