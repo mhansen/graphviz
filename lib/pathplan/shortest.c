@@ -515,8 +515,6 @@ static int growpnls(size_t newpnln) {
 
 static int growtris(int newtrin)
 {
-    if (newtrin <= trin)
-	return 0;
     tris = realloc(tris, TRIANGLESIZE * newtrin);
     if (tris == NULL) {
 	prerror("cannot realloc tris");
