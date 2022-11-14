@@ -126,10 +126,9 @@ char *late_nnstring(void *obj, attrsym_t *attr, char *defaultValue) {
     return rv;
 }
 
-bool late_bool(void *obj, attrsym_t * attr, bool def)
-{
+bool late_bool(void *obj, attrsym_t *attr, bool defaultValue) {
     if (attr == NULL)
-	return def;
+        return defaultValue;
 
     return mapbool(agxget(obj, attr));
 }
