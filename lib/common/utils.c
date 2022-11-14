@@ -384,10 +384,9 @@ int maptoken(char *p, char **name, int *val)
     return val[i];
 }
 
-bool mapBool(const char *p, bool dflt)
-{
+bool mapBool(const char *p, bool defaultValue) {
     if (!p || *p == '\0')
-	return dflt;
+        return defaultValue;
     if (!strcasecmp(p, "false"))
 	return false;
     if (!strcasecmp(p, "no"))
@@ -399,7 +398,7 @@ bool mapBool(const char *p, bool dflt)
     if (isdigit((int)*p))
 	return atoi(p) != 0;
     else
-	return dflt;
+        return defaultValue;
 }
 
 bool mapbool(const char *p)
