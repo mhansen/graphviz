@@ -76,7 +76,7 @@ UTILS_API attrsym_t *safe_dcl(graph_t *g, int obj_kind, char *name, char *def);
 UTILS_API int late_int(void *obj, Agsym_t *attr, int defaultValue, int minimum);
 UTILS_API double late_double(void *obj, Agsym_t *attr, double defaultValue,
                              double minimum);
-UTILS_API char *late_nnstring(void *, Agsym_t *, char *);
+UTILS_API char *late_nnstring(void *obj, Agsym_t *attr, char *defaultValue);
 UTILS_API char *late_string(void *obj, Agsym_t *attr, char *defaultValue);
 UTILS_API bool late_bool(void *, Agsym_t *, bool);
 UTILS_API double get_inputscale(graph_t *g);

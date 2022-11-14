@@ -119,11 +119,10 @@ char *late_string(void *obj, attrsym_t *attr, char *defaultValue) {
     return agxget(obj, attr);
 }
 
-char *late_nnstring(void *obj, attrsym_t * attr, char *def)
-{
-    char *rv = late_string(obj, attr, def);
+char *late_nnstring(void *obj, attrsym_t *attr, char *defaultValue) {
+    char *rv = late_string(obj, attr, defaultValue);
     if (!rv || (rv[0] == '\0'))
-	rv = def;
+        return defaultValue;
     return rv;
 }
 
