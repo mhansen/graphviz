@@ -1594,10 +1594,9 @@ bool overlap_edge(edge_t *e, boxf b)
 /* edgeType:
  * Convert string to edge type.
  */
-static int edgeType(const char *s, int dflt)
-{
+static int edgeType(const char *s, int defaultValue) {
     if (s == NULL || strcmp(s, "") == 0) {
-	return dflt;
+        return defaultValue;
     }
 
     if (*s == '0') { /* false */
@@ -1629,7 +1628,7 @@ static int edgeType(const char *s, int dflt)
     }
 
     agerr(AGWARN, "Unknown \"splines\" value: \"%s\" - ignored\n", s);
-    return dflt;
+    return defaultValue;
 }
 
 /* setEdgeType:
