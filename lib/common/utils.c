@@ -64,19 +64,18 @@ node_t *dequeue(nodequeue * q)
     return n;
 }
 
-int late_int(void *obj, attrsym_t * attr, int def, int low)
-{
-    char *p;
-    char *endp;
-    int rv;
+int late_int(void *obj, attrsym_t *attr, int defaultValue, int minimum) {
     if (attr == NULL)
-	return def;
-    p = ag_xget(obj, attr);
+        return defaultValue;
+    char *p = ag_xget(obj, attr);
     if (!p || p[0] == '\0')
-	return def;
-    rv = strtol (p, &endp, 10);
-    if (p == endp) return def;  /* invalid int format */
-    if (rv < low) return low;
+        return defaultValue;
+    char *endp;
+    int rv = strtol(p, &endp, 10);
+    if (p == endp)
+        return defaultValue; /* invalid int format */
+    if (rv < minimum)
+        return minimum;
     else return rv;
 }
 
