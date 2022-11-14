@@ -79,20 +79,19 @@ int late_int(void *obj, attrsym_t *attr, int defaultValue, int minimum) {
     else return rv;
 }
 
-double late_double(void *obj, attrsym_t * attr, double def, double low)
-{
-    char *p;
-    char *endp;
-    double rv;
-
+double late_double(void *obj, attrsym_t *attr, double defaultValue,
+                   double minimum) {
     if (!attr || !obj)
-	return def;
-    p = ag_xget(obj, attr);
+        return defaultValue;
+    char *p = ag_xget(obj, attr);
     if (!p || p[0] == '\0')
-	return def;
-    rv = strtod (p, &endp);
-    if (p == endp) return def;  /* invalid double format */
-    if (rv < low) return low;
+        return defaultValue;
+    char *endp;
+    double rv = strtod(p, &endp);
+    if (p == endp)
+        return defaultValue; /* invalid double format */
+    if (rv < minimum)
+        return minimum;
     else return rv;
 }
 

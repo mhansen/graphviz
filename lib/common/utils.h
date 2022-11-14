@@ -74,7 +74,8 @@ UTILS_API Agraph_t *findCluster(Dt_t *map, char *name);
 UTILS_API attrsym_t *safe_dcl(graph_t *g, int obj_kind, char *name, char *def);
 
 UTILS_API int late_int(void *obj, Agsym_t *attr, int defaultValue, int minimum);
-UTILS_API double late_double(void *, Agsym_t *, double, double);
+UTILS_API double late_double(void *obj, Agsym_t *attr, double defaultValue,
+                             double minimum);
 UTILS_API char *late_nnstring(void *, Agsym_t *, char *);
 UTILS_API char *late_string(void *, Agsym_t *, char *);
 UTILS_API bool late_bool(void *, Agsym_t *, bool);
