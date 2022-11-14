@@ -1634,7 +1634,7 @@ static int edgeType(const char *s, int dflt)
 
 /* setEdgeType:
  * Sets graph's edge type based on the "splines" attribute.
- * If the attribute is not defined, use default.
+ * If the attribute is not defined, use defaultValue.
  * If the attribute is "", use NONE.
  * If attribute value matches (case indepedent), use match.
  *   ortho => EDGETYPE_ORTHO
@@ -1642,24 +1642,22 @@ static int edgeType(const char *s, int dflt)
  *   line => EDGETYPE_LINE
  *   polyline => EDGETYPE_PLINE
  *   spline => EDGETYPE_SPLINE
- * If attribute is boolean, true means EDGETYPE_SPLINE, false means EDGETYPE_LINE.
- * Else warn and use default.
+ * If attribute is boolean, true means EDGETYPE_SPLINE, false means
+ * EDGETYPE_LINE. Else warn and use default.
  */
-void setEdgeType (graph_t* g, int dflt)
-{
+void setEdgeType(graph_t *g, int defaultValue) {
     char* s = agget(g, "splines");
     int et;
 
     if (!s) {
-	et = dflt;
+        et = defaultValue;
     }
     else if (*s == '\0') {
 	et = EDGETYPE_NONE;
-    }
-    else et = edgeType (s, dflt);
+    } else
+        et = edgeType(s, defaultValue);
     GD_flags(g) |= et;
 }
-
 
 /* get_gradient_points
  * Evaluates the extreme points of an ellipse or polygon
