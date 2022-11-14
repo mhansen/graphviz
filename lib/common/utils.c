@@ -1237,14 +1237,12 @@ void undoClusterEdges(graph_t * g)
 /* safe_dcl:
  * Find the attribute belonging to graph g for objects like obj
  * with given name. If one does not exist, create it with the
- * default value def.
+ * default value defaultValue.
  */
-attrsym_t*
-safe_dcl(graph_t * g, int obj_kind, char *name, char *def)
-{
+attrsym_t *safe_dcl(graph_t *g, int obj_kind, char *name, char *defaultValue) {
     attrsym_t *a = agattr(g,obj_kind,name, NULL);
     if (!a)	/* attribute does not exist */
-	a = agattr(g,obj_kind,name,def);
+        a = agattr(g, obj_kind, name, defaultValue);
     return a;
 }
 
