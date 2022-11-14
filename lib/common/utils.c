@@ -113,10 +113,9 @@ double get_inputscale (graph_t* g)
     else return d;
 }
 
-char *late_string(void *obj, attrsym_t * attr, char *def)
-{
+char *late_string(void *obj, attrsym_t *attr, char *defaultValue) {
     if (!attr || !obj)
-	return def;
+        return defaultValue;
     return agxget(obj, attr);
 }
 
