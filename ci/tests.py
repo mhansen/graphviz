@@ -97,10 +97,6 @@ def test_existence(binary: str):
   check that a given binary was built and is on $PATH
   """
 
-  tools_not_built_with_cmake = [
-    "gvedit",
-  ]
-
   tools_not_built_with_msbuild = [
     "cluster",
     "dot2gxl",
@@ -132,14 +128,6 @@ def test_existence(binary: str):
     pytest.skip("smyrna is not built for Centos (#1834)")
 
   # FIXME: Remove skip when
-  # https://gitlab.com/graphviz/graphviz/-/issues/1753 and
-  # https://gitlab.com/graphviz/graphviz/-/issues/1836 is fixed
-  if os.getenv("build_system") == "cmake":
-    if binary in tools_not_built_with_cmake:
-      check_that_tool_does_not_exist(binary, os_id)
-      pytest.skip(f"{binary} is not built with CMake (#1753 & #1836)")
-
-  # FIXME: Remove skip when
   # https://gitlab.com/graphviz/graphviz/-/issues/1837 is fixed
   if os.getenv("build_system") == "msbuild":
     if binary in tools_not_built_with_msbuild:
@@ -161,6 +149,10 @@ def test_existence(binary: str):
   if binary == "diffimg" and is_win64():
     check_that_tool_does_not_exist(binary, os_id)
     pytest.skip(f"{binary} is not built on 64-bit Windows due to lacking libgd")
+
+  if binary == "gvedit" and platform.system() == "Windows":
+    check_that_tool_does_not_exist(binary, os_id)
+    pytest.skip(f"{binary} is not built on Windows due to lacking Qt")
 
   # FIXME: Smyrna dependencies are not avaiable in other jobs
   if binary == "smyrna" and is_cmake() and platform.system() != "Linux":

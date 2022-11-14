@@ -37,8 +37,8 @@ def main(args: List[str]) -> int: #pylint: disable=C0116
     os.makedirs(build)
     run(["cmake", "--version"], build)
     run(["cmake", "--log-level=VERBOSE", "-G", "Visual Studio 16 2019", "-A",
-         options.platform, "-Dwith_cxx_api=ON", "--warn-uninitialized",
-         "-Werror=dev", ".."],
+         options.platform, "-Dwith_cxx_api=ON", "-Dwith_gvedit=OFF",
+         "--warn-uninitialized", "-Werror=dev", ".."],
         build)
     run(["cmake", "--build", ".", "--config", options.configuration], build)
     run(["cpack", "-C", options.configuration], build)
