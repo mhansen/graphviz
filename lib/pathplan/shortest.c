@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,10 +56,12 @@ typedef struct deque_t {
 } deque_t;
 
 static pointnlink_t *pnls, **pnlps;
-static int pnln, pnll;
+static size_t pnln;
+static int pnll;
 
 static triangle_t *tris;
-static int trin, tril;
+static size_t trin;
+static int tril;
 
 static deque_t dq;
 
@@ -80,8 +83,8 @@ static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(long, Ppoint_t *);
 
-static int growpnls(int);
-static int growtris(int);
+static int growpnls(size_t);
+static int growtris(size_t);
 static int growdq(int);
 static int growops(int);
 
@@ -105,7 +108,8 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 #endif
 
     /* make space */
-    if (growpnls(polyp->pn) != 0)
+    assert(polyp->pn >= 0);
+    if (growpnls((size_t)polyp->pn) != 0)
 	return -2;
     pnll = 0;
     tril = 0;
@@ -353,7 +357,7 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
     int ei;
 
     /* make space */
-    if (tril >= trin) {
+    if (tril >= 0 && (size_t)tril >= trin) {
 	if (growtris(trin + 20) != 0)
 		return -1;
     }
@@ -493,8 +497,7 @@ static int pointintri(long trii, Ppoint_t *pp) {
     return sum == 3 || sum == 0;
 }
 
-static int growpnls(int newpnln)
-{
+static int growpnls(size_t newpnln) {
     if (newpnln <= pnln)
 	return 0;
     pnls = realloc(pnls, POINTNLINKSIZE * newpnln);
@@ -511,10 +514,7 @@ static int growpnls(int newpnln)
     return 0;
 }
 
-static int growtris(int newtrin)
-{
-    if (newtrin <= trin)
-	return 0;
+static int growtris(size_t newtrin) {
     tris = realloc(tris, TRIANGLESIZE * newtrin);
     if (tris == NULL) {
 	prerror("cannot realloc tris");

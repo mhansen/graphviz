@@ -208,21 +208,21 @@ static int splinefits(Pedge_t * edges, int edgen, Ppoint_t pa,
 		      Ppoint_t * inps, int inpn)
 {
     Ppoint_t sps[4];
-    double a, b;
+    double a;
     int pi;
     int forceflag;
     int first = 1;
 
     forceflag = (inpn == 2 ? 1 : 0);
 
-    a = b = 4;
+    a = 4;
     for (;;) {
 	sps[0].x = pa.x;
 	sps[0].y = pa.y;
 	sps[1].x = pa.x + a * va.x / 3.0;
 	sps[1].y = pa.y + a * va.y / 3.0;
-	sps[2].x = pb.x - b * vb.x / 3.0;
-	sps[2].y = pb.y - b * vb.y / 3.0;
+	sps[2].x = pb.x - a * vb.x / 3.0;
+	sps[2].y = pb.y - a * vb.y / 3.0;
 	sps[3].x = pb.x;
 	sps[3].y = pb.y;
 
@@ -245,11 +245,13 @@ static int splinefits(Pedge_t * edges, int edgen, Ppoint_t pa,
 	    for (pi = 1; pi < 4; pi++)
 		ops[opl].x = sps[pi].x, ops[opl++].y = sps[pi].y;
 #if defined(DEBUG) && DEBUG >= 1
-	    fprintf(stderr, "success: %f %f\n", a, b);
+	    fprintf(stderr, "success: %f %f\n", a, a);
 #endif
 	    return 1;
 	}
-	if (a == 0 && b == 0) {
+	// is `a` 0, accounting for the precision with which it was computed (on the
+	// last loop iteration) below?
+	if (a < 0.005) {
 	    if (forceflag) {
 		if (growops(opl + 4) < 0) {
 		    return -1;
@@ -257,16 +259,16 @@ static int splinefits(Pedge_t * edges, int edgen, Ppoint_t pa,
 		for (pi = 1; pi < 4; pi++)
 		    ops[opl].x = sps[pi].x, ops[opl++].y = sps[pi].y;
 #if defined(DEBUG) && DEBUG >= 1
-		fprintf(stderr, "forced straight line: %f %f\n", a, b);
+		fprintf(stderr, "forced straight line: %f %f\n", a, a);
 #endif
 		return 1;
 	    }
 	    break;
 	}
 	if (a > .01)
-	    a /= 2, b /= 2;
+	    a /= 2;
 	else
-	    a = b = 0;
+	    a = 0;
     }
 #if defined(DEBUG) && DEBUG >= 1
     fprintf(stderr, "failure\n");
