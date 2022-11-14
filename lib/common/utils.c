@@ -103,12 +103,9 @@ double late_double(void *obj, attrsym_t *attr, double defaultValue,
  * If the value is 0, we return the default. Otherwise, we return the value.
  * Set but negative values are treated like 0.
  */
-double get_inputscale (graph_t* g)
-{
-    double d;
-
+double get_inputscale(graph_t *g) {
     if (PSinputscale > 0) return PSinputscale;  /* command line flag prevails */
-    d = late_double(g, agfindgraphattr(g, "inputscale"), -1, 0);
+    double d = late_double(g, agfindgraphattr(g, "inputscale"), -1, 0);
     if (d == 0) return POINTS_PER_INCH;
     else return d;
 }
@@ -373,14 +370,13 @@ const char *safefile(const char *filename)
     return findPath (dirs, maxdirlen, filename);
 }
 
-int maptoken(char *p, char **name, int *val)
-{
-    int i;
+int maptoken(char *p, char **name, int *val) {
     char *q;
 
-    for (i = 0; (q = name[i]) != 0; i++)
-	if (p && streq(p, q))
-	    break;
+    int i = 0;
+    for (; (q = name[i]) != 0; i++)
+        if (p && streq(p, q))
+            break;
     return val[i];
 }
 
@@ -1353,15 +1349,13 @@ static unsigned char
 cvtAndAppend (unsigned char c, agxbuf* xb)
 {
     char buf[2];
-    char* s;
-    char* p;
-    int len;
 
     buf[0] = c;
     buf[1] = '\0';
 
-    p = s = latin1ToUTF8 (buf);
-    len = strlen(s);
+    char *s = latin1ToUTF8(buf);
+    char *p = s;
+    int len = strlen(s);
     while (len-- > 1)
 	agxbputc(xb, *p++);
     c = *p;
@@ -1460,7 +1454,7 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
 char* latin1ToUTF8 (char* s)
 {
     agxbuf xb = {0};
-    unsigned int  v;
+    unsigned int v;
 
     /* Values are either a byte (<= 256) or come from htmlEntity, whose
      * values are all less than 0x07FF, so we need at most 3 bytes.
@@ -1495,32 +1489,28 @@ utf8ToLatin1 (char* s)
 {
     agxbuf xb = {0};
     unsigned char c;
-    unsigned char outc;
 
     while ((c = *(unsigned char*)s++)) {
 	if (c < 0x7F)
 	    agxbputc(&xb, (char)c);
 	else {
-	    outc = (c & 0x03) << 6;
-	    c = *(unsigned char*)s++;
-	    outc = outc | (c & 0x3F);
+            unsigned char outc = (c & 0x03) << 6;
+            c = *(unsigned char *)s++;
+            outc = outc | (c & 0x3F);
 	    agxbputc(&xb, (char)outc);
 	}
     }
     return agxbdisown(&xb);
 }
 
-bool overlap_node(node_t *n, boxf b)
-{
-    inside_t ictxt;
-    pointf p;
-
+bool overlap_node(node_t *n, boxf b) {
     if (! OVERLAP(b, ND_bb(n)))
         return false;
 
-/*  FIXME - need to do something better about CLOSEENOUGH */
-    p = sub_pointf(ND_coord(n), mid_pointf(b.UR, b.LL));
+    /*  FIXME - need to do something better about CLOSEENOUGH */
+    pointf p = sub_pointf(ND_coord(n), mid_pointf(b.UR, b.LL));
 
+    inside_t ictxt;
     ictxt.s.n = n;
     ictxt.s.bp = NULL;
 
@@ -1530,10 +1520,9 @@ bool overlap_node(node_t *n, boxf b)
 bool overlap_label(textlabel_t *lp, boxf b)
 {
     pointf s;
-    boxf bb;
-
     s.x = lp->dimen.x / 2.;
     s.y = lp->dimen.y / 2.;
+    boxf bb;
     bb.LL = sub_pointf(lp->pos, s);
     bb.UR = add_pointf(lp->pos, s);
     return OVERLAP(b, bb);
@@ -1545,17 +1534,13 @@ static bool overlap_arrow(pointf p, pointf u, double scale, boxf b)
     return OVERLAP(b, arrow_bb(p, u, scale));
 }
 
-static bool overlap_bezier(bezier bz, boxf b)
-{
-    int i;
-    pointf p, u;
-
+static bool overlap_bezier(bezier bz, boxf b) {
     assert(bz.size);
-    u = bz.list[0];
-    for (i = 1; i < bz.size; i++) {
-	p = bz.list[i];
-	if (lineToBox(p, u, b) != -1)
-	    return true;
+    pointf u = bz.list[0];
+    for (int i = 1; i < bz.size; i++) {
+        pointf p = bz.list[i];
+        if (lineToBox(p, u, b) != -1)
+            return true;
 	u = p;
     }
 
@@ -1573,17 +1558,13 @@ static bool overlap_bezier(bezier bz, boxf b)
 
 bool overlap_edge(edge_t *e, boxf b)
 {
-    int i;
-    splines *spl;
-    textlabel_t *lp;
-
-    spl = ED_spl(e);
+    splines *spl = ED_spl(e);
     if (spl && boxf_overlap(spl->bb, b))
-        for (i = 0; i < spl->size; i++)
+        for (int i = 0; i < spl->size; i++)
             if (overlap_bezier(spl->list[i], b))
                 return true;
 
-    lp = ED_label(e);
+    textlabel_t *lp = ED_label(e);
     if (lp && overlap_label(lp, b))
         return true;
 
@@ -1667,28 +1648,26 @@ void setEdgeType(graph_t *g, int defaultValue) {
  * is set, use standard coordinate system.
  */
 void get_gradient_points(pointf *A, pointf *G, int n, double angle, int flags) {
-    int i;
-    double rx, ry;
     pointf min,max,center;
     int isRadial = flags & 1;
     int isRHS = flags & 2;
 
     if (n == 2) {
-      rx = A[1].x - A[0].x;
-      ry = A[1].y - A[0].y;
-      min.x = A[0].x - rx;
-      max.x = A[0].x + rx;
-      min.y = A[0].y - ry;
-      max.y = A[0].y + ry;
+        double rx = A[1].x - A[0].x;
+        double ry = A[1].y - A[0].y;
+        min.x = A[0].x - rx;
+        max.x = A[0].x + rx;
+        min.y = A[0].y - ry;
+        max.y = A[0].y + ry;
     }
     else {
       min.x = max.x = A[0].x;
       min.y = max.y = A[0].y;
-      for (i = 0; i < n; i++){
-	min.x = MIN(A[i].x,min.x);
-	min.y = MIN(A[i].y,min.y);
-	max.x = MAX(A[i].x,max.x);
-	max.y = MAX(A[i].y,max.y);
+      for (int i = 0; i < n; i++) {
+            min.x = MIN(A[i].x, min.x);
+            min.y = MIN(A[i].y, min.y);
+            max.x = MAX(A[i].x, max.x);
+            max.y = MAX(A[i].y, max.y);
       }
     }
       center.x = min.x + (max.x - min.x)/2;
@@ -1725,11 +1704,9 @@ void get_gradient_points(pointf *A, pointf *G, int n, double angle, int flags) {
     }
 }
 
-void gv_free_splines(edge_t * e)
-{
-    int i;
+void gv_free_splines(edge_t *e) {
     if (ED_spl(e)) {
-        for (i = 0; i < ED_spl(e)->size; i++)
+        for (int i = 0; i < ED_spl(e)->size; i++)
             free(ED_spl(e)->list[i].list);
         free(ED_spl(e)->list);
         free(ED_spl(e));
@@ -1739,14 +1716,14 @@ void gv_free_splines(edge_t * e)
 
 void gv_cleanup_edge(edge_t * e)
 {
-    free (ED_path(e).ps);
+    free(ED_path(e).ps);
     gv_free_splines(e);
     free_label(ED_label(e));
     free_label(ED_xlabel(e));
     free_label(ED_head_label(e));
     free_label(ED_tail_label(e));
-	/*FIX HERE , shallow cleaning may not be enough here */
-	agdelrec(e, "Agedgeinfo_t");
+    /*FIX HERE , shallow cleaning may not be enough here */
+    agdelrec(e, "Agedgeinfo_t");
 }
 
 void gv_cleanup_node(node_t * n)
@@ -1756,21 +1733,18 @@ void gv_cleanup_node(node_t * n)
         ND_shape(n)->fns->freefn(n);
     free_label(ND_label(n));
     free_label(ND_xlabel(n));
-	/*FIX HERE , shallow cleaning may not be enough here */
-	agdelrec(n, "Agnodeinfo_t");
+    /*FIX HERE , shallow cleaning may not be enough here */
+    agdelrec(n, "Agnodeinfo_t");
 }
 
-void gv_nodesize(node_t * n, bool flip)
-{
-    double w;
-
+void gv_nodesize(node_t *n, bool flip) {
     if (flip) {
-        w = INCH2PS(ND_height(n));
+        double w = INCH2PS(ND_height(n));
         ND_lw(n) = ND_rw(n) = w / 2;
         ND_ht(n) = INCH2PS(ND_width(n));
     }
     else {
-        w = INCH2PS(ND_width(n));
+        double w = INCH2PS(ND_width(n));
         ND_lw(n) = ND_rw(n) = w / 2;
         ND_ht(n) = INCH2PS(ND_height(n));
     }
@@ -1795,7 +1769,7 @@ static void free_clust (Dt_t* dt, clust_t* clp, Dtdisc_t* disc)
 {
     (void)dt;
     (void)disc;
-    free (clp);
+    free(clp);
 }
 
 static Dtdisc_t strDisc = {
@@ -1807,24 +1781,18 @@ static Dtdisc_t strDisc = {
 
 static void fillMap (Agraph_t* g, Dt_t* map)
 {
-    Agraph_t* cl;
-    int c;
-    char* s;
-    clust_t* ip;
-
-    for (c = 1; c <= GD_n_cluster(g); c++) {
-	cl = GD_clust(g)[c];
-	s = agnameof(cl);
-	if (dtmatch (map, s)) {
-	    agerr(AGWARN, "Two clusters named %s - the second will be ignored\n", s);
-	}
-	else {
-	    ip = NEW(clust_t);
-	    ip->name = s;
-	    ip->clp = cl;
+    for (int c = 1; c <= GD_n_cluster(g); c++) {
+        Agraph_t *cl = GD_clust(g)[c];
+        char *s = agnameof(cl);
+        if (dtmatch(map, s)) {
+            agerr(AGWARN, "Two clusters named %s - the second will be ignored\n", s);
+        } else {
+            clust_t *ip = NEW(clust_t);
+            ip->name = s;
+            ip->clp = cl;
 	    dtinsert (map, ip);
-	}
-	fillMap (cl, map);
+        }
+        fillMap (cl, map);
     }
 }
 
