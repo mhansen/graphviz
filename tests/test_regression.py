@@ -74,6 +74,22 @@ def test_14():
   # process it with Graphviz
   dot("svg", input)
 
+@pytest.mark.skipif(which("neato") is None, reason="neato not available")
+@pytest.mark.xfail()
+def test_42():
+  """
+  check for a former crash in neatogen
+  https://gitlab.com/graphviz/graphviz/-/issues/42
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "42.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # process it with Graphviz
+  subprocess.check_call(["neato", "-n2", "-Tpng", input],
+                        stdout=subprocess.DEVNULL)
+
 def test_56():
   """
   parsing a particular graph should not cause a Trapezoid-table overflow
