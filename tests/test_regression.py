@@ -75,7 +75,6 @@ def test_14():
   dot("svg", input)
 
 @pytest.mark.skipif(which("neato") is None, reason="neato not available")
-@pytest.mark.xfail()
 def test_42():
   """
   check for a former crash in neatogen

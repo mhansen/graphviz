@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   7.0.2. Complete #2277, #2303
 - Several compilation errors when building Smyrna on macOS have been fixed. This
   was a regression in Graphviz 7.0.1.
+- A crash when using neato layout with large inferred per-node edge counts was
+  fixed. #42
 
 ## [7.0.1] – 2022-11-09
 
