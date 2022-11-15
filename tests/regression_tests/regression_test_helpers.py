@@ -1,7 +1,7 @@
 """
 Support functions for some other test files.
 
-FIXME: This should probably be integrated into ../../rtest/gvtest.py
+FIXME: This should probably be integrated into ../../tests/gvtest.py
 """
 
 import difflib
