@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <float.h>
 #include <neatogen/multispline.h>
 #include <neatogen/delaunay.h>
@@ -407,8 +408,9 @@ typedef struct {
 
 typedef struct {
     tnode *nodes;
+    size_t nnodes; // number of nodes
     tedge *edges;
-    int nedges;    /* no. of edges; no. of nodes is stored in router_t */
+    int nedges; // number of edges
 } tgraph;
 
 struct router_s {
@@ -486,21 +488,6 @@ static int *mkTriIndices(surface_t * sf)
     return tris;
 }
 
-/* degT:
- * Given a pointer to an array of 3 integers, return
- * the number not equal to -1
- */
-static int degT(int *ip)
-{
-    ip++;
-    if (*ip++ == -1)
-	return 1;
-    if (*ip == -1)
-	return 2;
-    else
-	return 3;
-}
-
 /* sharedEdge:
  * Returns a pair of integer (x,y), x < y, where x and y are the
  * indices of the two vertices of the shared edge.
@@ -551,7 +538,11 @@ static void addTriEdge(tgraph *g, int t, int h, ipair seg) {
     ep->dist = DIST(tp->ctr, hp->ctr);
     ep->seg = seg;
 
+    tp->edges = gv_recalloc(tp->edges, tp->ne, tp->ne + 1,
+                            sizeof(tp->edges[0]));
     tp->edges[tp->ne++] = g->nedges;
+    hp->edges = gv_recalloc(hp->edges, hp->ne, hp->ne + 1,
+                            sizeof(hp->edges[0]));
     hp->edges[hp->ne++] = g->nedges;
 
     g->nedges++;
@@ -559,7 +550,9 @@ static void addTriEdge(tgraph *g, int t, int h, ipair seg) {
 
 static void freeTriGraph(tgraph * tg)
 {
-    free(tg->nodes->edges);
+    for (size_t i = 0; i < tg->nnodes; ++i) {
+        free(tg->nodes[i].edges);
+    }
     free(tg->nodes);
     free(tg->edges);
     free(tg);
@@ -574,7 +567,6 @@ static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
     tgraph *g;
     tnode *np;
     int j, i, ne = 0;
-    int *edgei;
     int *jp;
 
     /* ne is twice no. of edges */
@@ -585,29 +577,28 @@ static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
     g = GNEW(tgraph);
 
     /* plus 2 for nodes added as endpoints of an edge */
-    g->nodes = N_GNEW(sf->nfaces + 2, tnode);
+    g->nnodes = sf->nfaces + 2;
+    g->nodes = N_GNEW(g->nnodes, tnode);
 
     /* allow 1 possible extra edge per triangle, plus 
      * obstacles can have at most maxv triangles touching 
      */
-    edgei = N_GNEW(sf->nfaces + ne + 2 * maxv, int);
     g->edges = N_GNEW(ne/2 + 2 * maxv, tedge);
     g->nedges = 0;
 
     for (i = 0; i < sf->nfaces; i++) {
 	np = g->nodes + i;
 	np->ne = 0;
-	np->edges = edgei;
+	np->edges = NULL;
 	np->ctr = triCenter(pts, sf->faces + 3 * i);
-	edgei += degT(sf->neigh + 3 * i) + 1;
     }
     /* initialize variable nodes */
     np = g->nodes + i;
     np->ne = 0;
-    np->edges = edgei;
+    np->edges = NULL;
     np++;
     np->ne = 0;
-    np->edges = edgei + maxv;
+    np->edges = NULL;
 
     for (i = 0; i < sf->nfaces; i++) {
 	np = g->nodes + i;
@@ -1179,14 +1170,13 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
 /* resetGraph:
  * Remove edges and nodes added for current edge routing
  */
-static void resetGraph(tgraph * g, int ncnt, int ecnt)
-{
+static void resetGraph(tgraph *g, int ncnt, int ecnt,
+                       int *original_edge_count) {
     int i;
     tnode *np = g->nodes;
     g->nedges = ecnt;
     for (i = 0; i < ncnt; i++) {
-	if (np->edges + np->ne == (np + 1)->edges)
-	    np->ne--;
+	np->ne = original_edge_count[i];
 	np++;
     }
 }
@@ -1288,6 +1278,13 @@ int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
     PQVTYPE *vals;
     int ret;
 
+    // record the number of edges in each node, so we can drop the added ones
+    // later
+    int *original_edge_count = gv_calloc(rtr->tg->nnodes,
+                                            sizeof(original_edge_count[0]));
+    for (size_t i = 0; i < rtr->tg->nnodes; ++i)
+        original_edge_count[i] = rtr->tg->nodes[i].ne;
+
 	/* Add endpoints to triangle graph */
     addEndpoint(rtr, t_p, t, t_id, ED_tail_port(e).side);
     addEndpoint(rtr, h_p, h, h_id, ED_head_port(e).side);
@@ -1318,6 +1315,7 @@ int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
     }
     else ret = -1;
 
-    resetGraph(rtr->tg, rtr->tn, ecnt);
+    resetGraph(rtr->tg, rtr->tn, ecnt, original_edge_count);
+    free(original_edge_count);
     return ret;
 }
