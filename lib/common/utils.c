@@ -1510,9 +1510,7 @@ bool overlap_node(node_t *n, boxf b) {
     /*  FIXME - need to do something better about CLOSEENOUGH */
     pointf p = sub_pointf(ND_coord(n), mid_pointf(b.UR, b.LL));
 
-    inside_t ictxt;
-    ictxt.s.n = n;
-    ictxt.s.bp = NULL;
+    inside_t ictxt = {.s.n = n};
 
     return ND_shape(n)->fns->insidefn(&ictxt, p);
 }
@@ -1522,9 +1520,7 @@ bool overlap_label(textlabel_t *lp, boxf b)
     pointf s;
     s.x = lp->dimen.x / 2.;
     s.y = lp->dimen.y / 2.;
-    boxf bb;
-    bb.LL = sub_pointf(lp->pos, s);
-    bb.UR = add_pointf(lp->pos, s);
+    boxf bb = {.LL = sub_pointf(lp->pos, s), .UR = add_pointf(lp->pos, s)};
     return OVERLAP(b, bb);
 }
 
@@ -1633,8 +1629,9 @@ void setEdgeType(graph_t *g, int defaultValue) {
     }
     else if (*s == '\0') {
 	et = EDGETYPE_NONE;
-    } else
+    } else {
         et = edgeType(s, defaultValue);
+    }
     GD_flags(g) |= et;
 }
 
