@@ -773,9 +773,10 @@ ubuntu-22.10-cmake-ASan-build-for-ctest:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
-        - export CXXFLAGS="-fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
-        - export LDFLAGS="-fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
+        - export CFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
+        - export CXXFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
+        - export LDFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
+        - export UBSAN_OPTIONS=print_stacktrace=1
         - export CMAKE_OPTIONS="-Duse_coverage=ON -Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
     # override the deb_build_definition artifacts since we need more
@@ -1172,9 +1173,10 @@ ubuntu-22.10-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
     before_script:
         - export build_system="cmake"
-        - export CFLAGS="-g -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
-        - export CXXFLAGS="-g -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
-        - export LDFLAGS="-g -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
+        - export CFLAGS="-g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
+        - export CXXFLAGS="-g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
+        - export LDFLAGS="-g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
+        - export UBSAN_OPTIONS=print_stacktrace=1
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu-22.10-cmake-ASan-build-for-ctest"
