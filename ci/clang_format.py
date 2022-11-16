@@ -247,7 +247,6 @@ EXCLUDE = (
   "lib/common/types.h",
   "lib/common/usershape.h",
   "lib/common/utils.c",
-  "lib/common/utils.h",
   "lib/common/xml.c",
   "lib/dotgen/acyclic.c",
   "lib/dotgen/aspect.c",
