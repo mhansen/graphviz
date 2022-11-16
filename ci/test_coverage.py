@@ -4,9 +4,9 @@
 
 import argparse
 import logging
-import os
 import subprocess
 import sys
+from pathlib import Path
 from typing import List
 
 # logging output stream, setup in main()
@@ -34,15 +34,15 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
         "Must specify --init or --analyze; refusing to run")
     return -1
 
-  cwd = os.getcwd()
+  cwd = Path.cwd()
 
   generated_files = [
-      f"{cwd}/build/cmd/tools/gmlparse.c",
-      f"{cwd}/build/cmd/tools/gmlscan.c",
-      f"{cwd}/build/lib/cgraph/grammar.c",
-      f"{cwd}/build/lib/cgraph/scan.c",
-      f"{cwd}/build/lib/common/htmlparse.c",
-      f"{cwd}/build/lib/expr/y.tab.c",
+      cwd / "build/cmd/tools/gmlparse.c",
+      cwd / "build/cmd/tools/gmlscan.c",
+      cwd / "build/lib/cgraph/grammar.c",
+      cwd / "build/lib/cgraph/scan.c",
+      cwd / "build/lib/common/htmlparse.c",
+      cwd / "build/lib/expr/y.tab.c",
       ]
 
   excluded_files = generated_files
@@ -68,12 +68,12 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
         ["lcov", "--rc", "lcov_branch_coverage=1", "--add-tracefile",
          "app_base.info", "-add-tracefile", "app_test.info", "--output-file", "app_total.info"])
     # generate coverage html pages using lcov which are nicer than gcovr's
-    os.makedirs("coverage/lcov", exist_ok=True)
+    Path("coverage/lcov").mkdir(parents=True, exist_ok=True)
     subprocess.check_call(
         ["genhtml", "--prefix", cwd, "--rc", "lcov_branch_coverage=1",
          "--output-directory", "coverage/lcov", "--show-details", "app_total.info"])
     # generate coverage info for GitLab's Test Coverage Visualization
-    os.makedirs("coverage/gcovr", exist_ok=True)
+    Path("coverage/gcovr").mkdir(parents=True, exist_ok=True)
     subprocess.check_call(
         ["gcovr"] + exclude_options +
         ["--xml-pretty", "--html-details=coverage/gcovr/index.html",
