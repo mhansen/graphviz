@@ -1171,9 +1171,9 @@ ubuntu-22.10-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
     before_script:
         - export build_system="cmake"
-        - export CFLAGS=" -g -fsanitize=address,undefined"
-        - export CXXFLAGS=" -g -fsanitize=address,undefined"
-        - export LDFLAGS=" -g -fsanitize=address,undefined"
+        - export CFLAGS="-g -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
+        - export CXXFLAGS="-g -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
+        - export LDFLAGS="-g -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu-22.10-cmake-ASan-build-for-ctest"
