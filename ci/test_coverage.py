@@ -43,6 +43,11 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
       cwd / "build/lib/cgraph/scan.c",
       cwd / "build/lib/common/htmlparse.c",
       cwd / "build/lib/expr/y.tab.c",
+      cwd / "build/cmd/gvedit/gvedit_autogen/EWIEGA46WW/moc_csettings.cpp",
+      cwd / "build/cmd/gvedit/gvedit_autogen/EWIEGA46WW/moc_imageviewer.cpp",
+      cwd / "build/cmd/gvedit/gvedit_autogen/EWIEGA46WW/moc_mainwindow.cpp",
+      cwd / "build/cmd/gvedit/gvedit_autogen/EWIEGA46WW/moc_mdichild.cpp",
+      cwd / "build/cmd/gvedit/gvedit_autogen/EWIEGA46WW/qrc_mdi.cpp",
       ]
 
   excluded_files = generated_files
