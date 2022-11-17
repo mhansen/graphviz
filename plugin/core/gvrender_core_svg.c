@@ -598,10 +598,10 @@ static int svg_rgradstyle(GVJ_t * job)
     int id = rgradId++;
 
     obj_state_t *obj = job->obj;
-    double angle = obj->gradient_angle * M_PI / 180;	//angle of gradient line
-    if (angle == 0.) {
+    if (obj->gradient_angle == 0) {
 	ifx = ify = 50;
     } else {
+	double angle = obj->gradient_angle * M_PI / 180;	//angle of gradient line
 	ifx = round(50 * (1 + cos(angle)));
 	ify = round(50 * (1 - sin(angle)));
     }

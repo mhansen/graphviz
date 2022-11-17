@@ -50,7 +50,7 @@
 #include <sys/types.h>
 #endif
 
-#if !defined(__APPLE__) && !defined(_WIN32)
+#if !defined(_WIN32)
 #include <unistd.h>
 #endif
 
@@ -212,7 +212,7 @@ static char *find_me(void) {
     assert(rc != 0);
     assert(buf_size > 0);
 
-    path = gv_alloc(buf_size);
+    char *path = gv_alloc(buf_size);
 
     // retrieve the actual path
     if (_NSGetExecutablePath(path, &buf_size) < 0) {

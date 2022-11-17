@@ -319,7 +319,7 @@ static void cairo_gradient_fill (cairo_t* cr, obj_state_t* obj, int filled, poin
 	  //r1 is inner radius, r2 is outer radius
 	r1 = G[1].x;    /* Set a r2/4 in get_gradient_points */
 	r2 = G[1].y;
-	if (angle == 0) {
+	if (obj->gradient_angle == 0) {
 	    c1.x = G[0].x;
 	    c1.y = G[0].y;
 	}
