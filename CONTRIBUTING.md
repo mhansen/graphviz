@@ -52,11 +52,12 @@ no maintainer has objected AND ((the request was submitted by a maintainer AND
 (was opened ≥ 5 days ago OR the request is approved by ≥ 1 maintainer)) OR the
 request is approved by ≥ 2 maintainers)
 
-Changes that have user-facing effects will need a CHANGELOG.md entry. Please ask
-in the MR description if you are unsure. An API-breaking change (e.g. a
-functional change to a C header mentioned in `pkginclude_HEADERS` in a
-Makefile.am file) will probably require discussion of the relative cost and
-benefit.
+Changes that have user-facing effects will need a CHANGELOG.md entry, to be
+appended to the relevant section (Added, Changed, or Fixed) after any existing
+entries for the upcoming release. Please ask in the MR description if you are
+unsure if your changes need an entry. An API-breaking change (e.g. a functional
+change to a C header mentioned in `pkginclude_HEADERS` in a Makefile.am file)
+will probably require discussion of the relative cost and benefit.
 
 ### C and C++ style
 
