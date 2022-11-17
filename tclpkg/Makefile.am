@@ -63,6 +63,7 @@ if WITH_PHP
 		echo "Warning: $(PHP_INSTALL_DIR) is not writable."; \
 		echo "Skipping system installation of php binding."; \
 	fi
+if WITH_SWIG_PHP_DATA
 	-mkdir -p $(DESTDIR)$(PHP_INSTALL_DATADIR);
 	if test -w $(DESTDIR)$(PHP_INSTALL_DATADIR); then \
 		(cd $(DESTDIR)$(PHP_INSTALL_DATADIR); \
@@ -71,6 +72,7 @@ if WITH_PHP
 		echo "Warning: $(PHP_INSTALL_DATADIR) is not writable."; \
 		echo "Skipping system installation of php binding."; \
 	fi
+endif
 endif
 if WITH_PYTHON
 	-mkdir -p $(DESTDIR)$(PYTHON_INSTALL_DIR);

@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   arguably a regression in Graphviz 6.0.1. #2307
 - The CMake build system’s interactions with a Zlib installed in a non-system
   location has been improved.
+- Do not try to install `gv.php` if using SWIG-4.1.0. Graphviz 7.0.1 changes
+  listed SWIG 4.1.0 as supported, but there was an oversight that is fixed in
+  7.0.2. Complete #2277, #2303
 
 ## [7.0.1] – 2022-11-09
 
