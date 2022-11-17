@@ -27,8 +27,9 @@ export CC="ccache ${CC:-cc}"
 export CXX="ccache ${CXX:-c++}"
 export CCACHE_DIR=ccache-cache
 
-# use the libs installed with cygwinsetup instead of those in
-# https://gitlab.com/graphviz/graphviz-windows-dependencies
-export CMAKE_OPTIONS=-Duse_win_pre_inst_libs=OFF
+# Use the libs installed with cygwinsetup instead of those in
+# https://gitlab.com/graphviz/graphviz-windows-dependencies. Also disable GVEdit
+# because we do not have Qt installed.
+export CMAKE_OPTIONS="-Duse_win_pre_inst_libs=OFF -Dwith_gvedit=OFF"
 
 ci/build.sh

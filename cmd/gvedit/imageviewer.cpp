@@ -11,6 +11,7 @@
 
 #include "imageviewer.h"
 #include "mdichild.h"
+#include <QtGlobal>
 
 extern int errorPipe(char *errMsg);
 
@@ -56,18 +57,25 @@ bool ImageViewer::open(QString fileName)
 
 void ImageViewer::print()
 {
-    Q_ASSERT(imageLabel->pixmap());
 #ifndef QT_NO_PRINTER
+    auto get_pixmap = [&]() {
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+        Q_ASSERT(imageLabel->pixmap());
+        return *imageLabel->pixmap();
+#else
+        return imageLabel->pixmap(Qt::ReturnByValue);
+#endif
+    };
     QPrintDialog dialog(&printer, this);
     if (dialog.exec()) {
 	QPainter painter(&printer);
 	QRect rect = painter.viewport();
-	QSize size = imageLabel->pixmap()->size();
+	QSize size = get_pixmap().size();
 	size.scale(rect.size(), Qt::KeepAspectRatio);
 	painter.setViewport(rect.x(), rect.y(), size.width(),
 			    size.height());
-	painter.setWindow(imageLabel->pixmap()->rect());
-	painter.drawPixmap(0, 0, *imageLabel->pixmap());
+	painter.setWindow(get_pixmap().rect());
+	painter.drawPixmap(0, 0, get_pixmap());
     }
 #endif
 }
@@ -178,9 +186,16 @@ void ImageViewer::updateActions()
 
 void ImageViewer::scaleImage(double factor)
 {
-    Q_ASSERT(imageLabel->pixmap());
+    auto get_pixmap = [&]() {
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+        Q_ASSERT(imageLabel->pixmap());
+        return *imageLabel->pixmap();
+#else
+        return imageLabel->pixmap(Qt::ReturnByValue);
+#endif
+    };
     scaleFactor *= factor;
-    imageLabel->resize(scaleFactor * imageLabel->pixmap()->size());
+    imageLabel->resize(scaleFactor * get_pixmap().size());
 
     adjustScrollBar(scrollArea->horizontalScrollBar(), factor);
     adjustScrollBar(scrollArea->verticalScrollBar(), factor);

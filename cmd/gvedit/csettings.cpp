@@ -10,7 +10,9 @@
 #ifdef _WIN32
 #include "windows.h"
 #endif
+#include <cassert>
 #include "csettings.h"
+#include <cstdint>
 #include "qmessagebox.h"
 #include "qfiledialog.h"
 #include <QtWidgets>
@@ -19,6 +21,21 @@
 #include "string.h"
 #include "mainwindow.h"
 #include <QTemporaryFile>
+#include <string>
+#include <vector>
+
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
+
+#ifdef __FreeBSD__
+#include <sys/sysctl.h>
+#include <sys/types.h>
+#endif
+
+#if !defined(_WIN32)
+#include <unistd.h>
+#endif
 
 extern int errorPipe(char *errMsg);
 
@@ -29,37 +46,143 @@ typedef struct {
     int cur;
 } rdr_t;
 
-#ifdef _WIN32
-#define BSZ 1024
+#if !defined(__APPLE__) && !defined(_WIN32)
+/// read the given symlink in the /proc file system
+static std::string read_proc(const std::string &path) {
 
-QString findAttrFile ()
-{
-    char line[BSZ];
-    int r;
-    char* s;
-    QString path;
-    MEMORY_BASIC_INFORMATION mbi;
+  std::vector<char> buf(PATH_MAX + 1, '\0');
+  if (readlink(path.c_str(), buf.data(), buf.size()) < 0)
+    return "";
 
-    if (VirtualQuery (&findAttrFile, &mbi, sizeof(mbi)) == 0) {
-	errout << "failed to get handle for executable.\n";
-	return path;
-    }
-    r = GetModuleFileNameA((HMODULE)mbi.AllocationBase, line, BSZ);
-    if (!r || r == BSZ) {
-	errout << "failed to get path for executable.\n";
-	return path;
-    }
-    s = strstr(line,"\\bin\\");
-    if (!s) {
-	errout << "no \"\\bin\" in path " << line << "\n";
-	return path;
-    }
-    *s = '\0';
-    path.append(line);
-    path.append("\\share\\graphviz\\gvedit\\attributes.txt");
-    return path;
+  // was the path too long?
+  if (buf.back() != '\0')
+    return "";
+
+  return buf.data();
 }
 #endif
+
+/// find an absolute path to the current executable
+static std::string find_me(void) {
+
+  // macOS
+#ifdef __APPLE__
+  {
+    // determine how many bytes we will need to allocate
+    uint32_t buf_size = 0;
+    int rc = _NSGetExecutablePath(NULL, &buf_size);
+    assert(rc != 0);
+    assert(buf_size > 0);
+
+    std::vector<char> path(buf_size);
+
+    // retrieve the actual path
+    if (_NSGetExecutablePath(path.data(), &buf_size) < 0) {
+      errout << "failed to get path for executable.\n";
+      return "";
+    }
+
+    // try to resolve any levels of symlinks if possible
+    while (true) {
+      std::vector<char> buf(PATH_MAX + 1, '\0');
+      if (readlink(path.data(), buf.data(), buf.size()) < 0)
+        return path.data();
+
+      path = buf;
+    }
+  }
+#elif defined(_WIN32)
+  {
+    std::vector<char> path;
+    int rc = 0;
+
+    do {
+      {
+        size_t size = path.empty() ? 1024 : (path.size() * 2);
+        path.resize(size);
+      }
+
+      rc = GetModuleFileName(NULL, path.data(), path.size());
+      if (rc == 0) {
+        errout << "failed to get path for executable.\n";
+        return "";
+      }
+
+    } while (rc == path.size());
+
+    return path.data();
+  }
+#else
+
+  // Linux
+  std::string path = read_proc("/proc/self/exe");
+  if (path != "")
+    return path;
+
+  // DragonFly BSD, FreeBSD
+  path = read_proc("/proc/curproc/file");
+  if (path != "")
+    return path;
+
+  // NetBSD
+  path = read_proc("/proc/curproc/exe");
+  if (path != "")
+    return path;
+
+// /proc-less FreeBSD
+#ifdef __FreeBSD__
+  {
+    int mib[] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
+    static const size_t MIB_LENGTH = sizeof(mib) / sizeof(mib[0]);
+    std::vector<char> buf(PATH_MAX + 1, '\0');
+    size_t buf_size = buf.size();
+    if (sysctl(mib, MIB_LENGTH, buf.data(), &buf_size, NULL, 0) == 0)
+      return buf.data();
+  }
+#endif
+#endif
+
+  errout << "failed to get path for executable.\n";
+  return "";
+}
+
+/// find an absolute path to where Smyrna auxiliary files are stored
+static std::string find_share(void) {
+
+#ifdef _WIN32
+  const char PATH_SEPARATOR = '\\';
+#else
+  const char PATH_SEPARATOR = '/';
+#endif
+
+  // find the path to the `gvedit` binary
+  std::string gvedit_exe = find_me();
+  if (gvedit_exe == "")
+    return "";
+
+  // assume it is of the form …/bin/gvedit[.exe] and construct
+  // …/share/graphviz/gvedit
+
+  size_t slash = gvedit_exe.rfind(PATH_SEPARATOR);
+  if (slash == std::string::npos) {
+    errout << "no path separator in path to self, " << gvedit_exe.c_str()
+           << '\n';
+    return "";
+  }
+
+  std::string bin = gvedit_exe.substr(0, slash);
+  slash = bin.rfind(PATH_SEPARATOR);
+  if (slash == std::string::npos) {
+    errout << "no path separator in directory containing self, "
+           << bin.c_str() << '\n';
+    return "";
+  }
+
+  std::string install_prefix = bin.substr(0, slash);
+
+  return install_prefix + PATH_SEPARATOR + "share" + PATH_SEPARATOR + "graphviz"
+    + PATH_SEPARATOR + "gvedit";
+}
  
 bool loadAttrs(const QString fileName, QComboBox * cbNameG,
 	       QComboBox * cbNameN, QComboBox * cbNameE)
@@ -117,13 +240,14 @@ CFrmSettings::CFrmSettings()
     graph = nullptr;
     activeWindow = nullptr;
     QString path;
+    char *s = NULL;
 #ifndef _WIN32
-    char *s = getenv("GVEDIT_PATH");
+    s = getenv("GVEDIT_PATH");
+#endif
     if (s)
 	path = s;
     else
-	path = GVEDIT_DATADIR;
-#endif
+	path = QString::fromStdString(find_share());
 
     connect(WIDGET(QPushButton, pbAdd), SIGNAL(clicked()), this,
 	    SLOT(addSlot()));
@@ -146,21 +270,10 @@ CFrmSettings::CFrmSettings()
 	    this, SLOT(scopeChangedSlot(int)));
     scopeChangedSlot(0);
 
-
-#ifndef _WIN32
-    loadAttrs(path + "/attrs.txt", WIDGET(QComboBox, cbNameG),
-	      WIDGET(QComboBox, cbNameN), WIDGET(QComboBox, cbNameE));
-#else
-    if (loadAttrs("../share/graphviz/gvedit/attributes.txt",
-	      WIDGET(QComboBox, cbNameG), WIDGET(QComboBox, cbNameN),
-	      WIDGET(QComboBox, cbNameE))) {
-	path = findAttrFile();
-	if (!path.isEmpty())
-	    loadAttrs(path,
-	      WIDGET(QComboBox, cbNameG), WIDGET(QComboBox, cbNameN),
-	      WIDGET(QComboBox, cbNameE));
+    if (path != "") {
+	loadAttrs(path + "/attrs.txt", WIDGET(QComboBox, cbNameG),
+	          WIDGET(QComboBox, cbNameN), WIDGET(QComboBox, cbNameE));
     }
-#endif
     setWindowIcon(QIcon(":/images/icon.png"));
 }
 

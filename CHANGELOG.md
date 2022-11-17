@@ -8,8 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- The `cluster`, `dot_builtins`, `dot2gxl`, `gv2gxl`, and `prune` utilities are
-  now included in the CMake build system. #1836
+- The `cluster`, `dot_builtins`, `dot2gxl`, `gv2gxl`, `gvedit`, and `prune`
+  utilities are now included in the CMake build system. #1753, #1836
+
+### Changed
+
+- `gvedit` now uses a relative path from its own executable to discover its
+  attributes file, `../share/graphviz/gvedit/attrs.txt`. This should make it
+  more relocatable and make its behavior more consistent across operating
+  systems.
 
 ### Fixed
 

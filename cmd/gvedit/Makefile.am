@@ -27,8 +27,7 @@ gvedit_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(QTGUI_CFLAGS) \
 	$(QTCORE_CFLAGS) \
-	-DDEMAND_LOADING=1 \
-	-DGVEDIT_DATADIR='"$(pkgdatadir)/gvedit"'
+	-DDEMAND_LOADING=1
 
 gvedit_LDADD = \
 	$(top_builddir)/lib/gvc/libgvc.la \
