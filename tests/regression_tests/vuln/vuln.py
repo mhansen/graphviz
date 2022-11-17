@@ -1,7 +1,7 @@
 """
 Some legacy tests against previous bugs.
 
-FIXME: this should probably be integrated into ../../../rtest/test_regression.py
+FIXME: this should probably be integrated into ../../../tests/test_regression.py
 """
 
 import subprocess
