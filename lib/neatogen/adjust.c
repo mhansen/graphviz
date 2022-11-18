@@ -786,9 +786,9 @@ vpscAdjust(graph_t* G)
     enum { dim = 2 };
     int nnodes = agnnodes(G);
     ipsep_options opt;
-    pointf* nsize = N_GNEW(nnodes, pointf);
+    pointf *nsize = gv_calloc(nnodes, sizeof(pointf));
     float* coords[dim];
-    float* f_storage = N_GNEW(dim * nnodes, float);
+    float *f_storage = gv_calloc(dim * nnodes, sizeof(float));
     int i, j;
     Agnode_t* v;
     expand_t exp_margin;
@@ -810,7 +810,7 @@ vpscAdjust(graph_t* G)
     opt.diredges = 0;
     opt.edge_gap = 0;
     opt.noverlap = 2;
-    opt.clusters = NEW(cluster_data);
+    opt.clusters = gv_alloc(sizeof(cluster_data));
     exp_margin = sepFactor (G);
  	/* Multiply by 2 since opt.gap is the gap size, not the margin */
     if (exp_margin.doAdd) {
