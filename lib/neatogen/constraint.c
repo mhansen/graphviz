@@ -10,6 +10,7 @@
 
 
 #include "config.h"
+#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
@@ -566,7 +567,7 @@ int cAdjust(graph_t * g, int mode)
 {
     expand_t margin;
     int ret, i, nnodes = agnnodes(g);
-    nitem *nlist = N_GNEW(nnodes, nitem);
+    nitem *nlist = gv_calloc(nnodes, sizeof(nitem));
     nitem *p = nlist;
     node_t *n;
 
