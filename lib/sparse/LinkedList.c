@@ -10,7 +10,6 @@
 
 #include <cgraph/alloc.h>
 #include <sparse/LinkedList.h>
-#include <common/memory.h>
 
 SingleLinkedList SingleLinkedList_new(void *data){
   SingleLinkedList head = gv_alloc(sizeof(struct SingleLinkedList_struct));
@@ -70,11 +69,8 @@ void SingleLinkedList_print(SingleLinkedList head, void (*linkedlist_print)(void
 
 
 DoubleLinkedList DoubleLinkedList_new(void *data){
-  DoubleLinkedList head;
-  head = GNEW(struct DoubleLinkedList_struct);
+  DoubleLinkedList head = gv_alloc(sizeof(struct DoubleLinkedList_struct));
   head->data = data;
-  head->next = NULL;
-  head->prev = NULL;
   return head;
 }
 
