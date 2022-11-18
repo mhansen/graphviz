@@ -526,7 +526,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
 	int sz = NPORTS(g);
 
 	/* freed in freeDeriveGraph */
-	PORTS(dg) = pq = N_NEW(sz + 1, bport_t);
+	PORTS(dg) = pq = gv_calloc(sz + 1, sizeof(bport_t));
 	sz = 0;
 	while (pp->e) {
 	    m = DNODE(pp->n);
