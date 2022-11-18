@@ -89,9 +89,9 @@ static void patchwork_init_node_edge(graph_t * g)
     node_t *n;
     edge_t *e;
     int i = 0;
-    rdata* alg = N_NEW(agnnodes(g), rdata);
+    rdata* alg = gv_calloc(agnnodes(g), sizeof(rdata));
 
-    GD_neato_nlist(g) = N_NEW(agnnodes(g) + 1, node_t *);
+    GD_neato_nlist(g) = gv_calloc(agnnodes(g) + 1, sizeof(node_t*));
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);  // node custom data
 	ND_alg(n) = alg + i;
