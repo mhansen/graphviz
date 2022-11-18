@@ -453,14 +453,10 @@ static boxf bbox(Ppoly_t** obsp, int npoly, int *np)
 	obs = *obsp++;
 	for (j = 0; j < obs->pn; j++) {
 	    p = obs->ps[j];
-	    if (p.x < bb.LL.x)
-		bb.LL.x = p.x;
-	    if (p.x > bb.UR.x)
-		bb.UR.x = p.x;
-	    if (p.y < bb.LL.y)
-		bb.LL.y = p.y;
-	    if (p.y > bb.UR.y)
-		bb.UR.y = p.y;
+	    bb.LL.x = fmin(bb.LL.x, p.x);
+	    bb.UR.x = fmax(bb.UR.x, p.x);
+	    bb.LL.y = fmin(bb.LL.y, p.y);
+	    bb.UR.y = fmax(bb.UR.y, p.y);
 	    cnt++;
 	}
     }
