@@ -86,7 +86,7 @@ static treenode_t* mkTreeNode (Agnode_t* n, attrsym_t* ap)
  */
 static treenode_t *mkTree (Agraph_t * g, attrsym_t* gp, attrsym_t* ap, attrsym_t* mp)
 {
-    treenode_t *p = NEW(treenode_t);
+    treenode_t *p = gv_alloc(sizeof(treenode_t));
     Agraph_t *subg;
     Agnode_t *n;
     treenode_t *cp;
