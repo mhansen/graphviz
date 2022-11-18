@@ -629,9 +629,8 @@ static void updateGraph(void)
 double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
 {
     Agnode_t *n;
-    double *sizes = N_GNEW(Ndim * agnnodes(g), double);
+    double *sizes = gv_calloc(Ndim * agnnodes(g), sizeof(double));
     int i, nedge_nodes = 0;
-    int* elabs;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (elabels && IS_LNODE(n)) nedge_nodes++;
@@ -642,7 +641,7 @@ double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
     }
 
     if (elabels && nedge_nodes) {
-	elabs = N_GNEW(nedge_nodes, int);
+	int* elabs = gv_calloc(nedge_nodes, sizeof(int));
 	nedge_nodes = 0;
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    if (IS_LNODE(n))
