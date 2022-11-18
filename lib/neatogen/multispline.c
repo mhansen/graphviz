@@ -565,7 +565,6 @@ static void freeTriGraph(tgraph * tg)
  */
 static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
 {
-    tgraph *g;
     tnode *np;
     int j, i, ne = 0;
     int *jp;
@@ -575,28 +574,16 @@ static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
 	if (sf->neigh[i] != -1)
 	    ne++;
 
-    g = GNEW(tgraph);
+    tgraph *g = gv_alloc(sizeof(tgraph));
 
     /* plus 2 for nodes added as endpoints of an edge */
     g->nnodes = sf->nfaces + 2;
-    g->nodes = N_GNEW(g->nnodes, tnode);
-
-    g->edges = NULL;
-    g->nedges = 0;
+    g->nodes = gv_calloc(g->nnodes, sizeof(tnode));
 
     for (i = 0; i < sf->nfaces; i++) {
 	np = g->nodes + i;
-	np->ne = 0;
-	np->edges = NULL;
 	np->ctr = triCenter(pts, sf->faces + 3 * i);
     }
-    /* initialize variable nodes */
-    np = g->nodes + i;
-    np->ne = 0;
-    np->edges = NULL;
-    np++;
-    np->ne = 0;
-    np->edges = NULL;
 
     for (i = 0; i < sf->nfaces; i++) {
 	np = g->nodes + i;
