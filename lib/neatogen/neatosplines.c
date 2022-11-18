@@ -115,7 +115,7 @@ static void *newitem(Dt_t * d, edgeitem * obj, Dtdisc_t * disc)
 
     (void)d;
     (void)disc;
-    newp = NEW(edgeitem);
+    newp = gv_alloc(sizeof(edgeitem));
     newp->id = obj->id;
     newp->e = obj->e;
     ED_count(newp->e) = 1;
