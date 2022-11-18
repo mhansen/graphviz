@@ -580,7 +580,7 @@ static void mkBR(char **atts)
 
 static htmlimg_t *mkImg(char **atts)
 {
-    htmlimg_t *img = NEW(htmlimg_t);
+    htmlimg_t *img = gv_alloc(sizeof(htmlimg_t));
 
     doAttrs(img, img_items, sizeof(img_items) / ISIZE, atts, "<IMG>");
 
