@@ -48,7 +48,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
         if (!strncmp(agnameof(subg), "cluster", 7)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 #ifdef FDP_GEN
-            GD_alg(subg) = (void *) NEW(gdata); /* freed in cleanup_subgs */
+            GD_alg(subg) = gv_alloc(sizeof(gdata)); /* freed in cleanup_subgs */
             GD_ndim(subg) = GD_ndim(parent);
             LEVEL(subg) = LEVEL(parent) + 1;
             GPARENT(subg) = parent;
