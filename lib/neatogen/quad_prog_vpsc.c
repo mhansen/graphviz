@@ -22,6 +22,7 @@
  * Tim Dwyer, 2006
  **********************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/digcola.h>
 #include <stdbool.h>
 #ifdef IPSEPCOLA
@@ -188,7 +189,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
     int i, j;
     /* nv is the number of real nodes */
     int nConCs;
-    CMajEnvVPSC *e = GNEW(CMajEnvVPSC);
+    CMajEnvVPSC *e = gv_alloc(sizeof(CMajEnvVPSC));
     e->A = NULL;
     e->packedMat = packedMat;
     /* if we have clusters then we'll need two constraints for each var in
@@ -198,7 +199,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
     e->ndv = 0;
 
     e->gcs = NULL;
-    e->vs = N_GNEW(n, Variable *);
+    e->vs = gv_calloc(n, sizeof(Variable*));
     for (i = 0; i < n; i++) {
 	e->vs[i] = newVariable(i, 1.0, 1.0);
     }
@@ -239,7 +240,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	    get_num_digcola_constraints(levels, e->ndv + 1) + e->ndv - 1;
 	e->gcs = newConstraints(e->gm);
 	e->gm = 0;
-	e->vs = N_GNEW(n + e->ndv, Variable *);
+	e->vs = gv_calloc(n + e->ndv, sizeof(Variable*));
 	for (i = 0; i < n; i++) {
 	    e->vs[i] = vs[i];
 	}
@@ -303,9 +304,9 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	e->A = unpackMatrix(packedMat, n);
     }
 
-    e->fArray1 = N_GNEW(n, float);
-    e->fArray2 = N_GNEW(n, float);
-    e->fArray3 = N_GNEW(n, float);
+    e->fArray1 = gv_calloc(n, sizeof(float));
+    e->fArray2 = gv_calloc(n, sizeof(float));
+    e->fArray3 = gv_calloc(n, sizeof(float));
     if (Verbose)
 	fprintf(stderr,
 		"  initCMajVPSC done: %d global constraints generated.\n",
