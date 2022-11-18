@@ -185,8 +185,8 @@ void quicksort_place(double *place, int *ordering, int first, int last)
 static void rescaleLayout(v_data *graph, size_t n, double *x_coords,
                           double *y_coords, int interval, double distortion) {
     // Rectlinear distortion - auxiliary function
-    double *copy_coords = N_NEW(n, double);
-    int *ordering = N_NEW(n, int);
+    double *copy_coords = gv_calloc(n, sizeof(double));
+    int *ordering = gv_calloc(n, sizeof(int));
     double factor;
 
     for (size_t i = 0; i < n; i++) {
