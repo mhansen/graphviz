@@ -730,7 +730,7 @@ fdpAdjust (graph_t* g, adjust_data* am)
     SparseMatrix A0 = makeMatrix(g, NULL);
     SparseMatrix A = A0;
     double *sizes;
-    double *pos = N_NEW(Ndim * agnnodes(g), double);
+    double *pos = gv_calloc(Ndim * agnnodes(g), sizeof(double));
     Agnode_t *n;
     int flag = 0, i;
     expand_t sep = sepFactor(g);
