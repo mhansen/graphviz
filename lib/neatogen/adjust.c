@@ -667,9 +667,6 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
     int nnodes;
     int nedges;
     int i, row;
-    int *I;
-    int *J;
-    double *val;
     double v;
     int type = MATRIX_TYPE_REAL;
     Agsym_t* symD = NULL;
@@ -685,14 +682,14 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
 	ND_id(n) = i++;
 
-    I = N_GNEW(nedges, int);
-    J = N_GNEW(nedges, int);
-    val = N_GNEW(nedges, double);
+    int *I = gv_calloc(nedges, sizeof(int));
+    int *J = gv_calloc(nedges, sizeof(int));
+    double *val = gv_calloc(nedges, sizeof(double));
 
     sym = agfindedgeattr(g, "weight");
     if (D) {
 	symD = agfindedgeattr(g, "len");
-	valD = N_NEW(nedges, double);
+	valD = gv_calloc(nedges, sizeof(double));
     }
 
     i = 0;
