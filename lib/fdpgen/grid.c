@@ -21,6 +21,7 @@
 /* uses PRIVATE interface for NOTUSED */
 #define FDP_PRIVATE 1
 
+#include <cgraph/alloc.h>
 #include <fdpgen/fdp.h>
 #include <fdpgen/grid.h>
 #include <common/macros.h>
@@ -40,11 +41,9 @@ typedef struct _block {
  */
 static block_t *newBlock(int size)
 {
-    block_t *newb;
-
-    newb = GNEW(block_t);
+    block_t *newb = gv_alloc(sizeof(block_t));
     newb->next = 0;
-    newb->mem = N_GNEW(size, cell);
+    newb->mem = gv_calloc(size, sizeof(cell));
     newb->endp = newb->mem + size;
     newb->cur = newb->mem;
 
