@@ -13,6 +13,7 @@
  * order to reduce/remove node overlaps.
  */
 
+#include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <cgraph/agxbuf.h>
 #include <common/utils.h>
@@ -142,7 +143,7 @@ static int makeInfo(Agraph_t * graph)
     nsites = agnnodes(graph);
     geominit();
 
-    nodeInfo = N_GNEW(nsites, Info_t);
+    nodeInfo = gv_calloc(nsites, sizeof(Info_t));
 
     node = agfstnode(graph);
     ip = nodeInfo;
