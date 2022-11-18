@@ -292,7 +292,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
     switch (shapeOf(n)) {
     case SH_POLY:
     case SH_POINT:
-	obs = NEW(Ppoly_t);
+	obs = gv_alloc(sizeof(Ppoly_t));
 	poly = ND_shape_info(n);
 	if (isOrtho) {
 	    isPoly = 1;
@@ -334,7 +334,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	    adj = drand48() * .01;
 	}
 	obs->pn = sides;
-	obs->ps = N_NEW(sides, Ppoint_t);
+	obs->ps = gv_calloc(sides, sizeof(Ppoint_t));
 	/* assuming polys are in CCW order, and pathplan needs CW */
 	for (j = 0; j < sides; j++) {
 	    double xmargin = 0.0, ymargin = 0.0;
@@ -394,9 +394,9 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
     case SH_RECORD:
 	fld = ND_shape_info(n);
 	b = fld->b;
-	obs = NEW(Ppoly_t);
+	obs = gv_alloc(sizeof(Ppoly_t));
 	obs->pn = 4;
-	obs->ps = N_NEW(4, Ppoint_t);
+	obs->ps = gv_calloc(4, sizeof(Ppoint_t));
 	/* CW order */
 	pt = ND_coord(n);
 	if (pmargin->doAdd) {
@@ -413,9 +413,9 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	}
 	break;
     case SH_EPSF:
-	obs = NEW(Ppoly_t);
+	obs = gv_alloc(sizeof(Ppoly_t));
 	obs->pn = 4;
-	obs->ps = N_NEW(4, Ppoint_t);
+	obs->ps = gv_calloc(4, sizeof(Ppoint_t));
 	/* CW order */
 	pt = ND_coord(n);
 	if (pmargin->doAdd) {
