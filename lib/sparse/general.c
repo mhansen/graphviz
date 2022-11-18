@@ -88,7 +88,7 @@ void vector_float_take(int n, float *v, int m, int *p, float **u){
   /* take m elements v[p[i]]],i=1,...,m and oput in u */
   int i;
 
-  if (!*u) *u = MALLOC(sizeof(float)*m);
+  if (!*u) *u = gv_calloc(m, sizeof(float));
 
   for (i = 0; i < m; i++) {
     assert(p[i] < n && p[i] >= 0);
