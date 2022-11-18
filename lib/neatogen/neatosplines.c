@@ -10,7 +10,7 @@
 
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
@@ -44,7 +44,6 @@ make_barriers(Ppoly_t ** poly, int npoly, int pp, int qp,
 	      Pedge_t ** barriers, int *n_barriers)
 {
     int i, j, k, n, b;
-    Pedge_t *bar;
 
     n = 0;
     for (i = 0; i < npoly; i++) {
@@ -54,7 +53,7 @@ make_barriers(Ppoly_t ** poly, int npoly, int pp, int qp,
 	    continue;
 	n += poly[i]->pn;
     }
-    bar = N_GNEW(n, Pedge_t);
+    Pedge_t *bar = gv_calloc(n, sizeof(Pedge_t));
     b = 0;
     for (i = 0; i < npoly; i++) {
 	if (i == pp)
