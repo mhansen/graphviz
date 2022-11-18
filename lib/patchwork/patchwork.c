@@ -143,8 +143,6 @@ static int nodecmp (treenode_t** p0, treenode_t** p1)
 static void layoutTree(treenode_t * tree)
 {
     rectangle *recs;
-    treenode_t** nodes;
-    double* areas_sorted;
     int i, nc;
     treenode_t* cp;
 
@@ -152,7 +150,7 @@ static void layoutTree(treenode_t * tree)
     if (tree->n_children == 0) return;
 
     nc = tree->n_children;
-    nodes = N_NEW(nc, treenode_t*);
+    treenode_t** nodes = gv_calloc(nc, sizeof(treenode_t*));
     cp = tree->leftchild;
     for (i = 0; i < nc; i++) {
 	nodes[i] = cp;
@@ -160,7 +158,7 @@ static void layoutTree(treenode_t * tree)
     }
 
     qsort (nodes, nc, sizeof(treenode_t*), (qsort_cmpf)nodecmp);
-    areas_sorted = N_NEW(nc,double);
+    double* areas_sorted = gv_calloc(nc, sizeof(double));
     for (i = 0; i < nc; i++) {
 	areas_sorted[i] = nodes[i]->area;
     }
