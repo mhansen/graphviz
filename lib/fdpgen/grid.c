@@ -190,7 +190,7 @@ void adjustGrid(Grid * g, int nnodes)
 	nsize = MAX(nnodes, 2 * g->listSize);
 	if (g->listMem)
 	    free(g->listMem);
-	g->listMem = N_GNEW(nsize, node_list);
+	g->listMem = gv_calloc(nsize, sizeof(node_list));
 	g->listSize = nsize;
     }
 }
