@@ -19,7 +19,7 @@
 #define FDP_PRIVATE 1
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <fdpgen/clusteredges.h>
 #include <fdpgen/fdp.h>
 #include <neatogen/neatoprocs.h>
@@ -63,10 +63,10 @@ static void addObj(objlist * l, Ppoly_t * obj)
 {
     if (l->sz == l->cnt) {
 	if (l->obs) {
+	    l->obs = gv_recalloc(l->obs, l->sz, l->sz * 2, sizeof(Ppoly_t*));
 	    l->sz *= 2;
-	    l->obs = RALLOC(l->sz, l->obs, Ppoly_t *);
 	} else {
-	    l->obs = N_GNEW(INIT_SZ, Ppoly_t *);
+	    l->obs = gv_calloc(INIT_SZ, sizeof(Ppoly_t*));
 	    l->sz = INIT_SZ;
 	}
     }
