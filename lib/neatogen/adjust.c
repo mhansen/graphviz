@@ -206,7 +206,7 @@ static void sortSites(void)
     Info_t *ip;
 
     if (sites == 0) {
-	sites = N_GNEW(nsites, Site *);
+	sites = gv_calloc(nsites, sizeof(Site*));
 	endSite = sites + nsites;
     }
 
