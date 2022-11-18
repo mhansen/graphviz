@@ -588,7 +588,6 @@ static int ecmp(const void *v1, const void *v2)
  */
 static erec *getEdgeList(node_t * n, graph_t * g)
 {
-    erec *erecs;
     int deg = DEG(n);
     int i;
     double dx, dy;
@@ -596,7 +595,7 @@ static erec *getEdgeList(node_t * n, graph_t * g)
     node_t *m;
 
     /* freed in expandCluster */
-    erecs = N_NEW(deg + 1, erec);
+    erec *erecs = gv_calloc(deg + 1, sizeof(erec));
     i = 0;
     for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
 	if (aghead(e) == n)
