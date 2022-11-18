@@ -32,6 +32,7 @@
 #include <limits.h>
 #include <inttypes.h>
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <fdpgen/tlayout.h>
 #include <math.h>
 #include <neatogen/neatoprocs.h>
@@ -184,8 +185,8 @@ static node_t *mkDeriveNode(graph_t * dg, char *name)
 
     dn = agnode(dg, name,1);
     agbindrec(dn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
-    ND_alg(dn) = NEW(dndata);	/* free in freeDeriveNode */
-    ND_pos(dn) = N_GNEW(GD_ndim(dg), double);
+    ND_alg(dn) = gv_alloc(sizeof(dndata)); // free in freeDeriveNode
+    ND_pos(dn) = gv_calloc(GD_ndim(dg), sizeof(double));
     /* fprintf (stderr, "Creating %s\n", dn->name); */
     return dn;
 }
