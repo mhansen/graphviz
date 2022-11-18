@@ -325,9 +325,8 @@ static void rescale_layout_polarFocus(v_data *graph, size_t n, double *x_coords,
                                       double distortion) {
     // Polar distortion - auxiliary function
     double *densities = NULL, *smoothed_densities = NULL;
-    double *distances = N_NEW(n, double);
-    double *orig_distances = N_NEW(n, double);
-    int *ordering;
+    double *distances = gv_calloc(n, sizeof(double));
+    double *orig_distances = gv_calloc(n, sizeof(double));
     double ratio;
 
     for (size_t i = 0; i < n; i++)
@@ -337,7 +336,7 @@ static void rescale_layout_polarFocus(v_data *graph, size_t n, double *x_coords,
     assert(n <= INT_MAX);
     cpvec(orig_distances, 0, (int)n - 1, distances);
 
-    ordering = N_NEW(n, int);
+    int *ordering = gv_calloc(n, sizeof(int));
     for (size_t i = 0; i < n; i++)
 	{
 		ordering[i] = (int)i;
