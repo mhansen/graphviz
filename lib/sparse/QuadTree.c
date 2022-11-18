@@ -67,10 +67,11 @@ static int node_data_get_id(void *d){
 static void check_or_realloc_arrays(int dim, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances){
   
   if (*nsuper >= *nsupermax) {
-    *nsupermax = *nsuper + 10;
-    *center = REALLOC(*center, sizeof(double)*(*nsupermax)*dim);
-    *supernode_wgts = REALLOC(*supernode_wgts, sizeof(double)*(*nsupermax));
-    *distances = REALLOC(*distances, sizeof(double)*(*nsupermax));
+    int new_nsupermax = *nsuper + 10;
+    *center = gv_recalloc(*center, dim * *nsupermax, dim * new_nsupermax, sizeof(double));
+    *supernode_wgts = gv_recalloc(*supernode_wgts, *nsupermax, new_nsupermax, sizeof(double));
+    *distances = gv_recalloc(*distances, *nsupermax, new_nsupermax, sizeof(double));
+    *nsupermax = new_nsupermax;
   }
 }
 
