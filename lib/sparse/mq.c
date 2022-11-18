@@ -87,7 +87,7 @@ static double get_mq(SparseMatrix A, int *assignment, int *ncluster0, double *mq
   assert(A->n == n);
   if (A->type == MATRIX_TYPE_REAL) a = A->a;
 
-  counts = CALLOC(n, sizeof(int));
+  counts = gv_calloc(n, sizeof(int));
 
   for (i = 0; i < n; i++){
     assert(assignment[i] >= 0 && assignment[i] < n);
@@ -125,9 +125,8 @@ static double get_mq(SparseMatrix A, int *assignment, int *ncluster0, double *mq
   }
 
   /* calculate scaled out degree */
-  dout = MALLOC(sizeof(double)*n);
+  dout = gv_calloc(n, sizeof(double));
   for (i = 0; i < n; i++){
-    dout[i] = 0;
     for (j = ia[i]; j < ia[i+1]; j++){
       jj = ja[j];
       if (jj == i) continue;
