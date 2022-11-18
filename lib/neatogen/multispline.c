@@ -394,7 +394,7 @@ static pointf *mkCtrlPts(int s, int mult, pointf prev, pointf v,
  */
 
 typedef struct {
-    int ne;         /* no. of edges. */
+    size_t ne;      // no. of edges.
     int *edges;     /* indices of edges adjacent to node. */
     pointf ctr;     /* center of triangle. */
 } tnode;
@@ -1009,8 +1009,8 @@ static ipair edgeToSeg(tgraph * tg, int i, int j)
     tnode *np = tg->nodes + i;
     tedge *ep;
 
-    for (i = 0; i < np->ne; i++) {
-	ep = tg->edges + np->edges[i];
+    for (size_t k = 0; k < np->ne; k++) {
+	ep = tg->edges + np->edges[k];
 	if ((ep->t == j) || (ep->h == j))
 	    return (ep->seg);
     }
@@ -1171,7 +1171,7 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
  * Remove edges and nodes added for current edge routing
  */
 static void resetGraph(tgraph *g, int ncnt, int ecnt,
-                       int *original_edge_count) {
+                       size_t *original_edge_count) {
     int i;
     tnode *np = g->nodes;
     g->nedges = ecnt;
@@ -1214,7 +1214,7 @@ typedef struct {
 static int *
 triPath(tgraph * g, int n, int v0, int v1, PQ * pq)
 {
-    int i, j, adjn;
+    int i, adjn;
     double d;
     tnode *np;
     tedge *e;
@@ -1234,7 +1234,7 @@ triPath(tgraph * g, int n, int v0, int v1, PQ * pq)
 	if (i == v1)
 	    break;
 	np = g->nodes + i;
-	for (j = 0; j < np->ne; j++) {
+	for (size_t j = 0; j < np->ne; j++) {
 	    e = g->edges + np->edges[j];
 	    if (e->t == i)
 		adjn = e->h;
@@ -1280,7 +1280,7 @@ int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
 
     // record the number of edges in each node, so we can drop the added ones
     // later
-    int *original_edge_count = gv_calloc(rtr->tg->nnodes,
+    size_t *original_edge_count = gv_calloc(rtr->tg->nnodes,
                                             sizeof(original_edge_count[0]));
     for (size_t i = 0; i < rtr->tg->nnodes; ++i)
         original_edge_count[i] = rtr->tg->nodes[i].ne;
