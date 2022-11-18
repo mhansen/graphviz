@@ -1197,7 +1197,7 @@ triPath(tgraph * g, int n, int v0, int v1, PQ * pq)
     double d;
     tnode *np;
     tedge *e;
-    int *dad = N_NEW(n, int);
+    int *dad = gv_calloc(n, sizeof(int));
 
     for (i = 0; i < pq->PQsize; i++)
 	N_VAL(pq, i) = UNSEEN;
