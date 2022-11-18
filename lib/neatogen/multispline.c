@@ -614,25 +614,21 @@ void freeRouter(router_t * rtr)
 
 router_t *mkRouter(Ppoly_t** obsp, int npoly)
 {
-    router_t *rtr = NEW(router_t);
+    router_t *rtr = gv_alloc(sizeof(router_t));
     Ppoly_t* obs;
     boxf bb;
-    pointf *pts;
     int npts;
     surface_t *sf;
-    int *segs;
-    double *x;
-    double *y;
     int maxv = 4; /* default max. no. of vertices in an obstacle; set below */
     /* points in obstacle i have indices obsi[i] through obsi[i+1]-1 in pts
      */
-    int *obsi = N_NEW(npoly + 1, int);
+    int *obsi = gv_calloc(npoly + 1, sizeof(int));
     int i, j, ix = 4, six = 0;
 
     bb = bbox(obsp, npoly, &npts);
     npts += 4;			/* 4 points of bounding box */
-    pts = N_GNEW(npts, pointf);	/* all points are stored in pts */
-    segs = N_GNEW(2 * npts, int);	/* indices of points forming segments */
+    pointf *pts = gv_calloc(npts, sizeof(pointf)); // all points are stored in pts
+    int *segs = gv_calloc(2 * npts, sizeof(int)); // indices of points forming segments
 
     /* store bounding box in CCW order */
     pts[0] = bb.LL;
@@ -667,8 +663,8 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
     obsi[i] = ix;
 
     /* copy points into coordinate arrays */
-    x = N_GNEW(npts, double);
-    y = N_GNEW(npts, double);
+    double *x = gv_calloc(npts, sizeof(double));
+    double *y = gv_calloc(npts, sizeof(double));
     for (i = 0; i < npts; i++) {
 	x[i] = pts[i].x;
 	y[i] = pts[i].y;
