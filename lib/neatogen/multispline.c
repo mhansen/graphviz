@@ -482,7 +482,7 @@ static boxf bbox(Ppoly_t** obsp, int npoly, int *np)
 
 static int *mkTriIndices(surface_t * sf)
 {
-    int *tris = N_GNEW(3 * sf->nfaces, int);
+    int *tris = gv_calloc(3 * sf->nfaces, sizeof(int));
     memcpy(tris, sf->faces, 3 * sf->nfaces * sizeof(int));
     return tris;
 }
