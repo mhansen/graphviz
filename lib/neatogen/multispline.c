@@ -1253,8 +1253,6 @@ int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
     int h_id = rtr->tn + 1;
     int ecnt = rtr->tg->nedges;
     PPQ pq;
-    PQTYPE *idxs;
-    PQVTYPE *vals;
     int ret;
 
     // record the number of edges in each node, so we can drop the added ones
@@ -1270,8 +1268,8 @@ int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
 
 	/* Initialize priority queue */
     PQgen(&pq.pq, rtr->tn + 2, -1);
-    idxs = N_GNEW(pq.pq.PQsize + 1, PQTYPE);
-    vals = N_GNEW(pq.pq.PQsize + 1, PQVTYPE);
+    PQTYPE *idxs = gv_calloc(pq.pq.PQsize + 1, sizeof(PQTYPE));
+    PQVTYPE *vals = gv_calloc(pq.pq.PQsize + 1, sizeof(PQVTYPE));
     vals[0] = 0;
     pq.vals = vals + 1;
     pq.idxs = idxs + 1;
