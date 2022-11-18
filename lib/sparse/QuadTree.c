@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <common/geom.h>
 #include <common/arith.h>
@@ -148,12 +149,10 @@ static double *get_or_assign_node_force(double *force, int i, SingleLinkedList l
   return f;
 }
 static double *get_or_alloc_force_qt(QuadTree qt, int dim){
-  int i;
   double *force = qt->data;
   if (!force){
-    qt->data = MALLOC(sizeof(double)*dim);
+    qt->data = gv_calloc(dim, sizeof(double));
     force = qt->data;
-    for (i = 0; i < dim; i++) force[i] = 0.;
   }
   return force;
 }
