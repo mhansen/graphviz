@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <common/htmltable.h>
@@ -1858,7 +1859,7 @@ static void poly_init(node_t * n)
     double width, height, marginx, marginy, spacex;
     int regular, peripheries, sides;
     int i, j, isBox, outp;
-    polygon_t *poly = NEW(polygon_t);
+    polygon_t *poly = gv_alloc(sizeof(polygon_t));
     bool isPlain = IS_PLAIN(n);
 
     regular = ND_shape(n)->polygon->regular;
