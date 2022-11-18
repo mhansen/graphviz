@@ -479,7 +479,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     /* if this node is empty right now */
     q->n = 1;
     q->total_weight = weight;
-    q->average = MALLOC(sizeof(double)*dim);
+    q->average = gv_calloc(dim, sizeof(double));
     for (i = 0; i < q->dim; i++) q->average[i] = coord[i];
     nd = node_data_new(q->dim, weight, coord, id);
     assert(!(q->l));
@@ -489,8 +489,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     q->total_weight += weight;
     for (i = 0; i < q->dim; i++) q->average[i] = ((q->average[i])*q->n + coord[i])/(q->n + 1);
     if (!q->qts){
-      q->qts = MALLOC(sizeof(QuadTree)*(1<<dim));
-      for (i = 0; i < 1<<dim; i++) q->qts[i] = NULL;
+      q->qts = gv_calloc(1 << dim, sizeof(QuadTree));
     }/* done adding new quadtree, now add points to them */
     
     /* insert the old node (if exist) and the current node into the appropriate child quadtree */
