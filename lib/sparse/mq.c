@@ -161,7 +161,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_init(SparseMatrix A, in
 
   if (!A) return NULL;
   assert(A->m == n);
-  grid = MALLOC(sizeof(struct Multilevel_MQ_Clustering_struct));
+  grid = gv_alloc(sizeof(struct Multilevel_MQ_Clustering_struct));
   grid->level = level;
   grid->n = n;
   grid->A = A;
@@ -170,7 +170,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_init(SparseMatrix A, in
   grid->next = NULL;
   grid->prev = NULL;
   grid->delete_top_level_A = FALSE;
-  matching = grid->matching = MALLOC(sizeof(double)*(n));
+  matching = grid->matching = gv_calloc(n, sizeof(double));
   grid->deg_intra = NULL;
   grid->dout = NULL;
   grid->wgt = NULL;
@@ -180,10 +180,10 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_init(SparseMatrix A, in
     int ncluster;
     double *deg_intra, *wgt, *dout;
 
-    grid->deg_intra = MALLOC(sizeof(double)*(n));
+    grid->deg_intra = gv_calloc(n, sizeof(double));
     deg_intra = grid->deg_intra;
 
-    grid->wgt = MALLOC(sizeof(double)*n);
+    grid->wgt = gv_calloc(n, sizeof(double));
     wgt = grid->wgt;
 
     for (i = 0; i < n; i++){
