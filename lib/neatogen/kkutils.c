@@ -239,14 +239,13 @@ void compute_new_weights(vtx_data * graph, int n)
 
     int i, j;
     int nedges = 0;
-    float *weights;
-    int *vtx_vec = N_GNEW(n, int);
+    int *vtx_vec = gv_calloc(n, sizeof(int));
     int deg_i, deg_j, neighbor;
 
     for (i = 0; i < n; i++) {
 	nedges += graph[i].nedges;
     }
-    weights = N_GNEW(nedges, float);
+    float *weights = gv_calloc(nedges, sizeof(float));
 
     for (i = 0; i < n; i++) {
 	vtx_vec[i] = 0;
