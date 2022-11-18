@@ -445,10 +445,10 @@ rescale_layout_polar(double *x_coords, double *y_coords,
     } else
 	{
 	// average-based rescale
-	double *final_x_coords = N_NEW(n, double);
-	double *final_y_coords = N_NEW(n, double);
-	double *cp_x_coords = N_NEW(n, double);
-	double *cp_y_coords = N_NEW(n, double);
+	double *final_x_coords = gv_calloc(n, sizeof(double));
+	double *final_y_coords = gv_calloc(n, sizeof(double));
+	double *cp_x_coords = gv_calloc(n, sizeof(double));
+	double *cp_y_coords = gv_calloc(n, sizeof(double));
 	for (size_t i = 0; i < n; i++) {
 	    final_x_coords[i] = final_y_coords[i] = 0;
 	}
