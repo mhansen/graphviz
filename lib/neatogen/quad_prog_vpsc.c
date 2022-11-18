@@ -358,7 +358,7 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
     Constraint **csol, **csolptr;
     int i, j, mol = 0;
     int n = e->nv + e->nldv;
-    boxf* bb = N_GNEW (n, boxf);
+    boxf* bb = gv_calloc(n, sizeof(boxf));
     bool genclusters = opt->clusters->nclusters > 0;
     if (genclusters) {
 	/* n is the number of real variables, not dummy cluster vars */
@@ -385,12 +385,13 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
 	    opt->gap.y / 2.0;
     }
     if (genclusters) {
-	Constraint ***cscl = N_GNEW(opt->clusters->nclusters + 1, Constraint**);
-	int* cm = N_GNEW(opt->clusters->nclusters + 1, int);
+	Constraint ***cscl = gv_calloc(opt->clusters->nclusters + 1,
+	                               sizeof(Constraint**));
+	int* cm = gv_calloc(opt->clusters->nclusters + 1, sizeof(int));
 	for (i = 0; i < opt->clusters->nclusters; i++) {
 	    int cn = opt->clusters->clustersizes[i];
-	    Variable** cvs = N_GNEW(cn + 2, Variable*);
-	    boxf* cbb = N_GNEW(cn + 2, boxf);
+	    Variable** cvs = gv_calloc(cn + 2, sizeof(Variable*));
+	    boxf* cbb = gv_calloc(cn + 2, sizeof(boxf));
 	    /* compute cluster bounding bb */
 	    boxf container;
 	    container.LL.x = container.LL.y = DBL_MAX;
@@ -424,8 +425,8 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
 	/* generate top level constraints */
 	{
 	    int cn = opt->clusters->ntoplevel + opt->clusters->nclusters;
-	    Variable** cvs = N_GNEW(cn,Variable*);
-	    boxf* cbb = N_GNEW(cn, boxf);
+	    Variable** cvs = gv_calloc(cn, sizeof(Variable*));
+	    boxf* cbb = gv_calloc(cn, sizeof(boxf));
 	    for (i = 0; i < opt->clusters->ntoplevel; i++) {
 		int iv = opt->clusters->toplevel[i];
 		cvs[i] = e->vs[iv];
