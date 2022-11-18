@@ -1211,7 +1211,7 @@ void undoClusterEdges(graph_t * g)
     if (!ecnt) return;
     clg = agsubg(g, "__clusternodes",1);
     agbindrec(clg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-    edge_t **edgelist = N_NEW(ecnt, edge_t*);
+    edge_t **edgelist = gv_calloc(ecnt, sizeof(edge_t*));
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    if (ED_compound(e))
