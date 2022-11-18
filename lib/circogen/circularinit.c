@@ -150,7 +150,7 @@ static Agraph_t **circomps(Agraph_t * g, int *cnt)
     /* Finally, add edge data to edges */
     for (n = agfstnode(dg); n; n = agnxtnode(dg, n)) {
 	for (e = agfstout(dg, n); e; e = agnxtout(dg, e)) {
-	    ED_alg(e) = NEW(edata);
+	    ED_alg(e) = gv_alloc(sizeof(edata));
 	}
     }
 
