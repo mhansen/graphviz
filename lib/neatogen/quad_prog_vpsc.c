@@ -575,17 +575,17 @@ DigColaLevel *assign_digcola_levels(int *ordering, int n, int *level_inds,
 				    int num_divisions)
 {
     int i, j;
-    DigColaLevel *l = N_GNEW(num_divisions + 1, DigColaLevel);
+    DigColaLevel *l = gv_calloc(num_divisions + 1, sizeof(DigColaLevel));
     /* first level */
     l[0].num_nodes = level_inds[0];
-    l[0].nodes = N_GNEW(l[0].num_nodes, int);
+    l[0].nodes = gv_calloc(l[0].num_nodes, sizeof(int));
     for (i = 0; i < l[0].num_nodes; i++) {
 	l[0].nodes[i] = ordering[i];
     }
     /* second through second last level */
     for (i = 1; i < num_divisions; i++) {
 	l[i].num_nodes = level_inds[i] - level_inds[i - 1];
-	l[i].nodes = N_GNEW(l[i].num_nodes, int);
+	l[i].nodes = gv_calloc(l[i].num_nodes, sizeof(int));
 	for (j = 0; j < l[i].num_nodes; j++) {
 	    l[i].nodes[j] = ordering[level_inds[i - 1] + j];
 	}
@@ -593,7 +593,7 @@ DigColaLevel *assign_digcola_levels(int *ordering, int n, int *level_inds,
     /* last level */
     if (num_divisions > 0) {
 	l[num_divisions].num_nodes = n - level_inds[num_divisions - 1];
-	l[num_divisions].nodes = N_GNEW(l[num_divisions].num_nodes, int);
+	l[num_divisions].nodes = gv_calloc(l[num_divisions].num_nodes, sizeof(int));
 	for (i = 0; i < l[num_divisions].num_nodes; i++) {
 	    l[num_divisions].nodes[i] =
 		ordering[level_inds[num_divisions - 1] + i];
