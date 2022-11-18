@@ -343,9 +343,9 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
   QuadTree qt = NULL;
   int i, k;
 
-  xmin = MALLOC(sizeof(double)*dim);
-  xmax = MALLOC(sizeof(double)*dim);
-  center = MALLOC(sizeof(double)*dim);
+  xmin = gv_calloc(dim, sizeof(double));
+  xmax = gv_calloc(dim, sizeof(double));
+  center = gv_calloc(dim, sizeof(double));
   if (!xmin || !xmax || !center) {
       free(xmin);
       free(xmax);
