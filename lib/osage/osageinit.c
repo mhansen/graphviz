@@ -15,6 +15,7 @@
  */
 
 #include    <assert.h>
+#include    <cgraph/alloc.h>
 #include    <cgraph/list.h>
 #include    <limits.h>
 #include    <osage/osage.h>
@@ -62,14 +63,12 @@ layout (Agraph_t* g, int depth)
     int nvs = 0;       /* no. of nodes in subclusters */
     Agnode_t*  n;
     Agraph_t*  subg;
-    boxf* gs;
     point* pts;
     boxf bb, rootbb;
     pointf p;
     pack_info pinfo;
     pack_mode pmode;
     double margin;
-    void** children;
     Agsym_t* cattr = NULL;
     Agsym_t* vattr = NULL;
     Agraph_t* root = g->root;
@@ -103,14 +102,14 @@ layout (Agraph_t* g, int depth)
 	cattr = agattr(root, AGRAPH, "sortv", 0);
 	vattr = agattr(root, AGNODE, "sortv", 0);
 	if (cattr || vattr)
-	    pinfo.vals = N_NEW(total, packval_t);
+	    pinfo.vals = gv_calloc(total, sizeof(packval_t));
 	else
 	    agerr (AGWARN, "Graph %s has array packing with user values but no \"sortv\" attributes are defined.",
 		agnameof(g));
     }
 
-    gs = N_NEW(total, boxf);
-    children = N_NEW(total, void*);
+    boxf *gs = gv_calloc(total, sizeof(boxf));
+    void **children = gv_calloc(total, sizeof(void*));
     j = 0;
     for (i = 1; i <= GD_n_cluster(g); i++) {
 	subg = GD_clust(g)[i];
