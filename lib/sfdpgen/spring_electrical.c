@@ -307,8 +307,8 @@ static double update_step(int adaptive_cooling, double step, double Fnorm, doubl
 
 static void check_real_array_size(double **a, int len, int *lenmax){
   if (len >= *lenmax){
+    *a = gv_recalloc(*a, *lenmax, len + 10, sizeof(double));
     *lenmax = len + 10;
-    *a = REALLOC(*a, sizeof(double)*(*lenmax));
   }
 
 }
