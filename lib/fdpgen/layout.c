@@ -403,7 +403,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
 
     dg = agopen("derived", Agstrictdirected,NULL);
     agbindrec(dg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-    GD_alg(dg) = NEW(gdata);	/* freed in freeDeriveGraph */
+    GD_alg(dg) = gv_alloc(sizeof(gdata)); // freed in freeDeriveGraph
 #ifdef DEBUG
     GORIG(dg) = g;
 #endif
