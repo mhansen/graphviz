@@ -797,7 +797,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 
     if ((mult == 1) || Concentrate) {
 	poly = trip->poly;
-	medges = N_GNEW(poly.pn, Pedge_t);
+	medges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	for (j = 0; j < poly.pn; j++) {
 	    medges[j].a = poly.ps[j];
 	    medges[j].b = poly.ps[(j + 1) % poly.pn];
@@ -816,7 +816,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
     
     pn = 2 * (pl.pn - 1);
 
-    cpts = N_NEW(pl.pn - 2, pointf *);
+    cpts = gv_calloc(pl.pn - 2, sizeof(pointf *));
     for (i = 0; i < pl.pn - 2; i++) {
 	cpts[i] =
 	    mkCtrlPts(t, mult+1, pl.ps[i], pl.ps[i + 1], pl.ps[i + 2], trip);
@@ -827,7 +827,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	}
     }
 
-    poly.ps = N_GNEW(pn, pointf);
+    poly.ps = gv_calloc(pn, sizeof(pointf));
     poly.pn = pn;
 
     for (i = 0; i < mult; i++) {
@@ -849,7 +849,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	    make_polyline (mmpl, &spl);
 	}
 	else {
-	    medges = N_GNEW(poly.pn, Pedge_t);
+	    medges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	    for (j = 0; j < poly.pn; j++) {
 		medges[j].a = poly.ps[j];
 		medges[j].b = poly.ps[(j + 1) % poly.pn];
