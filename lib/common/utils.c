@@ -29,11 +29,11 @@
  */
 nodequeue *new_queue(int sz)
 {
-    nodequeue *q = NEW(nodequeue);
+    nodequeue *q = gv_alloc(sizeof(nodequeue));
 
     if (sz <= 1)
 	sz = 2;
-    q->head = q->tail = q->store = N_NEW(sz, node_t *);
+    q->head = q->tail = q->store = gv_calloc(sz, sizeof(node_t*));
     q->limit = q->store + sz;
     return q;
 }
