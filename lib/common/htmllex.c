@@ -613,7 +613,7 @@ static htmlcell_t *mkCell(char **atts)
 
 static htmltbl_t *mkTbl(char **atts)
 {
-    htmltbl_t *tbl = NEW(htmltbl_t);
+    htmltbl_t *tbl = gv_alloc(sizeof(htmltbl_t));
 
     tbl->row_count = SIZE_MAX; // flag that table is a raw, parsed table
     tbl->cellborder = -1; // unset cell border attribute
