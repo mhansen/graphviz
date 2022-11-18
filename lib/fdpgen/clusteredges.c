@@ -202,7 +202,7 @@ static objlist *objectList(edge_t * ep, expand_t* pm)
     int tlevel;
     void *hex;			/* Objects to be excluded from list */
     void *tex;
-    objlist *list = NEW(objlist);
+    objlist *list = gv_alloc(sizeof(objlist));
 
     /* If either endpoint is a cluster node, we move up one level */
     if (IS_CLUST_NODE(h)) {
