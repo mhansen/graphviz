@@ -797,7 +797,7 @@ static double computeScale(pointf *aarr, size_t m) {
 int scAdjust(graph_t * g, int equal)
 {
     int nnodes = agnnodes(g);
-    info *nlist = N_GNEW(nnodes, info);
+    info *nlist = gv_calloc(nnodes, sizeof(info));
     info *p = nlist;
     node_t *n;
     pointf s;
