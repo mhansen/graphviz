@@ -73,11 +73,10 @@ static DistType **compute_apsp_simple(vtx_data * graph, int n)
     /* compute all pairs shortest path */
     /* for unweighted graph */
     int i;
-    DistType *storage = N_GNEW(n * n, int);
-    DistType **dij;
+    DistType *storage = gv_calloc((size_t)(n * n), sizeof(DistType));
     Queue Q;
 
-    dij = N_GNEW(n, DistType *);
+    DistType **dij = gv_calloc(n, sizeof(DistType*));
     for (i = 0; i < n; i++) {
 	dij[i] = storage + i * n;
     }
