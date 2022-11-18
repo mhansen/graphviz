@@ -555,7 +555,7 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
     
     /* build configuration */
     if (edgetype >= EDGETYPE_PLINE) {
-	obs = N_NEW(agnnodes(g), Ppoly_t *);
+	obs = gv_calloc(agnnodes(g), sizeof(Ppoly_t*));
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    obp = makeObstacle(n, pmargin, edgetype == EDGETYPE_ORTHO);
 	    if (obp) {
