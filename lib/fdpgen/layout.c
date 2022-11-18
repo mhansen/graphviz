@@ -298,8 +298,9 @@ static void addCluster(clist_t * clist, graph_t * subg)
 {
     clist->cnt++;
     if (clist->cnt >= clist->sz) {
+	clist->cl = gv_recalloc(clist->cl, clist->sz, clist->sz + CL_CHUNK,
+	                        sizeof(graph_t*));
 	clist->sz += CL_CHUNK;
-	clist->cl = RALLOC(clist->sz, clist->cl, graph_t *);
     }
     clist->cl[clist->cnt] = subg;
 }
