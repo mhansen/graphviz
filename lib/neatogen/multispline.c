@@ -528,6 +528,8 @@ static ipair sharedEdge(int *p, int *q)
  * segment seg.
  */
 static void addTriEdge(tgraph *g, int t, int h, ipair seg) {
+    g->edges = gv_recalloc(g->edges, g->nedges, g->nedges + 1,
+                           sizeof(g->edges[0]));
     tedge *ep = g->edges + g->nedges;
     tnode *tp = g->nodes + t;
     tnode *hp = g->nodes + h;
@@ -579,10 +581,7 @@ static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
     g->nnodes = sf->nfaces + 2;
     g->nodes = N_GNEW(g->nnodes, tnode);
 
-    /* allow 1 possible extra edge per triangle, plus 
-     * obstacles can have at most maxv triangles touching 
-     */
-    g->edges = N_GNEW(ne/2 + 2 * maxv, tedge);
+    g->edges = NULL;
     g->nedges = 0;
 
     for (i = 0; i < sf->nfaces; i++) {
