@@ -1045,23 +1045,19 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
     int nxt;
     ipair p;
     int nt = 0;
-    side_t *side1;
-    side_t *side2;
     int i, idx;
     int cnt1 = 0;
     int cnt2 = 0;
     pointf *pts;
-    pointf *pps;
     /* maps vertex index used in router_t to vertex index used in tripoly */
     Dt_t *vmap;
-    tri **trim;
 
     /* count number of triangles in path */
     for (nxt = dad[t]; nxt != s; nxt = dad[nxt])
 	nt++;
 
-    side1 = N_NEW(nt + 4, side_t);
-    side2 = N_NEW(nt + 4, side_t);
+    side_t *side1 = gv_calloc(nt + 4, sizeof(side_t));
+    side_t *side2 = gv_calloc(nt + 4, sizeof(side_t));
 
     nxt = dad[t];
     p = edgeToSeg(rtr->tg, nxt, t);
@@ -1117,8 +1113,8 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
     vmap = dtopen(&ipairdisc, Dtoset);
     vmapAdd(vmap, -1, 0);
     vmapAdd(vmap, -2, cnt1 + 1);
-    pps = pts = N_GNEW(nt + 4, pointf);
-    trim = N_NEW(nt + 4, tri *);
+    pointf *pps = pts = gv_calloc(nt + 4, sizeof(pointf));
+    tri **trim = gv_calloc(nt + 4, sizeof(tri*));
     *pps++ = p_t;
     idx = 1;
     for (i = 0; i < cnt1; i++) {
@@ -1138,7 +1134,7 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
 	mapTri(vmap, trim[i]);
     }
 
-    ps = NEW(tripoly_t);
+    ps = gv_alloc(sizeof(tripoly_t));
     ps->poly.pn = nt + 4;  /* nt triangles gives nt+2 points plus s and t */
     ps->poly.ps = pts;
     ps->triMap = trim;
