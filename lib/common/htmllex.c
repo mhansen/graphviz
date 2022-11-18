@@ -602,7 +602,7 @@ static textfont_t *mkFont(GVC_t *gvc, char **atts, unsigned char flags) {
 
 static htmlcell_t *mkCell(char **atts)
 {
-    htmlcell_t *cell = NEW(htmlcell_t);
+    htmlcell_t *cell = gv_alloc(sizeof(htmlcell_t));
 
     cell->colspan = 1;
     cell->rowspan = 1;
