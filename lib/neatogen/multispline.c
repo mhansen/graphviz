@@ -77,7 +77,7 @@ static int cmpItem(Dt_t * d, int p1[], int p2[], Dtdisc_t * disc)
  */
 static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
 {
-    item *newp = NEW(item);
+    item *newp = gv_alloc(sizeof(item));
 
     (void)d;
     (void)disc;
