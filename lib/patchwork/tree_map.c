@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <math.h>
 #include <patchwork/tree_map.h>
@@ -98,7 +99,6 @@ static void squarify(int n, double *area, rectangle *recs, int nadded, double ma
  */
 rectangle* tree_map(int n, double *area, rectangle fillrec){
   /* fill a rectangle rec with n items, each item i has area[i] area. */
-  rectangle *recs;
   int i;
   double total = 0, minarea = 1., maxarea = 0., asp = 1, totalarea = 0;
   int nadded = 0;
@@ -108,7 +108,7 @@ rectangle* tree_map(int n, double *area, rectangle fillrec){
   if (total > fillrec.size[0] * fillrec.size[1] + 0.001)
     return NULL;
   
-  recs = N_NEW(n,rectangle);
+  rectangle *recs = gv_calloc(n, sizeof(rectangle));
   squarify(n, area, recs, nadded, maxarea, minarea, totalarea, asp, fillrec);
   return recs;
 }
