@@ -286,7 +286,7 @@ getRankseps (Agraph_t* g, uint64_t maxrank)
     char *endp;
     char c;
     uint64_t rk = 1;
-    double* ranks = N_NEW(maxrank+1, double);
+    double* ranks = gv_calloc(maxrank + 1, sizeof(double));
     double xf = 0.0, delx = 0.0, d;
 
     if ((p = late_string(g, agfindgraphattr(g->root, "ranksep"), NULL))) {
