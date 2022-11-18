@@ -245,7 +245,7 @@ void makeSelfArcs(edge_t * e, int stepx)
 	makePortLabels(e);
     } else {
 	int i;
-	edge_t **edges = N_GNEW(cnt, edge_t *);
+	edge_t **edges = gv_calloc(cnt, sizeof(edge_t*));
 	for (i = 0; i < cnt; i++) {
 	    edges[i] = e;
 	    e = ED_to_virt(e);
