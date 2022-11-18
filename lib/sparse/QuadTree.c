@@ -384,12 +384,11 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
 }
 
 QuadTree QuadTree_new(int dim, double *center, double width, int max_level){
-  QuadTree q;
   int i;
-  q = MALLOC(sizeof(struct QuadTree_struct));
+  QuadTree q = gv_alloc(sizeof(struct QuadTree_struct));
   q->dim = dim;
   q->n = 0;
-  q->center = MALLOC(sizeof(double)*dim);
+  q->center = gv_calloc(dim, sizeof(double));
   for (i = 0; i < dim; i++) q->center[i] = center[i];
   assert(width > 0);
   q->width = width;
