@@ -29,11 +29,10 @@ typedef struct node_data_struct *node_data;
 
 
 static node_data node_data_new(int dim, double weight, double *coord, int id){
-  node_data nd;
   int i;
-  nd = MALLOC(sizeof(struct node_data_struct));
+  node_data nd = gv_alloc(sizeof(struct node_data_struct));
   nd->node_weight = weight;
-  nd->coord = MALLOC(sizeof(double)*dim);
+  nd->coord = gv_calloc(dim, sizeof(double));
   nd->id = id;
   for (i = 0; i < dim; i++) nd->coord[i] = coord[i];
   nd->data = NULL;
