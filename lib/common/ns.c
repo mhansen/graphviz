@@ -449,8 +449,7 @@ static
 STheap_t *STbuildheap(subtree_t **elt, int size)
 {
     int     i;
-    STheap_t *heap;
-    heap = NEW(STheap_t);
+    STheap_t *heap = gv_alloc(sizeof(STheap_t));
     heap->elt = elt;
     heap->size = size;
     for (i = 0; i < heap->size; i++) heap->elt[i]->heap_index = i;
