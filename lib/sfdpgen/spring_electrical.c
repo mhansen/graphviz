@@ -314,8 +314,8 @@ static void check_real_array_size(double **a, int len, int *lenmax){
 }
 static void check_int_array_size(int **a, int len, int *lenmax){
   if (len >= *lenmax){
+    *a = gv_recalloc(*a, *lenmax, len + 10, sizeof(int));
     *lenmax = len + 10;
-    *a = REALLOC(*a, sizeof(int)*(*lenmax));
   }
 
 }
