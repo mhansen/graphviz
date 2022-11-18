@@ -3053,7 +3053,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
  */
 static void point_init(node_t * n)
 {
-    polygon_t *poly = NEW(polygon_t);
+    polygon_t *poly = gv_alloc(sizeof(polygon_t));
     int sides, outp, peripheries = ND_shape(n)->polygon->peripheries;
     double sz;
     pointf P, *vertices;
