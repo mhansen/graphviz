@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   attributes file, `../share/graphviz/gvedit/attrs.txt`. This should make it
   more relocatable and make its behavior more consistent across operating
   systems.
+- `alt` tags are no longer set in the cmap output. #265
 
 ### Fixed
 

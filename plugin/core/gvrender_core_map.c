@@ -114,17 +114,6 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
 	    gvputs_xml(job, tooltip);
 	    gvputs(job, "\"");
 	}
-        /*
-	 * alt text is intended for the visually impaired, but such
-	 * folk are not likely to be clicking around on a graph anyway.
-	 * IE on the PC platform (but not on Macs) incorrectly
-	 * uses (non-empty) alt strings instead of title strings for tooltips.
-	 * To make tooltips work and avoid this IE issue,
-	 * while still satisfying usability guidelines
-	 * that require that there is always an alt string,
-	 * we generate just an empty alt string.
-	 */
-        gvputs(job, " alt=\"\"");
 
         gvputs(job, " coords=\"");
         switch (map_shape) {
