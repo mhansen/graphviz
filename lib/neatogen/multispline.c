@@ -182,7 +182,7 @@ static int cmpIpair(Dt_t * d, int *p1, int *p2, Dtdisc_t * disc)
 
 static void *newIpair(Dt_t * d, Ipair * objp, Dtdisc_t * disc)
 {
-    Ipair *newp = NEW(Ipair);
+    Ipair *newp = gv_alloc(sizeof(Ipair));
 
     (void)d;
     (void)disc;
