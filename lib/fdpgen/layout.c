@@ -383,7 +383,7 @@ static void addEdge(edge_t * de, edge_t * e)
     edge_t **el;
 
     el = (edge_t **) (ED_to_virt(de));
-    el = ALLOC(cnt + 1, el, edge_t *);
+    el = gv_recalloc(el, cnt, cnt + 1, sizeof(edge_t*));
     el[cnt] = e;
     ED_to_virt(de) = (edge_t *) el;
     ED_count(de)++;
