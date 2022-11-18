@@ -38,7 +38,7 @@ static double *compute_densities(v_data * graph, int n, double *x,
 // compute density of every node by calculating the average edge length in a 2-D layout
     int i, j, neighbor;
     double sum;
-    double *densities = N_NEW(n, double);
+    double *densities = gv_calloc(n, sizeof(double));
 
     for (i = 0; i < n; i++) {
 	sum = 0;
