@@ -692,7 +692,7 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
  */
 static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
     int j;
-    pointf *spline = N_GNEW(spl.pn, pointf);
+    pointf *spline = gv_calloc(spl.pn, sizeof(pointf));
 
     if (flip) {
 	for (j = 0; j < spl.pn; j++) {
