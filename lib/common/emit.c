@@ -1463,7 +1463,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 {
     int image_warn = 1;
     size_t ptsize = INITPTS;
-    pointf* pts = N_GNEW(INITPTS, pointf);
+    pointf* pts = gv_calloc(INITPTS, sizeof(pointf));
     exdot_op* op;
     int angle;
     char** styles = NULL;
