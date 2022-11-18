@@ -901,7 +901,7 @@ static int layout(graph_t * g, layout_info * infop)
     if (c_cnt > 1) {
 	bool *bp;
 	if (pinned) {
-	    bp = N_NEW(c_cnt, bool);
+	    bp = gv_calloc(c_cnt, sizeof(bool));
 	    bp[0] = true;
 	} else
 	    bp = NULL;
