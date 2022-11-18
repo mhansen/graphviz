@@ -707,14 +707,13 @@ static graph_t *expandCluster(node_t * n, graph_t * cg)
     erec *ep;
     erec *next;
     graph_t *sg = ND_clust(n);
-    bport_t *pp;
     int sz = WDEG(n);
     int idx = 0;
     double bnd;
 
     if (sz != 0) {
 	/* freed in cleanup_subgs */
-	pp = N_NEW(sz + 1, bport_t);
+	bport_t *pp = gv_calloc(sz + 1, sizeof(bport_t));
 
 	/* create sorted list of edges of n */
 	es = ep = getEdgeList(n, cg);
