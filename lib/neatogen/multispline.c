@@ -262,9 +262,9 @@ static int raySeg(pointf v, pointf w, pointf a, pointf b)
     if (wa == wb)
 	return 0;
     if (wa == 0) {
-	return (wind(v, b, w) * wind(v, b, a) >= 0);
+	return wind(v, b, w) * wind(v, b, a) >= 0;
     } else {
-	return (wind(v, a, w) * wind(v, a, b) >= 0);
+	return wind(v, a, w) * wind(v, a, b) >= 0;
     }
 }
 
@@ -312,7 +312,7 @@ static int ctrlPtIdx(pointf v, Ppoly_t * polys)
     int i;
     for (i = 1; i < polys->pn; i++) {
 	w = polys->ps[i];
-	if ((w.x == v.x) && (w.y == v.y))
+	if (w.x == v.x && w.y == v.y)
 	    return i;
     }
     return -1;
@@ -333,7 +333,7 @@ static int ctrlPtIdx(pointf v, Ppoly_t * polys)
 static pointf *mkCtrlPts(int s, int mult, pointf prev, pointf v,
 			   pointf nxt, tripoly_t * trip)
 {
-    int idx = ctrlPtIdx(v, &(trip->poly));
+    int idx = ctrlPtIdx(v, &trip->poly);
     int i;
     double d, sep, theta, sinTheta, cosTheta;
     pointf q, w;
@@ -493,15 +493,15 @@ static ipair sharedEdge(int *p, int *q)
     p1 = *p;
     p2 = *(p + 1);
     if (p1 == *q) {
-	if ((p2 != *(q + 1)) && (p2 != *(q + 2))) {
+	if (p2 != *(q + 1) && p2 != *(q + 2)) {
 	    p2 = *(p + 2);
 	}
     } else if (p1 == *(q + 1)) {
-	if ((p2 != *q) && (p2 != *(q + 2))) {
+	if (p2 != *q && p2 != *(q + 2)) {
 	    p2 = *(p + 2);
 	}
     } else if (p1 == *(q + 2)) {
-	if ((p2 != *q) && (p2 != *(q + 1))) {
+	if (p2 != *q && p2 != *(q + 1)) {
 	    p2 = *(p + 2);
 	}
     } else {
@@ -584,7 +584,7 @@ static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
 	np = g->nodes + i;
 	jp = sf->neigh + 3 * i;
         ne = 0;
-	while ((ne < 3) && ((j = *jp++) != -1)) {
+	while (ne < 3 && (j = *jp++) != -1) {
 	    if (i < j) {
 		ipair seg =
 		    sharedEdge(sf->faces + 3 * i, sf->faces + 3 * j);
@@ -790,7 +790,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
     evs[0].x = evs[0].y = 0;
     evs[1].x = evs[1].y = 0;
 
-    if ((mult == 1) || Concentrate) {
+    if (mult == 1 || Concentrate) {
 	poly = trip->poly;
 	medges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	for (j = 0; j < poly.pn; j++) {
@@ -881,7 +881,7 @@ finish :
 static int
 inCone (pointf a, pointf b, pointf c, pointf q)
 {
-    return ((area2(q,a,b) >= NSMALL) && (area2(q,b,c) >= NSMALL));
+  return area2(q,a,b) >= NSMALL && area2(q,b,c) >= NSMALL;
 }
 
 static pointf north = {0, 1};
@@ -989,8 +989,8 @@ static ipair edgeToSeg(tgraph * tg, int i, int j)
 
     for (size_t k = 0; k < np->ne; k++) {
 	ep = tg->edges + np->edges[k];
-	if ((ep->t == j) || (ep->h == j))
-	    return (ep->seg);
+	if (ep->t == j || ep->h == j)
+	    return ep->seg;
     }
 
     assert(0);
