@@ -338,7 +338,6 @@ static int ctrlPtIdx(pointf v, Ppoly_t * polys)
 static pointf *mkCtrlPts(int s, int mult, pointf prev, pointf v,
 			   pointf nxt, tripoly_t * trip)
 {
-    pointf *ps;
     int idx = ctrlPtIdx(v, &(trip->poly));
     int i;
     double d, sep, theta, sinTheta, cosTheta;
@@ -347,7 +346,7 @@ static pointf *mkCtrlPts(int s, int mult, pointf prev, pointf v,
     if (idx < 0)
 	return NULL;
 
-    ps = N_GNEW(mult, pointf);
+    pointf *ps = gv_calloc(mult, sizeof(pointf));
     theta = bisect(prev, v, nxt);
     sinTheta = sin(theta);
     cosTheta = cos(theta);
