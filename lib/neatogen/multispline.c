@@ -239,7 +239,7 @@ static void mapTri(Dt_t * map, tri * tp)
 static tri *
 addTri(int i, int j, tri * oldp)
 {
-    tri *tp = NEW(tri);
+    tri *tp = gv_alloc(sizeof(tri));
     tp->v.i = i;
     tp->v.j = j;
     tp->nxttri = oldp;
