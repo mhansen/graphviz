@@ -984,7 +984,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 	{
 	if (!strncmp(agnameof(subg), "cluster", 7)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-	    GD_alg(subg) = NEW(gdata);	/* freed in cleanup_subgs */
+	    GD_alg(subg) = gv_alloc(sizeof(gdata)); // freed in cleanup_subgs
 	    GD_ndim(subg) = GD_ndim(agroot(parent));
 	    LEVEL(subg) = LEVEL(parent) + 1;
 	    GPARENT(subg) = parent;
@@ -1010,7 +1010,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 static void fdp_init_graph(Agraph_t * g)
 {
     setEdgeType (g, EDGETYPE_LINE);
-    GD_alg(g) = NEW(gdata);	/* freed in cleanup_graph */
+    GD_alg(g) = gv_alloc(sizeof(gdata)); // freed in cleanup_graph
     GD_ndim(agroot(g)) = late_int(g, agattr(g,AGRAPH, "dim", NULL), 2, 2);
     Ndim = GD_ndim(agroot(g)) = MIN(GD_ndim(agroot(g)), MAXDIM);
 
