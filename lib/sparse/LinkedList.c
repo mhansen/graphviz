@@ -8,14 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <sparse/LinkedList.h>
 #include <common/memory.h>
 
 SingleLinkedList SingleLinkedList_new(void *data){
-  SingleLinkedList head;
-  head = GNEW(struct SingleLinkedList_struct);
+  SingleLinkedList head = gv_alloc(sizeof(struct SingleLinkedList_struct));
   head->data = data;
-  head->next = NULL;
   return head;
 }
 
