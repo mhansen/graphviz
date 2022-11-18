@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <neatogen/bfs.h>
 #include <neatogen/dijkstra.h>
 #include <neatogen/kkutils.h>
@@ -56,11 +56,9 @@ void empty_neighbors_vec(vtx_data * graph, int vtx, int *vtx_vec)
 static DistType **compute_apsp_dijkstra(vtx_data * graph, int n)
 {
     int i;
-    DistType *storage;
-    DistType **dij;
 
-    storage = N_GNEW(n * n, DistType);
-    dij = N_GNEW(n, DistType *);
+    DistType *storage = gv_calloc((size_t)(n * n), sizeof(DistType));
+    DistType **dij = gv_calloc(n, sizeof(DistType*));
     for (i = 0; i < n; i++)
 	dij[i] = storage + i * n;
 
