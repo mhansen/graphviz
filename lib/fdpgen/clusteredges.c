@@ -98,14 +98,14 @@ static void resetObjlist(objlist * l)
  */
 static Ppoly_t *makeClustObs(graph_t * g, expand_t* pm)
 {
-    Ppoly_t *obs = NEW(Ppoly_t);
+    Ppoly_t *obs = gv_alloc(sizeof(Ppoly_t));
     boxf bb;
     boxf newbb;
     Ppoint_t ctr;
 
     bb = GD_bb(g);
     obs->pn = 4;
-    obs->ps = N_NEW(4, Ppoint_t);
+    obs->ps = gv_calloc(4, sizeof(Ppoint_t));
 
     ctr.x = (bb.UR.x + bb.LL.x) / 2.0;
     ctr.y = (bb.UR.y + bb.LL.y) / 2.0;
