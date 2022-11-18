@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <sparse/general.h>
@@ -29,10 +30,9 @@ int irand(int n){
 }
 
 int *random_permutation(int n){
-  int *p;
   int i, j, pp, len;
   if (n <= 0) return NULL;
-  p = MALLOC(sizeof(int)*n);
+  int *p = gv_calloc(n, sizeof(int));
   for (i = 0; i < n; i++) p[i] = i;
 
   len = n;
