@@ -1785,7 +1785,7 @@ static void fillMap (Agraph_t* g, Dt_t* map)
         if (dtmatch(map, s)) {
             agerr(AGWARN, "Two clusters named %s - the second will be ignored\n", s);
         } else {
-            clust_t *ip = NEW(clust_t);
+            clust_t *ip = gv_alloc(sizeof(clust_t));
             ip->name = s;
             ip->clp = cl;
 	    dtinsert (map, ip);
