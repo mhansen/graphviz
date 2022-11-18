@@ -94,7 +94,7 @@ void fdp_init_node_edge(graph_t * g)
      * add new nodes.
      */
     nn = agnnodes(g);
-    GD_neato_nlist(g) = N_NEW(nn + 1, node_t *);
+    GD_neato_nlist(g) = gv_calloc(nn + 1, sizeof(node_t*));
 
     for (i = 0, n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	init_node (n);
