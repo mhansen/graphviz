@@ -4123,7 +4123,7 @@ bool findStopColor (char* colorlist, char* clrs[2], float* frac)
     if (segs.numc > 2)
 	agerr (AGWARN, "More than 2 colors specified for a gradient - ignoring remaining\n");
 
-    clrs[0] = N_GNEW (strlen(colorlist)+1,char); 
+    clrs[0] = gv_calloc(strlen(colorlist) + 1, sizeof(char));
     strcpy(clrs[0], segs.segs[0].color);
     if (segs.segs[1].color) {
 	clrs[1] = clrs[0] + (strlen(clrs[0])+1);
