@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <patchwork/patchwork.h>
@@ -68,7 +69,7 @@ static double getArea (void* obj, attrsym_t* ap)
  */
 static treenode_t* mkTreeNode (Agnode_t* n, attrsym_t* ap)
 {
-    treenode_t *p = NEW(treenode_t);
+    treenode_t *p = gv_alloc(sizeof(treenode_t));
 
     p->area = getArea (n, ap);
     p->kind = AGNODE;
