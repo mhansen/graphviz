@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include    <cgraph/alloc.h>
 #include    <twopigen/circle.h>
 #include    <ctype.h>
 #include    <inttypes.h>
@@ -120,7 +121,7 @@ typedef struct {
 } queue;
 static void push(queue* q, void* p)
 {
-    item_t* ip = NEW(item_t);
+    item_t* ip = gv_alloc(sizeof(item_t));
     ip->p = p;
     if (q->tail) {  /* non-empty q */
 	q->tail->s = ip;
