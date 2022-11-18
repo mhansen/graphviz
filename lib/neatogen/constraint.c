@@ -730,7 +730,6 @@ static pointf *mkOverlapSet(info *nl, size_t nn, size_t *cntp) {
 }
 
 static pointf computeScaleXY(pointf *aarr, size_t m) {
-    pointf *barr;
     double cost, bestcost;
     pointf scale;
 
@@ -738,7 +737,7 @@ static pointf computeScaleXY(pointf *aarr, size_t m) {
     aarr[0].y = HUGE_VAL;
     qsort(aarr + 1, m - 1, sizeof(pointf), (sortfn_t)sortf);
 
-    barr = N_GNEW(m, pointf);
+    pointf *barr = gv_calloc(m, sizeof(pointf));
     barr[m - 1].x = aarr[m - 1].x;
     barr[m - 1].y = 1;
     for (size_t k = m - 2; m > 1; k--) {
