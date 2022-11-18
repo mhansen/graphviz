@@ -126,11 +126,10 @@ void vector_ordering(int n, double *v, int **p){
      results in p. If *p == NULL, p is assigned.
   */
 
-  double *u;
   int i;
 
-  if (!*p) *p = MALLOC(sizeof(int)*n);
-  u = MALLOC(sizeof(double)*2*n);
+  if (!*p) *p = gv_calloc(n, sizeof(int));
+  double *u = gv_calloc(2 * n, sizeof(double));
 
   for (i = 0; i < n; i++) {
     u[2*i+1] = i;
