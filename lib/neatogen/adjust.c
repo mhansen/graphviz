@@ -1035,7 +1035,7 @@ adjust_data *graphAdjustMode(graph_t *G, adjust_data* dp, char* dflt)
     return getAdjustMode (G, am ? am : (dflt ? dflt : ""), dp);
 }
 
-#define ISZERO(d) ((fabs(d) < 0.000000001))
+#define ISZERO(d) (fabs(d) < 0.000000001)
 
 /* simpleScaling:
  */
