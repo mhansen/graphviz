@@ -1209,12 +1209,12 @@ parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
 	if (i == 1) y = x;
 	if (pp->doAdd) {
 	    if (sepfact > 1) {
-		pp->x = MIN(dflt,x/sepfact);
-		pp->y = MIN(dflt,y/sepfact);
+		pp->x = fminf(dflt, x/sepfact);
+		pp->y = fminf(dflt, y/sepfact);
 	    }
 	    else if (sepfact < 1) {
-		pp->x = MAX(dflt,x/sepfact);
-		pp->y = MAX(dflt,y/sepfact);
+		pp->x = fmaxf(dflt, x/sepfact);
+		pp->y = fmaxf(dflt, y/sepfact);
 	    }
 	    else {
 		pp->x = x;
