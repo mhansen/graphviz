@@ -61,23 +61,18 @@ static int cmpItem(Dt_t * d, int p1[], int p2[], Dtdisc_t * disc)
     (void)d;
     (void)disc;
 
-    if (p1[0] < p2[0])
-	return -1;
-    else if (p1[0] > p2[0])
-	return 1;
-    else if (p1[1] < p2[1])
-	return -1;
-    else if (p1[1] > p2[1])
-	return 1;
-    else
-	return 0;
+    if (p1[0] < p2[0]) return -1;
+    if (p1[0] > p2[0]) return 1;
+    if (p1[1] < p2[1]) return -1;
+    if (p1[1] > p2[1]) return 1;
+    return 0;
 }
 
 /* newItem:
  */
 static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
 {
-    item *newp = NEW(item);
+    item *newp = gv_alloc(sizeof(item));
 
     (void)d;
     (void)disc;
@@ -182,7 +177,7 @@ static int cmpIpair(Dt_t * d, int *p1, int *p2, Dtdisc_t * disc)
 
 static void *newIpair(Dt_t * d, Ipair * objp, Dtdisc_t * disc)
 {
-    Ipair *newp = NEW(Ipair);
+    Ipair *newp = gv_alloc(sizeof(Ipair));
 
     (void)d;
     (void)disc;
@@ -239,7 +234,7 @@ static void mapTri(Dt_t * map, tri * tp)
 static tri *
 addTri(int i, int j, tri * oldp)
 {
-    tri *tp = NEW(tri);
+    tri *tp = gv_alloc(sizeof(tri));
     tp->v.i = i;
     tp->v.j = j;
     tp->nxttri = oldp;
@@ -267,9 +262,9 @@ static int raySeg(pointf v, pointf w, pointf a, pointf b)
     if (wa == wb)
 	return 0;
     if (wa == 0) {
-	return (wind(v, b, w) * wind(v, b, a) >= 0);
+	return wind(v, b, w) * wind(v, b, a) >= 0;
     } else {
-	return (wind(v, a, w) * wind(v, a, b) >= 0);
+	return wind(v, a, w) * wind(v, a, b) >= 0;
     }
 }
 
@@ -317,7 +312,7 @@ static int ctrlPtIdx(pointf v, Ppoly_t * polys)
     int i;
     for (i = 1; i < polys->pn; i++) {
 	w = polys->ps[i];
-	if ((w.x == v.x) && (w.y == v.y))
+	if (w.x == v.x && w.y == v.y)
 	    return i;
     }
     return -1;
@@ -338,8 +333,7 @@ static int ctrlPtIdx(pointf v, Ppoly_t * polys)
 static pointf *mkCtrlPts(int s, int mult, pointf prev, pointf v,
 			   pointf nxt, tripoly_t * trip)
 {
-    pointf *ps;
-    int idx = ctrlPtIdx(v, &(trip->poly));
+    int idx = ctrlPtIdx(v, &trip->poly);
     int i;
     double d, sep, theta, sinTheta, cosTheta;
     pointf q, w;
@@ -347,7 +341,7 @@ static pointf *mkCtrlPts(int s, int mult, pointf prev, pointf v,
     if (idx < 0)
 	return NULL;
 
-    ps = N_GNEW(mult, pointf);
+    pointf *ps = gv_calloc(mult, sizeof(pointf));
     theta = bisect(prev, v, nxt);
     sinTheta = sin(theta);
     cosTheta = cos(theta);
@@ -395,7 +389,7 @@ static pointf *mkCtrlPts(int s, int mult, pointf prev, pointf v,
  */
 
 typedef struct {
-    int ne;         /* no. of edges. */
+    size_t ne;      // no. of edges.
     int *edges;     /* indices of edges adjacent to node. */
     pointf ctr;     /* center of triangle. */
 } tnode;
@@ -459,14 +453,10 @@ static boxf bbox(Ppoly_t** obsp, int npoly, int *np)
 	obs = *obsp++;
 	for (j = 0; j < obs->pn; j++) {
 	    p = obs->ps[j];
-	    if (p.x < bb.LL.x)
-		bb.LL.x = p.x;
-	    if (p.x > bb.UR.x)
-		bb.UR.x = p.x;
-	    if (p.y < bb.LL.y)
-		bb.LL.y = p.y;
-	    if (p.y > bb.UR.y)
-		bb.UR.y = p.y;
+	    bb.LL.x = fmin(bb.LL.x, p.x);
+	    bb.UR.x = fmax(bb.UR.x, p.x);
+	    bb.LL.y = fmin(bb.LL.y, p.y);
+	    bb.UR.y = fmax(bb.UR.y, p.y);
 	    cnt++;
 	}
     }
@@ -483,7 +473,7 @@ static boxf bbox(Ppoly_t** obsp, int npoly, int *np)
 
 static int *mkTriIndices(surface_t * sf)
 {
-    int *tris = N_GNEW(3 * sf->nfaces, int);
+    int *tris = gv_calloc(3 * sf->nfaces, sizeof(int));
     memcpy(tris, sf->faces, 3 * sf->nfaces * sizeof(int));
     return tris;
 }
@@ -499,15 +489,15 @@ static ipair sharedEdge(int *p, int *q)
     p1 = *p;
     p2 = *(p + 1);
     if (p1 == *q) {
-	if ((p2 != *(q + 1)) && (p2 != *(q + 2))) {
+	if (p2 != *(q + 1) && p2 != *(q + 2)) {
 	    p2 = *(p + 2);
 	}
     } else if (p1 == *(q + 1)) {
-	if ((p2 != *q) && (p2 != *(q + 2))) {
+	if (p2 != *q && p2 != *(q + 2)) {
 	    p2 = *(p + 2);
 	}
     } else if (p1 == *(q + 2)) {
-	if ((p2 != *q) && (p2 != *(q + 1))) {
+	if (p2 != *q && p2 != *(q + 1)) {
 	    p2 = *(p + 2);
 	}
     } else {
@@ -529,6 +519,8 @@ static ipair sharedEdge(int *p, int *q)
  * segment seg.
  */
 static void addTriEdge(tgraph *g, int t, int h, ipair seg) {
+    g->edges = gv_recalloc(g->edges, g->nedges, g->nedges + 1,
+                           sizeof(g->edges[0]));
     tedge *ep = g->edges + g->nedges;
     tnode *tp = g->nodes + t;
     tnode *hp = g->nodes + h;
@@ -564,7 +556,6 @@ static void freeTriGraph(tgraph * tg)
  */
 static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
 {
-    tgraph *g;
     tnode *np;
     int j, i, ne = 0;
     int *jp;
@@ -574,37 +565,22 @@ static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
 	if (sf->neigh[i] != -1)
 	    ne++;
 
-    g = GNEW(tgraph);
+    tgraph *g = gv_alloc(sizeof(tgraph));
 
     /* plus 2 for nodes added as endpoints of an edge */
     g->nnodes = sf->nfaces + 2;
-    g->nodes = N_GNEW(g->nnodes, tnode);
-
-    /* allow 1 possible extra edge per triangle, plus 
-     * obstacles can have at most maxv triangles touching 
-     */
-    g->edges = N_GNEW(ne/2 + 2 * maxv, tedge);
-    g->nedges = 0;
+    g->nodes = gv_calloc(g->nnodes, sizeof(tnode));
 
     for (i = 0; i < sf->nfaces; i++) {
 	np = g->nodes + i;
-	np->ne = 0;
-	np->edges = NULL;
 	np->ctr = triCenter(pts, sf->faces + 3 * i);
     }
-    /* initialize variable nodes */
-    np = g->nodes + i;
-    np->ne = 0;
-    np->edges = NULL;
-    np++;
-    np->ne = 0;
-    np->edges = NULL;
 
     for (i = 0; i < sf->nfaces; i++) {
 	np = g->nodes + i;
 	jp = sf->neigh + 3 * i;
         ne = 0;
-	while ((ne < 3) && ((j = *jp++) != -1)) {
+	while (ne < 3 && (j = *jp++) != -1) {
 	    if (i < j) {
 		ipair seg =
 		    sharedEdge(sf->faces + 3 * i, sf->faces + 3 * j);
@@ -629,25 +605,21 @@ void freeRouter(router_t * rtr)
 
 router_t *mkRouter(Ppoly_t** obsp, int npoly)
 {
-    router_t *rtr = NEW(router_t);
+    router_t *rtr = gv_alloc(sizeof(router_t));
     Ppoly_t* obs;
     boxf bb;
-    pointf *pts;
     int npts;
     surface_t *sf;
-    int *segs;
-    double *x;
-    double *y;
     int maxv = 4; /* default max. no. of vertices in an obstacle; set below */
     /* points in obstacle i have indices obsi[i] through obsi[i+1]-1 in pts
      */
-    int *obsi = N_NEW(npoly + 1, int);
+    int *obsi = gv_calloc(npoly + 1, sizeof(int));
     int i, j, ix = 4, six = 0;
 
     bb = bbox(obsp, npoly, &npts);
     npts += 4;			/* 4 points of bounding box */
-    pts = N_GNEW(npts, pointf);	/* all points are stored in pts */
-    segs = N_GNEW(2 * npts, int);	/* indices of points forming segments */
+    pointf *pts = gv_calloc(npts, sizeof(pointf)); // all points are stored in pts
+    int *segs = gv_calloc(2 * npts, sizeof(int)); // indices of points forming segments
 
     /* store bounding box in CCW order */
     pts[0] = bb.LL;
@@ -682,8 +654,8 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
     obsi[i] = ix;
 
     /* copy points into coordinate arrays */
-    x = N_GNEW(npts, double);
-    y = N_GNEW(npts, double);
+    double *x = gv_calloc(npts, sizeof(double));
+    double *y = gv_calloc(npts, sizeof(double));
     for (i = 0; i < npts; i++) {
 	x[i] = pts[i].x;
 	y[i] = pts[i].y;
@@ -711,7 +683,7 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
  */
 static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
     int j;
-    pointf *spline = N_GNEW(spl.pn, pointf);
+    pointf *spline = gv_calloc(spl.pn, sizeof(pointf));
 
     if (flip) {
 	for (j = 0; j < spl.pn; j++) {
@@ -814,9 +786,9 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
     evs[0].x = evs[0].y = 0;
     evs[1].x = evs[1].y = 0;
 
-    if ((mult == 1) || Concentrate) {
+    if (mult == 1 || Concentrate) {
 	poly = trip->poly;
-	medges = N_GNEW(poly.pn, Pedge_t);
+	medges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	for (j = 0; j < poly.pn; j++) {
 	    medges[j].a = poly.ps[j];
 	    medges[j].b = poly.ps[(j + 1) % poly.pn];
@@ -835,7 +807,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
     
     pn = 2 * (pl.pn - 1);
 
-    cpts = N_NEW(pl.pn - 2, pointf *);
+    cpts = gv_calloc(pl.pn - 2, sizeof(pointf *));
     for (i = 0; i < pl.pn - 2; i++) {
 	cpts[i] =
 	    mkCtrlPts(t, mult+1, pl.ps[i], pl.ps[i + 1], pl.ps[i + 2], trip);
@@ -846,7 +818,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	}
     }
 
-    poly.ps = N_GNEW(pn, pointf);
+    poly.ps = gv_calloc(pn, sizeof(pointf));
     poly.pn = pn;
 
     for (i = 0; i < mult; i++) {
@@ -868,7 +840,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	    make_polyline (mmpl, &spl);
 	}
 	else {
-	    medges = N_GNEW(poly.pn, Pedge_t);
+	    medges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	    for (j = 0; j < poly.pn; j++) {
 		medges[j].a = poly.ps[j];
 		medges[j].b = poly.ps[(j + 1) % poly.pn];
@@ -905,7 +877,7 @@ finish :
 static int
 inCone (pointf a, pointf b, pointf c, pointf q)
 {
-    return ((area2(q,a,b) >= NSMALL) && (area2(q,b,c) >= NSMALL));
+  return area2(q,a,b) >= NSMALL && area2(q,b,c) >= NSMALL;
 }
 
 static pointf north = {0, 1};
@@ -1011,10 +983,10 @@ static ipair edgeToSeg(tgraph * tg, int i, int j)
     tnode *np = tg->nodes + i;
     tedge *ep;
 
-    for (i = 0; i < np->ne; i++) {
-	ep = tg->edges + np->edges[i];
-	if ((ep->t == j) || (ep->h == j))
-	    return (ep->seg);
+    for (size_t k = 0; k < np->ne; k++) {
+	ep = tg->edges + np->edges[k];
+	if (ep->t == j || ep->h == j)
+	    return ep->seg;
     }
 
     assert(0);
@@ -1064,23 +1036,19 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
     int nxt;
     ipair p;
     int nt = 0;
-    side_t *side1;
-    side_t *side2;
     int i, idx;
     int cnt1 = 0;
     int cnt2 = 0;
     pointf *pts;
-    pointf *pps;
     /* maps vertex index used in router_t to vertex index used in tripoly */
     Dt_t *vmap;
-    tri **trim;
 
     /* count number of triangles in path */
     for (nxt = dad[t]; nxt != s; nxt = dad[nxt])
 	nt++;
 
-    side1 = N_NEW(nt + 4, side_t);
-    side2 = N_NEW(nt + 4, side_t);
+    side_t *side1 = gv_calloc(nt + 4, sizeof(side_t));
+    side_t *side2 = gv_calloc(nt + 4, sizeof(side_t));
 
     nxt = dad[t];
     p = edgeToSeg(rtr->tg, nxt, t);
@@ -1136,8 +1104,8 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
     vmap = dtopen(&ipairdisc, Dtoset);
     vmapAdd(vmap, -1, 0);
     vmapAdd(vmap, -2, cnt1 + 1);
-    pps = pts = N_GNEW(nt + 4, pointf);
-    trim = N_NEW(nt + 4, tri *);
+    pointf *pps = pts = gv_calloc(nt + 4, sizeof(pointf));
+    tri **trim = gv_calloc(nt + 4, sizeof(tri*));
     *pps++ = p_t;
     idx = 1;
     for (i = 0; i < cnt1; i++) {
@@ -1157,7 +1125,7 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
 	mapTri(vmap, trim[i]);
     }
 
-    ps = NEW(tripoly_t);
+    ps = gv_alloc(sizeof(tripoly_t));
     ps->poly.pn = nt + 4;  /* nt triangles gives nt+2 points plus s and t */
     ps->poly.ps = pts;
     ps->triMap = trim;
@@ -1173,7 +1141,7 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
  * Remove edges and nodes added for current edge routing
  */
 static void resetGraph(tgraph *g, int ncnt, int ecnt,
-                       int *original_edge_count) {
+                       size_t *original_edge_count) {
     int i;
     tnode *np = g->nodes;
     g->nedges = ecnt;
@@ -1216,11 +1184,11 @@ typedef struct {
 static int *
 triPath(tgraph * g, int n, int v0, int v1, PQ * pq)
 {
-    int i, j, adjn;
+    int i, adjn;
     double d;
     tnode *np;
     tedge *e;
-    int *dad = N_NEW(n, int);
+    int *dad = gv_calloc(n, sizeof(int));
 
     for (i = 0; i < pq->PQsize; i++)
 	N_VAL(pq, i) = UNSEEN;
@@ -1236,7 +1204,7 @@ triPath(tgraph * g, int n, int v0, int v1, PQ * pq)
 	if (i == v1)
 	    break;
 	np = g->nodes + i;
-	for (j = 0; j < np->ne; j++) {
+	for (size_t j = 0; j < np->ne; j++) {
 	    e = g->edges + np->edges[j];
 	    if (e->t == i)
 		adjn = e->h;
@@ -1276,13 +1244,11 @@ int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
     int h_id = rtr->tn + 1;
     int ecnt = rtr->tg->nedges;
     PPQ pq;
-    PQTYPE *idxs;
-    PQVTYPE *vals;
     int ret;
 
     // record the number of edges in each node, so we can drop the added ones
     // later
-    int *original_edge_count = gv_calloc(rtr->tg->nnodes,
+    size_t *original_edge_count = gv_calloc(rtr->tg->nnodes,
                                             sizeof(original_edge_count[0]));
     for (size_t i = 0; i < rtr->tg->nnodes; ++i)
         original_edge_count[i] = rtr->tg->nodes[i].ne;
@@ -1293,8 +1259,8 @@ int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
 
 	/* Initialize priority queue */
     PQgen(&pq.pq, rtr->tn + 2, -1);
-    idxs = N_GNEW(pq.pq.PQsize + 1, PQTYPE);
-    vals = N_GNEW(pq.pq.PQsize + 1, PQVTYPE);
+    PQTYPE *idxs = gv_calloc(pq.pq.PQsize + 1, sizeof(PQTYPE));
+    PQVTYPE *vals = gv_calloc(pq.pq.PQsize + 1, sizeof(PQVTYPE));
     vals[0] = 0;
     pq.vals = vals + 1;
     pq.idxs = idxs + 1;
