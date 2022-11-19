@@ -82,14 +82,14 @@ def get_version() -> Tuple[int, int, int, str]:
   return major, minor, patch, coll
 
 graphviz_date_format = "%Y%m%d.%H%M"
-iso_date_format = "%Y-%m-%d %H:%M:%S"
+changelog_date_format = "%a %b %e %Y"
 
 parser = argparse.ArgumentParser(description="Generate Graphviz version.")
-parser.add_argument("--committer-date-iso",
+parser.add_argument("--committer-date-changelog",
                     dest="date_format",
                     action="store_const",
-                    const=iso_date_format,
-                    help="Print ISO formatted committer date in UTC instead of version"
+                    const=changelog_date_format,
+                    help="Print changelog formatted committer date in UTC instead of version"
 )
 parser.add_argument("--committer-date-graphviz",
                     dest="date_format",
