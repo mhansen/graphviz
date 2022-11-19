@@ -27,9 +27,6 @@ else
         fi    
     fi
     echo "Graphviz: version date is based on time of last commit: $GRAPHVIZ_VERSION_DATE"
-
-    GRAPHVIZ_VERSION_COMMIT=$( git log -n 1 --format=%h )
-    echo "Graphviz: abbreviated hash of last commit: $GRAPHVIZ_VERSION_COMMIT"
 fi
 
 # initialize version for a "development" build
@@ -45,7 +42,6 @@ m4_define([graphviz_change_date],["$GRAPHVIZ_CHANGE_DATE"])
 m4_define([graphviz_git_date],["$GRAPHVIZ_GIT_DATE"])
 m4_define([graphviz_author_name],["$GRAPHVIZ_AUTHOR_NAME"])
 m4_define([graphviz_author_email],[$GRAPHVIZ_AUTHOR_EMAIL])
-m4_define([graphviz_version_commit],[$GRAPHVIZ_VERSION_COMMIT])
 
 EOF
 
