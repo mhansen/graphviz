@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,7 +21,7 @@ extern "C" {
     /* Sites are also used as vertices on line segments */
     typedef struct Site {
 	Point coord;
-	int sitenbr;
+	size_t sitenbr;
 	int refcnt;
     } Site;
 

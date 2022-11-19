@@ -13,6 +13,7 @@
  * order to reduce/remove node overlaps.
  */
 
+#include <assert.h>
 #include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <cgraph/agxbuf.h>
@@ -35,6 +36,7 @@
 #include <neatogen/quad_prog_vpsc.h>
 #endif
 #include <cgraph/strcasecmp.h>
+#include <stddef.h>
 
 #define SEPFACT         0.8f  /* default esep/sep */
 
@@ -72,10 +74,9 @@ static void setBoundBox(Point * ll, Point * ur)
   */
 static void freeNodes(void)
 {
-    int i;
     Info_t *ip = nodeInfo;
 
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
 	breakPoly(&ip->poly);
 	ip++;
     }
@@ -104,7 +105,7 @@ static void chkBoundBox(Agraph_t * graph)
     double y_min = pp->origin.y + y;
     double x_max = pp->corner.x + x;
     double y_max = pp->corner.y + y;
-    for (int i = 1; i < nsites; i++) {
+    for (size_t i = 1; i < nsites; i++) {
 	ip++;
 	pp = &ip->poly;
 	x = ip->site.coord.x;
@@ -135,12 +136,12 @@ static void chkBoundBox(Agraph_t * graph)
 static int makeInfo(Agraph_t * graph)
 {
     Agnode_t *node;
-    int i;
     Info_t *ip;
     expand_t pmargin;
     int (*polyf)(Poly *, Agnode_t *, float, float);
 
-    nsites = agnnodes(graph);
+    assert(agnnodes(graph) >= 0);
+    nsites = (size_t)agnnodes(graph);
     geominit();
 
     nodeInfo = gv_calloc(nsites, sizeof(Info_t));
@@ -158,7 +159,7 @@ static int makeInfo(Agraph_t * graph)
     }
 	
     else polyf = makePoly;
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
 	ip->site.coord.x = ND_pos(node)[0];
 	ip->site.coord.y = ND_pos(node)[1];
 
@@ -201,7 +202,6 @@ static int scomp(const void *S1, const void *S2)
   */
 static void sortSites(void)
 {
-    int i;
     Site **sp;
     Info_t *ip;
 
@@ -213,7 +213,7 @@ static void sortSites(void)
     sp = sites;
     ip = nodeInfo;
     infoinit();
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
 	*sp++ = &ip->site;
 	ip->verts = NULL;
 	ip->site.refcnt = 1;
@@ -229,15 +229,13 @@ static void sortSites(void)
 
 static void geomUpdate(int doSort)
 {
-    int i;
-
     if (doSort)
 	sortSites();
 
     /* compute ranges */
     xmin = sites[0]->coord.x;
     xmax = sites[0]->coord.x;
-    for (i = 1; i < nsites; i++) {
+    for (size_t i = 1; i < nsites; i++) {
 	xmin = fmin(xmin, sites[i]->coord.x);
 	xmax = fmax(xmax, sites[i]->coord.x);
     }
@@ -319,16 +317,15 @@ static void rmEquality(void)
 static int countOverlap(int iter)
 {
     int count = 0;
-    int i, j;
     Info_t *ip = nodeInfo;
     Info_t *jp;
 
-    for (i = 0; i < nsites; i++)
+    for (size_t i = 0; i < nsites; i++)
 	nodeInfo[i].overlaps = 0;
 
-    for (i = 0; i < nsites - 1; i++) {
+    for (size_t i = 0; i < nsites - 1; i++) {
 	jp = ip + 1;
-	for (j = i + 1; j < nsites; j++) {
+	for (size_t j = i + 1; j < nsites; j++) {
 	    if (polyOverlap(ip->site.coord, &ip->poly, jp->site.coord, &jp->poly)) {
 		count++;
 		ip->overlaps = 1;
@@ -432,10 +429,9 @@ static void addCorners(void)
     double sed = dist_2(&ip->site.coord, &se);
     double ned = dist_2(&ip->site.coord, &ne);
     double d;
-    int i;
 
     ip++;
-    for (i = 1; i < nsites; i++) {
+    for (size_t i = 1; i < nsites; i++) {
 	d = dist_2(&ip->site.coord, &sw);
 	if (d < swd) {
 	    swd = d;
@@ -475,11 +471,10 @@ static void addCorners(void)
   */
 static void newPos(void)
 {
-    int i;
     Info_t *ip = nodeInfo;
 
     addCorners();
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
 	if (doAll || ip->overlaps)
 	    newpos(ip);
 	ip++;
@@ -559,11 +554,10 @@ static int vAdjust(void)
 
 static double rePos(void)
 {
-    int i;
     Info_t *ip = nodeInfo;
     double f = 1.0 + incr;
 
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
 	ip->site.coord.x *= f;
 	ip->site.coord.y *= f;
 	ip++;
@@ -607,11 +601,10 @@ static int sAdjust(void)
   */
 static void updateGraph(void)
 {
-    int i;
     Info_t *ip;
 
     ip = nodeInfo;
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
 	ND_pos(ip->node)[0] = ip->site.coord.x;
 	ND_pos(ip->node)[1] = ip->site.coord.y;
 	ip++;

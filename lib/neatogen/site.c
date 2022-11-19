@@ -17,7 +17,7 @@ int siteidx;
 Site *bottomsite;
 
 static Freelist sfl;
-static int nvertices;
+static size_t nvertices;
 
 void siteinit()
 {
