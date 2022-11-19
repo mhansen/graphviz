@@ -50,7 +50,7 @@ static double incr = 0.05;	/* Increase bounding box by adding
 static int iterations = -1;	/* Number of iterations */
 static int useIter = 0;		/* Use specified number of iterations */
 
-static int doAll = 0;		/* Move all nodes, regardless of overlap */
+static bool doAll = false; // Move all nodes, regardless of overlap
 static Site **sites;		/* Array of pointers to sites; used in qsort */
 static Site **endSite;		/* Sentinel on sites array */
 static Point nw, ne, sw, se;	/* Corners of clipping window */
@@ -530,10 +530,10 @@ static int vAdjust(void)
 
 	switch (badLevel) {
 	case 0:
-	    doAll = 1;
+	    doAll = true;
 	    break;
 	default:
-	    doAll = 1;
+	    doAll = true;
 	    increaseCnt++;
 	    increaseBoundBox();
 	    break;
