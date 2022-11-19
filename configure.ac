@@ -33,8 +33,6 @@ GRAPHVIZ_CHANGE_DATE=graphviz_change_date()
 # NB: git commit hash of last commit
 GRAPHVIZ_VERSION_COMMIT=graphviz_version_commit()
 
-GRAPHVIZ_SOURCES=graphviz/SOURCES
-
 AC_SUBST([GRAPHVIZ_VERSION_MAJOR])
 AC_SUBST([GRAPHVIZ_VERSION_MINOR])
 AC_SUBST([GRAPHVIZ_VERSION_MICRO])
@@ -44,7 +42,6 @@ AC_SUBST([GRAPHVIZ_AUTHOR_NAME])
 AC_SUBST([GRAPHVIZ_AUTHOR_EMAIL])
 AC_SUBST([GRAPHVIZ_CHANGE_DATE])
 AC_SUBST([GRAPHVIZ_VERSION_COMMIT])
-AC_SUBST([GRAPHVIZ_SOURCES])
 
 dnl ===========================================================================
 
