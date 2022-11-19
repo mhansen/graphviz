@@ -936,7 +936,7 @@ typedef struct {
  * adjustMode[0] corresponds to overlap=true
  * adjustMode[1] corresponds to overlap=false
  */
-static lookup_t adjustMode[] = {
+static const lookup_t adjustMode[] = {
     ITEM(AM_NONE, "", "none"),
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
     ITEM(AM_PRISM, "prism", "prism"),
@@ -984,7 +984,7 @@ setPrismValues (Agraph_t* g, char* s, adjust_data* dp)
  */
 static adjust_data *getAdjustMode(Agraph_t* g, char *s, adjust_data* dp)
 {
-    lookup_t *ap = adjustMode + 1;
+    const lookup_t *ap = adjustMode + 1;
     if (s == NULL || *s == '\0') {
 	dp->mode = adjustMode[0].mode;
 	dp->print = adjustMode[0].print;
