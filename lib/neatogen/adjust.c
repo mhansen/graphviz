@@ -74,11 +74,8 @@ static void setBoundBox(Point * ll, Point * ur)
   */
 static void freeNodes(void)
 {
-    Info_t *ip = nodeInfo;
-
     for (size_t i = 0; i < nsites; i++) {
-	breakPoly(&ip->poly);
-	ip++;
+	breakPoly(&nodeInfo[i].poly);
     }
     polyFree();
     infoinit();			/* Free vertices */
