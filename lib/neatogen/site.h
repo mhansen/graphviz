@@ -22,7 +22,7 @@ extern "C" {
     typedef struct Site {
 	Point coord;
 	size_t sitenbr;
-	int refcnt;
+	unsigned refcnt;
     } Site;
 
     extern int siteidx;
