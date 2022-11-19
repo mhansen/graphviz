@@ -22,7 +22,6 @@ Entry version   Entry collection          Output
 """
 
 import argparse
-from datetime import datetime
 import os
 from pathlib import Path
 import re
@@ -135,21 +134,18 @@ else:
 if not patch_version.isnumeric() or args.date_format:
   os.environ["TZ"] = "UTC"
   try:
-    committer_date = datetime.strptime(
-        subprocess.check_output(
+    committer_date = subprocess.check_output(
             [
                 "git",
                 "log",
                 "-n",
                 "1",
                 "--format=%cd",
-                "--date=format-local:%Y-%m-%d %H:%M:%S"
+               f"--date=format-local:{date_format}"
             ],
             cwd=os.path.abspath(os.path.dirname(__file__)),
             universal_newlines=True,
-        ).strip(),
-        "%Y-%m-%d %H:%M:%S",
-    ).strftime(date_format)
+        ).strip()
   except (subprocess.CalledProcessError, FileNotFoundError):
     sys.stderr.write("Warning: build not started in a Git clone, or Git is not "
                      "installed: setting version date to 0.\n")
