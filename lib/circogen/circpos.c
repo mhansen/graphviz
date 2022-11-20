@@ -10,7 +10,7 @@
 
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 /* TODO:
  * If cut point is in exactly 2 blocks, expand block circles to overlap
  * especially in the case where one block is the sole child of the other.
@@ -338,7 +338,7 @@ static double position(int childCount, int length, nodelist_t *path,
     double maxRadius = 0.0;
     double angle;
     double theta = 0.0;
-    posinfo_t* parents = N_NEW(childCount, posinfo_t);
+    posinfo_t* parents = gv_calloc(childCount, sizeof(posinfo_t));
     int num_parents = 0;
     posinfo_t* next;
     posinfo_t* curr;
