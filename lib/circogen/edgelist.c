@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include	<cgraph/alloc.h>
 #include	<circogen/edgelist.h>
 #include	<assert.h>
 
@@ -17,7 +17,7 @@ static edgelistitem *mkItem(Dt_t * d, edgelistitem * obj, Dtdisc_t * disc)
     (void)d;
     (void)disc;
 
-    edgelistitem *ap = GNEW(edgelistitem);
+    edgelistitem *ap = gv_alloc(sizeof(edgelistitem));
 
     ap->edge = obj->edge;
     return ap;
