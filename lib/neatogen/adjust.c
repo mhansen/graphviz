@@ -583,13 +583,10 @@ static int sAdjust(void)
   */
 static void updateGraph(void)
 {
-    Info_t *ip;
-
-    ip = nodeInfo;
     for (size_t i = 0; i < nsites; i++) {
+	Info_t *ip = &nodeInfo[i];
 	ND_pos(ip->node)[0] = ip->site.coord.x;
 	ND_pos(ip->node)[1] = ip->site.coord.y;
-	ip++;
     }
 }
 
