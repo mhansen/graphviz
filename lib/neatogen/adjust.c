@@ -456,13 +456,11 @@ static void addCorners(void)
   */
 static void newPos(void)
 {
-    Info_t *ip = nodeInfo;
-
     addCorners();
     for (size_t i = 0; i < nsites; i++) {
+	Info_t *ip = &nodeInfo[i];
 	if (doAll || ip->overlaps)
 	    newpos(ip);
-	ip++;
     }
 }
 
