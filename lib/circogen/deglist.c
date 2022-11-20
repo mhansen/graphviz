@@ -45,12 +45,13 @@ static int cmpDegree(Dt_t * d, int *key1, int *key2, Dtdisc_t * disc)
     (void)d;
     (void)disc;
 
-    if (*key1 < *key2)
+    if (*key1 < *key2) {
 	return -1;
-    else if (*key1 > *key2)
+    }
+    if (*key1 > *key2) {
 	return 1;
-    else
-	return 0;
+    }
+    return 0;
 }
 
 static Dtdisc_t nodeDisc = {
