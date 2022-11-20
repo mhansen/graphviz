@@ -108,9 +108,6 @@
 /* Define to 1 if you have the <IL/il.h> header file. */
 /* #undef HAVE_IL_IL_H */
 
-/* Define if intptr_t is declared */
-#define HAVE_INTPTR_T 1
-
 /* Define if you have the lasi library */
 /* #undef HAVE_LASI */
 

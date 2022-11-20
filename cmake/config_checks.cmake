@@ -32,7 +32,6 @@ check_function_exists( srand48          HAVE_SRAND48         )
 include(CheckTypeSize)
 
 check_type_size( ssize_t     SSIZE_T     )
-check_type_size( intptr_t    INTPTR_T    )
 
 # Library checks
 set( HAVE_ANN       ${ANN_FOUND}        )

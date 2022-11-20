@@ -24,7 +24,6 @@
 
 // Types
 #cmakedefine HAVE_SSIZE_T
-#cmakedefine HAVE_INTPTR_T
 
 // Typedefs for missing types
 #ifndef HAVE_SSIZE_T
