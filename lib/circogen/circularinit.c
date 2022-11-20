@@ -80,9 +80,9 @@ static node_t *makeDerivedNode(graph_t * dg, char *name, int isNode,
 {
     node_t *n = agnode(dg, name,1);
     agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
-    ND_alg(n) = NEW(cdata);
+    ND_alg(n) = gv_alloc(sizeof(cdata));
     if (isNode) {
-	ND_pos(n) = N_NEW(Ndim, double);
+	ND_pos(n) = gv_calloc(Ndim, sizeof(double));
 	ND_lw(n) = ND_lw(orig);
 	ND_rw(n) = ND_rw(orig);
 	ND_ht(n) = ND_ht(orig);
