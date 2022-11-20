@@ -356,7 +356,6 @@ fi
 #  DEC : Enable NaN/Inf
 
 if test "${GCC}" != "yes" ; then
-    AC_CHECK_PROGS(RC,rc,false)
     case "${build}" in
         *-*-hpux* )
 	    CFLAGS="${CFLAGS} -Wp,-H30000"
@@ -372,7 +371,6 @@ if test "${GCC}" != "yes" ; then
 	    ;;
     esac
 else
-    AC_CHECK_PROGS(RC,[windres ${host}-windres],false)
     case "${build}" in
     *-dec-osf* )
       CFLAGS="${CFLAGS} -mieee -Wall"
@@ -392,8 +390,6 @@ else
       ;;
     esac
 fi
-
-AM_CONDITIONAL(RC_IS_RC, [test "x$RC" = "xrc"])
 
 # debug
 AC_ARG_ENABLE([debug],
