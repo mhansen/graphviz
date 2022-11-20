@@ -17,6 +17,7 @@
  */
 
 #include	<circogen/blockpath.h>
+#include	<math.h>
 
 /* getRotation:
  * The function determines how much the block should be rotated
@@ -221,13 +222,10 @@ setInfo (posinfo_t* p0, posinfo_t* p1, double delta)
 
     t /= 2*delta*p0->minRadius*p1->minRadius;
 
-    if (t < 1)
-	t = 1;
+    t = fmax(t, 1);
 
-    if (t > p0->scale)
-	p0->scale = t;
-    if (t > p1->scale)
-	p1->scale = t;
+    p0->scale = fmax(p0->scale, t);
+    p1->scale = fmax(p1->scale, t);
 }
 
 /* positionChildren:
