@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <circogen/deglist.h>
 #include <circogen/circular.h>
 #include <circogen/blockpath.h>
@@ -25,7 +25,7 @@ static degitem *mkItem(Dt_t * d, degitem * obj, Dtdisc_t * disc)
     (void)d;
     (void)disc;
 
-    degitem *ap = GNEW(degitem);
+    degitem *ap = gv_alloc(sizeof(degitem));
 
     ap->np = NULL;
     ap->deg = obj->deg;
