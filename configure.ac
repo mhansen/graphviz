@@ -373,33 +373,23 @@ if test "${GCC}" != "yes" ; then
     esac
 else
     AC_CHECK_PROGS(RC,[windres ${host}-windres],false)
-    case "${CC}" in
-	*icc* )
-	    # -Wall causes relocation errors with icc
-	    CFLAGS="${CFLAGS} -wd269"
-	    # icc doesn't like -pipe
-	    CFLAGS=`echo ${CFLAGS} | sed 's/ -pipe//'`
-	    ;;
-	* )
-	    case "${build}" in
-	    *-dec-osf* )
-			CFLAGS="${CFLAGS} -mieee -Wall"
-	        ;;
-	    *alpha*-*-linux* )
-            CFLAGS="${CFLAGS} -mieee -Wall"
-            ;;
-	    *-apple-darwin* )
-	        CFLAGS="${CFLAGS} -fno-common -Wall"
-	        LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names"
-	        ;;
-	    *-freebsd* )
-	        CFLAGS="${CFLAGS} -Wstrict-prototypes -Wpointer-arith -Wall"
-		    ;;
-	    * )
-	        CFLAGS="${CFLAGS} -Wno-unknown-pragmas -Wstrict-prototypes -Wpointer-arith -Wall"
-	        ;;
-	    esac
-	    ;;
+    case "${build}" in
+    *-dec-osf* )
+      CFLAGS="${CFLAGS} -mieee -Wall"
+      ;;
+    *alpha*-*-linux* )
+      CFLAGS="${CFLAGS} -mieee -Wall"
+      ;;
+    *-apple-darwin* )
+      CFLAGS="${CFLAGS} -fno-common -Wall"
+      LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names"
+      ;;
+    *-freebsd* )
+      CFLAGS="${CFLAGS} -Wstrict-prototypes -Wpointer-arith -Wall"
+      ;;
+    * )
+      CFLAGS="${CFLAGS} -Wno-unknown-pragmas -Wstrict-prototypes -Wpointer-arith -Wall"
+      ;;
     esac
 fi
 
@@ -413,8 +403,8 @@ AC_ARG_ENABLE([debug],
 	[enable_debug=no])
 AM_CONDITIONAL([DEBUG], [test $enable_debug = "yes"])
 if test "x$enable_debug" = "xyes"; then
-  dnl add -O0 only if GCC or ICC is used
-  if test "$GCC" = "yes" || test "$ICC" = "yes"; then
+  dnl add -O0 only if GCC is used
+  if test "$GCC" = "yes"; then
     CFLAGS="$CFLAGS -g -O0"
     CXXFLAGS="$CXXFLAGS -g -O0"
   fi
