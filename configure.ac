@@ -394,7 +394,6 @@ else
 fi
 
 AM_CONDITIONAL(RC_IS_RC, [test "x$RC" = "xrc"])
-AM_CONDITIONAL(RC_IS_WINDRES, [test "x$RC" = "xwindres"])
 
 # debug
 AC_ARG_ENABLE([debug],
