@@ -195,22 +195,17 @@ static int scomp(const void *S1, const void *S2)
   */
 static void sortSites(void)
 {
-    Site **sp;
-    Info_t *ip;
-
     if (sites == 0) {
 	sites = gv_calloc(nsites, sizeof(Site*));
 	endSite = sites + nsites;
     }
 
-    sp = sites;
-    ip = nodeInfo;
     infoinit();
     for (size_t i = 0; i < nsites; i++) {
-	*sp++ = &ip->site;
+	Info_t *ip = &nodeInfo[i];
+	sites[i] = &ip->site;
 	ip->verts = NULL;
 	ip->site.refcnt = 1;
-	ip++;
     }
 
     qsort(sites, nsites, sizeof(Site *), scomp);
