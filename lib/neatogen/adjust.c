@@ -221,9 +221,10 @@ static void geomUpdate(int doSort)
 	sortSites();
 
     /* compute ranges */
-    xmin = sites[0]->coord.x;
-    xmax = sites[0]->coord.x;
-    for (size_t i = 1; i < nsites; i++) {
+    xmin = DBL_MAX;
+    xmax = -DBL_MAX;
+    assert(nsites > 0);
+    for (size_t i = 0; i < nsites; ++i) {
 	xmin = fmin(xmin, sites[i]->coord.x);
 	xmax = fmax(xmax, sites[i]->coord.x);
     }
