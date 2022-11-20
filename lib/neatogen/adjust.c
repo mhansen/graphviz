@@ -306,23 +306,20 @@ static void rmEquality(void)
 static int countOverlap(int iter)
 {
     int count = 0;
-    Info_t *ip = nodeInfo;
-    Info_t *jp;
 
     for (size_t i = 0; i < nsites; i++)
 	nodeInfo[i].overlaps = 0;
 
     for (size_t i = 0; i < nsites - 1; i++) {
-	jp = ip + 1;
+	Info_t *ip = &nodeInfo[i];
 	for (size_t j = i + 1; j < nsites; j++) {
+	    Info_t *jp = &nodeInfo[j];
 	    if (polyOverlap(ip->site.coord, &ip->poly, jp->site.coord, &jp->poly)) {
 		count++;
 		ip->overlaps = 1;
 		jp->overlaps = 1;
 	    }
-	    jp++;
 	}
-	ip++;
     }
 
     if (Verbose > 1)
