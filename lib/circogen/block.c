@@ -10,7 +10,7 @@
 
 
 #include <assert.h>
-
+#include <cgraph/alloc.h>
 #include <circogen/circular.h>
 #include <circogen/block.h>
 
@@ -22,9 +22,7 @@ void initBlocklist(blocklist_t * bl)
 
 block_t *mkBlock(Agraph_t * g)
 {
-    block_t *sn;
-
-    sn = NEW(block_t);
+    block_t *sn = gv_alloc(sizeof(block_t));
     initBlocklist(&sn->children);
     sn->sub_graph = g;
     return sn;
