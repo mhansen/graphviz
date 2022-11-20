@@ -537,13 +537,12 @@ static int vAdjust(void)
 
 static double rePos(void)
 {
-    Info_t *ip = nodeInfo;
     double f = 1.0 + incr;
 
     for (size_t i = 0; i < nsites; i++) {
+	Info_t *ip = &nodeInfo[i];
 	ip->site.coord.x *= f;
 	ip->site.coord.y *= f;
-	ip++;
     }
     return f;
 }
