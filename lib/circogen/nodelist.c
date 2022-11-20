@@ -22,7 +22,7 @@ static nodelistitem_t *init_nodelistitem(Agnode_t * n)
 
 nodelist_t *mkNodelist()
 {
-    nodelist_t *list = NEW(nodelist_t);
+    nodelist_t *list = gv_alloc(sizeof(nodelist_t));
     return list;
 }
 
