@@ -416,8 +416,8 @@ static void addCorners(void)
     double ned = dist_2(&ip->site.coord, &ne);
     double d;
 
-    ip++;
     for (size_t i = 1; i < nsites; i++) {
+	ip = &nodeInfo[i];
 	d = dist_2(&ip->site.coord, &sw);
 	if (d < swd) {
 	    swd = d;
@@ -438,7 +438,6 @@ static void addCorners(void)
 	    ned = d;
 	    nes = ip;
 	}
-	ip++;
     }
 
     addVertex(&sws->site, sw.x, sw.y);
