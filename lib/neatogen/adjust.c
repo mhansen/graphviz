@@ -131,7 +131,6 @@ static void chkBoundBox(Agraph_t * graph)
 static int makeInfo(Agraph_t * graph)
 {
     Agnode_t *node;
-    Info_t *ip;
     expand_t pmargin;
     int (*polyf)(Poly *, Agnode_t *, float, float);
 
@@ -142,7 +141,6 @@ static int makeInfo(Agraph_t * graph)
     nodeInfo = gv_calloc(nsites, sizeof(Info_t));
 
     node = agfstnode(graph);
-    ip = nodeInfo;
 
     pmargin = sepFactor (graph);
 
@@ -155,6 +153,7 @@ static int makeInfo(Agraph_t * graph)
 	
     else polyf = makePoly;
     for (size_t i = 0; i < nsites; i++) {
+	Info_t *ip = &nodeInfo[i];
 	ip->site.coord.x = ND_pos(node)[0];
 	ip->site.coord.y = ND_pos(node)[1];
 
@@ -169,7 +168,6 @@ static int makeInfo(Agraph_t * graph)
 	ip->node = node;
 	ip->verts = NULL;
 	node = agnxtnode(graph, node);
-	ip++;
     }
     return 0;
 }
