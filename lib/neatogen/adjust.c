@@ -19,6 +19,7 @@
 #include <cgraph/agxbuf.h>
 #include <common/utils.h>
 #include <ctype.h>
+#include <float.h>
 #include <math.h>
 #include <neatogen/voronoi.h>
 #include <neatogen/info.h>
@@ -94,19 +95,16 @@ static void chkBoundBox(Agraph_t * graph)
 {
     Point ll, ur;
 
-    Info_t *ip = nodeInfo;
-    Poly *pp = &ip->poly;
-    double x = ip->site.coord.x;
-    double y = ip->site.coord.y;
-    double x_min = pp->origin.x + x;
-    double y_min = pp->origin.y + y;
-    double x_max = pp->corner.x + x;
-    double y_max = pp->corner.y + y;
-    for (size_t i = 1; i < nsites; i++) {
-	ip++;
-	pp = &ip->poly;
-	x = ip->site.coord.x;
-	y = ip->site.coord.y;
+    double x_min = DBL_MAX;
+    double y_min = DBL_MAX;
+    double x_max = -DBL_MAX;
+    double y_max = -DBL_MAX;
+    assert(nsites > 0);
+    for (size_t i = 0; i < nsites; ++i) {
+	Info_t *ip = &nodeInfo[i];
+	Poly *pp = &ip->poly;
+	double x = ip->site.coord.x;
+	double y = ip->site.coord.y;
 	x_min = fmin(x_min, pp->origin.x + x);
 	y_min = fmin(y_min, pp->origin.y + y);
 	x_max = fmax(x_max, pp->corner.x + x);
