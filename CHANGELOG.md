@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.3)]
 
+### Changed
+
+* Support for the Intel C Compiler in the Autotools build system has been
+  removed. #2298
+
 ### Fixed
 
 - The CMake build system no longer builds auxiliary tools beyond `gvpack` with

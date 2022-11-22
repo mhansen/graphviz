@@ -356,7 +356,6 @@ fi
 #  DEC : Enable NaN/Inf
 
 if test "${GCC}" != "yes" ; then
-    AC_CHECK_PROGS(RC,rc,false)
     case "${build}" in
         *-*-hpux* )
 	    CFLAGS="${CFLAGS} -Wp,-H30000"
@@ -372,39 +371,25 @@ if test "${GCC}" != "yes" ; then
 	    ;;
     esac
 else
-    AC_CHECK_PROGS(RC,[windres ${host}-windres],false)
-    case "${CC}" in
-	*icc* )
-	    # -Wall causes relocation errors with icc
-	    CFLAGS="${CFLAGS} -wd269"
-	    # icc doesn't like -pipe
-	    CFLAGS=`echo ${CFLAGS} | sed 's/ -pipe//'`
-	    ;;
-	* )
-	    case "${build}" in
-	    *-dec-osf* )
-			CFLAGS="${CFLAGS} -mieee -Wall"
-	        ;;
-	    *alpha*-*-linux* )
-            CFLAGS="${CFLAGS} -mieee -Wall"
-            ;;
-	    *-apple-darwin* )
-	        CFLAGS="${CFLAGS} -fno-common -Wall"
-	        LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names"
-	        ;;
-	    *-freebsd* )
-	        CFLAGS="${CFLAGS} -Wstrict-prototypes -Wpointer-arith -Wall"
-		    ;;
-	    * )
-	        CFLAGS="${CFLAGS} -Wno-unknown-pragmas -Wstrict-prototypes -Wpointer-arith -Wall"
-	        ;;
-	    esac
-	    ;;
+    case "${build}" in
+    *-dec-osf* )
+      CFLAGS="${CFLAGS} -mieee -Wall"
+      ;;
+    *alpha*-*-linux* )
+      CFLAGS="${CFLAGS} -mieee -Wall"
+      ;;
+    *-apple-darwin* )
+      CFLAGS="${CFLAGS} -fno-common -Wall"
+      LDFLAGS="${LDFLAGS} -Wl,-headerpad_max_install_names"
+      ;;
+    *-freebsd* )
+      CFLAGS="${CFLAGS} -Wstrict-prototypes -Wpointer-arith -Wall"
+      ;;
+    * )
+      CFLAGS="${CFLAGS} -Wno-unknown-pragmas -Wstrict-prototypes -Wpointer-arith -Wall"
+      ;;
     esac
 fi
-
-AM_CONDITIONAL(RC_IS_RC, [test "x$RC" = "xrc"])
-AM_CONDITIONAL(RC_IS_WINDRES, [test "x$RC" = "xwindres"])
 
 # debug
 AC_ARG_ENABLE([debug],
@@ -413,8 +398,8 @@ AC_ARG_ENABLE([debug],
 	[enable_debug=no])
 AM_CONDITIONAL([DEBUG], [test $enable_debug = "yes"])
 if test "x$enable_debug" = "xyes"; then
-  dnl add -O0 only if GCC or ICC is used
-  if test "$GCC" = "yes" || test "$ICC" = "yes"; then
+  dnl add -O0 only if GCC is used
+  if test "$GCC" = "yes"; then
     CFLAGS="$CFLAGS -g -O0"
     CXXFLAGS="$CXXFLAGS -g -O0"
   fi
@@ -2484,17 +2469,6 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
 	i=f->_IO_read_end;
 	]])],[AC_MSG_RESULT(yes)
 	AC_DEFINE_UNQUOTED(HAVE_FILE_IO_READ_END,1,Define if FILE structure provides _IO_read_end)
-	],[AC_MSG_RESULT(no)
-	])
-
-# -----------------------------------
-
-AC_MSG_CHECKING(if intptr_t is declared)
-AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdlib.h>
-  #include <stdint.h>
-	]], [[intptr_t  abc;
-	]])],[AC_MSG_RESULT(yes)
-	AC_DEFINE_UNQUOTED(HAVE_INTPTR_T,1,Define if intptr_t is declared)
 	],[AC_MSG_RESULT(no)
 	])
 
