@@ -258,7 +258,6 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
     edge_t *e;
     edge_t *e0;
     objlist *objl = NULL;
-    path *P = NULL;
     vconfig_t *vconfig;
     int rv = 0;
 
@@ -266,10 +265,6 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    head = aghead(e);
 	    if (n == head && ED_count(e)) {	/* self arc */
-		if (!P) {
-		    P = NEW(path);
-		    P->boxes = N_NEW(agnnodes(g) + 20 * 2 * 9, boxf);
-		}
 		makeSelfArcs(e, GD_nodesep(g));
 	    } else if (ED_count(e)) {
 		objl = objectList(e, pm);
@@ -309,9 +304,5 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 	}
     }
     freeObjlist(objl);
-    if (P) {
-	free(P->boxes);
-	free(P);
-    }
     return rv;
 }
