@@ -21,10 +21,12 @@
 /* uses PRIVATE interface for NOTUSED */
 #define FDP_PRIVATE 1
 
+#include <cgraph/alloc.h>
 #include <fdpgen/fdp.h>
 #include <fdpgen/grid.h>
 #include <common/macros.h>
 #include <stddef.h>
+#include <string.h>
 
   /* structure for maintaining a free list of cells */
 typedef struct _block {
@@ -39,11 +41,9 @@ typedef struct _block {
  */
 static block_t *newBlock(int size)
 {
-    block_t *newb;
-
-    newb = GNEW(block_t);
+    block_t *newb = gv_alloc(sizeof(block_t));
     newb->next = 0;
-    newb->mem = N_GNEW(size, cell);
+    newb->mem = gv_calloc(size, sizeof(cell));
     newb->endp = newb->mem + size;
     newb->cur = newb->mem;
 
@@ -112,7 +112,7 @@ static int ijcmpf(Dt_t * d, gridpt * p1, gridpt * p2, Dtdisc_t * disc)
     return 0;
 }
 
-static Grid *_grid;		/* hack because can't attach info. to Dt_t */
+static Grid _grid; // hack because can't attach info. to Dt_t
 
 /* newCell:
  * Allocate a new cell from free store and initialize its indices
@@ -125,7 +125,7 @@ static void *newCell(Dt_t * d, void *obj, Dtdisc_t * disc)
 
     (void)d;
     (void)disc;
-    newp = getCell(_grid);
+    newp = getCell(&_grid);
     newp->p.i = cellp->p.i;
     newp->p.j = cellp->p.j;
     newp->nodes = 0;
@@ -169,13 +169,9 @@ static Dtdisc_t gridDisc = {
  */
 Grid *mkGrid(int cellHint)
 {
-    Grid *g;
-
-    g = GNEW(Grid);
-    _grid = g;			/* see comment above */
+    Grid *g = &_grid;
+    memset(g, 0, sizeof(*g)); // see comment above
     g->data = dtopen(&gridDisc, Dtoset);
-    g->listMem = 0;
-    g->listSize = 0;
     g->cellMem = newBlock(cellHint);
     return g;
 }
@@ -194,7 +190,7 @@ void adjustGrid(Grid * g, int nnodes)
 	nsize = MAX(nnodes, 2 * g->listSize);
 	if (g->listMem)
 	    free(g->listMem);
-	g->listMem = N_GNEW(nsize, node_list);
+	g->listMem = gv_calloc(nsize, sizeof(node_list));
 	g->listSize = nsize;
     }
 }
@@ -219,7 +215,6 @@ void delGrid(Grid * g)
     dtclose(g->data);
     freeBlock(g->cellMem);
     free(g->listMem);
-    free(g);
 }
 
 /* addGrid:

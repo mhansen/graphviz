@@ -20,6 +20,7 @@
 /* use PRIVATE interface */
 #define FDP_PRIVATE 1
 
+#include <cgraph/alloc.h>
 #include <fdpgen/fdp.h>
 #include <fdpgen/comp.h>
 #include <pack/pack.h>
@@ -61,14 +62,13 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
     graph_t *subg;
     char name[128];
     int c_cnt = 0;
-    char *marks;
     bport_t *pp;
     graph_t **comps;
     graph_t **cp;
     int pinflag = 0;
 
 /* fprintf (stderr, "comps of %s starting at %d \n", g->name, c_cnt); */
-    marks = N_NEW(agnnodes(g), char);	/* freed below */
+    char *marks = gv_calloc(agnnodes(g), sizeof(char)); // freed below
 
     /* Create component based on port nodes */
     subg = 0;
@@ -76,7 +76,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
 	snprintf(name, sizeof(name), "cc%s_%d", agnameof(g), c_cnt++ + C_cnt);
 	subg = agsubg(g, name,1);
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-	GD_alg(subg) = NEW(gdata);
+	GD_alg(subg) = gv_alloc(sizeof(gdata));
 	PORTS(subg) = pp;
 	NPORTS(subg) = NPORTS(g);
 	for (; pp->n; pp++) {
@@ -97,7 +97,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
 	    snprintf(name, sizeof(name), "cc%s_%d", agnameof(g), c_cnt++ + C_cnt);
 	    subg = agsubg(g, name,1);
 		agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-	    GD_alg(subg) = NEW(gdata);
+	    GD_alg(subg) = gv_alloc(sizeof(gdata));
 	}
 	pinflag = 1;
 	dfs(g, n, subg, marks);
@@ -112,7 +112,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
 	snprintf(name, sizeof(name), "cc%s+%d", agnameof(g), c_cnt++ + C_cnt);
 	subg = agsubg(g, name,1);
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
-	GD_alg(subg) = NEW(gdata);
+	GD_alg(subg) = gv_alloc(sizeof(gdata));
 	dfs(g, n, subg, marks);
 	nodeInduce(subg);
     }
@@ -124,7 +124,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
     if (pinned)
 	*pinned = pinflag;
     /* freed in layout */
-    comps = cp = N_NEW(c_cnt + 1, graph_t *);
+    comps = cp = gv_calloc(c_cnt + 1, sizeof(graph_t*));
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	*cp++ = subg;
 	c_cnt--;

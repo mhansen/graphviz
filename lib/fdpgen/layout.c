@@ -32,6 +32,7 @@
 #include <limits.h>
 #include <inttypes.h>
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <fdpgen/tlayout.h>
 #include <math.h>
 #include <neatogen/neatoprocs.h>
@@ -184,8 +185,8 @@ static node_t *mkDeriveNode(graph_t * dg, char *name)
 
     dn = agnode(dg, name,1);
     agbindrec(dn, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
-    ND_alg(dn) = NEW(dndata);	/* free in freeDeriveNode */
-    ND_pos(dn) = N_GNEW(GD_ndim(dg), double);
+    ND_alg(dn) = gv_alloc(sizeof(dndata)); // free in freeDeriveNode
+    ND_pos(dn) = gv_calloc(GD_ndim(dg), sizeof(double));
     /* fprintf (stderr, "Creating %s\n", dn->name); */
     return dn;
 }
@@ -297,8 +298,9 @@ static void addCluster(clist_t * clist, graph_t * subg)
 {
     clist->cnt++;
     if (clist->cnt >= clist->sz) {
+	clist->cl = gv_recalloc(clist->cl, clist->sz, clist->sz + CL_CHUNK,
+	                        sizeof(graph_t*));
 	clist->sz += CL_CHUNK;
-	clist->cl = RALLOC(clist->sz, clist->cl, graph_t *);
     }
     clist->cl[clist->cnt] = subg;
 }
@@ -381,7 +383,7 @@ static void addEdge(edge_t * de, edge_t * e)
     edge_t **el;
 
     el = (edge_t **) (ED_to_virt(de));
-    el = ALLOC(cnt + 1, el, edge_t *);
+    el = gv_recalloc(el, cnt, cnt + 1, sizeof(edge_t*));
     el[cnt] = e;
     ED_to_virt(de) = (edge_t *) el;
     ED_count(de)++;
@@ -524,7 +526,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
 	int sz = NPORTS(g);
 
 	/* freed in freeDeriveGraph */
-	PORTS(dg) = pq = N_NEW(sz + 1, bport_t);
+	PORTS(dg) = pq = gv_calloc(sz + 1, sizeof(bport_t));
 	sz = 0;
 	while (pp->e) {
 	    m = DNODE(pp->n);
@@ -586,7 +588,6 @@ static int ecmp(const void *v1, const void *v2)
  */
 static erec *getEdgeList(node_t * n, graph_t * g)
 {
-    erec *erecs;
     int deg = DEG(n);
     int i;
     double dx, dy;
@@ -594,7 +595,7 @@ static erec *getEdgeList(node_t * n, graph_t * g)
     node_t *m;
 
     /* freed in expandCluster */
-    erecs = N_NEW(deg + 1, erec);
+    erec *erecs = gv_calloc(deg + 1, sizeof(erec));
     i = 0;
     for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
 	if (aghead(e) == n)
@@ -706,14 +707,13 @@ static graph_t *expandCluster(node_t * n, graph_t * cg)
     erec *ep;
     erec *next;
     graph_t *sg = ND_clust(n);
-    bport_t *pp;
     int sz = WDEG(n);
     int idx = 0;
     double bnd;
 
     if (sz != 0) {
 	/* freed in cleanup_subgs */
-	pp = N_NEW(sz + 1, bport_t);
+	bport_t *pp = gv_calloc(sz + 1, sizeof(bport_t));
 
 	/* create sorted list of edges of n */
 	es = ep = getEdgeList(n, cg);
@@ -901,7 +901,7 @@ static int layout(graph_t * g, layout_info * infop)
     if (c_cnt > 1) {
 	bool *bp;
 	if (pinned) {
-	    bp = N_NEW(c_cnt, bool);
+	    bp = gv_calloc(c_cnt, sizeof(bool));
 	    bp[0] = true;
 	} else
 	    bp = NULL;

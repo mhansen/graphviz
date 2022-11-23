@@ -18,6 +18,7 @@
 /* uses PRIVATE interface */
 #define FDP_PRIVATE 1
 
+#include    <cgraph/alloc.h>
 #include    <fdpgen/tlayout.h>
 #include    <neatogen/neatoprocs.h>
 #include    <cgraph/agxbuf.h>
@@ -74,7 +75,7 @@ static void init_edge(edge_t * e, attrsym_t * E_len)
 static void init_node(node_t * n)
 {
     common_init_node(n);
-    ND_pos(n) = N_NEW(GD_ndim(agraphof(n)), double);
+    ND_pos(n) = gv_calloc(GD_ndim(agraphof(n)), sizeof(double));
     gv_nodesize(n, GD_flip(agraphof(n)));
 }
 
@@ -93,7 +94,7 @@ void fdp_init_node_edge(graph_t * g)
      * add new nodes.
      */
     nn = agnnodes(g);
-    GD_neato_nlist(g) = N_NEW(nn + 1, node_t *);
+    GD_neato_nlist(g) = gv_calloc(nn + 1, sizeof(node_t*));
 
     for (i = 0, n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	init_node (n);

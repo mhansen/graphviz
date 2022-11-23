@@ -325,20 +325,6 @@ static void pswrite(Agraph_t * g, FILE * fp, int expMode)
     }
 
     fprintf(fp, "0.0 setlinewidth\n");
-#ifdef SHOW_GRID
-    if (UseGrid) {
-	int i;
-	fprintf(fp, "%f %f 5 fillCircle\n", 0.0, 0.0);
-	for (i = 0; i < maxx; i += CellW) {
-	    fprintf(fp, "%f 0.0 moveto %f %f lineto stroke\n",
-		    (float) i, (float) i, maxy);
-	}
-	for (i = 0; i < maxy; i += CellH) {
-	    fprintf(fp, "0.0 %f moveto %f %f lineto stroke\n",
-		    (float) i, maxx, (float) i);
-	}
-    }
-#endif
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (IS_PORT(n)) {
 	    double r;

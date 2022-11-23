@@ -19,17 +19,19 @@
 #define FDP_PRIVATE 1
 
 #include "config.h"
-
+#include <assert.h>
+#include <cgraph/alloc.h>
 #include <fdpgen/clusteredges.h>
 #include <fdpgen/fdp.h>
+#include <limits.h>
 #include <neatogen/neatoprocs.h>
 #include <pathplan/vispath.h>
 #include <pack/pack.h>
 #include <stdbool.h>
 
 typedef struct {
-    int cnt;
-    int sz;
+    size_t cnt;
+    size_t sz;
     Ppoly_t **obs;
 } objlist;
 
@@ -38,7 +40,7 @@ typedef struct {
  */
 #define INIT_SZ 100
 
-#if DEBUG > 1
+#if defined(DEBUG) && DEBUG > 1
 static void dumpObj(Ppoly_t * p)
 {
     int j;
@@ -52,8 +54,7 @@ static void dumpObj(Ppoly_t * p)
 
 static void dumpObjlist(objlist * l)
 {
-    int i;
-    for (i = 0; i < l->cnt; i++) {
+    for (size_t i = 0; i < l->cnt; i++) {
 	dumpObj(l->obs[i]);
     }
 }
@@ -63,10 +64,10 @@ static void addObj(objlist * l, Ppoly_t * obj)
 {
     if (l->sz == l->cnt) {
 	if (l->obs) {
+	    l->obs = gv_recalloc(l->obs, l->sz, l->sz * 2, sizeof(Ppoly_t*));
 	    l->sz *= 2;
-	    l->obs = RALLOC(l->sz, l->obs, Ppoly_t *);
 	} else {
-	    l->obs = N_GNEW(INIT_SZ, Ppoly_t *);
+	    l->obs = gv_calloc(INIT_SZ, sizeof(Ppoly_t*));
 	    l->sz = INIT_SZ;
 	}
     }
@@ -98,14 +99,14 @@ static void resetObjlist(objlist * l)
  */
 static Ppoly_t *makeClustObs(graph_t * g, expand_t* pm)
 {
-    Ppoly_t *obs = NEW(Ppoly_t);
+    Ppoly_t *obs = gv_alloc(sizeof(Ppoly_t));
     boxf bb;
     boxf newbb;
     Ppoint_t ctr;
 
     bb = GD_bb(g);
     obs->pn = 4;
-    obs->ps = N_NEW(4, Ppoint_t);
+    obs->ps = gv_calloc(4, sizeof(Ppoint_t));
 
     ctr.x = (bb.UR.x + bb.LL.x) / 2.0;
     ctr.y = (bb.UR.y + bb.LL.y) / 2.0;
@@ -202,7 +203,7 @@ static objlist *objectList(edge_t * ep, expand_t* pm)
     int tlevel;
     void *hex;			/* Objects to be excluded from list */
     void *tex;
-    objlist *list = NEW(objlist);
+    objlist *list = gv_alloc(sizeof(objlist));
 
     /* If either endpoint is a cluster node, we move up one level */
     if (IS_CLUST_NODE(h)) {
@@ -258,7 +259,6 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
     edge_t *e;
     edge_t *e0;
     objlist *objl = NULL;
-    path *P = NULL;
     vconfig_t *vconfig;
     int rv = 0;
 
@@ -266,15 +266,12 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    head = aghead(e);
 	    if (n == head && ED_count(e)) {	/* self arc */
-		if (!P) {
-		    P = NEW(path);
-		    P->boxes = N_NEW(agnnodes(g) + 20 * 2 * 9, boxf);
-		}
 		makeSelfArcs(e, GD_nodesep(g));
 	    } else if (ED_count(e)) {
 		objl = objectList(e, pm);
-		if (Plegal_arrangement(objl->obs, objl->cnt)) {
-		    vconfig = Pobsopen(objl->obs, objl->cnt);
+		assert(objl->cnt <= INT_MAX);
+		if (Plegal_arrangement(objl->obs, (int)objl->cnt)) {
+		    vconfig = Pobsopen(objl->obs, (int)objl->cnt);
 		    if (!vconfig) {
 			agerr(AGWARN, "compoundEdges: could not construct obstacles - falling back to straight line edges\n");
 			rv = 1;
@@ -302,16 +299,13 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		 */
 		for (e0 = e; e0; e0 = ED_to_virt(e0)) {
 		    ED_path(e0) = getPath(e0, vconfig, 0);
-		    makeSpline(e0, objl->obs, objl->cnt, false);
+		    assert(objl->cnt <= INT_MAX);
+		    makeSpline(e0, objl->obs, (int)objl->cnt, false);
 		}
 		resetObjlist(objl);
 	    }
 	}
     }
     freeObjlist(objl);
-    if (P) {
-	free(P->boxes);
-	free(P);
-    }
     return rv;
 }
