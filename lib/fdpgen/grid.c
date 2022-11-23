@@ -25,6 +25,7 @@
 #include <fdpgen/grid.h>
 #include <common/macros.h>
 #include <stddef.h>
+#include <string.h>
 
   /* structure for maintaining a free list of cells */
 typedef struct _block {
@@ -112,7 +113,7 @@ static int ijcmpf(Dt_t * d, gridpt * p1, gridpt * p2, Dtdisc_t * disc)
     return 0;
 }
 
-static Grid *_grid;		/* hack because can't attach info. to Dt_t */
+static Grid _grid; // hack because can't attach info. to Dt_t
 
 /* newCell:
  * Allocate a new cell from free store and initialize its indices
@@ -125,7 +126,7 @@ static void *newCell(Dt_t * d, void *obj, Dtdisc_t * disc)
 
     (void)d;
     (void)disc;
-    newp = getCell(_grid);
+    newp = getCell(&_grid);
     newp->p.i = cellp->p.i;
     newp->p.j = cellp->p.j;
     newp->nodes = 0;
@@ -169,13 +170,9 @@ static Dtdisc_t gridDisc = {
  */
 Grid *mkGrid(int cellHint)
 {
-    Grid *g;
-
-    g = GNEW(Grid);
-    _grid = g;			/* see comment above */
+    Grid *g = &_grid;
+    memset(g, 0, sizeof(*g)); // see comment above
     g->data = dtopen(&gridDisc, Dtoset);
-    g->listMem = 0;
-    g->listSize = 0;
     g->cellMem = newBlock(cellHint);
     return g;
 }
@@ -219,7 +216,6 @@ void delGrid(Grid * g)
     dtclose(g->data);
     freeBlock(g->cellMem);
     free(g->listMem);
-    free(g);
 }
 
 /* addGrid:
