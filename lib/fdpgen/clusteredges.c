@@ -19,17 +19,19 @@
 #define FDP_PRIVATE 1
 
 #include "config.h"
+#include <assert.h>
 #include <cgraph/alloc.h>
 #include <fdpgen/clusteredges.h>
 #include <fdpgen/fdp.h>
+#include <limits.h>
 #include <neatogen/neatoprocs.h>
 #include <pathplan/vispath.h>
 #include <pack/pack.h>
 #include <stdbool.h>
 
 typedef struct {
-    int cnt;
-    int sz;
+    size_t cnt;
+    size_t sz;
     Ppoly_t **obs;
 } objlist;
 
@@ -52,8 +54,7 @@ static void dumpObj(Ppoly_t * p)
 
 static void dumpObjlist(objlist * l)
 {
-    int i;
-    for (i = 0; i < l->cnt; i++) {
+    for (size_t i = 0; i < l->cnt; i++) {
 	dumpObj(l->obs[i]);
     }
 }
@@ -268,8 +269,9 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		makeSelfArcs(e, GD_nodesep(g));
 	    } else if (ED_count(e)) {
 		objl = objectList(e, pm);
-		if (Plegal_arrangement(objl->obs, objl->cnt)) {
-		    vconfig = Pobsopen(objl->obs, objl->cnt);
+		assert(objl->cnt <= INT_MAX);
+		if (Plegal_arrangement(objl->obs, (int)objl->cnt)) {
+		    vconfig = Pobsopen(objl->obs, (int)objl->cnt);
 		    if (!vconfig) {
 			agerr(AGWARN, "compoundEdges: could not construct obstacles - falling back to straight line edges\n");
 			rv = 1;
@@ -297,7 +299,8 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		 */
 		for (e0 = e; e0; e0 = ED_to_virt(e0)) {
 		    ED_path(e0) = getPath(e0, vconfig, 0);
-		    makeSpline(e0, objl->obs, objl->cnt, false);
+		    assert(objl->cnt <= INT_MAX);
+		    makeSpline(e0, objl->obs, (int)objl->cnt, false);
 		}
 		resetObjlist(objl);
 	    }
