@@ -40,7 +40,7 @@ typedef struct {
  */
 #define INIT_SZ 100
 
-#if DEBUG > 1
+#if defined(DEBUG) && DEBUG > 1
 static void dumpObj(Ppoly_t * p)
 {
     int j;
