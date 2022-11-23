@@ -22,17 +22,10 @@
 #cmakedefine HAVE_SINCOS
 #cmakedefine HAVE_SRAND48
 
-// Types
-#cmakedefine HAVE_SSIZE_T
-
 // Typedefs for missing types
-#ifndef HAVE_SSIZE_T
 #ifdef _MSC_VER
 #include <BaseTsd.h>
 typedef SSIZE_T ssize_t;
-#else
-typedef int ssize_t;
-#endif
 #endif
 
 // Libraries
