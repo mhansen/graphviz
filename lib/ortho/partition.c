@@ -24,7 +24,6 @@
 #endif
 
 #define NPOINTS 4   /* only rectangles */
-#define TRSIZE(ss) (5*(ss)+1)
 
 #define TR_FROM_UP 1        /* for traverse-direction */
 #define TR_FROM_DN 2
@@ -690,13 +689,15 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     int nsegs = 4*(ncells+1);
     segment_t* segs = gv_calloc(nsegs + 1, sizeof(segment_t));
     int* permute = gv_calloc(nsegs + 1, sizeof(int));
-    int ntraps = TRSIZE(nsegs);
-    traps_t trs = {.length = ntraps,
-                    .data = gv_calloc(ntraps, sizeof(trap_t))};
+
+    // First trapezoid is reserved as a sentinel. We will append later
+    // trapezoids by expanding this on-demand.
+    traps_t trs = {.length = 1, .data = gv_calloc(1, sizeof(trap_t))};
+
     int nt;
 
     if (DEBUG) {
-	fprintf (stderr, "cells = %d segs = %d traps = %d\n", ncells, nsegs, ntraps);
+	fprintf (stderr, "cells = %d segs = %d traps = dynamic\n", ncells, nsegs);
     }
     genSegments (cells, ncells, bb, segs, 0);
     if (DEBUG) {
@@ -715,6 +716,10 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     }
     boxes_t hor_decomp = {0};
     monotonate_trapezoids(nsegs, segs, &trs, 0, &hor_decomp);
+
+    // reset trapezoid collection
+    free(trs.data);
+    trs = (traps_t){.length = 1, .data = gv_calloc(1, sizeof(trap_t))};
 
     genSegments (cells, ncells, bb, segs, 1);
     generateRandomOrdering (nsegs, permute);
