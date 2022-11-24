@@ -811,15 +811,16 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
 	{
 	  double y0, yt;
 	  pointf tmppt;
-	  int tnext, i_d0, i_d1;
+	  int tnext;
+	  bool i_d0, i_d1;
 
-	  i_d0 = i_d1 = FALSE;
+	  i_d0 = i_d1 = false;
 	  if (FP_EQUAL(tr->data[t].lo.y, s.v0.y))
 	    {
 	      if (tr->data[t].lo.x > s.v0.x)
-		i_d0 = TRUE;
+		i_d0 = true;
 	      else
-		i_d1 = TRUE;
+		i_d1 = true;
 	    }
 	  else
 	    {
@@ -828,9 +829,9 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
 	      tmppt.x = s.v0.x + yt * (s.v1.x - s.v0.x);
 
 	      if (_less_than(&tmppt, &tr->data[t].lo))
-		i_d0 = TRUE;
+		i_d0 = true;
 	      else
-		i_d1 = TRUE;
+		i_d1 = true;
 	    }
 
 	  /* check continuity from the top so that the lower-neighbour */
