@@ -57,7 +57,6 @@ typedef struct {
 static int q_idx;
 static int tr_idx;
 static int QSIZE;
-static int TRSIZE;
 
 /* Return a new node to be added into the query tree */
 static int newnode(void)
@@ -73,7 +72,7 @@ static int newnode(void)
 
 /* Return a free trapezoid */
 static int newtrap(traps_t *tr) {
-    if (tr_idx < TRSIZE) {
+    if (tr_idx < tr->length) {
 	tr->data[tr_idx].lseg = -1;
 	tr->data[tr_idx].rseg = -1;
 	tr->data[tr_idx].state = ST_VALID;
@@ -1019,7 +1018,6 @@ construct_trapezoids(int nseg, segment_t *seg, int *permute, traps_t* tr) {
     qnode_t* qs;
 
     QSIZE = 2 * tr->length;
-    TRSIZE = tr->length;
     qs = gv_calloc(2 * tr->length, sizeof(qnode_t));
     q_idx = tr_idx = 1;
     memset(tr->data, 0, tr->length * sizeof(trap_t));
