@@ -22,6 +22,7 @@
  * Drawings", GD '02, LNCS 2528, pp. 12-22.
  */
 
+#include    <cgraph/alloc.h>
 #include    <circogen/circular.h>
 #include    <neatogen/adjust.h>
 #include    <pack/pack.h>
@@ -44,9 +45,9 @@ static void circular_init_node_edge(graph_t * g)
     node_t *n;
     edge_t *e;
     int i = 0;
-    ndata* alg = N_NEW(agnnodes(g), ndata);
+    ndata* alg = gv_calloc(agnnodes(g), sizeof(ndata));
 
-    GD_neato_nlist(g) = N_NEW(agnnodes(g) + 1, node_t *);
+    GD_neato_nlist(g) = gv_calloc(agnnodes(g) + 1, sizeof(node_t*));
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	neato_init_node(n);
 	ND_alg(n) = alg + i;
@@ -79,9 +80,9 @@ static node_t *makeDerivedNode(graph_t * dg, char *name, int isNode,
 {
     node_t *n = agnode(dg, name,1);
     agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
-    ND_alg(n) = NEW(cdata);
+    ND_alg(n) = gv_alloc(sizeof(cdata));
     if (isNode) {
-	ND_pos(n) = N_NEW(Ndim, double);
+	ND_pos(n) = gv_calloc(Ndim, sizeof(double));
 	ND_lw(n) = ND_lw(orig);
 	ND_rw(n) = ND_rw(orig);
 	ND_ht(n) = ND_ht(orig);

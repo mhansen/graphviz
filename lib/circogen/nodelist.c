@@ -8,21 +8,21 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include	<cgraph/alloc.h>
 #include	<circogen/nodelist.h>
 #include	<circogen/circular.h>
 #include	<assert.h>
 
 static nodelistitem_t *init_nodelistitem(Agnode_t * n)
 {
-    nodelistitem_t *p = NEW(nodelistitem_t);
+    nodelistitem_t *p = gv_alloc(sizeof(nodelistitem_t));
     p->curr = n;
     return p;
 }
 
 nodelist_t *mkNodelist()
 {
-    nodelist_t *list = NEW(nodelist_t);
+    nodelist_t *list = gv_alloc(sizeof(nodelist_t));
     return list;
 }
 

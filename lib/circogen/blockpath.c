@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include	<cgraph/alloc.h>
 #include	<circogen/blockpath.h>
 #include	<circogen/edgelist.h>
 #include	<circogen/deglist.h>
@@ -84,9 +84,6 @@ static deglist_t *getList(Agraph_t * g)
  */
 static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
 {
-    Agnode_t **neighbors_with;
-    Agnode_t **neighbors_without;
-
     Agedge_t *e;
     Agedge_t *ep;
     Agedge_t *ex;
@@ -100,8 +97,8 @@ static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
     int edge_cnt = 0;
 
     node_degree = DEGREE(n);
-    neighbors_with = N_GNEW(node_degree, Agnode_t *);
-    neighbors_without = N_GNEW(node_degree, Agnode_t *);
+    Agnode_t **neighbors_with = gv_calloc(node_degree, sizeof(Agnode_t*));
+    Agnode_t **neighbors_without = gv_calloc(node_degree, sizeof(Agnode_t*));
 
     for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
 	n1 = aghead(e);
