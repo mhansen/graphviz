@@ -62,12 +62,10 @@ typedef struct {
 
 static int q_idx;
 static int tr_idx;
-static int QSIZE;
 
 /* Return a new node to be added into the query tree */
-static int newnode(void)
-{
-    if (q_idx < QSIZE)
+static int newnode(qnodes_t *qs) {
+    if (q_idx < qs->length)
 	return q_idx++;
     else {
 	fprintf(stderr, "newnode: Query-table overflow\n");
@@ -157,34 +155,34 @@ init_query_structure(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   int t1, t2, t3, t4;
   segment_t *s = &seg[segnum];
 
-  i1 = newnode();
+  i1 = newnode(qs);
   qs->data[i1].nodetype = T_Y;
   _max(&qs->data[i1].yval, &s->v0, &s->v1); /* root */
   root = i1;
 
-  qs->data[i1].right = i2 = newnode();
+  qs->data[i1].right = i2 = newnode(qs);
   qs->data[i2].nodetype = T_SINK;
   qs->data[i2].parent = i1;
 
-  qs->data[i1].left = i3 = newnode();
+  qs->data[i1].left = i3 = newnode(qs);
   qs->data[i3].nodetype = T_Y;
   _min(&qs->data[i3].yval, &s->v0, &s->v1); /* root */
   qs->data[i3].parent = i1;
 
-  qs->data[i3].left = i4 = newnode();
+  qs->data[i3].left = i4 = newnode(qs);
   qs->data[i4].nodetype = T_SINK;
   qs->data[i4].parent = i3;
 
-  qs->data[i3].right = i5 = newnode();
+  qs->data[i3].right = i5 = newnode(qs);
   qs->data[i5].nodetype = T_X;
   qs->data[i5].segnum = segnum;
   qs->data[i5].parent = i3;
 
-  qs->data[i5].left = i6 = newnode();
+  qs->data[i5].left = i6 = newnode(qs);
   qs->data[i6].nodetype = T_SINK;
   qs->data[i6].parent = i5;
 
-  qs->data[i5].right = i7 = newnode();
+  qs->data[i5].right = i7 = newnode(qs);
   qs->data[i7].nodetype = T_SINK;
   qs->data[i7].parent = i5;
 
@@ -467,8 +465,8 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
       /* Now update the query structure and obtain the sinks for the */
       /* two trapezoids */
 
-      i1 = newnode();		/* Upper trapezoid sink */
-      i2 = newnode();		/* Lower trapezoid sink */
+      i1 = newnode(qs);		/* Upper trapezoid sink */
+      i2 = newnode(qs);		/* Lower trapezoid sink */
       sk = tr->data[tu].sink;
 
       qs->data[sk].nodetype = T_Y;
@@ -525,8 +523,8 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
       /* Now update the query structure and obtain the sinks for the */
       /* two trapezoids */
 
-      i1 = newnode();		/* Upper trapezoid sink */
-      i2 = newnode();		/* Lower trapezoid sink */
+      i1 = newnode(qs);		/* Upper trapezoid sink */
+      i2 = newnode(qs);		/* Lower trapezoid sink */
       sk = tr->data[tu].sink;
 
       qs->data[sk].nodetype = T_Y;
@@ -564,8 +562,8 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
     {
       int t_sav, tn_sav;
       sk = tr->data[t].sink;
-      i1 = newnode();		/* left trapezoid sink */
-      i2 = newnode();		/* right trapezoid sink */
+      i1 = newnode(qs);		/* left trapezoid sink */
+      i2 = newnode(qs);		/* right trapezoid sink */
 
       qs->data[sk].nodetype = T_X;
       qs->data[sk].segnum = segnum;
@@ -1022,7 +1020,6 @@ construct_trapezoids(int nseg, segment_t *seg, int *permute, traps_t* tr) {
     int root, h;
     int segi = 1;
 
-    QSIZE = 2 * tr->length;
     qnodes_t qs = {.length = 2 * tr->length,
                    .data = gv_calloc(2 * tr->length, sizeof(qnode_t))};
     q_idx = tr_idx = 1;
