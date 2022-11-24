@@ -60,18 +60,13 @@ typedef struct {
   qnode_t *data;
 } qnodes_t;
 
-static int q_idx;
 static int tr_idx;
 
 /* Return a new node to be added into the query tree */
 static int newnode(qnodes_t *qs) {
-    if (q_idx < qs->length)
-	return q_idx++;
-    else {
-	fprintf(stderr, "newnode: Query-table overflow\n");
-	assert(0);
-	return -1;
-    }
+  qs->data = gv_recalloc(qs->data, qs->length, qs->length + 1, sizeof(qnode_t));
+  ++qs->length;
+  return qs->length - 1;
 }
 
 /* Return a free trapezoid */
@@ -1026,9 +1021,11 @@ construct_trapezoids(int nseg, segment_t *seg, int *permute, traps_t* tr) {
     int root, h;
     int segi = 1;
 
-    qnodes_t qs = {.length = 2 * tr->length,
-                   .data = gv_calloc(2 * tr->length, sizeof(qnode_t))};
-    q_idx = tr_idx = 1;
+    // We will append later nodes by expanding this on-demand. First node is a
+    // sentinel.
+    qnodes_t qs = {.length = 1, .data = gv_calloc(1, sizeof(qnode_t))};
+
+    tr_idx = 1;
     memset(tr->data, 0, tr->length * sizeof(trap_t));
 
   /* Add the first segment and get the query structure and trapezoid */
