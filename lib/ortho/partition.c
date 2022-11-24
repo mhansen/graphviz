@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
+#include <common/boxes.h>
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <ortho/partition.h>
@@ -314,7 +315,7 @@ make_new_monotone_poly (int mcur, int v0, int v1)
 }
 
 /* recursively visit all the trapezoids */
-static int traverse_polygon(bitarray_t *visited, boxf *decomp, int size,
+static int traverse_polygon(bitarray_t *visited, boxes_t *decomp, int size,
                             segment_t *seg, traps_t *tr, int mcur, int trnum,
                             int from, int flip, int dir) {
   trap_t *t;
@@ -330,17 +331,19 @@ static int traverse_polygon(bitarray_t *visited, boxf *decomp, int size,
   
   if (t->hi.y > t->lo.y + C_EPS && FP_EQUAL(seg[t->lseg].v0.x, seg[t->lseg].v1.x) &&
       FP_EQUAL(seg[t->rseg].v0.x, seg[t->rseg].v1.x)) {
+      boxf newbox = {{0}};
       if (flip) {
-          decomp[size].LL.x = t->lo.y;
-          decomp[size].LL.y = -seg[t->rseg].v0.x;
-          decomp[size].UR.x = t->hi.y;
-          decomp[size].UR.y = -seg[t->lseg].v0.x;
+          newbox.LL.x = t->lo.y;
+          newbox.LL.y = -seg[t->rseg].v0.x;
+          newbox.UR.x = t->hi.y;
+          newbox.UR.y = -seg[t->lseg].v0.x;
       } else {
-          decomp[size].LL.x = seg[t->lseg].v0.x;
-          decomp[size].LL.y = t->lo.y;
-          decomp[size].UR.x = seg[t->rseg].v0.x;
-          decomp[size].UR.y = t->hi.y;
+          newbox.LL.x = seg[t->lseg].v0.x;
+          newbox.LL.y = t->lo.y;
+          newbox.UR.x = seg[t->rseg].v0.x;
+          newbox.UR.y = t->hi.y;
       }
+      boxes_append(decomp, newbox);
       size++;
   }
   
@@ -593,8 +596,7 @@ static int traverse_polygon(bitarray_t *visited, boxf *decomp, int size,
 
 static int
 monotonate_trapezoids(int nsegs, segment_t *seg, traps_t *tr, 
-    int flip, boxf* decomp)
-{
+    int flip, boxes_t *decomp) {
     int i, size;
     int tr_start;
     bitarray_t visited = bitarray_new_or_exit(tr->length);
@@ -702,8 +704,6 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     int ntraps = TRSIZE(nsegs);
     traps_t trs = {.length = ntraps,
                     .data = gv_calloc(ntraps, sizeof(trap_t))};
-    boxf* hor_decomp = gv_calloc(ntraps, sizeof(boxf));
-    boxf* vert_decomp = gv_calloc(ntraps, sizeof(boxf));
     int nt;
 
     if (DEBUG) {
@@ -724,7 +724,8 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     if (DEBUG) {
 	fprintf (stderr, "hor traps = %d\n", nt);
     }
-    hd_size = monotonate_trapezoids(nsegs, segs, &trs, 0, hor_decomp);
+    boxes_t hor_decomp = {0};
+    hd_size = monotonate_trapezoids(nsegs, segs, &trs, 0, &hor_decomp);
 
     genSegments (cells, ncells, bb, segs, 1);
     generateRandomOrdering (nsegs, permute);
@@ -732,20 +733,21 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     if (DEBUG) {
 	fprintf (stderr, "ver traps = %d\n", nt);
     }
-    vd_size = monotonate_trapezoids(nsegs, segs, &trs, 1, vert_decomp);
+    boxes_t vert_decomp = {0};
+    vd_size = monotonate_trapezoids(nsegs, segs, &trs, 1, &vert_decomp);
 
     rs = gv_calloc(hd_size * vd_size, sizeof(boxf));
     for (i=0; i<vd_size; i++) 
 	for (j=0; j<hd_size; j++)
-	    if (rectIntersect(&rs[cnt], &vert_decomp[i], &hor_decomp[j]))
+	    if (rectIntersect(&rs[cnt], &vert_decomp.data[i], &hor_decomp.data[j]))
 		cnt++;
 
     rs = gv_recalloc(rs, hd_size * vd_size, cnt, sizeof(boxf));
     free (segs);
     free (permute);
     free(trs.data);
-    free (hor_decomp);
-    free (vert_decomp);
+    boxes_free(&hor_decomp);
+    boxes_free(&vert_decomp);
     *nrects = cnt;
     return rs;
 }
