@@ -151,7 +151,7 @@ static bool _less_than (pointf *v0, pointf *v1)
 
 static int
 init_query_structure(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
-  int i1, i2, i3, i4, i5, i6, i7, root;
+  int i1, root;
   int t1, t2, t3, t4;
   segment_t *s = &seg[segnum];
 
@@ -160,29 +160,35 @@ init_query_structure(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   _max(&qs->data[i1].yval, &s->v0, &s->v1); /* root */
   root = i1;
 
-  qs->data[i1].right = i2 = newnode(qs);
+  int i2 = newnode(qs);
+  qs->data[i1].right = i2;
   qs->data[i2].nodetype = T_SINK;
   qs->data[i2].parent = i1;
 
-  qs->data[i1].left = i3 = newnode(qs);
+  int i3 = newnode(qs);
+  qs->data[i1].left = i3;
   qs->data[i3].nodetype = T_Y;
   _min(&qs->data[i3].yval, &s->v0, &s->v1); /* root */
   qs->data[i3].parent = i1;
 
-  qs->data[i3].left = i4 = newnode(qs);
+  int i4 = newnode(qs);
+  qs->data[i3].left = i4;
   qs->data[i4].nodetype = T_SINK;
   qs->data[i4].parent = i3;
 
-  qs->data[i3].right = i5 = newnode(qs);
+  int i5 = newnode(qs);
+  qs->data[i3].right = i5;
   qs->data[i5].nodetype = T_X;
   qs->data[i5].segnum = segnum;
   qs->data[i5].parent = i3;
 
-  qs->data[i5].left = i6 = newnode(qs);
+  int i6 = newnode(qs);
+  qs->data[i5].left = i6;
   qs->data[i6].nodetype = T_SINK;
   qs->data[i6].parent = i5;
 
-  qs->data[i5].right = i7 = newnode(qs);
+  int i7 = newnode(qs);
+  qs->data[i5].right = i7;
   qs->data[i7].nodetype = T_SINK;
   qs->data[i7].parent = i5;
 
