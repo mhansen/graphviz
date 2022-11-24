@@ -54,6 +54,12 @@ typedef struct {
   int left, right;      /* children */
 } qnode_t;
 
+/// an array of qnodes
+typedef struct {
+  size_t length;
+  qnode_t *data;
+} qnodes_t;
+
 static int q_idx;
 static int tr_idx;
 static int QSIZE;
@@ -146,49 +152,49 @@ static bool _less_than (pointf *v0, pointf *v1)
  */
 
 static int
-init_query_structure(int segnum, segment_t *seg, traps_t *tr, qnode_t *qs) {
+init_query_structure(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   int i1, i2, i3, i4, i5, i6, i7, root;
   int t1, t2, t3, t4;
   segment_t *s = &seg[segnum];
 
   i1 = newnode();
-  qs[i1].nodetype = T_Y;
-  _max(&qs[i1].yval, &s->v0, &s->v1); /* root */
+  qs->data[i1].nodetype = T_Y;
+  _max(&qs->data[i1].yval, &s->v0, &s->v1); /* root */
   root = i1;
 
-  qs[i1].right = i2 = newnode();
-  qs[i2].nodetype = T_SINK;
-  qs[i2].parent = i1;
+  qs->data[i1].right = i2 = newnode();
+  qs->data[i2].nodetype = T_SINK;
+  qs->data[i2].parent = i1;
 
-  qs[i1].left = i3 = newnode();
-  qs[i3].nodetype = T_Y;
-  _min(&qs[i3].yval, &s->v0, &s->v1); /* root */
-  qs[i3].parent = i1;
+  qs->data[i1].left = i3 = newnode();
+  qs->data[i3].nodetype = T_Y;
+  _min(&qs->data[i3].yval, &s->v0, &s->v1); /* root */
+  qs->data[i3].parent = i1;
 
-  qs[i3].left = i4 = newnode();
-  qs[i4].nodetype = T_SINK;
-  qs[i4].parent = i3;
+  qs->data[i3].left = i4 = newnode();
+  qs->data[i4].nodetype = T_SINK;
+  qs->data[i4].parent = i3;
 
-  qs[i3].right = i5 = newnode();
-  qs[i5].nodetype = T_X;
-  qs[i5].segnum = segnum;
-  qs[i5].parent = i3;
+  qs->data[i3].right = i5 = newnode();
+  qs->data[i5].nodetype = T_X;
+  qs->data[i5].segnum = segnum;
+  qs->data[i5].parent = i3;
 
-  qs[i5].left = i6 = newnode();
-  qs[i6].nodetype = T_SINK;
-  qs[i6].parent = i5;
+  qs->data[i5].left = i6 = newnode();
+  qs->data[i6].nodetype = T_SINK;
+  qs->data[i6].parent = i5;
 
-  qs[i5].right = i7 = newnode();
-  qs[i7].nodetype = T_SINK;
-  qs[i7].parent = i5;
+  qs->data[i5].right = i7 = newnode();
+  qs->data[i7].nodetype = T_SINK;
+  qs->data[i7].parent = i5;
 
   t1 = newtrap(tr);		/* middle left */
   t2 = newtrap(tr);		/* middle right */
   t3 = newtrap(tr);		/* bottom-most */
   t4 = newtrap(tr);		/* topmost */
 
-  tr->data[t1].hi = tr->data[t2].hi = tr->data[t4].lo = qs[i1].yval;
-  tr->data[t1].lo = tr->data[t2].lo = tr->data[t3].hi = qs[i3].yval;
+  tr->data[t1].hi = tr->data[t2].hi = tr->data[t4].lo = qs->data[i1].yval;
+  tr->data[t1].lo = tr->data[t2].lo = tr->data[t3].hi = qs->data[i3].yval;
   tr->data[t4].hi.y = (double)(INF);
   tr->data[t4].hi.x = (double)(INF);
   tr->data[t3].lo.y = (double)-1 * (INF);
@@ -207,10 +213,10 @@ init_query_structure(int segnum, segment_t *seg, traps_t *tr, qnode_t *qs) {
   tr->data[t1].state = tr->data[t2].state = ST_VALID;
   tr->data[t3].state = tr->data[t4].state = ST_VALID;
 
-  qs[i2].trnum = t4;
-  qs[i4].trnum = t3;
-  qs[i6].trnum = t1;
-  qs[i7].trnum = t2;
+  qs->data[i2].trnum = t4;
+  qs->data[i4].trnum = t3;
+  qs->data[i6].trnum = t1;
+  qs->data[i7].trnum = t2;
 
   s->is_inserted = true;
   return root;
@@ -283,9 +289,9 @@ static bool inserted (int segnum, segment_t* seg, int whichpt)
  * point v lie in. The return value is the trapezoid number.
  */
 static int
-locate_endpoint (pointf *v, pointf *vo, int r, segment_t* seg, qnode_t* qs)
+locate_endpoint (pointf *v, pointf *vo, int r, segment_t* seg, qnodes_t* qs)
 {
-  qnode_t *rptr = &qs[r];
+  qnode_t *rptr = &qs->data[r];
 
   switch (rptr->nodetype) {
     case T_SINK:
@@ -342,7 +348,7 @@ locate_endpoint (pointf *v, pointf *vo, int r, segment_t* seg, qnode_t* qs)
  */
 static void
 merge_trapezoids(int segnum, int tfirst, int tlast, int side, traps_t *tr,
-    qnode_t* qs)
+    qnodes_t* qs)
 {
   int t;
 
@@ -366,12 +372,12 @@ merge_trapezoids(int segnum, int tfirst, int tlast, int side, traps_t *tr,
 	    {			              /* merge them */
 	      /* Use the upper node as the new node i.e. t */
 
-	      ptnext = qs[tr->data[tnext].sink].parent;
+	      ptnext = qs->data[tr->data[tnext].sink].parent;
 
-	      if (qs[ptnext].left == tr->data[tnext].sink)
-		qs[ptnext].left = tr->data[t].sink;
+	      if (qs->data[ptnext].left == tr->data[tnext].sink)
+		qs->data[ptnext].left = tr->data[t].sink;
 	      else
-		qs[ptnext].right = tr->data[t].sink;	/* redirect parent */
+		qs->data[ptnext].right = tr->data[t].sink;	/* redirect parent */
 
 
 	      /* Change the upper neighbours of the lower trapezoids */
@@ -409,7 +415,7 @@ merge_trapezoids(int segnum, int tfirst, int tlast, int side, traps_t *tr,
  * Q-structure. Then start from the topmost trapezoid and go down to
  * the  lower trapezoid dividing all the trapezoids in between .
  */
-static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnode_t *qs) {
+static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   segment_t s;
   int tu, tl, sk, tfirst, tlast;
   int tfirstr = 0, tlastr = 0, tfirstl = 0, tlastl = 0;
@@ -465,19 +471,19 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnode_t *qs) {
       i2 = newnode();		/* Lower trapezoid sink */
       sk = tr->data[tu].sink;
 
-      qs[sk].nodetype = T_Y;
-      qs[sk].yval = s.v0;
-      qs[sk].segnum = segnum;	/* not really reqd ... maybe later */
-      qs[sk].left = i2;
-      qs[sk].right = i1;
+      qs->data[sk].nodetype = T_Y;
+      qs->data[sk].yval = s.v0;
+      qs->data[sk].segnum = segnum;	/* not really reqd ... maybe later */
+      qs->data[sk].left = i2;
+      qs->data[sk].right = i1;
 
-      qs[i1].nodetype = T_SINK;
-      qs[i1].trnum = tu;
-      qs[i1].parent = sk;
+      qs->data[i1].nodetype = T_SINK;
+      qs->data[i1].trnum = tu;
+      qs->data[i1].parent = sk;
 
-      qs[i2].nodetype = T_SINK;
-      qs[i2].trnum = tl;
-      qs[i2].parent = sk;
+      qs->data[i2].nodetype = T_SINK;
+      qs->data[i2].trnum = tl;
+      qs->data[i2].parent = sk;
 
       tr->data[tu].sink = i1;
       tr->data[tl].sink = i2;
@@ -523,19 +529,19 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnode_t *qs) {
       i2 = newnode();		/* Lower trapezoid sink */
       sk = tr->data[tu].sink;
 
-      qs[sk].nodetype = T_Y;
-      qs[sk].yval = s.v1;
-      qs[sk].segnum = segnum;	/* not really reqd ... maybe later */
-      qs[sk].left = i2;
-      qs[sk].right = i1;
+      qs->data[sk].nodetype = T_Y;
+      qs->data[sk].yval = s.v1;
+      qs->data[sk].segnum = segnum;	/* not really reqd ... maybe later */
+      qs->data[sk].left = i2;
+      qs->data[sk].right = i1;
 
-      qs[i1].nodetype = T_SINK;
-      qs[i1].trnum = tu;
-      qs[i1].parent = sk;
+      qs->data[i1].nodetype = T_SINK;
+      qs->data[i1].trnum = tu;
+      qs->data[i1].parent = sk;
 
-      qs[i2].nodetype = T_SINK;
-      qs[i2].trnum = tl;
-      qs[i2].parent = sk;
+      qs->data[i2].nodetype = T_SINK;
+      qs->data[i2].trnum = tl;
+      qs->data[i2].parent = sk;
 
       tr->data[tu].sink = i1;
       tr->data[tl].sink = i2;
@@ -561,19 +567,19 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnode_t *qs) {
       i1 = newnode();		/* left trapezoid sink */
       i2 = newnode();		/* right trapezoid sink */
 
-      qs[sk].nodetype = T_X;
-      qs[sk].segnum = segnum;
-      qs[sk].left = i1;
-      qs[sk].right = i2;
+      qs->data[sk].nodetype = T_X;
+      qs->data[sk].segnum = segnum;
+      qs->data[sk].left = i1;
+      qs->data[sk].right = i2;
 
-      qs[i1].nodetype = T_SINK;	/* left trapezoid (use existing one) */
-      qs[i1].trnum = t;
-      qs[i1].parent = sk;
+      qs->data[i1].nodetype = T_SINK;	/* left trapezoid (use existing one) */
+      qs->data[i1].trnum = t;
+      qs->data[i1].parent = sk;
 
-      qs[i2].nodetype = T_SINK;	/* right trapezoid (allocate new) */
-      qs[i2].trnum = tn = newtrap(tr);
+      qs->data[i2].nodetype = T_SINK;	/* right trapezoid (allocate new) */
+      qs->data[i2].trnum = tn = newtrap(tr);
       tr->data[tn].state = ST_VALID;
-      qs[i2].parent = sk;
+      qs->data[i2].parent = sk;
 
       if (t == tfirst)
 	tfirstr = tn;
@@ -974,7 +980,7 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnode_t *qs) {
  * the segment is inserted into the trapezoidation subsequently
  */
 static void
-find_new_roots(int segnum, segment_t *seg, traps_t *tr, qnode_t *qs) {
+find_new_roots(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   segment_t *s = &seg[segnum];
 
   if (s->is_inserted) return;
@@ -1015,33 +1021,33 @@ construct_trapezoids(int nseg, segment_t *seg, int *permute, traps_t* tr) {
     int i;
     int root, h;
     int segi = 1;
-    qnode_t* qs;
 
     QSIZE = 2 * tr->length;
-    qs = gv_calloc(2 * tr->length, sizeof(qnode_t));
+    qnodes_t qs = {.length = 2 * tr->length,
+                   .data = gv_calloc(2 * tr->length, sizeof(qnode_t))};
     q_idx = tr_idx = 1;
     memset(tr->data, 0, tr->length * sizeof(trap_t));
 
   /* Add the first segment and get the query structure and trapezoid */
   /* list initialised */
 
-    root = init_query_structure(permute[segi++], seg, tr, qs);
+    root = init_query_structure(permute[segi++], seg, tr, &qs);
 
     for (i = 1; i <= nseg; i++)
 	seg[i].root0 = seg[i].root1 = root;
 
     for (h = 1; h <= math_logstar_n(nseg); h++) {
 	for (i = math_N(nseg, h -1) + 1; i <= math_N(nseg, h); i++)
-	    add_segment(permute[segi++], seg, tr, qs);
+	    add_segment(permute[segi++], seg, tr, &qs);
 
       /* Find a new root for each of the segment endpoints */
 	for (i = 1; i <= nseg; i++)
-	    find_new_roots(i, seg, tr, qs);
+	    find_new_roots(i, seg, tr, &qs);
     }
 
     for (i = math_N(nseg, math_logstar_n(nseg)) + 1; i <= nseg; i++)
-	add_segment(permute[segi++], seg, tr, qs);
+	add_segment(permute[segi++], seg, tr, &qs);
 
-    free (qs);
+    free(qs.data);
     return tr_idx;
 }
