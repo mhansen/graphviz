@@ -596,16 +596,15 @@ monotonate_trapezoids(int nsegs, segment_t *seg, traps_t *tr,
 {
     int i, size;
     int tr_start;
-    int tr_size = TRSIZE(nsegs);
-    int* visited = gv_calloc(tr_size, sizeof(int));
+    int* visited = gv_calloc(tr->length, sizeof(int));
 
-    mchain = gv_calloc(tr_size, sizeof(monchain_t));
+    mchain = gv_calloc(tr->length, sizeof(monchain_t));
     vert = gv_calloc(nsegs + 1, sizeof(vertexchain_t));
     mon = gv_calloc(nsegs, sizeof(int));
 
   /* First locate a trapezoid which lies inside the polygon */
   /* and which is triangular */
-    for (i = 0; i < TRSIZE(nsegs); i++)
+    for (i = 0; i < tr->length; i++)
 	if (inside_polygon(&tr->data[i], seg)) break;
     tr_start = i;
   
