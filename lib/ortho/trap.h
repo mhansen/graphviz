@@ -19,6 +19,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stddef.h>
 
 /* Segment attributes */
 
@@ -42,6 +43,12 @@ typedef struct {
   int usave, uside;     /* I forgot what this means */
   int state;
 } trap_t; 
+
+/// an array of trapezoids
+typedef struct {
+  size_t length;
+  trap_t *data;
+} traps_t;
 
 #define ST_VALID 1      /* for trapezium state */
 #define ST_INVALID 2
@@ -76,4 +83,4 @@ static inline int dfp_cmp(double f1, double f2) {
 #define _greater_than(v0, v1) \
   (((v0)->y > (v1)->y + C_EPS) ? true : (((v0)->y < (v1)->y - C_EPS) ? false : ((v0)->x > (v1)->x)))
 
-extern int construct_trapezoids(int, segment_t*, int*, int, trap_t*);
+extern int construct_trapezoids(int, segment_t*, int*, traps_t *tr);

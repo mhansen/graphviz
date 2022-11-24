@@ -313,10 +313,9 @@ make_new_monotone_poly (int mcur, int v0, int v1)
 }
 
 /* recursively visit all the trapezoids */
-static int
-traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* tr,
-    int mcur, int trnum, int from, int flip, int dir)
-{
+static int traverse_polygon(int *visited, boxf *decomp, int size,
+                            segment_t *seg, traps_t *tr, int mcur, int trnum,
+                            int from, int flip, int dir) {
   trap_t *t;
   int mnew;
   int v0, v1;
@@ -324,7 +323,7 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
   if (trnum <= 0 || visited[trnum])
     return size;
 
-  t = &tr[trnum];
+  t = &tr->data[trnum];
 
   visited[trnum] = TRUE;
   
@@ -358,7 +357,7 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
     {
       if (t->d0 > 0 && t->d1 > 0) /* downward opening triangle */
 	{
-	  v0 = tr[t->d1].lseg;
+	  v0 = tr->data[t->d1].lseg;
 	  v1 = t->lseg;
 	  if (from == t->d1)
 	    {
@@ -388,7 +387,7 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
       if (t->u0 > 0 && t->u1 > 0) /* upward opening triangle */
 	{
 	  v0 = t->rseg;
-	  v1 = tr[t->u0].rseg;
+	  v1 = tr->data[t->u0].rseg;
 	  if (from == t->u1)
 	    {
 	      mnew = make_new_monotone_poly(mcur, v1, v0);
@@ -416,8 +415,8 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
     {
       if (t->d0 > 0 && t->d1 > 0) /* downward + upward cusps */
 	{
-	  v0 = tr[t->d1].lseg;
-	  v1 = tr[t->u0].rseg;
+	  v0 = tr->data[t->d1].lseg;
+	  v1 = tr->data[t->u0].rseg;
 	  if ((dir == TR_FROM_DN && t->d1 == from) ||
 	      (dir == TR_FROM_UP && t->u1 == from))
 	    {
@@ -440,7 +439,7 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
 	{
 	  if (_equal_to(&t->lo, &seg[t->lseg].v1))
 	    {
-	      v0 = tr[t->u0].rseg;
+	      v0 = tr->data[t->u0].rseg;
 	      v1 = seg[t->lseg].next;
 
 	      if (dir == TR_FROM_UP && t->u0 == from)
@@ -463,7 +462,7 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
 	  else
 	    {
 	      v0 = t->rseg;
-	      v1 = tr[t->u0].rseg;	
+	      v1 = tr->data[t->u0].rseg;	
 	      if (dir == TR_FROM_UP && t->u1 == from)
 		{
 		  mnew = make_new_monotone_poly(mcur, v1, v0);
@@ -489,7 +488,7 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
 	{
 	  if (_equal_to(&t->hi, &seg[t->lseg].v0))
 	    {
-	      v0 = tr[t->d1].lseg;
+	      v0 = tr->data[t->d1].lseg;
 	      v1 = t->lseg;
 	      if (!(dir == TR_FROM_DN && t->d0 == from))
 		{
@@ -510,7 +509,7 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
 	    }
 	  else
 	    {
-	      v0 = tr[t->d1].lseg;
+	      v0 = tr->data[t->d1].lseg;
 	      v1 = seg[t->rseg].next;
 
 	      if (dir == TR_FROM_DN && t->d1 == from)
@@ -592,7 +591,7 @@ traverse_polygon (int* visited, boxf* decomp, int size, segment_t* seg, trap_t* 
 }
 
 static int
-monotonate_trapezoids(int nsegs, segment_t*seg, trap_t* tr, 
+monotonate_trapezoids(int nsegs, segment_t *seg, traps_t *tr, 
     int flip, boxf* decomp)
 {
     int i, size;
@@ -607,7 +606,7 @@ monotonate_trapezoids(int nsegs, segment_t*seg, trap_t* tr,
   /* First locate a trapezoid which lies inside the polygon */
   /* and which is triangular */
     for (i = 0; i < TRSIZE(nsegs); i++)
-	if (inside_polygon(&tr[i], seg)) break;
+	if (inside_polygon(&tr->data[i], seg)) break;
     tr_start = i;
   
   /* Initialise the mon data-structure and start spanning all the */
@@ -629,10 +628,12 @@ monotonate_trapezoids(int nsegs, segment_t*seg, trap_t* tr,
 				/* chain  */
   
   /* traverse the polygon */
-    if (tr[tr_start].u0 > 0)
-	size = traverse_polygon (visited, decomp, 0, seg, tr, 0, tr_start, tr[tr_start].u0, flip, TR_FROM_UP);
-    else if (tr[tr_start].d0 > 0)
-	size = traverse_polygon (visited, decomp, 0, seg, tr, 0, tr_start, tr[tr_start].d0, flip, TR_FROM_DN);
+    if (tr->data[tr_start].u0 > 0)
+	size = traverse_polygon(visited, decomp, 0, seg, tr, 0, tr_start,
+	                        tr->data[tr_start].u0, flip, TR_FROM_UP);
+    else if (tr->data[tr_start].d0 > 0)
+	size = traverse_polygon(visited, decomp, 0, seg, tr, 0, tr_start,
+	                        tr->data[tr_start].d0, flip, TR_FROM_DN);
     else
 	size = 0;
   
@@ -699,7 +700,8 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     int i, j, cnt = 0;
     boxf* rs;
     int ntraps = TRSIZE(nsegs);
-    trap_t* trs = gv_calloc(ntraps, sizeof(trap_t));
+    traps_t trs = {.length = ntraps,
+                    .data = gv_calloc(ntraps, sizeof(trap_t))};
     boxf* hor_decomp = gv_calloc(ntraps, sizeof(boxf));
     boxf* vert_decomp = gv_calloc(ntraps, sizeof(boxf));
     int nt;
@@ -718,19 +720,19 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     }
     srand48(173);
     generateRandomOrdering (nsegs, permute);
-    nt = construct_trapezoids(nsegs, segs, permute, ntraps, trs);
+    nt = construct_trapezoids(nsegs, segs, permute, &trs);
     if (DEBUG) {
 	fprintf (stderr, "hor traps = %d\n", nt);
     }
-    hd_size = monotonate_trapezoids (nsegs, segs, trs, 0, hor_decomp);
+    hd_size = monotonate_trapezoids(nsegs, segs, &trs, 0, hor_decomp);
 
     genSegments (cells, ncells, bb, segs, 1);
     generateRandomOrdering (nsegs, permute);
-    nt = construct_trapezoids(nsegs, segs, permute, ntraps, trs);
+    nt = construct_trapezoids(nsegs, segs, permute, &trs);
     if (DEBUG) {
 	fprintf (stderr, "ver traps = %d\n", nt);
     }
-    vd_size = monotonate_trapezoids (nsegs, segs, trs, 1, vert_decomp);
+    vd_size = monotonate_trapezoids(nsegs, segs, &trs, 1, vert_decomp);
 
     rs = gv_calloc(hd_size * vd_size, sizeof(boxf));
     for (i=0; i<vd_size; i++) 
@@ -741,7 +743,7 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     rs = gv_recalloc(rs, hd_size * vd_size, cnt, sizeof(boxf));
     free (segs);
     free (permute);
-    free (trs);
+    free(trs.data);
     free (hor_decomp);
     free (vert_decomp);
     *nrects = cnt;
