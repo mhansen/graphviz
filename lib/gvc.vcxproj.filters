@@ -18,6 +18,9 @@
     <ClInclude Include="common\arith.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="common\boxes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="common\color.h">
       <Filter>Header Files</Filter>
     </ClInclude>

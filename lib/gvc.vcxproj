@@ -112,6 +112,7 @@ python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\colo
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="common\arith.h" />
+    <ClInclude Include="common\boxes.h" />
     <ClInclude Include="common\color.h" />
     <ClInclude Include="common\colorprocs.h" />
     <ClInclude Include="common\colortbl.h" />
