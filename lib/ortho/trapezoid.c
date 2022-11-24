@@ -1005,8 +1005,7 @@ static int math_N(int n, int h)
 }
 
 /* Main routine to perform trapezoidation */
-int
-construct_trapezoids(int nseg, segment_t *seg, int *permute, traps_t* tr) {
+traps_t construct_trapezoids(int nseg, segment_t *seg, int *permute) {
     int i;
     int root, h;
     int segi = 1;
@@ -1015,26 +1014,30 @@ construct_trapezoids(int nseg, segment_t *seg, int *permute, traps_t* tr) {
     // sentinel.
     qnodes_t qs = {.length = 1, .data = gv_calloc(1, sizeof(qnode_t))};
 
+    // First trapezoid is reserved as a sentinel. We will append later
+    // trapezoids by expanding this on-demand.
+    traps_t tr = {.length = 1, .data = gv_calloc(1, sizeof(trap_t))};
+
   /* Add the first segment and get the query structure and trapezoid */
   /* list initialised */
 
-    root = init_query_structure(permute[segi++], seg, tr, &qs);
+    root = init_query_structure(permute[segi++], seg, &tr, &qs);
 
     for (i = 1; i <= nseg; i++)
 	seg[i].root0 = seg[i].root1 = root;
 
     for (h = 1; h <= math_logstar_n(nseg); h++) {
 	for (i = math_N(nseg, h -1) + 1; i <= math_N(nseg, h); i++)
-	    add_segment(permute[segi++], seg, tr, &qs);
+	    add_segment(permute[segi++], seg, &tr, &qs);
 
       /* Find a new root for each of the segment endpoints */
 	for (i = 1; i <= nseg; i++)
-	    find_new_roots(i, seg, tr, &qs);
+	    find_new_roots(i, seg, &tr, &qs);
     }
 
     for (i = math_N(nseg, math_logstar_n(nseg)) + 1; i <= nseg; i++)
-	add_segment(permute[segi++], seg, tr, &qs);
+	add_segment(permute[segi++], seg, &tr, &qs);
 
     free(qs.data);
-    return tr->length;
+    return tr;
 }

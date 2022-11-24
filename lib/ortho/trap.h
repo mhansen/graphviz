@@ -83,4 +83,4 @@ static inline int dfp_cmp(double f1, double f2) {
 #define _greater_than(v0, v1) \
   (((v0)->y > (v1)->y + C_EPS) ? true : (((v0)->y < (v1)->y - C_EPS) ? false : ((v0)->x > (v1)->x)))
 
-extern int construct_trapezoids(int, segment_t*, int*, traps_t *tr);
+extern traps_t construct_trapezoids(int, segment_t*, int*);

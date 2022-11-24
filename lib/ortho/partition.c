@@ -12,6 +12,7 @@
 #include <common/boxes.h>
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
+#include <cgraph/prisize_t.h>
 #include <ortho/partition.h>
 #include <ortho/trap.h>
 #include <math.h>
@@ -690,12 +691,6 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     segment_t* segs = gv_calloc(nsegs + 1, sizeof(segment_t));
     int* permute = gv_calloc(nsegs + 1, sizeof(int));
 
-    // First trapezoid is reserved as a sentinel. We will append later
-    // trapezoids by expanding this on-demand.
-    traps_t trs = {.length = 1, .data = gv_calloc(1, sizeof(trap_t))};
-
-    int nt;
-
     if (DEBUG) {
 	fprintf (stderr, "cells = %d segs = %d traps = dynamic\n", ncells, nsegs);
     }
@@ -710,25 +705,23 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     }
     srand48(173);
     generateRandomOrdering (nsegs, permute);
-    nt = construct_trapezoids(nsegs, segs, permute, &trs);
+    traps_t hor_traps = construct_trapezoids(nsegs, segs, permute);
     if (DEBUG) {
-	fprintf (stderr, "hor traps = %d\n", nt);
+	fprintf (stderr, "hor traps = %" PRISIZE_T "\n", hor_traps.length);
     }
     boxes_t hor_decomp = {0};
-    monotonate_trapezoids(nsegs, segs, &trs, 0, &hor_decomp);
-
-    // reset trapezoid collection
-    free(trs.data);
-    trs = (traps_t){.length = 1, .data = gv_calloc(1, sizeof(trap_t))};
+    monotonate_trapezoids(nsegs, segs, &hor_traps, 0, &hor_decomp);
+    free(hor_traps.data);
 
     genSegments (cells, ncells, bb, segs, 1);
     generateRandomOrdering (nsegs, permute);
-    nt = construct_trapezoids(nsegs, segs, permute, &trs);
+    traps_t ver_traps = construct_trapezoids(nsegs, segs, permute);
     if (DEBUG) {
-	fprintf (stderr, "ver traps = %d\n", nt);
+	fprintf (stderr, "ver traps = %" PRISIZE_T "\n", ver_traps.length);
     }
     boxes_t vert_decomp = {0};
-    monotonate_trapezoids(nsegs, segs, &trs, 1, &vert_decomp);
+    monotonate_trapezoids(nsegs, segs, &ver_traps, 1, &vert_decomp);
+    free(ver_traps.data);
 
     boxes_t rs = {0};
     for (size_t i = 0; i < vert_decomp.size; ++i)
@@ -740,7 +733,6 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
 
     free (segs);
     free (permute);
-    free(trs.data);
     boxes_free(&hor_decomp);
     boxes_free(&vert_decomp);
     *nrects = rs.size;
