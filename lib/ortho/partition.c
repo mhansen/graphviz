@@ -690,8 +690,6 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     int nsegs = 4*(ncells+1);
     segment_t* segs = gv_calloc(nsegs + 1, sizeof(segment_t));
     int* permute = gv_calloc(nsegs + 1, sizeof(int));
-    int cnt = 0;
-    boxf* rs;
     int ntraps = TRSIZE(nsegs);
     traps_t trs = {.length = ntraps,
                     .data = gv_calloc(ntraps, sizeof(trap_t))};
@@ -727,18 +725,19 @@ partition (cell* cells, int ncells, int* nrects, boxf bb)
     boxes_t vert_decomp = {0};
     monotonate_trapezoids(nsegs, segs, &trs, 1, &vert_decomp);
 
-    rs = gv_calloc(hor_decomp.size * vert_decomp.size, sizeof(boxf));
+    boxes_t rs = {0};
     for (size_t i = 0; i < vert_decomp.size; ++i)
-	for (size_t j = 0; j < hor_decomp.size; ++j)
-	    if (rectIntersect(&rs[cnt], &vert_decomp.data[i], &hor_decomp.data[j]))
-		cnt++;
+	for (size_t j = 0; j < hor_decomp.size; ++j) {
+	    boxf newbox = {{0}};
+	    if (rectIntersect(&newbox, &vert_decomp.data[i], &hor_decomp.data[j]))
+		boxes_append(&rs, newbox);
+	}
 
-    rs = gv_recalloc(rs, hor_decomp.size * vert_decomp.size, cnt, sizeof(boxf));
     free (segs);
     free (permute);
     free(trs.data);
     boxes_free(&hor_decomp);
     boxes_free(&vert_decomp);
-    *nrects = cnt;
-    return rs;
+    *nrects = rs.size;
+    return rs.data;
 }
