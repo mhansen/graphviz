@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include <cgraph/alloc.h>
+#include <cgraph/bitarray.h>
 #include <ortho/partition.h>
 #include <ortho/trap.h>
 #include <math.h>
@@ -313,19 +314,19 @@ make_new_monotone_poly (int mcur, int v0, int v1)
 }
 
 /* recursively visit all the trapezoids */
-static int traverse_polygon(int *visited, boxf *decomp, int size,
+static int traverse_polygon(bitarray_t *visited, boxf *decomp, int size,
                             segment_t *seg, traps_t *tr, int mcur, int trnum,
                             int from, int flip, int dir) {
   trap_t *t;
   int mnew;
   int v0, v1;
 
-  if (trnum <= 0 || visited[trnum])
+  if (trnum <= 0 || bitarray_get(*visited, trnum))
     return size;
 
   t = &tr->data[trnum];
 
-  visited[trnum] = TRUE;
+  bitarray_set(visited, trnum, true);
   
   if (t->hi.y > t->lo.y + C_EPS && FP_EQUAL(seg[t->lseg].v0.x, seg[t->lseg].v1.x) &&
       FP_EQUAL(seg[t->rseg].v0.x, seg[t->rseg].v1.x)) {
@@ -596,7 +597,7 @@ monotonate_trapezoids(int nsegs, segment_t *seg, traps_t *tr,
 {
     int i, size;
     int tr_start;
-    int* visited = gv_calloc(tr->length, sizeof(int));
+    bitarray_t visited = bitarray_new_or_exit(tr->length);
 
     mchain = gv_calloc(tr->length, sizeof(monchain_t));
     vert = gv_calloc(nsegs + 1, sizeof(vertexchain_t));
@@ -628,15 +629,15 @@ monotonate_trapezoids(int nsegs, segment_t *seg, traps_t *tr,
   
   /* traverse the polygon */
     if (tr->data[tr_start].u0 > 0)
-	size = traverse_polygon(visited, decomp, 0, seg, tr, 0, tr_start,
+	size = traverse_polygon(&visited, decomp, 0, seg, tr, 0, tr_start,
 	                        tr->data[tr_start].u0, flip, TR_FROM_UP);
     else if (tr->data[tr_start].d0 > 0)
-	size = traverse_polygon(visited, decomp, 0, seg, tr, 0, tr_start,
+	size = traverse_polygon(&visited, decomp, 0, seg, tr, 0, tr_start,
 	                        tr->data[tr_start].d0, flip, TR_FROM_DN);
     else
 	size = 0;
   
-    free (visited);
+    bitarray_reset(&visited);
     free (mchain);
     free (vert);
     free (mon);
