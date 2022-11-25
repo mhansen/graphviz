@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -27,7 +29,7 @@ extern "C" {
     extern double xmin, xmax, ymin, ymax;	/* extreme x,y values of sites */
     extern double deltax, deltay;	/* xmax - xmin, ymax - ymin */
 
-    extern int nsites;		/* Number of sites */
+    extern size_t nsites; // Number of sites
     extern int sqrt_nsites;
 
     extern void geominit(void);

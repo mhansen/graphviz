@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/prisize_t.h>
 #include <common/render.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -124,10 +124,15 @@ void PQinitialize(void)
 
 static void PQdumphe(Halfedge * p)
 {
-    printf("  [%p] %p %p %d %d %d %d %f\n",
+    printf("  [%p] %p %p %d %d %d ",
 	   p, p->ELleft, p->ELright, p->ELedge->edgenbr,
-	   p->ELrefcnt, p->ELpm, p->vertex ? p->vertex->sitenbr : -1,
-	   p->ystar);
+	   p->ELrefcnt, p->ELpm);
+    if (p->vertex != 0) {
+      printf("%" PRISIZE_T, p->vertex->sitenbr);
+    } else {
+      printf("-1");
+    }
+    printf(" %f\n", p->ystar);
 }
 
 void PQdump(void)

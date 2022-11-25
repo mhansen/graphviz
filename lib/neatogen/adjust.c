@@ -13,10 +13,13 @@
  * order to reduce/remove node overlaps.
  */
 
+#include <assert.h>
+#include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <cgraph/agxbuf.h>
 #include <common/utils.h>
 #include <ctype.h>
+#include <float.h>
 #include <math.h>
 #include <neatogen/voronoi.h>
 #include <neatogen/info.h>
@@ -34,6 +37,7 @@
 #include <neatogen/quad_prog_vpsc.h>
 #endif
 #include <cgraph/strcasecmp.h>
+#include <stddef.h>
 
 #define SEPFACT         0.8f  /* default esep/sep */
 
@@ -47,7 +51,7 @@ static double incr = 0.05;	/* Increase bounding box by adding
 static int iterations = -1;	/* Number of iterations */
 static int useIter = 0;		/* Use specified number of iterations */
 
-static int doAll = 0;		/* Move all nodes, regardless of overlap */
+static bool doAll = false; // Move all nodes, regardless of overlap
 static Site **sites;		/* Array of pointers to sites; used in qsort */
 static Site **endSite;		/* Sentinel on sites array */
 static Point nw, ne, sw, se;	/* Corners of clipping window */
@@ -71,12 +75,8 @@ static void setBoundBox(Point * ll, Point * ur)
   */
 static void freeNodes(void)
 {
-    int i;
-    Info_t *ip = nodeInfo;
-
-    for (i = 0; i < nsites; i++) {
-	breakPoly(&ip->poly);
-	ip++;
+    for (size_t i = 0; i < nsites; i++) {
+	breakPoly(&nodeInfo[i].poly);
     }
     polyFree();
     infoinit();			/* Free vertices */
@@ -95,19 +95,16 @@ static void chkBoundBox(Agraph_t * graph)
 {
     Point ll, ur;
 
-    Info_t *ip = nodeInfo;
-    Poly *pp = &ip->poly;
-    double x = ip->site.coord.x;
-    double y = ip->site.coord.y;
-    double x_min = pp->origin.x + x;
-    double y_min = pp->origin.y + y;
-    double x_max = pp->corner.x + x;
-    double y_max = pp->corner.y + y;
-    for (int i = 1; i < nsites; i++) {
-	ip++;
-	pp = &ip->poly;
-	x = ip->site.coord.x;
-	y = ip->site.coord.y;
+    double x_min = DBL_MAX;
+    double y_min = DBL_MAX;
+    double x_max = -DBL_MAX;
+    double y_max = -DBL_MAX;
+    assert(nsites > 0);
+    for (size_t i = 0; i < nsites; ++i) {
+	Info_t *ip = &nodeInfo[i];
+	Poly *pp = &ip->poly;
+	double x = ip->site.coord.x;
+	double y = ip->site.coord.y;
 	x_min = fmin(x_min, pp->origin.x + x);
 	y_min = fmin(y_min, pp->origin.y + y);
 	x_max = fmax(x_max, pp->corner.x + x);
@@ -134,18 +131,16 @@ static void chkBoundBox(Agraph_t * graph)
 static int makeInfo(Agraph_t * graph)
 {
     Agnode_t *node;
-    int i;
-    Info_t *ip;
     expand_t pmargin;
     int (*polyf)(Poly *, Agnode_t *, float, float);
 
-    nsites = agnnodes(graph);
+    assert(agnnodes(graph) >= 0);
+    nsites = (size_t)agnnodes(graph);
     geominit();
 
-    nodeInfo = N_GNEW(nsites, Info_t);
+    nodeInfo = gv_calloc(nsites, sizeof(Info_t));
 
     node = agfstnode(graph);
-    ip = nodeInfo;
 
     pmargin = sepFactor (graph);
 
@@ -157,7 +152,8 @@ static int makeInfo(Agraph_t * graph)
     }
 	
     else polyf = makePoly;
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
+	Info_t *ip = &nodeInfo[i];
 	ip->site.coord.x = ND_pos(node)[0];
 	ip->site.coord.y = ND_pos(node)[1];
 
@@ -172,7 +168,6 @@ static int makeInfo(Agraph_t * graph)
 	ip->node = node;
 	ip->verts = NULL;
 	node = agnxtnode(graph, node);
-	ip++;
     }
     return 0;
 }
@@ -200,23 +195,17 @@ static int scomp(const void *S1, const void *S2)
   */
 static void sortSites(void)
 {
-    int i;
-    Site **sp;
-    Info_t *ip;
-
     if (sites == 0) {
-	sites = N_GNEW(nsites, Site *);
+	sites = gv_calloc(nsites, sizeof(Site*));
 	endSite = sites + nsites;
     }
 
-    sp = sites;
-    ip = nodeInfo;
     infoinit();
-    for (i = 0; i < nsites; i++) {
-	*sp++ = &ip->site;
+    for (size_t i = 0; i < nsites; i++) {
+	Info_t *ip = &nodeInfo[i];
+	sites[i] = &ip->site;
 	ip->verts = NULL;
 	ip->site.refcnt = 1;
-	ip++;
     }
 
     qsort(sites, nsites, sizeof(Site *), scomp);
@@ -228,15 +217,14 @@ static void sortSites(void)
 
 static void geomUpdate(int doSort)
 {
-    int i;
-
     if (doSort)
 	sortSites();
 
     /* compute ranges */
-    xmin = sites[0]->coord.x;
-    xmax = sites[0]->coord.x;
-    for (i = 1; i < nsites; i++) {
+    xmin = DBL_MAX;
+    xmax = -DBL_MAX;
+    assert(nsites > 0);
+    for (size_t i = 0; i < nsites; ++i) {
 	xmin = fmin(xmin, sites[i]->coord.x);
 	xmax = fmax(xmax, sites[i]->coord.x);
     }
@@ -318,24 +306,20 @@ static void rmEquality(void)
 static int countOverlap(int iter)
 {
     int count = 0;
-    int i, j;
-    Info_t *ip = nodeInfo;
-    Info_t *jp;
 
-    for (i = 0; i < nsites; i++)
+    for (size_t i = 0; i < nsites; i++)
 	nodeInfo[i].overlaps = 0;
 
-    for (i = 0; i < nsites - 1; i++) {
-	jp = ip + 1;
-	for (j = i + 1; j < nsites; j++) {
+    for (size_t i = 0; i < nsites - 1; i++) {
+	Info_t *ip = &nodeInfo[i];
+	for (size_t j = i + 1; j < nsites; j++) {
+	    Info_t *jp = &nodeInfo[j];
 	    if (polyOverlap(ip->site.coord, &ip->poly, jp->site.coord, &jp->poly)) {
 		count++;
 		ip->overlaps = 1;
 		jp->overlaps = 1;
 	    }
-	    jp++;
 	}
-	ip++;
     }
 
     if (Verbose > 1)
@@ -431,10 +415,9 @@ static void addCorners(void)
     double sed = dist_2(&ip->site.coord, &se);
     double ned = dist_2(&ip->site.coord, &ne);
     double d;
-    int i;
 
-    ip++;
-    for (i = 1; i < nsites; i++) {
+    for (size_t i = 1; i < nsites; i++) {
+	ip = &nodeInfo[i];
 	d = dist_2(&ip->site.coord, &sw);
 	if (d < swd) {
 	    swd = d;
@@ -455,7 +438,6 @@ static void addCorners(void)
 	    ned = d;
 	    nes = ip;
 	}
-	ip++;
     }
 
     addVertex(&sws->site, sw.x, sw.y);
@@ -474,14 +456,11 @@ static void addCorners(void)
   */
 static void newPos(void)
 {
-    int i;
-    Info_t *ip = nodeInfo;
-
     addCorners();
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
+	Info_t *ip = &nodeInfo[i];
 	if (doAll || ip->overlaps)
 	    newpos(ip);
-	ip++;
     }
 }
 
@@ -534,10 +513,10 @@ static int vAdjust(void)
 
 	switch (badLevel) {
 	case 0:
-	    doAll = 1;
+	    doAll = true;
 	    break;
 	default:
-	    doAll = 1;
+	    doAll = true;
 	    increaseCnt++;
 	    increaseBoundBox();
 	    break;
@@ -558,14 +537,12 @@ static int vAdjust(void)
 
 static double rePos(void)
 {
-    int i;
-    Info_t *ip = nodeInfo;
     double f = 1.0 + incr;
 
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
+	Info_t *ip = &nodeInfo[i];
 	ip->site.coord.x *= f;
 	ip->site.coord.y *= f;
-	ip++;
     }
     return f;
 }
@@ -606,14 +583,10 @@ static int sAdjust(void)
   */
 static void updateGraph(void)
 {
-    int i;
-    Info_t *ip;
-
-    ip = nodeInfo;
-    for (i = 0; i < nsites; i++) {
+    for (size_t i = 0; i < nsites; i++) {
+	Info_t *ip = &nodeInfo[i];
 	ND_pos(ip->node)[0] = ip->site.coord.x;
 	ND_pos(ip->node)[1] = ip->site.coord.y;
-	ip++;
     }
 }
 
@@ -628,9 +601,8 @@ static void updateGraph(void)
 double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
 {
     Agnode_t *n;
-    double *sizes = N_GNEW(Ndim * agnnodes(g), double);
+    double *sizes = gv_calloc(Ndim * agnnodes(g), sizeof(double));
     int i, nedge_nodes = 0;
-    int* elabs;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (elabels && IS_LNODE(n)) nedge_nodes++;
@@ -641,7 +613,7 @@ double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
     }
 
     if (elabels && nedge_nodes) {
-	elabs = N_GNEW(nedge_nodes, int);
+	int* elabs = gv_calloc(nedge_nodes, sizeof(int));
 	nedge_nodes = 0;
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    if (IS_LNODE(n))
@@ -667,9 +639,6 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
     int nnodes;
     int nedges;
     int i, row;
-    int *I;
-    int *J;
-    double *val;
     double v;
     int type = MATRIX_TYPE_REAL;
     Agsym_t* symD = NULL;
@@ -685,14 +654,14 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
 	ND_id(n) = i++;
 
-    I = N_GNEW(nedges, int);
-    J = N_GNEW(nedges, int);
-    val = N_GNEW(nedges, double);
+    int *I = gv_calloc(nedges, sizeof(int));
+    int *J = gv_calloc(nedges, sizeof(int));
+    double *val = gv_calloc(nedges, sizeof(double));
 
     sym = agfindedgeattr(g, "weight");
     if (D) {
 	symD = agfindedgeattr(g, "len");
-	valD = N_NEW(nedges, double);
+	valD = gv_calloc(nedges, sizeof(double));
     }
 
     i = 0;
@@ -733,7 +702,7 @@ fdpAdjust (graph_t* g, adjust_data* am)
     SparseMatrix A0 = makeMatrix(g, NULL);
     SparseMatrix A = A0;
     double *sizes;
-    double *pos = N_NEW(Ndim * agnnodes(g), double);
+    double *pos = gv_calloc(Ndim * agnnodes(g), sizeof(double));
     Agnode_t *n;
     int flag = 0, i;
     expand_t sep = sepFactor(g);
@@ -789,9 +758,9 @@ vpscAdjust(graph_t* G)
     enum { dim = 2 };
     int nnodes = agnnodes(G);
     ipsep_options opt;
-    pointf* nsize = N_GNEW(nnodes, pointf);
+    pointf *nsize = gv_calloc(nnodes, sizeof(pointf));
     float* coords[dim];
-    float* f_storage = N_GNEW(dim * nnodes, float);
+    float *f_storage = gv_calloc(dim * nnodes, sizeof(float));
     int i, j;
     Agnode_t* v;
     expand_t exp_margin;
@@ -813,7 +782,7 @@ vpscAdjust(graph_t* G)
     opt.diredges = 0;
     opt.edge_gap = 0;
     opt.noverlap = 2;
-    opt.clusters = NEW(cluster_data);
+    opt.clusters = gv_alloc(sizeof(cluster_data));
     exp_margin = sepFactor (G);
  	/* Multiply by 2 since opt.gap is the gap size, not the margin */
     if (exp_margin.doAdd) {
@@ -939,7 +908,7 @@ typedef struct {
  * adjustMode[0] corresponds to overlap=true
  * adjustMode[1] corresponds to overlap=false
  */
-static lookup_t adjustMode[] = {
+static const lookup_t adjustMode[] = {
     ITEM(AM_NONE, "", "none"),
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
     ITEM(AM_PRISM, "prism", "prism"),
@@ -987,7 +956,7 @@ setPrismValues (Agraph_t* g, char* s, adjust_data* dp)
  */
 static adjust_data *getAdjustMode(Agraph_t* g, char *s, adjust_data* dp)
 {
-    lookup_t *ap = adjustMode + 1;
+    const lookup_t *ap = adjustMode + 1;
     if (s == NULL || *s == '\0') {
 	dp->mode = adjustMode[0].mode;
 	dp->print = adjustMode[0].print;
@@ -1038,7 +1007,7 @@ adjust_data *graphAdjustMode(graph_t *G, adjust_data* dp, char* dflt)
     return getAdjustMode (G, am ? am : (dflt ? dflt : ""), dp);
 }
 
-#define ISZERO(d) ((fabs(d) < 0.000000001))
+#define ISZERO(d) (fabs(d) < 0.000000001)
 
 /* simpleScaling:
  */
@@ -1212,12 +1181,12 @@ parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
 	if (i == 1) y = x;
 	if (pp->doAdd) {
 	    if (sepfact > 1) {
-		pp->x = MIN(dflt,x/sepfact);
-		pp->y = MIN(dflt,y/sepfact);
+		pp->x = fminf(dflt, x/sepfact);
+		pp->y = fminf(dflt, y/sepfact);
 	    }
 	    else if (sepfact < 1) {
-		pp->x = MAX(dflt,x/sepfact);
-		pp->y = MAX(dflt,y/sepfact);
+		pp->x = fmaxf(dflt, x/sepfact);
+		pp->y = fmaxf(dflt, y/sepfact);
 	    }
 	    else {
 		pp->x = x;
