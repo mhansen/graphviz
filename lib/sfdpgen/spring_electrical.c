@@ -661,8 +661,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   int iter = 0;
   int adaptive_cooling = ctrl->adaptive_cooling;
   QuadTree qt = NULL;
-  int nsupermax = 10;
-  double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts_avg = 0;
+  double nsuper_avg, counts_avg = 0;
   double *force;
 #ifdef TIME
   clock_t start, end, start0, start2;
@@ -682,9 +681,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
   if (n >= ctrl->quadtree_size) {
     qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
-    center = gv_calloc(nsupermax * dim, sizeof(double));
-    supernode_wgts = gv_calloc(nsupermax, sizeof(double));
-    distances = gv_calloc(nsupermax, sizeof(double));
   }
   *flag = 0;
   if (m != n) {
@@ -840,9 +836,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   free(xold);
   if (A != A0) SparseMatrix_delete(A);
   free(f);
-  free(center);
-  free(supernode_wgts);
-  free(distances);
   free(force);
 }
 
