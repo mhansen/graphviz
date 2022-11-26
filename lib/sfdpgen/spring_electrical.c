@@ -212,14 +212,14 @@ void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *widt
   xmax = xmin = x[0];
   ymax = ymin = x[1];
   for (i = 0; i < A->m; i++){
-    xmax = MAX(xmax, x[i*dim]);
-    xmin = MIN(xmin, x[i*dim]);
-    ymax = MAX(ymax, x[i*dim+1]);
-    ymin = MIN(ymin, x[i*dim+1]);
+    xmax = fmax(xmax, x[i*dim]);
+    xmin = fmin(xmin, x[i*dim]);
+    ymax = fmax(ymax, x[i*dim+1]);
+    ymin = fmin(ymin, x[i*dim+1]);
   }
   xsize = xmax-xmin;
   ysize = ymax-ymin;
-  xsize = MAX(xsize, ysize);
+  xsize = fmax(xsize, ysize);
 
   if (dim == 2){
     fprintf(fp,"Graphics[{GrayLevel[0.5],Line[{");
