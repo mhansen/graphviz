@@ -661,7 +661,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   int iter = 0;
   int adaptive_cooling = ctrl->adaptive_cooling;
   QuadTree qt = NULL;
-  double nsuper_avg, counts_avg = 0;
+  double counts_avg = 0;
   double *force;
 #ifdef TIME
   clock_t start, end, start0, start2;
@@ -725,7 +725,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
     memcpy(xold, x, sizeof(double)*dim*n);
     Fnorm0 = Fnorm;
     Fnorm = 0.;
-    nsuper_avg = 0;
 
 #ifdef TIME
     start2 = clock();
@@ -779,20 +778,19 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
     if (qt) {
       QuadTree_delete(qt);
-      nsuper_avg /= n;
       counts_avg /= n;
 #ifdef TIME
       qtree_cpu0 = qtree_cpu - qtree_cpu0;
       if (Verbose && 0) fprintf(stderr, "\n cpu this outer iter = %f, quadtree time = %f other time = %f\n",((double) (clock() - start2)) / CLOCKS_PER_SEC, qtree_cpu0,((double) (clock() - start2))/CLOCKS_PER_SEC - qtree_cpu0);
       qtree_cpu0 = qtree_cpu;
 #endif
-      if (Verbose && 0) fprintf(stderr, "nsuper_avg=%f, counts_avg = %f 2*nsuper+counts=%f\n",nsuper_avg,counts_avg, 2*nsuper_avg+counts_avg);
-      oned_optimizer_train(qtree_level_optimizer, 5*nsuper_avg + counts_avg);
+      if (Verbose && 0) fprintf(stderr, "nsuper_avg=0, counts_avg = %f 2*nsuper+counts=%f\n",counts_avg, counts_avg);
+      oned_optimizer_train(qtree_level_optimizer, counts_avg);
     }
 
 #ifdef ENERGY
     if (Verbose) {
-        fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nsuper = %d nz = %d  K = %f                                  ",iter, step, Fnorm, (int) nsuper_avg,A->nz,K);
+        fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nsuper = 0 nz = %d  K = %f                                  ",iter, step, Fnorm,A->nz,K);
         fprintf(stderr, "energy = %f\n",spring_electrical_energy(dim, A, x, p, CRK, KP));
     }
 #endif
@@ -820,7 +818,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
 #ifdef DEBUG_PRINT
     if (Verbose) {
-      fprintf(stderr, "iter = %d, step = %f Fnorm = %f nsuper = %d nz = %d  K = %f   ",iter, step, Fnorm, (int) nsuper_avg,A->nz,K);
+      fprintf(stderr, "iter = %d, step = %f Fnorm = %f nsuper = 0 nz = %d  K = %f   ",iter, step, Fnorm, A->nz,K);
     }
 #endif
 
