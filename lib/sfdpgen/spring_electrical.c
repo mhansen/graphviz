@@ -663,7 +663,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   double *force;
 #ifdef TIME
   clock_t start, end, start0, start2;
-  double qtree_cpu = 0;
   double total_cpu = 0;
   start0 = clock();
 #endif
@@ -812,7 +811,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
 #ifdef TIME
   total_cpu += ((double) (clock() - start0)) / CLOCKS_PER_SEC;
-  if (Verbose) fprintf(stderr, "time for supernode = %f, total cpu = %f\n",qtree_cpu, total_cpu);
+  if (Verbose) fprintf(stderr, "time for supernode = 0, total cpu = %f\n", total_cpu);
 #endif
 
  RETURN:
