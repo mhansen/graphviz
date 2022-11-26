@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.4)]
 
+### Fixed
+
+- The `alt` attributes are once again set in the cmap output. This was a
+  regression in Graphviz 7.0.2, that intentionally removed these but did not
+  account for the W3C specification making these attributes required when the
+  `href` attribute is set. #265, #2319
+
 ## [7.0.3] – 2022-11-26
 
 ### Changed
