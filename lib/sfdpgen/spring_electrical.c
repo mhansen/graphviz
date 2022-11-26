@@ -661,9 +661,8 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   int iter = 0;
   int adaptive_cooling = ctrl->adaptive_cooling;
   QuadTree qt = NULL;
-  int USE_QT = FALSE;
-  int nsuper = 0, nsupermax = 10;
-  double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0, counts_avg = 0;
+  int nsupermax = 10;
+  double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts_avg = 0;
   double *force;
 #ifdef TIME
   clock_t start, end, start0, start2;
@@ -682,13 +681,11 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   force = gv_calloc(n *dim, sizeof(double));
 
   if (n >= ctrl->quadtree_size) {
-    USE_QT = TRUE;
     qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
     center = gv_calloc(nsupermax * dim, sizeof(double));
     supernode_wgts = gv_calloc(nsupermax, sizeof(double));
     distances = gv_calloc(nsupermax, sizeof(double));
   }
-  USE_QT = FALSE;
   *flag = 0;
   if (m != n) {
     *flag = ERROR_NOT_SQUARE_MATRIX;
@@ -734,10 +731,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
     Fnorm = 0.;
     nsuper_avg = 0;
 
-    if (USE_QT) {
-      max_qtree_level = oned_optimizer_get(qtree_level_optimizer);
-      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
-    }
 #ifdef TIME
     start2 = clock();
 #endif
@@ -746,32 +739,11 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
     for (i = 0; i < n; i++){
       for (k = 0; k < dim; k++) f[k] = 0.;
      /* repulsive force K^(1 - p)/||x_i-x_j||^(1 - p) (x_i - x_j) */
-      if (USE_QT){
-#ifdef TIME
-	start = clock();
-#endif
-	QuadTree_get_supernodes(qt, ctrl->bh, &(x[dim*i]), i, &nsuper, &nsupermax,
-				&center, &supernode_wgts, &distances, &counts, flag);
-#ifdef TIME
-	end = clock();
-	qtree_cpu += ((double) (end - start)) / CLOCKS_PER_SEC;
-#endif
-	counts_avg += counts;
-	nsuper_avg += nsuper;
-	if (*flag) goto RETURN;
-	for (j = 0; j < nsuper; j++){
-	  dist = MAX(distances[j], MINDIST);
-	  for (k = 0; k < dim; k++){
-	    f[k] += supernode_wgts[j]*KP*(x[i*dim+k] - center[j*dim+k])/pow(dist, 1.- p);
-	  }
-	}
-      } else {
-	for (j = 0; j < n; j++){
-	  if (j == i) continue;
-	  dist = distance_cropped(x, dim, i, j);
-	  for (k = 0; k < dim; k++){
-	    f[k] += KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	  }
+      for (j = 0; j < n; j++){
+	if (j == i) continue;
+	dist = distance_cropped(x, dim, i, j);
+	for (k = 0; k < dim; k++){
+	  f[k] += KP*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
 	}
       }
       for (k = 0; k < dim; k++) force[i*dim+k] += f[k];
@@ -852,11 +824,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
 #ifdef DEBUG_PRINT
     if (Verbose) {
-      if (USE_QT){
-	fprintf(stderr, "iter = %d, step = %f Fnorm = %f qt_level = %d nsuper = %d nz = %d  K = %f   ",iter, step, Fnorm, max_qtree_level, (int) nsuper_avg,A->nz,K);
-      } else {
-	fprintf(stderr, "iter = %d, step = %f Fnorm = %f nsuper = %d nz = %d  K = %f   ",iter, step, Fnorm, (int) nsuper_avg,A->nz,K);
-      }
+      fprintf(stderr, "iter = %d, step = %f Fnorm = %f nsuper = %d nz = %d  K = %f   ",iter, step, Fnorm, (int) nsuper_avg,A->nz,K);
     }
 #endif
 
@@ -868,9 +836,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 #endif
 
  RETURN:
-  if (USE_QT) {
-    ctrl->max_qtree_level = max_qtree_level;
-  }
   oned_optimizer_delete(qtree_level_optimizer);
   free(xold);
   if (A != A0) SparseMatrix_delete(A);
