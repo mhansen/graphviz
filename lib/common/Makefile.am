@@ -42,11 +42,13 @@ colortbl.h: brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names \
 
 brewer_lib: $(top_srcdir)/lib/common/brewer_colors \
             $(top_srcdir)/lib/common/make_brewer_lib.py
-	python3 $(top_srcdir)/lib/common/make_brewer_lib.py "$<" "$@"
+	python3 $(top_srcdir)/lib/common/make_brewer_lib.py \
+	  "$(top_srcdir)/lib/common/brewer_colors" "$@"
 
 svgcolor_lib: $(top_srcdir)/lib/common/svgcolor_names \
               $(top_srcdir)/lib/common/make_svgcolor_lib.py
-	python3 $(top_srcdir)/lib/common/make_svgcolor_lib.py "$<" "$@"
+	python3 $(top_srcdir)/lib/common/make_svgcolor_lib.py \
+	  "$(top_srcdir)/lib/common/svgcolor_names" "$@"
 
 htmllex.o htmllex.lo: htmllex.c htmllex.h htmlparse.h
 htmlparse.o htmlparse.lo: htmlparse.c htmlparse.h
