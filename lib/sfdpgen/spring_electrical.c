@@ -477,7 +477,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   int i, j, k;
   double p = ctrl->p, K = ctrl->K, C = ctrl->C, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
-  double *xold = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
   int adaptive_cooling = ctrl->adaptive_cooling;
@@ -521,7 +520,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
 
-  xold = gv_calloc(dim * n, sizeof(double));
   force = gv_calloc(dim * n, sizeof(double));
 
   do {
@@ -530,7 +528,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
 #endif
 
     iter++;
-    memcpy(xold, x, sizeof(double)*dim*n);
     Fnorm0 = Fnorm;
     Fnorm = 0.;
 
@@ -643,7 +640,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   oned_optimizer_delete(qtree_level_optimizer);
   ctrl->max_qtree_level = max_qtree_level;
 
-  free(xold);
   if (A != A0) SparseMatrix_delete(A);
   free(force);
 }
