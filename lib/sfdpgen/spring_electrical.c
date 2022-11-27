@@ -869,9 +869,9 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
  RETURN:
   if (USE_QT) {
-    oned_optimizer_delete(qtree_level_optimizer);
     ctrl->max_qtree_level = max_qtree_level;
   }
+  oned_optimizer_delete(qtree_level_optimizer);
   free(xold);
   if (A != A0) SparseMatrix_delete(A);
   free(f);
