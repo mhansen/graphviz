@@ -666,8 +666,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   double total_cpu = 0;
   start0 = clock();
 #endif
-  int max_qtree_level = ctrl->max_qtree_level;
-  oned_optimizer qtree_level_optimizer = NULL;
 
   fprintf(stderr,"spring_electrical_embedding_slow");
   if (!A || maxiter <= 0) return;
@@ -676,9 +674,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   if (n <= 0 || dim <= 0) return;
   force = gv_calloc(n *dim, sizeof(double));
 
-  if (n >= ctrl->quadtree_size) {
-    qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
-  }
   *flag = 0;
   if (m != n) {
     *flag = ERROR_NOT_SQUARE_MATRIX;
@@ -815,7 +810,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 #endif
 
  RETURN:
-  oned_optimizer_delete(qtree_level_optimizer);
   free(xold);
   if (A != A0) SparseMatrix_delete(A);
   free(f);
