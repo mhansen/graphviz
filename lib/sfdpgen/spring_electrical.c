@@ -652,7 +652,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   int i, j, k;
   double p = ctrl->p, K = ctrl->K, C = ctrl->C, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
-  double *xold = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
   int adaptive_cooling = ctrl->adaptive_cooling;
@@ -705,12 +704,10 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 #endif
 
   f = gv_calloc(dim, sizeof(double));
-  xold = gv_calloc(dim * n, sizeof(double));
   do {
     for (i = 0; i < dim*n; i++) force[i] = 0;
 
     iter++;
-    memcpy(xold, x, sizeof(double)*dim*n);
     Fnorm0 = Fnorm;
     Fnorm = 0.;
 
@@ -806,7 +803,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 #endif
 
  RETURN:
-  free(xold);
   if (A != A0) SparseMatrix_delete(A);
   free(f);
   free(force);
