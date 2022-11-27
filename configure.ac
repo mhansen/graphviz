@@ -2059,14 +2059,13 @@ dnl INCLUDES and LIBS for PLATFORMSDK
 
 AC_ARG_WITH(platformsdkincludedir,
   [AS_HELP_STRING([--with-platformsdkincludedir=DIR],[use Platform SDK (Windows) includes from DIR])],
-  [PLATFORMSDKINCLUDE=$withval; PLATFORMSDKINCLUDE_ESCAPED=${PLATFORMSDKINCLUDE//'\\'/\\\\}; PLATFORMSDKINCLUDE_ESCAPED=${PLATFORMSDKINCLUDE_ESCAPED// /\\ }])
+  [PLATFORMSDKINCLUDE=$withval])
 
 AC_ARG_WITH(platformsdklibdir,
   [AS_HELP_STRING([--with-platformsdklibdir=DIR],[use Platform SDK (Windows) libraries from DIR])],
   [PLATFORMSDKLIB=$withval])
 
 AC_SUBST([PLATFORMSDKINCLUDE])
-AC_SUBST([PLATFORMSDKINCLUDE_ESCAPED])
 AC_SUBST([PLATFORMSDKLIB])
 
 dnl -----------------------------------
