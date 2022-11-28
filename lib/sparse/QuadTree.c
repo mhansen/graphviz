@@ -121,14 +121,13 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *poi
 }
 
 void QuadTree_get_supernodes(QuadTree qt, double bh, double *point, int nodeid, int *nsuper, 
-			     int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts, int *flag){
+			     int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts) {
   int dim = qt->dim;
 
   (*counts) = 0;
 
   *nsuper = 0;
 
-  *flag = 0;
   *nsupermax = 10;
   if (!*center) *center = MALLOC(sizeof(double)*(*nsupermax)*dim);
   if (!*supernode_wgts) *supernode_wgts = MALLOC(sizeof(double)*(*nsupermax));
