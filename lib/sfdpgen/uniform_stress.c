@@ -126,13 +126,11 @@ static SparseMatrix get_distance_matrix(SparseMatrix A, double scaling){
 
 extern void scale_to_box(double xmin, double ymin, double xmax, double ymax, int n, int dim, double *x);
 
-void uniform_stress(int dim, SparseMatrix A, double *x, int *flag){
+void uniform_stress(int dim, SparseMatrix A, double *x) {
   UniformStressSmoother sm;
   double lambda0 = 10.1, M = 100, scaling = 1.;
   int maxit = 300, samepoint = TRUE, i, k, n = A->m;
   SparseMatrix B = NULL;
-
-  *flag = 0;
 
   /* just set random initial for now */
   for (i = 0; i < dim*n; i++) {
