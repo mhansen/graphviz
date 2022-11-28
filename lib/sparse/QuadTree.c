@@ -311,7 +311,7 @@ static void QuadTree_repulsive_force_accumulate(QuadTree qt, double *force, doub
 
 }
 
-void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double bh, double p, double KP, double *counts, int *flag){
+void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double bh, double p, double KP, double *counts){
   /* get repulsice force by a more efficient algortihm: we consider two cells, if they are well separated, we
      calculate the overall repulsive force on the cell level, if not well separated, we divide one of the cell.
      If both cells are at the leaf level, we calcuaulate repulsicve force among individual nodes. Finally
@@ -331,8 +331,6 @@ void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double 
   int n = qt->n, dim = qt->dim, i;
 
   for (i = 0; i < 4; i++) counts[i] = 0;
-
-  *flag = 0;
 
   for (i = 0; i < dim*n; i++) force[i] = 0;
 

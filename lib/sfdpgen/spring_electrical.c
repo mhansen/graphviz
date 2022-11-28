@@ -547,9 +547,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
     start = clock();
 #endif
 
-    QuadTree_get_repulsive_force(qt, force, x, ctrl->bh, p, KP, counts, flag);
-
-    assert(!(*flag));
+    QuadTree_get_repulsive_force(qt, force, x, ctrl->bh, p, KP, counts);
 
 #ifdef TIME
     end = clock();
