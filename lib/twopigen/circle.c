@@ -17,6 +17,7 @@
 #include    <stdbool.h>
 #include    <stdint.h>
 #include    <stdlib.h>
+#include    <string.h>
 #define DEF_RANKSEP 1.00
 #define UNSET 10.00
 
@@ -239,6 +240,14 @@ static void setSubtreeSpans(Agraph_t * sg, Agnode_t * center)
     setChildSubtreeSpans(sg, center);
 }
 
+/// has the given value been assigned?
+static bool is_set(double a) {
+  // Compare exactly against our sentinel. No need for a tolerance or
+  // approximation because anything unset has been explicitly assigned `UNSET`.
+  const double unset = UNSET;
+  return memcmp(&a, &unset, sizeof(a)) != 0;
+}
+
  /* Set the node positions for the 2nd and later rings. */
 static void setChildPositions(Agraph_t * sg, Agnode_t * n)
 {
@@ -255,7 +264,7 @@ static void setChildPositions(Agraph_t * sg, Agnode_t * n)
 	    next = aghead(ep);
 	if (SPARENT(next) != n)
 	    continue;		/* handles loops */
-	if (THETA(next) != UNSET)
+	if (is_set(THETA(next)))
 	    continue;		/* handles multiedges */
 
 	THETA(next) = theta + SPAN(next) / 2.0;
