@@ -69,7 +69,7 @@ static bool isLeaf(Agraph_t * g, Agnode_t * n)
 static void initLayout(Agraph_t * g)
 {
     int nnodes = agnnodes(g);
-    int INF = nnodes * nnodes;
+    uint64_t INF = (uint64_t)(nnodes * nnodes);
 
     for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	SCENTER(n) = INF;
