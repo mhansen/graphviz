@@ -2175,16 +2175,11 @@ completeregularpath(path * P, edge_t * first, edge_t * last,
  */
 static boxf makeregularend(boxf b, int side, double y)
 {
-    boxf newb;
-    switch (side) {
-    case BOTTOM:
-	newb = boxfof(b.LL.x, y, b.UR.x, b.LL.y);
-	break;
-    case TOP:
-	newb = boxfof(b.LL.x, b.UR.y, b.UR.x, y);
-	break;
-    }
-    return newb;
+  assert(side == BOTTOM || side == TOP);
+  if (side == BOTTOM) {
+    return boxfof(b.LL.x, y, b.UR.x, b.LL.y);
+  }
+  return boxfof(b.LL.x, b.UR.y, b.UR.x, y);
 }
 
 #ifndef DONT_WANT_ANY_ENDPOINT_PATH_REFINEMENT
