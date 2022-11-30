@@ -41,6 +41,7 @@ add_custom_command(
 add_library(common_obj OBJECT
   # Header files
   arith.h
+  boxes.h
   color.h
   colorprocs.h
   ${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h

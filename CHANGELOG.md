@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   demand loading disabled.
 - `gvpack` built with the CMake build system can now find plugins correctly at
   run time. #1838
+- The ortho library now allocates trapezoid structures on-demand, removing the
+  “Trapezoid-table overflow” error that previously occurred when its upfront
+  estimation was exceeded. #56, #1880
 
 ## [7.0.2] – 2022-11-18
 

@@ -100,12 +100,6 @@ def test_56():
   input = Path(__file__).parent / "56.dot"
   assert input.exists(), "unexpectedly missing test case"
 
-  # FIXME: remove this block when this #56 is fixed
-  if not is_ndebug_defined() and platform.system() != "Windows":
-    with pytest.raises(subprocess.CalledProcessError):
-      dot("svg", input)
-    return
-
   # process it with Graphviz
   dot("svg", input)
 
@@ -893,12 +887,6 @@ def test_1880():
   # locate our associated test case in this directory
   input = Path(__file__).parent / "1880.dot"
   assert input.exists(), "unexpectedly missing test case"
-
-  # FIXME: remove this block when this #1880 is fixed
-  if not is_ndebug_defined() and platform.system() != "Windows":
-    with pytest.raises(subprocess.CalledProcessError):
-      dot("png", input)
-    return
 
   # process it with Graphviz
   dot("png", input)
