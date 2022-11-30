@@ -51,9 +51,9 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
 double point_distance(double *p1, double *p2, int dim);
 
 void QuadTree_get_supernodes(QuadTree qt, double bh, double *point, int nodeid, int *nsuper, 
-			     int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts, int *flag);
+			     int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts);
 
-void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double bh, double p, double KP, double *counts, int *flag);
+void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double bh, double p, double KP, double *counts);
 
 /* find the nearest point and put in ymin, index in imin and distance in min */
 void QuadTree_get_nearest(QuadTree qt, double *x, double *ymin, int *imin, double *min);

@@ -74,7 +74,7 @@ static void check_or_realloc_arrays(int dim, int *nsuper, int *nsupermax, double
   }
 }
 
-static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *point, int nodeid, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts, int *flag){
+static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *point, int nodeid, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts) {
   SingleLinkedList l;
   double *coord, dist;
   int dim, i;
@@ -113,7 +113,7 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *poi
     } else {
       for (i = 0; i < 1<<dim; i++){
 	QuadTree_get_supernodes_internal(qt->qts[i], bh, point, nodeid, nsuper, nsupermax, center, 
-					 supernode_wgts, distances, counts, flag);
+					 supernode_wgts, distances, counts);
       }
     }
   }
@@ -121,19 +121,18 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *poi
 }
 
 void QuadTree_get_supernodes(QuadTree qt, double bh, double *point, int nodeid, int *nsuper, 
-			     int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts, int *flag){
+			     int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts) {
   int dim = qt->dim;
 
   (*counts) = 0;
 
   *nsuper = 0;
 
-  *flag = 0;
   *nsupermax = 10;
   if (!*center) *center = MALLOC(sizeof(double)*(*nsupermax)*dim);
   if (!*supernode_wgts) *supernode_wgts = MALLOC(sizeof(double)*(*nsupermax));
   if (!*distances) *distances = MALLOC(sizeof(double)*(*nsupermax));
-  QuadTree_get_supernodes_internal(qt, bh, point, nodeid, nsuper, nsupermax, center, supernode_wgts, distances, counts, flag);
+  QuadTree_get_supernodes_internal(qt, bh, point, nodeid, nsuper, nsupermax, center, supernode_wgts, distances, counts);
 
 }
 
@@ -311,7 +310,7 @@ static void QuadTree_repulsive_force_accumulate(QuadTree qt, double *force, doub
 
 }
 
-void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double bh, double p, double KP, double *counts, int *flag){
+void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double bh, double p, double KP, double *counts){
   /* get repulsice force by a more efficient algortihm: we consider two cells, if they are well separated, we
      calculate the overall repulsive force on the cell level, if not well separated, we divide one of the cell.
      If both cells are at the leaf level, we calcuaulate repulsicve force among individual nodes. Finally
@@ -331,8 +330,6 @@ void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double 
   int n = qt->n, dim = qt->dim, i;
 
   for (i = 0; i < 4; i++) counts[i] = 0;
-
-  *flag = 0;
 
   for (i = 0; i < dim*n; i++) force[i] = 0;
 

@@ -984,7 +984,7 @@ void SpringSmoother_smooth(SpringSmoother sm, SparseMatrix A, int dim, double *x
 
 /*=============================== end of spring and spring-electrical based smoother =========== */
 
-void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control ctrl, double *x, int *flag){
+void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control ctrl, double *x) {
 #ifdef TIME
   clock_t  cpu;
 #endif
@@ -992,7 +992,6 @@ void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control c
 #ifdef TIME
   cpu = clock();
 #endif
-  *flag = 0;
 
   switch (ctrl->smoothing){
   case SMOOTHING_RNG:

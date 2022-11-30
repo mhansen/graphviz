@@ -547,9 +547,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
     start = clock();
 #endif
 
-    QuadTree_get_repulsive_force(qt, force, x, ctrl->bh, p, KP, counts, flag);
-
-    assert(!(*flag));
+    QuadTree_get_repulsive_force(qt, force, x, ctrl->bh, p, KP, counts);
 
 #ifdef TIME
     end = clock();
@@ -929,7 +927,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
 	start = clock();
 #endif
 	QuadTree_get_supernodes(qt, ctrl->bh, &(x[dim*i]), i, &nsuper, &nsupermax,
-				&center, &supernode_wgts, &distances, &counts, flag);
+				&center, &supernode_wgts, &distances, &counts);
 
 #ifdef TIME
 	end = clock();
@@ -937,7 +935,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
 #endif
 	counts_avg += counts;
 	nsuper_avg += nsuper;
-	if (*flag) goto RETURN;
 	for (j = 0; j < nsuper; j++){
 	  dist = MAX(distances[j], MINDIST);
 	  for (k = 0; k < dim; k++){
@@ -1238,9 +1235,8 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
       /* repulsive force ||x_i-x_j||^(1 - p) (x_i - x_j) */
       if (USE_QT){
 	QuadTree_get_supernodes(qt, ctrl->bh, &(x[dim*i]), i, &nsuper, &nsupermax,
-				&center, &supernode_wgts, &distances, &counts, flag);
+				&center, &supernode_wgts, &distances, &counts);
 	nsuper_avg += nsuper;
-	if (*flag) goto RETURN;
 	for (j = 0; j < nsuper; j++){
 	  dist = MAX(distances[j], MINDIST);
 	  for (k = 0; k < dim; k++){
@@ -1410,9 +1406,8 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
       /* repulsive force K^(1 - p)/||x_i-x_j||^(1 - p) (x_i - x_j) */
       if (USE_QT){
 	QuadTree_get_supernodes(qt, ctrl->bh, &(x[dim*i]), i, &nsuper, &nsupermax,
-				&center, &supernode_wgts, &distances, &counts, flag);
+				&center, &supernode_wgts, &distances, &counts);
 	nsuper_avg += nsuper;
-	if (*flag) goto RETURN;
 	for (j = 0; j < nsuper; j++){
 	  dist = MAX(distances[j], MINDIST);
 	  for (k = 0; k < dim; k++){
@@ -1925,7 +1920,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
   cpu = clock();
 #endif
 
-  post_process_smoothing(dim, A, ctrl, x, flag);
+  post_process_smoothing(dim, A, ctrl, x);
 
   if (Verbose) fprintf(stderr, "ctrl->overlap=%d\n",ctrl->overlap);
 
