@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `href` attribute is set. #265, #2319
 - Building Graphviz from source using the Autotools build system in now possible
   on NetBSD. #2317
+- The ortho library now allocates trapezoid structures on-demand, removing the
+  “Trapezoid-table overflow” error that previously occurred when its upfront
+  estimation was exceeded. #56, #1880
 
 ## [7.0.3] – 2022-11-26
 
@@ -29,9 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   demand loading disabled.
 - `gvpack` built with the CMake build system can now find plugins correctly at
   run time. #1838
-- The ortho library now allocates trapezoid structures on-demand, removing the
-  “Trapezoid-table overflow” error that previously occurred when its upfront
-  estimation was exceeded. #56, #1880
 
 ## [7.0.2] – 2022-11-18
 
