@@ -11,10 +11,11 @@
 #pragma once
 
 #include <sparse/SparseMatrix.h>
+#include <stddef.h>
 
 typedef struct {
   double x[2];/* center */
   double size[2]; /* total width/height*/
 } rectangle;
 
-extern rectangle* tree_map(int n, double *area, rectangle fillrec);
+extern rectangle* tree_map(size_t n, double *area, rectangle fillrec);
