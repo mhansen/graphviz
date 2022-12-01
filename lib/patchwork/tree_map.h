@@ -12,7 +12,7 @@
 
 #include <sparse/SparseMatrix.h>
 
-typedef struct rectangle_struct {
+typedef struct {
   double x[2];/* center */
   double size[2]; /* total width/height*/
 } rectangle;
