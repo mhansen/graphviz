@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <common/render.h>
+#include <math.h>
 #include <patchwork/tree_map.h>
 
 static void squarify(int n, double *area, rectangle *recs, int nadded, double maxarea, double minarea, double totalarea,
@@ -22,7 +23,7 @@ static void squarify(int n, double *area, rectangle *recs, int nadded, double ma
      asp: current worst aspect ratio of the already added items so far
      fillrec: the rectangle to be filled in.
    */
-  double w = MIN(fillrec.size[0], fillrec.size[1]);
+  double w = fmin(fillrec.size[0], fillrec.size[1]);
   int i;
 
   if (n <= 0) return;
@@ -35,19 +36,19 @@ static void squarify(int n, double *area, rectangle *recs, int nadded, double ma
   if (nadded == 0){
     nadded = 1;
     maxarea = minarea = area[0];
-    asp = MAX(area[0]/(w*w), (w*w)/area[0]);
+    asp = fmax(area[0] / (w * w), w * w / area[0]);
     totalarea = area[0];
     squarify(n, area, recs, nadded, maxarea, minarea, totalarea, asp, fillrec);
   } else {
     double newmaxarea, newminarea, s, h, maxw, minw, newasp, hh, ww, xx, yy;
     if (nadded < n){
-      newmaxarea = MAX(maxarea, area[nadded]);
-      newminarea = MIN(minarea, area[nadded]);
+      newmaxarea = fmax(maxarea, area[nadded]);
+      newminarea = fmin(minarea, area[nadded]);
       s = totalarea + area[nadded];
       h = s/w;
       maxw = newmaxarea/h;
       minw = newminarea/h;
-      newasp = MAX(h/minw, maxw/h);/* same as MAX{s^2/(w^2*newminarea), (w^2*newmaxarea)/(s^2)}*/
+      newasp = fmax(h / minw, maxw / h);/* same as MAX{s^2/(w^2*newminarea), (w^2*newmaxarea)/(s^2)}*/
     }
     if (nadded < n && newasp <= asp){/* aspectio improved, keep adding */
       squarify(n, area, recs, ++nadded, newmaxarea, newminarea, s, newasp, fillrec);
