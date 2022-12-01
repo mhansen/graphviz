@@ -36,13 +36,6 @@ typedef struct {
     int cnt;
 } clist_t;
 
-static void initCList(clist_t * clist)
-{
-    clist->cl = 0;
-    clist->sz = 0;
-    clist->cnt = 0;
-}
-
 /* addCluster:
  * Append a new cluster to the list.
  * NOTE: cl[0] is empty. The clusters are in cl[1..cnt].
@@ -319,12 +312,11 @@ static void
 mkClusters (Agraph_t* g, clist_t* pclist, Agraph_t* parent)
 {
     graph_t* subg;
-    clist_t  list;
+    clist_t  list = {0};
     clist_t* clist;
 
     if (pclist == NULL) {
         clist = &list;
-        initCList(clist);
     }
     else
         clist = pclist;
