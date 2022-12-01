@@ -18,5 +18,3 @@ typedef struct {
 } rectangle;
 
 extern rectangle* tree_map(int n, double *area, rectangle fillrec);
-
-extern rectangle rectangle_new(double x, double y, double width, double height);

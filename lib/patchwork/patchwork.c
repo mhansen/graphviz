@@ -280,7 +280,7 @@ void patchworkLayout(Agraph_t * g)
 
     root = mkTree (g,gp,ap,mp);
     total = root->area;
-    root->r = rectangle_new(0, 0, sqrt(total + 0.1), sqrt(total + 0.1));
+    root->r = (rectangle){{0, 0}, {sqrt(total + 0.1), sqrt(total + 0.1)}};
     layoutTree(root);
     walkTree(root);
     freeTree (root);

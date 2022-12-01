@@ -111,15 +111,3 @@ rectangle* tree_map(int n, double *area, rectangle fillrec){
   squarify(n, area, recs, nadded, maxarea, minarea, totalarea, asp, fillrec);
   return recs;
 }
-
-/* rectangle_new:
- * Create and initialize a new rectangle structure
- */
-rectangle rectangle_new(double x, double y, double width, double height){
-  rectangle r;
-  r.x[0] = x;
-  r.x[1] = y;
-  r.size[0] = width;
-  r.size[1] = height;
-  return r;
-}
