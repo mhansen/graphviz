@@ -14,12 +14,14 @@
  * Written by Emden R. Gansner
  */
 
+#include    <assert.h>
+#include    <cgraph/list.h>
+#include    <limits.h>
 #include    <osage/osage.h>
 #include    <neatogen/neatoprocs.h>
 #include    <pack/pack.h>
 #include    <stdbool.h>
 
-#define CL_CHUNK 10
 #define DFLT_SZ  18
 #define PARENT(n) ((Agraph_t*)ND_alg(n))
 
@@ -30,27 +32,7 @@ indent (int i)
 	fputs ("  ", stderr);
 }
 
-typedef struct {
-    Agraph_t** cl;
-    int sz;
-    int cnt;
-} clist_t;
-
-/* addCluster:
- * Append a new cluster to the list.
- * NOTE: cl[0] is empty. The clusters are in cl[1..cnt].
- * Normally, we increase the array when cnt == sz.
- * The test for cnt > sz is necessary for the first time.
- */
-static void addCluster(clist_t * clist, graph_t * subg)
-{
-    clist->cnt++;
-    if (clist->cnt >= clist->sz) {
-        clist->sz += CL_CHUNK;
-        clist->cl = RALLOC(clist->sz, clist->cl, graph_t *);
-    }
-    clist->cl[clist->cnt] = subg;
-}
+DEFINE_LIST(clist, Agraph_t*)
 
 static void cluster_init_graph(graph_t * g)
 {
@@ -316,6 +298,8 @@ mkClusters (Agraph_t* g, clist_t* pclist, Agraph_t* parent)
     clist_t* clist;
 
     if (pclist == NULL) {
+        // [0] is empty. The clusters are in [1..cnt].
+        clist_append(&list, NULL);
         clist = &list;
     }
     else
@@ -325,7 +309,7 @@ mkClusters (Agraph_t* g, clist_t* pclist, Agraph_t* parent)
         if (!strncmp(agnameof(subg), "cluster", 7)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    do_graph_label (subg);
-            addCluster(clist, subg);
+            clist_append(clist, subg);
             mkClusters(subg, NULL, subg);
         }
         else {
@@ -333,9 +317,14 @@ mkClusters (Agraph_t* g, clist_t* pclist, Agraph_t* parent)
         }
     }
     if (pclist == NULL) {
-        GD_n_cluster(g) = list.cnt;
-        if (list.cnt)
-            GD_clust(g) = RALLOC(list.cnt + 1, list.cl, graph_t*);
+        assert(clist_size(&list) - 1 <= INT_MAX);
+        GD_n_cluster(g) = (int)(clist_size(&list) - 1);
+        if (clist_size(&list) > 1) {
+            clist_shrink_to_fit(&list);
+            GD_clust(g) = clist_detach(&list);
+        } else {
+            clist_free(&list);
+        }
     }
 }
 
