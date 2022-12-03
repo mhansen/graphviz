@@ -2031,3 +2031,17 @@ def test_2307():
       continue
     assert re.search(r"\bG2_", m.group("url")) is not None, \
       "ID G2 was not applied to polygon fill url"
+
+def test_changelog_dates():
+  """
+  Check the dates of releases in the changelog are correctly formatted
+  """
+  changelog = Path(__file__).parent / "../CHANGELOG.md"
+  with open(changelog, "rt", encoding="utf-8") as f:
+    for lineno, line in enumerate(f, 1):
+      m = re.match(r"## \[\d+\.\d+\.\d+\] [-–] (?P<date>.*)$", line)
+      if m is None:
+        continue
+      d = re.match(r"\d{4}-\d{2}-\d{2}", m.group("date"))
+      assert d is not None, \
+        f"CHANGELOG.md:{lineno}: date in incorrect format: {line}"
