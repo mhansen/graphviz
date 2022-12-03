@@ -19,6 +19,7 @@ add_library(cgraph SHARED
   exit.h
   itos.h
   likely.h
+  list.h
   prisize_t.h
   stack.h
   startswith.h

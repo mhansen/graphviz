@@ -105,6 +105,7 @@ win_flex -oscan.c scan.l</Command>
     <ClInclude Include="exit.h" />
     <ClInclude Include="itos.h" />
     <ClInclude Include="likely.h" />
+    <ClInclude Include="list.h" />
     <ClInclude Include="prisize_t.h" />
     <ClInclude Include="stack.h" />
     <ClInclude Include="startswith.h" />
