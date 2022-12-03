@@ -97,10 +97,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="generic_list.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="generic_list.c" />
     <ClCompile Include="prune.c" />
   </ItemGroup>
   <ItemGroup>

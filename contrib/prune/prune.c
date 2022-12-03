@@ -19,7 +19,6 @@
 #include <cgraph/exit.h>
 #include <cgraph/list.h>
 #include <ingraphs/ingraphs.h>
-#include "generic_list.h"
 
 /* structure to hold an attribute specified on the commandline */
 typedef struct {
@@ -28,12 +27,13 @@ typedef struct {
 } strattr_t;
 
 DEFINE_LIST(attrs, strattr_t)
+DEFINE_LIST(nodes, char*)
 
 static int remove_child(Agraph_t * graph, Agnode_t * node);
 static void help_message(const char *progname);
 
 static void addattr(attrs_t *l, char *a);
-static void addnode(generic_list_t * l, char *n);
+static void addnode(nodes_t *l, char *n);
 
 int verbose = 0;		/* Flag to indicate verbose message output */
 
@@ -70,8 +70,6 @@ int main(int argc, char **argv)
 
     char **files;
 
-    unsigned long i;
-
     opterr = 0;
 
     progname = strrchr(argv[0], '/');
@@ -82,7 +80,7 @@ int main(int argc, char **argv)
     }
 
     attrs_t attr_list = {0};
-    generic_list_t node_list = new_generic_list(16);
+    nodes_t node_list = {0};
 
     while ((c = getopt(argc, argv, "hvn:N:")) != -1) {
 	switch (c) {
@@ -138,16 +136,16 @@ int main(int argc, char **argv)
 	aginit(graph, AGNODE, NDNAME, sizeof(ndata), 1);
 
 	/* prune all nodes specified on the commandline */
-	for (i = 0; i < node_list.used; i++) {
+	for (size_t i = 0; i < nodes_size(&node_list); ++i) {
 	    if (verbose == 1)
-		fprintf(stderr, "Pruning node %s\n", (char*)node_list.data[i]);
+		fprintf(stderr, "Pruning node %s\n", nodes_get(&node_list, i));
 
 	    /* check whether a node of that name exists at all */
-	    node = agnode(graph, node_list.data[i], 0);
+	    node = agnode(graph, nodes_get(&node_list, i), 0);
 	    if (node == NULL) {
 		fprintf(stderr,
 			"*** Warning: No such node: %s -- gracefully skipping this one\n",
-			(char*)node_list.data[i]);
+			nodes_get(&node_list, i));
 	    } else {
 		MARK(node);	/* Avoid cycles */
 		/* Iterate over all outgoing edges */
@@ -180,7 +178,7 @@ int main(int argc, char **argv)
 	agclose(graph);
     }
     attrs_free(&attr_list);
-    free_generic_list(&node_list);
+    nodes_free(&node_list);
     graphviz_exit(EXIT_SUCCESS);
 }
 
@@ -259,8 +257,8 @@ static void addattr(attrs_t *l, char *a) {
 }
 
 /* add element to node list */
-static void addnode(generic_list_t *l, char *n) {
+static void addnode(nodes_t *l, char *n) {
     char *sp = gv_strdup(n);
 
-    add_to_generic_list(l, sp);
+    nodes_append(l, sp);
 }

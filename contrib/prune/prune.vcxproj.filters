@@ -15,14 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="generic_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="generic_list.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="prune.c">
       <Filter>Source Files</Filter>
     </ClCompile>
