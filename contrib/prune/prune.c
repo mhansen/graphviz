@@ -17,6 +17,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/list.h>
 #include <ingraphs/ingraphs.h>
 #include "generic_list.h"
 
@@ -26,10 +27,12 @@ typedef struct {
     char *v;
 } strattr_t;
 
+DEFINE_LIST(attrs, strattr_t)
+
 static int remove_child(Agraph_t * graph, Agnode_t * node);
 static void help_message(const char *progname);
 
-static void addattr(generic_list_t * l, char *a);
+static void addattr(attrs_t *l, char *a);
 static void addnode(generic_list_t * l, char *n);
 
 int verbose = 0;		/* Flag to indicate verbose message output */
@@ -67,7 +70,7 @@ int main(int argc, char **argv)
 
     char **files;
 
-    unsigned long i, j;
+    unsigned long i;
 
     opterr = 0;
 
@@ -78,7 +81,7 @@ int main(int argc, char **argv)
 	progname++;		/* character after last '/' */
     }
 
-    generic_list_t attr_list = new_generic_list(16);
+    attrs_t attr_list = {0};
     generic_list_t node_list = new_generic_list(16);
 
     while ((c = getopt(argc, argv, "hvn:N:")) != -1) {
@@ -161,23 +164,22 @@ int main(int argc, char **argv)
 		UNMARK(node);	/* Unmark so that it can be removed in later passes */
 
 		/* Change attribute (e.g. border style) to show that node has been pruneed */
-		for (j = 0; j < attr_list.used; j++) {
+		for (size_t j = 0; j < attrs_size(&attr_list); ++j) {
 		    /* create attribute if it doesn't exist and set it */
-		    attr =
-			agattr(graph, AGNODE, ((strattr_t*)attr_list.data[j])->n, "");
+		    attr = agattr(graph, AGNODE, attrs_get(&attr_list, j).n, "");
 		    if (attr == NULL) {
 			fprintf(stderr, "Couldn't create attribute: %s\n",
-				((strattr_t*)attr_list.data[j])->n);
+				attrs_get(&attr_list, j).n);
 			graphviz_exit(EXIT_FAILURE);
 		    }
-		    agxset(node, attr, ((strattr_t*)attr_list.data[j])->v);
+		    agxset(node, attr, attrs_get(&attr_list, j).v);
 		}
 	    }
 	}
 	agwrite(graph, stdout);
 	agclose(graph);
     }
-    free_generic_list(&attr_list);
+    attrs_free(&attr_list);
     free_generic_list(&node_list);
     graphviz_exit(EXIT_SUCCESS);
 }
@@ -234,10 +236,10 @@ static Agraph_t *gread(FILE *fp) {
 }
 
 /* add element to attribute list */
-static void addattr(generic_list_t * l, char *a) {
+static void addattr(attrs_t *l, char *a) {
     char *p;
 
-    strattr_t *sp = gv_alloc(sizeof(strattr_t));
+    strattr_t sp = {0};
 
     /* Split argument spec. at first '=' */
     p = strchr(a, '=');
@@ -248,12 +250,12 @@ static void addattr(generic_list_t * l, char *a) {
     *(p++) = '\0';
 
     /* pointer to argument name */
-    sp->n = gv_strdup(a);
+    sp.n = gv_strdup(a);
 
     /* pointer to argument value */
-    sp->v = gv_strdup(p);
+    sp.v = gv_strdup(p);
 
-    add_to_generic_list(l, sp);
+    attrs_append(l, sp);
 }
 
 /* add element to node list */
