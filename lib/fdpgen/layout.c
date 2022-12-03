@@ -29,10 +29,12 @@
 #define FDP_PRIVATE 1
 
 #include "config.h"
+#include <assert.h>
 #include <limits.h>
 #include <inttypes.h>
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/list.h>
 #include <fdpgen/tlayout.h>
 #include <math.h>
 #include <neatogen/neatoprocs.h>
@@ -273,30 +275,7 @@ static void evalPositions(graph_t * g, graph_t* rootg)
     }
 }
 
-#define CL_CHUNK 10
-
-typedef struct {
-    graph_t **cl;
-    int sz;
-    int cnt;
-} clist_t;
-
-/* addCluster:
- * Append a new cluster to the list.
- * NOTE: cl[0] is empty. The clusters are in cl[1..cnt].
- * Normally, we increase the array when cnt == sz.
- * The test for cnt > sz is necessary for the first time.
- */
-static void addCluster(clist_t * clist, graph_t * subg)
-{
-    clist->cnt++;
-    if (clist->cnt >= clist->sz) {
-	clist->cl = gv_recalloc(clist->cl, clist->sz, clist->sz + CL_CHUNK,
-	                        sizeof(graph_t*));
-	clist->sz += CL_CHUNK;
-    }
-    clist->cl[clist->cnt] = subg;
-}
+DEFINE_LIST(clist, graph_t*)
 
 #define BSZ 1000
 
@@ -994,6 +973,8 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
     clist_t* clist;
 
     if (pclist == NULL) {
+	// [0] is empty. The clusters are in [1..cnt].
+	clist_append(&list, NULL);
 	clist = &list;
     }
     else
@@ -1007,7 +988,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 	    GD_ndim(subg) = GD_ndim(agroot(parent));
 	    LEVEL(subg) = LEVEL(parent) + 1;
 	    GPARENT(subg) = parent;
-	    addCluster(clist, subg);
+	    clist_append(clist, subg);
 	    mkClusters(subg, NULL, subg);
 	}
 	else {
@@ -1015,9 +996,14 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 	}
     }
     if (pclist == NULL) {
-	GD_n_cluster(g) = list.cnt;
-	if (list.cnt)
-	    GD_clust(g) = RALLOC(list.cnt + 1, list.cl, graph_t*);
+	assert(clist_size(&list) - 1 <= INT_MAX);
+	GD_n_cluster(g) = (int)(clist_size(&list) - 1);
+	if (clist_size(&list) > 1) {
+	    clist_shrink_to_fit(&list);
+	    GD_clust(g) = clist_detach(&list);
+	} else {
+	    clist_free(&list);
+	}
     }
 }
 
