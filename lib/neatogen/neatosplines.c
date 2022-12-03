@@ -545,7 +545,6 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
     Ppoly_t *obp;
     int cnt, i = 0, npoly;
     vconfig_t *vconfig = 0;
-    path *P = NULL;
     int useEdges = Nop > 1;
     int legal = 0;
 
@@ -614,10 +613,6 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 	    } 
 	    else if (ED_count(e) == 0) continue;  /* only do representative */
 	    else if (n == head) {    /* self arc */
-		if (!P) {
-		    P = NEW(path);
-		    P->boxes = N_NEW(agnnodes(g) + 20 * 2 * 9, boxf);
-		}
 		makeSelfArcs(e, GD_nodesep(g->root));
 	    } else if (vconfig) { /* EDGETYPE_SPLINE or EDGETYPE_PLINE */
 #ifdef HAVE_GTS
@@ -660,10 +655,6 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 
     if (vconfig)
 	Pobsclose (vconfig);
-    if (P) {
-	free(P->boxes);
-	free(P);
-    }
     if (obs) {
 	for (i=0; i < npoly; i++) {
 	    free (obs[i]->ps);
