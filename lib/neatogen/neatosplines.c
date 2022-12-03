@@ -284,7 +284,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
     boxf b;
     pointf pt;
     field_t *fld;
-    int isPoly;
+    bool isPoly;
     pointf* verts = NULL;
     pointf vs[4];
     pointf p;
@@ -296,7 +296,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	obs = gv_alloc(sizeof(Ppoly_t));
 	poly = ND_shape_info(n);
 	if (isOrtho) {
-	    isPoly = 1;
+	    isPoly = true;
 	    sides = 4;
 	    verts = vs;
 	    margin.x = margin.y = 0;
@@ -324,13 +324,13 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	    }
 	}
 	else if (poly->sides >= 3) {
-	    isPoly = 1;
+	    isPoly = true;
 	    sides = poly->sides;
 	    verts = poly->vertices;
 	    margin.x = pmargin->x;
 	    margin.y = pmargin->y;
 	} else {		/* ellipse */
-	    isPoly = 0;
+	    isPoly = false;
 	    sides = 8;
 	    adj = drand48() * .01;
 	}
