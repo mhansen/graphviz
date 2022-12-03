@@ -63,18 +63,14 @@ constrained_majorization_vpsc(CMajEnvVPSC * e, float *b, float *place,
     g = e->fArray1;
     old_place = e->fArray2;
     d = e->fArray3;
-    /* fprintf(stderr,"Entered: constrained_majorization_vpsc, #constraints=%d\n",e->m); */
     if (e->m > 0) {
 	for (i = 0; i < n; i++) {
 	    setVariableDesiredPos(e->vs[i], place[i]);
 	}
-	/* fprintf(stderr,"  calling satisfyVPSC...\n"); */
 	satisfyVPSC(e->vpsc);
 	for (i = 0; i < n; i++) {
 	    place[i] = getVariablePos(e->vs[i]);
-	    /* fprintf(stderr,"vs[%d]=%f\n",i,place[i]); */
 	}
-	/* fprintf(stderr,"    done.\n"); */
     }
 #ifdef CONMAJ_LOGGING
     float prev_stress = 0;
@@ -85,15 +81,12 @@ constrained_majorization_vpsc(CMajEnvVPSC * e, float *b, float *place,
 	}
     }
     FILE *logfile = fopen("constrained_majorization_log", "a");
-
-    /* fprintf(logfile,"grad proj %d: stress=%f\n",call_no,prev_stress); */
 #endif
 
     for (counter = 0; counter < max_iterations && !converged; counter++) {
 	float test = 0;
 	float alpha, beta;
 	float numerator = 0, denominator = 0, r;
-	/* fprintf(stderr,"."); */
 	converged = true;
 	/* find steepest descent direction */
 	for (i = 0; i < n; i++) {
@@ -195,7 +188,6 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
     int i, j;
     /* nv is the number of real nodes */
     int nConCs;
-    /* fprintf(stderr,"Entered initCMajVPSC\n"); */
     CMajEnvVPSC *e = GNEW(CMajEnvVPSC);
     e->A = NULL;
     e->packedMat = packedMat;
@@ -216,7 +208,6 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	    fprintf(stderr, "  generate edge constraints...\n");
 	for (i = 0; i < e->nv; i++) {
 	    for (j = 1; j < graph[i].nedges; j++) {
-		/* fprintf(stderr,"edist=%f\n",graph[i].edists[j]); */
 		if (graph[i].edists[j] > 0.01) {
 		    e->gm++;
 		}
@@ -281,9 +272,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 		newConstraint(e->vs[n + i], e->vs[n + i + 1], 0);
 	}
     }
-    /* fprintf(stderr,"  generate edge constraints... done: n=%d,m=%d\n",e->n,e->gm); */
     if (opt->clusters->nclusters > 0) {
-	/* fprintf(stderr,"  generate cluster containment constraints...\n"); */
 	Constraint **ecs = e->gcs;
 	nConCs = 2 * opt->clusters->nvars;
 	e->gcs = newConstraints(e->gm + nConCs);
@@ -301,7 +290,6 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 		e->gcs[e->gm++] = newConstraint(v, cr, 0);
 	    }
 	}
-	/* fprintf(stderr,"  containment constraints... done: \n"); */
     }
 
     e->m = 0;
