@@ -997,9 +997,7 @@ static bool _neato_set_aspect(graph_t * g)
 	}
 	/* normalize */
 	if (GD_flip(g)) {
-	    double t = GD_bb(g).UR.x;
-	    GD_bb(g).UR.x = GD_bb(g).UR.y;
-	    GD_bb(g).UR.y = t;
+	    GD_bb(g).UR = exch_xyf(GD_bb(g).UR);
 	}
 	if (GD_drawing(g)->ratio_kind == R_FILL) {
 	    /* fill is weird because both X and Y can stretch */
