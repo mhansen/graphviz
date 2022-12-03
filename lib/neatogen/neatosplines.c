@@ -12,6 +12,7 @@
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
+#include <math.h>
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
 #include <pathplan/pathplan.h>
@@ -1022,7 +1023,7 @@ static bool _neato_set_aspect(graph_t * g)
 	    xf = (double) GD_drawing(g)->size.x / GD_bb(g).UR.x;
 	    yf = (double) GD_drawing(g)->size.y / GD_bb(g).UR.y;
 	    if (xf > 1.0 && yf > 1.0) {
-		double scale = MIN(xf, yf);
+		double scale = fmin(xf, yf);
 		xf = yf = scale;
 	    } else
 		return translated;
