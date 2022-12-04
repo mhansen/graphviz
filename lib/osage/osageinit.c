@@ -152,7 +152,7 @@ layout (Agraph_t* g, int depth)
 	bb.UR.y += p.y;
 	EXPANDBB(rootbb, bb);
 	if (j < GD_n_cluster(g)) {
-	    subg = (Agraph_t*)children[j];
+	    subg = children[j];
 	    GD_bb(subg) = bb;
 	    if (Verbose > 1) {
 		indent (depth);
@@ -160,7 +160,7 @@ layout (Agraph_t* g, int depth)
 	    }
 	}
 	else {
-	    n = (Agnode_t*)children[j];
+	    n = children[j];
 	    ND_coord(n) = mid_pointf (bb.LL, bb.UR);
 	    if (Verbose > 1) {
 		indent (depth);
@@ -208,7 +208,7 @@ layout (Agraph_t* g, int depth)
      */
     for (j = 0; j < total; j++) {
 	if (j < GD_n_cluster(g)) {
-	    subg = (Agraph_t*)children[j];
+	    subg = children[j];
 	    bb = GD_bb(subg);
 	    bb.LL = sub_pointf(bb.LL, rootbb.LL);
 	    bb.UR = sub_pointf(bb.UR, rootbb.LL);
@@ -219,7 +219,7 @@ layout (Agraph_t* g, int depth)
 	    }
 	}
 	else {
-	    n = (Agnode_t*)children[j];
+	    n = children[j];
 	    ND_coord(n) = sub_pointf (ND_coord(n), rootbb.LL);
 	    if (Verbose > 1) {
 		indent (depth);
