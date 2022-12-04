@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <patchwork/patchwork.h>
@@ -25,7 +26,7 @@ struct treenode_t {
 	Agnode_t *n;
     } u;
     int kind;
-    int n_children;
+    size_t n_children;
 };
 
 #define DFLT_SZ 1.0
@@ -68,7 +69,7 @@ static double getArea (void* obj, attrsym_t* ap)
  */
 static treenode_t* mkTreeNode (Agnode_t* n, attrsym_t* ap)
 {
-    treenode_t *p = NEW(treenode_t);
+    treenode_t *p = gv_alloc(sizeof(treenode_t));
 
     p->area = getArea (n, ap);
     p->kind = AGNODE;
@@ -85,18 +86,19 @@ static treenode_t* mkTreeNode (Agnode_t* n, attrsym_t* ap)
  */
 static treenode_t *mkTree (Agraph_t * g, attrsym_t* gp, attrsym_t* ap, attrsym_t* mp)
 {
-    treenode_t *p = NEW(treenode_t);
+    treenode_t *p = gv_alloc(sizeof(treenode_t));
     Agraph_t *subg;
     Agnode_t *n;
     treenode_t *cp;
     treenode_t *first = 0;
     treenode_t *prev = 0;
-    int i, n_children = 0;
+    int i;
     double area = 0;
 
     p->kind = AGRAPH;
     p->u.subg = g;
 
+    size_t n_children = 0;
     for (i = 1; i <= GD_n_cluster(g); i++) {
 	subg = GD_clust(g)[i];
 	cp = mkTree (subg, gp, ap, mp);
@@ -142,25 +144,22 @@ static int nodecmp (treenode_t** p0, treenode_t** p1)
 static void layoutTree(treenode_t * tree)
 {
     rectangle *recs;
-    treenode_t** nodes;
-    double* areas_sorted;
-    int i, nc;
     treenode_t* cp;
 
     /* if (tree->kind == AGNODE) return; */
     if (tree->n_children == 0) return;
 
-    nc = tree->n_children;
-    nodes = N_NEW(nc, treenode_t*);
+    size_t nc = tree->n_children;
+    treenode_t** nodes = gv_calloc(nc, sizeof(treenode_t*));
     cp = tree->leftchild;
-    for (i = 0; i < nc; i++) {
+    for (size_t i = 0; i < nc; i++) {
 	nodes[i] = cp;
 	cp = cp->rightsib;
     }
 
     qsort (nodes, nc, sizeof(treenode_t*), (qsort_cmpf)nodecmp);
-    areas_sorted = N_NEW(nc,double);
-    for (i = 0; i < nc; i++) {
+    double* areas_sorted = gv_calloc(nc, sizeof(double));
+    for (size_t i = 0; i < nc; i++) {
 	areas_sorted[i] = nodes[i]->area;
     }
     if (tree->area == tree->child_area)
@@ -179,7 +178,7 @@ static void layoutTree(treenode_t * tree)
     }
     if (Verbose)
 	fprintf (stderr, "rec %f %f %f %f\n", tree->r.x[0], tree->r.x[1], tree->r.size[0], tree->r.size[1]);
-    for (i = 0; i < nc; i++) {
+    for (size_t i = 0; i < nc; i++) {
 	nodes[i]->r = recs[i];
 	if (Verbose)
 	    fprintf (stderr, "%f - %f %f %f %f = %f (%f %f %f %f)\n", areas_sorted[i],
@@ -193,7 +192,7 @@ static void layoutTree(treenode_t * tree)
     free (recs);
 
     cp = tree->leftchild;
-    for (i = 0; i < nc; i++) {
+    for (size_t i = 0; i < nc; i++) {
 	if (cp->kind == AGRAPH)
 	    layoutTree (cp);
 	cp = cp->rightsib;
@@ -258,9 +257,9 @@ static void freeTree (treenode_t* tp)
 {
     treenode_t* cp = tp->leftchild;
     treenode_t* rp;
-    int i, nc = tp->n_children;
+    size_t nc = tp->n_children;
 
-    for (i = 0; i < nc; i++) {
+    for (size_t i = 0; i < nc; i++) {
 	rp = cp->rightsib;
 	freeTree (cp);
 	cp = rp;
@@ -280,7 +279,7 @@ void patchworkLayout(Agraph_t * g)
 
     root = mkTree (g,gp,ap,mp);
     total = root->area;
-    root->r = rectangle_new(0, 0, sqrt(total + 0.1), sqrt(total + 0.1));
+    root->r = (rectangle){{0, 0}, {sqrt(total + 0.1), sqrt(total + 0.1)}};
     layoutTree(root);
     walkTree(root);
     freeTree (root);

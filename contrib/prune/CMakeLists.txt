@@ -1,4 +1,4 @@
-add_executable(prune generic_list.c prune.c)
+add_executable(prune prune.c)
 target_include_directories(prune PRIVATE
   ../../lib
   ../../lib/cdt)

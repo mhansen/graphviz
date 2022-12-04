@@ -5,13 +5,12 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt
 
 bin_PROGRAMS = prune
-noinst_HEADERS = generic_list.h
 dist_man_MANS = prune.1
 if ENABLE_MAN_PDFS
 pdf_DATA = prune.1.pdf
 endif
 
-prune_SOURCES = generic_list.c prune.c
+prune_SOURCES = prune.c
 
 prune_LDADD = $(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \

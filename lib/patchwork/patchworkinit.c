@@ -8,7 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include    <assert.h>
+#include    <cgraph/list.h>
 #include    <patchwork/patchwork.h>
+#include    <limits.h>
 #include    <neatogen/adjust.h>
 #include    <pack/pack.h>
 #include    <neatogen/neatoprocs.h>
@@ -17,36 +20,7 @@
 /* the following code shamelessly copied from lib/fdpgen/layout.c
 and should be extracted and made into a common function */
 
-#define CL_CHUNK 10
-
-typedef struct {
-    graph_t **cl;
-    int sz;
-    int cnt;
-} clist_t;
-
-static void initCList(clist_t * clist)
-{
-    clist->cl = 0;
-    clist->sz = 0;
-    clist->cnt = 0;
-}
-
-/* addCluster:
- * Append a new cluster to the list.
- * NOTE: cl[0] is empty. The clusters are in cl[1..cnt].
- * Normally, we increase the array when cnt == sz.
- * The test for cnt > sz is necessary for the first time.
- */
-static void addCluster(clist_t * clist, graph_t * subg)
-{
-    clist->cnt++;
-    if (clist->cnt >= clist->sz) {
-	clist->sz += CL_CHUNK;
-	clist->cl = RALLOC(clist->sz, clist->cl, graph_t *);
-    }
-    clist->cl[clist->cnt] = subg;
-}
+DEFINE_LIST(clist, graph_t*)
 
 /* mkClusters:
  * Attach list of immediate child clusters.
@@ -59,12 +33,13 @@ static void
 mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 {
     graph_t* subg;
-    clist_t  list;
+    clist_t  list = {0};
     clist_t* clist;
 
     if (pclist == NULL) {
+        // [0] is empty. The clusters are in [1..cnt].
+        clist_append(&list, NULL);
         clist = &list;
-        initCList(clist);
     }
     else
         clist = pclist;
@@ -73,12 +48,12 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
         if (!strncmp(agnameof(subg), "cluster", 7)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 #ifdef FDP_GEN
-            GD_alg(subg) = (void *) NEW(gdata); /* freed in cleanup_subgs */
+            GD_alg(subg) = gv_alloc(sizeof(gdata)); /* freed in cleanup_subgs */
             GD_ndim(subg) = GD_ndim(parent);
             LEVEL(subg) = LEVEL(parent) + 1;
             GPARENT(subg) = parent;
 #endif
-            addCluster(clist, subg);
+            clist_append(clist, subg);
             mkClusters(subg, NULL, subg);
         }
         else {
@@ -86,9 +61,14 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
         }
     }
     if (pclist == NULL) {
-        GD_n_cluster(g) = list.cnt;
-        if (list.cnt)
-            GD_clust(g) = RALLOC(list.cnt + 1, list.cl, graph_t*);
+        assert(clist_size(&list) - 1 <= INT_MAX);
+        GD_n_cluster(g) = (int)(clist_size(&list) - 1);
+        if (clist_size(&list) > 1) {
+            clist_shrink_to_fit(&list);
+            GD_clust(g) = clist_detach(&list);
+        } else {
+            clist_free(&list);
+        }
     }
 }
 
@@ -109,9 +89,9 @@ static void patchwork_init_node_edge(graph_t * g)
     node_t *n;
     edge_t *e;
     int i = 0;
-    rdata* alg = N_NEW(agnnodes(g), rdata);
+    rdata* alg = gv_calloc(agnnodes(g), sizeof(rdata));
 
-    GD_neato_nlist(g) = N_NEW(agnnodes(g) + 1, node_t *);
+    GD_neato_nlist(g) = gv_calloc(agnnodes(g) + 1, sizeof(node_t*));
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);  // node custom data
 	ND_alg(n) = alg + i;

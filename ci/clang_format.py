@@ -123,8 +123,6 @@ EXCLUDE = (
   "cmd/tools/unflatten.c",
   "contrib/diffimg/diffimg.c",
   "contrib/pangotest/pangotest.c",
-  "contrib/prune/generic_list.c",
-  "contrib/prune/generic_list.h",
   "contrib/prune/prune.c",
   "doc/libgraph/agmemread.c",
   "doc/libgraph/sccmap.c",
