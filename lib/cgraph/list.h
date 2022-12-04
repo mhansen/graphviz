@@ -5,6 +5,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#ifdef __GNUC__
+#define LIST_UNUSED __attribute__((unused))
+#else
+#define LIST_UNUSED /* nothing */
+#endif
+
 /** create a new list type and its associated member functions
  *
  * \param name Type name to give the list container
@@ -31,21 +37,23 @@
    *                                                                           \
    * \return A new empty list                                                  \
    */                                                                          \
-  static inline name##_t name##_new(void) { return (name##_t){0}; }            \
+  static inline LIST_UNUSED name##_t name##_new(void) {                        \
+    return (name##_t){0};                                                      \
+  }                                                                            \
                                                                                \
   /** get the number of elements in a list */                                  \
-  static size_t name##_size(const name##_t *list) {                            \
+  static inline LIST_UNUSED size_t name##_size(const name##_t *list) {         \
     assert(list != NULL);                                                      \
     return list->size;                                                         \
   }                                                                            \
                                                                                \
   /** does this list contain no elements? */                                   \
-  static inline bool name##_is_empty(const name##_t *list) {                   \
+  static inline LIST_UNUSED bool name##_is_empty(const name##_t *list) {       \
     assert(list != NULL);                                                      \
     return name##_size(list) == 0;                                             \
   }                                                                            \
                                                                                \
-  static inline void name##_append(name##_t *list, type item) {                \
+  static inline LIST_UNUSED void name##_append(name##_t *list, type item) {    \
     assert(list != NULL);                                                      \
                                                                                \
     /* do we need to expand the backing storage? */                            \
@@ -65,7 +73,8 @@
    * \param index Element index to get                                         \
    * \return Element at the given index                                        \
    */                                                                          \
-  static inline type name##_get(const name##_t *list, size_t index) {          \
+  static inline LIST_UNUSED type name##_get(const name##_t *list,              \
+                                            size_t index) {                    \
     assert(list != NULL);                                                      \
     assert(index < list->size && "index out of bounds");                       \
     return list->data[index];                                                  \
@@ -77,7 +86,8 @@
    * \param index Element to assign to                                         \
    * \param item Value to assign                                               \
    */                                                                          \
-  static inline void name##_set(name##_t *list, size_t index, type item) {     \
+  static inline LIST_UNUSED void name##_set(name##_t *list, size_t index,      \
+                                            type item) {                       \
     assert(list != NULL);                                                      \
     assert(index < list->size && "index out of bounds");                       \
     list->data[index] = item;                                                  \
@@ -95,14 +105,14 @@
    * \param index Element to get a pointer to                                  \
    * \return Pointer to the requested element                                  \
    */                                                                          \
-  static inline type *name##_at(name##_t *list, size_t index) {                \
+  static inline LIST_UNUSED type *name##_at(name##_t *list, size_t index) {    \
     assert(list != NULL);                                                      \
     assert(index < list->size && "index out of bounds");                       \
     return &list->data[index];                                                 \
   }                                                                            \
                                                                                \
   /** remove all elements from a list */                                       \
-  static inline void name##_clear(name##_t *list) {                            \
+  static inline LIST_UNUSED void name##_clear(name##_t *list) {                \
     assert(list != NULL);                                                      \
     list->size = 0;                                                            \
   }                                                                            \
@@ -113,7 +123,8 @@
    * \param size New size of the list                                          \
    * \param value Default to assign to any new elements                        \
    */                                                                          \
-  static inline void name##_resize(name##_t *list, size_t size, type value) {  \
+  static inline LIST_UNUSED void name##_resize(name##_t *list, size_t size,    \
+                                               type value) {                   \
     assert(list != NULL);                                                      \
                                                                                \
     while (list->size < size) {                                                \
@@ -123,7 +134,7 @@
   }                                                                            \
                                                                                \
   /** deallocate unused backing storage, shrinking capacity to size */         \
-  static inline void name##_shrink_to_fit(name##_t *list) {                    \
+  static inline LIST_UNUSED void name##_shrink_to_fit(name##_t *list) {        \
     assert(list != NULL);                                                      \
                                                                                \
     if (list->size > list->capacity) {                                         \
@@ -134,7 +145,7 @@
   }                                                                            \
                                                                                \
   /** free resources associated with a list */                                 \
-  static inline void name##_free(name##_t *list) {                             \
+  static inline LIST_UNUSED void name##_free(name##_t *list) {                 \
     assert(list != NULL);                                                      \
     free(list->data);                                                          \
     *list = (name##_t){0};                                                     \
@@ -150,7 +161,7 @@
    * \param size Number of elements pointed to by `data`                       \
    * \return A managed list containing the provided elements                   \
    */                                                                          \
-  static inline name##_t name##_attach(type *data, size_t size) {              \
+  static inline LIST_UNUSED name##_t name##_attach(type *data, size_t size) {  \
     assert(data != NULL || size == 0);                                         \
     return (name##_t){.data = data, .size = size, .capacity = size};           \
   }                                                                            \
@@ -164,7 +175,7 @@
    * \param list List to operate on                                            \
    * \return A pointer to an array of the `list->size` elements                \
    */                                                                          \
-  static inline type *name##_detach(name##_t *list) {                          \
+  static inline LIST_UNUSED type *name##_detach(name##_t *list) {              \
     assert(list != NULL);                                                      \
     type *data = list->data;                                                   \
     *list = (name##_t){0};                                                     \
