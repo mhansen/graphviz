@@ -17,6 +17,7 @@
 #include <stdbool.h>
 
 static void dfs_cutval(node_t * v, edge_t * par);
+static int dfs_range_init(node_t * v, edge_t * par, int low);
 static int dfs_range(node_t * v, edge_t * par, int low);
 static int x_val(edge_t * e, node_t * v, int dir);
 #ifdef DEBUG
@@ -68,6 +69,35 @@ static int add_tree_edge(edge_t * e)
 	return -1;
     }
     return 0;
+}
+
+/**
+ * Invalidate DFS attributes by walking up the tree from to_node till lca
+ * (inclusively). Called when updating tree to improve pruning in dfs_range().
+ * Assigns ND_low(n) = -1 for the affected nodes.
+ */
+static void invalidate_path(node_t *lca, node_t *to_node) {
+    while (true) {
+        if (ND_low(to_node) == -1)
+          break;
+
+        ND_low(to_node) = -1;
+
+        edge_t *e = ND_par(to_node);
+        if (e == NULL)
+          break;
+
+        if (ND_lim(to_node) >= ND_lim(lca)) {
+          if (to_node != lca)
+            agerr(AGERR, "invalidate_path: skipped over LCA\n");
+          break;
+        }
+
+        if (ND_lim(agtail(e)) > ND_lim(aghead(e)))
+          to_node = agtail(e);
+        else
+          to_node = aghead(e);
+    }
 }
 
 static void exchange_tree_edges(edge_t * e, edge_t * f)
@@ -246,7 +276,7 @@ static edge_t *enter_edge(edge_t * e)
 
 static void init_cutvalues(void)
 {
-    dfs_range(GD_nlist(G), NULL, 1);
+    dfs_range_init(GD_nlist(G), NULL, 1);
     dfs_cutval(GD_nlist(G), NULL);
 }
 
@@ -619,10 +649,16 @@ update(edge_t * e, edge_t * f)
 	agerr(AGERR, "update: mismatched lca in treeupdates\n");
 	return 2;
     }
+
+    // invalidate paths from LCA till affected nodes:
+    int lca_low = ND_low(lca);
+    invalidate_path(lca, aghead(f));
+    invalidate_path(lca, agtail(f));
+
     ED_cutvalue(f) = -cutvalue;
     ED_cutvalue(e) = 0;
     exchange_tree_edges(e, f);
-    dfs_range(lca, ND_par(lca), ND_low(lca));
+    dfs_range(lca, ND_par(lca), lca_low);
     return 0;
 }
 
@@ -1019,10 +1055,49 @@ static void dfs_cutval(node_t * v, edge_t * par)
 	x_cutval(par);
 }
 
+/*
+* Initializes DFS range attributes (par, low, lim) over tree nodes such that:
+* ND_par(n) - parent tree edge
+* ND_low(n) - min DFS index for nodes in sub-tree (>= 1)
+* ND_lim(n) - max DFS index for nodes in sub-tree
+*/
+static int dfs_range_init(node_t *v, edge_t *par, int low) {
+    int i, lim;
+
+    lim = low;
+    ND_par(v) = par;
+    ND_low(v) = low;
+
+    for (i = 0; ND_tree_out(v).list[i]; i++) {
+        edge_t *e = ND_tree_out(v).list[i];
+        if (e != par) {
+            lim = dfs_range_init(aghead(e), e, lim);
+        }
+    }
+
+    for (i = 0; ND_tree_in(v).list[i]; i++) {
+        edge_t *e = ND_tree_in(v).list[i];
+        if (e != par) {
+            lim = dfs_range_init(agtail(e), e, lim);
+        }
+    }
+
+    ND_lim(v) = lim;
+
+    return lim + 1;
+}
+
+/*
+ * Incrementally updates DFS range attributes
+ */
 static int dfs_range(node_t * v, edge_t * par, int low)
 {
     edge_t *e;
     int i, lim;
+
+    if (ND_par(v) == par && ND_low(v) == low) {
+	return ND_lim(v) + 1;
+    }
 
     lim = low;
     ND_par(v) = par;
