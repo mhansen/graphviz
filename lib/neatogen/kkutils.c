@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <neatogen/bfs.h>
 #include <neatogen/dijkstra.h>
 #include <neatogen/kkutils.h>
@@ -56,11 +56,9 @@ void empty_neighbors_vec(vtx_data * graph, int vtx, int *vtx_vec)
 static DistType **compute_apsp_dijkstra(vtx_data * graph, int n)
 {
     int i;
-    DistType *storage;
-    DistType **dij;
 
-    storage = N_GNEW(n * n, DistType);
-    dij = N_GNEW(n, DistType *);
+    DistType *storage = gv_calloc((size_t)(n * n), sizeof(DistType));
+    DistType **dij = gv_calloc(n, sizeof(DistType*));
     for (i = 0; i < n; i++)
 	dij[i] = storage + i * n;
 
@@ -75,11 +73,10 @@ static DistType **compute_apsp_simple(vtx_data * graph, int n)
     /* compute all pairs shortest path */
     /* for unweighted graph */
     int i;
-    DistType *storage = N_GNEW(n * n, int);
-    DistType **dij;
+    DistType *storage = gv_calloc((size_t)(n * n), sizeof(DistType));
     Queue Q;
 
-    dij = N_GNEW(n, DistType *);
+    DistType **dij = gv_calloc(n, sizeof(DistType*));
     for (i = 0; i < n; i++) {
 	dij[i] = storage + i * n;
     }
@@ -183,9 +180,13 @@ fcmpf (int* ip1, int* ip2)
 {
     float d1 = fvals[*ip1];
     float d2 = fvals[*ip2];
-    if (d1 < d2) return -1;
-    else if (d1 > d2) return 1;
-    else return 0;
+    if (d1 < d2) {
+      return -1;
+    }
+    if (d1 > d2) {
+      return 1;
+    }
+    return 0;
 }
 
 void quicksort_placef(float *place, int *ordering, int first, int last)
@@ -238,14 +239,13 @@ void compute_new_weights(vtx_data * graph, int n)
 
     int i, j;
     int nedges = 0;
-    float *weights;
-    int *vtx_vec = N_GNEW(n, int);
+    int *vtx_vec = gv_calloc(n, sizeof(int));
     int deg_i, deg_j, neighbor;
 
     for (i = 0; i < n; i++) {
 	nedges += graph[i].nedges;
     }
-    weights = N_GNEW(nedges, float);
+    float *weights = gv_calloc(nedges, sizeof(float));
 
     for (i = 0; i < n; i++) {
 	vtx_vec[i] = 0;

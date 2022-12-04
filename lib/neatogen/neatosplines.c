@@ -10,8 +10,9 @@
 
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
+#include <math.h>
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
 #include <pathplan/pathplan.h>
@@ -44,7 +45,6 @@ make_barriers(Ppoly_t ** poly, int npoly, int pp, int qp,
 	      Pedge_t ** barriers, int *n_barriers)
 {
     int i, j, k, n, b;
-    Pedge_t *bar;
 
     n = 0;
     for (i = 0; i < npoly; i++) {
@@ -54,7 +54,7 @@ make_barriers(Ppoly_t ** poly, int npoly, int pp, int qp,
 	    continue;
 	n += poly[i]->pn;
     }
-    bar = N_GNEW(n, Pedge_t);
+    Pedge_t *bar = gv_calloc(n, sizeof(Pedge_t));
     b = 0;
     for (i = 0; i < npoly; i++) {
 	if (i == pp)
@@ -116,7 +116,7 @@ static void *newitem(Dt_t * d, edgeitem * obj, Dtdisc_t * disc)
 
     (void)d;
     (void)disc;
-    newp = NEW(edgeitem);
+    newp = gv_alloc(sizeof(edgeitem));
     newp->id = obj->id;
     newp->e = obj->e;
     ED_count(newp->e) = 1;
@@ -246,7 +246,7 @@ void makeSelfArcs(edge_t * e, int stepx)
 	makePortLabels(e);
     } else {
 	int i;
-	edge_t **edges = N_GNEW(cnt, edge_t *);
+	edge_t **edges = gv_calloc(cnt, sizeof(edge_t*));
 	for (i = 0; i < cnt; i++) {
 	    edges[i] = e;
 	    e = ED_to_virt(e);
@@ -284,7 +284,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
     boxf b;
     pointf pt;
     field_t *fld;
-    int isPoly;
+    bool isPoly;
     pointf* verts = NULL;
     pointf vs[4];
     pointf p;
@@ -293,10 +293,10 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
     switch (shapeOf(n)) {
     case SH_POLY:
     case SH_POINT:
-	obs = NEW(Ppoly_t);
+	obs = gv_alloc(sizeof(Ppoly_t));
 	poly = ND_shape_info(n);
 	if (isOrtho) {
-	    isPoly = 1;
+	    isPoly = true;
 	    sides = 4;
 	    verts = vs;
 	    margin.x = margin.y = 0;
@@ -324,18 +324,18 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	    }
 	}
 	else if (poly->sides >= 3) {
-	    isPoly = 1;
+	    isPoly = true;
 	    sides = poly->sides;
 	    verts = poly->vertices;
 	    margin.x = pmargin->x;
 	    margin.y = pmargin->y;
 	} else {		/* ellipse */
-	    isPoly = 0;
+	    isPoly = false;
 	    sides = 8;
 	    adj = drand48() * .01;
 	}
 	obs->pn = sides;
-	obs->ps = N_NEW(sides, Ppoint_t);
+	obs->ps = gv_calloc(sides, sizeof(Ppoint_t));
 	/* assuming polys are in CCW order, and pathplan needs CW */
 	for (j = 0; j < sides; j++) {
 	    double xmargin = 0.0, ymargin = 0.0;
@@ -395,9 +395,9 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
     case SH_RECORD:
 	fld = ND_shape_info(n);
 	b = fld->b;
-	obs = NEW(Ppoly_t);
+	obs = gv_alloc(sizeof(Ppoly_t));
 	obs->pn = 4;
-	obs->ps = N_NEW(4, Ppoint_t);
+	obs->ps = gv_calloc(4, sizeof(Ppoint_t));
 	/* CW order */
 	pt = ND_coord(n);
 	if (pmargin->doAdd) {
@@ -414,9 +414,9 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	}
 	break;
     case SH_EPSF:
-	obs = NEW(Ppoly_t);
+	obs = gv_alloc(sizeof(Ppoly_t));
 	obs->pn = 4;
-	obs->ps = N_NEW(4, Ppoint_t);
+	obs->ps = gv_calloc(4, sizeof(Ppoint_t));
 	/* CW order */
 	pt = ND_coord(n);
 	if (pmargin->doAdd) {
@@ -546,7 +546,6 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
     Ppoly_t *obp;
     int cnt, i = 0, npoly;
     vconfig_t *vconfig = 0;
-    path *P = NULL;
     int useEdges = Nop > 1;
     int legal = 0;
 
@@ -556,7 +555,7 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
     
     /* build configuration */
     if (edgetype >= EDGETYPE_PLINE) {
-	obs = N_NEW(agnnodes(g), Ppoly_t *);
+	obs = gv_calloc(agnnodes(g), sizeof(Ppoly_t*));
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    obp = makeObstacle(n, pmargin, edgetype == EDGETYPE_ORTHO);
 	    if (obp) {
@@ -615,10 +614,6 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 	    } 
 	    else if (ED_count(e) == 0) continue;  /* only do representative */
 	    else if (n == head) {    /* self arc */
-		if (!P) {
-		    P = NEW(path);
-		    P->boxes = N_NEW(agnnodes(g) + 20 * 2 * 9, boxf);
-		}
 		makeSelfArcs(e, GD_nodesep(g->root));
 	    } else if (vconfig) { /* EDGETYPE_SPLINE or EDGETYPE_PLINE */
 #ifdef HAVE_GTS
@@ -661,10 +656,6 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 
     if (vconfig)
 	Pobsclose (vconfig);
-    if (P) {
-	free(P->boxes);
-	free(P);
-    }
     if (obs) {
 	for (i=0; i < npoly; i++) {
 	    free (obs[i]->ps);
@@ -1006,9 +997,7 @@ static bool _neato_set_aspect(graph_t * g)
 	}
 	/* normalize */
 	if (GD_flip(g)) {
-	    double t = GD_bb(g).UR.x;
-	    GD_bb(g).UR.x = GD_bb(g).UR.y;
-	    GD_bb(g).UR.y = t;
+	    GD_bb(g).UR = exch_xyf(GD_bb(g).UR);
 	}
 	if (GD_drawing(g)->ratio_kind == R_FILL) {
 	    /* fill is weird because both X and Y can stretch */
@@ -1032,7 +1021,7 @@ static bool _neato_set_aspect(graph_t * g)
 	    xf = (double) GD_drawing(g)->size.x / GD_bb(g).UR.x;
 	    yf = (double) GD_drawing(g)->size.y / GD_bb(g).UR.y;
 	    if (xf > 1.0 && yf > 1.0) {
-		double scale = MIN(xf, yf);
+		double scale = fmin(xf, yf);
 		xf = yf = scale;
 	    } else
 		return translated;

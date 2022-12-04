@@ -22,6 +22,7 @@
  * Tim Dwyer, 2006
  **********************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/digcola.h>
 #include <stdbool.h>
 #ifdef IPSEPCOLA
@@ -63,18 +64,14 @@ constrained_majorization_vpsc(CMajEnvVPSC * e, float *b, float *place,
     g = e->fArray1;
     old_place = e->fArray2;
     d = e->fArray3;
-    /* fprintf(stderr,"Entered: constrained_majorization_vpsc, #constraints=%d\n",e->m); */
     if (e->m > 0) {
 	for (i = 0; i < n; i++) {
 	    setVariableDesiredPos(e->vs[i], place[i]);
 	}
-	/* fprintf(stderr,"  calling satisfyVPSC...\n"); */
 	satisfyVPSC(e->vpsc);
 	for (i = 0; i < n; i++) {
 	    place[i] = getVariablePos(e->vs[i]);
-	    /* fprintf(stderr,"vs[%d]=%f\n",i,place[i]); */
 	}
-	/* fprintf(stderr,"    done.\n"); */
     }
 #ifdef CONMAJ_LOGGING
     float prev_stress = 0;
@@ -85,15 +82,12 @@ constrained_majorization_vpsc(CMajEnvVPSC * e, float *b, float *place,
 	}
     }
     FILE *logfile = fopen("constrained_majorization_log", "a");
-
-    /* fprintf(logfile,"grad proj %d: stress=%f\n",call_no,prev_stress); */
 #endif
 
     for (counter = 0; counter < max_iterations && !converged; counter++) {
 	float test = 0;
 	float alpha, beta;
 	float numerator = 0, denominator = 0, r;
-	/* fprintf(stderr,"."); */
 	converged = true;
 	/* find steepest descent direction */
 	for (i = 0; i < n; i++) {
@@ -195,8 +189,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
     int i, j;
     /* nv is the number of real nodes */
     int nConCs;
-    /* fprintf(stderr,"Entered initCMajVPSC\n"); */
-    CMajEnvVPSC *e = GNEW(CMajEnvVPSC);
+    CMajEnvVPSC *e = gv_alloc(sizeof(CMajEnvVPSC));
     e->A = NULL;
     e->packedMat = packedMat;
     /* if we have clusters then we'll need two constraints for each var in
@@ -206,7 +199,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
     e->ndv = 0;
 
     e->gcs = NULL;
-    e->vs = N_GNEW(n, Variable *);
+    e->vs = gv_calloc(n, sizeof(Variable*));
     for (i = 0; i < n; i++) {
 	e->vs[i] = newVariable(i, 1.0, 1.0);
     }
@@ -216,7 +209,6 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	    fprintf(stderr, "  generate edge constraints...\n");
 	for (i = 0; i < e->nv; i++) {
 	    for (j = 1; j < graph[i].nedges; j++) {
-		/* fprintf(stderr,"edist=%f\n",graph[i].edists[j]); */
 		if (graph[i].edists[j] > 0.01) {
 		    e->gm++;
 		}
@@ -248,7 +240,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	    get_num_digcola_constraints(levels, e->ndv + 1) + e->ndv - 1;
 	e->gcs = newConstraints(e->gm);
 	e->gm = 0;
-	e->vs = N_GNEW(n + e->ndv, Variable *);
+	e->vs = gv_calloc(n + e->ndv, sizeof(Variable*));
 	for (i = 0; i < n; i++) {
 	    e->vs[i] = vs[i];
 	}
@@ -281,9 +273,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 		newConstraint(e->vs[n + i], e->vs[n + i + 1], 0);
 	}
     }
-    /* fprintf(stderr,"  generate edge constraints... done: n=%d,m=%d\n",e->n,e->gm); */
     if (opt->clusters->nclusters > 0) {
-	/* fprintf(stderr,"  generate cluster containment constraints...\n"); */
 	Constraint **ecs = e->gcs;
 	nConCs = 2 * opt->clusters->nvars;
 	e->gcs = newConstraints(e->gm + nConCs);
@@ -301,7 +291,6 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 		e->gcs[e->gm++] = newConstraint(v, cr, 0);
 	    }
 	}
-	/* fprintf(stderr,"  containment constraints... done: \n"); */
     }
 
     e->m = 0;
@@ -315,9 +304,9 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	e->A = unpackMatrix(packedMat, n);
     }
 
-    e->fArray1 = N_GNEW(n, float);
-    e->fArray2 = N_GNEW(n, float);
-    e->fArray3 = N_GNEW(n, float);
+    e->fArray1 = gv_calloc(n, sizeof(float));
+    e->fArray2 = gv_calloc(n, sizeof(float));
+    e->fArray3 = gv_calloc(n, sizeof(float));
     if (Verbose)
 	fprintf(stderr,
 		"  initCMajVPSC done: %d global constraints generated.\n",
@@ -369,7 +358,7 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
     Constraint **csol, **csolptr;
     int i, j, mol = 0;
     int n = e->nv + e->nldv;
-    boxf* bb = N_GNEW (n, boxf);
+    boxf* bb = gv_calloc(n, sizeof(boxf));
     bool genclusters = opt->clusters->nclusters > 0;
     if (genclusters) {
 	/* n is the number of real variables, not dummy cluster vars */
@@ -396,12 +385,13 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
 	    opt->gap.y / 2.0;
     }
     if (genclusters) {
-	Constraint ***cscl = N_GNEW(opt->clusters->nclusters + 1, Constraint**);
-	int* cm = N_GNEW(opt->clusters->nclusters + 1, int);
+	Constraint ***cscl = gv_calloc(opt->clusters->nclusters + 1,
+	                               sizeof(Constraint**));
+	int* cm = gv_calloc(opt->clusters->nclusters + 1, sizeof(int));
 	for (i = 0; i < opt->clusters->nclusters; i++) {
 	    int cn = opt->clusters->clustersizes[i];
-	    Variable** cvs = N_GNEW(cn + 2, Variable*);
-	    boxf* cbb = N_GNEW(cn + 2, boxf);
+	    Variable** cvs = gv_calloc(cn + 2, sizeof(Variable*));
+	    boxf* cbb = gv_calloc(cn + 2, sizeof(boxf));
 	    /* compute cluster bounding bb */
 	    boxf container;
 	    container.LL.x = container.LL.y = DBL_MAX;
@@ -435,8 +425,8 @@ void generateNonoverlapConstraints(CMajEnvVPSC * e,
 	/* generate top level constraints */
 	{
 	    int cn = opt->clusters->ntoplevel + opt->clusters->nclusters;
-	    Variable** cvs = N_GNEW(cn,Variable*);
-	    boxf* cbb = N_GNEW(cn, boxf);
+	    Variable** cvs = gv_calloc(cn, sizeof(Variable*));
+	    boxf* cbb = gv_calloc(cn, sizeof(boxf));
 	    for (i = 0; i < opt->clusters->ntoplevel; i++) {
 		int iv = opt->clusters->toplevel[i];
 		cvs[i] = e->vs[iv];
@@ -585,17 +575,17 @@ DigColaLevel *assign_digcola_levels(int *ordering, int n, int *level_inds,
 				    int num_divisions)
 {
     int i, j;
-    DigColaLevel *l = N_GNEW(num_divisions + 1, DigColaLevel);
+    DigColaLevel *l = gv_calloc(num_divisions + 1, sizeof(DigColaLevel));
     /* first level */
     l[0].num_nodes = level_inds[0];
-    l[0].nodes = N_GNEW(l[0].num_nodes, int);
+    l[0].nodes = gv_calloc(l[0].num_nodes, sizeof(int));
     for (i = 0; i < l[0].num_nodes; i++) {
 	l[0].nodes[i] = ordering[i];
     }
     /* second through second last level */
     for (i = 1; i < num_divisions; i++) {
 	l[i].num_nodes = level_inds[i] - level_inds[i - 1];
-	l[i].nodes = N_GNEW(l[i].num_nodes, int);
+	l[i].nodes = gv_calloc(l[i].num_nodes, sizeof(int));
 	for (j = 0; j < l[i].num_nodes; j++) {
 	    l[i].nodes[j] = ordering[level_inds[i - 1] + j];
 	}
@@ -603,7 +593,7 @@ DigColaLevel *assign_digcola_levels(int *ordering, int n, int *level_inds,
     /* last level */
     if (num_divisions > 0) {
 	l[num_divisions].num_nodes = n - level_inds[num_divisions - 1];
-	l[num_divisions].nodes = N_GNEW(l[num_divisions].num_nodes, int);
+	l[num_divisions].nodes = gv_calloc(l[num_divisions].num_nodes, sizeof(int));
 	for (i = 0; i < l[num_divisions].num_nodes; i++) {
 	    l[num_divisions].nodes[i] =
 		ordering[level_inds[num_divisions - 1] + i];
