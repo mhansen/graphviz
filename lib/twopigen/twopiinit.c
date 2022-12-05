@@ -14,6 +14,7 @@
  * Derived from Graham Wills' algorithm described in GD'97.
  */
 
+#include    <cgraph/alloc.h>
 #include    <twopigen/circle.h>
 #include    <neatogen/adjust.h>
 #include    <pack/pack.h>
@@ -33,10 +34,9 @@ static void twopi_init_node_edge(graph_t * g)
     edge_t *e;
     int i = 0;
     int n_nodes = agnnodes(g);
-    rdata* alg;
 
-    alg = N_NEW(n_nodes, rdata);
-    GD_neato_nlist(g) = N_NEW(n_nodes + 1, node_t *);
+    rdata* alg = gv_calloc(n_nodes, sizeof(rdata));
+    GD_neato_nlist(g) = gv_calloc(n_nodes + 1, sizeof(node_t*));
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	neato_init_node(n);
 	ND_alg(n) = alg + i;

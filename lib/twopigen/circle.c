@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include    <cgraph/alloc.h>
 #include    <twopigen/circle.h>
 #include    <ctype.h>
 #include    <inttypes.h>
@@ -16,6 +17,7 @@
 #include    <stdbool.h>
 #include    <stdint.h>
 #include    <stdlib.h>
+#include    <string.h>
 #define DEF_RANKSEP 1.00
 #define UNSET 10.00
 
@@ -68,7 +70,7 @@ static bool isLeaf(Agraph_t * g, Agnode_t * n)
 static void initLayout(Agraph_t * g)
 {
     int nnodes = agnnodes(g);
-    int INF = nnodes * nnodes;
+    uint64_t INF = (uint64_t)(nnodes * nnodes);
 
     for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	SCENTER(n) = INF;
@@ -120,7 +122,7 @@ typedef struct {
 } queue;
 static void push(queue* q, void* p)
 {
-    item_t* ip = NEW(item_t);
+    item_t* ip = gv_alloc(sizeof(item_t));
     ip->p = p;
     if (q->tail) {  /* non-empty q */
 	q->tail->s = ip;
@@ -238,6 +240,14 @@ static void setSubtreeSpans(Agraph_t * sg, Agnode_t * center)
     setChildSubtreeSpans(sg, center);
 }
 
+/// has the given value been assigned?
+static bool is_set(double a) {
+  // Compare exactly against our sentinel. No need for a tolerance or
+  // approximation because anything unset has been explicitly assigned `UNSET`.
+  const double unset = UNSET;
+  return memcmp(&a, &unset, sizeof(a)) != 0;
+}
+
  /* Set the node positions for the 2nd and later rings. */
 static void setChildPositions(Agraph_t * sg, Agnode_t * n)
 {
@@ -254,7 +264,7 @@ static void setChildPositions(Agraph_t * sg, Agnode_t * n)
 	    next = aghead(ep);
 	if (SPARENT(next) != n)
 	    continue;		/* handles loops */
-	if (THETA(next) != UNSET)
+	if (is_set(THETA(next)))
 	    continue;		/* handles multiedges */
 
 	THETA(next) = theta + SPAN(next) / 2.0;
@@ -285,7 +295,7 @@ getRankseps (Agraph_t* g, uint64_t maxrank)
     char *endp;
     char c;
     uint64_t rk = 1;
-    double* ranks = N_NEW(maxrank+1, double);
+    double* ranks = gv_calloc(maxrank + 1, sizeof(double));
     double xf = 0.0, delx = 0.0, d;
 
     if ((p = late_string(g, agfindgraphattr(g->root, "ranksep"), NULL))) {
