@@ -22,12 +22,10 @@
 #pragma once
 
 #include <assert.h>
-#include <cgraph/likely.h>
-#include <errno.h>
+#include <cgraph/alloc.h>
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -45,39 +43,18 @@ typedef struct {
 } bitarray_t;
 
 /// create an array of the given element length
-static inline int bitarray_new(bitarray_t *self, size_t size_bits) {
-  assert(self != NULL);
-  assert(self->size_bits == 0);
+static inline bitarray_t bitarray_new(size_t size_bits) {
+
+  bitarray_t ba = {.size_bits = size_bits};
 
   // if the array is small enough, we can use inline storage
-  if (size_bits <= sizeof(self->block) * 8) {
-    memset(self->block, 0, sizeof(self->block));
+  if (size_bits <= sizeof(ba.block) * 8) {
+    // nothing to be done
 
     // otherwise we need to heap-allocate
   } else {
     size_t capacity = size_bits / 8 + (size_bits % 8 == 0 ? 0 : 1);
-    uint8_t *base = calloc(capacity, sizeof(self->base[0]));
-    if (UNLIKELY(base == NULL))
-      return ENOMEM;
-
-    self->base = base;
-  }
-
-  self->size_bits = size_bits;
-
-  return 0;
-}
-
-/// `bitarray_new` for callers who cannot handle failure
-static inline bitarray_t bitarray_new_or_exit(size_t size_bits) {
-
-  bitarray_t ba;
-  memset(&ba, 0, sizeof(ba));
-
-  int error = bitarray_new(&ba, size_bits);
-  if (UNLIKELY(error != 0)) {
-    fprintf(stderr, "out of memory\n");
-    exit(EXIT_FAILURE);
+    ba.base = gv_calloc(capacity, sizeof(uint8_t));
   }
 
   return ba;

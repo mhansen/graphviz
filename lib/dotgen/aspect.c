@@ -201,7 +201,7 @@ static void computeLayerWidths(graph_t * g)
 	layerWidthInfo[i].nodeGroupsInLayer = gv_calloc(nNodeGroups, sizeof(nodeGroup_t*));
 
 	assert(nNodeGroups >= 0);
-	layerWidthInfo[i].removed = bitarray_new_or_exit((size_t)nNodeGroups);
+	layerWidthInfo[i].removed = bitarray_new((size_t)nNodeGroups);
 
 	layerWidthInfo[i].layerNumber = i;
 	layerWidthInfo[i].nNodeGroupsInLayer = 0;

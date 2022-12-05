@@ -596,7 +596,7 @@ monotonate_trapezoids(int nsegs, segment_t *seg, traps_t *tr,
     int flip, boxes_t *decomp) {
     int i;
     int tr_start;
-    bitarray_t visited = bitarray_new_or_exit(tr->length);
+    bitarray_t visited = bitarray_new(tr->length);
 
     mchain = gv_calloc(tr->length, sizeof(monchain_t));
     vert = gv_calloc(nsegs + 1, sizeof(vertexchain_t));

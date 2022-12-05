@@ -10,14 +10,10 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 // helper for basic construction and destruction, with nothing in-between
 static void create_reset(size_t size) {
-  bitarray_t b;
-  memset(&b, 0, sizeof(b));
-  int r = bitarray_new(&b, size);
-  assert(r == 0);
+  bitarray_t b = bitarray_new(size);
   bitarray_reset(&b);
 }
 
@@ -30,10 +26,7 @@ static void test_create_reset_large(void) { create_reset(1023); }
 // setting and unsetting of all bits
 static void set_unset(size_t size) {
 
-  bitarray_t b;
-  memset(&b, 0, sizeof(b));
-  int r = bitarray_new(&b, size);
-  assert(r == 0);
+  bitarray_t b = bitarray_new(size);
 
   // set and unset each bit
   for (size_t i = 0; i < size; ++i) {
@@ -100,10 +93,7 @@ static void test_reuse(void) {
 
   size_t size = 10;
 
-  bitarray_t b;
-  memset(&b, 0, sizeof(b));
-  int r = bitarray_new(&b, size);
-  assert(r == 0);
+  bitarray_t b = bitarray_new(size);
 
   // set and unset each bit
   for (size_t i = 0; i < size; ++i) {
@@ -121,8 +111,7 @@ static void test_reuse(void) {
 
   // reuse it with a different size
   size = 1023;
-  r = bitarray_new(&b, size);
-  assert(r == 0);
+  b = bitarray_new(size);
 
   // set and unset each bit
   for (size_t i = 0; i < size; ++i) {
@@ -142,10 +131,7 @@ static void test_reuse(void) {
 // redundant write to a bit
 static void double_set(size_t size, bool value) {
 
-  bitarray_t b;
-  memset(&b, 0, sizeof(b));
-  int r = bitarray_new(&b, size);
-  assert(r == 0);
+  bitarray_t b = bitarray_new(size);
 
   static const size_t index = 7;
   assert(!bitarray_get(b, index));

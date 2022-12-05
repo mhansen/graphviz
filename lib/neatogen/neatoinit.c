@@ -187,7 +187,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
      /* array of arrays of node indices in each cluster */
     int **cs,*cn;
     int i,j,nclusters=0;
-    bitarray_t assigned = bitarray_new_or_exit(agnnodes(g));
+    bitarray_t assigned = bitarray_new(agnnodes(g));
     cluster_data *cdata = GNEW(cluster_data);
 
     cdata->ntoplevel = agnnodes(g);
