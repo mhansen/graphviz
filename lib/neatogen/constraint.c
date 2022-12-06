@@ -80,7 +80,7 @@ static int distX(box * b1, box * b2)
 static int intersectX0(nitem * p, nitem * q)
 {
     int xdelta, ydelta;
-    int v = ((p->bb.LL.x <= q->bb.UR.x) && (q->bb.LL.x <= p->bb.UR.x));
+    int v = p->bb.LL.x <= q->bb.UR.x && q->bb.LL.x <= p->bb.UR.x;
     if (v == 0)  /* no x overlap */
 	return 0;
     if (p->bb.UR.y < q->bb.LL.y) /* but boxes don't really overlap */
@@ -90,7 +90,7 @@ static int intersectX0(nitem * p, nitem * q)
 	xdelta = distX(&p->bb,&q->bb) - (q->pos.x - p->pos.x); 
     else
 	xdelta = distX(&p->bb,&q->bb) - (p->pos.x - q->pos.x); 
-    return (ydelta <= xdelta);
+    return ydelta <= xdelta;
 }
 
 /* intersectY0:
@@ -102,7 +102,7 @@ static int intersectX0(nitem * p, nitem * q)
 static int intersectY0(nitem * p, nitem * q)
 {
     int xdelta, ydelta;
-    int v = ((p->bb.LL.y <= q->bb.UR.y) && (q->bb.LL.y <= p->bb.UR.y));
+    int v = p->bb.LL.y <= q->bb.UR.y && q->bb.LL.y <= p->bb.UR.y;
     if (v == 0)  /* no y overlap */
 	return 0;
     if (p->bb.UR.x < q->bb.LL.x) /* but boxes don't really overlap */
@@ -112,17 +112,17 @@ static int intersectY0(nitem * p, nitem * q)
 	ydelta = distY(&p->bb,&q->bb) - (q->pos.y - p->pos.y); 
     else
 	ydelta = distY(&p->bb,&q->bb) - (p->pos.y - q->pos.y); 
-    return (xdelta <= ydelta);
+    return xdelta <= ydelta;
 }
 
 static int intersectY(nitem * p, nitem * q)
 {
-    return ((p->bb.LL.y <= q->bb.UR.y) && (q->bb.LL.y <= p->bb.UR.y));
+  return p->bb.LL.y <= q->bb.UR.y && q->bb.LL.y <= p->bb.UR.y;
 }
 
 static int intersectX(nitem * p, nitem * q)
 {
-    return ((p->bb.LL.x <= q->bb.UR.x) && (q->bb.LL.x <= p->bb.UR.x));
+  return p->bb.LL.x <= q->bb.UR.x && q->bb.LL.x <= p->bb.UR.x;
 }
 
 /* mapGraphs:
@@ -816,8 +816,8 @@ int scAdjust(graph_t * g, int equal)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double w2, h2;
 	if (margin.doAdd) {
-	    w2 = (ND_width(n) / 2.0) + margin.x;
-	    h2 = (ND_height(n) / 2.0) + margin.y;
+	    w2 = ND_width(n) / 2.0 + margin.x;
+	    h2 = ND_height(n) / 2.0 + margin.y;
 	}
 	else {
 	    w2 = margin.x * ND_width(n) / 2.0;
