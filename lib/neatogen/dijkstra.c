@@ -199,7 +199,7 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
     }
     num_visited_nodes =
 	bfs_bounded(vertex, graph, dist, &Q, bound, visited_nodes);
-    bitarray_t node_in_neighborhood = bitarray_new_or_exit(n);
+    bitarray_t node_in_neighborhood = bitarray_new(n);
     for (i = 0; i < num_visited_nodes; i++) {
 	bitarray_set(&node_in_neighborhood, visited_nodes[i], true);
     }

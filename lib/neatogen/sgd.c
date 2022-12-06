@@ -52,7 +52,7 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
     }
     graph_sgd *graph = N_NEW(1, graph_sgd);
     graph->sources = N_NEW(n_nodes + 1, size_t);
-    graph->pinneds = bitarray_new_or_exit(n_nodes);
+    graph->pinneds = bitarray_new(n_nodes);
     graph->targets = N_NEW(n_edges, size_t);
     graph->weights = N_NEW(n_edges, float);
 
@@ -87,8 +87,8 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
     } else if (model == MODEL_SUBSET) {
         // i,j,k refer to actual node indices, while x,y refer to edge indices in graph->targets
         // initialise to no neighbours
-        bitarray_t neighbours_i = bitarray_new_or_exit(graph->n);
-        bitarray_t neighbours_j = bitarray_new_or_exit(graph->n);
+        bitarray_t neighbours_i = bitarray_new(graph->n);
+        bitarray_t neighbours_j = bitarray_new(graph->n);
         for (size_t i = 0; i < graph->n; i++) {
             int deg_i = 0;
             for (size_t x = graph->sources[i]; x < graph->sources[i + 1]; x++) {
