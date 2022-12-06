@@ -778,7 +778,7 @@ static double computeScale(pointf *aarr, size_t m) {
     aarr++;
     for (size_t i = 1; i < m; i++) {
 	p = *aarr++;
-	v = MIN(p.x, p.y);
+	v = fmin(p.x, p.y);
 	if (v > sc)
 	    sc = v;
     }
