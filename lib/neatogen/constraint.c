@@ -688,18 +688,16 @@ static double compress(info * nl, int nn)
     return sc;
 }
 
-static pointf *mkOverlapSet(info * nl, int nn, int *cntp)
-{
+static pointf *mkOverlapSet(info *nl, size_t nn, size_t *cntp) {
     info *p = nl;
     info *q;
-    int sz = nn;
+    size_t sz = nn;
     pointf *S = N_GNEW(sz + 1, pointf);
-    int i, j;
-    int cnt = 0;
+    size_t cnt = 0;
 
-    for (i = 0; i < nn; i++) {
+    for (size_t i = 0; i < nn; i++) {
 	q = p + 1;
-	for (j = i + 1; j < nn; j++) {
+	for (size_t j = i + 1; j < nn; j++) {
 	    if (overlap(p->bb, q->bb)) {
 		pointf pt;
 		if (cnt == sz) {
@@ -732,11 +730,9 @@ static pointf *mkOverlapSet(info * nl, int nn, int *cntp)
     return S;
 }
 
-static pointf computeScaleXY(pointf * aarr, int m)
-{
+static pointf computeScaleXY(pointf *aarr, size_t m) {
     pointf *barr;
     double cost, bestcost;
-    int k, best = 0;
     pointf scale;
 
     aarr[0].x = 1;
@@ -746,13 +742,17 @@ static pointf computeScaleXY(pointf * aarr, int m)
     barr = N_GNEW(m + 1, pointf);
     barr[m].x = aarr[m].x;
     barr[m].y = 1;
-    for (k = m - 1; k >= 0; k--) {
+    for (size_t k = m - 1; m > 0; k--) {
 	barr[k].x = aarr[k].x;
 	barr[k].y = MAX(aarr[k + 1].y, barr[k + 1].y);
+	if (k == 0) {
+	    break;
+	}
     }
 
+    size_t best = 0;
     bestcost = HUGE_VAL;
-    for (k = 0; k <= m; k++) {
+    for (size_t k = 0; k <= m; k++) {
 	cost = barr[k].x * barr[k].y;
 	if (cost < bestcost) {
 	    bestcost = cost;
@@ -770,15 +770,13 @@ static pointf computeScaleXY(pointf * aarr, int m)
  * For each (x,y) in aarr, scale has to be bigger than the smallest one.
  * So, the scale is the max min.
  */
-static double computeScale(pointf * aarr, int m)
-{
-    int i;
+static double computeScale(pointf *aarr, size_t m) {
     double sc = 0;
     double v;
     pointf p;
 
     aarr++;
-    for (i = 1; i <= m; i++) {
+    for (size_t i = 1; i <= m; i++) {
 	p = *aarr++;
 	v = MIN(p.x, p.y);
 	if (v > sc)
@@ -807,7 +805,6 @@ int scAdjust(graph_t * g, int equal)
     int i;
     expand_t margin;
     pointf *aarr;
-    int m;
 
     margin = sepFactor (g);
     if (margin.doAdd) {
@@ -846,7 +843,9 @@ int scAdjust(graph_t * g, int equal)
 	}
 	if (Verbose) fprintf(stderr, "compress %g \n", s.x);
     } else {
-	aarr = mkOverlapSet(nlist, nnodes, &m);
+	size_t m;
+	assert(nnodes >= 0);
+	aarr = mkOverlapSet(nlist, (size_t)nnodes, &m);
 
 	if (m == 0) {		/* no overlaps */
 	    free(aarr);
