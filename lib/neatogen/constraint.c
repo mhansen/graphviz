@@ -10,7 +10,7 @@
 
 
 #include "config.h"
-
+#include <cgraph/list.h>
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
 #include <stddef.h>
@@ -688,24 +688,20 @@ static double compress(info * nl, int nn)
     return sc;
 }
 
+DEFINE_LIST(points, pointf)
+
 static pointf *mkOverlapSet(info *nl, size_t nn, size_t *cntp) {
     info *p = nl;
     info *q;
-    size_t sz = nn + 1;
-    pointf *S = N_GNEW(sz, pointf);
-    size_t cnt = 0;
+    points_t S = {0};
 
-    S[cnt++] = (pointf){0};
+    points_append(&S, (pointf){0});
 
     for (size_t i = 0; i < nn; i++) {
 	q = p + 1;
 	for (size_t j = i + 1; j < nn; j++) {
 	    if (overlap(p->bb, q->bb)) {
 		pointf pt;
-		if (cnt == sz) {
-		    sz += nn;
-		    S = RALLOC(sz, S, pointf);
-		}
 		if (p->pos.x == q->pos.x)
 		    pt.x = HUGE_VAL;
 		else {
@@ -720,16 +716,16 @@ static pointf *mkOverlapSet(info *nl, size_t nn, size_t *cntp) {
 		    if (pt.y < 1)
 			pt.y = 1;
 		}
-		S[cnt++] = pt;
+		points_append(&S, pt);
 	    }
 	    q++;
 	}
 	p++;
     }
 
-    S = RALLOC(cnt, S, pointf);
-    *cntp = cnt;
-    return S;
+    points_shrink_to_fit(&S);
+    *cntp = points_size(&S);
+    return points_detach(&S);
 }
 
 static pointf computeScaleXY(pointf *aarr, size_t m) {
