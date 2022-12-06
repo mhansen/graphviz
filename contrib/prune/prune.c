@@ -26,6 +26,11 @@ typedef struct {
     char *v;
 } strattr_t;
 
+static void free_strattr(strattr_t s) {
+  free(s.n);
+  free(s.v);
+}
+
 DEFINE_LIST(attrs, strattr_t)
 DEFINE_LIST(nodes, char*)
 
@@ -79,8 +84,8 @@ int main(int argc, char **argv)
 	progname++;		/* character after last '/' */
     }
 
-    attrs_t attr_list = {0};
-    nodes_t node_list = {0};
+    attrs_t attr_list = {.dtor = free_strattr};
+    nodes_t node_list = {.dtor = (void(*)(char*))free};
 
     while ((c = getopt(argc, argv, "hvn:N:")) != -1) {
 	switch (c) {
