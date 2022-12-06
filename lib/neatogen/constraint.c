@@ -12,6 +12,7 @@
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
+#include <math.h>
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
 #include <stddef.h>
@@ -742,7 +743,7 @@ static pointf computeScaleXY(pointf *aarr, size_t m) {
     barr[m - 1].y = 1;
     for (size_t k = m - 2; m > 1; k--) {
 	barr[k].x = aarr[k].x;
-	barr[k].y = MAX(aarr[k + 1].y, barr[k + 1].y);
+	barr[k].y = fmax(aarr[k + 1].y, barr[k + 1].y);
 	if (k == 0) {
 	    break;
 	}
