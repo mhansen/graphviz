@@ -763,6 +763,7 @@ static pointf computeScaleXY(pointf *aarr, size_t m) {
     scale.x = barr[best].x;
     scale.y = barr[best].y;
 
+    free(barr);
     return scale;
 }
 
