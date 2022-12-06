@@ -691,9 +691,11 @@ static double compress(info * nl, int nn)
 static pointf *mkOverlapSet(info *nl, size_t nn, size_t *cntp) {
     info *p = nl;
     info *q;
-    size_t sz = nn;
-    pointf *S = N_GNEW(sz + 1, pointf);
+    size_t sz = nn + 1;
+    pointf *S = N_GNEW(sz, pointf);
     size_t cnt = 0;
+
+    S[cnt++] = (pointf){0};
 
     for (size_t i = 0; i < nn; i++) {
 	q = p + 1;
@@ -702,7 +704,7 @@ static pointf *mkOverlapSet(info *nl, size_t nn, size_t *cntp) {
 		pointf pt;
 		if (cnt == sz) {
 		    sz += nn;
-		    S = RALLOC(sz + 1, S, pointf);
+		    S = RALLOC(sz, S, pointf);
 		}
 		if (p->pos.x == q->pos.x)
 		    pt.x = HUGE_VAL;
@@ -718,14 +720,14 @@ static pointf *mkOverlapSet(info *nl, size_t nn, size_t *cntp) {
 		    if (pt.y < 1)
 			pt.y = 1;
 		}
-		S[++cnt] = pt;
+		S[cnt++] = pt;
 	    }
 	    q++;
 	}
 	p++;
     }
 
-    S = RALLOC(cnt + 1, S, pointf);
+    S = RALLOC(cnt, S, pointf);
     *cntp = cnt;
     return S;
 }
@@ -737,12 +739,12 @@ static pointf computeScaleXY(pointf *aarr, size_t m) {
 
     aarr[0].x = 1;
     aarr[0].y = HUGE_VAL;
-    qsort(aarr + 1, m, sizeof(pointf), (sortfn_t) sortf);
+    qsort(aarr + 1, m - 1, sizeof(pointf), (sortfn_t)sortf);
 
-    barr = N_GNEW(m + 1, pointf);
-    barr[m].x = aarr[m].x;
-    barr[m].y = 1;
-    for (size_t k = m - 1; m > 0; k--) {
+    barr = N_GNEW(m, pointf);
+    barr[m - 1].x = aarr[m - 1].x;
+    barr[m - 1].y = 1;
+    for (size_t k = m - 2; m > 1; k--) {
 	barr[k].x = aarr[k].x;
 	barr[k].y = MAX(aarr[k + 1].y, barr[k + 1].y);
 	if (k == 0) {
@@ -752,7 +754,7 @@ static pointf computeScaleXY(pointf *aarr, size_t m) {
 
     size_t best = 0;
     bestcost = HUGE_VAL;
-    for (size_t k = 0; k <= m; k++) {
+    for (size_t k = 0; k < m; k++) {
 	cost = barr[k].x * barr[k].y;
 	if (cost < bestcost) {
 	    bestcost = cost;
@@ -777,7 +779,7 @@ static double computeScale(pointf *aarr, size_t m) {
     pointf p;
 
     aarr++;
-    for (size_t i = 1; i <= m; i++) {
+    for (size_t i = 1; i < m; i++) {
 	p = *aarr++;
 	v = MIN(p.x, p.y);
 	if (v > sc)
