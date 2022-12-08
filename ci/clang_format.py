@@ -575,8 +575,6 @@ EXCLUDE = (
   "lib/sparse/BinaryHeap.h",
   "lib/sparse/DotIO.c",
   "lib/sparse/DotIO.h",
-  "lib/sparse/IntStack.c",
-  "lib/sparse/IntStack.h",
   "lib/sparse/LinkedList.c",
   "lib/sparse/LinkedList.h",
   "lib/sparse/QuadTree.c",
