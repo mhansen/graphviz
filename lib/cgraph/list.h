@@ -173,6 +173,26 @@
     *list = (name##_t){0};                                                     \
   }                                                                            \
                                                                                \
+  /** alias for append */                                                      \
+  static inline LIST_UNUSED void name##_push(name##_t *list, type value) {     \
+    name##_append(list, value);                                                \
+  }                                                                            \
+                                                                               \
+  /** remove and return last element */                                        \
+  static inline LIST_UNUSED type name##_pop(name##_t *list) {                  \
+    assert(list != NULL);                                                      \
+    assert(list->size > 0);                                                    \
+                                                                               \
+    type value = list->data[list->size - 1];                                   \
+                                                                               \
+    /* do not call `list->dtor` because we are transferring ownership of the   \
+     * removed element to the caller                                           \
+     */                                                                        \
+    --list->size;                                                              \
+                                                                               \
+    return value;                                                              \
+  }                                                                            \
+                                                                               \
   /** create a new list from a bare array and element count                    \
    *                                                                           \
    * This can be useful when receiving data from a caller who does not use     \
