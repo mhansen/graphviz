@@ -10,7 +10,9 @@
 
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
+#include <cgraph/list.h>
+#include <math.h>
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
 #include <stddef.h>
@@ -78,7 +80,7 @@ static int distX(box * b1, box * b2)
 static int intersectX0(nitem * p, nitem * q)
 {
     int xdelta, ydelta;
-    int v = ((p->bb.LL.x <= q->bb.UR.x) && (q->bb.LL.x <= p->bb.UR.x));
+    int v = p->bb.LL.x <= q->bb.UR.x && q->bb.LL.x <= p->bb.UR.x;
     if (v == 0)  /* no x overlap */
 	return 0;
     if (p->bb.UR.y < q->bb.LL.y) /* but boxes don't really overlap */
@@ -88,7 +90,7 @@ static int intersectX0(nitem * p, nitem * q)
 	xdelta = distX(&p->bb,&q->bb) - (q->pos.x - p->pos.x); 
     else
 	xdelta = distX(&p->bb,&q->bb) - (p->pos.x - q->pos.x); 
-    return (ydelta <= xdelta);
+    return ydelta <= xdelta;
 }
 
 /* intersectY0:
@@ -100,7 +102,7 @@ static int intersectX0(nitem * p, nitem * q)
 static int intersectY0(nitem * p, nitem * q)
 {
     int xdelta, ydelta;
-    int v = ((p->bb.LL.y <= q->bb.UR.y) && (q->bb.LL.y <= p->bb.UR.y));
+    int v = p->bb.LL.y <= q->bb.UR.y && q->bb.LL.y <= p->bb.UR.y;
     if (v == 0)  /* no y overlap */
 	return 0;
     if (p->bb.UR.x < q->bb.LL.x) /* but boxes don't really overlap */
@@ -110,17 +112,17 @@ static int intersectY0(nitem * p, nitem * q)
 	ydelta = distY(&p->bb,&q->bb) - (q->pos.y - p->pos.y); 
     else
 	ydelta = distY(&p->bb,&q->bb) - (p->pos.y - q->pos.y); 
-    return (xdelta <= ydelta);
+    return xdelta <= ydelta;
 }
 
 static int intersectY(nitem * p, nitem * q)
 {
-    return ((p->bb.LL.y <= q->bb.UR.y) && (q->bb.LL.y <= p->bb.UR.y));
+  return p->bb.LL.y <= q->bb.UR.y && q->bb.LL.y <= p->bb.UR.y;
 }
 
 static int intersectX(nitem * p, nitem * q)
 {
-    return ((p->bb.LL.x <= q->bb.UR.x) && (q->bb.LL.x <= p->bb.UR.x));
+  return p->bb.LL.x <= q->bb.UR.x && q->bb.LL.x <= p->bb.UR.x;
 }
 
 /* mapGraphs:
@@ -566,7 +568,7 @@ int cAdjust(graph_t * g, int mode)
 {
     expand_t margin;
     int ret, i, nnodes = agnnodes(g);
-    nitem *nlist = N_GNEW(nnodes, nitem);
+    nitem *nlist = gv_calloc(nnodes, sizeof(nitem));
     nitem *p = nlist;
     node_t *n;
 
@@ -688,24 +690,20 @@ static double compress(info * nl, int nn)
     return sc;
 }
 
-static pointf *mkOverlapSet(info * nl, int nn, int *cntp)
-{
+DEFINE_LIST(points, pointf)
+
+static pointf *mkOverlapSet(info *nl, size_t nn, size_t *cntp) {
     info *p = nl;
     info *q;
-    int sz = nn;
-    pointf *S = N_GNEW(sz + 1, pointf);
-    int i, j;
-    int cnt = 0;
+    points_t S = {0};
 
-    for (i = 0; i < nn; i++) {
+    points_append(&S, (pointf){0});
+
+    for (size_t i = 0; i < nn; i++) {
 	q = p + 1;
-	for (j = i + 1; j < nn; j++) {
+	for (size_t j = i + 1; j < nn; j++) {
 	    if (overlap(p->bb, q->bb)) {
 		pointf pt;
-		if (cnt == sz) {
-		    sz += nn;
-		    S = RALLOC(sz + 1, S, pointf);
-		}
 		if (p->pos.x == q->pos.x)
 		    pt.x = HUGE_VAL;
 		else {
@@ -720,39 +718,40 @@ static pointf *mkOverlapSet(info * nl, int nn, int *cntp)
 		    if (pt.y < 1)
 			pt.y = 1;
 		}
-		S[++cnt] = pt;
+		points_append(&S, pt);
 	    }
 	    q++;
 	}
 	p++;
     }
 
-    S = RALLOC(cnt + 1, S, pointf);
-    *cntp = cnt;
-    return S;
+    points_shrink_to_fit(&S);
+    *cntp = points_size(&S);
+    return points_detach(&S);
 }
 
-static pointf computeScaleXY(pointf * aarr, int m)
-{
-    pointf *barr;
+static pointf computeScaleXY(pointf *aarr, size_t m) {
     double cost, bestcost;
-    int k, best = 0;
     pointf scale;
 
     aarr[0].x = 1;
     aarr[0].y = HUGE_VAL;
-    qsort(aarr + 1, m, sizeof(pointf), (sortfn_t) sortf);
+    qsort(aarr + 1, m - 1, sizeof(pointf), (sortfn_t)sortf);
 
-    barr = N_GNEW(m + 1, pointf);
-    barr[m].x = aarr[m].x;
-    barr[m].y = 1;
-    for (k = m - 1; k >= 0; k--) {
+    pointf *barr = gv_calloc(m, sizeof(pointf));
+    barr[m - 1].x = aarr[m - 1].x;
+    barr[m - 1].y = 1;
+    for (size_t k = m - 2; m > 1; k--) {
 	barr[k].x = aarr[k].x;
-	barr[k].y = MAX(aarr[k + 1].y, barr[k + 1].y);
+	barr[k].y = fmax(aarr[k + 1].y, barr[k + 1].y);
+	if (k == 0) {
+	    break;
+	}
     }
 
+    size_t best = 0;
     bestcost = HUGE_VAL;
-    for (k = 0; k <= m; k++) {
+    for (size_t k = 0; k < m; k++) {
 	cost = barr[k].x * barr[k].y;
 	if (cost < bestcost) {
 	    bestcost = cost;
@@ -763,6 +762,7 @@ static pointf computeScaleXY(pointf * aarr, int m)
     scale.x = barr[best].x;
     scale.y = barr[best].y;
 
+    free(barr);
     return scale;
 }
 
@@ -770,17 +770,15 @@ static pointf computeScaleXY(pointf * aarr, int m)
  * For each (x,y) in aarr, scale has to be bigger than the smallest one.
  * So, the scale is the max min.
  */
-static double computeScale(pointf * aarr, int m)
-{
-    int i;
+static double computeScale(pointf *aarr, size_t m) {
     double sc = 0;
     double v;
     pointf p;
 
     aarr++;
-    for (i = 1; i <= m; i++) {
+    for (size_t i = 1; i < m; i++) {
 	p = *aarr++;
-	v = MIN(p.x, p.y);
+	v = fmin(p.x, p.y);
 	if (v > sc)
 	    sc = v;
     }
@@ -800,14 +798,13 @@ static double computeScale(pointf * aarr, int m)
 int scAdjust(graph_t * g, int equal)
 {
     int nnodes = agnnodes(g);
-    info *nlist = N_GNEW(nnodes, info);
+    info *nlist = gv_calloc(nnodes, sizeof(info));
     info *p = nlist;
     node_t *n;
     pointf s;
     int i;
     expand_t margin;
     pointf *aarr;
-    int m;
 
     margin = sepFactor (g);
     if (margin.doAdd) {
@@ -819,8 +816,8 @@ int scAdjust(graph_t * g, int equal)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double w2, h2;
 	if (margin.doAdd) {
-	    w2 = (ND_width(n) / 2.0) + margin.x;
-	    h2 = (ND_height(n) / 2.0) + margin.y;
+	    w2 = ND_width(n) / 2.0 + margin.x;
+	    h2 = ND_height(n) / 2.0 + margin.y;
 	}
 	else {
 	    w2 = margin.x * ND_width(n) / 2.0;
@@ -846,7 +843,9 @@ int scAdjust(graph_t * g, int equal)
 	}
 	if (Verbose) fprintf(stderr, "compress %g \n", s.x);
     } else {
-	aarr = mkOverlapSet(nlist, nnodes, &m);
+	size_t m;
+	assert(nnodes >= 0);
+	aarr = mkOverlapSet(nlist, (size_t)nnodes, &m);
 
 	if (m == 0) {		/* no overlaps */
 	    free(aarr);
