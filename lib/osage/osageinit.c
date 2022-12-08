@@ -14,12 +14,15 @@
  * Written by Emden R. Gansner
  */
 
+#include    <assert.h>
+#include    <cgraph/alloc.h>
+#include    <cgraph/list.h>
+#include    <limits.h>
 #include    <osage/osage.h>
 #include    <neatogen/neatoprocs.h>
 #include    <pack/pack.h>
 #include    <stdbool.h>
 
-#define CL_CHUNK 10
 #define DFLT_SZ  18
 #define PARENT(n) ((Agraph_t*)ND_alg(n))
 
@@ -30,34 +33,7 @@ indent (int i)
 	fputs ("  ", stderr);
 }
 
-typedef struct {
-    Agraph_t** cl;
-    int sz;
-    int cnt;
-} clist_t;
-
-static void initCList(clist_t * clist)
-{
-    clist->cl = 0;
-    clist->sz = 0;
-    clist->cnt = 0;
-}
-
-/* addCluster:
- * Append a new cluster to the list.
- * NOTE: cl[0] is empty. The clusters are in cl[1..cnt].
- * Normally, we increase the array when cnt == sz.
- * The test for cnt > sz is necessary for the first time.
- */
-static void addCluster(clist_t * clist, graph_t * subg)
-{
-    clist->cnt++;
-    if (clist->cnt >= clist->sz) {
-        clist->sz += CL_CHUNK;
-        clist->cl = RALLOC(clist->sz, clist->cl, graph_t *);
-    }
-    clist->cl[clist->cnt] = subg;
-}
+DEFINE_LIST(clist, Agraph_t*)
 
 static void cluster_init_graph(graph_t * g)
 {
@@ -87,14 +63,12 @@ layout (Agraph_t* g, int depth)
     int nvs = 0;       /* no. of nodes in subclusters */
     Agnode_t*  n;
     Agraph_t*  subg;
-    boxf* gs;
     point* pts;
     boxf bb, rootbb;
     pointf p;
     pack_info pinfo;
     pack_mode pmode;
     double margin;
-    void** children;
     Agsym_t* cattr = NULL;
     Agsym_t* vattr = NULL;
     Agraph_t* root = g->root;
@@ -128,14 +102,14 @@ layout (Agraph_t* g, int depth)
 	cattr = agattr(root, AGRAPH, "sortv", 0);
 	vattr = agattr(root, AGNODE, "sortv", 0);
 	if (cattr || vattr)
-	    pinfo.vals = N_NEW(total, packval_t);
+	    pinfo.vals = gv_calloc(total, sizeof(packval_t));
 	else
 	    agerr (AGWARN, "Graph %s has array packing with user values but no \"sortv\" attributes are defined.",
 		agnameof(g));
     }
 
-    gs = N_NEW(total, boxf);
-    children = N_NEW(total, void*);
+    boxf *gs = gv_calloc(total, sizeof(boxf));
+    void **children = gv_calloc(total, sizeof(void*));
     j = 0;
     for (i = 1; i <= GD_n_cluster(g); i++) {
 	subg = GD_clust(g)[i];
@@ -178,7 +152,7 @@ layout (Agraph_t* g, int depth)
 	bb.UR.y += p.y;
 	EXPANDBB(rootbb, bb);
 	if (j < GD_n_cluster(g)) {
-	    subg = (Agraph_t*)children[j];
+	    subg = children[j];
 	    GD_bb(subg) = bb;
 	    if (Verbose > 1) {
 		indent (depth);
@@ -186,7 +160,7 @@ layout (Agraph_t* g, int depth)
 	    }
 	}
 	else {
-	    n = (Agnode_t*)children[j];
+	    n = children[j];
 	    ND_coord(n) = mid_pointf (bb.LL, bb.UR);
 	    if (Verbose > 1) {
 		indent (depth);
@@ -234,7 +208,7 @@ layout (Agraph_t* g, int depth)
      */
     for (j = 0; j < total; j++) {
 	if (j < GD_n_cluster(g)) {
-	    subg = (Agraph_t*)children[j];
+	    subg = children[j];
 	    bb = GD_bb(subg);
 	    bb.LL = sub_pointf(bb.LL, rootbb.LL);
 	    bb.UR = sub_pointf(bb.UR, rootbb.LL);
@@ -245,7 +219,7 @@ layout (Agraph_t* g, int depth)
 	    }
 	}
 	else {
-	    n = (Agnode_t*)children[j];
+	    n = children[j];
 	    ND_coord(n) = sub_pointf (ND_coord(n), rootbb.LL);
 	    if (Verbose > 1) {
 		indent (depth);
@@ -319,12 +293,13 @@ static void
 mkClusters (Agraph_t* g, clist_t* pclist, Agraph_t* parent)
 {
     graph_t* subg;
-    clist_t  list;
+    clist_t  list = {0};
     clist_t* clist;
 
     if (pclist == NULL) {
+        // [0] is empty. The clusters are in [1..cnt].
+        clist_append(&list, NULL);
         clist = &list;
-        initCList(clist);
     }
     else
         clist = pclist;
@@ -333,7 +308,7 @@ mkClusters (Agraph_t* g, clist_t* pclist, Agraph_t* parent)
         if (!strncmp(agnameof(subg), "cluster", 7)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    do_graph_label (subg);
-            addCluster(clist, subg);
+            clist_append(clist, subg);
             mkClusters(subg, NULL, subg);
         }
         else {
@@ -341,9 +316,14 @@ mkClusters (Agraph_t* g, clist_t* pclist, Agraph_t* parent)
         }
     }
     if (pclist == NULL) {
-        GD_n_cluster(g) = list.cnt;
-        if (list.cnt)
-            GD_clust(g) = RALLOC(list.cnt + 1, list.cl, graph_t*);
+        assert(clist_size(&list) - 1 <= INT_MAX);
+        GD_n_cluster(g) = (int)(clist_size(&list) - 1);
+        if (clist_size(&list) > 1) {
+            clist_shrink_to_fit(&list);
+            GD_clust(g) = clist_detach(&list);
+        } else {
+            clist_free(&list);
+        }
     }
 }
 
