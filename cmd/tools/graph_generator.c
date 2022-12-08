@@ -11,7 +11,7 @@
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
-#include <cgraph/stack.h>
+#include <cgraph/list.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -620,22 +620,18 @@ treeDup (tree_t* tp, int J)
 
 /*****************/
 
-static void push(gv_stack_t *sp, int j, int d) {
+DEFINE_LIST(int_stack, int)
 
-  // convert the ints to pointers to store them in a generic stack
-  void *j_ptr = (void*)(intptr_t)j;
-  void *d_ptr = (void*)(intptr_t)d;
-
-  // push them onto the stack
-  stack_push_or_exit(sp, j_ptr);
-  stack_push_or_exit(sp, d_ptr);
+static void push(int_stack_t *sp, int j, int d) {
+  int_stack_push(sp, j);
+  int_stack_push(sp, d);
 }
 
-static pair pop(gv_stack_t *sp) {
+static pair pop(int_stack_t *sp) {
 
   // extract ints in the opposite order in which they were pushed
-  int d = (int)(intptr_t)stack_pop(sp);
-  int j = (int)(intptr_t)stack_pop(sp);
+  int d = int_stack_pop(sp);
+  int j = int_stack_pop(sp);
 
   return (pair){j, d};
 }
@@ -676,7 +672,7 @@ drand(void)
     return d;
 }
 
-static void genTree(int NN, int *T, gv_stack_t *stack, tree_t *TREE) {
+static void genTree(int NN, int *T, int_stack_t *stack, tree_t *TREE) {
     double v;
     pair p;
     int Z, D, N, J, TD, M, more;
@@ -734,7 +730,7 @@ writeTree (tree_t* tp, edgefn ef)
 struct treegen_s {
     int N;
     int* T;
-    gv_stack_t sp;
+    int_stack_t sp;
     tree_t* tp;
 };
 
@@ -745,7 +741,7 @@ makeTreeGen (int N)
 
     tg->N = N;
     tg->T = genCnt(N);
-    tg->sp = (gv_stack_t){0};
+    tg->sp = (int_stack_t){0};
     tg->tp = mkTree(N+1);
     srand((unsigned)time(0));
 
@@ -754,7 +750,7 @@ makeTreeGen (int N)
 
 void makeRandomTree (treegen_t* tg, edgefn ef)
 {
-    stack_reset(&tg->sp);
+    int_stack_clear(&tg->sp);
     resetTree(tg->tp);
     genTree(tg->N, tg->T, &tg->sp, tg->tp);
     writeTree (tg->tp, ef);
@@ -764,7 +760,7 @@ void
 freeTreeGen(treegen_t* tg)
 {
     free (tg->T);
-    stack_reset(&tg->sp);
+    int_stack_free(&tg->sp);
     freeTree (tg->tp);
     free (tg);
 }
