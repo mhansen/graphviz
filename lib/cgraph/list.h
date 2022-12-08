@@ -24,9 +24,10 @@
    * accessed through the functions below.                                     \
    */                                                                          \
   typedef struct {                                                             \
-    type *data;      /* backing storage */                                     \
-    size_t size;     /* number of elements in the list */                      \
-    size_t capacity; /* available storage slots */                             \
+    type *data;         /* backing storage */                                  \
+    size_t size;        /* number of elements in the list */                   \
+    size_t capacity;    /* available storage slots */                          \
+    void (*dtor)(type); /* optional element destructor */                      \
   } name##_t;                                                                  \
                                                                                \
   /** create a new list                                                        \
@@ -90,6 +91,9 @@
                                             type item) {                       \
     assert(list != NULL);                                                      \
     assert(index < list->size && "index out of bounds");                       \
+    if (list->dtor != NULL) {                                                  \
+      list->dtor(list->data[index]);                                           \
+    }                                                                          \
     list->data[index] = item;                                                  \
   }                                                                            \
                                                                                \
@@ -114,6 +118,13 @@
   /** remove all elements from a list */                                       \
   static inline LIST_UNUSED void name##_clear(name##_t *list) {                \
     assert(list != NULL);                                                      \
+                                                                               \
+    if (list->dtor != NULL) {                                                  \
+      for (size_t i = 0; i < list->size; ++i) {                                \
+        list->dtor(list->data[i]);                                             \
+      }                                                                        \
+    }                                                                          \
+                                                                               \
     list->size = 0;                                                            \
   }                                                                            \
                                                                                \
@@ -127,10 +138,20 @@
                                                type value) {                   \
     assert(list != NULL);                                                      \
                                                                                \
-    while (list->size < size) {                                                \
-      name##_append(list, value);                                              \
+    if (list->size < size) {                                                   \
+      /* we are expanding the list */                                          \
+      while (list->size < size) {                                              \
+        name##_append(list, value);                                            \
+      }                                                                        \
+    } else if (list->size > size) {                                            \
+      /* we are shrinking the list */                                          \
+      if (list->dtor != NULL) {                                                \
+        while (list->size > size) {                                            \
+          list->dtor(list->data[list->size - 1]);                              \
+          --list->size;                                                        \
+        }                                                                      \
+      }                                                                        \
     }                                                                          \
-    list->size = size;                                                         \
   }                                                                            \
                                                                                \
   /** deallocate unused backing storage, shrinking capacity to size */         \
@@ -147,6 +168,7 @@
   /** free resources associated with a list */                                 \
   static inline LIST_UNUSED void name##_free(name##_t *list) {                 \
     assert(list != NULL);                                                      \
+    name##_clear(list);                                                        \
     free(list->data);                                                          \
     *list = (name##_t){0};                                                     \
   }                                                                            \
