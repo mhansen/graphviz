@@ -882,7 +882,7 @@ static char *findNext(char *s, agxbuf* xb)
 static void protect_rsqb(agxbuf *xb) {
 
   // if the buffer is empty, we have nothing to do
-  if (xb->buf == xb->ptr) {
+  if (agxblen(xb) == 0) {
     return;
   }
 
