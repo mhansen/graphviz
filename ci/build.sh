@@ -102,6 +102,9 @@ else
         if [ "${OSTYPE}" = "msys" ]; then
             # ensure that MinGW tcl shell is used in order to find tcl functions
             CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS:-} --with-tclsh=${MSYSTEM_PREFIX}/bin/tclsh86"
+        else # Cygwin
+            # avoid platform detection problems
+            CONFIGURE_OPTIONS="${CONFIGURE_OPTIONS:-} --build=x86_64-pc-cygwin"
         fi
         if [ "${use_autogen:-no}" = "yes" ]; then
             ./autogen.sh
