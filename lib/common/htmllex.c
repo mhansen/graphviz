@@ -897,15 +897,20 @@ static void protect_rsqb(agxbuf *xb) {
     return;
   }
 
-  // if the buffer does not end in a ], we have nothing to do
-  if (xb->ptr[-1] != ']') {
+  // check the last character and if it is not ], we have nothing to do
+  char *data = agxbuse(xb);
+  size_t size = strlen(data);
+  assert(size > 0);
+  if (data[size - 1] != ']') {
+    agxbput_move(xb, data);
     return;
   }
 
-  // rewind over the ]
-  --xb->ptr;
+  // truncate ] and write back the remaining prefix
+  data[size - 1] = '\0';
+  agxbput_move(xb, data);
 
-  // write an XML-escaped version of ]
+  // write an XML-escaped version of ] as a replacement
   agxbput(xb, "&#93;");
 }
 #endif
