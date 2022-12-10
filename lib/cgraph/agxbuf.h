@@ -43,7 +43,6 @@ static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
   }
   xb->eptr = xb->buf + hint;
   xb->ptr = xb->buf;
-  *xb->ptr = '\0';
 }
 
 /* agxbfree:
