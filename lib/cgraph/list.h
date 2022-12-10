@@ -158,7 +158,7 @@
   static inline LIST_UNUSED void name##_shrink_to_fit(name##_t *list) {        \
     assert(list != NULL);                                                      \
                                                                                \
-    if (list->size > list->capacity) {                                         \
+    if (list->capacity > list->size) {                                         \
       list->data =                                                             \
           gv_recalloc(list->data, list->capacity, list->size, sizeof(type));   \
       list->capacity = list->size;                                             \
