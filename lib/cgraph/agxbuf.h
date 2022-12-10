@@ -21,8 +21,8 @@
  */
 typedef struct {
   char *buf;           // start of buffer
-  char *ptr;           // next place to write
-  char *eptr;          // end of buffer
+  size_t size;         ///< number of characters in the buffer
+  size_t capacity;     ///< available bytes in the buffer
   int stack_allocated; // false if buffer is malloc'ed
 } agxbuf;
 
@@ -41,8 +41,8 @@ static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
     xb->stack_allocated = 0;
     xb->buf = (char *)gv_calloc(hint, sizeof(char));
   }
-  xb->eptr = xb->buf + hint;
-  xb->ptr = xb->buf;
+  xb->size = 0;
+  xb->capacity = hint;
 }
 
 /* agxbfree:
@@ -56,9 +56,7 @@ static inline void agxbfree(agxbuf *xb) {
 /* agxblen:
  * Return number of characters currently stored.
  */
-static inline size_t agxblen(const agxbuf *xb) {
-  return (size_t)(xb->ptr - xb->buf);
-}
+static inline size_t agxblen(const agxbuf *xb) { return xb->size; }
 
 /* agxbpop:
  * Removes last character added, if any.
@@ -69,7 +67,8 @@ static inline int agxbpop(agxbuf *xb) {
     return -1;
   }
 
-  int c = *xb->ptr--;
+  int c = xb->buf[xb->size - 1];
+  --xb->size;
   return c;
 }
 
@@ -82,7 +81,7 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
   size_t nsize = 0; // new buffer size
   char *nbuf;       // new buffer
 
-  size = (size_t)(xb->eptr - xb->buf);
+  size = xb->capacity;
   nsize = size == 0 ? BUFSIZ : (2 * size);
   if (size + ssz > nsize)
     nsize = size + ssz;
@@ -95,8 +94,7 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
     xb->stack_allocated = 0;
   }
   xb->buf = nbuf;
-  xb->ptr = xb->buf + cnt;
-  xb->eptr = xb->buf + nsize;
+  xb->capacity = nsize;
 }
 
 /* support for extra API misuse warnings if available */
@@ -133,7 +131,7 @@ static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
 
   // do we need to expand the buffer?
   {
-    size_t unused_space = (size_t)(xb->eptr - xb->ptr);
+    size_t unused_space = xb->capacity - xb->size;
     if (unused_space < size) {
       size_t extra = size - unused_space;
       agxbmore(xb, extra);
@@ -141,10 +139,10 @@ static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
   }
 
   // we can now safely print into the buffer
-  result = vsnprintf(xb->ptr, size, fmt, ap);
+  result = vsnprintf(&xb->buf[xb->size], size, fmt, ap);
   assert(result == (int)(size - 1) || result < 0);
   if (result > 0) {
-    xb->ptr += (size_t)result;
+    xb->size += (size_t)result;
   }
 
   va_end(ap);
@@ -160,10 +158,10 @@ static inline size_t agxbput_n(agxbuf *xb, const char *s, size_t ssz) {
   if (ssz == 0) {
     return 0;
   }
-  if (xb->ptr + ssz > xb->eptr)
+  if (ssz > xb->capacity - xb->size)
     agxbmore(xb, ssz);
-  memcpy(xb->ptr, s, ssz);
-  xb->ptr += ssz;
+  memcpy(&xb->buf[xb->size], s, ssz);
+  xb->size += ssz;
   return ssz;
 }
 
@@ -181,10 +179,11 @@ static inline size_t agxbput(agxbuf *xb, const char *s) {
  *  int agxbputc(agxbuf*, char)
  */
 static inline int agxbputc(agxbuf *xb, char c) {
-  if (xb->ptr >= xb->eptr) {
+  if (xb->size >= xb->capacity) {
     agxbmore(xb, 1);
   }
-  *xb->ptr++ = c;
+  xb->buf[xb->size] = c;
+  ++xb->size;
   return 0;
 }
 
@@ -196,14 +195,14 @@ static inline int agxbputc(agxbuf *xb, char c) {
  */
 static inline char *agxbuse(agxbuf *xb) {
   (void)agxbputc(xb, '\0');
-  xb->ptr = xb->buf;
-  return xb->ptr;
+  xb->size = 0;
+  return xb->buf;
 }
 
 /* agxbclear:
  * Resets pointer to data;
  */
-static inline void agxbclear(agxbuf *xb) { xb->ptr = xb->buf; }
+static inline void agxbclear(agxbuf *xb) { xb->size = 0; }
 
 /* agxbdisown:
  * Disassociate the backing buffer from this agxbuf and return it. The buffer is
@@ -230,7 +229,9 @@ static inline char *agxbdisown(agxbuf *xb) {
   }
 
   // reset xb to a state where it is usable
-  xb->buf = xb->ptr = xb->eptr = NULL;
+  xb->buf = NULL;
+  xb->size = 0;
+  xb->capacity = 0;
   xb->stack_allocated = 0;
 
   return buf;
