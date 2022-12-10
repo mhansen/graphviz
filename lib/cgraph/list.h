@@ -145,11 +145,11 @@
       }                                                                        \
     } else if (list->size > size) {                                            \
       /* we are shrinking the list */                                          \
-      if (list->dtor != NULL) {                                                \
-        while (list->size > size) {                                            \
+      while (list->size > size) {                                              \
+        if (list->dtor != NULL) {                                              \
           list->dtor(list->data[list->size - 1]);                              \
-          --list->size;                                                        \
         }                                                                      \
+        --list->size;                                                          \
       }                                                                        \
     }                                                                          \
   }                                                                            \
