@@ -3795,7 +3795,6 @@ static token_t style_token(char **s) {
 }
 
 #define FUNLIMIT 64
-static char outbuf[SMALLBUF];
 static agxbuf ps_xb;
 
 /* parse_style:
@@ -3810,15 +3809,9 @@ char **parse_style(char *s)
 {
     static char *parse[FUNLIMIT];
     size_t parse_offsets[sizeof(parse) / sizeof(parse[0])];
-    static bool is_first = true;
     size_t fun = 0;
     bool in_parens = false;
     char *p;
-
-    if (is_first) {
-	agxbinit(&ps_xb, SMALLBUF, outbuf);
-	is_first = false;
-    }
 
     p = s;
     while (true) {
