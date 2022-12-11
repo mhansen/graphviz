@@ -3809,6 +3809,7 @@ static agxbuf ps_xb;
 char **parse_style(char *s)
 {
     static char *parse[FUNLIMIT];
+    size_t parse_offsets[sizeof(parse) / sizeof(parse[0])];
     static bool is_first = true;
     size_t fun = 0;
     bool in_parens = false;
@@ -3852,7 +3853,7 @@ char **parse_style(char *s)
 		    return parse;
 		}
 		agxbputc(&ps_xb, '\0');	/* terminate previous */
-		parse[fun++] = agxbnext(&ps_xb);
+		parse_offsets[fun++] = agxblen(&ps_xb);
 	    }
 	    agxbput_n(&ps_xb, c.start, c.size);
 	    agxbputc(&ps_xb, '\0');
@@ -3864,8 +3865,15 @@ char **parse_style(char *s)
 	parse[0] = NULL;
 	return parse;
     }
+
+    char *base = agxbuse(&ps_xb); // add final '\0' to buffer
+
+    // construct list of style strings
+    for (size_t i = 0; i < fun; ++i) {
+        parse[i] = base + parse_offsets[i];
+    }
     parse[fun] = NULL;
-    (void)agxbuse(&ps_xb);		/* adds final '\0' to buffer */
+
     return parse;
 }
 
