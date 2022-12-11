@@ -2032,6 +2032,21 @@ def test_2307():
     assert re.search(r"\bG2_", m.group("url")) is not None, \
       "ID G2 was not applied to polygon fill url"
 
+@pytest.mark.xfail()
+def test_2325():
+  """
+  using more than 63 styles and/or more than 128 style bytes should not trigger
+  an out-of-bounds memory read
+  https://gitlab.com/graphviz/graphviz/-/issues/2325
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "2325.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # run it through Graphviz
+  dot("svg", input)
+
 def test_changelog_dates():
   """
   Check the dates of releases in the changelog are correctly formatted
