@@ -85,7 +85,6 @@
     <ClCompile Include="color_palette.c" />
     <ClCompile Include="DotIO.c" />
     <ClCompile Include="general.c" />
-    <ClCompile Include="IntStack.c" />
     <ClCompile Include="LinkedList.c" />
     <ClCompile Include="mq.c" />
     <ClCompile Include="QuadTree.c" />

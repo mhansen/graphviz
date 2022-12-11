@@ -10,13 +10,15 @@
 
 #pragma once
 
+#include <cgraph/list.h>
 #include <sparse/general.h>
-#include <sparse/IntStack.h>
 #include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+DEFINE_LIST(int_stack, int)
 
 /* binary heap code. 
    Caution: items inserted should be kept untouched, e.g., the value of the item should be kepted unchanged while the heap is still in use! 
@@ -35,7 +37,7 @@ struct BinaryHeap_struct {
 		    pos_to_id[id_to_pos[i]] = i, for i not in the id_stack & i < length(id_stack)+len
 		    id_to_pos[pos_to_id[i]] = i, 0 <= i < len
 		 */
-  IntStack id_stack;/* a stack that store IDs that is no longer used, to
+  int_stack_t id_stack;/* a stack that stores IDs that are no longer used, to
 		       be assigned to newly inserted elements.
 		       For sanity check, the union of items in
 		       the id_stack, and that is pos_to_id[1:len],

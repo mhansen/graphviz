@@ -145,11 +145,11 @@
       }                                                                        \
     } else if (list->size > size) {                                            \
       /* we are shrinking the list */                                          \
-      if (list->dtor != NULL) {                                                \
-        while (list->size > size) {                                            \
+      while (list->size > size) {                                              \
+        if (list->dtor != NULL) {                                              \
           list->dtor(list->data[list->size - 1]);                              \
-          --list->size;                                                        \
         }                                                                      \
+        --list->size;                                                          \
       }                                                                        \
     }                                                                          \
   }                                                                            \
@@ -158,7 +158,7 @@
   static inline LIST_UNUSED void name##_shrink_to_fit(name##_t *list) {        \
     assert(list != NULL);                                                      \
                                                                                \
-    if (list->size > list->capacity) {                                         \
+    if (list->capacity > list->size) {                                         \
       list->data =                                                             \
           gv_recalloc(list->data, list->capacity, list->size, sizeof(type));   \
       list->capacity = list->size;                                             \
@@ -171,6 +171,26 @@
     name##_clear(list);                                                        \
     free(list->data);                                                          \
     *list = (name##_t){0};                                                     \
+  }                                                                            \
+                                                                               \
+  /** alias for append */                                                      \
+  static inline LIST_UNUSED void name##_push(name##_t *list, type value) {     \
+    name##_append(list, value);                                                \
+  }                                                                            \
+                                                                               \
+  /** remove and return last element */                                        \
+  static inline LIST_UNUSED type name##_pop(name##_t *list) {                  \
+    assert(list != NULL);                                                      \
+    assert(list->size > 0);                                                    \
+                                                                               \
+    type value = list->data[list->size - 1];                                   \
+                                                                               \
+    /* do not call `list->dtor` because we are transferring ownership of the   \
+     * removed element to the caller                                           \
+     */                                                                        \
+    --list->size;                                                              \
+                                                                               \
+    return value;                                                              \
   }                                                                            \
                                                                                \
   /** create a new list from a bare array and element count                    \

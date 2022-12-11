@@ -26,7 +26,7 @@ BinaryHeap BinaryHeap_new(int (*cmp)(void*item1, void*item2)){
   for (size_t i = 0; i < max_len; i++) h->id_to_pos[i] = SIZE_MAX;
 
   h->pos_to_id = CALLOC(max_len, sizeof(h->pos_to_id[0]));
-  h->id_stack = IntStack_new();
+  h->id_stack = (int_stack_t){0};
   h->cmp = cmp;
   return h;
 }
@@ -36,7 +36,7 @@ void BinaryHeap_delete(BinaryHeap h, void (*del)(void* item)){
   if (!h) return;
   free(h->id_to_pos);
   free(h->pos_to_id);
-  IntStack_delete(h->id_stack);
+  int_stack_free(&h->id_stack);
   if (del) for (size_t i = 0; i < h->len; i++) del((h->heap)[i]);
   free(h->heap);
   free(h);
@@ -137,16 +137,17 @@ static size_t siftDown(BinaryHeap h, size_t nodePos){
 int BinaryHeap_insert(BinaryHeap h, void *item){
   size_t len = h->len;
   assert(len <= (size_t)INT_MAX);
-  int id = (int)len, flag;
+  int id = (int)len;
 
   /* insert an item, and return its ID. This ID can be used later to extract the item */
   if (len > h->max_len - 1) {
     if (BinaryHeap_realloc(h) == NULL) return BinaryHeap_error_malloc;
   }
   
-  /* check if we have IDs in the stack to reuse. If no, then assign the last pos as the ID */
-  id = IntStack_pop(h->id_stack, &flag);
-  if (flag) id = (int)len;
+  // check if we have IDs in the stack to reuse
+  if (!int_stack_is_empty(&h->id_stack)) {
+    id = int_stack_pop(&h->id_stack);
+  }
 
   h->heap[len] = item;
   h->id_to_pos[id] = len;
@@ -189,7 +190,7 @@ void* BinaryHeap_extract_item(BinaryHeap h, int id){
 
   item = (h->heap)[pos];
 
-  IntStack_push(h->id_stack, id);
+  int_stack_push(&h->id_stack, id);
 
   if (pos < h->len - 1){/* move the last item to occupy the position of extracted item */
     swap(h, pos, h->len - 1);
@@ -245,11 +246,11 @@ void BinaryHeap_sanity_check(BinaryHeap h){
     assert((h->cmp)(heap[i], heap[parentPos]) >= 0);
   }
 
-  mask = CALLOC(h->len + IntStack_get_length(h->id_stack), sizeof(mask[0]));
+  mask = CALLOC(h->len + int_stack_size(&h->id_stack), sizeof(mask[0]));
 
   /* check that spare keys has negative id_to_pos mapping */
-  for (size_t i = 0; i <= h->id_stack->last; i++) {
-    int key_spare = h->id_stack->stack[i];
+  for (size_t i = 0; i < int_stack_size(&h->id_stack); i++) {
+    int key_spare = int_stack_get(&h->id_stack, i);
     assert(h->id_to_pos[key_spare] == SIZE_MAX);
     mask[key_spare] = 1;/* mask spare ID */
   }
@@ -265,7 +266,7 @@ void BinaryHeap_sanity_check(BinaryHeap h){
   }
 
   /* all IDs, spare or in use, are accounted for and give a contiguous set */
-  for (size_t i = 0; i < h->len + IntStack_get_length(h->id_stack); i++)
+  for (size_t i = 0; i < h->len + int_stack_size(&h->id_stack); i++)
     assert(mask[i] != 0);
 
   free(mask);
@@ -282,9 +283,9 @@ void BinaryHeap_print(BinaryHeap h, void (*pnt)(void*)){
     }
   }
   fprintf(stderr, "\nSpare keys =");
-  for (size_t i = 0; i <= h->id_stack->last; i++) {
-    fprintf(stderr, "%d(%" PRISIZE_T ") ", h->id_stack->stack[i],
-            h->id_to_pos[h->id_stack->stack[i]]);
+  for (size_t i = 0; i < int_stack_size(&h->id_stack); i++) {
+    fprintf(stderr, "%d(%" PRISIZE_T ") ", int_stack_get(&h->id_stack, i),
+            h->id_to_pos[int_stack_get(&h->id_stack, i)]);
   }
   fprintf(stderr, "\n");
 }
