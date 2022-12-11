@@ -3795,7 +3795,6 @@ static token_t style_token(char **s) {
 }
 
 #define FUNLIMIT 64
-static agxbuf ps_xb;
 
 /* parse_style:
  * This is one of the worst internal designs in graphviz.
@@ -3812,6 +3811,7 @@ char **parse_style(char *s)
     size_t fun = 0;
     bool in_parens = false;
     char *p;
+    static agxbuf ps_xb;
 
     p = s;
     while (true) {
