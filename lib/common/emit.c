@@ -3810,7 +3810,7 @@ char **parse_style(char *s)
 {
     static char *parse[FUNLIMIT];
     static bool is_first = true;
-    int fun = 0;
+    size_t fun = 0;
     bool in_parens = false;
     char *p;
 
