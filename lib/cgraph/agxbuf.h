@@ -205,11 +205,6 @@ static inline size_t agxblen(const agxbuf *xb) {
  */
 static inline void agxbclear(agxbuf *xb) { xb->ptr = xb->buf; }
 
-/* agxbnext:
- * Next position for writing.
- */
-static inline char *agxbnext(agxbuf *xb) { return xb->ptr; }
-
 /* agxbdisown:
  * Disassociate the backing buffer from this agxbuf and return it. The buffer is
  * NUL terminated before being returned. If the agxbuf is using stack memory,
