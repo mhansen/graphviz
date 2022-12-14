@@ -193,11 +193,6 @@ static inline char *agxbuse(agxbuf *xb) {
   return xb->ptr;
 }
 
-/* agxbstart:
- * Return pointer to beginning of buffer.
- */
-static inline char *agxbstart(agxbuf *xb) { return xb->buf; }
-
 /* agxblen:
  * Return number of characters currently stored.
  */

@@ -1032,9 +1032,9 @@ static void printTok(int tok)
 	s = "<unknown>";
     }
     if (tok == T_string) {
-	fprintf(stderr, "%s \"", s);
-	fwrite(agxbstart(state.xb), 1, agxblen(state.xb), stderr);
-	fprintf(stderr, "\"\n");
+	const char *token_text = agxbuse(state.xb);
+	fprintf(stderr, "%s \"%s\"\n", s, token_text);
+	agxbput(state.xb, token_text);
     } else
 	fprintf(stderr, "%s\n", s);
 }
