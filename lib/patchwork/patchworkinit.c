@@ -151,3 +151,13 @@ void patchwork_cleanup(graph_t * g)
     }
     patchwork_cleanup_graph(g);
 }
+
+/**
+ * @dir lib/patchwork
+ * @brief squarified [treemap](https://en.wikipedia.org/wiki/Treemapping) layout engine, API patchwork/patchwork.h
+ * @ingroup engines
+ *
+ * [Patchwork layout user manual](https://graphviz.org/docs/layouts/patchwork/)
+ *
+ * Other @ref engines
+ */

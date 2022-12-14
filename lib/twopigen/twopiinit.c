@@ -192,3 +192,15 @@ void twopi_cleanup(graph_t * g)
     }
     twopi_cleanup_graph(g);
 }
+
+/**
+ * @dir lib/twopigen
+ * @brief radial layout engine, API twopigen/circle.h
+ * @ingroup engines
+ *
+ * Twopi means 2π.
+ *
+ * [Twopi layout user manual](https://graphviz.org/docs/layouts/twopi/)
+ *
+ * Other @ref engines
+ */

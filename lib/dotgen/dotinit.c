@@ -499,3 +499,14 @@ Agraph_t * dot_root (void* p)
     return GD_dotroot(agroot(p));
 }
 
+/**
+ * @defgroup engines Graphviz layout engines
+ * @{
+ * @dir lib/dotgen
+ * @brief [hierarchical or layered](https://en.wikipedia.org/wiki/Layered_graph_drawing) layout engine, API dotgen/dotprocs.h
+ *
+ * [Dot layout user manual](https://graphviz.org/docs/layouts/dot/)
+ *
+ * Other @ref engines
+ * @}
+ */

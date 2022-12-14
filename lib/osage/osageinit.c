@@ -374,3 +374,13 @@ void osage_cleanup(Agraph_t *g)
     }
     cleanup_graphs(g);
 }
+
+/**
+ * @dir lib/osage
+ * @brief clustered layout engine, API osage/osage.h
+ * @ingroup engines
+ *
+ * [Osage layout user manual](https://graphviz.org/docs/layouts/osage/)
+ *
+ * Other @ref engines
+ */
