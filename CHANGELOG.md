@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.5)]
 
+### Fixed
+
+- Using `style` attributes in excess of 128 bytes and/or 63 individual styles no
+  longer results in out-of-bounds memory accesses. #2325
+
 ## [7.0.4] – 2022-12-03
 
 ### Fixed
