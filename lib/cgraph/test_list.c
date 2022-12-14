@@ -258,12 +258,12 @@ static void test_attach_detach(void) {
   ints_free(&zs);
 }
 
-DEFINE_LIST(strs, char *)
+DEFINE_LIST_WITH_DTOR(strs, char *, free)
 
 static void test_dtor(void) {
 
   // setup a list with a non-trivial destructor
-  strs_t xs = {.dtor = (void (*)(char *))free};
+  strs_t xs = {0};
 
   for (size_t i = 0; i < 10; ++i) {
     char *hello = strdup("hello");

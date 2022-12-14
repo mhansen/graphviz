@@ -16,7 +16,15 @@
  * \param name Type name to give the list container
  * \param type Type of the elements the list will store
  */
-#define DEFINE_LIST(name, type)                                                \
+#define DEFINE_LIST(name, type) DEFINE_LIST_WITH_DTOR(name, type, NULL)
+
+/** \p DEFINE_LIST but with a custom element destructor
+ *
+ * \param name Type name to give the list container
+ * \param type Type of the elements the list will store
+ * \param dtor Destructor to be called on elements being released
+ */
+#define DEFINE_LIST_WITH_DTOR(name, type, dtor)                                \
                                                                                \
   /** list container                                                           \
    *                                                                           \
@@ -24,10 +32,9 @@
    * accessed through the functions below.                                     \
    */                                                                          \
   typedef struct {                                                             \
-    type *data;         /* backing storage */                                  \
-    size_t size;        /* number of elements in the list */                   \
-    size_t capacity;    /* available storage slots */                          \
-    void (*dtor)(type); /* optional element destructor */                      \
+    type *data;      /* backing storage */                                     \
+    size_t size;     /* number of elements in the list */                      \
+    size_t capacity; /* available storage slots */                             \
   } name##_t;                                                                  \
                                                                                \
   /** create a new list                                                        \
@@ -91,8 +98,9 @@
                                             type item) {                       \
     assert(list != NULL);                                                      \
     assert(index < list->size && "index out of bounds");                       \
-    if (list->dtor != NULL) {                                                  \
-      list->dtor(list->data[index]);                                           \
+    void (*dtor_)(type) = (void (*)(type))(dtor);                              \
+    if (dtor_ != NULL) {                                                       \
+      dtor_(list->data[index]);                                                \
     }                                                                          \
     list->data[index] = item;                                                  \
   }                                                                            \
@@ -119,9 +127,10 @@
   static inline LIST_UNUSED void name##_clear(name##_t *list) {                \
     assert(list != NULL);                                                      \
                                                                                \
-    if (list->dtor != NULL) {                                                  \
+    void (*dtor_)(type) = (void (*)(type))(dtor);                              \
+    if (dtor_ != NULL) {                                                       \
       for (size_t i = 0; i < list->size; ++i) {                                \
-        list->dtor(list->data[i]);                                             \
+        dtor_(list->data[i]);                                                  \
       }                                                                        \
     }                                                                          \
                                                                                \
@@ -146,8 +155,9 @@
     } else if (list->size > size) {                                            \
       /* we are shrinking the list */                                          \
       while (list->size > size) {                                              \
-        if (list->dtor != NULL) {                                              \
-          list->dtor(list->data[list->size - 1]);                              \
+        void (*dtor_)(type) = (void (*)(type))(dtor);                          \
+        if (dtor_ != NULL) {                                                   \
+          dtor_(list->data[list->size - 1]);                                   \
         }                                                                      \
         --list->size;                                                          \
       }                                                                        \
@@ -185,8 +195,8 @@
                                                                                \
     type value = list->data[list->size - 1];                                   \
                                                                                \
-    /* do not call `list->dtor` because we are transferring ownership of the   \
-     * removed element to the caller                                           \
+    /* do not call `dtor` because we are transferring ownership of the removed \
+     * element to the caller                                                   \
      */                                                                        \
     --list->size;                                                              \
                                                                                \
