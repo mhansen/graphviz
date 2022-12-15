@@ -202,6 +202,11 @@ static inline int agxbputc(agxbuf *xb, char c) {
   return 0;
 }
 
+/* agxbclear:
+ * Resets pointer to data;
+ */
+static inline void agxbclear(agxbuf *xb) { xb->size = 0; }
+
 /* agxbuse:
  * Null-terminates buffer; resets and returns pointer to data. The buffer is
  * still associated with the agxbuf and will be overwritten on the next, e.g.,
@@ -213,11 +218,6 @@ static inline char *agxbuse(agxbuf *xb) {
   xb->size = 0;
   return xb->buf;
 }
-
-/* agxbclear:
- * Resets pointer to data;
- */
-static inline void agxbclear(agxbuf *xb) { xb->size = 0; }
 
 /* agxbdisown:
  * Disassociate the backing buffer from this agxbuf and return it. The buffer is
