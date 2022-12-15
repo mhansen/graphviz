@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -33,11 +34,13 @@ typedef enum {
 ///
 /// This has the following layout assuming x86-64.
 ///
-///   ┌───────────────┬───────────────┬───────────────┬───────────────┐
-///   │      buf      │     size      │   capacity    │               │
-///   ├───────────────┴───────────────┴───────────────┤    located    │
-///   │                     store                     │               │
-///   └───────────────────────────────────────────────┴───────────────┘
+///                                                               located
+///                                                                  ↓
+///   ┌───────────────┬───────────────┬───────────────┬─────────────┬─┐
+///   │      buf      │     size      │   capacity    │   padding   │ │
+///   ├───────────────┴───────────────┴───────────────┴─────────────┼─┤
+///   │                             store                           │ │
+///   └─────────────────────────────────────────────────────────────┴─┘
 ///   0               8               16              24              32
 ///
 /// \p buf, \p size, and \p capacity are in use when \p located is
@@ -46,15 +49,17 @@ typedef enum {
 typedef struct {
   union {
     struct {
-      char *buf;       ///< start of buffer
-      size_t size;     ///< number of characters in the buffer
-      size_t capacity; ///< available bytes in the buffer
+      char *buf;                        ///< start of buffer
+      size_t size;                      ///< number of characters in the buffer
+      size_t capacity;                  ///< available bytes in the buffer
+      char padding[sizeof(size_t) - 1]; ///< unused; for alignment
+      unsigned char
+          located; ///< where does the backing memory for this buffer live?
     };
-    char store[sizeof(char *) +
-               sizeof(size_t) * 2]; ///< inline storage used when \p located is
-                                    ///< > \p AGXBUF_ON_STACK
+    char store[sizeof(char *) + sizeof(size_t) * 3 -
+               1]; ///< inline storage used when \p located is
+                   ///< > \p AGXBUF_ON_STACK
   };
-  size_t located; ///< where does the backing memory for this buffer live?
 } agxbuf;
 
 static inline bool agxbuf_is_inline(const agxbuf *xb) {
@@ -228,7 +233,8 @@ static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
   assert(result == (int)(size - 1) || result < 0);
   if (result > 0) {
     if (agxbuf_is_inline(xb)) {
-      xb->located += (size_t)result;
+      assert(result <= (int)UCHAR_MAX);
+      xb->located += (unsigned char)result;
       assert(agxblen(xb) <= sizeof(xb->store) && "agxbuf corruption");
     } else {
       xb->size += (size_t)result;
@@ -253,7 +259,8 @@ static inline size_t agxbput_n(agxbuf *xb, const char *s, size_t ssz) {
   size_t len = agxblen(xb);
   if (agxbuf_is_inline(xb)) {
     memcpy(&xb->store[len], s, ssz);
-    xb->located += ssz;
+    assert(ssz <= UCHAR_MAX);
+    xb->located += (unsigned char)ssz;
     assert(agxblen(xb) <= sizeof(xb->store) && "agxbuf corruption");
   } else {
     memcpy(&xb->buf[len], s, ssz);
