@@ -215,7 +215,7 @@ static inline void agxbclear(agxbuf *xb) { xb->size = 0; }
  */
 static inline char *agxbuse(agxbuf *xb) {
   (void)agxbputc(xb, '\0');
-  xb->size = 0;
+  agxbclear(xb);
   return xb->buf;
 }
 
