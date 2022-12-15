@@ -15,9 +15,11 @@
 #include <common/htmllex.h>
 #include <cdt/cdt.h>
 #include <ctype.h>
+#include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
+#include <cgraph/unused.h>
 #include <limits.h>
 #include <stddef.h>
 
@@ -798,6 +800,15 @@ int clearHTMLlexer()
 #endif
 }
 
+/// \p agxbput, but assume that source and destination may overlap
+static UNUSED void agxbput_move(agxbuf *dst, const char *src) {
+  // we cannot call `agxbput` itself because it calls `memcpy`, thereby
+  // implicitly assuming that source and destination do not overlap
+  char *src_copy = gv_strdup(src);
+  agxbput(dst, src_copy);
+  free(src_copy);
+}
+
 #ifdef HAVE_EXPAT
 /* eatComment:
  * Given first character after open comment, eat characters
@@ -1034,7 +1045,7 @@ static void printTok(int tok)
     if (tok == T_string) {
 	const char *token_text = agxbuse(state.xb);
 	fprintf(stderr, "%s \"%s\"\n", s, token_text);
-	agxbput(state.xb, token_text);
+	agxbput_move(state.xb, token_text);
     } else
 	fprintf(stderr, "%s\n", s);
 }
