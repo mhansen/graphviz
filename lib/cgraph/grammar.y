@@ -168,12 +168,9 @@ optattrdefs	: optattrdefs attrdefs
 attrdefs	:  attritem optseparator
 			;
 
-attritem	: attrassignment | attrmacro ; 
+attritem	: attrassignment;
 
 attrassignment	:  atom '=' atom {appendattr($1,$3);}
-			;
-
-attrmacro	:	'@' atom {appendattr($2,NULL);}	/* not yet impl */
 			;
 
 graphattrdefs : attrassignment
