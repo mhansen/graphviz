@@ -233,21 +233,15 @@ void aagerror(const char *str)
 	else switch (YYSTATE) {
 	case qstring: {
 		agxbprint(&xb, " scanning a quoted string (missing endquote? longer than %d?)", YY_BUF_SIZE);
-		size_t len = agxblen(&Sbuf);
-		if (len > 0) {
-			if (len > 80)
-				len = 80;
-			agxbprint(&xb, "\nString starting:\"%.*s", (int)len, agxbuse(&Sbuf));
+		if (agxblen(&Sbuf) > 0) {
+			agxbprint(&xb, "\nString starting:\"%.80s", agxbuse(&Sbuf));
 		}
 		break;
 	}
 	case hstring: {
 		agxbprint(&xb, " scanning a HTML string (missing '>'? bad nesting? longer than %d?)", YY_BUF_SIZE);
-		size_t len = agxblen(&Sbuf);
-		if (len > 0) {
-			if (len > 80)
-				len = 80;
-			agxbprint(&xb, "\nString starting:<%.*s", (int)len, agxbuse(&Sbuf));
+		if (agxblen(&Sbuf) > 0) {
+			agxbprint(&xb, "\nString starting:<%.80s", agxbuse(&Sbuf));
 		}
 		break;
 	}
