@@ -165,10 +165,8 @@ attrlist	: optattr '[' optattrdefs ']' ;
 optattrdefs	: optattrdefs attrdefs 
 			| /* empty */ ;
 
-attrdefs	:  attritem optseparator
+attrdefs	:  attrassignment optseparator
 			;
-
-attritem	: attrassignment;
 
 attrassignment	:  atom '=' atom {appendattr($1,$3);}
 			;
