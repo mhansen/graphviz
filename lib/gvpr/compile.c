@@ -261,7 +261,7 @@ static Agdesc_t xargs(char *args)
  */
 static char *deparse(Expr_t *ex, Exnode_t *n, agxbuf *xb) {
   exdump(ex, n, xb);
-  return xb->buf;
+  return agxbuse(xb);
 }
 
 /* deref:
