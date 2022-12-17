@@ -237,9 +237,8 @@ void aagerror(const char *str)
 		if (len > 0) {
 			if (len > 80)
 				len = 80;
-			agxbprint(&xb, "\nString starting:\"%.*s", (int)len, Sbuf.buf);
+			agxbprint(&xb, "\nString starting:\"%.*s", (int)len, agxbuse(&Sbuf));
 		}
-		agxbclear(&Sbuf);
 		break;
 	}
 	case hstring: {
@@ -248,9 +247,8 @@ void aagerror(const char *str)
 		if (len > 0) {
 			if (len > 80)
 				len = 80;
-			agxbprint(&xb, "\nString starting:<%.*s", (int)len, Sbuf.buf);
+			agxbprint(&xb, "\nString starting:<%.*s", (int)len, agxbuse(&Sbuf));
 		}
-		agxbclear(&Sbuf);
 		break;
 	}
 	case comment :
