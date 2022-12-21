@@ -76,26 +76,26 @@ static attr_t *new_attr(void) {
 
 static attr_t *new_attr_with_ref(Agsym_t * sym)
 {
-    attr_t *attr = new_attr();
-    attr->name = safestrdup(sym->name);
+    attr_t *a = new_attr();
+    a->name = safestrdup(sym->name);
     switch (sym->kind) {
     case AGRAPH:
-	attr->objType[0] = 1;
+	a->objType[0] = 1;
 	if (sym->defval)
-	    attr->defValG = safestrdup(sym->defval);
+	    a->defValG = safestrdup(sym->defval);
 	break;
     case AGNODE:
-	attr->objType[1] = 1;
+	a->objType[1] = 1;
 	if (sym->defval)
-	    attr->defValN = safestrdup(sym->defval);
+	    a->defValN = safestrdup(sym->defval);
 	break;
     case AGEDGE:
-	attr->objType[2] = 1;
+	a->objType[2] = 1;
 	if (sym->defval)
-	    attr->defValE = safestrdup(sym->defval);
+	    a->defValE = safestrdup(sym->defval);
 	break;
     }
-    return attr;
+    return a;
 }
 
 static attr_t *new_attr_ref(attr_t * refAttr)
