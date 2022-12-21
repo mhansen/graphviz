@@ -1973,6 +1973,21 @@ def test_2272():
   # run the test
   run_c(c_src, link=["cgraph", "gvc"])
 
+def test_2272_2():
+  """
+  An unterminated string in the source should not crash Graphviz. Variant of
+  `test_2272`.
+  """
+
+  # a graph with an open string
+  graph = 'graph { a[label="abc'
+
+  # process it with Graphviz, which should not crash
+  p = subprocess.run(["dot", "-o", os.devnull], input=graph,
+                     universal_newlines=True)
+  assert p.returncode != 0, "dot accepted invalid input"
+  assert p.returncode == 1, "dot crashed"
+
 def test_2282():
   """
   using the `fdp` layout with JSON output should result in valid JSON

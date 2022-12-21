@@ -833,8 +833,8 @@ centos7-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-error=missing-braces"
+        - export CXXFLAGS="-Werror -Wno-error=missing-braces"
     tags:
         - linux
     variables:
