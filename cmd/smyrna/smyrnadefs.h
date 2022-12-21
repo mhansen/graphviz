@@ -432,7 +432,6 @@ typedef struct
 	mouse_action_t* mouse_actions;	/*customizable moouse interraction list*/
 	size_t mouse_action_count;
 	refresh_filter refresh;
-	int edgerendertype;
 	float nodeScale;
 	int guiMode;
 	char* optArg;

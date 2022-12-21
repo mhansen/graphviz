@@ -214,8 +214,6 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     vi->colschms =
 	create_color_theme(atoi
 			   (get_attribute_value("colortheme", vi, g)));
-    vi->edgerendertype=atoi(get_attribute_value("edgerender", vi, g));
-
 
     if (vi->graphCount > 0)
 	glClearColor(vi->bgColor.R, vi->bgColor.G, vi->bgColor.B, vi->bgColor.A);	//background color
@@ -384,7 +382,6 @@ void init_viewport(ViewInfo * view)
     view->refresh.pos=1;
     view->refresh.selection=1;
     view->refresh.nodesize=1;
-    view->edgerendertype=0;
     if(view->guiMode!=GUI_FULLSCREEN)
 	view->guiMode=GUI_WINDOWED;
 
