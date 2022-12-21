@@ -76,12 +76,11 @@ void close_graph(ViewInfo *vi) {
     clear_viewport(vi);
 }
 
-char *get_attribute_value(char *attr, ViewInfo * view, Agraph_t * g)
-{
+char *get_attribute_value(char *attr, ViewInfo *vi, Agraph_t *g) {
     char *buf;
     buf = agget(g, attr);
     if (!buf || *buf == '\0')
-	buf = agget(view->systemGraphs.def_attrs, attr);
+	buf = agget(vi->systemGraphs.def_attrs, attr);
     return buf;
 }
 
