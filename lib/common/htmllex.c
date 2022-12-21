@@ -622,7 +622,7 @@ static htmltbl_t *mkTbl(char **atts)
 
 static void startElement(void *user, const char *name, char **atts)
 {
-    GVC_t *gvc = (GVC_t*)user;
+    GVC_t *gvc = user;
 
     if (strcasecmp(name, "TABLE") == 0) {
 	htmllval.tbl = mkTbl(atts);
