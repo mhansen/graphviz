@@ -38,10 +38,9 @@ ViewInfo *view;
 /* these two global variables should be wrapped in something else */
 GtkMessageDialog *Dlg;
 
-static void clear_viewport(ViewInfo * view)
-{
-    if (view->graphCount)
-	agclose(view->g[view->activeGraph]);
+static void clear_viewport(ViewInfo *vi) {
+    if (vi->graphCount)
+	agclose(vi->g[vi->activeGraph]);
 }
 static void *get_glut_font(int ind)
 {
