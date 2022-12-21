@@ -174,12 +174,6 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     vi->mg.kts =
 	(float) atof(get_attribute_value("defaultmagnifierkts", vi, g));
 
-    vi->fmg.constantR =
-	atoi(get_attribute_value
-	     ("defaultfisheyemagnifierradius", vi, g));
-
-    vi->fmg.fisheye_distortion_fac = atoi(get_attribute_value
-	     ("defaultfisheyemagnifierdistort", vi, g));
     vi->drawnodes = atoi(get_attribute_value("drawnodes", vi, g));
     vi->drawedges = atoi(get_attribute_value("drawedges", vi, g));
     vi->drawnodelabels=atoi(get_attribute_value("labelshownodes", vi, g));
@@ -332,8 +326,6 @@ void init_viewport(ViewInfo * view)
     view->mg.width = DEFAULT_MAGNIFIER_WIDTH;
     view->mg.height = DEFAULT_MAGNIFIER_HEIGHT;
     view->mg.kts = DEFAULT_MAGNIFIER_KTS;
-    view->fmg.constantR = DEFAULT_FISHEYE_MAGNIFIER_RADIUS;
-    view->fmg.active = 0;
     view->mouse.down = 0;
     view->activeGraph = -1;
     view->Topview = gv_alloc(sizeof(topview));
