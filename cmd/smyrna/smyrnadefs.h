@@ -325,8 +325,6 @@ typedef struct
 	float defaultnodealpha;
 	/*default edge alpha */
 	float defaultedgealpha;
-	/*default node shape */
-	int defaultnodeshape;
 
 	/*default line width */
 	float LineWidth;

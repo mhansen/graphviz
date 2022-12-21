@@ -108,9 +108,6 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
 
     vi->gridSize = (float)atof(buf = get_attribute_value("gridsize", vi, g));
 
-    vi->defaultnodeshape = atoi(buf = get_attribute_value("defaultnodeshape",
-                                                          vi, g));
-
     vi->gridVisible = atoi(get_attribute_value("gridvisible", vi, g));
 
     //background color , default white
