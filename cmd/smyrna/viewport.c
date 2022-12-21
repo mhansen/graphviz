@@ -168,7 +168,6 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     vi->FontSize =
 	(float) atof(get_attribute_value("defaultfontsize", vi, g));
 
-    get_attribute_value("defaultmagnifierwidth", vi, g);
     vi->mg.width =
 	atoi(get_attribute_value("defaultmagnifierwidth", vi, g));
     vi->mg.height =
