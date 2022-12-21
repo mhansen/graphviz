@@ -269,7 +269,6 @@ typedef struct
 	xdot* xDot;
 	float global_z;
 	attr_list* attributes;/*attribute list*/
-	attr_list* filtered_attr_list;
 
 	topviewcache cache;
 	selection sel;

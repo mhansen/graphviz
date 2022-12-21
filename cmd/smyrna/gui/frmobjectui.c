@@ -51,15 +51,6 @@ static int get_object_type(void)
     return -1;
 }
 
-static void free_attr(attr_t *at) {
-    free(at->defValG);
-    free(at->defValN);
-    free(at->defValE);
-
-    free(at->name);
-    free(at);
-}
-
 static attr_t *new_attr(void) {
   return gv_alloc(sizeof(attr_t));
 }
@@ -107,24 +98,6 @@ static void reset_attr_list_widgets(attr_list * l)
     for (id = 0; id < MAX_FILTERED_ATTR_COUNT; id++) {
 	gtk_label_set_text(l->fLabels[id], "");
     }
-}
-
-static void free_attr_list_widgets(attr_list * l)
-{
-    int id;
-    for (id = 0; id < MAX_FILTERED_ATTR_COUNT; id++) {
-	gtk_object_destroy((GtkObject *) l->fLabels[id]);
-    }
-}
-
-static void free_attr_list(attr_list *l) {
-    int id;
-    for (id = 0; id < l->attr_count; id++) {
-	free_attr(l->attributes[id]);
-    }
-    if (l->with_widgets)
-	free_attr_list_widgets(l);
-    free(l);
 }
 
 // creates a new attr_list
@@ -318,12 +291,9 @@ static void filter_attributes(const char *prefix, topview *t) {
     int tmp;
 
     attr_list *l = t->attributes;
-    attr_list *fl = t->filtered_attr_list;
     int objKind = get_object_type();
 
-    if (fl)
-	free_attr_list(fl);
-    fl = attr_list_new(0);
+    attr_list *fl = attr_list_new(0);
     reset_attr_list_widgets(l);
     create_filtered_list(prefix, l, fl);
     for (ind = 0; ind < fl->attr_count; ind++) {
