@@ -166,14 +166,6 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     vi->LineWidth =
 	(float) atof(get_attribute_value("defaultlinewidth", vi, g));
 
-    vi->mg.width =
-	atoi(get_attribute_value("defaultmagnifierwidth", vi, g));
-    vi->mg.height =
-	atoi(get_attribute_value("defaultmagnifierheight", vi, g));
-
-    vi->mg.kts =
-	(float) atof(get_attribute_value("defaultmagnifierkts", vi, g));
-
     vi->drawnodes = atoi(get_attribute_value("drawnodes", vi, g));
     vi->drawedges = atoi(get_attribute_value("drawedges", vi, g));
     vi->drawnodelabels=atoi(get_attribute_value("labelshownodes", vi, g));
@@ -320,12 +312,6 @@ void init_viewport(ViewInfo * view)
 
     view->zoom = -20;
 
-    view->mg.active = 0;
-    view->mg.x = 0;
-    view->mg.y = 0;
-    view->mg.width = DEFAULT_MAGNIFIER_WIDTH;
-    view->mg.height = DEFAULT_MAGNIFIER_HEIGHT;
-    view->mg.kts = DEFAULT_MAGNIFIER_KTS;
     view->mouse.down = 0;
     view->activeGraph = -1;
     view->Topview = gv_alloc(sizeof(topview));

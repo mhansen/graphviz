@@ -287,14 +287,6 @@ typedef struct
 
     } attribute;
 
-    typedef struct _magnifier {
-	float x, y;
-	float kts;		//zoom X
-	float GLwidth, GLheight;
-	int width, height;	//how big is the magnifier referenced from windows
-	int active;
-    } magnifier;
-
     typedef struct{
     Agraph_t *def_attrs;
     Agraph_t *attrs_widgets;
@@ -367,9 +359,6 @@ typedef struct
 
 	/*selection object,refer to smyrnadefs.h for more info */
 //	selection Selection;
-
-	/*rectangular magnifier object */
-	magnifier mg;
 
 	viewport_camera **cameras;
 	int camera_count;	//number of cameras
