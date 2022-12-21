@@ -168,7 +168,6 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     vi->FontSize =
 	(float) atof(get_attribute_value("defaultfontsize", vi, g));
 
-    vi->topviewusermode = atoi(get_attribute_value("usermode", vi, g));
     get_attribute_value("defaultmagnifierwidth", vi, g);
     vi->mg.width =
 	atoi(get_attribute_value("defaultmagnifierwidth", vi, g));
@@ -331,7 +330,6 @@ void init_viewport(ViewInfo * view)
     view->zoom = -20;
     view->FontSize = 52;
 
-    view->topviewusermode = TOP_VIEW_USER_NOVICE_MODE;	//for demo
     view->mg.active = 0;
     view->mg.x = 0;
     view->mg.y = 0;

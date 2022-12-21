@@ -389,9 +389,6 @@ typedef struct
 	int camera_count;	//number of cameras
 	int active_camera;
 
-	/*0 advanced users with editing options 1 nonice users just navigate (glmenu system) */
-	int topviewusermode;
-
 	/*open gl canvas, used to be a globa variable before looks better wrapped in viewinfo */
 	GtkWidget *drawing_area;
 
