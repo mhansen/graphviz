@@ -141,7 +141,7 @@ static void free_attr_list(attr_list *l) {
 // attr_list is a basic stack implementation
 // with alphanumeric sorting functions
 // that uses quicksort
-static attr_list *attr_list_new(Agraph_t *g, int with_widgets) {
+static attr_list *attr_list_new(int with_widgets) {
     int id;
     attr_list *l = gv_alloc(sizeof(attr_list));
     l->attr_count = 0;
@@ -333,7 +333,7 @@ static void filter_attributes(const char *prefix, topview *t) {
 
     if (fl)
 	free_attr_list(fl);
-    fl = attr_list_new(NULL, 0);
+    fl = attr_list_new(0);
     reset_attr_list_widgets(l);
     create_filtered_list(prefix, l, fl);
     for (ind = 0; ind < fl->attr_count; ind++) {
@@ -584,7 +584,7 @@ attr_list *load_attr_list(Agraph_t * g)
     if (!smyrna_attrs)
 	smyrna_attrs = smyrnaPath("attrs.txt");
     g = view->g[view->activeGraph];
-    l = attr_list_new(NULL, 1);
+    l = attr_list_new(1);
     file = fopen(smyrna_attrs, "r");
     if (file != NULL) {
 	int i = 0;
