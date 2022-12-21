@@ -165,8 +165,6 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     /*default line width */
     vi->LineWidth =
 	(float) atof(get_attribute_value("defaultlinewidth", vi, g));
-    vi->FontSize =
-	(float) atof(get_attribute_value("defaultfontsize", vi, g));
 
     vi->mg.width =
 	atoi(get_attribute_value("defaultmagnifierwidth", vi, g));
@@ -327,7 +325,6 @@ void init_viewport(ViewInfo * view)
 
 
     view->zoom = -20;
-    view->FontSize = 52;
 
     view->mg.active = 0;
     view->mg.x = 0;
