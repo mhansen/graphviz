@@ -100,15 +100,15 @@ static attr_t *new_attr_with_ref(Agsym_t * sym)
 
 static attr_t *new_attr_ref(attr_t * refAttr)
 {
-    attr_t *attr = gv_alloc(sizeof(attr_t));
-    *attr = *refAttr;
-    attr->defValG = safestrdup(refAttr->defValG);
-    attr->defValN = safestrdup(refAttr->defValN);
-    attr->defValE = safestrdup(refAttr->defValE);
-    attr->name = safestrdup(refAttr->name);
+    attr_t *a = gv_alloc(sizeof(attr_t));
+    *a = *refAttr;
+    a->defValG = safestrdup(refAttr->defValG);
+    a->defValN = safestrdup(refAttr->defValN);
+    a->defValE = safestrdup(refAttr->defValE);
+    a->name = safestrdup(refAttr->name);
     if (refAttr->value)
-	attr->value = safestrdup(refAttr->value);
-    return attr;
+	a->value = safestrdup(refAttr->value);
+    return a;
 }
 
 static void reset_attr_list_widgets(attr_list * l)
