@@ -61,17 +61,7 @@ static void free_attr(attr_t *at) {
 }
 
 static attr_t *new_attr(void) {
-    attr_t *attr = gv_alloc(sizeof(attr_t));
-    attr->defValG = NULL;
-    attr->defValN = NULL;
-    attr->defValE = NULL;
-    attr->name = NULL;
-    attr->value = NULL;
-    attr->propagate = 0;
-    attr->objType[0] = 0;
-    attr->objType[1] = 0;
-    attr->objType[2] = 0;
-    return attr;
+  return gv_alloc(sizeof(attr_t));
 }
 
 static attr_t *new_attr_with_ref(Agsym_t * sym)
