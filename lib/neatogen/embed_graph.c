@@ -45,11 +45,6 @@ void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
     Queue Q;
     DistType max_dist = 0;
 
-    if (coords != NULL) {
-	free(coords[0]);
-	free(coords);
-    }
-
     /* this matrix stores the distance between each node and each "pivot" */
     *Coords = coords = N_GNEW(dim, DistType *);
     for (i = 0; i < dim; i++)
