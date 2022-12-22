@@ -73,7 +73,7 @@ void bfs(int vertex, vtx_data *graph, int n, DistType *dist)
 
 int
 bfs_bounded(int vertex, vtx_data * graph, DistType * dist,
-	    Queue * Q, int bound, int *visited_nodes)
+	    int bound, int *visited_nodes, int queue_size)
  /* compute vector 'dist' of distances of all nodes  from 'vertex' */
  /* ignore nodes whose distance to 'vertex' is more than bound */
 {
@@ -86,10 +86,12 @@ bfs_bounded(int vertex, vtx_data * graph, DistType * dist,
 
     dist[vertex] = 0;
 
-    initQueue(Q, vertex);
+    Queue Q;
+    mkQueue(&Q, queue_size);
+    initQueue(&Q, vertex);
 
     num_visit = 0;
-    while (deQueue(Q, &closestVertex)) {
+    while (deQueue(&Q, &closestVertex)) {
 	closestDist = dist[closestVertex];
 	if (closestDist > bound) {
 	    dist[closestVertex] = -1;
@@ -101,14 +103,15 @@ bfs_bounded(int vertex, vtx_data * graph, DistType * dist,
 	    neighbor = graph[closestVertex].edges[i];
 	    if (dist[neighbor] < -0.5) {	/* first time to reach neighbor */
 		dist[neighbor] = closestDist + 1;
-		enQueue(Q, neighbor);
+		enQueue(&Q, neighbor);
 	    }
 	}
     }
+    freeQueue(&Q);
 
     /* set distances of all nodes in Queue to -1 */
     /* for next run */
-    while (deQueue(Q, &closestVertex)) {
+    while (deQueue(&Q, &closestVertex)) {
 	dist[closestVertex] = -1;
     }
     dist[vertex] = -1;

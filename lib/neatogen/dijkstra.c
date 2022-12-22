@@ -185,20 +185,18 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
 {
     int num_visited_nodes;
     int i;
-    Queue Q;
     heap H;
     int closestVertex, neighbor;
     DistType closestDist;
     int num_found = 0;
 
     /* first, perform BFS to find the nodes in the region */
-    mkQueue(&Q, n);
     /* remember that dist should be init. with -1's */
     for (i = 0; i < n; i++) {
 	dist[i] = -1;		/* far, TOO COSTLY (O(n))! */
     }
     num_visited_nodes =
-	bfs_bounded(vertex, graph, dist, &Q, bound, visited_nodes);
+	bfs_bounded(vertex, graph, dist, bound, visited_nodes, n);
     bitarray_t node_in_neighborhood = bitarray_new(n);
     for (i = 0; i < num_visited_nodes; i++) {
 	bitarray_set(&node_in_neighborhood, visited_nodes[i], true);
@@ -234,7 +232,6 @@ dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
     bitarray_reset(&node_in_neighborhood);
     freeHeap(&H);
     free(index);
-    freeQueue(&Q);
     return num_visited_nodes;
 }
 
