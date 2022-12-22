@@ -368,7 +368,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
     if (reweight_graph) {
 	dijkstra(node, graph, n, Dij[0]);
     } else {
-	bfs(node, graph, n, Dij[0], &Q);
+	bfs(node, graph, n, Dij[0]);
     }
 
     /* find the most distant node from first pivot */
@@ -387,7 +387,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	if (reweight_graph) {
 	    dijkstra(node, graph, n, Dij[i]);
 	} else {
-	    bfs(node, graph, n, Dij[i], &Q);
+	    bfs(node, graph, n, Dij[i]);
 	}
 	max_dist = 0;
 	for (j = 0; j < n; j++) {
@@ -751,19 +751,15 @@ float *compute_apsp_packed(vtx_data * graph, int n)
     float *Dij = N_NEW(n * (n + 1) / 2, float);
 
     DistType *Di = N_NEW(n, DistType);
-    Queue Q;
-
-    mkQueue(&Q, n);
 
     count = 0;
     for (i = 0; i < n; i++) {
-	bfs(i, graph, n, Di, &Q);
+	bfs(i, graph, n, Di);
 	for (j = i; j < n; j++) {
 	    Dij[count++] = (float)Di[j];
 	}
     }
     free(Di);
-    freeQueue(&Q);
     return Dij;
 }
 

@@ -42,7 +42,6 @@ void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
     DistType *dist = N_GNEW(n, DistType);	/* this vector stores  the distances of
 						   each nodes to the selected "pivots" */
     float *old_weights = graph[0].ewgts;
-    Queue Q;
     DistType max_dist = 0;
 
     /* this matrix stores the distance between each node and each "pivot" */
@@ -57,11 +56,10 @@ void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
     /* select the first pivot */
     node = rand() % n;
 
-    mkQueue(&Q, n);
     if (reweight_graph) {
 	dijkstra(node, graph, n, coords[0]);
     } else {
-	bfs(node, graph, n, coords[0], &Q);
+	bfs(node, graph, n, coords[0]);
     }
 
     for (i = 0; i < n; i++) {
@@ -77,7 +75,7 @@ void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
 	if (reweight_graph) {
 	    dijkstra(node, graph, n, coords[i]);
 	} else {
-	    bfs(node, graph, n, coords[i], &Q);
+	    bfs(node, graph, n, coords[i]);
 	}
 	max_dist = 0;
 	for (j = 0; j < n; j++) {
@@ -91,7 +89,6 @@ void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
     }
 
     free(dist);
-    freeQueue(&Q);
 
     if (reweight_graph) {
 	restore_old_weights(graph, n, old_weights);

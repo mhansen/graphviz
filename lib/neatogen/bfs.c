@@ -21,7 +21,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-void bfs(int vertex, vtx_data * graph, int n, DistType * dist, Queue * Q)
+void bfs(int vertex, vtx_data *graph, int n, DistType *dist)
  /* compute vector 'dist' of distances of all nodes from 'vertex' */
 {
     int i;
@@ -33,21 +33,23 @@ void bfs(int vertex, vtx_data * graph, int n, DistType * dist, Queue * Q)
 	dist[i] = -1;
     dist[vertex] = 0;
 
-    initQueue(Q, vertex);
+    Queue Q;
+    mkQueue(&Q, n);
+    initQueue(&Q, vertex);
 
     if (graph[0].ewgts == NULL) {
-	while (deQueue(Q, &closestVertex)) {
+	while (deQueue(&Q, &closestVertex)) {
 	    closestDist = dist[closestVertex];
 	    for (i = 1; i < graph[closestVertex].nedges; i++) {
 		neighbor = graph[closestVertex].edges[i];
 		if (dist[neighbor] < -0.5) {	/* first time to reach neighbor */
 		    dist[neighbor] = closestDist + 1;
-		    enQueue(Q, neighbor);
+		    enQueue(&Q, neighbor);
 		}
 	    }
 	}
     } else {
-	while (deQueue(Q, &closestVertex)) {
+	while (deQueue(&Q, &closestVertex)) {
 	    closestDist = dist[closestVertex];
 	    for (i = 1; i < graph[closestVertex].nedges; i++) {
 		neighbor = graph[closestVertex].edges[i];
@@ -55,7 +57,7 @@ void bfs(int vertex, vtx_data * graph, int n, DistType * dist, Queue * Q)
 		    dist[neighbor] =
 			closestDist +
 			(DistType) graph[closestVertex].ewgts[i];
-		    enQueue(Q, neighbor);
+		    enQueue(&Q, neighbor);
 		}
 	    }
 	}
@@ -65,6 +67,8 @@ void bfs(int vertex, vtx_data * graph, int n, DistType * dist, Queue * Q)
     for (i = 0; i < n; i++)
 	if (dist[i] < -0.5)	/* 'i' is not connected to 'vertex' */
 	    dist[i] = closestDist + 10;
+
+    freeQueue(&Q);
 }
 
 int
