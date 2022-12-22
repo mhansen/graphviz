@@ -91,6 +91,7 @@ void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
     }
 
     free(dist);
+    freeQueue(&Q);
 
     if (reweight_graph) {
 	restore_old_weights(graph, n, old_weights);
