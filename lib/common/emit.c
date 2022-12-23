@@ -2199,12 +2199,8 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
     return 0;
 }
 
-static void free_stroke (stroke_t* sp)
-{
-    if (sp) {
-	free (sp->vertices);
-	free (sp);
-    }
+static void free_stroke(stroke_t sp) {
+  free(sp.vertices);
 }
 
 typedef double (*radfunc_t)(double,double,double);
@@ -2323,15 +2319,14 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	color = pencolor;
 
 	if (tapered) {
-	    stroke_t* stp;
 	    if (*color == '\0') color = DEFAULT_COLOR;
 	    if (*fillcolor == '\0') fillcolor = DEFAULT_COLOR;
     	    gvrender_set_pencolor(job, "transparent");
 	    gvrender_set_fillcolor(job, color);
 	    bz = ED_spl(e)->list[0];
-	    stp = taper (&bz, taperfun (e), penwidth, 0, 0);
-	    gvrender_polygon(job, stp->vertices, stp->nvertices, TRUE);
-	    free_stroke (stp);
+	    stroke_t stp = taper(&bz, taperfun (e), penwidth, 0, 0);
+	    gvrender_polygon(job, stp.vertices, stp.nvertices, TRUE);
+	    free_stroke(stp);
     	    gvrender_set_pencolor(job, color);
 	    if (fillcolor != color)
 		gvrender_set_fillcolor(job, fillcolor);
