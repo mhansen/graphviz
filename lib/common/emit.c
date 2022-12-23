@@ -3149,7 +3149,7 @@ static void init_job_viewport(GVJ_t * job, graph_t * g)
     double X, Y, Z, x, y;
     int rv;
     Agnode_t *n;
-    char *str, *nodename = NULL, *junk = NULL;
+    char *str, *nodename = NULL;
 
     UR = gvc->bb.UR;
     LL = gvc->bb.LL;
@@ -3187,7 +3187,6 @@ static void init_job_viewport(GVJ_t * job, graph_t * g)
     /* user can override */
     if ((str = agget(g, "viewport"))) {
         nodename = malloc(strlen(str)+1);
-        junk = malloc(strlen(str)+1);
 	rv = sscanf(str, "%lf,%lf,%lf,\'%[^\']\'", &X, &Y, &Z, nodename);
 	if (rv == 4) {
 	    n = agfindnode(g->root, nodename);
@@ -3197,7 +3196,8 @@ static void init_job_viewport(GVJ_t * job, graph_t * g)
 	    }
 	}
 	else {
-	    rv = sscanf(str, "%lf,%lf,%lf,%[^,]%s", &X, &Y, &Z, nodename, junk);
+	    char junk;
+	    rv = sscanf(str, "%lf,%lf,%lf,%[^,]%c", &X, &Y, &Z, nodename, &junk);
 	    if (rv == 4) {
                 n = agfindnode(g->root, nodename);
                 if (n) {
@@ -3210,7 +3210,6 @@ static void init_job_viewport(GVJ_t * job, graph_t * g)
 	    }
         }
 	free (nodename);
-	free (junk);
     }
     /* rv is ignored since args retain previous values if not scanned */
 
