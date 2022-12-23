@@ -522,6 +522,7 @@ pointf spline_at_y(splines * spl, double y)
 static int Tflag;
 void gvToggle(int s)
 {
+    (void)s;
     Tflag = !Tflag;
 #if !defined(_WIN32)
     signal(SIGUSR1, gvToggle);
