@@ -47,7 +47,7 @@ void free_queue(nodequeue * q)
 
 void enqueue(nodequeue * q, node_t * n)
 {
-    *(q->tail++) = n;
+    *q->tail++ = n;
     if (q->tail >= q->limit)
 	q->tail = q->store;
 }
@@ -58,7 +58,7 @@ node_t *dequeue(nodequeue * q)
     if (q->head == q->tail)
 	n = NULL;
     else {
-	n = *(q->head++);
+	n = *q->head++;
 	if (q->head >= q->limit)
 	    q->head = q->store;
     }
@@ -134,7 +134,7 @@ bool late_bool(void *obj, attrsym_t *attr, bool defaultValue) {
 /* union-find */
 node_t *UF_find(node_t * n)
 {
-    while (ND_UF_parent(n) && (ND_UF_parent(n) != n)) {
+    while (ND_UF_parent(n) && ND_UF_parent(n) != n) {
 	if (ND_UF_parent(ND_UF_parent(n)))
 	    ND_UF_parent(n) = ND_UF_parent(ND_UF_parent(n));
 	n = ND_UF_parent(n);
@@ -230,7 +230,7 @@ pointf Bezier(pointf * V, int degree, double t, pointf * Left, pointf * Right)
 	for (j = 0; j <= degree; j++)
 	    Right[j] = Vtemp[degree - j][j];
 
-    return (Vtemp[degree][0]);
+    return Vtemp[degree][0];
 }
 
 #ifdef DEBUG
@@ -365,7 +365,7 @@ const char *safefile(const char *filename)
 	    dirs = mkDirlist (pathlist, &maxdirlen);
     }
 
-    if ((*filename == DIRSEP[0]) || !dirs)
+    if (*filename == DIRSEP[0] || !dirs)
 	return filename;
 
     return findPath (dirs, maxdirlen, filename);
@@ -421,7 +421,7 @@ pointf dotneato_closest(splines * spl, pointf pt)
 	    b.x = bz.list[j].x;
 	    b.y = bz.list[j].y;
 	    d2 = DIST2(b, pt);
-	    if ((bestj == -1) || (d2 < bestdist2)) {
+	    if (bestj == -1 || d2 < bestdist2) {
 		besti = i;
 		bestj = j;
 		bestdist2 = d2;
@@ -485,9 +485,9 @@ pointf spline_at_y(splines * spl, double y)
     else {
 	for (i = 0; i < bz.size; i += 3) {
 	    for (j = 0; j < 3; j++) {
-		if ((bz.list[i + j].y <= y) && (y <= bz.list[i + j + 1].y))
+		if (bz.list[i + j].y <= y && y <= bz.list[i + j + 1].y)
 		    break;
-		if ((bz.list[i + j].y >= y) && (y >= bz.list[i + j + 1].y))
+		if (bz.list[i + j].y >= y && y >= bz.list[i + j + 1].y)
 		    break;
 	    }
 	    if (j < 3)
@@ -498,7 +498,7 @@ pointf spline_at_y(splines * spl, double y)
 	    c[j].x = bz.list[i + j].x;
 	    c[j].y = bz.list[i + j].y;
 	    /* make the spline be monotonic in Y, awful but it works for now */
-	    if ((j > 0) && (c[j].y > c[j - 1].y))
+	    if (j > 0 && c[j].y > c[j - 1].y)
 		c[j].y = c[j - 1].y;
 	}
 	low = 0.0;
@@ -555,10 +555,10 @@ void common_init_node(node_t * n)
     fi.fontname = late_nnstring(n, N_fontname, DEFAULT_FONTNAME);
     fi.fontcolor = late_nnstring(n, N_fontcolor, DEFAULT_COLOR);
     ND_label(n) = make_label(n, str,
-	        ((aghtmlstr(str) ? LT_HTML : LT_NONE) | ( (shapeOf(n) == SH_RECORD) ? LT_RECD : LT_NONE)),
+	        (aghtmlstr(str) ? LT_HTML : LT_NONE) | ( (shapeOf(n) == SH_RECORD) ? LT_RECD : LT_NONE),
 		fi.fontsize, fi.fontname, fi.fontcolor);
-    if (N_xlabel && (str = agxget(n, N_xlabel)) && (str[0])) {
-	ND_xlabel(n) = make_label(n, str, (aghtmlstr(str) ? LT_HTML : LT_NONE),
+    if (N_xlabel && (str = agxget(n, N_xlabel)) && str[0]) {
+	ND_xlabel(n) = make_label(n, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
 				fi.fontsize, fi.fontname, fi.fontcolor);
 	GD_has_labels(agraphof(n)) |= NODE_XLABEL;
     }
@@ -635,36 +635,36 @@ int common_init_edge(edge_t * e)
 
     fi.fontname = NULL;
     lfi.fontname = NULL;
-    if (E_label && (str = agxget(e, E_label)) && (str[0])) {
+    if (E_label && (str = agxget(e, E_label)) && str[0]) {
 	r = 1;
 	initFontEdgeAttr(e, &fi);
-	ED_label(e) = make_label(e, str, (aghtmlstr(str) ? LT_HTML : LT_NONE),
+	ED_label(e) = make_label(e, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
 				fi.fontsize, fi.fontname, fi.fontcolor);
 	GD_has_labels(sg) |= EDGE_LABEL;
 	ED_label_ontop(e) =
 	    mapbool(late_string(e, E_label_float, "false")) ? TRUE : FALSE;
     }
 
-    if (E_xlabel && (str = agxget(e, E_xlabel)) && (str[0])) {
+    if (E_xlabel && (str = agxget(e, E_xlabel)) && str[0]) {
 	if (!fi.fontname)
 	    initFontEdgeAttr(e, &fi);
-	ED_xlabel(e) = make_label(e, str, (aghtmlstr(str) ? LT_HTML : LT_NONE),
+	ED_xlabel(e) = make_label(e, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
 				fi.fontsize, fi.fontname, fi.fontcolor);
 	GD_has_labels(sg) |= EDGE_XLABEL;
     }
 
 
     /* vladimir */
-    if (E_headlabel && (str = agxget(e, E_headlabel)) && (str[0])) {
+    if (E_headlabel && (str = agxget(e, E_headlabel)) && str[0]) {
 	initFontLabelEdgeAttr(e, &fi, &lfi);
-	ED_head_label(e) = make_label(e, str, (aghtmlstr(str) ? LT_HTML : LT_NONE),
+	ED_head_label(e) = make_label(e, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
 				lfi.fontsize, lfi.fontname, lfi.fontcolor);
 	GD_has_labels(sg) |= HEAD_LABEL;
     }
-    if (E_taillabel && (str = agxget(e, E_taillabel)) && (str[0])) {
+    if (E_taillabel && (str = agxget(e, E_taillabel)) && str[0]) {
 	if (!lfi.fontname)
 	    initFontLabelEdgeAttr(e, &fi, &lfi);
-	ED_tail_label(e) = make_label(e, str, (aghtmlstr(str) ? LT_HTML : LT_NONE),
+	ED_tail_label(e) = make_label(e, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
 				lfi.fontsize, lfi.fontname, lfi.fontcolor);
 	GD_has_labels(sg) |= TAIL_LABEL;
     }
@@ -772,7 +772,7 @@ void compute_bb(graph_t * g)
     pointf ptf, s2;
     int i, j;
 
-    if ((agnnodes(g) == 0) && (GD_n_cluster(g) ==0)) {
+    if (agnnodes(g) == 0 && GD_n_cluster(g) == 0) {
 	bb.LL = (pointf){0};
 	bb.UR = (pointf){0};
 	return;
@@ -1148,7 +1148,7 @@ static node_t *mapN(node_t * n, graph_t * clg)
     graph_t *g = agraphof(n);
     Agsym_t *sym;
 
-    if (!(IS_CLUST_NODE(n)))
+    if (!IS_CLUST_NODE(n))
 	return n;
     agsubnode(clg, n, 1);
     name = strchr(agnameof(n), ':');
@@ -1262,7 +1262,7 @@ char* scanEntity (char* t, agxbuf* xb)
 
     agxbputc(xb, '&');
     if (!endp) return t;
-    if (((len = (size_t)(endp - t)) > MAXENTLEN) || (len < 2)) return t;
+    if ((len = (size_t)(endp - t)) > MAXENTLEN || len < 2) return t;
     strncpy (buf, t, len);
     buf[len] = '\0';
     key.name =  buf;
@@ -1270,7 +1270,7 @@ char* scanEntity (char* t, agxbuf* xb)
         sizeof(entities[0]), comp_entities);
     if (!res) return t;
     agxbprint(xb, "#%d;", res->value);
-    return (endp+1);
+    return endp + 1;
 }
 
 
@@ -1305,14 +1305,14 @@ htmlEntity (char** s)
                     byte = byte - '0';
 		else
                     break;
-		n = (n * 16) + (int)byte;
+		n = n * 16 + (int)byte;
 	    }
 	}
 	else {
 	    for (i = 1; i < 8; i++) {
 		byte = *(str + i);
 		if (byte >= '0' && byte <= '9')
-		    n = (n * 10) + ((int)byte - '0');
+		    n = n * 10 + ((int)byte - '0');
 		else
 		    break;
 	    }
