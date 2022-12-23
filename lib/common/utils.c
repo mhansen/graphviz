@@ -1205,24 +1205,23 @@ void undoClusterEdges(graph_t * g)
     node_t *nextn;
     edge_t *e;
     graph_t *clg;
-    edge_t **elist;
     int ecnt = num_clust_edges(g);
     int i = 0;
 
     if (!ecnt) return;
     clg = agsubg(g, "__clusternodes",1);
     agbindrec(clg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-    elist = N_NEW(ecnt, edge_t*);
+    edge_t **edgelist = N_NEW(ecnt, edge_t*);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    if (ED_compound(e))
-		elist[i++] = e;
+		edgelist[i++] = e;
 	}
     }
     assert(i == ecnt);
     for (i = 0; i < ecnt; i++)
-	undoCompound(elist[i], clg);
-    free (elist);
+	undoCompound(edgelist[i], clg);
+    free (edgelist);
     for (n = agfstnode(clg); n; n = nextn) {
 	nextn = agnxtnode(clg, n);
 	gv_cleanup_node(n);
