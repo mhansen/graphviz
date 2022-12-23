@@ -15,6 +15,7 @@
 #include <cgraph/tokenize.h>
 #include <common/htmltable.h>
 #include <common/entities.h>
+#include <limits.h>
 #include <math.h>
 #include <gvc/gvc.h>
 #include <cgraph/strcasecmp.h>
@@ -71,12 +72,12 @@ int late_int(void *obj, attrsym_t *attr, int defaultValue, int minimum) {
     if (!p || p[0] == '\0')
         return defaultValue;
     char *endp;
-    int rv = strtol(p, &endp, 10);
-    if (p == endp)
+    long rv = strtol(p, &endp, 10);
+    if (p == endp || rv > INT_MAX)
         return defaultValue; /* invalid int format */
     if (rv < minimum)
         return minimum;
-    else return rv;
+    else return (int)rv;
 }
 
 double late_double(void *obj, attrsym_t *attr, double defaultValue,
