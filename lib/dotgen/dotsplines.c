@@ -918,7 +918,6 @@ cleanupCloneGraph (graph_t* g, attr_state_t* attr_state)
     G_ordering = attr_state->G_ordering;
     State = attr_state->State;
 
-    free (attr_state);
     dot_cleanup(g);
     agclose(g);
 }
@@ -1233,7 +1232,6 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     double midx, midy, leftx, rightx;
     pointf   del;
     edge_t* hvye = NULL;
-    attr_state_t* attrs;
     static int warned;
 
     tn = agtail(e0), hn = aghead(e0);
@@ -1265,8 +1263,8 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 	return;
     }
 
-    attrs = gv_alloc(sizeof(attr_state_t));
-    auxg = cloneGraph (g, attrs);
+    attr_state_t attrs = {0};
+    auxg = cloneGraph(g, &attrs);
     subg = agsubg (auxg, "xxx",1);
     agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
     agset (subg, "rank", "source");
@@ -1367,7 +1365,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 	}
     }
 
-    cleanupCloneGraph (auxg, attrs);
+    cleanupCloneGraph(auxg, &attrs);
 }
 
 /* makeFlatEnd;
