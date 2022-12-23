@@ -1356,7 +1356,7 @@ cvtAndAppend (unsigned char c, agxbuf* xb)
 
     char *s = latin1ToUTF8(buf);
     char *p = s;
-    int len = strlen(s);
+    size_t len = strlen(s);
     while (len-- > 1)
 	agxbputc(xb, *p++);
     c = *p;
