@@ -267,7 +267,7 @@ static void _dot_splines(graph_t * g, int normalize)
     Agedgeinfo_t fwdedgeai, fwdedgebi;
     Agedgepair_t fwdedgea, fwdedgeb;
     edge_t *e, *e0, *e1, *ea, *eb, *le0, *le1, **edges = NULL;
-    path *P = NULL;
+    path P = {0};
     spline_info_t sd;
     int et = EDGE_TYPE(g);
     fwdedgea.out.base.data = (Agrec_t*)&fwdedgeai;
@@ -297,7 +297,6 @@ static void _dot_splines(graph_t * g, int normalize)
 
     mark_lowclusters(g);
     if (routesplinesinit()) return;
-    P = gv_alloc(sizeof(path));
     /* FlatHeight = 2 * GD_nodesep(g); */
     sd.Splinesep = GD_nodesep(g) / 4;
     sd.Multisep = GD_nodesep(g);
@@ -373,7 +372,7 @@ static void _dot_splines(graph_t * g, int normalize)
     qsort(edges, n_edges, sizeof(edges[0]), (qsort_cmpf)edgecmp);
 
     /* FIXME: just how many boxes can there be? */
-    P->boxes = gv_calloc(n_nodes + 20 * 2 * NSUB, sizeof(boxf));
+    P.boxes = gv_calloc(n_nodes + 20 * 2 * NSUB, sizeof(boxf));
     sd.Rank_box = gv_calloc(i, sizeof(boxf));
 
     if (et == EDGETYPE_LINE) {
@@ -463,10 +462,10 @@ static void _dot_splines(graph_t * g, int normalize)
 	    }
 	}
 	else if (ND_rank(agtail(e0)) == ND_rank(aghead(e0))) {
-	    make_flat_edge(g, &sd, P, edges, ind, cnt, et);
+	    make_flat_edge(g, &sd, &P, edges, ind, cnt, et);
 	}
 	else
-	    make_regular_edge(g, &sd, P, edges, ind, cnt, et);
+	    make_regular_edge(g, &sd, &P, edges, ind, cnt, et);
     }
 
     /* place regular edge labels */
@@ -515,8 +514,7 @@ finish :
     if (et != EDGETYPE_CURVED) {
 #endif
 	free(edges);
-	free(P->boxes);
-	free(P);
+	free(P.boxes);
 	free(sd.Rank_box);
 	routesplinesterm();
     } 
