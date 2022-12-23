@@ -1257,12 +1257,12 @@ char* scanEntity (char* t, agxbuf* xb)
 {
     char*  endp = strchr (t, ';');
     struct entities_s key, *res;
-    int    len;
+    size_t len;
     char   buf[MAXENTLEN+1];
 
     agxbputc(xb, '&');
     if (!endp) return t;
-    if (((len = endp-t) > MAXENTLEN) || (len < 2)) return t;
+    if (((len = (size_t)(endp - t)) > MAXENTLEN) || (len < 2)) return t;
     strncpy (buf, t, len);
     buf[len] = '\0';
     key.name =  buf;
