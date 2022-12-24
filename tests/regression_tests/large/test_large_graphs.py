@@ -12,9 +12,8 @@ import pytest
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../tests"))
 from gvtest import dot #pylint: disable=wrong-import-position
 
-@pytest.mark.skipif(platform.system() == "Windows" and
-                    platform.architecture()[0] == "32bit",
-                    reason="https://gitlab.com/graphviz/graphviz/-/issues/1710")
+@pytest.mark.xfail(platform.system() == "Windows",
+                   reason="https://gitlab.com/graphviz/graphviz/-/issues/1710")
 def test_long_chain():
   """
   This test will fail on 32bit Windows machine if compiled with stack size < 16MB.
@@ -37,7 +36,7 @@ def test_long_chain():
     graph.render("long_chain")
   """
   subprocess.check_call([
-    "dot", "-Tsvg", "-O", os.devnull
+    "dot", "-Tsvg", "-o", os.devnull, Path(__file__).parent / "long_chain"
   ])
 
 def test_wide_clusters():
