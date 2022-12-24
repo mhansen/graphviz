@@ -40,7 +40,6 @@ public:
     CMainWindow(char*** Files = nullptr);
     QMdiArea *mdiArea;
     void addFile (QString fileName);
-    std::vector <QString> initFiles;
 private slots:
     void slotSettings();
     void slotRun(MdiChild* m = nullptr);
