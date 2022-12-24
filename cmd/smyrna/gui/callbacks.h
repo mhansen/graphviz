@@ -22,7 +22,6 @@
 
     _BB void save_as_graph_clicked(GtkWidget * widget, gpointer user_data);
     _BB void remove_graph_clicked(GtkWidget * widget, gpointer user_data);
-    void on_newNode(GtkWidget * button, gpointer user_data);
     void dlgOpenGraph_OK_Clicked(GtkWidget * button, gpointer data);
     _BB void btn_dot_clicked(GtkWidget * widget, gpointer user_data);
     _BB void btn_neato_clicked(GtkWidget * widget, gpointer user_data);
