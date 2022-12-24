@@ -38,10 +38,9 @@ ViewInfo *view;
 /* these two global variables should be wrapped in something else */
 GtkMessageDialog *Dlg;
 
-static void clear_viewport(ViewInfo * view)
-{
-    if (view->graphCount)
-	agclose(view->g[view->activeGraph]);
+static void clear_viewport(ViewInfo *vi) {
+    if (vi->graphCount)
+	agclose(vi->g[vi->activeGraph]);
 }
 static void *get_glut_font(int ind)
 {
@@ -71,164 +70,132 @@ static void *get_glut_font(int ind)
 
 }
 
-void close_graph(ViewInfo *view) {
-    if (view->activeGraph < 0)
+void close_graph(ViewInfo *vi) {
+    if (vi->activeGraph < 0)
 	return;
-    clear_viewport(view);
+    clear_viewport(vi);
 }
 
-char *get_attribute_value(char *attr, ViewInfo * view, Agraph_t * g)
-{
+char *get_attribute_value(char *attr, ViewInfo *vi, Agraph_t *g) {
     char *buf;
     buf = agget(g, attr);
     if (!buf || *buf == '\0')
-	buf = agget(view->systemGraphs.def_attrs, attr);
+	buf = agget(vi->systemGraphs.def_attrs, attr);
     return buf;
 }
 
-void set_viewport_settings_from_template(ViewInfo * view, Agraph_t * g)
-{
+void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     gvcolor_t cl;
     char *buf;
-    colorxlate(get_attribute_value("bordercolor", view, g), &cl,
+    colorxlate(get_attribute_value("bordercolor", vi, g), &cl,
 	       RGBA_DOUBLE);
-    view->borderColor.R = (float) cl.u.RGBA[0];
-    view->borderColor.G = (float) cl.u.RGBA[1];
-    view->borderColor.B = (float) cl.u.RGBA[2];
+    vi->borderColor.R = (float)cl.u.RGBA[0];
+    vi->borderColor.G = (float)cl.u.RGBA[1];
+    vi->borderColor.B = (float)cl.u.RGBA[2];
 
-    view->borderColor.A =
-	(float) atof(get_attribute_value("bordercoloralpha", view, g));
+    vi->borderColor.A =
+	(float)atof(get_attribute_value("bordercoloralpha", vi, g));
 
-    view->bdVisible = atoi(get_attribute_value("bordervisible", view, g));
+    vi->bdVisible = atoi(get_attribute_value("bordervisible", vi, g));
 
-    buf = get_attribute_value("gridcolor", view, g);
+    buf = get_attribute_value("gridcolor", vi, g);
     colorxlate(buf, &cl, RGBA_DOUBLE);
-    view->gridColor.R = (float) cl.u.RGBA[0];
-    view->gridColor.G = (float) cl.u.RGBA[1];
-    view->gridColor.B = (float) cl.u.RGBA[2];
-    view->gridColor.A =
-	(float) atof(get_attribute_value("gridcoloralpha", view, g));
+    vi->gridColor.R = (float)cl.u.RGBA[0];
+    vi->gridColor.G = (float)cl.u.RGBA[1];
+    vi->gridColor.B = (float)cl.u.RGBA[2];
+    vi->gridColor.A =
+	(float) atof(get_attribute_value("gridcoloralpha", vi, g));
 
-    view->gridSize = (float) atof(buf =
-				  get_attribute_value("gridsize", view,
-						      g));
+    vi->gridSize = (float)atof(buf = get_attribute_value("gridsize", vi, g));
 
-    view->defaultnodeshape = atoi(buf =
-				  get_attribute_value("defaultnodeshape",
-						      view, g));
-
-    view->gridVisible = atoi(get_attribute_value("gridvisible", view, g));
+    vi->gridVisible = atoi(get_attribute_value("gridvisible", vi, g));
 
     //background color , default white
-    colorxlate(get_attribute_value("bgcolor", view, g), &cl, RGBA_DOUBLE);
+    colorxlate(get_attribute_value("bgcolor", vi, g), &cl, RGBA_DOUBLE);
 
-    view->bgColor.R = (float) cl.u.RGBA[0];
-    view->bgColor.G = (float) cl.u.RGBA[1];
-    view->bgColor.B = (float) cl.u.RGBA[2];
-    view->bgColor.A = (float) 1;
+    vi->bgColor.R = (float)cl.u.RGBA[0];
+    vi->bgColor.G = (float)cl.u.RGBA[1];
+    vi->bgColor.B = (float)cl.u.RGBA[2];
+    vi->bgColor.A = 1.0f;
 
     //selected nodes are drawn with this color
-    colorxlate(get_attribute_value("selectednodecolor", view, g), &cl,
+    colorxlate(get_attribute_value("selectednodecolor", vi, g), &cl,
 	       RGBA_DOUBLE);
-    view->selectedNodeColor.R = (float) cl.u.RGBA[0];
-    view->selectedNodeColor.G = (float) cl.u.RGBA[1];
-    view->selectedNodeColor.B = (float) cl.u.RGBA[2];
-    view->selectedNodeColor.A = (float)
-	atof(get_attribute_value("selectednodecoloralpha", view, g));
+    vi->selectedNodeColor.R = (float)cl.u.RGBA[0];
+    vi->selectedNodeColor.G = (float)cl.u.RGBA[1];
+    vi->selectedNodeColor.B = (float)cl.u.RGBA[2];
+    vi->selectedNodeColor.A = (float)
+	atof(get_attribute_value("selectednodecoloralpha", vi, g));
     //selected edge are drawn with this color
-    colorxlate(get_attribute_value("selectededgecolor", view, g), &cl,
+    colorxlate(get_attribute_value("selectededgecolor", vi, g), &cl,
 	       RGBA_DOUBLE);
-    view->selectedEdgeColor.R = (float) cl.u.RGBA[0];
-    view->selectedEdgeColor.G = (float) cl.u.RGBA[1];
-    view->selectedEdgeColor.B = (float) cl.u.RGBA[2];
-    view->selectedEdgeColor.A = (float)
-	atof(get_attribute_value("selectededgecoloralpha", view, g));
+    vi->selectedEdgeColor.R = (float)cl.u.RGBA[0];
+    vi->selectedEdgeColor.G = (float)cl.u.RGBA[1];
+    vi->selectedEdgeColor.B = (float)cl.u.RGBA[2];
+    vi->selectedEdgeColor.A = (float)
+	atof(get_attribute_value("selectededgecoloralpha", vi, g));
 
-    colorxlate(get_attribute_value("highlightednodecolor", view, g), &cl,
+    colorxlate(get_attribute_value("highlightednodecolor", vi, g), &cl,
 	       RGBA_DOUBLE);
-    view->highlightedNodeColor.R = (float) cl.u.RGBA[0];
-    view->highlightedNodeColor.G = (float) cl.u.RGBA[1];
-    view->highlightedNodeColor.B = (float) cl.u.RGBA[2];
-    view->highlightedNodeColor.A = (float)
-	atof(get_attribute_value("highlightednodecoloralpha", view, g));
+    vi->highlightedNodeColor.R = (float)cl.u.RGBA[0];
+    vi->highlightedNodeColor.G = (float)cl.u.RGBA[1];
+    vi->highlightedNodeColor.B = (float)cl.u.RGBA[2];
+    vi->highlightedNodeColor.A = (float)
+	atof(get_attribute_value("highlightednodecoloralpha", vi, g));
 
     buf = agget(g, "highlightededgecolor");
-    colorxlate(get_attribute_value("highlightededgecolor", view, g), &cl,
+    colorxlate(get_attribute_value("highlightededgecolor", vi, g), &cl,
 	       RGBA_DOUBLE);
-    view->highlightedEdgeColor.R = (float) cl.u.RGBA[0];
-    view->highlightedEdgeColor.G = (float) cl.u.RGBA[1];
-    view->highlightedEdgeColor.B = (float) cl.u.RGBA[2];
-    view->highlightedEdgeColor.A = (float)
-	atof(get_attribute_value("highlightededgecoloralpha", view, g));
-    view->defaultnodealpha = (float)
-	atof(get_attribute_value("defaultnodealpha", view, g));
+    vi->highlightedEdgeColor.R = (float)cl.u.RGBA[0];
+    vi->highlightedEdgeColor.G = (float)cl.u.RGBA[1];
+    vi->highlightedEdgeColor.B = (float)cl.u.RGBA[2];
+    vi->highlightedEdgeColor.A = (float)
+	atof(get_attribute_value("highlightededgecoloralpha", vi, g));
+    vi->defaultnodealpha = (float)
+	atof(get_attribute_value("defaultnodealpha", vi, g));
 
-    view->defaultedgealpha = (float)
-	atof(get_attribute_value("defaultedgealpha", view, g));
+    vi->defaultedgealpha = (float)
+	atof(get_attribute_value("defaultedgealpha", vi, g));
 
 
 
     /*default line width */
-    view->LineWidth =
-	(float) atof(get_attribute_value("defaultlinewidth", view, g));
-    view->FontSize =
-	(float) atof(get_attribute_value("defaultfontsize", view, g));
+    vi->LineWidth =
+	(float) atof(get_attribute_value("defaultlinewidth", vi, g));
 
-    view->topviewusermode = atoi(get_attribute_value("usermode", view, g));
-    get_attribute_value("defaultmagnifierwidth", view, g);
-    view->mg.width =
-	atoi(get_attribute_value("defaultmagnifierwidth", view, g));
-    view->mg.height =
-	atoi(get_attribute_value("defaultmagnifierheight", view, g));
+    vi->drawnodes = atoi(get_attribute_value("drawnodes", vi, g));
+    vi->drawedges = atoi(get_attribute_value("drawedges", vi, g));
+    vi->drawnodelabels=atoi(get_attribute_value("labelshownodes", vi, g));
+    vi->drawedgelabels=atoi(get_attribute_value("labelshowedges", vi, g));
+    vi->nodeScale=atof(get_attribute_value("nodesize", vi, g))*.30;
 
-    view->mg.kts =
-	(float) atof(get_attribute_value("defaultmagnifierkts", view, g));
-
-    view->fmg.constantR =
-	atoi(get_attribute_value
-	     ("defaultfisheyemagnifierradius", view, g));
-
-    view->fmg.fisheye_distortion_fac =
-	atoi(get_attribute_value
-	     ("defaultfisheyemagnifierdistort", view, g));
-    view->drawnodes = atoi(get_attribute_value("drawnodes", view, g));
-    view->drawedges = atoi(get_attribute_value("drawedges", view, g));
-    view->drawnodelabels=atoi(get_attribute_value("labelshownodes", view, g));
-    view->drawedgelabels=atoi(get_attribute_value("labelshowedges", view, g));
-    view->nodeScale=atof(get_attribute_value("nodesize", view, g))*.30;
-
-    view->glutfont =
-	get_glut_font(atoi(get_attribute_value("labelglutfont", view, g)));
-    colorxlate(get_attribute_value("nodelabelcolor", view, g), &cl,
+    vi->glutfont =
+	get_glut_font(atoi(get_attribute_value("labelglutfont", vi, g)));
+    colorxlate(get_attribute_value("nodelabelcolor", vi, g), &cl,
 	       RGBA_DOUBLE);
-    view->nodelabelcolor.R = (float) cl.u.RGBA[0];
-    view->nodelabelcolor.G = (float) cl.u.RGBA[1];
-    view->nodelabelcolor.B = (float) cl.u.RGBA[2];
-    view->nodelabelcolor.A =
-	(float) atof(get_attribute_value("defaultnodealpha", view, g));
-    colorxlate(get_attribute_value("edgelabelcolor", view, g), &cl,
+    vi->nodelabelcolor.R = (float)cl.u.RGBA[0];
+    vi->nodelabelcolor.G = (float)cl.u.RGBA[1];
+    vi->nodelabelcolor.B = (float)cl.u.RGBA[2];
+    vi->nodelabelcolor.A =
+	(float) atof(get_attribute_value("defaultnodealpha", vi, g));
+    colorxlate(get_attribute_value("edgelabelcolor", vi, g), &cl,
 	       RGBA_DOUBLE);
-    view->edgelabelcolor.R = (float) cl.u.RGBA[0];
-    view->edgelabelcolor.G = (float) cl.u.RGBA[1];
-    view->edgelabelcolor.B = (float) cl.u.RGBA[2];
-    view->edgelabelcolor.A =
-	(float) atof(get_attribute_value("defaultedgealpha", view, g));
-    view->labelwithdegree =
-	atoi(get_attribute_value("labelwithdegree", view, g));
-    view->labelnumberofnodes =
-	atof(get_attribute_value("labelnumberofnodes", view, g));
-    view->labelshownodes =
-	atoi(get_attribute_value("labelshownodes", view, g));
-    view->labelshowedges =
-	atoi(get_attribute_value("labelshowedges", view, g));
-    view->colschms =
+    vi->edgelabelcolor.R = (float)cl.u.RGBA[0];
+    vi->edgelabelcolor.G = (float)cl.u.RGBA[1];
+    vi->edgelabelcolor.B = (float)cl.u.RGBA[2];
+    vi->edgelabelcolor.A =
+	(float) atof(get_attribute_value("defaultedgealpha", vi, g));
+    vi->labelwithdegree = atoi(get_attribute_value("labelwithdegree", vi, g));
+    vi->labelnumberofnodes =
+	atof(get_attribute_value("labelnumberofnodes", vi, g));
+    vi->labelshownodes = atoi(get_attribute_value("labelshownodes", vi, g));
+    vi->labelshowedges = atoi(get_attribute_value("labelshowedges", vi, g));
+    vi->colschms =
 	create_color_theme(atoi
-			   (get_attribute_value("colortheme", view, g)));
-    view->edgerendertype=atoi(get_attribute_value("edgerender", view, g));
+			   (get_attribute_value("colortheme", vi, g)));
 
-
-    if (view->graphCount > 0)
-	glClearColor(view->bgColor.R, view->bgColor.G, view->bgColor.B, view->bgColor.A);	//background color
+    if (vi->graphCount > 0)
+	glClearColor(vi->bgColor.R, vi->bgColor.G, vi->bgColor.B, vi->bgColor.A);	//background color
 }
 
 static gboolean gl_main_expose(gpointer data)
@@ -341,17 +308,7 @@ void init_viewport(ViewInfo * view)
 
 
     view->zoom = -20;
-    view->FontSize = 52;
 
-    view->topviewusermode = TOP_VIEW_USER_NOVICE_MODE;	//for demo
-    view->mg.active = 0;
-    view->mg.x = 0;
-    view->mg.y = 0;
-    view->mg.width = DEFAULT_MAGNIFIER_WIDTH;
-    view->mg.height = DEFAULT_MAGNIFIER_HEIGHT;
-    view->mg.kts = DEFAULT_MAGNIFIER_KTS;
-    view->fmg.constantR = DEFAULT_FISHEYE_MAGNIFIER_RADIUS;
-    view->fmg.active = 0;
     view->mouse.down = 0;
     view->activeGraph = -1;
     view->Topview = gv_alloc(sizeof(topview));
@@ -394,7 +351,6 @@ void init_viewport(ViewInfo * view)
     view->refresh.pos=1;
     view->refresh.selection=1;
     view->refresh.nodesize=1;
-    view->edgerendertype=0;
     if(view->guiMode!=GUI_FULLSCREEN)
 	view->guiMode=GUI_WINDOWED;
 

@@ -17,20 +17,18 @@
 #include <glcomp/glcomppanel.h>
 
 
-static viewport_camera *new_viewport_camera(ViewInfo * view)
-{
+static viewport_camera *new_viewport_camera(void) {
     return gv_alloc(sizeof(viewport_camera));
 }
 
-static viewport_camera *add_camera_to_viewport(ViewInfo * view)
-{
-    view->cameras = gv_recalloc(view->cameras, view->camera_count,
-                                view->camera_count + 1,
-                                sizeof(viewport_camera*));
-    view->camera_count++;
-    view->cameras[view->camera_count - 1] = new_viewport_camera(view);
-    view->active_camera = view->camera_count - 1;
-    return view->cameras[view->camera_count - 1];
+static viewport_camera *add_camera_to_viewport(ViewInfo *vi) {
+    vi->cameras = gv_recalloc(vi->cameras, vi->camera_count,
+                              vi->camera_count + 1,
+                              sizeof(viewport_camera*));
+    vi->camera_count++;
+    vi->cameras[vi->camera_count - 1] = new_viewport_camera();
+    vi->active_camera = vi->camera_count - 1;
+    return vi->cameras[vi->camera_count - 1];
 }
 
 void menu_click_add_camera(void)

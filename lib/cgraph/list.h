@@ -39,9 +39,9 @@
                                                                                \
   /** create a new list                                                        \
    *                                                                           \
-   * This function is provided for convenience, but it the equivalent of zero  \
-   * initialization, `list_t list = {0}`. In general, the latter should be     \
-   * preferred as it can be understood locally.                                \
+   * This function is provided for convenience, but it is the equivalent of    \
+   * zero initialization, `list_t list = {0}`. In general, the latter should   \
+   * be preferred as it can be understood locally.                             \
    *                                                                           \
    * \return A new empty list                                                  \
    */                                                                          \

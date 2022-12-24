@@ -269,7 +269,6 @@ typedef struct
 	xdot* xDot;
 	float global_z;
 	attr_list* attributes;/*attribute list*/
-	attr_list* filtered_attr_list;
 
 	topviewcache cache;
 	selection sel;
@@ -287,22 +286,6 @@ typedef struct
 
     } attribute;
 
-    typedef struct _magnifier {
-	float x, y;
-	float kts;		//zoom X
-	float GLwidth, GLheight;
-	int width, height;	//how big is the magnifier referenced from windows
-	int active;
-    } magnifier;
-
-    typedef struct _fisheye_magnifier {
-	float x, y;		//center coords of active circle
-	float distortion_factor;	//distortion factor ,default 1
-	int R;			//radius of  the magnifier 
-	int constantR;		//radius of  the magnifier referenced from windows
-	int active;
-	int fisheye_distortion_fac;
-    } fisheye_magnifier;
     typedef struct{
     Agraph_t *def_attrs;
     Agraph_t *attrs_widgets;
@@ -342,8 +325,6 @@ typedef struct
 	float defaultnodealpha;
 	/*default edge alpha */
 	float defaultedgealpha;
-	/*default node shape */
-	int defaultnodeshape;
 
 	/*default line width */
 	float LineWidth;
@@ -356,10 +337,6 @@ typedef struct
 	/*draws a border in border colors if it is 1 */
 	int bdVisible;		//if borders are visible (boundries of the drawing,
 	/*border coordinates, needs to be calculated for each graph */
-
-	/*Font Size */
-	float FontSize;
-
 
 	float bdxLeft, bdyTop;
 	float bdxRight, bdyBottom;
@@ -380,17 +357,9 @@ typedef struct
 	/*selection object,refer to smyrnadefs.h for more info */
 //	selection Selection;
 
-	/*rectangular magnifier object */
-	magnifier mg;
-	/*fisheye magnifier object */
-	fisheye_magnifier fmg;
-
 	viewport_camera **cameras;
 	int camera_count;	//number of cameras
 	int active_camera;
-
-	/*0 advanced users with editing options 1 nonice users just navigate (glmenu system) */
-	int topviewusermode;
 
 	/*open gl canvas, used to be a globa variable before looks better wrapped in viewinfo */
 	GtkWidget *drawing_area;
@@ -432,7 +401,6 @@ typedef struct
 	mouse_action_t* mouse_actions;	/*customizable moouse interraction list*/
 	size_t mouse_action_count;
 	refresh_filter refresh;
-	int edgerendertype;
 	float nodeScale;
 	int guiMode;
 	char* optArg;

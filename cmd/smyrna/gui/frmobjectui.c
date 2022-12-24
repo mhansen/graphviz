@@ -51,64 +51,45 @@ static int get_object_type(void)
     return -1;
 }
 
-static void free_attr(attr_t *at) {
-    free(at->defValG);
-    free(at->defValN);
-    free(at->defValE);
-
-    free(at->name);
-    free(at);
-}
-
 static attr_t *new_attr(void) {
-    attr_t *attr = gv_alloc(sizeof(attr_t));
-    attr->defValG = NULL;
-    attr->defValN = NULL;
-    attr->defValE = NULL;
-    attr->name = NULL;
-    attr->value = NULL;
-    attr->propagate = 0;
-    attr->objType[0] = 0;
-    attr->objType[1] = 0;
-    attr->objType[2] = 0;
-    return attr;
+  return gv_alloc(sizeof(attr_t));
 }
 
 static attr_t *new_attr_with_ref(Agsym_t * sym)
 {
-    attr_t *attr = new_attr();
-    attr->name = safestrdup(sym->name);
+    attr_t *a = new_attr();
+    a->name = safestrdup(sym->name);
     switch (sym->kind) {
     case AGRAPH:
-	attr->objType[0] = 1;
+	a->objType[0] = 1;
 	if (sym->defval)
-	    attr->defValG = safestrdup(sym->defval);
+	    a->defValG = safestrdup(sym->defval);
 	break;
     case AGNODE:
-	attr->objType[1] = 1;
+	a->objType[1] = 1;
 	if (sym->defval)
-	    attr->defValN = safestrdup(sym->defval);
+	    a->defValN = safestrdup(sym->defval);
 	break;
     case AGEDGE:
-	attr->objType[2] = 1;
+	a->objType[2] = 1;
 	if (sym->defval)
-	    attr->defValE = safestrdup(sym->defval);
+	    a->defValE = safestrdup(sym->defval);
 	break;
     }
-    return attr;
+    return a;
 }
 
 static attr_t *new_attr_ref(attr_t * refAttr)
 {
-    attr_t *attr = gv_alloc(sizeof(attr_t));
-    *attr = *refAttr;
-    attr->defValG = safestrdup(refAttr->defValG);
-    attr->defValN = safestrdup(refAttr->defValN);
-    attr->defValE = safestrdup(refAttr->defValE);
-    attr->name = safestrdup(refAttr->name);
+    attr_t *a = gv_alloc(sizeof(attr_t));
+    *a = *refAttr;
+    a->defValG = safestrdup(refAttr->defValG);
+    a->defValN = safestrdup(refAttr->defValN);
+    a->defValE = safestrdup(refAttr->defValE);
+    a->name = safestrdup(refAttr->name);
     if (refAttr->value)
-	attr->value = safestrdup(refAttr->value);
-    return attr;
+	a->value = safestrdup(refAttr->value);
+    return a;
 }
 
 static void reset_attr_list_widgets(attr_list * l)
@@ -119,29 +100,11 @@ static void reset_attr_list_widgets(attr_list * l)
     }
 }
 
-static void free_attr_list_widgets(attr_list * l)
-{
-    int id;
-    for (id = 0; id < MAX_FILTERED_ATTR_COUNT; id++) {
-	gtk_object_destroy((GtkObject *) l->fLabels[id]);
-    }
-}
-
-static void free_attr_list(attr_list *l) {
-    int id;
-    for (id = 0; id < l->attr_count; id++) {
-	free_attr(l->attributes[id]);
-    }
-    if (l->with_widgets)
-	free_attr_list_widgets(l);
-    free(l);
-}
-
 // creates a new attr_list
 // attr_list is a basic stack implementation
 // with alphanumeric sorting functions
 // that uses quicksort
-static attr_list *attr_list_new(Agraph_t *g, int with_widgets) {
+static attr_list *attr_list_new(int with_widgets) {
     int id;
     attr_list *l = gv_alloc(sizeof(attr_list));
     l->attr_count = 0;
@@ -328,12 +291,9 @@ static void filter_attributes(const char *prefix, topview *t) {
     int tmp;
 
     attr_list *l = t->attributes;
-    attr_list *fl = t->filtered_attr_list;
     int objKind = get_object_type();
 
-    if (fl)
-	free_attr_list(fl);
-    fl = attr_list_new(NULL, 0);
+    attr_list *fl = attr_list_new(0);
     reset_attr_list_widgets(l);
     create_filtered_list(prefix, l, fl);
     for (ind = 0; ind < fl->attr_count; ind++) {
@@ -584,7 +544,7 @@ attr_list *load_attr_list(Agraph_t * g)
     if (!smyrna_attrs)
 	smyrna_attrs = smyrnaPath("attrs.txt");
     g = view->g[view->activeGraph];
-    l = attr_list_new(NULL, 1);
+    l = attr_list_new(1);
     file = fopen(smyrna_attrs, "r");
     if (file != NULL) {
 	int i = 0;
