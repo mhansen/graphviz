@@ -91,13 +91,6 @@ void btn_fdp_clicked(GtkWidget * widget, gpointer user_data)
     btn_clicked(widget, GVK_FDP);
 }
 
-void dlgOpenGraph_OK_Clicked(GtkWidget * button, gpointer data)
-{
-    (void)button;
-
-    g_print("ok is pressed - %i was pressed\n", *(int *) data);
-}
-
 /*console output widgets*/
 _BB void on_clearconsolebtn_clicked(GtkWidget * widget, gpointer user_data)
 {
