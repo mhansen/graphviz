@@ -44,85 +44,6 @@ static glMouseButtonType getGlCompMouseType(int n)
     }
 }
 
-
-/*
-	test single opengl parameter, all visual , it doesnt return a value
-	params:gtk gl config class , attribute name and id,if boolean expected send is_boolean true
-	return value:none
-*/
-static void print_gl_config_attrib(GdkGLConfig * glconfig,
-			    const gchar * attrib_str,
-			    int attrib, gboolean is_boolean)
-{
-    int value;
-
-    g_print("%s = ", attrib_str);
-    if (gdk_gl_config_get_attrib(glconfig, attrib, &value)) {
-	if (is_boolean)
-	    g_print("%s\n", value ? "TRUE" : "FALSE");
-	else
-	    g_print("%d\n", value);
-    } else
-	g_print("*** Cannot get %s attribute value\n", attrib_str);
-}
-
-
-/*
-	test opengl parameters, configuration.Run this function to see machine's open gl capabilities
-	params:gtk gl config class ,gtk takes care of all these tests
-	return value:none
-*/
-static void examine_gl_config_attrib(GdkGLConfig * glconfig)
-{
-    g_print("\nOpenGL visual configurations :\n\n");
-    g_print("gdk_gl_config_is_rgba (glconfig) = %s\n",
-	    gdk_gl_config_is_rgba(glconfig) ? "TRUE" : "FALSE");
-    g_print("gdk_gl_config_is_double_buffered (glconfig) = %s\n",
-	    gdk_gl_config_is_double_buffered(glconfig) ? "TRUE" : "FALSE");
-    g_print("gdk_gl_config_is_stereo (glconfig) = %s\n",
-	    gdk_gl_config_is_stereo(glconfig) ? "TRUE" : "FALSE");
-    g_print("gdk_gl_config_has_alpha (glconfig) = %s\n",
-	    gdk_gl_config_has_alpha(glconfig) ? "TRUE" : "FALSE");
-    g_print("gdk_gl_config_has_depth_buffer (glconfig) = %s\n",
-	    gdk_gl_config_has_depth_buffer(glconfig) ? "TRUE" : "FALSE");
-    g_print("gdk_gl_config_has_stencil_buffer (glconfig) = %s\n",
-	    gdk_gl_config_has_stencil_buffer(glconfig) ? "TRUE" : "FALSE");
-    g_print("gdk_gl_config_has_accum_buffer (glconfig) = %s\n",
-	    gdk_gl_config_has_accum_buffer(glconfig) ? "TRUE" : "FALSE");
-    g_print("\n");
-    print_gl_config_attrib(glconfig, "GDK_GL_USE_GL", GDK_GL_USE_GL, TRUE);
-    print_gl_config_attrib(glconfig, "GDK_GL_BUFFER_SIZE",
-			   GDK_GL_BUFFER_SIZE, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_LEVEL", GDK_GL_LEVEL, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_RGBA", GDK_GL_RGBA, TRUE);
-    print_gl_config_attrib(glconfig, "GDK_GL_DOUBLEBUFFER",
-			   GDK_GL_DOUBLEBUFFER, TRUE);
-    print_gl_config_attrib(glconfig, "GDK_GL_STEREO", GDK_GL_STEREO, TRUE);
-    print_gl_config_attrib(glconfig, "GDK_GL_AUX_BUFFERS",
-			   GDK_GL_AUX_BUFFERS, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_RED_SIZE", GDK_GL_RED_SIZE,
-			   FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_GREEN_SIZE",
-			   GDK_GL_GREEN_SIZE, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_BLUE_SIZE", GDK_GL_BLUE_SIZE,
-			   FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_ALPHA_SIZE",
-			   GDK_GL_ALPHA_SIZE, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_DEPTH_SIZE",
-			   GDK_GL_DEPTH_SIZE, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_STENCIL_SIZE",
-			   GDK_GL_STENCIL_SIZE, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_ACCUM_RED_SIZE",
-			   GDK_GL_ACCUM_RED_SIZE, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_ACCUM_GREEN_SIZE",
-			   GDK_GL_ACCUM_GREEN_SIZE, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_ACCUM_BLUE_SIZE",
-			   GDK_GL_ACCUM_BLUE_SIZE, FALSE);
-    print_gl_config_attrib(glconfig, "GDK_GL_ACCUM_ALPHA_SIZE",
-			   GDK_GL_ACCUM_ALPHA_SIZE, FALSE);
-    g_print("\n");
-}
-
 /*
 	initialize the gl , run only once!!
 	params:gtk opgn gl canvas and optional data pointer
@@ -453,8 +374,6 @@ void create_window(GdkGLConfig * glconfig, GtkWidget * vbox)
 
     /* Try double-buffered visual */
 
-    if (IS_TEST_MODE_ON)	//printf some gl values, to test if your system has opengl stuff
-	examine_gl_config_attrib(glconfig);
     /* Drawing area for drawing OpenGL scene. */
     view->drawing_area = gtk_drawing_area_new();
     gtk_widget_set_size_request(view->drawing_area, 300, 300);
