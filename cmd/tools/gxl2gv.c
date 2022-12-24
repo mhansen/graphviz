@@ -148,29 +148,24 @@ static Dtdisc_t nameDisc = {
     .freef = (Dtfree_f)free_nitem,
 };
 
-static userdata_t *genUserdata(void)
-{
-    userdata_t *user = calloc(1, sizeof(userdata_t));
-    if (user == NULL)
-	return NULL;
-    user->listen = FALSE;
-    user->elements = (gv_stack_t){0};
-    user->closedElementType = TAG_NONE;
-    user->globalAttrType = TAG_NONE;
-    user->compositeReadState = FALSE;
-    user->edgeinverted = FALSE;
-    user->nameMap = dtopen(&nameDisc, Dtoset);
-    return user;
+static userdata_t genUserdata(void) {
+  userdata_t user = {0};
+  user.listen = FALSE;
+  user.elements = (gv_stack_t){0};
+  user.closedElementType = TAG_NONE;
+  user.globalAttrType = TAG_NONE;
+  user.compositeReadState = FALSE;
+  user.edgeinverted = FALSE;
+  user.nameMap = dtopen(&nameDisc, Dtoset);
+  return user;
 }
 
-static void freeUserdata(userdata_t * ud)
-{
-    dtclose(ud->nameMap);
-    agxbfree(&(ud->xml_attr_name));
-    agxbfree(&(ud->xml_attr_value));
-    agxbfree(&(ud->composite_buffer));
-    freeString(&ud->elements);
-    free(ud);
+static void freeUserdata(userdata_t ud) {
+  dtclose(ud.nameMap);
+  agxbfree(&ud.xml_attr_name);
+  agxbfree(&ud.xml_attr_value);
+  agxbfree(&ud.composite_buffer);
+  freeString(&ud.elements);
 }
 
 static void addToMap(Dt_t * map, char *name, char *uniqueName)
@@ -700,15 +695,10 @@ Agraph_t *gxl_to_gv(FILE * gxlFile)
 {
     char buf[BUFSIZ];
     int done;
-    userdata_t *udata = genUserdata();
+    userdata_t udata = genUserdata();
     XML_Parser parser = XML_ParserCreate(NULL);
 
-    if (udata == NULL) {
-	fprintf(stderr, "out of memory\n");
-	graphviz_exit(1);
-    }
-
-    XML_SetUserData(parser, udata);
+    XML_SetUserData(parser, &udata);
     XML_SetElementHandler(parser, startElementHandler, endElementHandler);
     XML_SetCharacterDataHandler(parser, characterDataHandler);
 

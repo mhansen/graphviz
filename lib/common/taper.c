@@ -250,10 +250,8 @@ typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
  * The linejoin and linecap parameters have roughly the same meaning as in postscript.
  *  - linejoin = 0 or 1 
  *  - linecap = 0 or 1 or 2 
- *
- * Calling function needs to free the allocated stroke_t.
  */
-stroke_t* taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, int linecap)
+stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, int linecap)
 {
     int i, l, n;
     int pathcount, bevel;
@@ -266,7 +264,6 @@ stroke_t* taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, i
     double lx, ly, ldir;
     double lineout=0, linerad=0, linelen=0;
     double theta, phi;
-    stroke_t* p;
 
     pathcount = arr->cnt;
     pathpoints = arr->pts;
@@ -351,7 +348,7 @@ stroke_t* taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, i
     }
 
 	 /* draw line */
-    p = NEW(stroke_t);
+    stroke_t p = {0};
 	 /* side 1 */
     for (i = 0; i < pathcount; i++) {
 	cur_point = pathpoints[i];
@@ -362,20 +359,20 @@ stroke_t* taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, i
 	bevel = cur_point.bevel;
 	direction_2 = cur_point.dir2;
 	if (i == 0) {
-	    moveto (p, x+cos(direction)*lineout, y+sin(direction)*lineout);
+	    moveto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
 	} else {
-	    lineto (p, x+cos(direction)*lineout, y+sin(direction)*lineout);
+	    lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
 	}
 	if (bevel) {
-	    drawbevel (x, y, lineout, TRUE, direction, direction_2, linejoin, p);
+	    drawbevel(x, y, lineout, TRUE, direction, direction_2, linejoin, &p);
 	}
     }
 	 /* end circle as needed */
     if (linecap == 1) {
-	arcn (p, x,y,lineout,direction,direction+D2R(180));
+	arcn(&p, x,y,lineout,direction,direction+D2R(180));
     } else {
 	direction += D2R(180);
-	lineto (p, x+cos(direction)*lineout, y+sin(direction)*lineout);
+	lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
     }
 	 /* side 2 */
     for (i = pathcount-2; i >= 0; i--) {
@@ -386,16 +383,16 @@ stroke_t* taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, i
 	lineout = cur_point.lout;
 	bevel = cur_point.bevel;
 	direction_2 = cur_point.dir2 + D2R(180);
-	lineto (p, x+cos(direction_2)*lineout, y+sin(direction_2)*lineout);
+	lineto(&p, x+cos(direction_2)*lineout, y+sin(direction_2)*lineout);
 	if (bevel) { 
-	    drawbevel (x, y, lineout, FALSE, direction, direction_2, linejoin, p);
+	    drawbevel(x, y, lineout, FALSE, direction, direction_2, linejoin, &p);
 	}
     }
 	 /* start circle if needed */
     if (linecap == 1) {
-	arcn (p, x,y,lineout,direction,direction+D2R(180));
+	arcn(&p, x,y,lineout,direction,direction+D2R(180));
     }
-    /* closepath (p); */
+    /* closepath(&p); */
     freeArr (arr);
     return p;
 }

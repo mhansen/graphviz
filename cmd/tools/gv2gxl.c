@@ -834,43 +834,40 @@ static void iterateBody(gxlstate_t * stp, Agraph_t * g)
     }
 }
 
-static gxlstate_t *initState(Agraph_t * g)
-{
-    gxlstate_t *stp = gv_alloc(sizeof(*stp));
-    stp->nodeMap = dtopen(&nameDisc, Dtoset);
-    stp->graphMap = dtopen(&nameDisc, Dtoset);
-    stp->synNodeMap = dtopen(&nameDisc, Dtoset);
-    stp->idList = dtopen(&idDisc, Dtoset);
-    stp->attrsNotWritten = 0;
-    stp->root = g;
-    stp->directed = agisdirected(g) != 0;
-    return stp;
+static gxlstate_t initState(Agraph_t *g) {
+  gxlstate_t stp = {0};
+  stp.nodeMap = dtopen(&nameDisc, Dtoset);
+  stp.graphMap = dtopen(&nameDisc, Dtoset);
+  stp.synNodeMap = dtopen(&nameDisc, Dtoset);
+  stp.idList = dtopen(&idDisc, Dtoset);
+  stp.attrsNotWritten = 0;
+  stp.root = g;
+  stp.directed = agisdirected(g) != 0;
+  return stp;
 }
 
-static void freeState(gxlstate_t * stp)
-{
-    dtclose(stp->nodeMap);
-    dtclose(stp->graphMap);
-    dtclose(stp->synNodeMap);
-    dtclose(stp->idList);
-    free(stp);
+static void freeState(gxlstate_t stp) {
+  dtclose(stp.nodeMap);
+  dtclose(stp.graphMap);
+  dtclose(stp.synNodeMap);
+  dtclose(stp.idList);
 }
 
 void gv_to_gxl(Agraph_t * g, FILE * gxlFile)
 {
-    gxlstate_t *stp = initState(g);
+    gxlstate_t stp = initState(g);
     aginit(g, AGNODE, "node", sizeof(Local_Agnodeinfo_t), TRUE);
 
-    iterateHdr(stp, g);
-    iterateBody(stp, g);
+    iterateHdr(&stp, g);
+    iterateBody(&stp, g);
 
     Level = 0;
 
     fprintf(gxlFile, "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n");
     fprintf(gxlFile, "<gxl>\n");
 
-    writeHdr(stp, g, gxlFile, TRUE);
-    writeBody(stp, g, gxlFile);
+    writeHdr(&stp, g, gxlFile, TRUE);
+    writeBody(&stp, g, gxlFile);
     writeTrl(g, gxlFile, TRUE);
 
     fprintf(gxlFile, "</gxl>\n");

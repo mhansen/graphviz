@@ -99,20 +99,17 @@ static Agedge_t *E;		/* Set if Current_class == TAG_EDGE */
 
 static gv_stack_t Gstack;
 
-static userdata_t *genUserdata(char* dfltname)
-{
-    userdata_t *user = gv_alloc(sizeof(*user));
-    user->elements = (gv_stack_t){0};
-    user->closedElementType = TAG_NONE;
-    user->edgeinverted = FALSE;
-    user->gname = dfltname;
-    return user;
+static userdata_t genUserdata(char *dfltname) {
+  userdata_t user = {0};
+  user.elements = (gv_stack_t){0};
+  user.closedElementType = TAG_NONE;
+  user.edgeinverted = FALSE;
+  user.gname = dfltname;
+  return user;
 }
 
-static void freeUserdata(userdata_t * ud)
-{
-    freeString(&ud->elements);
-    free(ud);
+static void freeUserdata(userdata_t ud) {
+  freeString(&ud.elements);
 }
 
 static int isAnonGraph(const char *name) {
@@ -361,11 +358,11 @@ static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
 {
     char buf[BUFSIZ];
     int done;
-    userdata_t *udata = genUserdata(gname);
+    userdata_t udata = genUserdata(gname);
     XML_Parser parser = XML_ParserCreate(NULL);
 
     *rv = 0;
-    XML_SetUserData(parser, udata);
+    XML_SetUserData(parser, &udata);
     XML_SetElementHandler(parser, startElementHandler, endElementHandler);
 
     Current_class = TAG_GRAPH;
