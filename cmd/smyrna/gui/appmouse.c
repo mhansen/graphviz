@@ -17,9 +17,6 @@
 #include "selectionfuncs.h"
 #include "topviewfuncs.h"
 
-
-static float prevX=0;
-static float prevY=0;
 static int lastAction;
 
 static void apply_actions(ViewInfo* v,int x,int y)
@@ -90,9 +87,6 @@ static void appmouse_down(ViewInfo* v,int x,int y)
     
     to3D(x,y,&v->mouse.GLinitPos.x,&v->mouse.GLinitPos.y,&v->mouse.GLinitPos.z);
     to3D( x,y, &v->mouse.GLpos.x,&v->mouse.GLpos.y,&v->mouse.GLpos.z);
-
-    prevX=0;
-    prevY=0;
 }
 static void appmouse_up(ViewInfo* v,int x,int y)
 {
@@ -121,8 +115,6 @@ static void appmouse_drag(ViewInfo* v,int x,int y)
     v->mouse.pos.x=x;
     v->mouse.pos.y=y;
     to3D( x,y, &v->mouse.GLpos.x,&v->mouse.GLpos.y,&v->mouse.GLpos.z);
-    prevX=v->mouse.GLpos.x;
-    prevY=v->mouse.GLpos.y;
     apply_actions(v,x,y);
 }
 
