@@ -36,8 +36,6 @@
 typedef struct _ArcBall_t ArcBall_t;
 
 #define IS_TEST_MODE_ON							0
-#define TOP_VIEW_USER_ADVANCED_MODE				0
-#define TOP_VIEW_USER_NOVICE_MODE				1
 #define GL_VIEWPORT_FACTOR						100
 //mouse modes
 #define MM_PAN					0
