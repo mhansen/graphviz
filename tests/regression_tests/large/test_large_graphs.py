@@ -12,7 +12,7 @@ import pytest
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../tests"))
 from gvtest import dot #pylint: disable=wrong-import-position
 
-@pytest.mark.xfail(platform.system() == "Windows",
+@pytest.mark.xfail(platform.system() in ("Darwin", "Windows"),
                    reason="https://gitlab.com/graphviz/graphviz/-/issues/1710")
 def test_long_chain():
   """
