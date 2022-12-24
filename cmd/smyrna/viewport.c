@@ -350,7 +350,6 @@ void init_viewport(ViewInfo * view)
     view->refresh.color=1;
     view->refresh.pos=1;
     view->refresh.selection=1;
-    view->refresh.nodesize=1;
     if(view->guiMode!=GUI_FULLSCREEN)
 	view->guiMode=GUI_WINDOWED;
 
@@ -450,7 +449,6 @@ void refreshViewport(void)
 {
     Agraph_t *graph = view->g[view->activeGraph];
     view->refresh.color=1;
-    view->refresh.nodesize=1;
     view->refresh.pos=1;
     view->refresh.selection=1;
     load_settings_from_graph();

@@ -25,8 +25,6 @@ void size_change_request(GtkWidget * widget, gpointer user_data)
 {
     (void)widget;
     (void)user_data;
-
-    view->refresh.nodesize=1;
 }
 
 void on_settingsOKBtn_clicked(GtkWidget * widget, gpointer user_data)

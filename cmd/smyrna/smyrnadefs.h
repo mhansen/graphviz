@@ -138,9 +138,6 @@ typedef struct
 	int color;
 	int pos;
 	int selection;
-	int nodesize;
-
-
     }refresh_filter;
 
 
