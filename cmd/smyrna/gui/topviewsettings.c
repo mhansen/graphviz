@@ -267,10 +267,9 @@ static int set_combobox_widget(char *attrib, char *widget_name)
 	copy_attr(view->systemGraphs.def_attrs, attrib, view->g[view->activeGraph]);
     }
     if (buf) {
-	value = (int) atoi(buf);
+	value = atoi(buf);
 	gtk_combo_box_set_active((GtkComboBox *)
-				 glade_xml_get_widget(xml, widget_name),
-				 (int) value);
+				 glade_xml_get_widget(xml, widget_name), value);
 
 	return 1;
     }
