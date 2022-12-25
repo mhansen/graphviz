@@ -82,7 +82,6 @@
     <ClInclude Include="circo.h" />
     <ClInclude Include="circpos.h" />
     <ClInclude Include="circular.h" />
-    <ClInclude Include="deglist.h" />
     <ClInclude Include="edgelist.h" />
     <ClInclude Include="nodelist.h" />
   </ItemGroup>
@@ -93,7 +92,6 @@
     <ClCompile Include="circpos.c" />
     <ClCompile Include="circular.c" />
     <ClCompile Include="circularinit.c" />
-    <ClCompile Include="deglist.c" />
     <ClCompile Include="edgelist.c" />
     <ClCompile Include="nodelist.c" />
   </ItemGroup>
