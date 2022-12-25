@@ -164,6 +164,19 @@
     }                                                                          \
   }                                                                            \
                                                                                \
+  /** sort the list using the given comparator */                              \
+  static inline LIST_UNUSED void name##_sort(                                  \
+      name##_t *list, int (*cmp)(const type *a, const type *b)) {              \
+    assert(list != NULL);                                                      \
+    assert(cmp != NULL);                                                       \
+                                                                               \
+    int (*compar)(const void *, const void *) =                                \
+        (int (*)(const void *, const void *))cmp;                              \
+    if (list->size > 0) {                                                      \
+      qsort(list->data, list->size, sizeof(type), compar);                     \
+    }                                                                          \
+  }                                                                            \
+                                                                               \
   /** deallocate unused backing storage, shrinking capacity to size */         \
   static inline LIST_UNUSED void name##_shrink_to_fit(name##_t *list) {        \
     assert(list != NULL);                                                      \

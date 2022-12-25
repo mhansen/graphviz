@@ -151,6 +151,108 @@ static void test_resize_to_0(void) {
   ints_free(&xs);
 }
 
+/// an int comparer
+static int cmp_int(const int *a, const int *b) {
+  if (*a < *b) {
+    return -1;
+  }
+  if (*a > *b) {
+    return 1;
+  }
+  return 0;
+}
+
+/// sort on an empty list should be a no-op
+static void test_sort_empty(void) {
+  ints_t xs = {0};
+  ints_sort(&xs, cmp_int);
+  assert(ints_size(&xs) == 0);
+  ints_free(&xs);
+}
+
+static void test_sort(void) {
+  ints_t xs = {0};
+
+  // a list of ints in an arbitrary order
+  const int ys[] = {4, 2, 10, 5, -42, 3};
+
+  // setup this list and sort it
+  for (size_t i = 0; i < sizeof(ys) / sizeof(ys[0]); ++i) {
+    ints_append(&xs, ys[i]);
+  }
+  ints_sort(&xs, cmp_int);
+
+  // we should now have a sorted version of `ys`
+  assert(ints_size(&xs) == sizeof(ys) / sizeof(ys[0]));
+  assert(ints_get(&xs, 0) == -42);
+  assert(ints_get(&xs, 1) == 2);
+  assert(ints_get(&xs, 2) == 3);
+  assert(ints_get(&xs, 3) == 4);
+  assert(ints_get(&xs, 4) == 5);
+  assert(ints_get(&xs, 5) == 10);
+
+  ints_free(&xs);
+}
+
+/// sorting an already sorted list should be a no-op
+static void test_sort_sorted(void) {
+  ints_t xs = {0};
+  const int ys[] = {-42, 2, 3, 4, 5, 10};
+
+  for (size_t i = 0; i < sizeof(ys) / sizeof(ys[0]); ++i) {
+    ints_append(&xs, ys[i]);
+  }
+  ints_sort(&xs, cmp_int);
+
+  for (size_t i = 0; i < sizeof(ys) / sizeof(ys[0]); ++i) {
+    assert(ints_get(&xs, i) == ys[i]);
+  }
+
+  ints_free(&xs);
+}
+
+typedef struct {
+  int x;
+  int y;
+} pair_t;
+
+DEFINE_LIST(pairs, pair_t)
+
+/// a pair comparer, using only the first element
+static int cmp_pair(const pair_t *a, const pair_t *b) {
+  if (a->x < b->x) {
+    return -1;
+  }
+  if (a->x > b->x) {
+    return 1;
+  }
+  return 0;
+}
+
+/// sorting a complex type should move entire values of the type together
+static void test_sort_complex(void) {
+  pairs_t xs = {0};
+
+  const pair_t ys[] = {{1, 2}, {-2, 3}, {-10, 4}, {0, 7}};
+
+  for (size_t i = 0; i < sizeof(ys) / sizeof(ys[0]); ++i) {
+    pairs_append(&xs, ys[i]);
+  }
+  pairs_sort(&xs, cmp_pair);
+
+  assert(pairs_size(&xs) == sizeof(ys) / sizeof(ys[0]));
+  assert(pairs_get(&xs, 0).x == -10);
+  assert(pairs_get(&xs, 0).y == 4);
+  assert(pairs_get(&xs, 1).x == -2);
+  assert(pairs_get(&xs, 1).y == 3);
+  assert(pairs_get(&xs, 2).x == 0);
+  assert(pairs_get(&xs, 2).y == 7);
+  assert(pairs_get(&xs, 3).x == 1);
+  assert(pairs_get(&xs, 3).y == 2);
+
+  pairs_free(&xs);
+}
+
 static void test_shrink(void) {
   ints_t xs = {0};
 
@@ -299,6 +401,10 @@ int main(void) {
   RUN(resize_empty_2);
   RUN(resize_down);
   RUN(resize_to_0);
+  RUN(sort_empty);
+  RUN(sort);
+  RUN(sort_sorted);
+  RUN(sort_complex);
   RUN(shrink);
   RUN(shrink_empty);
   RUN(free);
