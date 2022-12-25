@@ -25,8 +25,6 @@ void size_change_request(GtkWidget * widget, gpointer user_data)
 {
     (void)widget;
     (void)user_data;
-
-    view->refresh.nodesize=1;
 }
 
 void on_settingsOKBtn_clicked(GtkWidget * widget, gpointer user_data)
@@ -269,10 +267,9 @@ static int set_combobox_widget(char *attrib, char *widget_name)
 	copy_attr(view->systemGraphs.def_attrs, attrib, view->g[view->activeGraph]);
     }
     if (buf) {
-	value = (int) atoi(buf);
+	value = atoi(buf);
 	gtk_combo_box_set_active((GtkComboBox *)
-				 glade_xml_get_widget(xml, widget_name),
-				 (int) value);
+				 glade_xml_get_widget(xml, widget_name), value);
 
 	return 1;
     }
