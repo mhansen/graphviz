@@ -273,7 +273,6 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
     /* if i is a pivot than CenterIndex[i] is its index, otherwise CenterIndex[i]= -1 */
     int *CenterIndex;
     int *invCenterIndex;	/* list the pivot nodes  */
-    Queue Q;
     float *old_weights;
     /* this matrix stores the distance between  each node and each "center" */
     DistType **Dij;
@@ -332,7 +331,6 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
     }
     invCenterIndex = NULL;
 
-    mkQueue(&Q, n);
     old_weights = graph[0].ewgts;
 
     if (reweight_graph) {
@@ -368,7 +366,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
     if (reweight_graph) {
 	dijkstra(node, graph, n, Dij[0]);
     } else {
-	bfs(node, graph, n, Dij[0], &Q);
+	bfs(node, graph, n, Dij[0]);
     }
 
     /* find the most distant node from first pivot */
@@ -387,7 +385,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	if (reweight_graph) {
 	    dijkstra(node, graph, n, Dij[i]);
 	} else {
-	    bfs(node, graph, n, Dij[i], &Q);
+	    bfs(node, graph, n, Dij[i]);
 	}
 	max_dist = 0;
 	for (j = 0; j < n; j++) {
@@ -441,7 +439,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 				     visited_nodes);
 	    } else {
 		num_visited_nodes =
-		    bfs_bounded(i, graph, dist, &Q, dist_bound, visited_nodes);
+		    bfs_bounded(i, graph, dist, dist_bound, visited_nodes, n);
 	    }
 	    /* filter the pivots out of the visited nodes list, and the self loop: */
 	    for (j = 0; j < num_visited_nodes;) {
@@ -678,7 +676,6 @@ finish0:
     }
     free(subspace[0]);
     free(subspace);
-    freeQueue(&Q);
 
     return iterations;
 }
@@ -751,19 +748,15 @@ float *compute_apsp_packed(vtx_data * graph, int n)
     float *Dij = N_NEW(n * (n + 1) / 2, float);
 
     DistType *Di = N_NEW(n, DistType);
-    Queue Q;
-
-    mkQueue(&Q, n);
 
     count = 0;
     for (i = 0; i < n; i++) {
-	bfs(i, graph, n, Di, &Q);
+	bfs(i, graph, n, Di);
 	for (j = i; j < n; j++) {
 	    Dij[count++] = (float)Di[j];
 	}
     }
     free(Di);
-    freeQueue(&Q);
     return Dij;
 }
 

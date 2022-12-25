@@ -74,17 +74,14 @@ static DistType **compute_apsp_simple(vtx_data * graph, int n)
     /* for unweighted graph */
     int i;
     DistType *storage = gv_calloc((size_t)(n * n), sizeof(DistType));
-    Queue Q;
 
     DistType **dij = gv_calloc(n, sizeof(DistType*));
     for (i = 0; i < n; i++) {
 	dij[i] = storage + i * n;
     }
-    mkQueue(&Q, n);
     for (i = 0; i < n; i++) {
-	bfs(i, graph, n, dij[i], &Q);
+	bfs(i, graph, n, dij[i]);
     }
-    freeQueue(&Q);
     return dij;
 }
 
