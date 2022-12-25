@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <assert.h>
 #include <pathplan/vis.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -33,8 +33,9 @@ static array2 allocArray(int V, int extra)
     array2 arr;
     COORD *p;
 
+    assert(V >= 0);
     arr = malloc((V + extra) * sizeof(COORD *));
-    p = calloc(V * V, sizeof(COORD));
+    p = calloc((size_t)V * (size_t)V, sizeof(COORD));
     for (i = 0; i < V; i++) {
 	arr[i] = p;
 	p += V;

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The Autotools build system no longer errors when attempting libANN discovery
   during cross-compilation. This was a regression in Graphviz 7.0.6. #2335
+- Graphs with more than 46341 (⌈√INT_MAX⌉) nodes no longer crash `twopi`. #1999
 
 ## [7.0.6] – 2023-01-06
 
