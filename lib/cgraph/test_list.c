@@ -71,6 +71,70 @@ static void test_set(void) {
   ints_free(&xs);
 }
 
+/// removing from an empty list should be a no-op
+static void test_remove_empty(void) {
+  ints_t xs = {0};
+  ints_remove(&xs, 10);
+  assert(ints_size(&xs) == 0);
+  ints_free(&xs);
+}
+
+/// some basic removal tests
+static void test_remove(void) {
+  ints_t xs = {0};
+
+  for (size_t i = 0; i < 10; ++i) {
+    ints_append(&xs, (int)i);
+  }
+
+  // remove something that does not exist
+  ints_remove(&xs, 42);
+  for (size_t i = 0; i < 10; ++i) {
+    assert(ints_get(&xs, i) == (int)i);
+  }
+
+  // remove in the middle
+  ints_remove(&xs, 4);
+  assert(ints_size(&xs) == 9);
+  for (size_t i = 0; i < 9; ++i) {
+    if (i < 4) {
+      assert(ints_get(&xs, i) == (int)i);
+    } else {
+      assert(ints_get(&xs, i) == (int)i + 1);
+    }
+  }
+
+  // remove the first
+  ints_remove(&xs, 0);
+  assert(ints_size(&xs) == 8);
+  for (size_t i = 0; i < 8; ++i) {
+    if (i < 3) {
+      assert(ints_get(&xs, i) == (int)i + 1);
+    } else {
+      assert(ints_get(&xs, i) == (int)i + 2);
+    }
+  }
+
+  // remove the last
+  ints_remove(&xs, 9);
+  assert(ints_size(&xs) == 7);
+  for (size_t i = 0; i < 7; ++i) {
+    if (i < 3) {
+      assert(ints_get(&xs, i) == (int)i + 1);
+    } else {
+      assert(ints_get(&xs, i) == (int)i + 2);
+    }
+  }
+
+  // remove all the rest
+  for (size_t i = 0; i < 7; ++i) {
+    ints_remove(&xs, ints_get(&xs, 0));
+  }
+  assert(ints_size(&xs) == 0);
+
+  ints_free(&xs);
+}
+
 static void test_at(void) {
   ints_t xs = {0};
   for (size_t i = 0; i < 10; ++i) {
@@ -380,6 +444,20 @@ static void test_dtor(void) {
   strs_free(&xs);
 }
 
+/// test removal does not leak memory
+static void test_remove_with_dtor(void) {
+  strs_t xs = {0};
+
+  char *hello = strdup("hello");
+  assert(hello != NULL);
+
+  strs_append(&xs, hello);
+  strs_remove(&xs, hello);
+  assert(strs_size(&xs) == 0);
+
+  strs_free(&xs);
+}
+
 int main(void) {
 
 #define RUN(t)                                                                 \
@@ -394,6 +472,8 @@ int main(void) {
   RUN(append);
   RUN(get);
   RUN(set);
+  RUN(remove_empty);
+  RUN(remove);
   RUN(at);
   RUN(clear_empty);
   RUN(clear);
@@ -413,6 +493,7 @@ int main(void) {
   RUN(large);
   RUN(attach_detach);
   RUN(dtor);
+  RUN(remove_with_dtor);
 
 #undef RUN
 

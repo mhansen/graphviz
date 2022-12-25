@@ -4,6 +4,7 @@
 #include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef __GNUC__
 #define LIST_UNUSED __attribute__((unused))
@@ -103,6 +104,33 @@
       dtor_(list->data[index]);                                                \
     }                                                                          \
     list->data[index] = item;                                                  \
+  }                                                                            \
+                                                                               \
+  /** remove an element from a list                                            \
+   *                                                                           \
+   * \param list List to operate on                                            \
+   * \param item Value of element to remove                                    \
+   */                                                                          \
+  static inline LIST_UNUSED void name##_remove(name##_t *list, type item) {    \
+    assert(list != NULL);                                                      \
+                                                                               \
+    for (size_t i = 0; i < list->size; ++i) {                                  \
+      /* is this the element we are looking for? */                            \
+      if (memcmp(&list->data[i], &item, sizeof(type)) == 0) {                  \
+                                                                               \
+        /* destroy the element we are about to remove */                       \
+        void (*dtor_)(type) = (void (*)(type))(dtor);                          \
+        if (dtor_ != NULL) {                                                   \
+          dtor_(list->data[i]);                                                \
+        }                                                                      \
+                                                                               \
+        /* shrink the list */                                                  \
+        size_t remainder = (list->size - i - 1) * sizeof(type);                \
+        memmove(&list->data[i], &list->data[i + 1], remainder);                \
+        --list->size;                                                          \
+        return;                                                                \
+      }                                                                        \
+    }                                                                          \
   }                                                                            \
                                                                                \
   /** access an element in a list for the purpose of modification              \
