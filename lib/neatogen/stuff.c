@@ -68,14 +68,13 @@ void free_array(double **rv)
 
 static double ***new_3array(int m, int n, int p, double ival)
 {
-    double ***rv;
     int i, j, k;
 
-    rv = N_NEW(m + 1, double **);
+    double ***rv = gv_calloc(m + 1, sizeof(double**));
     for (i = 0; i < m; i++) {
-	rv[i] = N_NEW(n + 1, double *);
+	rv[i] = gv_calloc(n + 1, sizeof(double*));
 	for (j = 0; j < n; j++) {
-	    rv[i][j] = N_NEW(p, double);
+	    rv[i][j] = gv_calloc(p, sizeof(double));
 	    for (k = 0; k < p; k++)
 		rv[i][j][k] = ival;
 	}
