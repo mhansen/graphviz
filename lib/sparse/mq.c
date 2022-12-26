@@ -175,7 +175,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_init(SparseMatrix A, in
 
   if (level == 0){
     double mq = 0, mq_in, mq_out;
-    int n = A->n, ncluster;
+    int ncluster;
     double *deg_intra, *wgt, *dout;
 
     grid->deg_intra = MALLOC(sizeof(double)*(n));
