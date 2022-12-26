@@ -16,6 +16,7 @@
 #pragma once
 
 #include <ortho/maze.h>
+#include <stddef.h>
 
 /**
  * @brief partitions space around cells (nodes) into rectangular tiles
@@ -25,4 +26,4 @@
  * @returns array of the tiles
  */
 
-boxf* partition(cell* cells, int ncells, int* nrects, boxf bb);
+boxf *partition(cell *cells, int ncells, size_t *nrects, boxf bb);

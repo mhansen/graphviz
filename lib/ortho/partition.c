@@ -684,9 +684,7 @@ dumpSegs (segment_t* sg, int n)
 }
 #endif
 
-boxf*
-partition (cell* cells, int ncells, int* nrects, boxf bb)
-{
+boxf *partition(cell *cells, int ncells, size_t *nrects, boxf bb) {
     int nsegs = 4*(ncells+1);
     segment_t* segs = gv_calloc(nsegs + 1, sizeof(segment_t));
     int* permute = gv_calloc(nsegs + 1, sizeof(int));
