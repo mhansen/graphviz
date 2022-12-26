@@ -67,7 +67,7 @@ typedef struct {
     char *beg[MAXGROUP];
     char *end[MAXGROUP];
     char *next_s;
-    short groups;
+    int groups;
 } Group_t;
 
 typedef struct {
