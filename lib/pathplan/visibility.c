@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <pathplan/vis.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -30,12 +31,10 @@
 static array2 allocArray(int V, int extra)
 {
     int i;
-    array2 arr;
-    COORD *p;
 
     assert(V >= 0);
-    arr = malloc((V + extra) * sizeof(COORD *));
-    p = calloc((size_t)V * (size_t)V, sizeof(COORD));
+    array2 arr = gv_calloc(V + extra, sizeof(COORD*));
+    COORD *p = gv_calloc((size_t)V * (size_t)V, sizeof(COORD));
     for (i = 0; i < V; i++) {
 	arr[i] = p;
 	p += V;
