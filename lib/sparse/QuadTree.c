@@ -658,7 +658,7 @@ void QuadTree_print(FILE *fp, QuadTree q){
 
 
 static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, double *min, int *imin, int tentative){
-  /* get the narest point years to {x[0], ..., x[dim]} and store in y.*/
+  /* get the nearest point years to {x[0], ..., x[dim]} and store in y.*/
   SingleLinkedList l;
   double *coord, dist;
   int dim, i, iq = -1;
