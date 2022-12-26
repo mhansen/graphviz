@@ -474,7 +474,6 @@ EXCLUDE = (
   "lib/ortho/ortho.c",
   "lib/ortho/ortho.h",
   "lib/ortho/partition.c",
-  "lib/ortho/partition.h",
   "lib/ortho/rawgraph.c",
   "lib/ortho/rawgraph.h",
   "lib/ortho/sgraph.c",
