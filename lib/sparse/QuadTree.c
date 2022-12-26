@@ -370,7 +370,7 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
     center[i] = (xmin[i] + xmax[i])*0.5;
     width = MAX(width, xmax[i] - xmin[i]);
   }
-  if (width == 0) width = 0.00001;/* if we only have one point, width = 0! */
+  width = fmax(width, 0.00001);/* if we only have one point, width = 0! */
   width *= 0.52;
   qt = QuadTree_new(dim, center, width, max_level);
 
