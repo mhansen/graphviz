@@ -651,7 +651,7 @@ void shortest_path(graph_t * G, int nG)
 {
     node_t *v;
 
-    Heap = N_NEW(nG + 1, node_t *);
+    Heap = gv_calloc(nG + 1, sizeof(node_t*));
     if (Verbose) {
 	fprintf(stderr, "Calculating shortest paths: ");
 	start_timer();
