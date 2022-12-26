@@ -10,7 +10,7 @@
 
 
 #include "config.h"
-
+#include	<cgraph/alloc.h>
 #include	<neatogen/neato.h>
 #include	<neatogen/stress.h>
 #include	<time.h>
@@ -44,12 +44,10 @@ static double distvec(double *p0, double *p1, double *vec)
 
 double **new_array(int m, int n, double ival)
 {
-    double **rv;
-    double *mem;
     int i, j;
 
-    rv = N_NEW(m, double *);
-    mem = N_NEW(m * n, double);
+    double **rv = gv_calloc(m, sizeof(double*));
+    double *mem = gv_calloc(m * n, sizeof(double));
     for (i = 0; i < m; i++) {
 	rv[i] = mem;
 	mem += n;
