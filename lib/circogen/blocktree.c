@@ -121,7 +121,7 @@ static void dfs(Agraph_t * g, Agnode_t * u, circ_state * state, int isRoot, esta
 		if (block) {	/* If block != NULL, it's not empty */
 		    if (!BLOCK(u) && blockSize (block) > 1)
 			addNode(block, u);
-		    if (isRoot && (BLOCK(u) == block))
+		    if (isRoot && BLOCK(u) == block)
 			insertBlock(&state->bl, block);
 		    else
 			appendBlock(&state->bl, block);
@@ -213,7 +213,7 @@ block_t *createBlocktree(Agraph_t * g, circ_state * state)
 	SET_PARENT(parent);
 	CHILD(bp) = child;
 	next = bp->next;	/* save next since list insertion destroys it */
-	appendBlock(&(BLOCK(parent)->children), bp);
+	appendBlock(&BLOCK(parent)->children, bp);
     }
     initBlocklist(&state->bl);	/* zero out list */
     return root;

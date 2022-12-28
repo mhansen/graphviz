@@ -67,7 +67,7 @@ static double getRotation(block_t *sn, double x, double y, double theta) {
 
     count = sizeNodelist(list);
     if (count == 2) {
-	return (theta - M_PI / 2.0);
+	return theta - M_PI / 2.0;
     }
 
     /* Find node in block connected to block's parent */
@@ -95,13 +95,13 @@ static double getRotation(block_t *sn, double x, double y, double theta) {
 	double rho = sn->rad0;
 	double r = sn->radius - rho;
 	double n_x = ND_pos(neighbor)[0];
-	if (COALESCED(sn) && (-r < n_x)) {
+	if (COALESCED(sn) && -r < n_x) {
 	    double R = LEN(x, y);
 	    double n_y = ND_pos(neighbor)[1];
 	    double phi = atan2(n_y, n_x + r);
-	    double l = r - rho / (cos(phi));
+	    double l = r - rho / cos(phi);
 
-	    theta += M_PI / 2.0 - phi - asin((l / R) * (cos(phi)));
+	    theta += M_PI / 2.0 - phi - asin(l / R * cos(phi));
 	} else {		/* Origin still at center of this block */
 	    double phi = atan2(ND_pos(neighbor)[1], ND_pos(neighbor)[0]);
 	    theta += M_PI - phi - PSI(neighbor);
@@ -219,7 +219,7 @@ getInfo (posinfo_t* pi, posstate * stp, double min_dist)
 static void
 setInfo (posinfo_t* p0, posinfo_t* p1, double delta)
 {
-    double t = (p0->diameter*p1->minRadius) + (p1->diameter*p0->minRadius);
+    double t = p0->diameter * p1->minRadius + p1->diameter * p0->minRadius;
 
     t /= 2*delta*p0->minRadius*p1->minRadius;
 
@@ -309,7 +309,7 @@ positionChildren(posinfo_t *pi, posstate *stp, int length, double min_dist)
 	    midAngle = childAngle;
     }
 
-    if ((length > 1) && (pi->n == stp->neighbor)) {
+    if (length > 1 && pi->n == stp->neighbor) {
 	PSI(pi->n) = midAngle;
     }
 
@@ -440,7 +440,7 @@ static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
     if (childCount > 0)
 	centerAngle = position(childCount, length, longest_path, sn, min_dist);
 
-    if ((length == 1) && (BLK_PARENT(sn))) {
+    if (length == 1 && BLK_PARENT(sn)) {
 	sn->parent_pos = centerAngle;
 	if (sn->parent_pos < 0)
 	    sn->parent_pos += 2 * M_PI;
