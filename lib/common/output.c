@@ -229,7 +229,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 {
     int e_arrows;		/* graph has edges with end arrows */
     int s_arrows;		/* graph has edges with start arrows */
-    int i, j, sides;
+    int j, sides;
     char buf[BUFSIZ];		/* Used only for small strings */
     char xbuffer[BUFSIZ];	/* Initial buffer for xb */
     agxbuf xb;
@@ -296,7 +296,6 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 	    agset(n, "rects", agxbuse(&xb));
 	} else {
 	    polygon_t *poly;
-	    int i;
 	    if (N_vertices && isPolygon(n)) {
 		poly = ND_shape_info(n);
 		sides = poly->sides;
@@ -309,7 +308,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 		    if (sides < 3)
 			sides = 8;
 		}
-		for (i = 0; i < sides; i++) {
+		for (int i = 0; i < sides; i++) {
 		    if (i > 0)
 			agxbputc(&xb, ' ');
 		    if (poly->sides >= 3)
@@ -330,7 +329,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 		    continue;
 		if (ED_spl(e) == NULL)
 		    continue;	/* reported in postproc */
-		for (i = 0; i < ED_spl(e)->size; i++) {
+		for (int i = 0; i < ED_spl(e)->size; i++) {
 		    if (i > 0)
 			agxbputc(&xb, ';');
 		    if (ED_spl(e)->list[i].sflag) {
