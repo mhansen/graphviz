@@ -73,7 +73,6 @@ typedef struct {
     double T0;          /* initial temperature */
     int smode;          /* seed mode */
     double Cell;	/* grid cell size */
-    double K2;		/* K*K */
     double Wd;		/* half-width of boundary */
     double Ht;		/* half-height of boundary */
     int pass1;		/* iterations used in pass 1 */
@@ -94,7 +93,6 @@ static parms_t parms;
 #define T_T0        (parms.T0)
 #define T_smode     (parms.smode)
 #define T_Cell      (parms.Cell)
-#define T_K2        (parms.K2)
 #define T_Wd        (parms.Wd)
 #define T_Ht        (parms.Ht)
 #define T_pass1     (parms.pass1)
@@ -190,7 +188,6 @@ void fdp_initParams(graph_t * g)
     }
 
     T_pass1 = T_unscaled * T_maxIters / 100;
-    T_K2 = T_K * T_K;
 
     if (T_useGrid) {
 	if (T_Cell <= 0.0)
@@ -220,9 +217,9 @@ doRep(node_t * p, node_t * q, double xdelta, double ydelta, double dist2)
     }
     if (T_useNew) {
 	dist = sqrt(dist2);
-	force = T_K2 / (dist * dist2);
+	force = T_K * T_K / (dist * dist2);
     } else
-	force = T_K2 / dist2;
+	force = T_K * T_K / dist2;
     if (IS_PORT(p) && IS_PORT(q))
 	force *= 10.0;
     DISP(q)[0] += xdelta * force;
