@@ -73,7 +73,6 @@ typedef struct {
     double T0;          /* initial temperature */
     int smode;          /* seed mode */
     double Cell;	/* grid cell size */
-    double Cell2;	/* Cell*Cell */
     double K2;		/* K*K */
     double Wd;		/* half-width of boundary */
     double Ht;		/* half-height of boundary */
@@ -97,7 +96,6 @@ static parms_t parms;
 #define T_T0        (parms.T0)
 #define T_smode     (parms.smode)
 #define T_Cell      (parms.Cell)
-#define T_Cell2     (parms.Cell2)
 #define T_K2        (parms.K2)
 #define T_Wd        (parms.Wd)
 #define T_Ht        (parms.Ht)
@@ -201,7 +199,6 @@ void fdp_initParams(graph_t * g)
     if (T_useGrid) {
 	if (T_Cell <= 0.0)
 	    T_Cell = 3 * T_K;
-	T_Cell2 = T_Cell * T_Cell;
     }
 #ifdef DEBUG
     if (Verbose) {
@@ -275,7 +272,7 @@ static void doNeighbor(Grid * grid, int i, int j, node_list * nodes)
 		xdelta = (ND_pos(q))[0] - (ND_pos(p))[0];
 		ydelta = (ND_pos(q))[1] - (ND_pos(p))[1];
 		dist2 = xdelta * xdelta + ydelta * ydelta;
-		if (dist2 < T_Cell2)
+		if (dist2 < T_Cell * T_Cell)
 		    doRep(p, q, xdelta, ydelta, dist2);
 	    }
 	}
