@@ -17,6 +17,7 @@
  */
 
 #include	<circogen/blockpath.h>
+#include	<circogen/circpos.h>
 #include	<math.h>
 
 /* getRotation:
