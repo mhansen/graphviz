@@ -32,13 +32,12 @@ static void agputs (const char* s, FILE* fp)
 {
     putstr(fp, s);
 }
-static void agputc (int c, FILE* fp)
-{
+
+static void agputc(char c, FILE *fp) {
     static char buf[2] = {'\0','\0'};
     buf[0] = c;
     putstr(fp, buf);
 }
-
 
 static void printstring(FILE * f, char *prefix, char *s)
 {
