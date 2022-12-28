@@ -76,7 +76,6 @@ typedef struct {
     double K2;		/* K*K */
     double Wd;		/* half-width of boundary */
     double Ht;		/* half-height of boundary */
-    double Ht2;		/* Ht*Ht */
     int pass1;		/* iterations used in pass 1 */
     int loopcnt;        /* actual iterations in this pass */
 } parms_t;
@@ -98,7 +97,6 @@ static parms_t parms;
 #define T_K2        (parms.K2)
 #define T_Wd        (parms.Wd)
 #define T_Ht        (parms.Ht)
-#define T_Ht2       (parms.Ht2)
 #define T_pass1     (parms.pass1)
 #define T_loopcnt   (parms.loopcnt)
 
@@ -369,7 +367,7 @@ static void updatePos(Agraph_t * g, double temp, bport_t * pp)
 
 	/* if ports, limit by boundary */
 	if (pp) {
-	    d = sqrt(x * x / (T_Wd * T_Wd) + y * y / T_Ht2);
+	    d = sqrt(x * x / (T_Wd * T_Wd) + y * y / (T_Ht * T_Ht));
 	    if (IS_PORT(n)) {
 		ND_pos(n)[0] = x / d;
 		ND_pos(n)[1] = y / d;
@@ -520,7 +518,6 @@ static pointf initPositions(graph_t * g, bport_t * pp)
     } else {
 	ctr.x = ctr.y = 0;
     }
-    T_Ht2 = T_Ht * T_Ht;
 
     /* Set seed value */
     if (T_smode == INIT_RANDOM)
