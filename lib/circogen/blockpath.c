@@ -295,17 +295,16 @@ static nodelist_t *find_longest_path(Agraph_t * tree)
     Agnode_t *n;
     Agedge_t *e;
     Agnode_t *common = 0;
-    nodelist_t *path;
     nodelist_t *endPath;
     int maxlength = 0;
     int length;
 
     if (agnnodes(tree) == 1) {
-	path = mkNodelist();
+	nodelist_t *beginPath = mkNodelist();
 	n = agfstnode(tree);
-	appendNodelist(path, NULL, n);
+	appendNodelist(beginPath, NULL, n);
 	SET_ONPATH(n);
-	return path;
+	return beginPath;
     }
 
     for (n = agfstnode(tree); n; n = agnxtnode(tree, n)) {
@@ -326,12 +325,12 @@ static nodelist_t *find_longest_path(Agraph_t * tree)
 	}
     }
 
-    path = mkNodelist();
+    nodelist_t *beginPath = mkNodelist();
     for (n = LEAFONE(common); n != common; n = TPARENT(n)) {
-	appendNodelist(path, NULL, n);
+	appendNodelist(beginPath, NULL, n);
 	SET_ONPATH(n);
     }
-    appendNodelist(path, NULL, common);
+    appendNodelist(beginPath, NULL, common);
     SET_ONPATH(common);
 
     if (DISTTWO(common)) {	/* 2nd path might be empty */
@@ -340,10 +339,10 @@ static nodelist_t *find_longest_path(Agraph_t * tree)
 	    appendNodelist(endPath, NULL, n);
 	    SET_ONPATH(n);
 	}
-	reverseAppend(path, endPath);
+	reverseAppend(beginPath, endPath);
     }
 
-    return path;
+    return beginPath;
 }
 
 /* dfs:
