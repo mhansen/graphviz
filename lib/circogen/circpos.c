@@ -326,7 +326,7 @@ positionChildren(posinfo_t *pi, posstate *stp, int length, double min_dist)
  * Finally, positionChildren is called to do the actual positioning.
  * If length is 1, keeps track of minimum and maximum child angle.
  */
-static double position(int childCount, int length, nodelist_t *nodepath,
+static double position(size_t childCount, int length, nodelist_t *nodepath,
 	 block_t * sn, double min_dist)
 {
     nodelistitem_t *item;
@@ -420,11 +420,11 @@ static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
 {
     block_t *child;
     nodelist_t *longest_path;
-    int childCount, length;
+    int length;
     double centerAngle = M_PI;
 
     /* layout child subtrees */
-    childCount = 0;
+    size_t childCount = 0;
     for (child = sn->children.first; child; child = child->next) {
 	doBlock(g, child, min_dist);
 	childCount++;
