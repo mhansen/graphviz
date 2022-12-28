@@ -94,16 +94,15 @@ static char* canon (graph_t *g, char* s)
     return cs;
 }
 
-static void writenodeandport(FILE * f, node_t * node, char *port)
-{
+static void writenodeandport(FILE *f, node_t *node, char *portname) {
     char *name;
     if (IS_CLUST_NODE(node))
 	name = canon (agraphof(node), strchr(agnameof(node), ':') + 1);
     else
 	name = agcanonStr (agnameof(node));
     printstring(f, " ", name); /* slimey i know */
-    if (port && *port)
-	printstring(f, ":", agcanonStr(port));
+    if (portname && *portname)
+	printstring(f, ":", agcanonStr(portname));
 }
 
 /* _write_plain:
