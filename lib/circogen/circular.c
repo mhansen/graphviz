@@ -109,11 +109,10 @@ void prGraph(Agraph_t * g)
 
     fprintf(stderr, "%s\n", agnameof(g));
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	fprintf(stderr, "%s (%x)\n", agnameof(n), (unsigned int) n);
+	fprintf(stderr, "%s (%p)\n", agnameof(n), n);
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    fprintf(stderr, "%s", agnameof(n));
-	    fprintf(stderr, " -- %s (%x)\n", agnameof(aghead(e)),
-		    (unsigned int) e);
+	    fprintf(stderr, " -- %s (%p)\n", agnameof(aghead(e)), e);
 	}
     }
 }
