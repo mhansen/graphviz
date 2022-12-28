@@ -335,17 +335,15 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 			agxbputc(&xb, ';');
 		    if (ED_spl(e)->list[i].sflag) {
 			s_arrows = 1;
-			snprintf(buf, sizeof(buf), "s,%.5g,%.5g ",
+			agxbprint(&xb, "s,%.5g,%.5g ",
 				ED_spl(e)->list[i].sp.x,
 				YDIR(ED_spl(e)->list[i].sp.y));
-			agxbput(&xb, buf);
 		    }
 		    if (ED_spl(e)->list[i].eflag) {
 			e_arrows = 1;
-			snprintf(buf, sizeof(buf), "e,%.5g,%.5g ",
+			agxbprint(&xb, "e,%.5g,%.5g ",
 				ED_spl(e)->list[i].ep.x,
 				YDIR(ED_spl(e)->list[i].ep.y));
-			agxbput(&xb, buf);
 		    }
 		    for (j = 0; j < ED_spl(e)->list[i].size; j++) {
 			if (j > 0)
