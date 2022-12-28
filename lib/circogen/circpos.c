@@ -326,7 +326,7 @@ positionChildren(posinfo_t *pi, posstate *stp, int length, double min_dist)
  * Finally, positionChildren is called to do the actual positioning.
  * If length is 1, keeps track of minimum and maximum child angle.
  */
-static double position(int childCount, int length, nodelist_t *path,
+static double position(int childCount, int length, nodelist_t *nodepath,
 	 block_t * sn, double min_dist)
 {
     nodelistitem_t *item;
@@ -350,7 +350,7 @@ static double position(int childCount, int length, nodelist_t *path,
     state.firstAngle = -1;
     state.lastAngle = -1;
 
-    for (item = path->first; item; item = item->next) {
+    for (item = nodepath->first; item; item = item->next) {
 	n = item->curr;
 
 	theta = counter * state.nodeAngle;
