@@ -85,15 +85,6 @@ static void freeObjlist(objlist * l)
     }
 }
 
-/* resetObjlist:
- * Reset objlist so it can be reused, using
- * the same memory.
- */
-static void resetObjlist(objlist * l)
-{
-    l->cnt = 0;
-}
-
 /* makeClustObs:
  * Create an obstacle corresponding to a cluster's bbox.
  */
@@ -258,7 +249,6 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
     node_t *head;
     edge_t *e;
     edge_t *e0;
-    objlist *objl = NULL;
     vconfig_t *vconfig;
     int rv = 0;
 
@@ -268,13 +258,14 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 	    if (n == head && ED_count(e)) {	/* self arc */
 		makeSelfArcs(e, GD_nodesep(g));
 	    } else if (ED_count(e)) {
-		objl = objectList(e, pm);
+		objlist *objl = objectList(e, pm);
 		assert(objl->cnt <= INT_MAX);
 		if (Plegal_arrangement(objl->obs, (int)objl->cnt)) {
 		    vconfig = Pobsopen(objl->obs, (int)objl->cnt);
 		    if (!vconfig) {
 			agerr(AGWARN, "compoundEdges: could not construct obstacles - falling back to straight line edges\n");
 			rv = 1;
+			freeObjlist(objl);
 			continue;
 		    }
 		}
@@ -290,6 +281,7 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 				margin.x, margin.y, pm->x, pm->y);
 			rv = 1;
 		    }
+		    freeObjlist(objl);
 		    continue;
 		}
 
@@ -302,10 +294,9 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		    assert(objl->cnt <= INT_MAX);
 		    makeSpline(e0, objl->obs, (int)objl->cnt, false);
 		}
-		resetObjlist(objl);
+		freeObjlist(objl);
 	    }
 	}
     }
-    freeObjlist(objl);
     return rv;
 }
