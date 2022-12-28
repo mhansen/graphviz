@@ -190,15 +190,13 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 static void set_record_rects(node_t * n, field_t * f, agxbuf * xb)
 {
     int i;
-    char buf[BUFSIZ];
 
     if (f->n_flds == 0) {
-	snprintf(buf, sizeof(buf), "%.5g,%.5g,%.5g,%.5g ",
+	agxbprint(xb, "%.5g,%.5g,%.5g,%.5g ",
 		f->b.LL.x + ND_coord(n).x,
 		YDIR(f->b.LL.y + ND_coord(n).y),
 		f->b.UR.x + ND_coord(n).x,
 		YDIR(f->b.UR.y + ND_coord(n).y));
-	agxbput(xb, buf);
     }
     for (i = 0; i < f->n_flds; i++)
 	set_record_rects(n, f->fld[i], xb);
