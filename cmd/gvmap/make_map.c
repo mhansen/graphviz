@@ -638,29 +638,6 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
   free(elist);
 }
 
-static void plot_cycle(int head, int *cycle, int *edge_table, double *x){
-  int cur, next;
-  double x1, x2, y1, y2;
-
-  printf("Graphics[{");
-  cur = head;
-  while ((next = cycle_next(cur)) != head){
-    x1 = x[2*edge_head(cur)];
-    y1 = x[2*edge_head(cur)+1];
-    x2 = x[2*edge_tail(cur)];
-    y2 = x[2*edge_tail(cur)+1];
-    printf("{Black,Arrow[{{%f,%f},{%f,%f}}],Green,Text[%d, {%f,%f}],Text[%d, {%f,%f}]},",x1,y1,x2,y2,edge_head(cur),x1,y1,edge_tail(cur),x2,y2);
-    cur = next;
-  }
-  x1 = x[2*edge_head(cur)];
-  y1 = x[2*edge_head(cur)+1];
-  x2 = x[2*edge_tail(cur)];
-  y2 = x[2*edge_tail(cur)+1];
-  printf("{Black,Arrow[{{%f,%f},{%f,%f}}],Green,Text[%d, {%f,%f}],Text[%d, {%f,%f}]}}]",x1,y1,x2,y2,edge_head(cur),x1,y1,edge_tail(cur),x2,y2);
-
-
-}
-
 static void cycle_print(int head, int *cycle, int *edge_table){
   int cur, next;
 
@@ -906,11 +883,6 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 	    cur = next;
 	    next = nn;
 	  }
-	}
-	if (DEBUG_CYCLE && 0) {
-	  cycle_print(etail, cycle,edge_table);
-	  plot_cycle(etail, cycle,edge_table, x_poly);
-	  printf(",");
 	}
 
       }
