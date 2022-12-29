@@ -702,7 +702,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 		     numbered as e1 and e2. Likewise from v to u there are also two edges e1 and e2.
 		  */
 
-  int n = E->m, *ie = E->ia, *je = E->ja, *e = (int*) E->a, ne, i, j, t1, t2, jj, ii;
+  int n = E->m, *ie = E->ia, *je = E->ja, *e = E->a, ne, i, j, t1, t2, jj, ii;
   int *cycle, cycle_head = 0;/* a list of edges that form a cycle that describe the polygon. cycle[e][0] gives the prev edge in the cycle from e,
 	       cycle[e][1] gives the next edge
 	     */
@@ -763,7 +763,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 
   ie = half_edges->ia;
   je = half_edges->ja;
-  e = (int*) half_edges->a;
+  e = half_edges->a;
   elist = gv_calloc(nt * 3, sizeof(int));
   for (i = 0; i < nt; i++) elist[i*edim + 2] = 0;
 
