@@ -696,15 +696,13 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
 }
 
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
-static int
-fdpAdjust (graph_t* g, adjust_data* am)
-{
+static void fdpAdjust(graph_t *g, adjust_data *am) {
     SparseMatrix A0 = makeMatrix(g, NULL);
     SparseMatrix A = A0;
     double *sizes;
     double *pos = gv_calloc(Ndim * agnnodes(g), sizeof(double));
     Agnode_t *n;
-    int flag = 0, i;
+    int i;
     expand_t sep = sepFactor(g);
     pointf pad;
 
@@ -746,8 +744,6 @@ fdpAdjust (graph_t* g, adjust_data* am)
     if (A != A0)
 	SparseMatrix_delete(A);
     SparseMatrix_delete (A0);
-
-    return flag;
 }
 #endif
 
@@ -1088,7 +1084,8 @@ removeOverlapWith (graph_t * G, adjust_data* am)
 	    break;
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
 	case AM_PRISM:
-	    ret = fdpAdjust(G, am);
+	    fdpAdjust(G, am);
+	    ret = 0;
 	    break;
 #endif
 #ifdef IPSEPCOLA
