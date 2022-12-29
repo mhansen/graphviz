@@ -276,7 +276,7 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               const char *line_color, SparseMatrix polys,
                               double *x_poly, int *polys_groups, float *r,
                               float *g, float *b, const char *opacity) {
-  int i, j, *ia = polys->ia, *ja = polys->ja, *a = (int*) polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
+  int i, j, *ia = polys->ia, *ja = polys->ja, *a = polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
   int np = 0, maxlen = 0;
   float *xp, *yp;
   int fill = -1;
