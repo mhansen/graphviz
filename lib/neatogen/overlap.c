@@ -71,7 +71,6 @@ static void ideal_distance_avoid_overlap(int dim, SparseMatrix A, double *x, dou
 
     }
   }
-  return;
 }
 
 enum {INTV_OPEN, INTV_CLOSE};
