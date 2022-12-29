@@ -165,34 +165,6 @@ static void maximal_independent_vertex_set_RS(SparseMatrix A, int **vset, int *n
   
 }
 
-static void maximal_independent_edge_set(SparseMatrix A, int **matching, int *nmatch){
-  int i, ii, j, *ia, *ja, m, n, *p = NULL;
-  assert(A);
-  assert(SparseMatrix_known_strucural_symmetric(A));
-  ia = A->ia;
-  ja = A->ja;
-  m = A->m;
-  n = A->n;
-  assert(n == m);
-  *matching = gv_calloc(m, sizeof(int));
-  for (i = 0; i < m; i++) (*matching)[i] = i;
-  *nmatch = n;
-
-  p = random_permutation(m);
-  for (ii = 0; ii < m; ii++){
-    i = p[ii];
-    for (j = ia[i]; j < ia[i+1]; j++){
-      if (i == ja[j]) continue;
-      if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
-        (*matching)[ja[j]] = i;
-        (*matching)[i] = ja[j];
-        (*nmatch)--;
-      }
-    }
-  }
-  free(p);
-}
-
 static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(SparseMatrix A, int **cluster, int **clusterp, int *ncluster){
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
   (void)n;
