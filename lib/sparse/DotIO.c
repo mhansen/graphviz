@@ -115,7 +115,7 @@ SparseMatrix SparseMatrix_import_dot(Agraph_t *g, int dim, double **label_sizes,
     A->nz = nedges;
     I = A->ia;
     J = A->ja;
-    val = (double*) A->a;
+    val = A->a;
   } else {
     I = N_NEW(nedges, int);
     J = N_NEW(nedges, int);
