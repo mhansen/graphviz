@@ -8,7 +8,6 @@ demoluadir = $(demodir)
 demoocamldir = $(demodir)
 demoperldir = $(demodir)
 demophpdir = $(demodir)
-demopythondir = $(demodir)
 demopython3dir = $(demodir)
 demoRdir = $(demodir)
 demorubydir = $(demodir)
@@ -38,9 +37,6 @@ demoperl_SCRIPTS = modgraph.pl
 endif
 if WITH_PHP
 demophp_SCRIPTS = modgraph.php
-endif
-if WITH_PYTHON
-demopython_SCRIPTS = modgraph.py
 endif
 if WITH_PYTHON3
 demopython3_SCRIPTS = modgraph.py

@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.6)]
 
+### Changed
+
+- The Autotools build system no longer looks for `python` binaries. The Python
+  interpreter is unconditionally assumed to be `python3`. The configure option
+  `--enable-python` is now an alias for `--enable-python3`.
+
 ### Fixed
 
 - The modgraph.php example no longer includes gv.php, which is no longer

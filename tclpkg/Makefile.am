@@ -9,7 +9,6 @@ pkgluadir = $(pkglibdir)/lua
 pkgocamldir = $(pkglibdir)/ocaml
 pkgperldir = $(pkglibdir)/perl
 pkgphpdir = $(pkglibdir)/php
-pkgpythondir = $(pkglibdir)/python
 pkgpython3dir = $(pkglibdir)/python3
 pkgRdir = $(pkglibdir)/R
 pkgrubydir = $(pkglibdir)/ruby
@@ -74,17 +73,6 @@ if WITH_SWIG_PHP_DATA
 	fi
 endif
 endif
-if WITH_PYTHON
-	-mkdir -p $(DESTDIR)$(PYTHON_INSTALL_DIR);
-	if test -w $(DESTDIR)$(PYTHON_INSTALL_DIR); then \
-		(cd $(DESTDIR)$(PYTHON_INSTALL_DIR); \
-			cp -f $(DESTDIR)$(pkgpythondir)/libgv_python.so _gv.so; \
-			cp -f $(DESTDIR)$(pkgpythondir)/gv.py gv.py;) \
-	else \
-		echo "Warning: $(PYTHON_INSTALL_DIR) is not writable."; \
-		echo "Skipping system installation of python binding."; \
-	fi
-endif
 if WITH_PYTHON3
 	-mkdir -p $(DESTDIR)$(PYTHON3_INSTALL_DIR);
 	if test -w $(DESTDIR)$(PYTHON3_INSTALL_DIR); then \
@@ -133,8 +121,6 @@ uninstall-hook:
 	-rm -rf $(DESTDIR)$(PERL_INSTALL_DIR)/gv.so $(DESTDIR)$(PERL_INSTALL_DIR)/gv.pm;
 	-rm -rf $(DESTDIR)$(pkgphpdir);
 	-rm -rf $(DESTDIR)$(PHP_INSTALL_DIR)/gv.so $(DESTDIR)$(PHP_INSTALL_DATADIR)/gv.php;
-	-rm -rf $(DESTDIR)$(pkgpythondir);
-	-rm -rf $(DESTDIR)$(PYTHON_INSTALL_DIR)/_gv.so $(DESTDIR)$(PYTHON_INSTALL_DIR)/gv.py;
 	-rm -rf $(DESTDIR)$(pkgpython3dir);
 	-rm -rf $(DESTDIR)$(PYTHON3_INSTALL_DIR)/_gv.so $(DESTDIR)$(PYTHON3_INSTALL_DIR)/gv.py;
 	-rm -rf $(DESTDIR)$(pkgRdir);

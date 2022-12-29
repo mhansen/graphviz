@@ -1099,58 +1099,10 @@ AM_CONDITIONAL(WITH_PHP, [test "x$use_php" = "xYes"])
 dnl -----------------------------------
 dnl INCLUDES and LIBS for PYTHON
 
+# alias for `--enable-python3`
 AC_ARG_ENABLE(python,
   [AS_HELP_STRING([--enable-python=yes],[python language bindings])],
-  [], [enable_python=yes])
-
-if test "x$enable_python" != "xyes"; then
-  use_python="No (disabled)"
-else
-  if test "x$use_swig" != "xYes"; then
-    use_python="No (swig not available)"
-  else
-    if test `$SWIG -help 2>&1 | $EGREP -c '\-python *- Generate'` = 0; then
-      use_python="No (swig does not support -python option)"
-    else
-      AC_CHECK_PROG(PYTHON,python,python)
-      if test "x$PYTHON" = "x"; then
-        use_python="No (python not available)"
-      else
-        PYTHON_VERSION=`$PYTHON -c "import sys; print('%d.%d' % sys.version_info[[0:2]])"`
-        if test "x$PYTHON_VERSION" = "x"; then
-          PYTHON=
-        else
-          AX_COMPARE_VERSION([$PYTHON_VERSION], [lt], [3], [PYTHON=])
-        fi
-      fi
-      if test "x$PYTHON" = "x"; then
-	use_python="No (python is too old)"
-      else
-        PYTHON_PREFIX=`$PYTHON -c "import sys; print(sys.prefix)"`
-        PYTHON_INCLUDES=-I$PYTHON_PREFIX/include/python$PYTHON_VERSION
-	PYTHON_LIBS="-undefined dynamic_lookup"
-        PYTHON_INSTALL_DIR="`$PYTHON -c 'from distutils import sysconfig; print(sysconfig.get_python_lib(1,0))'`"
-        save_CPPFLAGS=$CPPFLAGS
-        CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES"
-        AC_CHECK_HEADER(Python.h,,[
-          use_python="No (missing header)"
-          PYTHON=
-        ])
-        CPPFLAGS=$save_CPPFLAGS
-	if test "x$PYTHON" != "x"; then
-	  use_python="Yes"
-          AC_SUBST([PYTHON_INSTALL_DIR])
-          AC_SUBST([PYTHON_INCLUDES])
-          AC_SUBST([PYTHON_LIBS])
-        fi
-      fi
-    fi
-  fi
-fi
-AM_CONDITIONAL(WITH_PYTHON, [test "x$use_python" = "xYes"])
-
-dnl -----------------------------------
-dnl INCLUDES and LIBS for PYTHON3
+  [], [enable_python3=yes])
 
 AC_ARG_ENABLE(python3,
   [AS_HELP_STRING([--enable-python3=yes],[python3 language bindings])],
@@ -2648,7 +2600,6 @@ echo "  gv_lua:        $use_lua"
 echo "  gv_ocaml:      $use_ocaml"
 echo "  gv_perl:       $use_perl"
 echo "  gv_php:        $use_php"
-echo "  gv_python:     $use_python"
 echo "  gv_python3:    $use_python3"
 echo "  gv_R:          $use_r"
 echo "  gv_ruby:       $use_ruby"
