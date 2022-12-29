@@ -490,7 +490,7 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
   int *elist, edim = 3;/* a list tell which vertex a particular vertex is linked with during poly construction.
 		since the surface is a cycle, each can only link with 2 others, the 3rd position is used to record how many links
 	      */
-  int *ie = E->ia, *je = E->ja, *e = (int*) E->a, n = E->m;
+  int *ie = E->ia, *je = E->ja, *e = E->a, n = E->m;
   int *ia = NULL, *ja = NULL;
   SparseMatrix A;
   int *gmask = NULL;
