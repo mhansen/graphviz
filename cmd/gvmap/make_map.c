@@ -116,7 +116,6 @@ void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_m
      .  If j < n, it is the original point, otherwise it is artificial point (forming the rectangle around a label) or random points.
   */
   int i, j, *ia, *ja, u, v;
-  double *a;
   SparseMatrix point_poly_map, D;
   double dist;
   int nbad = 0, flag;
@@ -127,7 +126,7 @@ void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_m
 
   assert(graph->m == n);
   ia = D->ia; ja = D->ja;
-  a = (double*) D->a;
+  double *a = D->a;
 
   /* point_poly_map: each row i has only 1 entry at column j, which says that point i is in polygon j */
   point_poly_map = SparseMatrix_transpose(poly_point_map);
