@@ -21,7 +21,6 @@ Multilevel_control Multilevel_control_new(void) {
   ctrl->minsize = 4;
   ctrl->min_coarsen_factor = 0.75;
   ctrl->maxlevel = 1<<30;
-  ctrl->randomize = TRUE;
 
   ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;
   ctrl->coarsen_mode = COARSEN_MODE_FORCEFUL;
@@ -69,7 +68,7 @@ void Multilevel_delete(Multilevel grid){
   free(grid);
 }
 
-static void maximal_independent_vertex_set(SparseMatrix A, int randomize, int **vset, int *nvset, int *nzc){
+static void maximal_independent_vertex_set(SparseMatrix A, int **vset, int *nvset, int *nzc){
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
   (void)n;
   assert(A);
@@ -84,37 +83,23 @@ static void maximal_independent_vertex_set(SparseMatrix A, int randomize, int **
   *nvset = 0;
   *nzc = 0;
 
-  if (!randomize){
-    for (i = 0; i < m; i++){
-      if ((*vset)[i] == MAX_IND_VTX_SET_U){
-	(*vset)[i] = (*nvset)++;
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  if (i == ja[j]) continue;
-	  (*vset)[ja[j]] = MAX_IND_VTX_SET_F;
-	  (*nzc)++;
-	}
+  p = random_permutation(m);
+  for (ii = 0; ii < m; ii++){
+    i = p[ii];
+    if ((*vset)[i] == MAX_IND_VTX_SET_U){
+      (*vset)[i] = (*nvset)++;
+      for (j = ia[i]; j < ia[i+1]; j++){
+	if (i == ja[j]) continue;
+	(*vset)[ja[j]] = MAX_IND_VTX_SET_F;
+	(*nzc)++;
       }
     }
-  } else {
-    p = random_permutation(m);
-    for (ii = 0; ii < m; ii++){
-      i = p[ii];
-      if ((*vset)[i] == MAX_IND_VTX_SET_U){
-	(*vset)[i] = (*nvset)++;
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  if (i == ja[j]) continue;
-	  (*vset)[ja[j]] = MAX_IND_VTX_SET_F;
-	  (*nzc)++;
-	}
-      }
-    }
-    free(p);
   }
+  free(p);
   (*nzc) += *nvset;
 }
 
-
-static void maximal_independent_vertex_set_RS(SparseMatrix A, int randomize, int **vset, int *nvset, int *nzc){
+static void maximal_independent_vertex_set_RS(SparseMatrix A, int **vset, int *nvset, int *nzc){
   /* The Ruge-Stuben coarsening scheme. Initially all vertices are in the U set (with marker MAX_IND_VTX_SET_U),
      with gain equal to their degree. Select vertex with highest gain into a C set (with
      marker >= MAX_IND_VTX_SET_C), and their neighbors j in F set (with marker MAX_IND_VTX_SET_F). The neighbors of
@@ -143,17 +128,12 @@ static void maximal_independent_vertex_set_RS(SparseMatrix A, int randomize, int
 
   q = PriorityQueue_new(m, 2*(m-1));
 
-  if (!randomize){
-    for (i = 0; i < m; i++)
-      PriorityQueue_push(q, i, ia[i+1] - ia[i]);
-  } else {
-    p = random_permutation(m);
-    for (ii = 0; ii < m; ii++){
-      i = p[ii];
-      PriorityQueue_push(q, i, ia[i+1] - ia[i]);
-    }
-    free(p);
+  p = random_permutation(m);
+  for (ii = 0; ii < m; ii++){
+    i = p[ii];
+    PriorityQueue_push(q, i, ia[i+1] - ia[i]);
   }
+  free(p);
 
   while (PriorityQueue_pop(q, &i, &gain)){
     assert((*vset)[i] == MAX_IND_VTX_SET_U);
@@ -186,9 +166,7 @@ static void maximal_independent_vertex_set_RS(SparseMatrix A, int randomize, int
   
 }
 
-
-
-static void maximal_independent_edge_set(SparseMatrix A, int randomize, int **matching, int *nmatch){
+static void maximal_independent_edge_set(SparseMatrix A, int **matching, int *nmatch){
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
   assert(A);
   assert(SparseMatrix_known_strucural_symmetric(A));
@@ -201,37 +179,22 @@ static void maximal_independent_edge_set(SparseMatrix A, int randomize, int **ma
   for (i = 0; i < m; i++) (*matching)[i] = i;
   *nmatch = n;
 
-  if (!randomize){
-    for (i = 0; i < m; i++){
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
-	  (*matching)[ja[j]] = i;
-	  (*matching)[i] = ja[j];
-	  (*nmatch)--;
-	}
+  p = random_permutation(m);
+  for (ii = 0; ii < m; ii++){
+    i = p[ii];
+    for (j = ia[i]; j < ia[i+1]; j++){
+      if (i == ja[j]) continue;
+      if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
+        (*matching)[ja[j]] = i;
+        (*matching)[i] = ja[j];
+        (*nmatch)--;
       }
     }
-  } else {
-    p = random_permutation(m);
-    for (ii = 0; ii < m; ii++){
-      i = p[ii];
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
-	  (*matching)[ja[j]] = i;
-	  (*matching)[i] = ja[j];
-	  (*nmatch)--;
-	}
-      }
-    }
-    free(p);
   }
+  free(p);
 }
 
-
-
-static void maximal_independent_edge_set_heavest_edge_pernode(SparseMatrix A, int randomize, int **matching, int *nmatch){
+static void maximal_independent_edge_set_heavest_edge_pernode(SparseMatrix A, int **matching, int *nmatch){
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
   double *a, amax = 0;
   int first = TRUE, jamax = 0;
@@ -251,59 +214,33 @@ static void maximal_independent_edge_set_heavest_edge_pernode(SparseMatrix A, in
   assert(A->type == MATRIX_TYPE_REAL);
 
   a = A->a;
-  if (!randomize){
-    for (i = 0; i < m; i++){
-      first = TRUE;
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
-	  if (first) {
-	    amax = a[j];
-	    jamax = ja[j];
-	    first = FALSE;
-	  } else {
-	    if (a[j] > amax){
-	      amax = a[j];
-	      jamax = ja[j];
-	    }
-	  }
-	}
-      }
-      if (!first){
-	  (*matching)[jamax] = i;
-	  (*matching)[i] = jamax;
-	  (*nmatch)--;
+  p = random_permutation(m);
+  for (ii = 0; ii < m; ii++){
+    i = p[ii];
+    if ((*matching)[i] != i) continue;
+    first = TRUE;
+    for (j = ia[i]; j < ia[i+1]; j++){
+      if (i == ja[j]) continue;
+      if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
+        if (first) {
+          amax = a[j];
+          jamax = ja[j];
+          first = FALSE;
+        } else {
+          if (a[j] > amax){
+            amax = a[j];
+            jamax = ja[j];
+          }
+        }
       }
     }
-  } else {
-    p = random_permutation(m);
-    for (ii = 0; ii < m; ii++){
-      i = p[ii];
-      if ((*matching)[i] != i) continue;
-      first = TRUE;
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
-	  if (first) {
-	    amax = a[j];
-	    jamax = ja[j];
-	    first = FALSE;
-	  } else {
-	    if (a[j] > amax){
-	      amax = a[j];
-	      jamax = ja[j];
-	    }
-	  }
-	}
-      }
-      if (!first){
-	  (*matching)[jamax] = i;
-	  (*matching)[i] = jamax;
-	  (*nmatch)--;
-      }
+    if (!first){
+      (*matching)[jamax] = i;
+      (*matching)[i] = jamax;
+      (*nmatch)--;
     }
-    free(p);
   }
+  free(p);
 }
 
 
@@ -312,7 +249,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode(SparseMatrix A, in
 
 #define node_degree(i) (ia[(i)+1] - ia[(i)])
 
-static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(SparseMatrix A, int randomize, int **cluster, int **clusterp, int *ncluster){
+static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(SparseMatrix A, int **cluster, int **clusterp, int *ncluster){
   int i, ii, j, *ia, *ja, m, n, *p = NULL, q;
   (void)n;
   double *a, amax = 0;
@@ -340,153 +277,81 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
   (*clusterp)[0] = 0;
   nz = 0;
   a = A->a;
-  if (!randomize){
-    for (i = 0; i < m; i++){
-      if (matched[i] == MATCHED || node_degree(i) != 1) continue;
-      q = ja[ia[i]];
-      assert(matched[q] != MATCHED);
-      matched[q] = MATCHED;
-      (*cluster)[nz++] = q;
-      for (j = ia[q]; j < ia[q+1]; j++){
-	if (q == ja[j]) continue;
-	if (node_degree(ja[j]) == 1){
-	  matched[ja[j]] = MATCHED;
-	  (*cluster)[nz++] = ja[j];
-	}
-      }
-      ncmax = MAX(ncmax, nz - (*clusterp)[*ncluster]);
-      nz0 = (*clusterp)[*ncluster];
-      if (nz - nz0 <= MAX_CLUSTER_SIZE){
-	(*clusterp)[++(*ncluster)] = nz;
-      } else {
-	(*clusterp)[++(*ncluster)] = ++nz0;	
-	nzz = nz0;
-	for (k = nz0; k < nz && nzz < nz; k++){
-	  nzz += MAX_CLUSTER_SIZE - 1;
-	  nzz = MIN(nz, nzz);
-	  (*clusterp)[++(*ncluster)] = nzz;
-	}
-      }
-
-    }
- #ifdef DEBUG_print
-   if (Verbose)
-     fprintf(stderr, "%d leaves and parents for %d clusters, largest cluster = %d\n",nz, *ncluster, ncmax);
-#endif
-    for (i = 0; i < m; i++){
-      first = TRUE;
-      if (matched[i] == MATCHED) continue;
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if (matched[ja[j]] != MATCHED && matched[i] != MATCHED){
-	  if (first) {
-	    amax = a[j];
-	    jamax = ja[j];
-	    first = FALSE;
-	  } else {
-	    if (a[j] > amax){
-	      amax = a[j];
-	      jamax = ja[j];
-	    }
-	  }
-	}
-      }
-      if (!first){
-	  matched[jamax] = MATCHED;
-	  matched[i] = MATCHED;
-	  (*cluster)[nz++] = i;
-	  (*cluster)[nz++] = jamax;
-	  (*clusterp)[++(*ncluster)] = nz;
+  p = random_permutation(m);
+  for (ii = 0; ii < m; ii++){
+    i = p[ii];
+    if (matched[i] == MATCHED || node_degree(i) != 1) continue;
+    q = ja[ia[i]];
+    assert(matched[q] != MATCHED);
+    matched[q] = MATCHED;
+    (*cluster)[nz++] = q;
+    for (j = ia[q]; j < ia[q+1]; j++){
+      if (q == ja[j]) continue;
+      if (node_degree(ja[j]) == 1){
+        matched[ja[j]] = MATCHED;
+        (*cluster)[nz++] = ja[j];
       }
     }
-
-    for (i = 0; i < m; i++){
-      if (matched[i] == i){
-	(*cluster)[nz++] = i;
-	(*clusterp)[++(*ncluster)] = nz;
+    ncmax = MAX(ncmax, nz - (*clusterp)[*ncluster]);
+    nz0 = (*clusterp)[*ncluster];
+    if (nz - nz0 <= MAX_CLUSTER_SIZE){
+      (*clusterp)[++(*ncluster)] = nz;
+    } else {
+      (*clusterp)[++(*ncluster)] = ++nz0;	
+      nzz = nz0;
+      for (k = nz0; k < nz && nzz < nz; k++){
+        nzz += MAX_CLUSTER_SIZE - 1;
+        nzz = MIN(nz, nzz);
+        (*clusterp)[++(*ncluster)] = nzz;
       }
     }
-    assert(nz == n);
-    
-  } else {
-    p = random_permutation(m);
-    for (ii = 0; ii < m; ii++){
-      i = p[ii];
-      if (matched[i] == MATCHED || node_degree(i) != 1) continue;
-      q = ja[ia[i]];
-      assert(matched[q] != MATCHED);
-      matched[q] = MATCHED;
-      (*cluster)[nz++] = q;
-      for (j = ia[q]; j < ia[q+1]; j++){
-	if (q == ja[j]) continue;
-	if (node_degree(ja[j]) == 1){
-	  matched[ja[j]] = MATCHED;
-	  (*cluster)[nz++] = ja[j];
-	}
-      }
-      ncmax = MAX(ncmax, nz - (*clusterp)[*ncluster]);
-      nz0 = (*clusterp)[*ncluster];
-      if (nz - nz0 <= MAX_CLUSTER_SIZE){
-	(*clusterp)[++(*ncluster)] = nz;
-      } else {
-	(*clusterp)[++(*ncluster)] = ++nz0;	
-	nzz = nz0;
-	for (k = nz0; k < nz && nzz < nz; k++){
-	  nzz += MAX_CLUSTER_SIZE - 1;
-	  nzz = MIN(nz, nzz);
-	  (*clusterp)[++(*ncluster)] = nzz;
-	}
-      }
-    }
-
- #ifdef DEBUG_print
-    if (Verbose)
-      fprintf(stderr, "%d leaves and parents for %d clusters, largest cluster = %d\n",nz, *ncluster, ncmax);
-#endif
-    for (ii = 0; ii < m; ii++){
-      i = p[ii];
-      first = TRUE;
-      if (matched[i] == MATCHED) continue;
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if (matched[ja[j]] != MATCHED && matched[i] != MATCHED){
-	  if (first) {
-	    amax = a[j];
-	    jamax = ja[j];
-	    first = FALSE;
-	  } else {
-	    if (a[j] > amax){
-	      amax = a[j];
-	      jamax = ja[j];
-	    }
-	  }
-	}
-      }
-      if (!first){
-	  matched[jamax] = MATCHED;
-	  matched[i] = MATCHED;
-	  (*cluster)[nz++] = i;
-	  (*cluster)[nz++] = jamax;
-	  (*clusterp)[++(*ncluster)] = nz;
-      }
-    }
-
-    for (i = 0; i < m; i++){
-      if (matched[i] == i){
-	(*cluster)[nz++] = i;
-	(*clusterp)[++(*ncluster)] = nz;
-      }
-    }
-
-    free(p);
   }
+
+ #ifdef DEBUG_print
+  if (Verbose)
+    fprintf(stderr, "%d leaves and parents for %d clusters, largest cluster = %d\n",nz, *ncluster, ncmax);
+#endif
+  for (ii = 0; ii < m; ii++){
+    i = p[ii];
+    first = TRUE;
+    if (matched[i] == MATCHED) continue;
+    for (j = ia[i]; j < ia[i+1]; j++){
+      if (i == ja[j]) continue;
+      if (matched[ja[j]] != MATCHED && matched[i] != MATCHED){
+        if (first) {
+          amax = a[j];
+          jamax = ja[j];
+          first = FALSE;
+        } else {
+          if (a[j] > amax){
+            amax = a[j];
+            jamax = ja[j];
+          }
+        }
+      }
+    }
+    if (!first){
+        matched[jamax] = MATCHED;
+        matched[i] = MATCHED;
+        (*cluster)[nz++] = i;
+        (*cluster)[nz++] = jamax;
+        (*clusterp)[++(*ncluster)] = nz;
+    }
+  }
+
+  for (i = 0; i < m; i++){
+    if (matched[i] == i){
+      (*cluster)[nz++] = i;
+      (*clusterp)[++(*ncluster)] = nz;
+    }
+  }
+
+  free(p);
 
   free(matched);
 }
 
-
-
-static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(SparseMatrix A, int randomize, int **cluster, int **clusterp, int *ncluster){
+static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(SparseMatrix A, int **cluster, int **clusterp, int *ncluster){
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
   (void)n;
   double *a, amax = 0;
@@ -532,81 +397,42 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
     if (nz > nz0) (*clusterp)[++(*ncluster)] = nz;
   }
 
-  if (!randomize){
-    for (i = 0; i < m; i++){
-      first = TRUE;
-      if (matched[i] == MATCHED) continue;
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if (matched[ja[j]] != MATCHED && matched[i] != MATCHED){
-	  if (first) {
-	    amax = a[j];
-	    jamax = ja[j];
-	    first = FALSE;
-	  } else {
-	    if (a[j] > amax){
-	      amax = a[j];
-	      jamax = ja[j];
-	    }
-	  }
-	}
-      }
-      if (!first){
-	  matched[jamax] = MATCHED;
-	  matched[i] = MATCHED;
-	  (*cluster)[nz++] = i;
-	  (*cluster)[nz++] = jamax;
-	  (*clusterp)[++(*ncluster)] = nz;
+  p = random_permutation(m);
+  for (ii = 0; ii < m; ii++){
+    i = p[ii];
+    first = TRUE;
+    if (matched[i] == MATCHED) continue;
+    for (j = ia[i]; j < ia[i+1]; j++){
+      if (i == ja[j]) continue;
+      if (matched[ja[j]] != MATCHED && matched[i] != MATCHED){
+        if (first) {
+          amax = a[j];
+          jamax = ja[j];
+          first = FALSE;
+        } else {
+          if (a[j] > amax){
+            amax = a[j];
+            jamax = ja[j];
+          }
+        }
       }
     }
-
-    for (i = 0; i < m; i++){
-      if (matched[i] == i){
-	(*cluster)[nz++] = i;
-	(*clusterp)[++(*ncluster)] = nz;
-      }
+    if (!first){
+        matched[jamax] = MATCHED;
+        matched[i] = MATCHED;
+        (*cluster)[nz++] = i;
+        (*cluster)[nz++] = jamax;
+        (*clusterp)[++(*ncluster)] = nz;
     }
-    assert(nz == n);
-    
-  } else {
-    p = random_permutation(m);
-    for (ii = 0; ii < m; ii++){
-      i = p[ii];
-      first = TRUE;
-      if (matched[i] == MATCHED) continue;
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if (matched[ja[j]] != MATCHED && matched[i] != MATCHED){
-	  if (first) {
-	    amax = a[j];
-	    jamax = ja[j];
-	    first = FALSE;
-	  } else {
-	    if (a[j] > amax){
-	      amax = a[j];
-	      jamax = ja[j];
-	    }
-	  }
-	}
-      }
-      if (!first){
-	  matched[jamax] = MATCHED;
-	  matched[i] = MATCHED;
-	  (*cluster)[nz++] = i;
-	  (*cluster)[nz++] = jamax;
-	  (*clusterp)[++(*ncluster)] = nz;
-      }
-    }
-
-    for (i = 0; i < m; i++){
-      if (matched[i] == i){
-	(*cluster)[nz++] = i;
-	(*clusterp)[++(*ncluster)] = nz;
-      }
-    }
-    free(p);
-
   }
+
+  for (i = 0; i < m; i++){
+    if (matched[i] == i){
+      (*cluster)[nz++] = i;
+      (*clusterp)[++(*ncluster)] = nz;
+    }
+  }
+  free(p);
 
   free(super);
 
@@ -723,7 +549,8 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
 
   free(matched);
 }
-static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatrix A, int randomize, int **matching, int *nmatch){
+
+static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatrix A, int **matching, int *nmatch){
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
   double *a, amax = 0;
   int first = TRUE, jamax = 0;
@@ -743,59 +570,33 @@ static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatri
   assert(A->type == MATRIX_TYPE_REAL);
 
   a = A->a;
-  if (!randomize){
-    for (i = 0; i < m; i++){
-      first = TRUE;
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
-	  if (first) {
-	    amax = a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]);
-	    jamax = ja[j];
-	    first = FALSE;
-	  } else {
-	    if (a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]) > amax){
-	      amax = a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]);
-	      jamax = ja[j];
-	    }
-	  }
-	}
-      }
-      if (!first){
-	  (*matching)[jamax] = i;
-	  (*matching)[i] = jamax;
-	  (*nmatch)--;
+  p = random_permutation(m);
+  for (ii = 0; ii < m; ii++){
+    i = p[ii];
+    if ((*matching)[i] != i) continue;
+    first = TRUE;
+    for (j = ia[i]; j < ia[i+1]; j++){
+      if (i == ja[j]) continue;
+      if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
+        if (first) {
+          amax = a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]);
+          jamax = ja[j];
+          first = FALSE;
+        } else {
+          if (a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]) > amax){
+            amax = a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]);
+            jamax = ja[j];
+          }
+        }
       }
     }
-  } else {
-    p = random_permutation(m);
-    for (ii = 0; ii < m; ii++){
-      i = p[ii];
-      if ((*matching)[i] != i) continue;
-      first = TRUE;
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
-	  if (first) {
-	    amax = a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]);
-	    jamax = ja[j];
-	    first = FALSE;
-	  } else {
-	    if (a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]) > amax){
-	      amax = a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]);
-	      jamax = ja[j];
-	    }
-	  }
-	}
-      }
-      if (!first){
-	  (*matching)[jamax] = i;
-	  (*matching)[i] = jamax;
-	  (*nmatch)--;
-      }
+    if (!first){
+        (*matching)[jamax] = i;
+        (*matching)[i] = jamax;
+        (*nmatch)--;
     }
-    free(p);
   }
+  free(p);
 }
 
 static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD,
@@ -868,9 +669,9 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
   case  COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_CLUSTER_PERNODE_LEAVES_FIRST:
   case COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_LEAVES_FIRST:
     if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_LEAVES_FIRST) {
-      maximal_independent_edge_set_heavest_edge_pernode_leaves_first(A, ctrl->randomize, &cluster, &clusterp, &ncluster);
+      maximal_independent_edge_set_heavest_edge_pernode_leaves_first(A, &cluster, &clusterp, &ncluster);
     } else if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST) {
-      maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, ctrl->randomize, &cluster, &clusterp, &ncluster);
+      maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, &cluster, &clusterp, &ncluster);
     } else {
       maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(A, 4, &cluster, &clusterp, &ncluster);
     }
@@ -921,13 +722,13 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
 
     break;
   case COARSEN_INDEPENDENT_EDGE_SET:
-    maximal_independent_edge_set(A, ctrl->randomize, &matching, &nmatch);
+    maximal_independent_edge_set(A, &matching, &nmatch);
   case COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE:
     if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE) 
-      maximal_independent_edge_set_heavest_edge_pernode(A, ctrl->randomize, &matching, &nmatch);
+      maximal_independent_edge_set_heavest_edge_pernode(A, &matching, &nmatch);
   case COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_DEGREE_SCALED:
     if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_DEGREE_SCALED) 
-      maximal_independent_edge_set_heavest_edge_pernode_scaled(A, ctrl->randomize, &matching, &nmatch);
+      maximal_independent_edge_set_heavest_edge_pernode_scaled(A, &matching, &nmatch);
     nc = nmatch;
     if ((ctrl->coarsen_mode == COARSEN_MODE_GENTLE && nc > ctrl->min_coarsen_factor*n) || nc == n || nc < ctrl->minsize) {
 #ifdef DEBUG_PRINT
@@ -984,9 +785,9 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
   case COARSEN_INDEPENDENT_VERTEX_SET:
   case COARSEN_INDEPENDENT_VERTEX_SET_RS:
     if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_VERTEX_SET){
-      maximal_independent_vertex_set(A, ctrl->randomize, &vset, &nvset, &nzc);
+      maximal_independent_vertex_set(A, &vset, &nvset, &nzc);
     } else {
-      maximal_independent_vertex_set_RS(A, ctrl->randomize, &vset, &nvset, &nzc);
+      maximal_independent_vertex_set_RS(A, &vset, &nvset, &nzc);
     }
     ia = A->ia;
     ja = A->ja;

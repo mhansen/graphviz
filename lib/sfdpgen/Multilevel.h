@@ -41,7 +41,6 @@ struct Multilevel_control_struct {
   int minsize;
   double min_coarsen_factor;
   int maxlevel;
-  int randomize;
   int coarsen_scheme;
   int coarsen_mode;
 };
