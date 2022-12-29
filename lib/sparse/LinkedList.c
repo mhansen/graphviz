@@ -19,8 +19,7 @@ SingleLinkedList SingleLinkedList_new(void *data){
 }
 
 SingleLinkedList SingleLinkedList_new_int(int i){
-  int *data;
-  data = malloc(sizeof(int));
+  int *data = gv_alloc(sizeof(int));
   data[0] = i;
   return SingleLinkedList_new((void*) data);
 }
