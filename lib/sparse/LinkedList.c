@@ -48,7 +48,7 @@ SingleLinkedList SingleLinkedList_prepend(SingleLinkedList l, void *data){
 SingleLinkedList SingleLinkedList_prepend_int(SingleLinkedList l, int i){
   int *data = gv_alloc(sizeof(int));
   data[0] = i;
-  return SingleLinkedList_prepend(l, (void*) data);
+  return SingleLinkedList_prepend(l, data);
 }
 
 void* SingleLinkedList_get_data(SingleLinkedList l){
