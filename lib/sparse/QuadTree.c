@@ -149,10 +149,10 @@ static double *get_or_assign_node_force(double *force, int i, SingleLinkedList l
 }
 static double *get_or_alloc_force_qt(QuadTree qt, int dim){
   int i;
-  double *force = (double*) qt->data;
+  double *force = qt->data;
   if (!force){
     qt->data = MALLOC(sizeof(double)*dim);
-    force = (double*) qt->data;
+    force = qt->data;
     for (i = 0; i < dim; i++) force[i] = 0.;
   }
   return force;
