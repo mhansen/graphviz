@@ -22,7 +22,6 @@ Multilevel_control Multilevel_control_new(void) {
   ctrl->min_coarsen_factor = 0.75;
   ctrl->maxlevel = 1<<30;
 
-  ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;
   ctrl->coarsen_mode = COARSEN_MODE_FORCEFUL;
   return ctrl;
 }
@@ -601,12 +600,12 @@ static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatri
 
 static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD,
 					double *node_wgt, double **cnode_wgt,
-					SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl, int *coarsen_scheme_used){
-  int *matching = NULL, nmatch = 0, nc, nzc, n, i;
-  int *irn = NULL, *jcn = NULL, *ia = NULL, *ja = NULL;
+					SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
+  int *matching = NULL, nc, nzc, n, i;
+  int *irn = NULL, *jcn = NULL;
   double *val = NULL;
   SparseMatrix B = NULL;
-  int *vset = NULL, nvset, ncov, j;
+  int *vset = NULL, j;
   int *cluster=NULL, *clusterp=NULL, ncluster;
 
   assert(A->m == A->n);
@@ -616,235 +615,50 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
   *R = NULL;
   n = A->m;
 
-  *coarsen_scheme_used = ctrl->coarsen_scheme;
-
-  switch (ctrl->coarsen_scheme){
-  case COARSEN_HYBRID:
+  maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, &cluster, &clusterp, &ncluster);
+  assert(ncluster <= n);
+  nc = ncluster;
+  if ((ctrl->coarsen_mode == COARSEN_MODE_GENTLE && nc > ctrl->min_coarsen_factor*n) || nc == n || nc < ctrl->minsize) {
 #ifdef DEBUG_PRINT
     if (Verbose)
-      fprintf(stderr, "hybrid scheme, try COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_LEAVES_FIRST first\n");
+      fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl->minsize, ctrl->min_coarsen_factor);
 #endif
-    *coarsen_scheme_used = ctrl->coarsen_scheme =  COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_LEAVES_FIRST;
-    Multilevel_coarsen_internal(A, cA, D, cD, node_wgt, cnode_wgt, P, R, ctrl, coarsen_scheme_used);
-
-    if (!(*cA)) {
-#ifdef DEBUG_PRINT
-      if (Verbose)
-        fprintf(stderr, "switching to COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST\n");
-#endif
-      *coarsen_scheme_used = ctrl->coarsen_scheme =  COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;
-      Multilevel_coarsen_internal(A, cA, D, cD, node_wgt, cnode_wgt, P, R, ctrl, coarsen_scheme_used);
-    }
-
-    if (!(*cA)) {
-#ifdef DEBUG_PRINT
-      if (Verbose)
-        fprintf(stderr, "switching to COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_CLUSTER_PERNODE_LEAVES_FIRST\n");
-#endif
-      *coarsen_scheme_used = ctrl->coarsen_scheme =  COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_CLUSTER_PERNODE_LEAVES_FIRST;
-      Multilevel_coarsen_internal(A, cA, D, cD, node_wgt, cnode_wgt, P, R, ctrl, coarsen_scheme_used);
-    }
-
-    if (!(*cA)) {
-#ifdef DEBUG_PRINT
-     if (Verbose)
-        fprintf(stderr, "switching to COARSEN_INDEPENDENT_VERTEX_SET\n");
-#endif
-      *coarsen_scheme_used = ctrl->coarsen_scheme = COARSEN_INDEPENDENT_VERTEX_SET;
-      Multilevel_coarsen_internal(A, cA, D, cD, node_wgt, cnode_wgt, P, R, ctrl, coarsen_scheme_used);
-    }
-
-
-    if (!(*cA)) {
-#ifdef DEBUG_PRINT
-      if (Verbose)
-        fprintf(stderr, "switching to COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE\n");
-#endif
-      *coarsen_scheme_used = ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE;
-      Multilevel_coarsen_internal(A, cA, D, cD, node_wgt, cnode_wgt, P, R, ctrl, coarsen_scheme_used);
-    }
-    ctrl->coarsen_scheme = COARSEN_HYBRID;
-    break;
-  case  COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST:
-  case  COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_CLUSTER_PERNODE_LEAVES_FIRST:
-  case COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_LEAVES_FIRST:
-    if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_LEAVES_FIRST) {
-      maximal_independent_edge_set_heavest_edge_pernode_leaves_first(A, &cluster, &clusterp, &ncluster);
-    } else if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST) {
-      maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, &cluster, &clusterp, &ncluster);
-    } else {
-      maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(A, 4, &cluster, &clusterp, &ncluster);
-    }
-    assert(ncluster <= n);
-    nc = ncluster;
-    if ((ctrl->coarsen_mode == COARSEN_MODE_GENTLE && nc > ctrl->min_coarsen_factor*n) || nc == n || nc < ctrl->minsize) {
-#ifdef DEBUG_PRINT
-      if (Verbose)
-        fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl->minsize, ctrl->min_coarsen_factor);
-#endif
-      goto RETURN;
-    }
-    irn = gv_calloc(n, sizeof(int));
-    jcn = gv_calloc(n, sizeof(int));
-    val = gv_calloc(n, sizeof(double));
-    nzc = 0; 
-    for (i = 0; i < ncluster; i++){
-      for (j = clusterp[i]; j < clusterp[i+1]; j++){
-	assert(clusterp[i+1] > clusterp[i]);
-	irn[nzc] = cluster[j];
-	jcn[nzc] = i;
-	val[nzc++] = 1.;
-     }
-    }
-    assert(nzc == n);
-    *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, val,
-                                             MATRIX_TYPE_REAL, sizeof(double));
-    *R = SparseMatrix_transpose(*P);
-
-    *cD = NULL;
-
-    *cA = SparseMatrix_multiply3(*R, A, *P); 
-
-    /*
-      B = SparseMatrix_multiply(*R, A);
-      if (!B) goto RETURN;
-      *cA = SparseMatrix_multiply(B, *P); 
-      */
-    if (!*cA) goto RETURN;
-
-    SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt);
-    *R = SparseMatrix_divide_row_by_degree(*R);
-    SparseMatrix_set_symmetric(*cA);
-    SparseMatrix_set_pattern_symmetric(*cA);
-    *cA = SparseMatrix_remove_diagonal(*cA);
-
-
-
-    break;
-  case COARSEN_INDEPENDENT_EDGE_SET:
-    maximal_independent_edge_set(A, &matching, &nmatch);
-  case COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE:
-    if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE) 
-      maximal_independent_edge_set_heavest_edge_pernode(A, &matching, &nmatch);
-  case COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_DEGREE_SCALED:
-    if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_DEGREE_SCALED) 
-      maximal_independent_edge_set_heavest_edge_pernode_scaled(A, &matching, &nmatch);
-    nc = nmatch;
-    if ((ctrl->coarsen_mode == COARSEN_MODE_GENTLE && nc > ctrl->min_coarsen_factor*n) || nc == n || nc < ctrl->minsize) {
-#ifdef DEBUG_PRINT
-      if (Verbose)
-        fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl->minsize, ctrl->min_coarsen_factor);
-#endif
-      goto RETURN;
-    }
-    irn = gv_calloc(n, sizeof(int));
-    jcn = gv_calloc(n, sizeof(int));
-    val = gv_calloc(n, sizeof(double));
-    nzc = 0; nc = 0;
-    for (i = 0; i < n; i++){
-      if (matching[i] >= 0){
-	if (matching[i] == i){
-	  irn[nzc] = i;
-	  jcn[nzc] = nc;
-	  val[nzc++] = 1.;
-	} else {
-	  irn[nzc] = i;
-	  jcn[nzc] = nc;
-	  val[nzc++] = 1;
-	  irn[nzc] = matching[i];
-	  jcn[nzc] = nc;
-	  val[nzc++] = 1;
-	  matching[matching[i]] = -1;
-	}
-	nc++;
-	matching[i] = -1;
-      }
-    }
-    assert(nc == nmatch);
-    assert(nzc == n);
-    *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, val,
-                                             MATRIX_TYPE_REAL, sizeof(double));
-    *R = SparseMatrix_transpose(*P);
-    *cA = SparseMatrix_multiply3(*R, A, *P); 
-    /*
-      B = SparseMatrix_multiply(*R, A);
-      if (!B) goto RETURN;
-      *cA = SparseMatrix_multiply(B, *P); 
-      */
-    if (!*cA) goto RETURN;
-    SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt);
-    *R = SparseMatrix_divide_row_by_degree(*R);
-    SparseMatrix_set_symmetric(*cA);
-    SparseMatrix_set_pattern_symmetric(*cA);
-    *cA = SparseMatrix_remove_diagonal(*cA);
-
-
-    *cD = NULL;
-
-    break;
-  case COARSEN_INDEPENDENT_VERTEX_SET:
-  case COARSEN_INDEPENDENT_VERTEX_SET_RS:
-    if (ctrl->coarsen_scheme == COARSEN_INDEPENDENT_VERTEX_SET){
-      maximal_independent_vertex_set(A, &vset, &nvset, &nzc);
-    } else {
-      maximal_independent_vertex_set_RS(A, &vset, &nvset, &nzc);
-    }
-    ia = A->ia;
-    ja = A->ja;
-    nc = nvset;
-    if ((ctrl->coarsen_mode == COARSEN_MODE_GENTLE && nc > ctrl->min_coarsen_factor*n) || nc == n || nc < ctrl->minsize) {
-#ifdef DEBUG_PRINT
-      if (Verbose)
-        fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl->minsize, ctrl->min_coarsen_factor);
-#endif
-      goto RETURN;
-    }
-    irn = gv_calloc(nzc, sizeof(int));
-    jcn = gv_calloc(nzc, sizeof(int));
-    val = gv_calloc(nzc, sizeof(double));
-    nzc = 0; 
-    for (i = 0; i < n; i++){
-      if (vset[i] == MAX_IND_VTX_SET_F){
-	ncov = 0;
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  if (vset[ja[j]] >= MAX_IND_VTX_SET_C){
-	    ncov++;
-	  }
-	}
-	assert(ncov > 0);
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  if (vset[ja[j]] >= MAX_IND_VTX_SET_C){
-	    irn[nzc] = i;
-	    jcn[nzc] = vset[ja[j]];
-	    val[nzc++] = 1./(double) ncov;
-	  }
-	}
-      } else {
-	assert(vset[i] >= MAX_IND_VTX_SET_C);
-	irn[nzc] = i;
-	jcn[nzc] = vset[i];
-	val[nzc++] = 1.;
-      }
-    }
-
-    *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, val,
-                                             MATRIX_TYPE_REAL, sizeof(double));
-    *R = SparseMatrix_transpose(*P);
-    *cA = SparseMatrix_multiply3(*R, A, *P); 
-    if (!*cA) goto RETURN;
-    SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt);
-    SparseMatrix_set_symmetric(*cA);
-    SparseMatrix_set_pattern_symmetric(*cA);
-    *cA = SparseMatrix_remove_diagonal(*cA);
-
-    // TODO: restrict filtering, the operation that would happen here, has not
-    // been implemented
-    assert(!D);
-    *cD = NULL;
-    break;
-  default:
     goto RETURN;
   }
+  irn = gv_calloc(n, sizeof(int));
+  jcn = gv_calloc(n, sizeof(int));
+  val = gv_calloc(n, sizeof(double));
+  nzc = 0; 
+  for (i = 0; i < ncluster; i++){
+    for (j = clusterp[i]; j < clusterp[i+1]; j++){
+      assert(clusterp[i+1] > clusterp[i]);
+      irn[nzc] = cluster[j];
+      jcn[nzc] = i;
+      val[nzc++] = 1.;
+   }
+  }
+  assert(nzc == n);
+  *P = SparseMatrix_from_coordinate_arrays(nzc, n, nc, irn, jcn, val,
+                                           MATRIX_TYPE_REAL, sizeof(double));
+  *R = SparseMatrix_transpose(*P);
+
+  *cD = NULL;
+
+  *cA = SparseMatrix_multiply3(*R, A, *P); 
+
+  /*
+    B = SparseMatrix_multiply(*R, A);
+    if (!B) goto RETURN;
+    *cA = SparseMatrix_multiply(B, *P); 
+    */
+  if (!*cA) goto RETURN;
+
+  SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt);
+  *R = SparseMatrix_divide_row_by_degree(*R);
+  SparseMatrix_set_symmetric(*cA);
+  SparseMatrix_set_pattern_symmetric(*cA);
+  *cA = SparseMatrix_remove_diagonal(*cA);
+
  RETURN:
   free(matching);
   free(vset);
@@ -858,7 +672,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
 }
 
 void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD, double *node_wgt, double **cnode_wgt,
-			       SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl, int *coarsen_scheme_used){
+			       SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
   SparseMatrix cA0 = A,  cD0 = NULL, P0 = NULL, R0 = NULL, M;
   double *cnode_wgt0 = NULL;
   int nc = 0, n;
@@ -869,7 +683,7 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, Sparse
 
   do {/* this loop force a sufficient reduction */
     node_wgt = cnode_wgt0;
-    Multilevel_coarsen_internal(A, &cA0, D, &cD0, node_wgt, &cnode_wgt0, &P0, &R0, ctrl, coarsen_scheme_used);
+    Multilevel_coarsen_internal(A, &cA0, D, &cD0, node_wgt, &cnode_wgt0, &P0, &R0, ctrl);
     if (!cA0) return;
     nc = cA0->n;
 #ifdef DEBUG_PRINT
@@ -911,7 +725,6 @@ void print_padding(int n){
 }
 static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl){
   Multilevel cgrid;
-  int coarsen_scheme_used;
   double *cnode_weights = NULL;
   SparseMatrix P, R, A, cA, D, cD;
 
@@ -932,12 +745,12 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
 #endif
     return grid;
   }
-  Multilevel_coarsen(A, &cA, D, &cD, grid->node_weights, &cnode_weights, &P, &R, ctrl, &coarsen_scheme_used);
+  Multilevel_coarsen(A, &cA, D, &cD, grid->node_weights, &cnode_weights, &P, &R, ctrl);
   if (!cA) return grid;
 
   cgrid = Multilevel_init(cA, cD, cnode_weights);
   grid->next = cgrid;
-  cgrid->coarsen_scheme_used = coarsen_scheme_used;
+  cgrid->coarsen_scheme_used = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;
   cgrid->level = grid->level + 1;
   cgrid->n = cA->m;
   cgrid->A = cA;
