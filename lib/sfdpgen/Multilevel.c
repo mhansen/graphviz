@@ -598,7 +598,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatri
   free(p);
 }
 
-static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD,
+static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD,
 					double *node_wgt, double **cnode_wgt,
 					SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
   int *matching = NULL, nc, nzc, n, i;
@@ -671,7 +671,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
   free(clusterp);
 }
 
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD, double *node_wgt, double **cnode_wgt,
+void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD, double *node_wgt, double **cnode_wgt,
 			       SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
   SparseMatrix cA0 = A,  cD0 = NULL, P0 = NULL, R0 = NULL, M;
   double *cnode_wgt0 = NULL;
@@ -683,7 +683,7 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, Sparse
 
   do {/* this loop force a sufficient reduction */
     node_wgt = cnode_wgt0;
-    Multilevel_coarsen_internal(A, &cA0, D, &cD0, node_wgt, &cnode_wgt0, &P0, &R0, ctrl);
+    Multilevel_coarsen_internal(A, &cA0, &cD0, node_wgt, &cnode_wgt0, &P0, &R0, ctrl);
     if (!cA0) return;
     nc = cA0->n;
 #ifdef DEBUG_PRINT
@@ -712,7 +712,6 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, Sparse
     if (*cnode_wgt) free(*cnode_wgt);
     *cnode_wgt = cnode_wgt0;
     A = cA0;
-    D = cD0;
     node_wgt = cnode_wgt0;
     cnode_wgt0 = NULL;
   } while (nc > ctrl->min_coarsen_factor*n && ctrl->coarsen_mode ==  COARSEN_MODE_FORCEFUL);
@@ -726,7 +725,7 @@ void print_padding(int n){
 static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl){
   Multilevel cgrid;
   double *cnode_weights = NULL;
-  SparseMatrix P, R, A, cA, D, cD;
+  SparseMatrix P, R, A, cA, cD;
 
 #ifdef DEBUG_PRINT
   if (Verbose) {
@@ -735,7 +734,6 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   }
 #endif
   A = grid->A;
-  D = grid->D;
   if (grid->level >= ctrl->maxlevel - 1) {
 #ifdef DEBUG_PRINT
   if (Verbose) {
@@ -745,7 +743,7 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
 #endif
     return grid;
   }
-  Multilevel_coarsen(A, &cA, D, &cD, grid->node_weights, &cnode_weights, &P, &R, ctrl);
+  Multilevel_coarsen(A, &cA, &cD, grid->node_weights, &cnode_weights, &P, &R, ctrl);
   if (!cA) return grid;
 
   cgrid = Multilevel_init(cA, cD, cnode_weights);
