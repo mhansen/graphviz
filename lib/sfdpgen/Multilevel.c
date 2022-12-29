@@ -67,37 +67,6 @@ void Multilevel_delete(Multilevel grid){
   free(grid);
 }
 
-static void maximal_independent_vertex_set(SparseMatrix A, int **vset, int *nvset, int *nzc){
-  int i, ii, j, *ia, *ja, m, n, *p = NULL;
-  (void)n;
-  assert(A);
-  assert(SparseMatrix_known_strucural_symmetric(A));
-  ia = A->ia;
-  ja = A->ja;
-  m = A->m;
-  n = A->n;
-  assert(n == m);
-  *vset = gv_calloc(m, sizeof(int));
-  for (i = 0; i < m; i++) (*vset)[i] = MAX_IND_VTX_SET_U;
-  *nvset = 0;
-  *nzc = 0;
-
-  p = random_permutation(m);
-  for (ii = 0; ii < m; ii++){
-    i = p[ii];
-    if ((*vset)[i] == MAX_IND_VTX_SET_U){
-      (*vset)[i] = (*nvset)++;
-      for (j = ia[i]; j < ia[i+1]; j++){
-	if (i == ja[j]) continue;
-	(*vset)[ja[j]] = MAX_IND_VTX_SET_F;
-	(*nzc)++;
-      }
-    }
-  }
-  free(p);
-  (*nzc) += *nvset;
-}
-
 static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(SparseMatrix A, int **cluster, int **clusterp, int *ncluster){
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
   (void)n;
