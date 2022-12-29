@@ -549,55 +549,6 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
   free(matched);
 }
 
-static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatrix A, int **matching, int *nmatch){
-  int i, ii, j, *ia, *ja, m, n, *p = NULL;
-  double *a, amax = 0;
-  int first = TRUE, jamax = 0;
-
-  assert(A);
-  assert(SparseMatrix_known_strucural_symmetric(A));
-  ia = A->ia;
-  ja = A->ja;
-  m = A->m;
-  n = A->n;
-  assert(n == m);
-  *matching = gv_calloc(m, sizeof(int));
-  for (i = 0; i < m; i++) (*matching)[i] = i;
-  *nmatch = n;
-
-  assert(SparseMatrix_is_symmetric(A, false));
-  assert(A->type == MATRIX_TYPE_REAL);
-
-  a = A->a;
-  p = random_permutation(m);
-  for (ii = 0; ii < m; ii++){
-    i = p[ii];
-    if ((*matching)[i] != i) continue;
-    first = TRUE;
-    for (j = ia[i]; j < ia[i+1]; j++){
-      if (i == ja[j]) continue;
-      if ((*matching)[ja[j]] == ja[j] && (*matching)[i] == i){
-        if (first) {
-          amax = a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]);
-          jamax = ja[j];
-          first = FALSE;
-        } else {
-          if (a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]) > amax){
-            amax = a[j]/(ia[i+1]-ia[i])/(ia[ja[j]+1]-ia[ja[j]]);
-            jamax = ja[j];
-          }
-        }
-      }
-    }
-    if (!first){
-        (*matching)[jamax] = i;
-        (*matching)[i] = jamax;
-        (*nmatch)--;
-    }
-  }
-  free(p);
-}
-
 static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD,
 					double *node_wgt, double **cnode_wgt,
 					SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
