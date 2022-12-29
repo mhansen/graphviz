@@ -82,7 +82,7 @@ static double get_mq(SparseMatrix A, int *assignment, int *ncluster0, double *mq
 
   assert(SparseMatrix_is_symmetric(A, test_pattern_symmetry_only));
   assert(A->n == n);
-  if (A->type == MATRIX_TYPE_REAL) a = (double*) A->a;
+  if (A->type == MATRIX_TYPE_REAL) a = A->a;
 
   counts = CALLOC(n, sizeof(int));
 
