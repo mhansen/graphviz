@@ -201,17 +201,6 @@ php_gv.h: gv_php.cpp
 gv_php.cpp: gv.i
 	$(SWIG) -c++ $(SWIG_PHP_OPT) -o $@ $(srcdir)/gv.i
 
-pkgpythondir = $(pkglibdir)/python
-PYTHON_data = gv.py
-nodist_libgv_python_la_SOURCES = gv_python.cpp $(PYTHON_data)
-libgv_python_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-libgv_python_la_LIBADD = $(BASELIBS) $(PYTHON_LIBS)
-libgv_python_la_LDFLAGS = -module -avoid-version
-libgv_python_la_CPPFLAGS = $(BASECPPFLAGS) $(PYTHON_INCLUDES)
-$(PYTHON_data): gv_python.cpp
-gv_python.cpp: gv.i
-	$(SWIG) -c++ -python -o $@ $(srcdir)/gv.i
-
 pkgpython3dir = $(pkglibdir)/python3
 PYTHON3_data = gv.py
 nodist_libgv_python3_la_SOURCES = gv_python3.cpp $(PYTHON3_data)
@@ -356,11 +345,6 @@ endif
 pkgphp_LTLIBRARIES = libgv_php.la
 DEVTSTS += test_php
 endif
-if WITH_PYTHON
-pkgpython_DATA = $(PYTHON_data)
-pkgpython_LTLIBRARIES = libgv_python.la
-DEVTSTS += test_python
-endif
 if WITH_PYTHON3
 pkgpython3_DATA = $(PYTHON3_data)
 pkgpython3_LTLIBRARIES = libgv_python3.la
@@ -482,9 +466,6 @@ endif
 if WITH_PHP
 	(cd $(DESTDIR)$(pkgphpdir); rm -f gv.so; $(LN_S) libgv_php.so gv.so;)
 endif
-if WITH_PYTHON
-	(cd $(DESTDIR)$(pkgpythondir); rm -f _gv.so; $(LN_S) libgv_python.so _gv.so;)
-endif
 if WITH_PYTHON3
 	(cd $(DESTDIR)$(pkgpython3dir); rm -f _gv.so; $(LN_S) libgv_python3.so _gv.so;)
 endif
@@ -567,13 +548,6 @@ test_php: libgv_php.la
 		ln -fs ../.libs/libgv_php.so libgv.so; \
 		ln -fs ../$(srcdir)/*.gv ../$(srcdir)/*.php .; \
 		$(PHP) ./test.php)
-
-.PHONY: test_python
-test_python: libgv_python.la
-	-(mkdir -p test_python; cd test_python; \
-		ln -fs ../.libs/libgv_python.so _gv.so; \
-		ln -fs ../$(srcdir)/*.gv ../$(srcdir)/*.py .; \
-		PYTHONPATH=. $(PYTHON) test.py)
 
 .PHONY: test_python3
 test_python3: libgv_python3.la
