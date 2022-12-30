@@ -1520,21 +1520,19 @@ void interpolate_coord(int dim, SparseMatrix A, double *x){
 
   free(y);
 }
-static void prolongate(int dim, SparseMatrix A, SparseMatrix P, SparseMatrix R, double *x, double *y, int coarsen_scheme_used, double delta){
+static void prolongate(int dim, SparseMatrix A, SparseMatrix P, SparseMatrix R, double *x, double *y, double delta){
   int nc, *ia, *ja, i, j, k;
   SparseMatrix_multiply_dense(P, x, &y, dim);
 
   /* xu yao rao dong */
-  if (coarsen_scheme_used > EDGE_BASED_STA && coarsen_scheme_used < EDGE_BASED_STO){
-    interpolate_coord(dim, A, y);
-    nc = R->m;
-    ia = R->ia;
-    ja = R->ja;
-    for (i = 0; i < nc; i++){
-      for (j = ia[i]+1; j < ia[i+1]; j++){
-	for (k = 0; k < dim; k++){
-	  y[ja[j]*dim + k] += delta*(drand() - 0.5);
-	}
+  interpolate_coord(dim, A, y);
+  nc = R->m;
+  ia = R->ia;
+  ja = R->ja;
+  for (i = 0; i < nc; i++){
+    for (j = ia[i]+1; j < ia[i+1]; j++){
+      for (k = 0; k < dim; k++){
+        y[ja[j]*dim + k] += delta*(drand() - 0.5);
       }
     }
   }
@@ -1766,7 +1764,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
 
 
   Multilevel_control mctrl = NULL;
-  int n, plg, coarsen_scheme_used;
+  int n, plg;
   SparseMatrix A = A0, D = D0, P = NULL;
   Multilevel grid, grid0;
   double *xc = NULL, *xf = NULL;
@@ -1893,25 +1891,19 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
       goto RETURN;
     }
     P = grid->P;
-    coarsen_scheme_used = grid->coarsen_scheme_used;
     grid = grid->prev;
     if (Multilevel_is_finest(grid)){
       xf = x;
     } else {
       xf = gv_calloc(grid->n * dim, sizeof(double));
     }
-    prolongate(dim, grid->A, P, grid->R, xc, xf, coarsen_scheme_used, (ctrl->K)*0.001);
+    prolongate(dim, grid->A, P, grid->R, xc, xf, (ctrl->K)*0.001);
     free(xc);
     xc = xf;
     ctrl->random_start = FALSE;
     ctrl->K = ctrl->K * 0.75;
     ctrl->adaptive_cooling = FALSE;
-    if (grid->next->coarsen_scheme_used > VERTEX_BASED_STA &&
-	grid->next->coarsen_scheme_used < VERTEX_BASED_STO){
-      ctrl->step = 1;
-    } else {
-      ctrl->step = .1;
-    }
+    ctrl->step = .1;
   } while (grid);
 
 #ifdef TIME

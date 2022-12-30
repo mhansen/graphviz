@@ -305,7 +305,6 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
 
   cgrid = Multilevel_init(cA, cD, cnode_weights);
   grid->next = cgrid;
-  cgrid->coarsen_scheme_used = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;
   cgrid->level = grid->level + 1;
   cgrid->n = cA->m;
   cgrid->A = cA;
