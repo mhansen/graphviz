@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include <sfdpgen/Multilevel.h>
-#include <sfdpgen/PriorityQueue.h>
 #include <assert.h>
 #include <cgraph/alloc.h>
 #include <common/arith.h>

@@ -80,7 +80,6 @@
   <ItemGroup>
     <ClCompile Include="Multilevel.c" />
     <ClCompile Include="post_process.c" />
-    <ClCompile Include="PriorityQueue.c" />
     <ClCompile Include="sfdpinit.c" />
     <ClCompile Include="sparse_solve.c" />
     <ClCompile Include="spring_electrical.c" />

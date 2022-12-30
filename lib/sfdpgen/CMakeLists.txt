@@ -6,7 +6,6 @@ add_library(sfdpgen STATIC
   # Header files
   Multilevel.h
   post_process.h
-  PriorityQueue.h
   sfdp.h
   sfdpinternal.h
   sparse_solve.h
@@ -17,7 +16,6 @@ add_library(sfdpgen STATIC
   # Source files
   Multilevel.c
   post_process.c
-  PriorityQueue.c
   sfdpinit.c
   sparse_solve.c
   spring_electrical.c

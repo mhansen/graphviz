@@ -518,8 +518,6 @@ EXCLUDE = (
   "lib/rbtree/test_red_black_tree.c",
   "lib/sfdpgen/Multilevel.c",
   "lib/sfdpgen/Multilevel.h",
-  "lib/sfdpgen/PriorityQueue.c",
-  "lib/sfdpgen/PriorityQueue.h",
   "lib/sfdpgen/post_process.c",
   "lib/sfdpgen/post_process.h",
   "lib/sfdpgen/sfdp.h",
