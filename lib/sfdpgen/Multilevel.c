@@ -21,7 +21,6 @@ Multilevel_control Multilevel_control_new(void) {
   ctrl->min_coarsen_factor = 0.75;
   ctrl->maxlevel = 1<<30;
 
-  ctrl->coarsen_mode = COARSEN_MODE_FORCEFUL;
   return ctrl;
 }
 
@@ -176,7 +175,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
   maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, &cluster, &clusterp, &ncluster);
   assert(ncluster <= n);
   nc = ncluster;
-  if ((ctrl->coarsen_mode == COARSEN_MODE_GENTLE && nc > ctrl->min_coarsen_factor*n) || nc == n || nc < ctrl->minsize) {
+  if (nc == n || nc < ctrl->minsize) {
 #ifdef DEBUG_PRINT
     if (Verbose)
       fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl->minsize, ctrl->min_coarsen_factor);
@@ -272,7 +271,7 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD, doub
     A = cA0;
     node_wgt = cnode_wgt0;
     cnode_wgt0 = NULL;
-  } while (nc > ctrl->min_coarsen_factor*n && ctrl->coarsen_mode ==  COARSEN_MODE_FORCEFUL);
+  } while (nc > ctrl->min_coarsen_factor*n);
 
 }
 
