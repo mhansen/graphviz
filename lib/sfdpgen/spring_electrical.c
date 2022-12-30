@@ -1524,7 +1524,6 @@ static void prolongate(int dim, SparseMatrix A, SparseMatrix P, SparseMatrix R, 
   int nc, *ia, *ja, i, j, k;
   SparseMatrix_multiply_dense(P, x, &y, dim);
 
-  /* xu yao rao dong */
   interpolate_coord(dim, A, y);
   nc = R->m;
   ia = R->ia;
