@@ -82,7 +82,7 @@ static double get_mq(SparseMatrix A, int *assignment, int *ncluster0, double *mq
 
   assert(SparseMatrix_is_symmetric(A, test_pattern_symmetry_only));
   assert(A->n == n);
-  if (A->type == MATRIX_TYPE_REAL) a = (double*) A->a;
+  if (A->type == MATRIX_TYPE_REAL) a = A->a;
 
   counts = CALLOC(n, sizeof(int));
 
@@ -228,7 +228,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
   int n = grid->n, level = grid->level, nc = 0, nclusters = n;
   double mq = 0, mq_in = 0, mq_out = 0, mq_new, mq_in_new, mq_out_new, mq_max = 0, mq_in_max = 0, mq_out_max = 0;
   int *ia = A->ia, *ja = A->ja;
-  double *a, amax = 0;
+  double amax = 0;
   double *deg_intra = grid->deg_intra, *wgt = grid->wgt;
   double *deg_intra_new, *wgt_new = NULL;
   int i, j, k, jj, jc, jmax;
@@ -280,7 +280,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
      mq_new = mq_in_new/(k-1) - mq_out_new/((k-1)*(k-2))
      gain = mq_new - mq
   */
-  a = (double*) A->a;
+  double *a = A->a;
   for (i = 0; i < n; i++){
     if (matching[i] != UNMATCHED) continue;
     /* accumulate connections between i and clusters */

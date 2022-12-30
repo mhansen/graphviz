@@ -12,6 +12,7 @@
 
 #include <sparse/general.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -36,7 +37,7 @@ struct SparseMatrix_struct {
   void *a; /* entry values. If NULL, pattern matrix */
   int format;/* whether it is CSR, CSC, COORD. By default it is in CSR format */
   int property; /* pattern_symmetric/symmetric/skew/hermitian*/
-  int size;/* size of each entry. This allows for general matrix where each entry is, say, a matrix itself */
+  size_t size;/* size of each entry. This allows for general matrix where each entry is, say, a matrix itself */
 };
 
 typedef struct SparseMatrix_struct* SparseMatrix;

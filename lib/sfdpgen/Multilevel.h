@@ -41,8 +41,6 @@ struct Multilevel_control_struct {
   int minsize;
   double min_coarsen_factor;
   int maxlevel;
-  int randomize;
-  int coarsen_scheme;
   int coarsen_mode;
 };
 
@@ -63,5 +61,5 @@ void print_padding(int n);
 #define Multilevel_is_finest(grid) (!((grid)->prev))
 #define Multilevel_is_coarsest(grid) (!((grid)->next))
 
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix D, SparseMatrix *cD, double *node_wgt, double **cnode_wgt,
-			SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl, int *coarsen_scheme_used);
+void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD, double *node_wgt, double **cnode_wgt,
+			SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl);

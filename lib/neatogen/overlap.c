@@ -71,7 +71,6 @@ static void ideal_distance_avoid_overlap(int dim, SparseMatrix A, double *x, dou
 
     }
   }
-  return;
 }
 
 enum {INTV_OPEN, INTV_CLOSE};
@@ -421,7 +420,7 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
 
   assert((sm->Lwd)->type == MATRIX_TYPE_REAL);
   
-  ideal_distance_avoid_overlap(dim, sm->Lwd, x, width, (double*) (sm->Lwd->a), max_overlap, min_overlap);
+  ideal_distance_avoid_overlap(dim, sm->Lwd, x, width, sm->Lwd->a, max_overlap, min_overlap);
 
   /* no overlap at all! */
   if (*max_overlap < 1 && shrink){
@@ -436,7 +435,8 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
   }
 
   iw = sm->Lw->ia; jw = sm->Lw->ja;
-  w = (double*) sm->Lw->a; d = (double*) sm->Lwd->a;
+  w = sm->Lw->a;
+  d = sm->Lwd->a;
 
   for (i = 0; i < m; i++){
     diag_d = diag_w = 0;

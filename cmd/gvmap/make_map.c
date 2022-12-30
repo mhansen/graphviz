@@ -116,7 +116,6 @@ void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_m
      .  If j < n, it is the original point, otherwise it is artificial point (forming the rectangle around a label) or random points.
   */
   int i, j, *ia, *ja, u, v;
-  double *a;
   SparseMatrix point_poly_map, D;
   double dist;
   int nbad = 0, flag;
@@ -127,7 +126,7 @@ void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_m
 
   assert(graph->m == n);
   ia = D->ia; ja = D->ja;
-  a = (double*) D->a;
+  double *a = D->a;
 
   /* point_poly_map: each row i has only 1 entry at column j, which says that point i is in polygon j */
   point_poly_map = SparseMatrix_transpose(poly_point_map);
@@ -277,7 +276,7 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               const char *line_color, SparseMatrix polys,
                               double *x_poly, int *polys_groups, float *r,
                               float *g, float *b, const char *opacity) {
-  int i, j, *ia = polys->ia, *ja = polys->ja, *a = (int*) polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
+  int i, j, *ia = polys->ia, *ja = polys->ja, *a = polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
   int np = 0, maxlen = 0;
   float *xp, *yp;
   int fill = -1;
@@ -491,7 +490,7 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
   int *elist, edim = 3;/* a list tell which vertex a particular vertex is linked with during poly construction.
 		since the surface is a cycle, each can only link with 2 others, the 3rd position is used to record how many links
 	      */
-  int *ie = E->ia, *je = E->ja, *e = (int*) E->a, n = E->m;
+  int *ie = E->ia, *je = E->ja, *e = E->a, n = E->m;
   int *ia = NULL, *ja = NULL;
   SparseMatrix A;
   int *gmask = NULL;
@@ -639,29 +638,6 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
   free(elist);
 }
 
-static void plot_cycle(int head, int *cycle, int *edge_table, double *x){
-  int cur, next;
-  double x1, x2, y1, y2;
-
-  printf("Graphics[{");
-  cur = head;
-  while ((next = cycle_next(cur)) != head){
-    x1 = x[2*edge_head(cur)];
-    y1 = x[2*edge_head(cur)+1];
-    x2 = x[2*edge_tail(cur)];
-    y2 = x[2*edge_tail(cur)+1];
-    printf("{Black,Arrow[{{%f,%f},{%f,%f}}],Green,Text[%d, {%f,%f}],Text[%d, {%f,%f}]},",x1,y1,x2,y2,edge_head(cur),x1,y1,edge_tail(cur),x2,y2);
-    cur = next;
-  }
-  x1 = x[2*edge_head(cur)];
-  y1 = x[2*edge_head(cur)+1];
-  x2 = x[2*edge_tail(cur)];
-  y2 = x[2*edge_tail(cur)+1];
-  printf("{Black,Arrow[{{%f,%f},{%f,%f}}],Green,Text[%d, {%f,%f}],Text[%d, {%f,%f}]}}]",x1,y1,x2,y2,edge_head(cur),x1,y1,edge_tail(cur),x2,y2);
-
-
-}
-
 static void cycle_print(int head, int *cycle, int *edge_table){
   int cur, next;
 
@@ -703,7 +679,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 		     numbered as e1 and e2. Likewise from v to u there are also two edges e1 and e2.
 		  */
 
-  int n = E->m, *ie = E->ia, *je = E->ja, *e = (int*) E->a, ne, i, j, t1, t2, jj, ii;
+  int n = E->m, *ie = E->ia, *je = E->ja, *e = E->a, ne, i, j, t1, t2, jj, ii;
   int *cycle, cycle_head = 0;/* a list of edges that form a cycle that describe the polygon. cycle[e][0] gives the prev edge in the cycle from e,
 	       cycle[e][1] gives the next edge
 	     */
@@ -764,7 +740,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 
   ie = half_edges->ia;
   je = half_edges->ja;
-  e = (int*) half_edges->a;
+  e = half_edges->a;
   elist = gv_calloc(nt * 3, sizeof(int));
   for (i = 0; i < nt; i++) elist[i*edim + 2] = 0;
 
@@ -907,11 +883,6 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 	    cur = next;
 	    next = nn;
 	  }
-	}
-	if (DEBUG_CYCLE && 0) {
-	  cycle_print(etail, cycle,edge_table);
-	  plot_cycle(etail, cycle,edge_table, x_poly);
-	  printf(",");
 	}
 
       }
