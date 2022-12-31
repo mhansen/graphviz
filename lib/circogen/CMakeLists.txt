@@ -8,7 +8,6 @@ add_library(circogen STATIC
   circo.h
   circpos.h
   circular.h
-  deglist.h
   edgelist.h
   nodelist.h
 
@@ -19,7 +18,6 @@ add_library(circogen STATIC
   circpos.c
   circular.c
   circularinit.c
-  deglist.c
   edgelist.c
   nodelist.c
 )

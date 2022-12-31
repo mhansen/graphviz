@@ -71,6 +71,70 @@ static void test_set(void) {
   ints_free(&xs);
 }
 
+/// removing from an empty list should be a no-op
+static void test_remove_empty(void) {
+  ints_t xs = {0};
+  ints_remove(&xs, 10);
+  assert(ints_size(&xs) == 0);
+  ints_free(&xs);
+}
+
+/// some basic removal tests
+static void test_remove(void) {
+  ints_t xs = {0};
+
+  for (size_t i = 0; i < 10; ++i) {
+    ints_append(&xs, (int)i);
+  }
+
+  // remove something that does not exist
+  ints_remove(&xs, 42);
+  for (size_t i = 0; i < 10; ++i) {
+    assert(ints_get(&xs, i) == (int)i);
+  }
+
+  // remove in the middle
+  ints_remove(&xs, 4);
+  assert(ints_size(&xs) == 9);
+  for (size_t i = 0; i < 9; ++i) {
+    if (i < 4) {
+      assert(ints_get(&xs, i) == (int)i);
+    } else {
+      assert(ints_get(&xs, i) == (int)i + 1);
+    }
+  }
+
+  // remove the first
+  ints_remove(&xs, 0);
+  assert(ints_size(&xs) == 8);
+  for (size_t i = 0; i < 8; ++i) {
+    if (i < 3) {
+      assert(ints_get(&xs, i) == (int)i + 1);
+    } else {
+      assert(ints_get(&xs, i) == (int)i + 2);
+    }
+  }
+
+  // remove the last
+  ints_remove(&xs, 9);
+  assert(ints_size(&xs) == 7);
+  for (size_t i = 0; i < 7; ++i) {
+    if (i < 3) {
+      assert(ints_get(&xs, i) == (int)i + 1);
+    } else {
+      assert(ints_get(&xs, i) == (int)i + 2);
+    }
+  }
+
+  // remove all the rest
+  for (size_t i = 0; i < 7; ++i) {
+    ints_remove(&xs, ints_get(&xs, 0));
+  }
+  assert(ints_size(&xs) == 0);
+
+  ints_free(&xs);
+}
+
 static void test_at(void) {
   ints_t xs = {0};
   for (size_t i = 0; i < 10; ++i) {
@@ -149,6 +213,108 @@ static void test_resize_to_0(void) {
   assert(ints_is_empty(&xs));
 
   ints_free(&xs);
+}
+
+/// an int comparer
+static int cmp_int(const int *a, const int *b) {
+  if (*a < *b) {
+    return -1;
+  }
+  if (*a > *b) {
+    return 1;
+  }
+  return 0;
+}
+
+/// sort on an empty list should be a no-op
+static void test_sort_empty(void) {
+  ints_t xs = {0};
+  ints_sort(&xs, cmp_int);
+  assert(ints_size(&xs) == 0);
+  ints_free(&xs);
+}
+
+static void test_sort(void) {
+  ints_t xs = {0};
+
+  // a list of ints in an arbitrary order
+  const int ys[] = {4, 2, 10, 5, -42, 3};
+
+  // setup this list and sort it
+  for (size_t i = 0; i < sizeof(ys) / sizeof(ys[0]); ++i) {
+    ints_append(&xs, ys[i]);
+  }
+  ints_sort(&xs, cmp_int);
+
+  // we should now have a sorted version of `ys`
+  assert(ints_size(&xs) == sizeof(ys) / sizeof(ys[0]));
+  assert(ints_get(&xs, 0) == -42);
+  assert(ints_get(&xs, 1) == 2);
+  assert(ints_get(&xs, 2) == 3);
+  assert(ints_get(&xs, 3) == 4);
+  assert(ints_get(&xs, 4) == 5);
+  assert(ints_get(&xs, 5) == 10);
+
+  ints_free(&xs);
+}
+
+/// sorting an already sorted list should be a no-op
+static void test_sort_sorted(void) {
+  ints_t xs = {0};
+  const int ys[] = {-42, 2, 3, 4, 5, 10};
+
+  for (size_t i = 0; i < sizeof(ys) / sizeof(ys[0]); ++i) {
+    ints_append(&xs, ys[i]);
+  }
+  ints_sort(&xs, cmp_int);
+
+  for (size_t i = 0; i < sizeof(ys) / sizeof(ys[0]); ++i) {
+    assert(ints_get(&xs, i) == ys[i]);
+  }
+
+  ints_free(&xs);
+}
+
+typedef struct {
+  int x;
+  int y;
+} pair_t;
+
+DEFINE_LIST(pairs, pair_t)
+
+/// a pair comparer, using only the first element
+static int cmp_pair(const pair_t *a, const pair_t *b) {
+  if (a->x < b->x) {
+    return -1;
+  }
+  if (a->x > b->x) {
+    return 1;
+  }
+  return 0;
+}
+
+/// sorting a complex type should move entire values of the type together
+static void test_sort_complex(void) {
+  pairs_t xs = {0};
+
+  const pair_t ys[] = {{1, 2}, {-2, 3}, {-10, 4}, {0, 7}};
+
+  for (size_t i = 0; i < sizeof(ys) / sizeof(ys[0]); ++i) {
+    pairs_append(&xs, ys[i]);
+  }
+  pairs_sort(&xs, cmp_pair);
+
+  assert(pairs_size(&xs) == sizeof(ys) / sizeof(ys[0]));
+  assert(pairs_get(&xs, 0).x == -10);
+  assert(pairs_get(&xs, 0).y == 4);
+  assert(pairs_get(&xs, 1).x == -2);
+  assert(pairs_get(&xs, 1).y == 3);
+  assert(pairs_get(&xs, 2).x == 0);
+  assert(pairs_get(&xs, 2).y == 7);
+  assert(pairs_get(&xs, 3).x == 1);
+  assert(pairs_get(&xs, 3).y == 2);
+
+  pairs_free(&xs);
 }
 
 static void test_shrink(void) {
@@ -278,6 +444,20 @@ static void test_dtor(void) {
   strs_free(&xs);
 }
 
+/// test removal does not leak memory
+static void test_remove_with_dtor(void) {
+  strs_t xs = {0};
+
+  char *hello = strdup("hello");
+  assert(hello != NULL);
+
+  strs_append(&xs, hello);
+  strs_remove(&xs, hello);
+  assert(strs_size(&xs) == 0);
+
+  strs_free(&xs);
+}
+
 int main(void) {
 
 #define RUN(t)                                                                 \
@@ -292,6 +472,8 @@ int main(void) {
   RUN(append);
   RUN(get);
   RUN(set);
+  RUN(remove_empty);
+  RUN(remove);
   RUN(at);
   RUN(clear_empty);
   RUN(clear);
@@ -299,6 +481,10 @@ int main(void) {
   RUN(resize_empty_2);
   RUN(resize_down);
   RUN(resize_to_0);
+  RUN(sort_empty);
+  RUN(sort);
+  RUN(sort_sorted);
+  RUN(sort_complex);
   RUN(shrink);
   RUN(shrink_empty);
   RUN(free);
@@ -307,6 +493,7 @@ int main(void) {
   RUN(large);
   RUN(attach_detach);
   RUN(dtor);
+  RUN(remove_with_dtor);
 
 #undef RUN
 

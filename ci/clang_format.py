@@ -193,8 +193,6 @@ EXCLUDE = (
   "lib/circogen/circular.c",
   "lib/circogen/circular.h",
   "lib/circogen/circularinit.c",
-  "lib/circogen/deglist.c",
-  "lib/circogen/deglist.h",
   "lib/circogen/edgelist.c",
   "lib/circogen/edgelist.h",
   "lib/circogen/nodelist.c",

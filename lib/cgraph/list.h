@@ -4,6 +4,7 @@
 #include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifdef __GNUC__
 #define LIST_UNUSED __attribute__((unused))
@@ -105,6 +106,33 @@
     list->data[index] = item;                                                  \
   }                                                                            \
                                                                                \
+  /** remove an element from a list                                            \
+   *                                                                           \
+   * \param list List to operate on                                            \
+   * \param item Value of element to remove                                    \
+   */                                                                          \
+  static inline LIST_UNUSED void name##_remove(name##_t *list, type item) {    \
+    assert(list != NULL);                                                      \
+                                                                               \
+    for (size_t i = 0; i < list->size; ++i) {                                  \
+      /* is this the element we are looking for? */                            \
+      if (memcmp(&list->data[i], &item, sizeof(type)) == 0) {                  \
+                                                                               \
+        /* destroy the element we are about to remove */                       \
+        void (*dtor_)(type) = (void (*)(type))(dtor);                          \
+        if (dtor_ != NULL) {                                                   \
+          dtor_(list->data[i]);                                                \
+        }                                                                      \
+                                                                               \
+        /* shrink the list */                                                  \
+        size_t remainder = (list->size - i - 1) * sizeof(type);                \
+        memmove(&list->data[i], &list->data[i + 1], remainder);                \
+        --list->size;                                                          \
+        return;                                                                \
+      }                                                                        \
+    }                                                                          \
+  }                                                                            \
+                                                                               \
   /** access an element in a list for the purpose of modification              \
    *                                                                           \
    * Because this acquires an internal pointer into the list structure, `get`  \
@@ -161,6 +189,19 @@
         }                                                                      \
         --list->size;                                                          \
       }                                                                        \
+    }                                                                          \
+  }                                                                            \
+                                                                               \
+  /** sort the list using the given comparator */                              \
+  static inline LIST_UNUSED void name##_sort(                                  \
+      name##_t *list, int (*cmp)(const type *a, const type *b)) {              \
+    assert(list != NULL);                                                      \
+    assert(cmp != NULL);                                                       \
+                                                                               \
+    int (*compar)(const void *, const void *) =                                \
+        (int (*)(const void *, const void *))cmp;                              \
+    if (list->size > 0) {                                                      \
+      qsort(list->data, list->size, sizeof(type), compar);                     \
     }                                                                          \
   }                                                                            \
                                                                                \
