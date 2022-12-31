@@ -8,22 +8,19 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <sparse/LinkedList.h>
-#include <common/memory.h>
 
 SingleLinkedList SingleLinkedList_new(void *data){
-  SingleLinkedList head;
-  head = GNEW(struct SingleLinkedList_struct);
+  SingleLinkedList head = gv_alloc(sizeof(struct SingleLinkedList_struct));
   head->data = data;
-  head->next = NULL;
   return head;
 }
 
 SingleLinkedList SingleLinkedList_new_int(int i){
-  int *data;
-  data = malloc(sizeof(int));
+  int *data = gv_alloc(sizeof(int));
   data[0] = i;
-  return SingleLinkedList_new((void*) data);
+  return SingleLinkedList_new(data);
 }
   
 
@@ -48,10 +45,9 @@ SingleLinkedList SingleLinkedList_prepend(SingleLinkedList l, void *data){
 }
 
 SingleLinkedList SingleLinkedList_prepend_int(SingleLinkedList l, int i){
-  int *data;
-  data = malloc(sizeof(int));
+  int *data = gv_alloc(sizeof(int));
   data[0] = i;
-  return SingleLinkedList_prepend(l, (void*) data);
+  return SingleLinkedList_prepend(l, data);
 }
 
 void* SingleLinkedList_get_data(SingleLinkedList l){
@@ -73,11 +69,8 @@ void SingleLinkedList_print(SingleLinkedList head, void (*linkedlist_print)(void
 
 
 DoubleLinkedList DoubleLinkedList_new(void *data){
-  DoubleLinkedList head;
-  head = GNEW(struct DoubleLinkedList_struct);
+  DoubleLinkedList head = gv_alloc(sizeof(struct DoubleLinkedList_struct));
   head->data = data;
-  head->next = NULL;
-  head->prev = NULL;
   return head;
 }
 

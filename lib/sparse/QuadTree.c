@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <common/geom.h>
 #include <common/arith.h>
@@ -139,21 +140,19 @@ void QuadTree_get_supernodes(QuadTree qt, double bh, double *point, int nodeid, 
 
 static double *get_or_assign_node_force(double *force, int i, SingleLinkedList l, int dim){
 
-  double *f = (double*) node_data_get_data(SingleLinkedList_get_data(l));
+  double *f = node_data_get_data(SingleLinkedList_get_data(l));
 
   if (!f){
     node_data_get_data(SingleLinkedList_get_data(l)) = &(force[i*dim]);
-    f = (double*) node_data_get_data(SingleLinkedList_get_data(l));
+    f = node_data_get_data(SingleLinkedList_get_data(l));
   }
   return f;
 }
 static double *get_or_alloc_force_qt(QuadTree qt, int dim){
-  int i;
-  double *force = (double*) qt->data;
+  double *force = qt->data;
   if (!force){
-    qt->data = MALLOC(sizeof(double)*dim);
-    force = (double*) qt->data;
-    for (i = 0; i < dim; i++) force[i] = 0.;
+    qt->data = gv_calloc(dim, sizeof(double));
+    force = qt->data;
   }
   return force;
 }
