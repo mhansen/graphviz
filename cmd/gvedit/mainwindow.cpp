@@ -539,7 +539,7 @@ void CMainWindow::actions()
 	new QAction(QIcon(":/images/settings.png"), tr("Settings"), this);
     settingsAct->setStatusTip(tr("Show Graphviz Settings"));
     connect(settingsAct, SIGNAL(triggered()), this, SLOT(slotSettings()));
-    settingsAct->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_F5));
+    settingsAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_F5));
 
 
 

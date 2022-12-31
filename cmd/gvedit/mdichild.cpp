@@ -10,7 +10,7 @@
 
 #include <memory>
 #include <QtWidgets>
-
+#include <QtGlobal>
 #include "mdichild.h"
 #include "mainwindow.h"
 
@@ -93,7 +93,9 @@ bool MdiChild::saveFile(const QString & fileName)
 
     QTextStream out(&file);
     QApplication::setOverrideCursor(Qt::WaitCursor);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     out.setCodec("UTF-8");
+#endif
     out << toPlainText();
     out.flush();
     QApplication::restoreOverrideCursor();
