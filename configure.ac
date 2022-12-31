@@ -1969,21 +1969,56 @@ AC_ARG_WITH([qt],
   [AS_HELP_STRING([--with-qt=yes], [Qt features])])
 
 AS_IF([test "x$with_qt" != "xno"], [
-  # required for linking with QT5
+  # required for linking with QT
   CXXFLAGS="${CXXFLAGS} -fPIE -fPIC"
-  AC_CHECK_PROGS([QMAKE], [qmake-qt5 qmake5 qmake], [false])
-  AS_IF([test "$QMAKE" != "false"], [
-    PKG_CHECK_MODULES([QTCORE], [Qt5Core], [
-      PKG_CHECK_MODULES([QTGUI], [Qt5Widgets Qt5PrintSupport], [
-        use_qt="Yes"
+  AC_CHECK_PROGS([QMAKE], [qmake6 qmake-qt5 qmake5 qmake], [false])
+  AS_IF([test "$QMAKE" == "qmake6"], [
+    # Qt6
+    AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_HEADERS)/QtCore/QtCore, [
+      QTCORE_CFLAGS="-I$(${QMAKE} -query QT_INSTALL_HEADERS) -I$(${QMAKE} -query QT_INSTALL_HEADERS)/QtCore"
+      AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_LIBS)/libQt6Core.so, [
+        QTCORE_LIBS="-L$(${QMAKE} -query QT_INSTALL_LIBS) -lQt6Core"
+        AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_HEADERS)/QtWidgets/QtWidgets, [
+          AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_HEADERS)/QtPrintSupport/QtPrintSupport, [
+            QTGUI_CFLAGS="-I$(${QMAKE} -query QT_INSTALL_HEADERS) -I$(${QMAKE} -query QT_INSTALL_HEADERS)/QtWidgets -I$(${QMAKE} -query QT_INSTALL_HEADERS)/QtPrintSupport -I$(${QMAKE} -query QT_INSTALL_HEADERS)/QtGui"
+            AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_LIBS)/libQt6Widgets.so, [
+              AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_LIBS)/libQt6PrintSupport.so, [
+                QTGUI_LIBS="-L$(${QMAKE} -query QT_INSTALL_LIBS) -lQt6Widgets -lQt6PrintSupport -lQt6Gui -lQt6Core"
+                AX_CXX_COMPILE_STDCXX_17(noext,mandatory)
+                use_qt="Yes"
+              ], [
+                use_qt="No (Qt6PrintSupport library not available)"
+              ])
+            ], [
+              use_qt="No (Qt6Widgets library not available)"
+            ])
+          ], [
+            use_qt="No (Qt6PrintSupport header not available)"
+          ])
+        ], [
+          use_qt="No (Qt6Widgets header not available)"
+        ])
       ], [
-        use_qt="No (QtGui not available)"
+        use_qt="No (Qt6Core library not available)"
       ])
     ], [
-      use_qt="No (QtCore not available)"
+      use_qt="No (Qt6Core header not available)"
     ])
   ], [
-    use_qt="No (qmake not found)"
+    # Qt5
+    AS_IF([test "$QMAKE" != "false"], [
+      PKG_CHECK_MODULES([QTCORE], [Qt5Core], [
+        PKG_CHECK_MODULES([QTGUI], [Qt5Widgets Qt5PrintSupport], [
+          use_qt="Yes"
+        ], [
+          use_qt="No (QtGui not available)"
+        ])
+      ], [
+        use_qt="No (QtCore not available)"
+      ])
+    ], [
+      use_qt="No (qmake not found)"
+    ])
   ])
 
   AS_IF([test "x$with_qt" = "xyes" && test "x$use_qt" != "xYes"], [
