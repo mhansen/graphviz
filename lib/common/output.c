@@ -32,13 +32,12 @@ static void agputs (const char* s, FILE* fp)
 {
     putstr(fp, s);
 }
-static void agputc (int c, FILE* fp)
-{
+
+static void agputc(char c, FILE *fp) {
     static char buf[2] = {'\0','\0'};
     buf[0] = c;
     putstr(fp, buf);
 }
-
 
 static void printstring(FILE * f, char *prefix, char *s)
 {
@@ -95,16 +94,15 @@ static char* canon (graph_t *g, char* s)
     return cs;
 }
 
-static void writenodeandport(FILE * f, node_t * node, char *port)
-{
+static void writenodeandport(FILE *f, node_t *node, char *portname) {
     char *name;
     if (IS_CLUST_NODE(node))
 	name = canon (agraphof(node), strchr(agnameof(node), ':') + 1);
     else
 	name = agcanonStr (agnameof(node));
     printstring(f, " ", name); /* slimey i know */
-    if (port && *port)
-	printstring(f, ":", agcanonStr(port));
+    if (portname && *portname)
+	printstring(f, ":", agcanonStr(portname));
 }
 
 /* _write_plain:
@@ -190,15 +188,13 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 static void set_record_rects(node_t * n, field_t * f, agxbuf * xb)
 {
     int i;
-    char buf[BUFSIZ];
 
     if (f->n_flds == 0) {
-	snprintf(buf, sizeof(buf), "%.5g,%.5g,%.5g,%.5g ",
+	agxbprint(xb, "%.5g,%.5g,%.5g,%.5g ",
 		f->b.LL.x + ND_coord(n).x,
 		YDIR(f->b.LL.y + ND_coord(n).y),
 		f->b.UR.x + ND_coord(n).x,
 		YDIR(f->b.UR.y + ND_coord(n).y));
-	agxbput(xb, buf);
     }
     for (i = 0; i < f->n_flds; i++)
 	set_record_rects(n, f->fld[i], xb);
@@ -231,7 +227,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 {
     int e_arrows;		/* graph has edges with end arrows */
     int s_arrows;		/* graph has edges with start arrows */
-    int i, j, sides;
+    int j, sides;
     char buf[BUFSIZ];		/* Used only for small strings */
     char xbuffer[BUFSIZ];	/* Initial buffer for xb */
     agxbuf xb;
@@ -298,7 +294,6 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 	    agset(n, "rects", agxbuse(&xb));
 	} else {
 	    polygon_t *poly;
-	    int i;
 	    if (N_vertices && isPolygon(n)) {
 		poly = ND_shape_info(n);
 		sides = poly->sides;
@@ -311,7 +306,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 		    if (sides < 3)
 			sides = 8;
 		}
-		for (i = 0; i < sides; i++) {
+		for (int i = 0; i < sides; i++) {
 		    if (i > 0)
 			agxbputc(&xb, ' ');
 		    if (poly->sides >= 3)
@@ -332,22 +327,20 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 		    continue;
 		if (ED_spl(e) == NULL)
 		    continue;	/* reported in postproc */
-		for (i = 0; i < ED_spl(e)->size; i++) {
+		for (int i = 0; i < ED_spl(e)->size; i++) {
 		    if (i > 0)
 			agxbputc(&xb, ';');
 		    if (ED_spl(e)->list[i].sflag) {
 			s_arrows = 1;
-			snprintf(buf, sizeof(buf), "s,%.5g,%.5g ",
+			agxbprint(&xb, "s,%.5g,%.5g ",
 				ED_spl(e)->list[i].sp.x,
 				YDIR(ED_spl(e)->list[i].sp.y));
-			agxbput(&xb, buf);
 		    }
 		    if (ED_spl(e)->list[i].eflag) {
 			e_arrows = 1;
-			snprintf(buf, sizeof(buf), "e,%.5g,%.5g ",
+			agxbprint(&xb, "e,%.5g,%.5g ",
 				ED_spl(e)->list[i].ep.x,
 				YDIR(ED_spl(e)->list[i].ep.y));
-			agxbput(&xb, buf);
 		    }
 		    for (j = 0; j < ED_spl(e)->list[i].size; j++) {
 			if (j > 0)
