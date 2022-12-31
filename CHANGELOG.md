@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Autotools build system no longer looks for `python` binaries. The Python
   interpreter is unconditionally assumed to be `python3`. The configure option
   `--enable-python` is now an alias for `--enable-python3`.
+- The CMake build system, when building `gvedit`, will now look for and use Qt6
+  in preference over Qt5. #2233
 
 ### Fixed
 

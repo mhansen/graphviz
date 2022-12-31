@@ -1,5 +1,11 @@
 if(with_gvedit)
-  find_package(Qt5 COMPONENTS Core PrintSupport Widgets REQUIRED)
+  find_package(Qt6 COMPONENTS Core PrintSupport Widgets)
+  if(Qt6_FOUND)
+    set(QT_LIBS Qt6::Core Qt6::PrintSupport Qt6::Widgets)
+  else()
+    find_package(Qt5 COMPONENTS Core PrintSupport Widgets REQUIRED)
+    set(QT_LIBS Qt5::Core Qt5::PrintSupport Qt5::Widgets)
+  endif()
 
   add_executable(gvedit
     csettings.cpp
@@ -34,7 +40,7 @@ if(with_gvedit)
     gvc
   )
 
-  target_link_libraries(gvedit PRIVATE Qt5::Core Qt5::PrintSupport Qt5::Widgets)
+  target_link_libraries(gvedit PRIVATE ${QT_LIBS})
 
   if(EXPAT_FOUND)
     target_include_directories(gvedit SYSTEM PRIVATE ${EXPAT_INCLUDE_DIRS})
