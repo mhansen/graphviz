@@ -12,8 +12,6 @@
 #include "country_graph_coloring.h"
 #include <math.h>
 #include "power.h"
-
-#include <sfdpgen/PriorityQueue.h>
 #include <stdbool.h>
 #include <time.h>
 

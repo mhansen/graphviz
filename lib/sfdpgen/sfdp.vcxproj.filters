@@ -26,9 +26,6 @@
     <ClCompile Include="post_process.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PriorityQueue.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfdpinit.c">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -26,22 +26,14 @@ struct Multilevel_struct {
   Multilevel next;
   Multilevel prev;
   int delete_top_level_A;
-  int coarsen_scheme_used;/* to get from previous level to here */
 };
 
-enum {MAX_IND_VTX_SET_U = -100, MAX_IND_VTX_SET_F = -1, MAX_IND_VTX_SET_C = 0};
-
 enum {MAX_CLUSTER_SIZE = 4};
-
-enum {EDGE_BASED_STA, COARSEN_INDEPENDENT_EDGE_SET, COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE, COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_LEAVES_FIRST, COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST, COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_DEGREE_SCALED, COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_CLUSTER_PERNODE_LEAVES_FIRST, EDGE_BASED_STO, VERTEX_BASED_STA, COARSEN_INDEPENDENT_VERTEX_SET, COARSEN_INDEPENDENT_VERTEX_SET_RS, VERTEX_BASED_STO, COARSEN_HYBRID};
-
-enum {COARSEN_MODE_GENTLE, COARSEN_MODE_FORCEFUL};
 
 struct Multilevel_control_struct {
   int minsize;
   double min_coarsen_factor;
   int maxlevel;
-  int coarsen_mode;
 };
 
 typedef struct Multilevel_control_struct *Multilevel_control;

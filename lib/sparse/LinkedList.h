@@ -33,25 +33,6 @@ SingleLinkedList SingleLinkedList_get_next(SingleLinkedList l);
 
 void SingleLinkedList_print(SingleLinkedList head, void (*linkedlist_print)(void*));
 
-
-typedef struct DoubleLinkedList_struct* DoubleLinkedList;
-
-struct DoubleLinkedList_struct {
-  void *data;
-  DoubleLinkedList next;
-  DoubleLinkedList prev;
-};
-
-DoubleLinkedList DoubleLinkedList_new(void *data);
-void DoubleLinkedList_delete(DoubleLinkedList head, void (*linklist_deallocator)(void*));
-DoubleLinkedList DoubleLinkedList_prepend(DoubleLinkedList l, void *data);
-
-void* DoubleLinkedList_get_data(DoubleLinkedList l);
-
-DoubleLinkedList DoubleLinkedList_get_next(DoubleLinkedList l);
-
-void DoubleLinkedList_delete_element(DoubleLinkedList l,  void (*linklist_deallocator)(void*), DoubleLinkedList *head);
-
 #ifdef __cplusplus
 }
 #endif
