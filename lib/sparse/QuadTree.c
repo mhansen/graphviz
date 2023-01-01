@@ -21,7 +21,7 @@ extern double distance_cropped(double *x, int dim, int i, int j);
 struct node_data_struct {
   double node_weight;
   double *coord;
-  double id;
+  int id;
   void *data;
 };
 
