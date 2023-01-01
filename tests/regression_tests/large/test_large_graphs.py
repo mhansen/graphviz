@@ -4,16 +4,12 @@ Tests of large and/or expensive graphs.
 
 import os
 from pathlib import Path
-import platform
 import subprocess
 import sys
-import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../tests"))
 from gvtest import dot #pylint: disable=wrong-import-position
 
-@pytest.mark.xfail(platform.system() == "Darwin",
-                   reason="https://gitlab.com/graphviz/graphviz/-/issues/1710")
 def test_long_chain():
   """
   This test will fail on 32bit Windows machine if compiled with stack size < 16MB.

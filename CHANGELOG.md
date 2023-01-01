@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   in preference over Qt5. #2233
 - Reserved stack size on Windows for the `dot.exe` binary has been increased
   from ~3.8MB to 32MB. #1710
+- Reserved stack size on macOS for the `dot` binary when built with CMake has
+  been increased from 8MB to 32MB. #1710
 
 ### Fixed
 
