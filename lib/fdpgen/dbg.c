@@ -362,7 +362,7 @@ static void pswrite(Agraph_t * g, FILE * fp, int expMode)
 	wd = data->wd;
 	ht = data->ht;
 	fprintf(fp, "%f %f %f %f doBox\n", wd, ht,
-		data->pos.x - (wd / 2), data->pos.y - (ht / 2));
+		data->pos.x - wd / 2, data->pos.y - ht / 2);
     }
 #else
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -372,9 +372,9 @@ static void pswrite(Agraph_t * g, FILE * fp, int expMode)
 	    double r;
 	    wd = ND_width(n);
 	    ht = ND_height(n);
-	    r = sqrt((wd * wd / 4) + ht * ht / 4);
+	    r = sqrt(wd * wd / 4 + ht * ht / 4);
 	    fprintf(fp, "%f inch %f inch %f inch %f inch doBox\n", wd, ht,
-		    ND_pos(n)[0] - (wd / 2), ND_pos(n)[1] - (ht / 2));
+		    ND_pos(n)[0] - wd / 2, ND_pos(n)[1] - ht / 2);
 	    fprintf(fp, "%f inch %f inch %f inch drawCircle\n",
 		    ND_pos(n)[0], ND_pos(n)[1], r);
 	} else {

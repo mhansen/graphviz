@@ -354,7 +354,7 @@ static void addEdge(edge_t * de, edge_t * e)
     short cnt = ED_count(de);
     edge_t **el;
 
-    el = (edge_t **) (ED_to_virt(de));
+    el = (edge_t**)ED_to_virt(de);
     el = gv_recalloc(el, cnt, cnt + 1, sizeof(edge_t*));
     el[cnt] = e;
     ED_to_virt(de) = (edge_t *) el;
@@ -403,7 +403,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
 
     dg = agopen("derived", Agstrictdirected,NULL);
     agbindrec(dg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-    GD_alg(dg) = NEW(gdata);	/* freed in freeDeriveGraph */
+    GD_alg(dg) = gv_alloc(sizeof(gdata)); // freed in freeDeriveGraph
 #ifdef DEBUG
     GORIG(dg) = g;
 #endif
@@ -984,7 +984,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 	{
 	if (!strncmp(agnameof(subg), "cluster", 7)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-	    GD_alg(subg) = NEW(gdata);	/* freed in cleanup_subgs */
+	    GD_alg(subg) = gv_alloc(sizeof(gdata)); // freed in cleanup_subgs
 	    GD_ndim(subg) = GD_ndim(agroot(parent));
 	    LEVEL(subg) = LEVEL(parent) + 1;
 	    GPARENT(subg) = parent;
@@ -1010,7 +1010,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 static void fdp_init_graph(Agraph_t * g)
 {
     setEdgeType (g, EDGETYPE_LINE);
-    GD_alg(g) = NEW(gdata);	/* freed in cleanup_graph */
+    GD_alg(g) = gv_alloc(sizeof(gdata)); // freed in cleanup_graph
     GD_ndim(agroot(g)) = late_int(g, agattr(g,AGRAPH, "dim", NULL), 2, 2);
     Ndim = GD_ndim(agroot(g)) = MIN(GD_ndim(agroot(g)), MAXDIM);
 

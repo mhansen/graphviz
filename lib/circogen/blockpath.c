@@ -216,7 +216,7 @@ static Agraph_t *remove_pair_edges(Agraph_t * ing)
     nodeCount = agnnodes(g);
     deglist_t dl = getList(g);
 
-    while (counter < (nodeCount - 3)) {
+    while (counter < nodeCount - 3) {
 	currnode = deglist_is_empty(&dl) ? NULL : deglist_pop(&dl);
 
 	/* Remove all adjacent nodes since they have to be reinserted */
@@ -270,7 +270,7 @@ measure_distance(Agnode_t * n, Agnode_t * ancestor, int dist,
 	DISTONE(parent) = dist;
     } else if (dist > DISTONE(parent)) {
 	if (LEAFONE(parent) != change) {
-	    if (!DISTTWO(parent) || (LEAFTWO(parent) != change))
+	    if (!DISTTWO(parent) || LEAFTWO(parent) != change)
 		change = LEAFONE(parent);
 	    LEAFTWO(parent) = LEAFONE(parent);
 	    DISTTWO(parent) = DISTONE(parent);
@@ -295,17 +295,16 @@ static nodelist_t *find_longest_path(Agraph_t * tree)
     Agnode_t *n;
     Agedge_t *e;
     Agnode_t *common = 0;
-    nodelist_t *path;
     nodelist_t *endPath;
     int maxlength = 0;
     int length;
 
     if (agnnodes(tree) == 1) {
-	path = mkNodelist();
+	nodelist_t *beginPath = mkNodelist();
 	n = agfstnode(tree);
-	appendNodelist(path, NULL, n);
+	appendNodelist(beginPath, NULL, n);
 	SET_ONPATH(n);
-	return path;
+	return beginPath;
     }
 
     for (n = agfstnode(tree); n; n = agnxtnode(tree, n)) {
@@ -326,12 +325,12 @@ static nodelist_t *find_longest_path(Agraph_t * tree)
 	}
     }
 
-    path = mkNodelist();
+    nodelist_t *beginPath = mkNodelist();
     for (n = LEAFONE(common); n != common; n = TPARENT(n)) {
-	appendNodelist(path, NULL, n);
+	appendNodelist(beginPath, NULL, n);
 	SET_ONPATH(n);
     }
-    appendNodelist(path, NULL, common);
+    appendNodelist(beginPath, NULL, common);
     SET_ONPATH(common);
 
     if (DISTTWO(common)) {	/* 2nd path might be empty */
@@ -340,10 +339,10 @@ static nodelist_t *find_longest_path(Agraph_t * tree)
 	    appendNodelist(endPath, NULL, n);
 	    SET_ONPATH(n);
 	}
-	reverseAppend(path, endPath);
+	reverseAppend(beginPath, endPath);
     }
 
-    return path;
+    return beginPath;
 }
 
 /* dfs:
@@ -444,7 +443,7 @@ static int count_all_crossings(nodelist_t * list, Agraph_t * subg)
 		     eitem = dtnext(openEdgeList, eitem)) {
 		    ep = eitem->edge;
 		    if (EDGEORDER(ep) > EDGEORDER(e)) {
-			if ((aghead(ep) != n) && (agtail(ep) != n))
+			if (aghead(ep) != n && agtail(ep) != n)
 			    crossings++;
 		    }
 		}
@@ -525,7 +524,7 @@ static nodelist_t *reduce_edge_crossings(nodelist_t * list,
 	origCrossings = crossings;
 	list = reduce(list, subg, &crossings);
 	/* return if no crossings or no improvement */
-	if ((origCrossings == crossings) || (crossings == 0))
+	if (origCrossings == crossings || crossings == 0)
 	    return list;
     }
     return list;
@@ -646,7 +645,7 @@ nodelist_t *layout_block(Agraph_t * g, block_t * sn, double min_dist)
     if (N == 1)
 	radius = 0;
     else
-	radius = (N * (min_dist + largest_node)) / (2 * M_PI);
+	radius = N * (min_dist + largest_node) / (2 * M_PI);
 
     for (item = longest_path->first; item; item = item->next) {
 	n = item->curr;
@@ -662,7 +661,7 @@ nodelist_t *layout_block(Agraph_t * g, block_t * sn, double min_dist)
 	n = item->curr;
 	POSITION(n) = k;
 	PSI(n) = 0.0;
-	theta = k * ((2.0 * M_PI) / N);
+	theta = k * (2.0 * M_PI / N);
 
 	ND_pos(n)[0] = radius * cos(theta);
 	ND_pos(n)[1] = radius * sin(theta);

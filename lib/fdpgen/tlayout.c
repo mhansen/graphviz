@@ -73,12 +73,8 @@ typedef struct {
     double T0;          /* initial temperature */
     int smode;          /* seed mode */
     double Cell;	/* grid cell size */
-    double Cell2;	/* Cell*Cell */
-    double K2;		/* K*K */
     double Wd;		/* half-width of boundary */
     double Ht;		/* half-height of boundary */
-    double Wd2;		/* Wd*Wd */
-    double Ht2;		/* Ht*Ht */
     int pass1;		/* iterations used in pass 1 */
     int loopcnt;        /* actual iterations in this pass */
 } parms_t;
@@ -97,12 +93,8 @@ static parms_t parms;
 #define T_T0        (parms.T0)
 #define T_smode     (parms.smode)
 #define T_Cell      (parms.Cell)
-#define T_Cell2     (parms.Cell2)
-#define T_K2        (parms.K2)
 #define T_Wd        (parms.Wd)
 #define T_Ht        (parms.Ht)
-#define T_Wd2       (parms.Wd2)
-#define T_Ht2       (parms.Ht2)
 #define T_pass1     (parms.pass1)
 #define T_loopcnt   (parms.loopcnt)
 
@@ -196,12 +188,10 @@ void fdp_initParams(graph_t * g)
     }
 
     T_pass1 = T_unscaled * T_maxIters / 100;
-    T_K2 = T_K * T_K;
 
     if (T_useGrid) {
 	if (T_Cell <= 0.0)
 	    T_Cell = 3 * T_K;
-	T_Cell2 = T_Cell * T_Cell;
     }
 #ifdef DEBUG
     if (Verbose) {
@@ -227,9 +217,9 @@ doRep(node_t * p, node_t * q, double xdelta, double ydelta, double dist2)
     }
     if (T_useNew) {
 	dist = sqrt(dist2);
-	force = T_K2 / (dist * dist2);
+	force = T_K * T_K / (dist * dist2);
     } else
-	force = T_K2 / dist2;
+	force = T_K * T_K / dist2;
     if (IS_PORT(p) && IS_PORT(q))
 	force *= 10.0;
     DISP(q)[0] += xdelta * force;
@@ -275,7 +265,7 @@ static void doNeighbor(Grid * grid, int i, int j, node_list * nodes)
 		xdelta = (ND_pos(q))[0] - (ND_pos(p))[0];
 		ydelta = (ND_pos(q))[1] - (ND_pos(p))[1];
 		dist2 = xdelta * xdelta + ydelta * ydelta;
-		if (dist2 < T_Cell2)
+		if (dist2 < T_Cell * T_Cell)
 		    doRep(p, q, xdelta, ydelta, dist2);
 	    }
 	}
@@ -374,7 +364,7 @@ static void updatePos(Agraph_t * g, double temp, bport_t * pp)
 
 	/* if ports, limit by boundary */
 	if (pp) {
-	    d = sqrt(x * x / T_Wd2 + y * y / T_Ht2);
+	    d = sqrt(x * x / (T_Wd * T_Wd) + y * y / (T_Ht * T_Ht));
 	    if (IS_PORT(n)) {
 		ND_pos(n)[0] = x / d;
 		ND_pos(n)[1] = y / d;
@@ -525,8 +515,6 @@ static pointf initPositions(graph_t * g, bport_t * pp)
     } else {
 	ctr.x = ctr.y = 0;
     }
-    T_Wd2 = T_Wd * T_Wd;
-    T_Ht2 = T_Ht * T_Ht;
 
     /* Set seed value */
     if (T_smode == INIT_RANDOM)
