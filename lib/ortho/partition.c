@@ -322,12 +322,12 @@ static void traverse_polygon(bitarray_t *visited, boxes_t *decomp,
   int mnew;
   int v0, v1;
 
-  if (trnum <= 0 || bitarray_get(*visited, trnum))
+  if (trnum <= 0 || bitarray_get(*visited, (size_t)trnum))
     return;
 
   t = &tr->data[trnum];
 
-  bitarray_set(visited, trnum, true);
+  bitarray_set(visited, (size_t)trnum, true);
   
   if (t->hi.y > t->lo.y + C_EPS && FP_EQUAL(seg[t->lseg].v0.x, seg[t->lseg].v1.x) &&
       FP_EQUAL(seg[t->rseg].v0.x, seg[t->rseg].v1.x)) {
@@ -684,9 +684,7 @@ dumpSegs (segment_t* sg, int n)
 }
 #endif
 
-boxf*
-partition (cell* cells, int ncells, int* nrects, boxf bb)
-{
+boxf *partition(cell *cells, int ncells, size_t *nrects, boxf bb) {
     int nsegs = 4*(ncells+1);
     segment_t* segs = gv_calloc(nsegs + 1, sizeof(segment_t));
     int* permute = gv_calloc(nsegs + 1, sizeof(int));

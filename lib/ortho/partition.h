@@ -4,7 +4,7 @@
  */
 
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@
 #pragma once
 
 #include <ortho/maze.h>
+#include <stddef.h>
 
 /**
  * @brief partitions space around cells (nodes) into rectangular tiles
@@ -25,4 +26,4 @@
  * @returns array of the tiles
  */
 
-boxf* partition(cell* cells, int ncells, int* nrects, boxf bb);
+boxf *partition(cell *cells, int ncells, size_t *nrects, boxf bb);

@@ -56,9 +56,7 @@ char* post = "showpage\n";
 /// @brief dumps @ref maze::gcells and @ref maze::cells via rects to PostScript
 
 static void
-psdump (cell* gcells, int n_gcells, boxf BB, boxf* rects, int nrect)
-{
-    int i;
+psdump(cell *gcells, int n_gcells, boxf BB, boxf *rects, size_t nrect) {
     boxf bb;
     box absbb;
 
@@ -72,12 +70,12 @@ psdump (cell* gcells, int n_gcells, boxf BB, boxf* rects, int nrect)
 
     fprintf (stderr, "%f %f translate\n", 10-BB.LL.x, 10-BB.LL.y);
     fputs ("0 0 1 setrgbcolor\n", stderr);
-    for (i = 0; i < n_gcells; i++) {
+    for (int i = 0; i < n_gcells; i++) {
       bb = gcells[i].bb;
       fprintf (stderr, "%f %f %f %f node\n", bb.LL.x, bb.LL.y, bb.UR.x, bb.UR.y);
     }
     fputs ("0 0 0 setrgbcolor\n", stderr);
-    for (i = 0; i < nrect; i++) {
+    for (size_t i = 0; i < nrect; i++) {
       bb = rects[i];
       fprintf (stderr, "%f %f %f %f cell\n", bb.LL.x, bb.LL.y, bb.UR.x, bb.UR.y);
     }
@@ -468,7 +466,6 @@ maze *mkMaze(graph_t *g) {
     node_t* n;
     maze* mp = gv_alloc(sizeof(maze));
     boxf* rects;
-    int i, nrect;
     cell* cp;
     double w2, h2;
     boxf bb, BB;
@@ -499,6 +496,7 @@ maze *mkMaze(graph_t *g) {
     BB.LL.y -= MARGIN;
     BB.UR.x += MARGIN;
     BB.UR.y += MARGIN;
+    size_t nrect;
     rects = partition (mp->gcells, mp->ngcells, &nrect, BB);
 
 #ifdef DEBUG
@@ -506,7 +504,7 @@ maze *mkMaze(graph_t *g) {
 #endif
     mp->cells = gv_calloc(nrect, sizeof(cell));
     mp->ncells = nrect;
-    for (i = 0; i < nrect; i++) {
+    for (size_t i = 0; i < nrect; i++) {
 	mp->cells[i].bb = rects[i];
     }
     free (rects);

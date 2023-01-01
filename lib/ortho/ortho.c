@@ -1411,7 +1411,7 @@ static char* prolog2 =
 static char* epilog2 =
 "showpage\n\
 %%%%Trailer\n\
-%%%%BoundingBox: %d %d %d %d\n";
+%%%%BoundingBox: %.f %.f %.f %.f\n";
 
 static point
 coordOf (cell* cp, snode* np)
@@ -1536,7 +1536,6 @@ static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
 static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
                                route *route_list, epair_t es[]) {
     boxf bb, absbb;
-    box bbox;
 
     absbb.LL.x = absbb.LL.y = MAXDOUBLE;
     absbb.UR.x = absbb.UR.y = -MAXDOUBLE;
@@ -1564,6 +1563,7 @@ static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
       absbb.UR.y = MAX(absbb.UR.y, bb.UR.y);
     }
 
+    boxf bbox;
     bbox.LL.x = absbb.LL.x + TRANS;
     bbox.LL.y = absbb.LL.y + TRANS;
     bbox.UR.x = absbb.UR.x + TRANS;

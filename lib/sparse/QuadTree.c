@@ -370,7 +370,7 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
     center[i] = (xmin[i] + xmax[i])*0.5;
     width = MAX(width, xmax[i] - xmin[i]);
   }
-  if (width == 0) width = 0.00001;/* if we only have one point, width = 0! */
+  width = fmax(width, 0.00001);/* if we only have one point, width = 0! */
   width *= 0.52;
   qt = QuadTree_new(dim, center, width, max_level);
 
@@ -658,12 +658,11 @@ void QuadTree_print(FILE *fp, QuadTree q){
 
 
 static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, double *min, int *imin, int tentative){
-  /* get the narest point years to {x[0], ..., x[dim]} and store in y.*/
+  /* get the nearest point years to {x[0], ..., x[dim]} and store in y.*/
   SingleLinkedList l;
   double *coord, dist;
   int dim, i, iq = -1;
   double qmin;
-  double *point = x;
 
   if (!qt) return;
   dim = qt->dim;
@@ -671,7 +670,7 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, dou
   if (l){
     while (l){
       coord = node_data_get_coord(SingleLinkedList_get_data(l));
-      dist = point_distance(point, coord, dim);
+      dist = point_distance(x, coord, dim);
       if(*min < 0 || dist < *min) {
 	*min = dist;
 	*imin = node_data_get_id(SingleLinkedList_get_data(l));
@@ -682,7 +681,7 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, dou
   }
   
   if (qt->qts){
-    dist = point_distance(qt->center, point, dim); 
+    dist = point_distance(qt->center, x, dim); 
     if (*min >= 0 && (dist - sqrt((double) dim) * qt->width > *min)){
       return;
     } else {
@@ -690,7 +689,7 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, dou
 	qmin = -1;
 	for (i = 0; i < 1<<dim; i++){
 	  if (qt->qts[i]){
-	    dist = point_distance(qt->qts[i]->average, point, dim); 
+	    dist = point_distance(qt->qts[i]->average, x, dim);
 	    if (dist < qmin || qmin < 0){
 	      qmin = dist; iq = i;
 	    }

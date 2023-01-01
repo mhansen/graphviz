@@ -2122,9 +2122,9 @@ static boxf makeregularend(boxf b, int side, double y)
 {
   assert(side == BOTTOM || side == TOP);
   if (side == BOTTOM) {
-    return boxfof(b.LL.x, y, b.UR.x, b.LL.y);
+    return (boxf){{b.LL.x, y}, {b.UR.x, b.LL.y}};
   }
-  return boxfof(b.LL.x, b.UR.y, b.UR.x, y);
+  return (boxf){{b.LL.x, b.UR.y}, {b.UR.x, y}};
 }
 
 #ifndef DONT_WANT_ANY_ENDPOINT_PATH_REFINEMENT

@@ -52,24 +52,6 @@ GEOMPROCS_API void rect2poly(pointf *p);
 
 GEOMPROCS_API int line_intersect (pointf a, pointf b, pointf c, pointf d, pointf* p);
 
-static inline box boxof(int llx, int lly, int urx, int ury)
-{
-    box b;
-
-    b.LL.x = llx, b.LL.y = lly;
-    b.UR.x = urx, b.UR.y = ury;
-    return b;
-}
-
-static inline boxf boxfof(double llx, double lly, double urx, double ury)
-{
-    boxf b;
-
-    b.LL.x = llx, b.LL.y = lly;
-    b.UR.x = urx, b.UR.y = ury;
-    return b;
-}
-
 static inline point add_point(point p, point q)
 {
     point r;

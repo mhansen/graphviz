@@ -2037,7 +2037,7 @@ int make_html_label(void *obj, textlabel_t * lp)
 	rv |= size_html_tbl(g, lbl->u.tbl, NULL, &env);
 	wd2 = lbl->u.tbl->data.box.UR.x / 2;
 	ht2 = lbl->u.tbl->data.box.UR.y / 2;
-	box = boxfof(-wd2, -ht2, wd2, ht2);
+	box = (boxf){{-wd2, -ht2}, {wd2, ht2}};
 	pos_html_tbl(lbl->u.tbl, box, BOTTOM | RIGHT | TOP | LEFT);
 	lp->dimen.x = box.UR.x - box.LL.x;
 	lp->dimen.y = box.UR.y - box.LL.y;
@@ -2045,7 +2045,7 @@ int make_html_label(void *obj, textlabel_t * lp)
 	rv |= size_html_txt(GD_gvc(g), lbl->u.txt, &env);
 	wd2 = lbl->u.txt->box.UR.x  / 2;
 	ht2 = lbl->u.txt->box.UR.y  / 2;
-	box = boxfof(-wd2, -ht2, wd2, ht2);
+	box = (boxf){{-wd2, -ht2}, {wd2, ht2}};
 	lbl->u.txt->box = box;
 	lp->dimen.x = box.UR.x - box.LL.x;
 	lp->dimen.y = box.UR.y - box.LL.y;
