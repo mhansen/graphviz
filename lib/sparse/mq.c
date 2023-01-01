@@ -56,10 +56,12 @@
 */
 
 #define STANDALONE
+#include <cgraph/alloc.h>
+#include <cgraph/list.h>
+#include <limits.h>
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
 #include <sparse/mq.h>
-#include <sparse/LinkedList.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -222,6 +224,8 @@ static void Multilevel_MQ_Clustering_delete(Multilevel_MQ_Clustering grid){
   free(grid);
 }
 
+DEFINE_LIST(ints, int)
+
 static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ_Clustering grid, int maxcluster){
   int *matching = grid->matching;
   SparseMatrix A = grid->A;
@@ -236,11 +240,8 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
   int *mask;
   double maxgain = 0;
   double total_gain = 0;
-  SingleLinkedList *neighbors = NULL, lst;
 
-
-  neighbors = MALLOC(sizeof(SingleLinkedList)*n);
-  for (i = 0; i < n; i++) neighbors[i] = NULL;
+  ints_t *neighbors = gv_calloc(n, sizeof(ints_t));
 
   mq = grid->mq;
   mq_in = grid->mq_in;
@@ -375,8 +376,8 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
       jc = matching[jmax];
       if (jc == UNMATCHED){
 	fprintf(stderr, "maxgain=%f, merge %d, %d\n",maxgain, i, jmax);
-	neighbors[nc] = SingleLinkedList_new_int(jmax);
-	neighbors[nc] = SingleLinkedList_prepend_int(neighbors[nc], i);
+	ints_append(&neighbors[nc], jmax);
+	ints_append(&neighbors[nc], i);
 	dout_new[nc] = dout_i + dout_max;
 	matching[i] = matching[jmax] = nc;
 	wgt_new[nc] = wgt[i] + wgt[jmax];
@@ -384,7 +385,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
 	nc++;
       } else {	
 	fprintf(stderr,"maxgain=%f, merge with existing cluster %d, %d\n",maxgain, i, jc);
-	neighbors[jc] = SingleLinkedList_prepend_int(neighbors[jc], i);
+	ints_append(&neighbors[jc], i);
 	dout_new[jc] = dout_i + dout_max;
 	wgt_new[jc] += wgt[i];
 	matching[i] = jc;
@@ -397,7 +398,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
     } else {
       fprintf(stderr,"gain: %f -- no gain, skip merging node %d\n", maxgain, i);
       assert(maxgain <= 0);
-      neighbors[nc] = SingleLinkedList_new_int(i);
+      ints_append(&neighbors[nc], i);
       matching[i] = nc;
       deg_intra_new[nc] = deg_intra[i];
       wgt_new[nc] = wgt[i];
@@ -407,16 +408,12 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
 
     /* update scaled outdegree of neighbors of i and its merged node/cluster jmax */
     jc = matching[i];
-    lst = neighbors[jc];
-    do {
-      mask[*((int*) SingleLinkedList_get_data(lst))] = n+i;
-      lst = SingleLinkedList_get_next(lst);
-    } while (lst);
+    for (size_t l = ints_size(&neighbors[jc]) - 1; l != SIZE_MAX; --l) {
+      mask[ints_get(&neighbors[jc], l)] = n + i;
+    }
 
-    lst = neighbors[jc];
-
-    do {
-      k = *((int*) SingleLinkedList_get_data(lst));
+    for (size_t l = ints_size(&neighbors[jc]) - 1; l != SIZE_MAX; --l) {
+      k = ints_get(&neighbors[jc], l);
       for (j = ia[k]; j < ia[k+1]; j++){
 	jj = ja[j]; 
 	if (mask[jj] == n+i) continue;/* link to within cluster */
@@ -434,8 +431,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
 	  }
 	}
       }
-      lst = SingleLinkedList_get_next(lst);
-    } while (lst);
+    }
 
   }
 
@@ -507,7 +503,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
   }
 
  RETURN:
-  for (i = 0; i < n; i++) SingleLinkedList_delete(neighbors[i], free);
+  for (i = 0; i < n; i++) ints_free(&neighbors[i]);
   free(neighbors);
 
   free(deg_inter);
