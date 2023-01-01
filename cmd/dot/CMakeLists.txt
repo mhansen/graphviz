@@ -21,6 +21,12 @@ target_link_libraries(dot
   gvc
 )
 
+if(MINGW)
+  set_target_properties(dot PROPERTIES LINK_FLAGS -Wl,--stack,0x2000000)
+elseif(WIN32)
+  set_target_properties(dot PROPERTIES LINK_FLAGS /STACK:"33554432")
+endif()
+
 # Installation location of executables
 install(
   TARGETS dot
