@@ -346,7 +346,7 @@ static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_targe
 
 
 
-void modularity_clustering(SparseMatrix A, int inplace, int ncluster_target, int use_value,
+void modularity_clustering(SparseMatrix A, int inplace, int ncluster_target,
 			   int *nclusters, int **assignment, double *modularity){
   /* find a clustering of vertices by maximize modularity
      A: symmetric square matrix n x n. If real value, value will be used as edges weights, otherwise edge weights are considered as 1.
@@ -373,7 +373,7 @@ void modularity_clustering(SparseMatrix A, int inplace, int ncluster_target, int
 
   B = SparseMatrix_remove_diagonal(B);
 
-  if (B->type != MATRIX_TYPE_REAL || !use_value) B = SparseMatrix_set_entries_to_real_one(B);
+  if (B->type != MATRIX_TYPE_REAL) B = SparseMatrix_set_entries_to_real_one(B);
 
   hierachical_modularity_clustering(B, ncluster_target, nclusters, assignment, modularity);
 

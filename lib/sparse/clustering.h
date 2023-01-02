@@ -45,13 +45,12 @@ enum {CLUSTERING_MODULARITY = 0, CLUSTERING_MQ};
    maxcluster: used to specify the maximum number of cluster desired, e.g., maxcluster=10 means that a maximum of 10 clusters
    .   is desired. this may not always be realized, and modularity may be low when this is specified. Default: maxcluster = 0 (no limit)
 
-   use_value: whether to use the entry value, or treat edge weights as 1.
    nclusters: on output the number of clusters
    assignment: dimension n. Node i is assigned to cluster "assignment[i]". 0 <= assignment < nclusters.
    .   If *assignment = NULL on entry, it will be allocated. Otherwise used.
    modularity: achieve modularity
 */
-void modularity_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
+void modularity_clustering(SparseMatrix A, int inplace, int maxcluster,
 			   int *nclusters, int **assignment, double *modularity);
 
 #ifdef __cplusplus

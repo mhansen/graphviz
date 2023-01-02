@@ -498,14 +498,13 @@ static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* ed
   double ink0, ink1;
   pedge e;
   int i, j, jj;
-  int use_value_for_clustering = TRUE;
 
   SparseMatrix BB;
 
   /* B may contain negative entries */
   BB = SparseMatrix_copy(B);
   BB = SparseMatrix_apply_fun(BB, fabs);
-  modularity_clustering(BB, TRUE, 0, use_value_for_clustering, &nclusters, &assignment, &modularity);
+  modularity_clustering(BB, TRUE, 0, &nclusters, &assignment, &modularity);
   SparseMatrix_delete(BB);
 
   if (Verbose > 1) fprintf(stderr, "there are %d clusters, modularity = %f\n",nclusters, modularity);
