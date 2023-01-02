@@ -869,10 +869,10 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
 #ifdef DEBUG_0
   {
     FILE *f;
-    char fname[10000];
-    strcpy(fname,"/tmp/graph_layout_0_");
-    sprintf(&(fname[strlen(fname)]), "%d",n);
-    f = fopen(fname,"w");
+    agxbuf fname = {0};
+    agxbprint(&fname, "/tmp/graph_layout_0_%d", n);
+    f = fopen(agxbuse(&fname), "w");
+    agxbfree(&fname);
     export_embedding(f, dim, A, x, NULL);
     fclose(f);
   }
@@ -995,10 +995,10 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
 #ifdef DEBUG_PRINT_0
   {
     FILE *f;
-    char fname[10000];
-    strcpy(fname,"/tmp/graph_layout");
-    sprintf(&(fname[strlen(fname)]), "%d",n);
-    f = fopen(fname,"w");
+    agxbuf fname = {0};
+    agxbprint(&fname, "/tmp/graph_layout%d", n);
+    f = fopen(agxbuse(&fname), "w");
+    agxbfree(&fname);
     export_embedding(f, dim, A, x, NULL);
     fclose(f);
   }
