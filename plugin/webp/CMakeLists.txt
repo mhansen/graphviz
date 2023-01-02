@@ -35,6 +35,15 @@ if(WEBP_FOUND)
     target_link_libraries(gvplugin_webp
       ${CAIRO_LINK_LIBRARIES}
     )
+    if(PANGOCAIRO_FOUND)
+      target_include_directories(gvplugin_webp SYSTEM PRIVATE
+        ${PANGOCAIRO_INCLUDE_DIRS}
+      )
+
+      target_link_libraries(gvplugin_webp
+        ${PANGOCAIRO_LINK_LIBRARIES}
+      )
+    endif()
   endif()
 
   install(
