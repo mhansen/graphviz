@@ -34,7 +34,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
   grid->next = NULL;
   grid->prev = NULL;
   grid->delete_top_level_A = FALSE;
-  grid->matching = MALLOC(sizeof(double)*(n));
+  grid->matching = MALLOC(sizeof(double) * n);
   grid->deg = NULL;
   grid->agglomerate_regardless = FALSE;
 
@@ -46,7 +46,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
     double *indeg;
 
     grid->deg_total = 0.;
-    grid->deg = MALLOC(sizeof(double)*(n));
+    grid->deg = MALLOC(sizeof(double) * n);
     deg = grid->deg;
 
     indeg = MALLOC(sizeof(double)*n);
@@ -101,7 +101,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
   double *deg = grid->deg;
   double *deg_new;
   int i, j, jj, jc, jmax;
-  double inv_deg_total = 1./(grid->deg_total);
+  double inv_deg_total = 1./ grid->deg_total;
   double *deg_inter, gain;
   int *mask;
   double maxgain;
@@ -339,7 +339,7 @@ static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_targe
   if (*assignment){
     matching = *assignment; 
   } else {
-    matching = MALLOC(sizeof(int)*(grid->n));
+    matching = MALLOC(sizeof(int) * grid->n);
     *assignment = matching;
   }
   for (i = 0; i < grid->n; i++) (matching)[i] = (int) u[i];
