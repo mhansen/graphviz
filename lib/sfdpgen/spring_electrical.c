@@ -1170,10 +1170,10 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
 #ifdef DEBUG_0
   {
     FILE *f;
-    char fname[10000];
-    strcpy(fname,"/tmp/graph_layout_0_");
-    sprintf(&(fname[strlen(fname)]), "%d",n);
-    f = fopen(fname,"w");
+    agxbuf fname = {0};
+    agxbprint(&fname, "/tmp/graph_layout_0_%d", n);
+    f = fopen(agxbuse(&fname), "w");
+    agxbfree(&fname);
     export_embedding(f, dim, A, x, NULL);
     fclose(f);
   }
