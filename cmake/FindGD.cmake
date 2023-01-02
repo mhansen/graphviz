@@ -18,6 +18,11 @@ set(GD_INCLUDE_DIRS ${GD_INCLUDE_DIR})
 set(GD_LIBRARIES ${GD_LIBRARY})
 set(GD_RUNTIME_LIBRARIES ${GD_RUNTIME_LIBRARY})
 
+find_package(PkgConfig)
+if(PkgConfig_FOUND)
+  pkg_check_modules(GDLIB gdlib>=2.0.33)
+endif()
+
 if(GD_LIBRARY)
   find_program(GDLIB_CONFIG gdlib-config)
   if(GDLIB_CONFIG)
@@ -50,7 +55,7 @@ if(GD_LIBRARY)
       set(HAVE_GD_GIF 1)
     endif()
   else()
-    if(APPLE)
+    if(APPLE OR GDLIB_FOUND)
       # At time of writing, Macports does not package libgd. So assume the user
       # obtained this through Homebrew and hard code the options the Homebrew
       # package enables.
@@ -60,7 +65,9 @@ if(GD_LIBRARY)
       set(HAVE_GD_FREETYPE 1)
       set(HAVE_GD_GIF 1)
     else()
-      message(WARNING "gdlib-config not found; skipping feature checks")
+      message(
+        WARNING
+        "gdlib-config/gdlib pkgconfig not found; skipping feature checks")
     endif()
   endif()
 endif()
