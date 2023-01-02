@@ -589,11 +589,10 @@ static void hierachical_mq_clustering(SparseMatrix A, int maxcluster,
 
 
 
-void mq_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
+void mq_clustering(SparseMatrix A, int maxcluster, int use_value,
 			   int *nclusters, int **assignment, double *mq){
   /* find a clustering of vertices by maximize mq
      A: symmetric square matrix n x n. If real value, value will be used as edges weights, otherwise edge weights are considered as 1.
-     inplace: whether A can e modified. If true, A will be modified by removing diagonal.
      maxcluster: used to specify the maximum number of cluster desired, e.g., maxcluster=10 means that a maximum of 10 clusters
      .   is desired. this may not always be realized, and mq may be low when this is specified. Default: maxcluster = 0 
      nclusters: on output the number of clusters
@@ -605,7 +604,7 @@ void mq_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
 
   B = SparseMatrix_symmetrize(A, false);
 
-  if (!inplace && B == A) {
+  if (B == A) {
     B = SparseMatrix_copy(A);
   }
 
