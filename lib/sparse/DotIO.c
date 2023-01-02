@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #define STANDALONE
+#include <cgraph/agxbuf.h>
 #include <cgraph/itos.h>
 #include <sparse/general.h>
 #include <sparse/DotIO.h>
@@ -27,20 +28,19 @@ typedef struct {
 
 #define ND_id(n)  (((Agnodeinfo_t*)((n)->base.data))->id)
 
-static void color_string(int slen, char *buf, int dim, double *color){
+static void color_string(agxbuf *buf, int dim, double *color){
   if (dim > 3 || dim < 1){
     fprintf(stderr,"can only 1, 2 or 3 dimensional color space. with color value between 0 to 1\n");
     assert(0);
   }
-  assert(slen >= 3);
   if (dim == 3){
-    sprintf(buf,"#%02x%02x%02x", MIN((unsigned int)(color[0]*255),255), 
+    agxbprint(buf, "#%02x%02x%02x", MIN((unsigned int)(color[0] *255), 255),
 	    MIN((unsigned int) (color[1]*255), 255), MIN((unsigned int)(color[2]*255), 255));
   } else if (dim == 1){
-    sprintf(buf,"#%02x%02x%02x", MIN((unsigned int)(color[0]*255),255), 
+    agxbprint(buf, "#%02x%02x%02x", MIN((unsigned int)(color[0] * 255), 255),
 	    MIN((unsigned int) (color[0]*255), 255), MIN((unsigned int)(color[0]*255), 255));
   } else if (dim == 2){
-    sprintf(buf,"#%02x%02x%02x", MIN((unsigned int)(color[0]*255),255), 
+    agxbprint(buf, "#%02x%02x%02x", MIN((unsigned int)(color[0] * 255), 255),
 	    0, MIN((unsigned int)(color[1]*255), 255));
   }
 }
@@ -51,8 +51,7 @@ void attach_edge_colors(Agraph_t* g, int dim, double *colors){
   Agsym_t* sym = agattr(g, AGEDGE, "color", 0); 
   Agedge_t* e;
   Agnode_t* n;
-  enum {slen = 1024};
-  char buf[slen];
+  agxbuf buf = {0};
   unsigned row, col;
   int ie = 0;
 
@@ -64,12 +63,12 @@ void attach_edge_colors(Agraph_t* g, int dim, double *colors){
     for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
       col = ND_id(aghead(e));
       if (row == col) continue;
-      color_string(slen, buf, dim, colors + ie*dim);
-      agxset(e, sym, buf);
+      color_string(&buf, dim, colors + ie*dim);
+      agxset(e, sym, agxbuse(&buf));
       ie++;
     }
   }
-
+  agxbfree(&buf);
 }
 
 /* SparseMatrix_import_dot:
