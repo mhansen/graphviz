@@ -42,7 +42,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
     double modularity = 0;
     int *ia = A->ia, *ja = A->ja;
     double deg_total = 0;
-    double *deg, *a = (double*) (A->a);
+    double *deg, *a = A->a;
     double *indeg;
 
     grid->deg_total = 0.;
@@ -97,7 +97,6 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
   int n = grid->n, level = grid->level, nc = 0;
   double modularity = 0;
   int *ia = A->ia, *ja = A->ja;
-  double *a;
   double *deg = grid->deg;
   double *deg_new;
   int i, j, jj, jc, jmax;
@@ -119,7 +118,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
   /* gain in merging node i into cluster j is
      deg(i,j)/deg_total - 2*deg(i)*deg(j)/deg_total^2
   */
-  a = (double*) A->a;
+  double *a = A->a;
   for (i = 0; i < n; i++){
     if (matching[i] != UNMATCHED) continue;
     /* accumulate connections between i and clusters */
