@@ -535,7 +535,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_new(SparseMatrix A0, in
 
 
 static void hierachical_mq_clustering(SparseMatrix A, int maxcluster,
-					      int *nclusters, int **assignment, double *mq, int *flag){
+					      int *nclusters, int **assignment, double *mq){
   /* find a clustering of vertices by maximize mq
      A: symmetric square matrix n x n. If real value, value will be used as edges weights, otherwise edge weights are considered as 1.
      maxcluster: used to specify the maximum number of cluster desired, e.g., maxcluster=10 means that a maximum of 10 clusters
@@ -551,8 +551,6 @@ static void hierachical_mq_clustering(SparseMatrix A, int maxcluster,
   assert(A->m == A->n);
 
   *mq = 0.;
-
-  *flag = 0;
 
   grid = Multilevel_MQ_Clustering_new(A, maxcluster);
 
@@ -617,7 +615,7 @@ void mq_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
 
   if (B->type != MATRIX_TYPE_REAL || !use_value) B = SparseMatrix_set_entries_to_real_one(B);
 
-  hierachical_mq_clustering(B, maxcluster, nclusters, assignment, mq, flag);
+  hierachical_mq_clustering(B, maxcluster, nclusters, assignment, mq);
 
   if (B != A) SparseMatrix_delete(B);
 
