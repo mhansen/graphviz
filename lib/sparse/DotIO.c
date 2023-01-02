@@ -10,7 +10,6 @@
 
 #define STANDALONE
 #include <cgraph/agxbuf.h>
-#include <cgraph/itos.h>
 #include <sparse/general.h>
 #include <sparse/DotIO.h>
 #include <sparse/clustering.h>
@@ -673,9 +672,10 @@ void attached_clustering(Agraph_t* g, int maxcluster, int clustering_scheme){
     for (i = 0; i < nnodes; i++) (clusters)[i]++;/* make into 1 based */
     for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
       i = ND_id(n);
-      char value_buffer[CHARS_FOR_NUL_TERM_INT];
-      snprintf(value_buffer, sizeof(value_buffer), "%d", clusters[i]);
-      agxset(n, clust_sym, value_buffer);
+      agxbuf value_buffer = {0};
+      agxbprint(&value_buffer, "%d", clusters[i]);
+      agxset(n, clust_sym, agxbuse(&value_buffer));
+      agxbfree(&value_buffer);
     }
     if (Verbose){
       fprintf(stderr," no complement clustering info in dot file, using modularity clustering. Modularity = %f, ncluster=%d\n",modularity, nc);
