@@ -113,7 +113,7 @@ if(with_smyrna)
     ${GLUT_LIBRARIES}
     ${GTK2_LIBRARIES}
     ${GTKGLEXT_LIBRARIES}
-    ${GTS_LIBRARIES}
+    ${GTS_LINK_LIBRARIES}
     ${XRENDER_LIBRARIES}
   )
 

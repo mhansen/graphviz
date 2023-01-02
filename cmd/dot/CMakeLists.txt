@@ -76,7 +76,7 @@ if(PkgConfig_FOUND)
   pkg_check_modules(GTS gts)
   if(GTS_FOUND)
     target_include_directories(dot_builtins SYSTEM PRIVATE ${GTS_INCLUDE_DIRS})
-    target_link_libraries(dot_builtins PRIVATE ${GTS_LIBRARIES})
+    target_link_libraries(dot_builtins PRIVATE ${GTS_LINK_LIBRARIES})
   endif()
 
   pkg_check_modules(LASI lasi)
