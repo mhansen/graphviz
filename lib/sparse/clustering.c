@@ -186,7 +186,6 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
   if (Verbose) fprintf(stderr,"modularity = %f new modularity = %f level = %d, n = %d, nc = %d, gain = %g\n", modularity, modularity + total_gain, 
 		       level, n, nc, total_gain);
 
-  /* !!!!!!!!!!!!!!!!!!!!!! */
   if (ncluster_target > 0){
     if (nc <= ncluster_target && n >= ncluster_target){
       if (n - ncluster_target > ncluster_target - nc){/* ncluster = nc */
