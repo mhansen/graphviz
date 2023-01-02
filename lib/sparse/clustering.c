@@ -39,7 +39,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
 
   if (level == 0){
     double modularity = 0;
-    int *ia = A->ia, *ja = A->ja, n = A->n;
+    int *ia = A->ia, *ja = A->ja;
     double deg_total = 0;
     double *deg, *a = (double*) (A->a);
     double *indeg;
