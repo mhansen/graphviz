@@ -589,7 +589,7 @@ static void hierachical_mq_clustering(SparseMatrix A, int maxcluster,
 
 
 
-void mq_clustering(SparseMatrix A, int maxcluster, int use_value,
+void mq_clustering(SparseMatrix A, int maxcluster,
 			   int *nclusters, int **assignment, double *mq){
   /* find a clustering of vertices by maximize mq
      A: symmetric square matrix n x n. If real value, value will be used as edges weights, otherwise edge weights are considered as 1.
@@ -610,7 +610,7 @@ void mq_clustering(SparseMatrix A, int maxcluster, int use_value,
 
   B = SparseMatrix_remove_diagonal(B);
 
-  if (B->type != MATRIX_TYPE_REAL || !use_value) B = SparseMatrix_set_entries_to_real_one(B);
+  if (B->type != MATRIX_TYPE_REAL) B = SparseMatrix_set_entries_to_real_one(B);
 
   hierachical_mq_clustering(B, maxcluster, nclusters, assignment, mq);
 
