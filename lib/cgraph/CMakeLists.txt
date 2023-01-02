@@ -17,7 +17,6 @@ add_library(cgraph SHARED
   cghdr.h
   cgraph.h
   exit.h
-  itos.h
   likely.h
   list.h
   prisize_t.h
