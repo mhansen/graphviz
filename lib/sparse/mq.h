@@ -58,7 +58,7 @@ struct Multilevel_MQ_Clustering_struct {
    mq: achieve modularity
 */
 void mq_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
-			   int *nclusters, int **assignment, double *mq, int *flag);
+			   int *nclusters, int **assignment, double *mq);
 
 #ifdef __cplusplus
 }
