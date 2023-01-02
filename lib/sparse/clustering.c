@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #define STANDALONE
+#include <math.h>
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
 #include <sparse/clustering.h>
@@ -58,7 +59,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
       }
       deg_total += deg[i];
     }
-    if (deg_total == 0) deg_total = 1;
+    deg_total = fmax(deg_total, 1);
     for (i = 0; i < n; i++){
       modularity += (indeg[i] - deg[i]*deg[i]/deg_total)/deg_total;
     }
