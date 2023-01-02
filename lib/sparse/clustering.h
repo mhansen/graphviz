@@ -52,7 +52,7 @@ enum {CLUSTERING_MODULARITY = 0, CLUSTERING_MQ};
    modularity: achieve modularity
 */
 void modularity_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
-			   int *nclusters, int **assignment, double *modularity, int *flag);
+			   int *nclusters, int **assignment, double *modularity);
 
 #ifdef __cplusplus
 }

@@ -482,7 +482,7 @@ SparseMatrix Import_coord_clusters_from_dot(Agraph_t* g, int maxcluster, int dim
 		    &nc, clusters, &modularity, &flag);
     } else if (clustering_scheme == CLUSTERING_MODULARITY){ 
       modularity_clustering(A, FALSE, maxcluster, use_value,
-		    &nc, clusters, &modularity, &flag);
+		    &nc, clusters, &modularity);
     } else {
       assert(0);
     }
@@ -669,7 +669,7 @@ void attached_clustering(Agraph_t* g, int maxcluster, int clustering_scheme){
 		    &nc, &clusters, &modularity, &flag);
     } else if (clustering_scheme == CLUSTERING_MODULARITY){ 
       modularity_clustering(A, FALSE, maxcluster, use_value,
-			    &nc, &clusters, &modularity, &flag);
+			    &nc, &clusters, &modularity);
     } else {
       assert(0);
     }
