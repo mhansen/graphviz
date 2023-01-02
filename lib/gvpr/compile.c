@@ -2318,27 +2318,22 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
                           int cnt, const char *lbl)
 {
     int i;
-    static const char LONGEST_CALLER_PREFIX[] = "_begin_g_";
-    static const char LONGEST_INFIX[] = "__a";
-    char tmp[sizeof(LONGEST_CALLER_PREFIX) - 1 + CHARS_FOR_NUL_TERM_INT - 1 +
-             sizeof(LONGEST_INFIX) - 1 + CHARS_FOR_NUL_TERM_INT - 1 + 1];
-
-    // the logic in our caller, mkBlock, should guarantee this
-    assert(strlen(lbl) + sizeof(LONGEST_INFIX) - 1 +
-           CHARS_FOR_NUL_TERM_INT - 1 + 1 <= sizeof(tmp));
+    agxbuf tmp = {0};
 
     case_stmt *cs = gv_calloc(cnt, sizeof(case_stmt));
 
     for (i = 0; i < cnt; i++) {
 	if (sp->guard) {
-	    snprintf(tmp, sizeof(tmp), "%s_g%d", lbl, i);
-	    cs[i].guard = compile(prog, src, sp->guard, sp->gstart, tmp, 0, INTEGER);
+	    agxbprint(&tmp, "%s_g%d", lbl, i);
+	    cs[i].guard = compile(prog, src, sp->guard, sp->gstart, agxbuse(&tmp), 0,
+	                          INTEGER);
 	    if (getErrorErrors()) break;
 	    checkGuard(cs[i].guard, src, sp->gstart);
 	}
 	if (sp->action) {
-	    snprintf(tmp, sizeof(tmp), "%s_a%d", lbl, i);
-	    cs[i].action = compile(prog, src, sp->action, sp->astart, tmp, 0, INTEGER);
+	    agxbprint(&tmp, "%s_a%d", lbl, i);
+	    cs[i].action = compile(prog, src, sp->action, sp->astart, agxbuse(&tmp),
+	                           0, INTEGER);
 	    if (getErrorErrors()) break;
 	    /* If no error but no compiled action, the input action must
 	     * have been essentially an empty block, which should be
@@ -2346,13 +2341,14 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
 	     * trivial block.
 	     */
 	    if (!cs[i].action) {
-		snprintf(tmp, sizeof(tmp), "%s__a%d", lbl, i);
-		cs[i].action = compile(prog, src, "1", sp->astart, tmp, 0, INTEGER);
+		agxbprint(&tmp, "%s__a%d", lbl, i);
+		cs[i].action = compile(prog, src, "1", sp->astart, agxbuse(&tmp), 0,
+		                       INTEGER);
 	    }
 	}
 	sp = sp->next;
     }
-
+    agxbfree(&tmp);
     return cs;
 }
 
