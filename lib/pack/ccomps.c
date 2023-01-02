@@ -94,15 +94,11 @@ static int isLegal(const char *p) {
     return 1;
 }
 
-/* insertFn:
- */
 static void insertFn(Agnode_t * n, void *state)
 {
     agsubnode(state, n, 1);
 }
 
-/* markFn:
- */
 static int markFn (Agnode_t* n, int v)
 {
     int ret;
@@ -112,8 +108,6 @@ static int markFn (Agnode_t* n, int v)
     return ret;
 }
 
-/* setPrefix:
- */
 static void setPrefix(agxbuf *xb, const char *pfx) {
     if (!pfx || !isLegal(pfx)) {
         pfx = "_cc_";
@@ -409,8 +403,6 @@ static void unionNodes(Agraph_t * dg, Agraph_t * g)
     }
 }
 
-/* clMarkFn:
- */
 static int clMarkFn (Agnode_t* n, int v)
 {
     int ret;
