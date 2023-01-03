@@ -21,7 +21,7 @@ extern double distance_cropped(double *x, int dim, int i, int j);
 struct node_data_struct {
   double node_weight;
   double *coord;
-  double id;
+  int id;
   void *data;
 };
 
@@ -75,7 +75,7 @@ static void check_or_realloc_arrays(int dim, int *nsuper, int *nsupermax, double
   }
 }
 
-static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *point, int nodeid, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts) {
+static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *pt, int nodeid, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts) {
   SingleLinkedList l;
   double *coord, dist;
   int dim, i;
@@ -94,7 +94,7 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *poi
 	  (*center)[dim*(*nsuper)+i] = coord[i];
 	}
 	(*supernode_wgts)[*nsuper] = node_data_get_weight(SingleLinkedList_get_data(l));
-	(*distances)[*nsuper] = point_distance(point, coord, dim);
+	(*distances)[*nsuper] = point_distance(pt, coord, dim);
 	(*nsuper)++;
       }
       l = SingleLinkedList_get_next(l);
@@ -102,18 +102,18 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *poi
   }
 
   if (qt->qts){
-    dist = point_distance(qt->center, point, dim); 
+    dist = point_distance(qt->center, pt, dim); 
     if (qt->width < bh*dist){
       check_or_realloc_arrays(dim, nsuper, nsupermax, center, supernode_wgts, distances);
       for (i = 0; i < dim; i++){
         (*center)[dim*(*nsuper)+i] = qt->average[i];
       }
       (*supernode_wgts)[*nsuper] = qt->total_weight;
-      (*distances)[*nsuper] = point_distance(qt->average, point, dim); 
+      (*distances)[*nsuper] = point_distance(qt->average, pt, dim); 
       (*nsuper)++;
     } else {
       for (i = 0; i < 1<<dim; i++){
-	QuadTree_get_supernodes_internal(qt->qts[i], bh, point, nodeid, nsuper, nsupermax, center, 
+	QuadTree_get_supernodes_internal(qt->qts[i], bh, pt, nodeid, nsuper, nsupermax, center, 
 					 supernode_wgts, distances, counts);
       }
     }
@@ -121,7 +121,7 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *poi
 
 }
 
-void QuadTree_get_supernodes(QuadTree qt, double bh, double *point, int nodeid, int *nsuper, 
+void QuadTree_get_supernodes(QuadTree qt, double bh, double *pt, int nodeid, int *nsuper, 
 			     int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts) {
   int dim = qt->dim;
 
@@ -133,7 +133,7 @@ void QuadTree_get_supernodes(QuadTree qt, double bh, double *point, int nodeid, 
   if (!*center) *center = MALLOC(sizeof(double)*(*nsupermax)*dim);
   if (!*supernode_wgts) *supernode_wgts = MALLOC(sizeof(double)*(*nsupermax));
   if (!*distances) *distances = MALLOC(sizeof(double)*(*nsupermax));
-  QuadTree_get_supernodes_internal(qt, bh, point, nodeid, nsuper, nsupermax, center, supernode_wgts, distances, counts);
+  QuadTree_get_supernodes_internal(qt, bh, pt, nodeid, nsuper, nsupermax, center, supernode_wgts, distances, counts);
 
 }
 
