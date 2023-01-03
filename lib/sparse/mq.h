@@ -46,19 +46,17 @@ struct Multilevel_MQ_Clustering_struct {
 
 /* find a clustering of vertices by maximize modularity quality
    A: symmetric square matrix n x n. If real value, value will be used as edges weights, otherwise edge weights are considered as 1.
-   inplace: whether A can e modified. If true, A will be modified by removing diagonal.
 
    maxcluster: used to specify the maximum number of cluster desired, e.g., maxcluster=10 means that a maximum of 10 clusters
    .   is desired. this may not always be realized, and modularity quality may be low when this is specified. Default: maxcluster = 0 (no limit)
 
-   use_value: whether to use the entry value, or treat edge weights as 1.
    nclusters: on output the number of clusters
    assignment: dimension n. Node i is assigned to cluster "assignment[i]". 0 <= assignment < nclusters.
    .   If *assignment = NULL on entry, it will be allocated. Otherwise used.
    mq: achieve modularity
 */
-void mq_clustering(SparseMatrix A, int inplace, int maxcluster, int use_value,
-			   int *nclusters, int **assignment, double *mq, int *flag);
+void mq_clustering(SparseMatrix A, int maxcluster,
+			   int *nclusters, int **assignment, double *mq);
 
 #ifdef __cplusplus
 }

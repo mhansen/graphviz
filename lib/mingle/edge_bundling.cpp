@@ -490,7 +490,7 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
 }
 
 static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* edges, double angle_param, double angle){
-  int *assignment = NULL, flag, nclusters;
+  int *assignment = NULL, nclusters;
   double modularity;
   int *clusterp, *clusters;
   SparseMatrix D, C;
@@ -498,17 +498,15 @@ static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* ed
   double ink0, ink1;
   pedge e;
   int i, j, jj;
-  int use_value_for_clustering = TRUE;
 
   SparseMatrix BB;
 
   /* B may contain negative entries */
   BB = SparseMatrix_copy(B);
   BB = SparseMatrix_apply_fun(BB, fabs);
-  modularity_clustering(BB, TRUE, 0, use_value_for_clustering, &nclusters, &assignment, &modularity, &flag);
+  modularity_clustering(BB, TRUE, 0, &nclusters, &assignment, &modularity);
   SparseMatrix_delete(BB);
 
-  assert(!flag);
   if (Verbose > 1) fprintf(stderr, "there are %d clusters, modularity = %f\n",nclusters, modularity);
   
   C = SparseMatrix_new(1, 1, 1, MATRIX_TYPE_PATTERN, FORMAT_COORD);

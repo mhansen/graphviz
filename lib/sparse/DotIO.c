@@ -473,16 +473,15 @@ SparseMatrix Import_coord_clusters_from_dot(Agraph_t* g, int maxcluster, int dim
   MAX_GRPS = nc;
 
   if (noclusterinfo) {
-    int use_value = TRUE, flag = 0;
     double modularity;
     if (!clust_sym) clust_sym = agattr(g,AGNODE,"cluster","-1");
 
     if (clustering_scheme == CLUSTERING_MQ){
-      mq_clustering(A, FALSE, maxcluster, use_value,
-		    &nc, clusters, &modularity, &flag);
+      mq_clustering(A, maxcluster,
+		    &nc, clusters, &modularity);
     } else if (clustering_scheme == CLUSTERING_MODULARITY){ 
-      modularity_clustering(A, FALSE, maxcluster, use_value,
-		    &nc, clusters, &modularity, &flag);
+      modularity_clustering(A, FALSE, maxcluster,
+		    &nc, clusters, &modularity);
     } else {
       assert(0);
     }
@@ -660,16 +659,15 @@ void attached_clustering(Agraph_t* g, int maxcluster, int clustering_scheme){
   clusters = MALLOC(sizeof(int)*nnodes);
 
   {
-    int use_value = TRUE, flag = 0;
     double modularity;
     if (!clust_sym) clust_sym = agattr(g,AGNODE,"cluster","-1");
     
     if (clustering_scheme == CLUSTERING_MQ){
-      mq_clustering(A, FALSE, maxcluster, use_value,
-		    &nc, &clusters, &modularity, &flag);
+      mq_clustering(A, maxcluster,
+		    &nc, &clusters, &modularity);
     } else if (clustering_scheme == CLUSTERING_MODULARITY){ 
-      modularity_clustering(A, FALSE, maxcluster, use_value,
-			    &nc, &clusters, &modularity, &flag);
+      modularity_clustering(A, FALSE, maxcluster,
+			    &nc, &clusters, &modularity);
     } else {
       assert(0);
     }
