@@ -116,12 +116,6 @@ def test_existence(binary: str):
   os_id = _freedesktop_os_release().get("ID")
 
   # FIXME: Remove skip when
-  # https://gitlab.com/graphviz/graphviz/-/issues/1835 is fixed
-  if os_id == "ubuntu" and binary == "mingle" and not is_cmake():
-    check_that_tool_does_not_exist(binary, os_id)
-    pytest.skip(f"mingle is not built for {os_id} (#1835)")
-
-  # FIXME: Remove skip when
   # https://gitlab.com/graphviz/graphviz/-/issues/1834 is fixed
   if os_id == "centos" and binary == "smyrna":
     check_that_tool_does_not_exist(binary, os_id)

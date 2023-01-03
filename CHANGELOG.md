@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   from ~3.8MB to 32MB. #1710
 - Reserved stack size on macOS for the `dot` binary when built with CMake has
   been increased from 8MB to 32MB. #1710
+- The Autotools build system can now find libANN on Debian-based operating
+  systems, enabling compilation of libmingle and `mingle`. #1835
 
 ### Fixed
 

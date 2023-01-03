@@ -1924,7 +1924,18 @@ else
     AC_SUBST([ANN_CFLAGS])
     AC_SUBST([ANN_LIBS])
   ],[
-    use_ann="No (no ann.pc found)"
+    # fall back discovery for the Debian ecosystem which does not ship an ann.pc
+    AC_CHECK_FILE(/usr/include/ANN/ANN.h, [
+      ANN_CFLAGS= # nothing required
+      AC_CHECK_LIB(ann, ann_visit_pts, [
+        ANN_LIBS=-lann
+        use_ann="Yes"
+      ], [
+        use_ann="No (no ann.pc or libANN found)"
+      ])
+    ], [
+      use_ann="No (no ann.pc or ANN.h found)"
+    ])
   ])
 fi
 AM_CONDITIONAL(WITH_ANN, [test x"${use_ann%% *}" = "xYes"])
