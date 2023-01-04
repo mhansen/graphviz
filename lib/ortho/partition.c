@@ -331,7 +331,7 @@ static void traverse_polygon(bitarray_t *visited, boxes_t *decomp,
   
   if (t->hi.y > t->lo.y + C_EPS && FP_EQUAL(seg[t->lseg].v0.x, seg[t->lseg].v1.x) &&
       FP_EQUAL(seg[t->rseg].v0.x, seg[t->rseg].v1.x)) {
-      boxf newbox = {{0}};
+      boxf newbox = {0};
       if (flip) {
           newbox.LL.x = t->lo.y;
           newbox.LL.y = -seg[t->rseg].v0.x;
@@ -724,7 +724,7 @@ boxf *partition(cell *cells, int ncells, size_t *nrects, boxf bb) {
     boxes_t rs = {0};
     for (size_t i = 0; i < vert_decomp.size; ++i)
 	for (size_t j = 0; j < hor_decomp.size; ++j) {
-	    boxf newbox = {{0}};
+	    boxf newbox = {0};
 	    if (rectIntersect(&newbox, &vert_decomp.data[i], &hor_decomp.data[j]))
 		boxes_append(&rs, newbox);
 	}
