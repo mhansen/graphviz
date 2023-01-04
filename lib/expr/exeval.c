@@ -1084,15 +1084,13 @@ static void xConvert(Expr_t *ex, Exnode_t *exnode, int type, Extype_t v,
 /* xPrint:
  * Generate string representation from value of external type.
  */
-static void
-xPrint(Expr_t * ex, Exnode_t * expr, Extype_t v, Exnode_t * tmp)
-{
-	*tmp = *expr->data.operand.left;
+static void xPrint(Expr_t *ex, Exnode_t *exnode, Extype_t v, Exnode_t *tmp) {
+	*tmp = *exnode->data.operand.left;
 	tmp->data.constant.value = v;
 	if (ex->disc->stringof(ex, tmp, 0))
 	exerror("%s: no string representation of %s value",
-		expr->data.operand.left->data.variable.symbol->name,
-		extypename(ex, expr->data.operand.left->type));
+		exnode->data.operand.left->data.variable.symbol->name,
+		extypename(ex, exnode->data.operand.left->type));
 	tmp->type = STRING;
 }
 
