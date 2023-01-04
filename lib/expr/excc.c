@@ -648,7 +648,7 @@ global(Dt_t* table, void* object, void* handle)
  * open C program generator context
  */
 
-static Excc_t *exccopen(Expr_t *expr, Exccdisc_t *disc) {
+static Excc_t *exccopen(Expr_t *ex, Exccdisc_t *disc) {
 	Excc_t*	cc;
 	char*			id;
 
@@ -656,8 +656,8 @@ static Excc_t *exccopen(Expr_t *expr, Exccdisc_t *disc) {
 		id = "";
 	if (!(cc = newof(0, Excc_t, 1, strlen(id) + 2)))
 		return 0;
-	cc->expr = expr;
-	cc->disc = expr->disc;
+	cc->expr = ex;
+	cc->disc = ex->disc;
 	cc->id = (char*)(cc + 1);
 	cc->ccdisc = disc;
 	if (!(disc->flags & EX_CC_DUMP))
@@ -667,7 +667,7 @@ static Excc_t *exccopen(Expr_t *expr, Exccdisc_t *disc) {
 		if (*id)
 			snprintf(cc->id, strlen(id) + 2, "%s_", id);
 		agxbputc(disc->text, '\n');
-		dtwalk(expr->symbols, global, disc->text);
+		dtwalk(ex->symbols, global, disc->text);
 	}
 	return cc;
 }
