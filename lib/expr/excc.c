@@ -699,7 +699,7 @@ static int exccclose(Excc_t *cc) {
  * dump an expression tree to a buffer
  */
 
-int exdump(Expr_t *expr, Exnode_t *node, agxbuf *xb) {
+int exdump(Expr_t *ex, Exnode_t *node, agxbuf *xb) {
 	Excc_t*		cc;
 	Exccdisc_t	ccdisc;
 	Exid_t*		sym;
@@ -707,12 +707,12 @@ int exdump(Expr_t *expr, Exnode_t *node, agxbuf *xb) {
 	memset(&ccdisc, 0, sizeof(ccdisc));
 	ccdisc.flags = EX_CC_DUMP;
 	ccdisc.text = xb;
-	if (!(cc = exccopen(expr, &ccdisc)))
+	if (!(cc = exccopen(ex, &ccdisc)))
 		return -1;
 	if (node)
 		gen(cc, node);
 	else
-		for (sym = dtfirst(expr->symbols); sym; sym = dtnext(expr->symbols, sym))
+		for (sym = dtfirst(ex->symbols); sym; sym = dtnext(ex->symbols, sym))
 			if (sym->lex == PROCEDURE && sym->value)
 			{
 				agxbprint(xb, "%s:\n", sym->name);
