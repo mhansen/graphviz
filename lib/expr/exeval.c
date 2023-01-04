@@ -498,9 +498,7 @@ scformat(void* vp, Sffmt_t* dp)
  * do scanf
  */
 
-static int
-scan(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
-{
+static int scan(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
 	Extype_t		v;
 	Extype_t		u;
 	Fmt_t			fmt;
@@ -508,10 +506,10 @@ scan(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
 
 	if (!sp)
 	{
-		if (expr->data.scan.descriptor)
+		if (exnode->data.scan.descriptor)
 		{
-			v = eval(ex, expr->data.scan.descriptor, env);
-			if (expr->data.scan.descriptor->type == STRING)
+			v = eval(ex, exnode->data.scan.descriptor, env);
+			if (exnode->data.scan.descriptor->type == STRING)
 				goto get;
 		}
 		else
@@ -527,9 +525,9 @@ scan(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
 	fmt.fmt.extf = scformat;
 	fmt.expr = ex;
 	fmt.env = env;
-	u = eval(ex, expr->data.scan.format, env);
+	u = eval(ex, exnode->data.scan.format, env);
 	fmt.fmt.form = u.string;
-	fmt.actuals = expr->data.scan.args;
+	fmt.actuals = exnode->data.scan.args;
 	n = sp ? sfscanf(sp, "%!", &fmt) : sfsscanf(v.string, "%!", &fmt);
 	if (fmt.actuals && !*fmt.fmt.form)
 		exerror("scanf: %s: too many arguments", fmt.actuals->data.operand.left->data.variable.symbol->name);
