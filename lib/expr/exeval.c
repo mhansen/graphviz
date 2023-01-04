@@ -2012,29 +2012,27 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
  * evaluate expression expr
  */
 
-Extype_t
-exeval(Expr_t* ex, Exnode_t* expr, void* env)
-{
+Extype_t exeval(Expr_t *ex, Exnode_t *exnode, void *env) {
 	Extype_t	v;
 
-	if (expr->compiled.integer)
+	if (exnode->compiled.integer)
 	{
-		switch (expr->type)
+		switch (exnode->type)
 		{
 		case FLOATING:
-			v.floating = expr->compiled.floating(ex->disc->data);
+			v.floating = exnode->compiled.floating(ex->disc->data);
 			break;
 		case STRING:
-			v.string = expr->compiled.string(ex->disc->data);
+			v.string = exnode->compiled.string(ex->disc->data);
 			break;
 		default:
-			v.integer = expr->compiled.integer(ex->disc->data);
+			v.integer = exnode->compiled.integer(ex->disc->data);
 			break;
 		}
 	}
 	else
 	{
-		v = eval(ex, expr, env);
+		v = eval(ex, exnode, env);
 		if (ex->loopcount > 0)
 		{
 			ex->loopcount = 0;
