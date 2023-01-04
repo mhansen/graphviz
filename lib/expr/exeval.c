@@ -938,9 +938,7 @@ static Extype_t extokens(Expr_t *ex, Exnode_t *exnode, void *env) {
 /* exsub:
  * return string after pattern substitution
  */
-static Extype_t
-exsub(Expr_t * ex, Exnode_t * expr, void *env, bool global)
-{
+static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 	char *str;
 	char *pat;
 	char *repl;
@@ -951,10 +949,10 @@ exsub(Expr_t * ex, Exnode_t * expr, void *env, bool global)
 	int flags = STR_MAXIMAL;
 	int ng;
 
-	str = eval(ex, expr->data.string.base, env).string;
-	pat = eval(ex, expr->data.string.pat, env).string;
-	if (expr->data.string.repl)
-		repl = eval(ex, expr->data.string.repl, env).string;
+	str = eval(ex, exnode->data.string.base, env).string;
+	pat = eval(ex, exnode->data.string.pat, env).string;
+	if (exnode->data.string.repl)
+		repl = eval(ex, exnode->data.string.repl, env).string;
 	else
 		repl = 0;
 
