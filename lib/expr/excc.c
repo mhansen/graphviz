@@ -120,18 +120,16 @@ exopname(int op)
  * generate printf()
  */
 
-static void
-print(Excc_t* cc, Exnode_t* expr)
-{
+static void print(Excc_t *cc, Exnode_t *exnode) {
 	Print_t*	x;
 
-	if ((x = expr->data.print.args))
+	if ((x = exnode->data.print.args))
 	{
-		agxbprint(cc->ccdisc->text, "sfprintf(%s, \"%s", expr->data.print.descriptor->op == CONSTANT && expr->data.print.descriptor->data.constant.value.integer == 2 ? "sfstderr" : "sfstdout", fmtesq(x->format, quote));
+		agxbprint(cc->ccdisc->text, "sfprintf(%s, \"%s", exnode->data.print.descriptor->op == CONSTANT && exnode->data.print.descriptor->data.constant.value.integer == 2 ? "sfstderr" : "sfstdout", fmtesq(x->format, quote));
 		while ((x = x->next))
 			agxbput(cc->ccdisc->text, fmtesq(x->format, quote));
 		agxbputc(cc->ccdisc->text, '"');
-		for (x = expr->data.print.args; x; x = x->next)
+		for (x = exnode->data.print.args; x; x = x->next)
 		{
 			if (x->arg)
 			{
