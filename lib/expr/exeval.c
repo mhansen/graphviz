@@ -1068,16 +1068,15 @@ static Extype_t exsubstr(Expr_t *ex, Exnode_t *exnode, void *env) {
 /* xConvert:
  * Convert from external type.
  */
-static void
-xConvert(Expr_t * ex, Exnode_t * expr, int type, Extype_t v,
+static void xConvert(Expr_t *ex, Exnode_t *exnode, int type, Extype_t v,
 	 Exnode_t * tmp)
 {
-	*tmp = *expr->data.operand.left;
+	*tmp = *exnode->data.operand.left;
 	tmp->data.constant.value = v;
 	if (ex->disc->convertf(tmp, type, 0)) {
 		exerror("%s: cannot convert %s value to %s",
-			expr->data.operand.left->data.variable.symbol->name,
-			extypename(ex, expr->data.operand.left->type), extypename(ex, type));
+			exnode->data.operand.left->data.variable.symbol->name,
+			extypename(ex, exnode->data.operand.left->type), extypename(ex, type));
 	}
 	tmp->type = type;
 }
