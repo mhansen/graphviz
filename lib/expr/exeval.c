@@ -844,19 +844,17 @@ addItem (Dt_t* arr, Extype_t v, char* tok)
  * break string into possibly empty fields and store in array
  * return number of fields
  */
-static Extype_t
-exsplit(Expr_t * ex, Exnode_t * expr, void *env)
-{
+static Extype_t exsplit(Expr_t *ex, Exnode_t *exnode, void *env) {
 	Extype_t v;
 	char *str;
 	char *seps;
 	char *tok;
 	size_t sz;
-	Dt_t* arr = (Dt_t*)expr->data.split.array->local.pointer;
+	Dt_t* arr = (Dt_t*)exnode->data.split.array->local.pointer;
 
-	str = eval(ex, expr->data.split.string, env).string;
-	if (expr->data.split.seps)
-		seps = eval(ex, expr->data.split.seps, env).string;
+	str = eval(ex, exnode->data.split.string, env).string;
+	if (exnode->data.split.seps)
+		seps = eval(ex, exnode->data.split.seps, env).string;
 	else
 		seps = " \t\n";
 
