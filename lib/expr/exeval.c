@@ -1035,22 +1035,21 @@ static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 /* exsubstr:
  * return substring.
  */
-static Extype_t exsubstr(Expr_t * ex, Exnode_t * expr, void *env)
-{
+static Extype_t exsubstr(Expr_t *ex, Exnode_t *exnode, void *env) {
 	Extype_t s;
 	Extype_t i;
 	Extype_t l;
 	Extype_t v;
 	int len;
 
-	s = eval(ex, expr->data.string.base, env);
+	s = eval(ex, exnode->data.string.base, env);
 	len = strlen(s.string);
-	i = eval(ex, expr->data.string.pat, env);
+	i = eval(ex, exnode->data.string.pat, env);
 	if (i.integer < 0 || len < i.integer)
 		exerror("illegal start index in substr(%s,%" PRIdMAX ")", s.string,
 		        (intmax_t)i.integer);
-	if (expr->data.string.repl) {
-		l = eval(ex, expr->data.string.repl, env);
+	if (exnode->data.string.repl) {
+		l = eval(ex, exnode->data.string.repl, env);
 		if (l.integer < 0 || len - i.integer < l.integer)
 	    exerror("illegal length in substr(%s,%" PRIdMAX ",%" PRIdMAX ")",
 	            s.string, (intmax_t)i.integer, (intmax_t)l.integer);
@@ -1058,7 +1057,7 @@ static Extype_t exsubstr(Expr_t * ex, Exnode_t * expr, void *env)
 		l.integer = len - i.integer;
 
 	v.string = vmalloc(ex->ve, l.integer + 1);
-	if (expr->data.string.repl) {
+	if (exnode->data.string.repl) {
 		strncpy(v.string, s.string + i.integer, l.integer);
 		v.string[l.integer] = '\0';
 	} else
