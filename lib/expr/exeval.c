@@ -516,7 +516,7 @@ scan(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
 		}
 		else
 			v.integer = 0;
-		if (v.integer < 0 || v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = sfnew(NULL, NULL, SF_UNBOUND, v.integer, SF_READ|SF_WRITE))))
+		if (v.integer < 0 || (size_t)v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = sfnew(NULL, NULL, SF_UNBOUND, (int)v.integer, SF_READ|SF_WRITE))))
 		{
 			exerror("scanf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
 			return 0;
