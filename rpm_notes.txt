@@ -1,7 +1,6 @@
 The following packages are known to depend on or use graphviz:
 
 Requires
-	webdot
 	doxygen
 	R
 	ImageMagick
