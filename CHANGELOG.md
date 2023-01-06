@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- The command line option `--help` has been added as an alias for `-?`. #1618
 - The command line option `--version` has been added as an alias for `-V`. #1618
 
 ### Fixed

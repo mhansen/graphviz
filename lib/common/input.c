@@ -277,6 +277,9 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 	            gvc->common.info[1], gvc->common.info[2]);
 	    if (GvExitOnUsage) graphviz_exit(0);
 	    return 1;
+	} else if (argv[i] &&
+	    (startswith(argv[i], "-?") || strcmp(argv[i], "--help") == 0)) {
+	    return dotneato_usage(0);
 	} else if (argv[i] && argv[i][0] == '-') {
 	    rest = &argv[i][2];
 	    switch (c = argv[i][1]) {
@@ -407,9 +410,6 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 		break;
 	    case 'y':
 		Y_invert = TRUE;
-		break;
-	    case '?':
-		return (dotneato_usage(0));
 		break;
 	    default:
 		agerr(AGERR, "%s: option -%c unrecognized\n\n", gvc->common.cmdname,
