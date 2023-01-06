@@ -16,6 +16,7 @@
 #include <xdot/xdot.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/exit.h>
+#include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -269,7 +270,14 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     nfiles = 0;
     agxbinit(&xb, SMALLBUF, buf);
     for (i = 1; i < argc; i++) {
-	if (argv[i] && argv[i][0] == '-') {
+	if (argv[i] &&
+	    (startswith(argv[i], "-V") || strcmp(argv[i], "--version") == 0)) {
+	    fprintf(stderr, "%s - %s version %s (%s)\n",
+	            gvc->common.cmdname, gvc->common.info[0],
+	            gvc->common.info[1], gvc->common.info[2]);
+	    if (GvExitOnUsage) graphviz_exit(0);
+	    return 1;
+	} else if (argv[i] && argv[i][0] == '-') {
 	    rest = &argv[i][2];
 	    switch (c = argv[i][1]) {
 	    case 'G':
@@ -348,13 +356,6 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 		break;
 	    case 'P':
 		P_graph = gvplugin_graph(gvc);
-		break;
-	    case 'V':
-		fprintf(stderr, "%s - %s version %s (%s)\n",
-			gvc->common.cmdname, gvc->common.info[0], 
-			gvc->common.info[1], gvc->common.info[2]);
-		if (GvExitOnUsage) graphviz_exit(0);
-		return (1);
 		break;
 	    case 'l':
 		val = getFlagOpt(argc, argv, &i);

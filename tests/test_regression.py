@@ -601,9 +601,9 @@ def test_1594():
   assert "line 3:" in stderr, \
     "GVPR did not identify correct line of syntax error"
 
-@pytest.mark.parametrize("long,short", (("--help", "-?"),
+@pytest.mark.parametrize("long,short", (pytest.param("--help", "-?",
+                                        marks=pytest.mark.xfail(strict=True)),
                                         ("--version", "-V")))
-@pytest.mark.xfail(strict=True)
 def test_1618(long: str, short: str):
   """
   Graphviz should understand `--help` and `--version`
