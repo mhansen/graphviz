@@ -19,4 +19,10 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-gvplugin_library_t gvplugin_webp_LTX_library = { "webp", apis };
+#ifdef GVDLL
+#define GVPLUGIN_WEBP_API __declspec(dllexport)
+#else
+#define GVPLUGIN_WEBP_API
+#endif
+
+GVPLUGIN_WEBP_API gvplugin_library_t gvplugin_webp_LTX_library = { "webp", apis };
