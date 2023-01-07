@@ -1925,7 +1925,7 @@ else
     AC_SUBST([ANN_LIBS])
   ],[
     # fall back discovery for the Debian ecosystem which does not ship an ann.pc
-    AC_CHECK_FILE(/usr/include/ANN/ANN.h, [
+    AS_IF([test -f /usr/include/ANN/ANN.h], [
       ANN_CFLAGS= # nothing required
       AC_CHECK_LIB(ann, ann_visit_pts, [
         ANN_LIBS=-lann
