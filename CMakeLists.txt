@@ -220,6 +220,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+# enable LTO in release builds
+include(CheckIPOSupported)
+check_ipo_supported(RESULT HAVE_IPO)
+if(CMAKE_BUILD_TYPE STREQUAL "Release" OR
+   CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  if(HAVE_IPO)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+  endif()
+endif()
+
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   # MSVC warning C4996 mostly fires on completely valid code. The changes
   # proposed in the warning text often seriously compromise the code
