@@ -634,7 +634,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 	    }
 	}
     }
-    AGATTRWF((Agobj_t *) obj) = !(AGATTRWF((Agobj_t *) obj));
+    AGATTRWF(obj) = !(AGATTRWF(obj));
 }
 
 /* nodeID:
@@ -642,7 +642,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
  */
 static int attrs_written(gxlstate_t * stp, void *obj)
 {
-    return !(AGATTRWF((Agobj_t *) obj) == stp->attrsNotWritten);
+    return !(AGATTRWF(obj) == stp->attrsNotWritten);
 }
 
 static void

@@ -501,7 +501,7 @@ static int write_nondefault_attrs(void *obj, iochan_t * ofile,
 	CHKRV(ioput(g, ofile, "]"));
 	Level--;
     }
-    AGATTRWF((Agobj_t *) obj) = TRUE;
+    AGATTRWF(obj) = TRUE;
     return 0;
 }
 
