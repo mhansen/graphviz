@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.7)]
 
+### Added
+
+- The command line option `--help` has been added as an alias for `-?`. #1618
+- The command line option `--version` has been added as an alias for `-V`. #1618
+
 ### Fixed
 
 - The Autotools build system no longer errors when attempting libANN discovery

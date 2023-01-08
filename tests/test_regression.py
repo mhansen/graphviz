@@ -601,6 +601,26 @@ def test_1594():
   assert "line 3:" in stderr, \
     "GVPR did not identify correct line of syntax error"
 
+@pytest.mark.parametrize("long,short", (("--help", "-?"),
+                                        ("--version", "-V")))
+def test_1618(long: str, short: str):
+  """
+  Graphviz should understand `--help` and `--version`
+  https://gitlab.com/graphviz/graphviz/-/issues/1618
+  """
+
+  # run Graphviz with the short form of the argument
+  p1 = subprocess.run(["dot", short], stdout=subprocess.PIPE,
+                      stderr=subprocess.PIPE, check=True)
+
+  # run it with the long form of the argument
+  p2 = subprocess.run(["dot", long], stdout=subprocess.PIPE,
+                      stderr=subprocess.PIPE, check=True)
+
+  # output from both should match
+  assert p1.stdout == p2.stdout, f"`dot {long}` wrote output than `dot {short}`"
+  assert p1.stderr == p2.stderr, f"`dot {long}` wrote output than `dot {short}`"
+
 @pytest.mark.xfail(strict=True)
 def test_1624():
   """
