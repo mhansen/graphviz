@@ -498,9 +498,7 @@ scformat(void* vp, Sffmt_t* dp)
  * do scanf
  */
 
-static int
-scan(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
-{
+static int scan(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
 	Extype_t		v;
 	Extype_t		u;
 	Fmt_t			fmt;
@@ -508,15 +506,15 @@ scan(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
 
 	if (!sp)
 	{
-		if (expr->data.scan.descriptor)
+		if (exnode->data.scan.descriptor)
 		{
-			v = eval(ex, expr->data.scan.descriptor, env);
-			if (expr->data.scan.descriptor->type == STRING)
+			v = eval(ex, exnode->data.scan.descriptor, env);
+			if (exnode->data.scan.descriptor->type == STRING)
 				goto get;
 		}
 		else
 			v.integer = 0;
-		if (v.integer < 0 || v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = sfnew(NULL, NULL, SF_UNBOUND, v.integer, SF_READ|SF_WRITE))))
+		if (v.integer < 0 || (size_t)v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = sfnew(NULL, NULL, SF_UNBOUND, (int)v.integer, SF_READ|SF_WRITE))))
 		{
 			exerror("scanf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
 			return 0;
@@ -527,9 +525,9 @@ scan(Expr_t* ex, Exnode_t* expr, void* env, Sfio_t* sp)
 	fmt.fmt.extf = scformat;
 	fmt.expr = ex;
 	fmt.env = env;
-	u = eval(ex, expr->data.scan.format, env);
+	u = eval(ex, exnode->data.scan.format, env);
 	fmt.fmt.form = u.string;
-	fmt.actuals = expr->data.scan.args;
+	fmt.actuals = exnode->data.scan.args;
 	n = sp ? sfscanf(sp, "%!", &fmt) : sfsscanf(v.string, "%!", &fmt);
 	if (fmt.actuals && !*fmt.fmt.form)
 		exerror("scanf: %s: too many arguments", fmt.actuals->data.operand.left->data.variable.symbol->name);
@@ -846,19 +844,17 @@ addItem (Dt_t* arr, Extype_t v, char* tok)
  * break string into possibly empty fields and store in array
  * return number of fields
  */
-static Extype_t
-exsplit(Expr_t * ex, Exnode_t * expr, void *env)
-{
+static Extype_t exsplit(Expr_t *ex, Exnode_t *exnode, void *env) {
 	Extype_t v;
 	char *str;
 	char *seps;
 	char *tok;
 	size_t sz;
-	Dt_t* arr = (Dt_t*)expr->data.split.array->local.pointer;
+	Dt_t* arr = (Dt_t*)exnode->data.split.array->local.pointer;
 
-	str = eval(ex, expr->data.split.string, env).string;
-	if (expr->data.split.seps)
-		seps = eval(ex, expr->data.split.seps, env).string;
+	str = eval(ex, exnode->data.split.string, env).string;
+	if (exnode->data.split.seps)
+		seps = eval(ex, exnode->data.split.seps, env).string;
 	else
 		seps = " \t\n";
 
@@ -901,19 +897,17 @@ exsplit(Expr_t * ex, Exnode_t * expr, void *env)
  * tokenize string and store in array
  * return number of tokens
  */
-static Extype_t
-extokens(Expr_t * ex, Exnode_t * expr, void *env)
-{
+static Extype_t extokens(Expr_t *ex, Exnode_t *exnode, void *env) {
 	Extype_t v;
 	char *str;
 	char *seps;
 	char *tok;
 	size_t sz;
-	Dt_t* arr = (Dt_t*)expr->data.split.array->local.pointer;
+	Dt_t* arr = (Dt_t*)exnode->data.split.array->local.pointer;
 
-	str = eval(ex, expr->data.split.string, env).string;
-	if (expr->data.split.seps)
-		seps = eval(ex, expr->data.split.seps, env).string;
+	str = eval(ex, exnode->data.split.string, env).string;
+	if (exnode->data.split.seps)
+		seps = eval(ex, exnode->data.split.seps, env).string;
 	else
 		seps = " \t\n";
 
@@ -944,9 +938,7 @@ extokens(Expr_t * ex, Exnode_t * expr, void *env)
 /* exsub:
  * return string after pattern substitution
  */
-static Extype_t
-exsub(Expr_t * ex, Exnode_t * expr, void *env, bool global)
-{
+static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 	char *str;
 	char *pat;
 	char *repl;
@@ -957,10 +949,10 @@ exsub(Expr_t * ex, Exnode_t * expr, void *env, bool global)
 	int flags = STR_MAXIMAL;
 	int ng;
 
-	str = eval(ex, expr->data.string.base, env).string;
-	pat = eval(ex, expr->data.string.pat, env).string;
-	if (expr->data.string.repl)
-		repl = eval(ex, expr->data.string.repl, env).string;
+	str = eval(ex, exnode->data.string.base, env).string;
+	pat = eval(ex, exnode->data.string.pat, env).string;
+	if (exnode->data.string.repl)
+		repl = eval(ex, exnode->data.string.repl, env).string;
 	else
 		repl = 0;
 
@@ -1043,22 +1035,21 @@ exsub(Expr_t * ex, Exnode_t * expr, void *env, bool global)
 /* exsubstr:
  * return substring.
  */
-static Extype_t exsubstr(Expr_t * ex, Exnode_t * expr, void *env)
-{
+static Extype_t exsubstr(Expr_t *ex, Exnode_t *exnode, void *env) {
 	Extype_t s;
 	Extype_t i;
 	Extype_t l;
 	Extype_t v;
 	int len;
 
-	s = eval(ex, expr->data.string.base, env);
+	s = eval(ex, exnode->data.string.base, env);
 	len = strlen(s.string);
-	i = eval(ex, expr->data.string.pat, env);
+	i = eval(ex, exnode->data.string.pat, env);
 	if (i.integer < 0 || len < i.integer)
 		exerror("illegal start index in substr(%s,%" PRIdMAX ")", s.string,
 		        (intmax_t)i.integer);
-	if (expr->data.string.repl) {
-		l = eval(ex, expr->data.string.repl, env);
+	if (exnode->data.string.repl) {
+		l = eval(ex, exnode->data.string.repl, env);
 		if (l.integer < 0 || len - i.integer < l.integer)
 	    exerror("illegal length in substr(%s,%" PRIdMAX ",%" PRIdMAX ")",
 	            s.string, (intmax_t)i.integer, (intmax_t)l.integer);
@@ -1066,7 +1057,7 @@ static Extype_t exsubstr(Expr_t * ex, Exnode_t * expr, void *env)
 		l.integer = len - i.integer;
 
 	v.string = vmalloc(ex->ve, l.integer + 1);
-	if (expr->data.string.repl) {
+	if (exnode->data.string.repl) {
 		strncpy(v.string, s.string + i.integer, l.integer);
 		v.string[l.integer] = '\0';
 	} else
@@ -1077,16 +1068,15 @@ static Extype_t exsubstr(Expr_t * ex, Exnode_t * expr, void *env)
 /* xConvert:
  * Convert from external type.
  */
-static void
-xConvert(Expr_t * ex, Exnode_t * expr, int type, Extype_t v,
+static void xConvert(Expr_t *ex, Exnode_t *exnode, int type, Extype_t v,
 	 Exnode_t * tmp)
 {
-	*tmp = *expr->data.operand.left;
+	*tmp = *exnode->data.operand.left;
 	tmp->data.constant.value = v;
 	if (ex->disc->convertf(tmp, type, 0)) {
 		exerror("%s: cannot convert %s value to %s",
-			expr->data.operand.left->data.variable.symbol->name,
-			extypename(ex, expr->data.operand.left->type), extypename(ex, type));
+			exnode->data.operand.left->data.variable.symbol->name,
+			extypename(ex, exnode->data.operand.left->type), extypename(ex, type));
 	}
 	tmp->type = type;
 }
@@ -1094,15 +1084,13 @@ xConvert(Expr_t * ex, Exnode_t * expr, int type, Extype_t v,
 /* xPrint:
  * Generate string representation from value of external type.
  */
-static void
-xPrint(Expr_t * ex, Exnode_t * expr, Extype_t v, Exnode_t * tmp)
-{
-	*tmp = *expr->data.operand.left;
+static void xPrint(Expr_t *ex, Exnode_t *exnode, Extype_t v, Exnode_t *tmp) {
+	*tmp = *exnode->data.operand.left;
 	tmp->data.constant.value = v;
 	if (ex->disc->stringof(ex, tmp, 0))
 	exerror("%s: no string representation of %s value",
-		expr->data.operand.left->data.variable.symbol->name,
-		extypename(ex, expr->data.operand.left->type));
+		exnode->data.operand.left->data.variable.symbol->name,
+		extypename(ex, exnode->data.operand.left->type));
 	tmp->type = STRING;
 }
 
@@ -1111,9 +1099,7 @@ xPrint(Expr_t * ex, Exnode_t * expr, Extype_t v, Exnode_t * tmp)
  */
 static long seed;
 
-static Extype_t
-eval(Expr_t* ex, Exnode_t* expr, void* env)
-{
+static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 	Exnode_t*	x;
 	Exnode_t*	a;
 	Extype_t**	t;
@@ -1129,22 +1115,22 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 	Extype_t		args[FRAME+1];
 	Extype_t		save[FRAME];
 
-	if (!expr || ex->loopcount)
+	if (!exnode || ex->loopcount)
 	{
 		v.integer = 1;
 		return v;
 	}
-	x = expr->data.operand.left;
-	switch (expr->op)
+	x = exnode->data.operand.left;
+	switch (exnode->op)
 	{
 	case BREAK:
 	case CONTINUE:
 		v = eval(ex, x, env);
 		ex->loopcount = v.integer;
-		ex->loopop = expr->op;
+		ex->loopop = exnode->op;
 		return v;
 	case CONSTANT:
-		return expr->data.constant.value;
+		return exnode->data.constant.value;
 	case DEC:
 		n = -1;
 	add:
@@ -1207,24 +1193,24 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			                   x->data.variable.reference, env, v) < 0)
 				exerror("%s: cannot set value", x->data.variable.symbol->name);
 		}
-		if (expr->subop == PRE)
+		if (exnode->subop == PRE)
 			r = v;
 		return r;
 	case DYNAMIC:
-		return getdyn(ex, expr, env, &assoc);
+		return getdyn(ex, exnode, env, &assoc);
 	case SPLIT:
-		return exsplit(ex, expr, env);
+		return exsplit(ex, exnode, env);
 	case TOKENS:
-		return extokens(ex, expr, env);
+		return extokens(ex, exnode, env);
 	case GSUB:
-		return exsub(ex, expr, env, /* global = */ true);
+		return exsub(ex, exnode, env, /* global = */ true);
 	case SUB:
-		return exsub(ex, expr, env, /* global = */ false);
+		return exsub(ex, exnode, env, /* global = */ false);
 	case SUBSTR:
-		return exsubstr(ex, expr, env);
+		return exsubstr(ex, exnode, env);
 	case SRAND:
 		v.integer = seed;
-		if (expr->binary) {
+		if (exnode->binary) {
 			seed = eval(ex, x, env).integer;
 		} else
 			seed = time(0);
@@ -1245,14 +1231,14 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 	case IF:
 		v = eval(ex, x, env);
 		if (v.integer)
-			eval(ex, expr->data.operand.right->data.operand.left, env);
+			eval(ex, exnode->data.operand.right->data.operand.left, env);
 		else
-			eval(ex, expr->data.operand.right->data.operand.right, env);
+			eval(ex, exnode->data.operand.right->data.operand.right, env);
 		v.integer = 1;
 		return v;
 	case FOR:
 	case WHILE:
-		expr = expr->data.operand.right;
+		exnode = exnode->data.operand.right;
 		for (;;)
 		{
 			r = eval(ex, x, env);
@@ -1261,24 +1247,24 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				v.integer = 1;
 				return v;
 			}
-			if (expr->data.operand.right)
+			if (exnode->data.operand.right)
 			{
-				eval(ex, expr->data.operand.right, env);
+				eval(ex, exnode->data.operand.right, env);
 				if (ex->loopcount > 0 && (--ex->loopcount > 0 || ex->loopop != CONTINUE))
 				{
 					v.integer = 0;
 					return v;
 				}
 			}
-			if (expr->data.operand.left)
-				eval(ex, expr->data.operand.left, env);
+			if (exnode->data.operand.left)
+				eval(ex, exnode->data.operand.left, env);
 		}
 		/*NOTREACHED*/
 	case SWITCH:
 		v = eval(ex, x, env);
 		i.integer = x->type;
 		r.integer = 0;
-		x = expr->data.operand.right;
+		x = exnode->data.operand.right;
 		a = x->data.select.statement;
 		n = 0;
 		while ((x = x->data.select.next))
@@ -1333,17 +1319,17 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		return r;
 	case ITERATE:
 		v.integer = 0;
-		if (expr->data.generate.array->op == DYNAMIC)
+		if (exnode->data.generate.array->op == DYNAMIC)
 		{
-			n = expr->data.generate.index->type == STRING;
-			for (assoc = dtfirst((Dt_t*)expr->data.generate.array->data.variable.symbol->local.pointer); assoc; assoc = dtnext((Dt_t*)expr->data.generate.array->data.variable.symbol->local.pointer, assoc))
+			n = exnode->data.generate.index->type == STRING;
+			for (assoc = dtfirst((Dt_t*)exnode->data.generate.array->data.variable.symbol->local.pointer); assoc; assoc = dtnext((Dt_t*)exnode->data.generate.array->data.variable.symbol->local.pointer, assoc))
 			{
 				v.integer++;
 				if (n)
-					expr->data.generate.index->value->data.constant.value.string = assoc->name;
+					exnode->data.generate.index->value->data.constant.value.string = assoc->name;
 				else
-					expr->data.generate.index->value->data.constant.value = assoc->key;
-				eval(ex, expr->data.generate.statement, env);
+					exnode->data.generate.index->value->data.constant.value = assoc->key;
+				eval(ex, exnode->data.generate.statement, env);
 				if (ex->loopcount > 0 && (--ex->loopcount > 0 || ex->loopop != CONTINUE))
 				{
 					v.integer = 0;
@@ -1353,13 +1339,13 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		}
 		else
 		{
-			r = ex->disc->getf(ex, expr, expr->data.generate.array->data.variable.symbol,
-			                   expr->data.generate.array->data.variable.reference, env,
+			r = ex->disc->getf(ex, exnode, exnode->data.generate.array->data.variable.symbol,
+			                   exnode->data.generate.array->data.variable.reference, env,
 			                   0, ex->disc);
 			for (v.integer = 0; v.integer < r.integer; v.integer++)
 			{
-				expr->data.generate.index->value->data.constant.value.integer = v.integer;
-				eval(ex, expr->data.generate.statement, env);
+				exnode->data.generate.index->value->data.constant.value.integer = v.integer;
+				eval(ex, exnode->data.generate.statement, env);
 				if (ex->loopcount > 0 && (--ex->loopcount > 0 || ex->loopop != CONTINUE))
 				{
 					v.integer = 0;
@@ -1370,32 +1356,32 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		return v;
     case ITERATER:
 		v.integer = 0;
-		if (expr->data.generate.array->op == DYNAMIC) {
-			n = expr->data.generate.index->type == STRING;
-			for (assoc = dtlast((Dt_t *) expr->data.generate.array->
+		if (exnode->data.generate.array->op == DYNAMIC) {
+			n = exnode->data.generate.index->type == STRING;
+			for (assoc = dtlast((Dt_t *) exnode->data.generate.array->
 						   data.variable.symbol->local.
 						   pointer); assoc;
-		 		assoc = dtprev((Dt_t *) expr->data.generate.array->
+		 		assoc = dtprev((Dt_t *) exnode->data.generate.array->
 						  data.variable.symbol->local.pointer,
 						  assoc)) {
 				v.integer++;
 				if (n)
-					expr->data.generate.index->value->data.constant.value.string = assoc->name;
+					exnode->data.generate.index->value->data.constant.value.string = assoc->name;
 				else
-					expr->data.generate.index->value->data.constant.value = assoc->key;
-				eval(ex, expr->data.generate.statement, env);
+					exnode->data.generate.index->value->data.constant.value = assoc->key;
+				eval(ex, exnode->data.generate.statement, env);
 				if (ex->loopcount > 0 && (--ex->loopcount > 0 || ex->loopop != CONTINUE)) {
 					v.integer = 0;
 					break;
 				}
 			}
 		} else {
-			r = ex->disc->getf(ex, expr, expr->data.generate.array->data.variable.symbol,
-			                   expr->data.generate.array->data.variable.reference, env,
+			r = ex->disc->getf(ex, exnode, exnode->data.generate.array->data.variable.symbol,
+			                   exnode->data.generate.array->data.variable.reference, env,
 			                   0, ex->disc);
 			for (v.integer = r.integer-1; 0 <= v.integer; v.integer--) {
-				expr->data.generate.index->value->data.constant.value.integer = v.integer;
-				eval(ex, expr->data.generate.statement, env);
+				exnode->data.generate.index->value->data.constant.value.integer = v.integer;
+				eval(ex, exnode->data.generate.statement, env);
 				if (ex->loopcount > 0 && (--ex->loopcount > 0 || ex->loopop != CONTINUE)) {
 					v.integer = 0;
 					break;
@@ -1404,23 +1390,23 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		}
 		return v;
 	case '#':
-		v.integer = dtsize ((Dt_t*)expr->data.variable.symbol->local.pointer);
+		v.integer = dtsize ((Dt_t*)exnode->data.variable.symbol->local.pointer);
 		return v;
 	case IN_OP:
-		v.integer = evaldyn (ex, expr, env, 0);
+		v.integer = evaldyn (ex, exnode, env, 0);
 		return v;
 	case UNSET:
-		if (expr->data.variable.index) {
-			v.integer = evaldyn (ex, expr, env, 1);
+		if (exnode->data.variable.index) {
+			v.integer = evaldyn (ex, exnode, env, 1);
 		}
 		else {
-			dtclear ((Dt_t*)expr->data.variable.symbol->local.pointer);
+			dtclear ((Dt_t*)exnode->data.variable.symbol->local.pointer);
 			v.integer = 0;
 		}
 		return v;
 	case CALL:
-		x = expr->data.call.args;
-		for (n = 0, a = expr->data.call.procedure->value->data.procedure.args; a && x; a = a->data.operand.right)
+		x = exnode->data.call.args;
+		for (n = 0, a = exnode->data.call.procedure->value->data.procedure.args; a && x; a = a->data.operand.right)
 		{
 			if (n < elementsof(args))
 			{
@@ -1431,63 +1417,63 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				a->data.operand.left->data.variable.symbol->value->data.constant.value = eval(ex, x->data.operand.left, env);
 			x = x->data.operand.right;
 		}
-		for (n = 0, a = expr->data.call.procedure->value->data.procedure.args; a && n < elementsof(save); a = a->data.operand.right)
+		for (n = 0, a = exnode->data.call.procedure->value->data.procedure.args; a && n < elementsof(save); a = a->data.operand.right)
 			a->data.operand.left->data.variable.symbol->value->data.constant.value = args[n++];
 		if (x)
 			exerror("too many actual args");
 		else if (a)
 			exerror("not enough actual args");
-		v = exeval(ex, expr->data.call.procedure->value->data.procedure.body, env);
-		for (n = 0, a = expr->data.call.procedure->value->data.procedure.args; a && n < elementsof(save); a = a->data.operand.right)
+		v = exeval(ex, exnode->data.call.procedure->value->data.procedure.body, env);
+		for (n = 0, a = exnode->data.call.procedure->value->data.procedure.args; a && n < elementsof(save); a = a->data.operand.right)
 			a->data.operand.left->data.variable.symbol->value->data.constant.value = save[n++];
 		return v;
 	case ARRAY:
 		n = 0;
-		for (x = expr->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
+		for (x = exnode->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
 			args[n++] = eval(ex, x->data.operand.left, env);
-		return ex->disc->getf(ex, expr->data.operand.left,
-		                      expr->data.operand.left->data.variable.symbol,
-		                      expr->data.operand.left->data.variable.reference, args,
+		return ex->disc->getf(ex, exnode->data.operand.left,
+		                      exnode->data.operand.left->data.variable.symbol,
+		                      exnode->data.operand.left->data.variable.reference, args,
 		                      EX_ARRAY, ex->disc);
 	case FUNCTION:
 		n = 0;
 		args[n++].string = env;
-		for (x = expr->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
+		for (x = exnode->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
 			args[n++] = eval(ex, x->data.operand.left, env);
-		return ex->disc->getf(ex, expr->data.operand.left,
-		                      expr->data.operand.left->data.variable.symbol,
-		                      expr->data.operand.left->data.variable.reference,
+		return ex->disc->getf(ex, exnode->data.operand.left,
+		                      exnode->data.operand.left->data.variable.symbol,
+		                      exnode->data.operand.left->data.variable.reference,
 		                      args+1, EX_CALL, ex->disc);
 	case ID:
-		if (expr->data.variable.index)
-			i = eval(ex, expr->data.variable.index, env);
+		if (exnode->data.variable.index)
+			i = eval(ex, exnode->data.variable.index, env);
 		else
 			i.integer = EX_SCALAR;
-		if (expr->data.variable.dyna) {
+		if (exnode->data.variable.dyna) {
 			Extype_t locv;
-			locv = getdyn(ex, expr->data.variable.dyna, env, &assoc);
-			expr->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
+			locv = getdyn(ex, exnode->data.variable.dyna, env, &assoc);
+			exnode->data.variable.dyna->data.variable.dyna->data.constant.value = locv;
 		}
-		return ex->disc->getf(ex, expr, expr->data.variable.symbol,
-		                      expr->data.variable.reference, env, (int)i.integer,
+		return ex->disc->getf(ex, exnode, exnode->data.variable.symbol,
+		                      exnode->data.variable.reference, env, (int)i.integer,
 		                      ex->disc);
 	case INC:
 		n = 1;
 		goto add;
 	case PRINT:
-		v.integer = prints(ex, expr, env, sfstdout);
+		v.integer = prints(ex, exnode, env, sfstdout);
 		return v;
 	case PRINTF:
-		v.integer = print(ex, expr, env, NULL);
+		v.integer = print(ex, exnode, env, NULL);
 		return v;
 	case RETURN:
 		ex->loopret = eval(ex, x, env);
 		ex->loopcount = 32767;
-		ex->loopop = expr->op;
+		ex->loopop = exnode->op;
 		return ex->loopret;
 	case SCANF:
 	case SSCANF:
-		v.integer = scan(ex, expr, env, NULL);
+		v.integer = scan(ex, exnode, env, NULL);
 		return v;
 	case SPRINTF: {
 		Sfio_t *buffer = sfstropen();
@@ -1495,14 +1481,14 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			fprintf(stderr, "out of memory\n");
 			graphviz_exit(EXIT_FAILURE);
 		}
-		print(ex, expr, env, buffer);
+		print(ex, exnode, env, buffer);
 		v.string = exstash(buffer, ex->ve);
 		sfstrclose(buffer);
 		return v;
 	}
 	case '=':
-		v = eval(ex, expr->data.operand.right, env);
-		if (expr->subop != '=')
+		v = eval(ex, exnode->data.operand.right, env);
+		if (exnode->subop != '=')
 		{
 			r = v;
 			if (x->op == DYNAMIC)
@@ -1525,7 +1511,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			switch (x->type)
 			{
 			case FLOATING:
-				switch (expr->subop)
+				switch (exnode->subop)
 				{
 				case '+':
 					v.floating += r.floating;
@@ -1573,7 +1559,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				break;
 			case INTEGER:
 			case UNSIGNED:
-				switch (expr->subop)
+				switch (exnode->subop)
 				{
 				case '+':
 					v.integer += r.integer;
@@ -1616,7 +1602,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				}
 				break;
 			case STRING:
-				switch (expr->subop)
+				switch (exnode->subop)
 				{
 				case '+':
 					v.string = str_add(ex, v.string, r.string);
@@ -1653,47 +1639,47 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 	case ';':
 	case ',':
 		v = eval(ex, x, env);
-		while ((expr = expr->data.operand.right) && (expr->op == ';' || expr->op == ','))
+		while ((exnode = exnode->data.operand.right) && (exnode->op == ';' || exnode->op == ','))
 		{
-			v = eval(ex, expr->data.operand.left, env);
+			v = eval(ex, exnode->data.operand.left, env);
 			if (ex->loopcount)
 				return v;
 		}
-		return expr ? eval(ex, expr, env) : v;
+		return exnode ? eval(ex, exnode, env) : v;
 	case '?':
 		v = eval(ex, x, env);
-		return v.integer ? eval(ex, expr->data.operand.right->data.operand.left, env) : eval(ex, expr->data.operand.right->data.operand.right, env);
+		return v.integer ? eval(ex, exnode->data.operand.right->data.operand.left, env) : eval(ex, exnode->data.operand.right->data.operand.right, env);
 	case AND:
 		v = eval(ex, x, env);
-		return v.integer ? eval(ex, expr->data.operand.right, env) : v;
+		return v.integer ? eval(ex, exnode->data.operand.right, env) : v;
 	case OR:
 		v = eval(ex, x, env);
-		return v.integer ? v : eval(ex, expr->data.operand.right, env);
+		return v.integer ? v : eval(ex, exnode->data.operand.right, env);
 	}
 	v = eval(ex, x, env);
-	if ((x = expr->data.operand.right)) {
+	if ((x = exnode->data.operand.right)) {
 		r = eval(ex, x, env);
-		if (!BUILTIN(x->type) && expr->binary) {
-			tmp = *expr->data.operand.left;
+		if (!BUILTIN(x->type) && exnode->binary) {
+			tmp = *exnode->data.operand.left;
 			tmp.data.constant.value = v;
 			rtmp = *x;
 			rtmp.data.constant.value = r;
-			if (!ex->disc->binaryf(&tmp, expr, &rtmp, 0))
+			if (!ex->disc->binaryf(&tmp, exnode, &rtmp, 0))
 			  return tmp.data.constant.value;
 		}
 	}
-	switch (expr->data.operand.left->type)
+	switch (exnode->data.operand.left->type)
 	{
 	case FLOATING:
-		switch (expr->op)
+		switch (exnode->op)
 		{
 		case F2I:
 			v.integer = v.floating;
 			return v;
 		case F2S:
-			tmp = *expr->data.operand.left;
+			tmp = *exnode->data.operand.left;
 			tmp.data.constant.value = v;
-			if (expr->data.operand.left->op != DYNAMIC && expr->data.operand.left->op != ID)
+			if (exnode->data.operand.left->op != DYNAMIC && exnode->data.operand.left->op != ID)
 			{
 				tmp.data.constant.value.string = exprintf(ex->ve, "%g", v.floating);
 			}
@@ -1703,11 +1689,11 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			tmp.type = STRING;
 			return tmp.data.constant.value;
 		case F2X:
-			tmp = *expr->data.operand.left;
+			tmp = *exnode->data.operand.left;
 			tmp.data.constant.value = v;
-			if (ex->disc->convertf(&tmp, expr->type, 0))
+			if (ex->disc->convertf(&tmp, exnode->type, 0))
 				exerror("%s: cannot convert floating value to external", tmp.data.variable.symbol->name);
-			tmp.type = expr->type;
+			tmp.type = exnode->type;
 			return tmp.data.constant.value;
 		case '!':
 			v.floating = !(Sflong_t)v.floating;
@@ -1775,25 +1761,25 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		}
 		break;
 	default:
-		switch (expr->op)
+		switch (exnode->op)
 		{
 		case X2F:
-			xConvert(ex, expr, FLOATING, v, &tmp);
+			xConvert(ex, exnode, FLOATING, v, &tmp);
 			return tmp.data.constant.value;
 		case X2I:
-			xConvert(ex, expr, INTEGER, v, &tmp);
+			xConvert(ex, exnode, INTEGER, v, &tmp);
 			return tmp.data.constant.value;
 		case X2S:
-			xConvert(ex, expr, STRING, v, &tmp);
+			xConvert(ex, exnode, STRING, v, &tmp);
 			return tmp.data.constant.value;
 		case X2X:
-			xConvert(ex, expr, expr->type, v, &tmp);
+			xConvert(ex, exnode, exnode->type, v, &tmp);
 			return tmp.data.constant.value;
 		case XPRINT:
-			xPrint(ex, expr, v, &tmp);
+			xPrint(ex, exnode, v, &tmp);
 			return tmp.data.constant.value;
 		default:
-			tmp = *expr->data.operand.left;
+			tmp = *exnode->data.operand.left;
 			tmp.data.constant.value = v;
 			if (x) {
 				rtmp = *x;
@@ -1801,12 +1787,12 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 				rp = &rtmp;
 			} else
 				rp = 0;
-			if (!ex->disc->binaryf(&tmp, expr, rp, 0))
+			if (!ex->disc->binaryf(&tmp, exnode, rp, 0))
 				return tmp.data.constant.value;
 		}
 		goto integer;
 	case UNSIGNED:
-		switch (expr->op)
+		switch (exnode->op)
 		{
 		case '<':
 			v.integer = (Sfulong_t)v.integer < (Sfulong_t)r.integer;
@@ -1824,25 +1810,25 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		/*FALLTHROUGH*/
 	case INTEGER:
 	integer:
-		switch (expr->op)
+		switch (exnode->op)
 		{
 		case I2F:
 #ifdef _WIN32
 			v.floating = v.integer;
 #else
-			if (expr->type == UNSIGNED)
+			if (exnode->type == UNSIGNED)
 				v.floating = (Sfulong_t)v.integer;
 			else
 				v.floating = v.integer;
 #endif
 			return v;
 		case I2S:
-			tmp = *expr->data.operand.left;
+			tmp = *exnode->data.operand.left;
 			tmp.data.constant.value = v;
-			if (expr->data.operand.left->op != DYNAMIC && expr->data.operand.left->op != ID)
+			if (exnode->data.operand.left->op != DYNAMIC && exnode->data.operand.left->op != ID)
 			{
 				char *str;
-				if (expr->data.operand.left->type == UNSIGNED)
+				if (exnode->data.operand.left->type == UNSIGNED)
 					str = exprintf(ex->ve, "%llu", (unsigned long long)v.integer);
 				else
 					str = exprintf(ex->ve, "%lld", (long long)v.integer);
@@ -1850,7 +1836,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			}
 			else if (ex->disc->convertf(&tmp, STRING, 0)) {
 				char *str = NULL;
-				if (expr->data.operand.left->type == UNSIGNED)
+				if (exnode->data.operand.left->type == UNSIGNED)
 					str = exprintf(ex->ve, "%llu", (unsigned long long)v.integer);
 				else
 					str = exprintf(ex->ve, "%lld", (long long)v.integer);
@@ -1859,11 +1845,11 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			tmp.type = STRING;
 			return tmp.data.constant.value;
 		case I2X:
-			tmp = *expr->data.operand.left;
+			tmp = *exnode->data.operand.left;
 			tmp.data.constant.value = v;
-			if (ex->disc->convertf(&tmp, expr->type, 0))
+			if (ex->disc->convertf(&tmp, exnode->type, 0))
 				exerror("%s: cannot convert integer value to external", tmp.data.variable.symbol->name);
-			tmp.type = expr->type;
+			tmp.type = exnode->type;
 			return tmp.data.constant.value;
 		case '!':
 			v.integer = !v.integer;
@@ -1931,13 +1917,13 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		}
 		break;
 	case STRING:
-		switch (expr->op)
+		switch (exnode->op)
 		{
 		case S2B:
 			v.integer = *v.string != 0;
 			return v;
 		case S2F:
-			tmp = *expr->data.operand.left;
+			tmp = *exnode->data.operand.left;
 			tmp.data.constant.value = v;
 			if (ex->disc->convertf(&tmp, FLOATING, 0))
 			{
@@ -1948,7 +1934,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			tmp.type = FLOATING;
 			return tmp.data.constant.value;
 		case S2I:
-			tmp = *expr->data.operand.left;
+			tmp = *exnode->data.operand.left;
 			tmp.data.constant.value = v;
 			if (ex->disc->convertf(&tmp, INTEGER, 0))
 			{
@@ -1963,11 +1949,11 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			tmp.type = INTEGER;
 			return tmp.data.constant.value;
 		case S2X:
-			tmp = *expr->data.operand.left;
+			tmp = *exnode->data.operand.left;
 			tmp.data.constant.value = v;
-			if (ex->disc->convertf(&tmp, expr->type, 0))
+			if (ex->disc->convertf(&tmp, exnode->type, 0))
 				exerror("%s: cannot convert string value to external", tmp.data.variable.symbol->name);
-			tmp.type = expr->type;
+			tmp.type = exnode->type;
 			return tmp.data.constant.value;
 		case EQ:
 		case NE:
@@ -1975,7 +1961,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			              ? ((ex->disc->version >= 19981111L && ex->disc->matchf)
 			                ? ex->disc->matchf(v.string, r.string)
 			                : strmatch(v.string, r.string))
-			              : (v.string == r.string)) == (expr->op == EQ);
+			              : (v.string == r.string)) == (exnode->op == EQ);
 			return v;
 		case '+':
 			v.string = str_add(ex, v.string, r.string);
@@ -1997,7 +1983,7 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 			return v;
 		}
 		v.integer = strcoll(v.string, r.string);
-		switch (expr->op)
+		switch (exnode->op)
 		{
 		case '<':
 			v.integer = v.integer < 0;
@@ -2015,40 +2001,38 @@ eval(Expr_t* ex, Exnode_t* expr, void* env)
 		goto huh;
 	}
  huh:
-	if (expr->binary)
-		exerror("operator %s %s %s not implemented", lexname(expr->data.operand.left->type, -1), lexname(expr->op, expr->subop), expr->data.operand.right ? lexname(expr->data.operand.right->type, -1) : "UNARY");
+	if (exnode->binary)
+		exerror("operator %s %s %s not implemented", lexname(exnode->data.operand.left->type, -1), lexname(exnode->op, exnode->subop), exnode->data.operand.right ? lexname(exnode->data.operand.right->type, -1) : "UNARY");
 	else
-		exerror("operator %s %s not implemented", lexname(expr->op, expr->subop), lexname(expr->data.operand.left->type, -1));
-	return exzero(expr->type);
+		exerror("operator %s %s not implemented", lexname(exnode->op, exnode->subop), lexname(exnode->data.operand.left->type, -1));
+	return exzero(exnode->type);
 }
 
 /*
  * evaluate expression expr
  */
 
-Extype_t
-exeval(Expr_t* ex, Exnode_t* expr, void* env)
-{
+Extype_t exeval(Expr_t *ex, Exnode_t *exnode, void *env) {
 	Extype_t	v;
 
-	if (expr->compiled.integer)
+	if (exnode->compiled.integer)
 	{
-		switch (expr->type)
+		switch (exnode->type)
 		{
 		case FLOATING:
-			v.floating = expr->compiled.floating(ex->disc->data);
+			v.floating = exnode->compiled.floating(ex->disc->data);
 			break;
 		case STRING:
-			v.string = expr->compiled.string(ex->disc->data);
+			v.string = exnode->compiled.string(ex->disc->data);
 			break;
 		default:
-			v.integer = expr->compiled.integer(ex->disc->data);
+			v.integer = exnode->compiled.integer(ex->disc->data);
 			break;
 		}
 	}
 	else
 	{
-		v = eval(ex, expr, env);
+		v = eval(ex, exnode, env);
 		if (ex->loopcount > 0)
 		{
 			ex->loopcount = 0;
