@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.0.7)]
 
+### Fixed
+
+- The Autotools build system no longer errors when attempting libANN discovery
+  during cross-compilation. This was a regression in Graphviz 7.0.6. #2335
+
 ## [7.0.6] – 2023-01-06
 
 ### Changed
