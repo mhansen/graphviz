@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include    <assert.h>
 #include    <cgraph/alloc.h>
 #include    <twopigen/circle.h>
 #include    <ctype.h>
@@ -70,7 +71,8 @@ static bool isLeaf(Agraph_t * g, Agnode_t * n)
 static void initLayout(Agraph_t * g)
 {
     int nnodes = agnnodes(g);
-    uint64_t INF = (uint64_t)(nnodes * nnodes);
+    assert(nnodes >= 0);
+    uint64_t INF = (uint64_t)nnodes * (uint64_t)nnodes;
 
     for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	SCENTER(n) = INF;
