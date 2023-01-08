@@ -85,20 +85,18 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *pt,
   if (!qt) return;
   dim = qt->dim;
   l = qt->l;
-  if (l){
-    while (l){
-      check_or_realloc_arrays(dim, nsuper, nsupermax, center, supernode_wgts, distances);
-      if (node_data_get_id(SingleLinkedList_get_data(l)) != nodeid){
-	coord = node_data_get_coord(SingleLinkedList_get_data(l));
-	for (i = 0; i < dim; i++){
-	  (*center)[dim*(*nsuper)+i] = coord[i];
-	}
-	(*supernode_wgts)[*nsuper] = node_data_get_weight(SingleLinkedList_get_data(l));
-	(*distances)[*nsuper] = point_distance(pt, coord, dim);
-	(*nsuper)++;
+  while (l) {
+    check_or_realloc_arrays(dim, nsuper, nsupermax, center, supernode_wgts, distances);
+    if (node_data_get_id(SingleLinkedList_get_data(l)) != nodeid){
+      coord = node_data_get_coord(SingleLinkedList_get_data(l));
+      for (i = 0; i < dim; i++){
+        (*center)[dim*(*nsuper)+i] = coord[i];
       }
-      l = SingleLinkedList_get_next(l);
+      (*supernode_wgts)[*nsuper] = node_data_get_weight(SingleLinkedList_get_data(l));
+      (*distances)[*nsuper] = point_distance(pt, coord, dim);
+      (*nsuper)++;
     }
+    l = SingleLinkedList_get_next(l);
   }
 
   if (qt->qts){
@@ -667,17 +665,15 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y, dou
   if (!qt) return;
   dim = qt->dim;
   l = qt->l;
-  if (l){
-    while (l){
-      coord = node_data_get_coord(SingleLinkedList_get_data(l));
-      dist = point_distance(x, coord, dim);
-      if(*min < 0 || dist < *min) {
-	*min = dist;
-	*imin = node_data_get_id(SingleLinkedList_get_data(l));
-	for (i = 0; i < dim; i++) y[i] = coord[i];
-      }
-      l = SingleLinkedList_get_next(l);
+  while (l){
+    coord = node_data_get_coord(SingleLinkedList_get_data(l));
+    dist = point_distance(x, coord, dim);
+    if(*min < 0 || dist < *min) {
+      *min = dist;
+      *imin = node_data_get_id(SingleLinkedList_get_data(l));
+      for (i = 0; i < dim; i++) y[i] = coord[i];
     }
+    l = SingleLinkedList_get_next(l);
   }
   
   if (qt->qts){
