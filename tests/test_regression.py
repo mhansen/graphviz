@@ -2083,7 +2083,6 @@ def test_2325():
   dot("svg", input)
 
 @pytest.mark.skipif(shutil.which("groff") is None, reason="groff not available")
-@pytest.mark.xfail(strict=True)
 def test_2341():
   """
   PIC backend should generate correct comments

@@ -54,7 +54,8 @@ static double Fontscale;
   The first approach is used here.
 */
 
-static const char EscComment[] = "# ";       /* PIC comment */
+static const char pic_comments[] = "# ";       /* PIC comment */
+static const char troff_comments[] = ".\\\" "; /* troff comment */
 static const char picgen_msghdr[] = "dot pic plugin: ";
 
 static void unsupported(char *s)
@@ -167,7 +168,7 @@ static void pic_line_style(obj_state_t *obj, int *line_style, double *style_val)
 
 static void pic_comment(GVJ_t *job, char *str)
 {
-    gvprintf(job, "%s %s\n", EscComment, str);
+    gvprintf(job, "%s %s\n", pic_comments, str);
 }
 
 static void pic_begin_graph(GVJ_t * job)
@@ -175,18 +176,18 @@ static void pic_begin_graph(GVJ_t * job)
     obj_state_t *obj = job->obj;
 
     gvprintf(job, "%s Creator: %s version %s (%s)\n",
-	EscComment, job->common->info[0], job->common->info[1], job->common->info[2]);
-    gvprintf(job, "%s Title: %s\n", EscComment, agnameof(obj->u.g));
+	troff_comments, job->common->info[0], job->common->info[1], job->common->info[2]);
+    gvprintf(job, "%s Title: %s\n", troff_comments, agnameof(obj->u.g));
     gvprintf(job,
             "%s save point size and font\n.nr .S \\n(.s\n.nr DF \\n(.f\n",
-            EscComment);
+            troff_comments);
 }
 
 static void pic_end_graph(GVJ_t * job)
 {
     gvprintf(job,
             "%s restore point size and font\n.ps \\n(.S\n.ft \\n(DF\n",
-            EscComment);
+            troff_comments);
 }
 
 static void pic_begin_page(GVJ_t * job)
@@ -208,7 +209,7 @@ static void pic_begin_page(GVJ_t * job)
     gvprintf(job, ".PS %.5f %.5f\n", width, height);
     gvprintf(job,
             "%s to change drawing size, multiply the width and height on the .PS line above and the number on the two lines below (rounded to the nearest integer) by a scale factor\n",
-            EscComment);
+            pic_comments);
     if (width > 0.0) {
         Fontscale = log10(width);
         Fontscale += 3.0 - (int) Fontscale;     /* between 3.0 and 4.0 */
@@ -219,79 +220,79 @@ static void pic_begin_page(GVJ_t * job)
             Fontscale);
     gvprintf(job,
             "%s don't change anything below this line in this drawing\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s non-fatal run-time pic version determination, version 2\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "boxrad=2.0 %s will be reset to 0.0 by gpic only\n",
-            EscComment);
+            pic_comments);
     gvprintf(job, "scale=1.0 %s required for comparisons\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s boxrad is now 0.0 in gpic, else it remains 2.0\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s dashwid is 0.1 in 10th Edition, 0.05 in DWB 2 and in gpic\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s fillval is 0.3 in 10th Edition (fill 0 means black), 0.5 in gpic (fill 0 means white), undefined in DWB 2\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s fill has no meaning in DWB 2, gpic can use fill or filled, 10th Edition uses fill only\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s DWB 2 doesn't use fill and doesn't define fillval\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s reset works in gpic and 10th edition, but isn't defined in DWB 2\n",
-            EscComment);
+            pic_comments);
     gvprintf(job, "%s DWB 2 compatibility definitions\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "if boxrad > 1.0 && dashwid < 0.075 then X\n\tfillval = 1;\n\tdefine fill Y Y;\n\tdefine solid Y Y;\n\tdefine reset Y scale=1.0 Y;\nX\n");
-    gvprintf(job, "reset %s set to known state\n", EscComment);
+    gvprintf(job, "reset %s set to known state\n", pic_comments);
     gvprintf(job, "%s GNU pic vs. 10th Edition d\\(e'tente\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "if fillval > 0.4 then X\n\tdefine setfillval Y fillval = 1 - Y;\n\tdefine bold Y thickness 2 Y;\n");
     gvprintf(job,
             "\t%s if you use gpic and it barfs on encountering \"solid\",\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "\t%s\tinstall a more recent version of gpic or switch to DWB or 10th Edition pic;\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "\t%s\tsorry, the groff folks changed gpic; send any complaint to them;\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "X else Z\n\tdefine setfillval Y fillval = Y;\n\tdefine bold Y Y;\n\tdefine filled Y fill Y;\nZ\n");
     gvprintf(job,
             "%s arrowhead has no meaning in DWB 2, arrowhead = 7 makes filled arrowheads in gpic and in 10th Edition\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s arrowhead is undefined in DWB 2, initially 1 in gpic, 2 in 10th Edition\n",
-            EscComment);
+            pic_comments);
     gvprintf(job, "arrowhead = 7 %s not used by graphviz\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s GNU pic supports a boxrad variable to draw boxes with rounded corners; DWB and 10th Ed. do not\n",
-            EscComment);
+            pic_comments);
     gvprintf(job, "boxrad = 0 %s no rounded corners in graphviz\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s GNU pic supports a linethick variable to set line thickness; DWB and 10th Ed. do not\n",
-            EscComment);
+            pic_comments);
     gvprintf(job, "linethick = 0; oldlinethick = linethick\n");
     gvprintf(job,
             "%s .PS w/o args causes GNU pic to scale drawing to fit 8.5x11 paper; DWB does not\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s maxpsht and maxpswid have no meaning in DWB 2.0, set page boundaries in gpic and in 10th Edition\n",
-            EscComment);
+            pic_comments);
     gvprintf(job,
             "%s maxpsht and maxpswid are predefined to 11.0 and 8.5 in gpic\n",
-            EscComment);
+            pic_comments);
     gvprintf(job, "maxpsht = %f\nmaxpswid = %f\n", height, width);
     gvprintf(job, "Dot: [\n");
     gvprintf(job,
