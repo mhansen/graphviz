@@ -119,17 +119,12 @@ static void core_loadimage_vrml(GVJ_t * job, usershape_t *us, boxf b, bool fille
     (void)b;
     (void)filled;
 
-    obj_state_t *obj;
-    node_t *n;
-
     assert(job);
-    obj = job->obj;
-    assert(obj);
+    assert(job->obj);
     assert(us);
     assert(us->name);
 
-    n = job->obj->u.n;
-    assert(n);
+    assert(job->obj->u.n);
 
     gvprintf(job, "Shape {\n");
     gvprintf(job, "  appearance Appearance {\n");
