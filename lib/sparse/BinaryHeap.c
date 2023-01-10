@@ -158,7 +158,7 @@ int BinaryHeap_insert(BinaryHeap h, void *item){
   size_t pos = siftUp(h, len);
   assert(h->id_to_pos[id] == pos);
   assert(h->pos_to_id[pos] == id);
-
+  (void)pos;
 
   return id;
 }
