@@ -294,6 +294,7 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
     np = 0;
     for (j = ia[i]; j < ia[i+1]; j++){
       assert(ja[j] < nverts && ja[j] >= 0);
+      (void)nverts;
       if (abs(a[j]) != ipoly){/* the first poly, or a hole */
 	ipoly = abs(a[j]);
 	if (r && g && b) {
