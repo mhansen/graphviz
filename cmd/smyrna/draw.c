@@ -123,7 +123,7 @@ static void DrawBeziers(sdot_op* o, int param)
     int filled;
     xdot_op *  op=&o->op;
     xdot_point* ps = op->u.bezier.pts;
-    view->Topview->global_z = view->Topview->global_z + o->layer*LAYER_DIFF;
+    view->Topview->global_z += o->layer * LAYER_DIFF;
 
     if (op->kind == xd_filled_bezier)
 	filled = 1;
@@ -145,7 +145,7 @@ static void DrawEllipse(sdot_op*  o, int param)
     int i = 0;
     int filled;
     xdot_op * op=&o->op;
-    view->Topview->global_z=view->Topview->global_z+o->layer*LAYER_DIFF;
+    view->Topview->global_z += o->layer * LAYER_DIFF;
     set_options(param);
     x = op->u.ellipse.x - dx;
     y = op->u.ellipse.y - dy;
@@ -189,7 +189,7 @@ static void DrawEllipse(sdot_op*  o, int param)
 static void DrawPolygon(sdot_op * o, int param)
 {
     xdot_op *  op=&o->op;
-    view->Topview->global_z=view->Topview->global_z+o->layer*LAYER_DIFF;
+    view->Topview->global_z += o->layer * LAYER_DIFF;
 
     set_options(param);
 
@@ -219,7 +219,7 @@ static void DrawPolygon(sdot_op * o, int param)
 static void DrawPolyline(sdot_op* o, int param)
 {
     xdot_op * op=&o->op;
-    view->Topview->global_z=view->Topview->global_z+o->layer*LAYER_DIFF;
+    view->Topview->global_z += o->layer * LAYER_DIFF;
 
     if (param == 0)
 	glColor4f(view->penColor.R, view->penColor.G, view->penColor.B,
@@ -339,7 +339,7 @@ static void EmbedText(sdot_op* o, int param)
 
 	GLfloat x,y;
 	glColor4f(view->penColor.R,view->penColor.G,view->penColor.B,view->penColor.A);
-	view->Topview->global_z=view->Topview->global_z+o->layer*LAYER_DIFF+0.05;
+	view->Topview->global_z += o->layer * LAYER_DIFF + 0.05;
 	switch (o->op.u.text.align)
 	{
 		case xd_left:
