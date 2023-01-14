@@ -28,6 +28,7 @@
 #include <cgraph/exit.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
+#include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
@@ -690,6 +691,8 @@ static void initargs(int argc, char **argv)
 		usage(1);
 	    }
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
 
