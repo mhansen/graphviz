@@ -326,13 +326,13 @@ static int remove_poly(vgpane_t * vgp, int id)
 }
 
 static int
-insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int polyid, char *vargv[],
+insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int id, char *vargv[],
 	    int vargc)
 {
     poly *np;
     int i, result;
 
-    np = allocpoly(vgp, polyid, vargc);
+    np = allocpoly(vgp, id, vargc);
     for (i = 0; i < vargc; i += 2) {
 	result =
 	    scanpoint(interp, &vargv[i],
