@@ -28,6 +28,7 @@
 #include <getopt.h>
 
 #include <stdlib.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
@@ -74,22 +75,12 @@ typedef struct {
     Agraph_t *blks;
 } bcstate;
 
-static char *blockName(char *gname, int d)
-{
-    static char *buf;
-    static size_t bufsz;
-
-    size_t sz = strlen(gname) + 128;
-    if (sz > bufsz) {
-	free(buf);
-	buf = gv_alloc(sz);
-    }
-
+static char *blockName(agxbuf *xb, char *gname, int d) {
     if (*gname == '%') /* anonymous graph */
-	sprintf(buf, "_%s_bcc_%d", gname, d);
+	agxbprint(xb, "_%s_bcc_%d", gname, d);
     else
-	sprintf(buf, "%s_bcc_%d", gname, d);
-    return buf;
+	agxbprint(xb, "%s_bcc_%d", gname, d);
+    return agxbuse(xb);
 }
 
 /* getName:
@@ -154,7 +145,9 @@ static Agraph_t *mkBlock(Agraph_t * g, bcstate * stp)
     Agraph_t *sg;
 
     stp->nComp++;
-    sg = agsubg(g, blockName(agnameof(g), stp->nComp), 1);
+    agxbuf xb = {0};
+    sg = agsubg(g, blockName(&xb, agnameof(g), stp->nComp), 1);
+    agxbfree(&xb);
     agbindrec(sg, "info", sizeof(Agraphinfo_t), true);
     NEXTBLK(sg) = stp->blks;
     stp->blks = sg;
