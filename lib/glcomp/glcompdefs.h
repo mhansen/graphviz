@@ -86,8 +86,6 @@ extern "C" {
 	    glFontVJustifyBottom, glFontVJustifyCenter } glCompVJustify;
     typedef enum { glFontHJustifyNone, glFontHJustifyLeft,
 	    glFontHJustifyRight, glFontHJustifyCenter } glCompHJustify;
-    typedef enum { glBorderNone, glBorderSolid, glBorderBevel,
-	    glBorderCustom } glCompBorderType;
 
     typedef enum { glMouseDown, glMouseUp } glCompMouseStatus;
     typedef enum { glMouseLeftButton, glMouseRightButton,
@@ -221,7 +219,6 @@ extern "C" {
 	glCompPoint refPos;	/*calculated pos after anchors and aligns */
 	GLfloat width, height;
 	GLfloat borderWidth;
-	glCompBorderType borderType;
 	glCompColor color;
 	int enabled;
 	int visible;
