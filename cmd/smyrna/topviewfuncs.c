@@ -71,7 +71,7 @@ static void set_boundaries(Agraph_t * g)
     view->bdyBottom = bottom;
 }
 
-static void draw_xdot(xdot* x,float base_z)
+static void draw_xdot(xdot* x, double base_z)
 {
 	sdot_op *op;
 	if (!x)
@@ -318,7 +318,7 @@ static void renderNodes(Agraph_t * g)
 
     x=parseXdotwithattrs(g);
     if (x) {
-	draw_xdot(x,-0.2f);
+	draw_xdot(x, -0.2);
 	freeXDot (x);
     }
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) 
@@ -326,7 +326,7 @@ static void renderNodes(Agraph_t * g)
 	    if(!object_color(v,&c))
 		continue;
 	    x=parseXdotwithattrs(v);
-	    draw_xdot(x,-0.1f);
+	    draw_xdot(x, -0.1);
 
 	    if(x)
 		freeXDot (x);

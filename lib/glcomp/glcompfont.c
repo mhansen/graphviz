@@ -121,8 +121,8 @@ glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 }
 
 /*texture base 3d text rendering*/
-void glCompDrawText3D(glCompFont * f,GLfloat x,GLfloat y,GLfloat z,GLfloat w,GLfloat h)
-{
+void glCompDrawText3D(glCompFont *f, GLfloat x, GLfloat y, double z, GLfloat w,
+                      GLfloat h) {
 	glEnable(GL_BLEND);		// Turn Blending On
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);

@@ -32,7 +32,8 @@ extern "C" {
     void glDeleteFont(glCompFont * f);
     void glCompDrawText(glCompFont * f,GLfloat x,GLfloat y);
     void glCompRenderText(glCompFont * f, glCompObj * parentObj);
-    void glCompDrawText3D(glCompFont * f,GLfloat x,GLfloat y,GLfloat z,GLfloat w,GLfloat h);
+    void glCompDrawText3D(glCompFont *f, GLfloat x, GLfloat y, double z,
+                          GLfloat w, GLfloat h);
 
 #ifdef __cplusplus
 }
