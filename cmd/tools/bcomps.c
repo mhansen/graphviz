@@ -33,6 +33,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
+#include <cgraph/unreachable.h>
 
 typedef struct {
     Agrec_t h;
@@ -341,6 +342,8 @@ static void init(int argc, char *argv[])
 		usage(1);
 	    }
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
     argv += optind;
