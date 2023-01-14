@@ -79,9 +79,9 @@ char *smyrnaPath(char *suffix)
     if (baselen == 0) {
 	baselen = strlen(smyrnaDir) + 2;
     }
-    size_t slen = strlen(suffix);
-    char *buf = gv_calloc(baselen + slen, sizeof(char));
-    sprintf(buf, "%s%s%s", smyrnaDir, pathSep, suffix);
+    size_t len = baselen + strlen(suffix);
+    char *buf = gv_calloc(len, sizeof(char));
+    snprintf(buf, len, "%s%s%s", smyrnaDir, pathSep, suffix);
     return buf;
 }
 
