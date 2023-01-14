@@ -12,7 +12,6 @@
 ///
 /// Use this sparingly, as the MSVC version applies to everything in both the
 /// current and next line, so can end up accidentally masking genuine problems.
-/// Only use this in C code. In C++, use `[[maybe_unused]]`.
 #ifdef __GNUC__ // Clang and GCC
 #define UNUSED __attribute__((unused))
 #elif defined(_MSC_VER) // MSVC

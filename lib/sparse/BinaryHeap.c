@@ -158,7 +158,7 @@ int BinaryHeap_insert(BinaryHeap h, void *item){
   size_t pos = siftUp(h, len);
   assert(h->id_to_pos[id] == pos);
   assert(h->pos_to_id[pos] == id);
-
+  (void)pos;
 
   return id;
 }
@@ -244,6 +244,8 @@ void BinaryHeap_sanity_check(BinaryHeap h){
   for (size_t i = 1; i < h->len; i++){
     size_t parentPos = ParentPos(i);
     assert((h->cmp)(heap[i], heap[parentPos]) >= 0);
+    (void)heap;
+    (void)parentPos;
   }
 
   mask = CALLOC(h->len + int_stack_size(&h->id_stack), sizeof(mask[0]));
@@ -263,6 +265,7 @@ void BinaryHeap_sanity_check(BinaryHeap h){
     assert(mask[pos_to_id[i]] == 0);/* that id is in use so can't be spare */
     mask[pos_to_id[i]] = 1;
     assert(id_to_pos[pos_to_id[i]] == i);
+    (void)id_to_pos;
   }
 
   /* all IDs, spare or in use, are accounted for and give a contiguous set */

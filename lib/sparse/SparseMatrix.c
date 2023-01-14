@@ -2364,6 +2364,7 @@ int SparseMatrix_distance_matrix(SparseMatrix D0, int weighted, double **dist0){
   }
 
   assert(m == n);
+  (void)m;
 
   if (!(*dist0)) *dist0 = gv_calloc(n * n, sizeof(double));
   for (i = 0; i < n*n; i++) (*dist0)[i] = -1;

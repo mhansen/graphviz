@@ -355,6 +355,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 	ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
 	if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"finish calling ink2...\n");
 	assert(fabs(ink1 - cgrid->inks[i])<=MAX(TOL, TOL*ink1) && ink1 - ink0 <= TOL);
+	(void)TOL;
 	assert(ink1 < 1000 * ink0); /* assert that points were found */
 	wgt_all = 0.;
 	if (ia[i+1]-ia[i] > 1){
