@@ -36,7 +36,7 @@ typedef struct Pedge_t {
 int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 {
 
-    int i, j, vno, rv;
+    int j, vno, rv;
 
     struct vertex *vertex_list;
     struct polygon *polygon_list;
@@ -46,12 +46,12 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
     polygon_list = malloc(n_polys * sizeof(struct polygon));
 
     size_t nverts = 0;
-    for (i = 0; i < n_polys; i++)
+    for (int i = 0; i < n_polys; i++)
 	nverts += polys[i]->pn;
 
     vertex_list = malloc(nverts * sizeof(struct vertex));
 
-    for (i = vno = 0; i < n_polys; i++) {
+    for (int i = vno = 0; i < n_polys; i++) {
 	polygon_list[i].start = &vertex_list[vno];
 	for (j = 0; j < polys[i]->pn; j++) {
 	    vertex_list[vno].pos.x = polys[i]->ps[j].x;
@@ -71,9 +71,8 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 #define EQ_PT(v,w) (((v).x == (w).x) && ((v).y == (w).y))
     rv = 1;
     {
-	int i;
 	struct position vft, vsd, avft, avsd;
-	for (i = 0; i < input.ninters; i++) {
+	for (int i = 0; i < input.ninters; i++) {
 	    vft = ilist[i].firstv->pos;
 	    avft = after(ilist[i].firstv)->pos;
 	    vsd = ilist[i].secondv->pos;
