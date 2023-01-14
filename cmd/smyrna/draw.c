@@ -140,17 +140,15 @@ static void DrawBeziers(sdot_op* o, int param)
 //void DrawEllipse(xdot_point* xpoint,GLfloat xradius, GLfloat yradius,int filled)
 static void DrawEllipse(sdot_op*  o, int param)
 {
-    //to draw a circle set xradius and yradius same values
-    GLfloat x, y, xradius, yradius;
     int i = 0;
     int filled;
     xdot_op * op=&o->op;
     view->Topview->global_z += o->layer * LAYER_DIFF;
     set_options(param);
-    x = op->u.ellipse.x - dx;
-    y = op->u.ellipse.y - dy;
-    xradius = (GLfloat) op->u.ellipse.w;
-    yradius = (GLfloat) op->u.ellipse.h;
+    double x = op->u.ellipse.x - dx;
+    double y = op->u.ellipse.y - dy;
+    double xradius = op->u.ellipse.w;
+    double yradius = op->u.ellipse.h;
     if (op->kind == xd_filled_ellipse) {
 	if (param == 0)
 	    glColor4f(view->fillColor.R, view->fillColor.G,
