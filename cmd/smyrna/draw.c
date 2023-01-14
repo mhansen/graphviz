@@ -398,7 +398,7 @@ void drawCircle(float x, float y, float radius, float zdepth)
 {
     int i;
     if (radius < 0.3)
-	radius = (float) 0.4;
+	radius = 0.4f;
     glBegin(GL_POLYGON);
     for (i = 0; i < 360; i = i + 36) {
 	float degInRad = (float) (i * DEG2RAD);
