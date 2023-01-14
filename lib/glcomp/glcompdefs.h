@@ -78,7 +78,6 @@ extern "C" {
 #define	GLCOMP_DEFAULT_WIDTH	10.0f
 #define	GLCOMP_DEFAULT_HEIGHT	10.0f
 
-    typedef enum { gluttext, pangotext } glCompFontType;
     typedef enum { glAlignNone, glAlignLeft, glAlignTop, glAlignBottom,
 	    glAlignRight, glAlignParent, glAlignCenter } glCompAlignment;
 
@@ -185,7 +184,6 @@ extern "C" {
     typedef struct {
 	char *fontdesc;		//font description , only used with pango fonts
 	glCompColor color;
-	glCompFontType type;
 	void *glutfont;		/*glut font pointer if used */
 	int transparent;
 	glCompTex *tex;		/* texture, if type is pangotext */

@@ -366,7 +366,7 @@ static void EmbedText(sdot_op* o, int param)
 		char **ptr = &escaped;
 		(void)xml_escape(o->op.u.text.text, flags, put, ptr);
 
-		o->font = glNewFont(view->widgets, escaped, &view->penColor, pangotext,
+		o->font = glNewFont(view->widgets, escaped, &view->penColor,
 		                    font_op->op.u.font.name, font_op->op.u.font.size, 0);
 
 		free(escaped);
