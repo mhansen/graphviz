@@ -708,10 +708,10 @@ static int process(Agraph_t * g, char* graphName)
 	    return 1;
 	}
 	{
-	    char *name = gv_alloc(sizeof(PFX1) + strlen(graphName));
-	    sprintf(name, PFX1, graphName);
-	    out = agsubg(g, name, 1);
-	    free(name);
+	    agxbuf name = {0};
+	    agxbprint(&name, PFX1, graphName);
+	    out = agsubg(g, agxbuse(&name), 1);
+	    agxbfree(&name);
 	}
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
@@ -733,10 +733,10 @@ static int process(Agraph_t * g, char* graphName)
 	if (ND_mark(n))
 	    continue;
 	{
-	    char *name = gv_alloc(sizeof(PFX2) + strlen(graphName) + 32);
-	    sprintf(name, PFX2, graphName, c_cnt);
-	    out = agsubg(g, name, 1);
-	    free(name);
+	    agxbuf name = {0};
+	    agxbprint(&name, PFX2, graphName, c_cnt);
+	    out = agsubg(g, agxbuse(&name), 1);
+	    agxbfree(&name);
 	}
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
