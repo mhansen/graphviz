@@ -19,6 +19,7 @@
 #include    <cgraph/exit.h>
 #include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
+#include    <cgraph/unreachable.h>
 #include    <getopt.h>
 #include    <stdio.h>
 #include    <string.h>
@@ -465,6 +466,9 @@ static void initargs(int argc, char **argv)
 			optopt);
 		usage(1);
 	    }
+	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
 
