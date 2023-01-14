@@ -92,30 +92,24 @@ static char *blockName(agxbuf *xb, char *gname, int d) {
  */
 static char *getName(int ng, int nb)
 {
-    char *name;
-    static char *buf;
+    agxbuf name = {0};
 
     if (ng == 0 && nb == 0)
-	name = outfile;
+	agxbput(&name, outfile);
     else {
-	if (!buf) {
-	    size_t sz = strlen(outfile) + 100; // enough to handle '_<g>_<b>'
-	    buf = gv_alloc(sz);
-	}
 	if (suffix) {
 	    if (nb < 0)
-		sprintf(buf, "%s_%d_T.%s", path, ng, suffix);
+		agxbprint(&name, "%s_%d_T.%s", path, ng, suffix);
 	    else
-		sprintf(buf, "%s_%d_%d.%s", path, ng, nb, suffix);
+		agxbprint(&name, "%s_%d_%d.%s", path, ng, nb, suffix);
 	} else {
 	    if (nb < 0)
-		sprintf(buf, "%s_%d_T", path, ng);
+		agxbprint(&name, "%s_%d_T", path, ng);
 	    else
-		sprintf(buf, "%s_%d_%d", path, ng, nb);
+		agxbprint(&name, "%s_%d_%d", path, ng, nb);
 	}
-	name = buf;
     }
-    return name;
+    return agxbdisown(&name);
 }
 
 static void gwrite(Agraph_t * g, int ng, int nb)
@@ -134,8 +128,10 @@ static void gwrite(Agraph_t * g, int ng, int nb)
 	if (!outf) {
 	    fprintf(stderr, "Could not open %s for writing\n", name);
 	    perror("bcomps");
+	    free(name);
 	    graphviz_exit(1);
 	}
+	free(name);
 	agwrite(g, outf);
 	fclose(outf);
     }
