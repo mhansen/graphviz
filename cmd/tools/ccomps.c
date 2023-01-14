@@ -325,6 +325,7 @@ static void gwrite(Agraph_t * g)
 	if (!outf) {
 	    fprintf(stderr, "Could not open %s for writing\n", name);
 	    perror("ccomps");
+	    graphviz_exit(EXIT_FAILURE);
 	}
 	agwrite(g, outf);
 	fclose(outf);

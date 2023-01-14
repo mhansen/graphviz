@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Compatibility with `/bin/sh` has been restored in the Autotools build system.
   This was a regression in Graphviz 7.0.6. This restores the ability to compile
   on NetBSD which was fixed in 7.0.4 but regressed in 7.0.6. #2340
+- `ccomps` no longer crashes when failing to open files.
 
 ## [7.0.6] – 2023-01-06
 
