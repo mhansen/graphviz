@@ -23,6 +23,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/stack.h>
@@ -293,22 +294,18 @@ static int nodeInduce(Agraph_t * g, Agraph_t * eg)
 
 static char *getName(void)
 {
-    char *name;
-    static char *buf = 0;
+    agxbuf name = {0};
 
     if (sufcnt == 0)
-	name = outfile;
+	agxbput(&name, outfile);
     else {
-	if (!buf)
-	    buf = gv_alloc(strlen(outfile) + 20); // enough to handle '_number'
 	if (suffix)
-	    sprintf(buf, "%s_%d.%s", path, sufcnt, suffix);
+	    agxbprint(&name, "%s_%d.%s", path, sufcnt, suffix);
 	else
-	    sprintf(buf, "%s_%d", path, sufcnt);
-	name = buf;
+	    agxbprint(&name, "%s_%d", path, sufcnt);
     }
     sufcnt++;
-    return name;
+    return agxbuse(&name);
 }
 
 static void gwrite(Agraph_t * g)
@@ -325,8 +322,10 @@ static void gwrite(Agraph_t * g)
 	if (!outf) {
 	    fprintf(stderr, "Could not open %s for writing\n", name);
 	    perror("ccomps");
+	    free(name);
 	    graphviz_exit(EXIT_FAILURE);
 	}
+	free(name);
 	agwrite(g, outf);
 	fclose(outf);
     }
