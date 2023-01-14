@@ -574,11 +574,12 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    return 1;
 	}
 	{
-	    char *name = gv_alloc(sizeof(PFX1) + strlen(graphName));
-	    sprintf(name, PFX1, graphName);
+	    agxbuf buf = {0};
+	    agxbprint(&buf, PFX1, graphName);
+	    char *name = agxbuse(&buf);
 	    dout = agsubg(dg, name, 1);
 	    out = agsubg(g, name, 1);
-	    free(name);
+	    agxbfree(&buf);
 	}
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
@@ -602,11 +603,12 @@ static int processClusters(Agraph_t * g, char* graphName)
 	if (ND_mark(dn))
 	    continue;
 	{
-	    char *name = gv_alloc(sizeof(PFX2) + strlen(graphName) + 32);
-	    sprintf(name, PFX2, graphName, c_cnt);
+	    agxbuf buf = {0};
+	    agxbprint(&buf, PFX2, graphName, c_cnt);
+	    char *name = agxbuse(&buf);
 	    dout = agsubg(dg, name, 1);
 	    out = agsubg(g, name, 1);
-	    free(name);
+	    agxbfree(&buf);
 	}
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
 	GD_cc_subg(out) = 1;
