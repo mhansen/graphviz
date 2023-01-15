@@ -28,10 +28,12 @@
 #include <getopt.h>
 
 #include <stdlib.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
+#include <cgraph/unreachable.h>
 
 typedef struct {
     Agrec_t h;
@@ -74,22 +76,12 @@ typedef struct {
     Agraph_t *blks;
 } bcstate;
 
-static char *blockName(char *gname, int d)
-{
-    static char *buf;
-    static size_t bufsz;
-
-    size_t sz = strlen(gname) + 128;
-    if (sz > bufsz) {
-	free(buf);
-	buf = gv_alloc(sz);
-    }
-
+static char *blockName(agxbuf *xb, char *gname, int d) {
     if (*gname == '%') /* anonymous graph */
-	sprintf(buf, "_%s_bcc_%d", gname, d);
+	agxbprint(xb, "_%s_bcc_%d", gname, d);
     else
-	sprintf(buf, "%s_bcc_%d", gname, d);
-    return buf;
+	agxbprint(xb, "%s_bcc_%d", gname, d);
+    return agxbuse(xb);
 }
 
 /* getName:
@@ -100,30 +92,24 @@ static char *blockName(char *gname, int d)
  */
 static char *getName(int ng, int nb)
 {
-    char *name;
-    static char *buf;
+    agxbuf name = {0};
 
     if (ng == 0 && nb == 0)
-	name = outfile;
+	agxbput(&name, outfile);
     else {
-	if (!buf) {
-	    size_t sz = strlen(outfile) + 100; // enough to handle '_<g>_<b>'
-	    buf = gv_alloc(sz);
-	}
 	if (suffix) {
 	    if (nb < 0)
-		sprintf(buf, "%s_%d_T.%s", path, ng, suffix);
+		agxbprint(&name, "%s_%d_T.%s", path, ng, suffix);
 	    else
-		sprintf(buf, "%s_%d_%d.%s", path, ng, nb, suffix);
+		agxbprint(&name, "%s_%d_%d.%s", path, ng, nb, suffix);
 	} else {
 	    if (nb < 0)
-		sprintf(buf, "%s_%d_T", path, ng);
+		agxbprint(&name, "%s_%d_T", path, ng);
 	    else
-		sprintf(buf, "%s_%d_%d", path, ng, nb);
+		agxbprint(&name, "%s_%d_%d", path, ng, nb);
 	}
-	name = buf;
     }
-    return name;
+    return agxbdisown(&name);
 }
 
 static void gwrite(Agraph_t * g, int ng, int nb)
@@ -142,8 +128,10 @@ static void gwrite(Agraph_t * g, int ng, int nb)
 	if (!outf) {
 	    fprintf(stderr, "Could not open %s for writing\n", name);
 	    perror("bcomps");
+	    free(name);
 	    graphviz_exit(1);
 	}
+	free(name);
 	agwrite(g, outf);
 	fclose(outf);
     }
@@ -154,7 +142,9 @@ static Agraph_t *mkBlock(Agraph_t * g, bcstate * stp)
     Agraph_t *sg;
 
     stp->nComp++;
-    sg = agsubg(g, blockName(agnameof(g), stp->nComp), 1);
+    agxbuf xb = {0};
+    sg = agsubg(g, blockName(&xb, agnameof(g), stp->nComp), 1);
+    agxbfree(&xb);
     agbindrec(sg, "info", sizeof(Agraphinfo_t), true);
     NEXTBLK(sg) = stp->blks;
     stp->blks = sg;
@@ -301,11 +291,10 @@ static void usage(int v)
 static void split(char *name)
 {
     char *sfx = 0;
-    int size;
 
     sfx = strrchr(name, '.');
     if (sfx) {
-	size = sfx - name;
+	size_t size = (size_t)(sfx - name);
 	suffix = sfx + 1;
 	path = gv_strndup(name, size);
     } else {
@@ -349,6 +338,8 @@ static void init(int argc, char *argv[])
 		usage(1);
 	    }
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
     argv += optind;

@@ -19,6 +19,7 @@
 #include    <cgraph/exit.h>
 #include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
+#include    <cgraph/unreachable.h>
 #include    <getopt.h>
 #include    <stdio.h>
 #include    <string.h>
@@ -354,11 +355,10 @@ static void endElementHandler(void *userData, const char *name)
     }
 }
 
-static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
-{
+static Agraph_t *graphml_to_gv(char *graphname, FILE *graphmlFile, int *rv) {
     char buf[BUFSIZ];
     int done;
-    userdata_t udata = genUserdata(gname);
+    userdata_t udata = genUserdata(graphname);
     XML_Parser parser = XML_ParserCreate(NULL);
 
     *rv = 0;
@@ -466,6 +466,9 @@ static void initargs(int argc, char **argv)
 			optopt);
 		usage(1);
 	    }
+	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
 
@@ -499,7 +502,7 @@ nameOf (char* name, int cnt)
 
 int main(int argc, char **argv)
 {
-    Agraph_t *G;
+    Agraph_t *graph;
     Agraph_t *prev = 0;
     FILE *inFile;
     int rv = 0, gcnt = 0;
@@ -507,15 +510,15 @@ int main(int argc, char **argv)
 #ifdef HAVE_EXPAT
     initargs(argc, argv);
     while ((inFile = getFile())) {
-	while ((G = graphml_to_gv(nameOf(gname, gcnt), inFile, &rv))) {
+	while ((graph = graphml_to_gv(nameOf(gname, gcnt), inFile, &rv))) {
 	    gcnt++;
 	    if (prev)
 		agclose(prev);
-	    prev = G;
+	    prev = graph;
 	    if (Verbose) 
 		fprintf (stderr, "%s: %d nodes %d edges\n",
-		    agnameof (G), agnnodes(G), agnedges(G));
-	    agwrite(G, outFile);
+		    agnameof(graph), agnnodes(graph), agnedges(graph));
+	    agwrite(graph, outFile);
 	    fflush(outFile);
 	}
     }

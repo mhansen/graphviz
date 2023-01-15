@@ -26,6 +26,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/stack.h>
 #include <cgraph/exit.h>
+#include <cgraph/unreachable.h>
 #include <common/arith.h>
 #include <common/types.h>
 #include <common/utils.h>
@@ -210,6 +211,8 @@ static void init(int argc, char *argv[])
 		usage(1);
 	    }
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
     argv += optind;

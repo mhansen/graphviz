@@ -32,6 +32,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
+#include <cgraph/unreachable.h>
 #include <ingraphs/ingraphs.h>
 
 #include <getopt.h>
@@ -302,6 +303,8 @@ static void scanArgs(int argc, char **argv)
 		usage(1);
 	    }
 	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
     argv += optind;
