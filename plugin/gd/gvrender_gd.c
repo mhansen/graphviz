@@ -290,11 +290,14 @@ void gdgen_text(gdImagePtr im, pointf spf, pointf epf, int fontcolor, double fon
 #ifdef HAVE_GD_FONTCONFIG
         char* fontlist = fontname;
 #else
-        extern char *gd_alternate_fontlist(char *font);
+        extern char *gd_alternate_fontlist(const char *font);
         char* fontlist = gd_alternate_fontlist(fontname);
 #endif
         err = gdImageStringFTEx(im, brect, fontcolor,
                 fontlist, fontsize, fontangle, sp.x, sp.y, str, &strex);
+#ifndef HAVE_GD_FONTCONFIG
+        free(fontlist);
+#endif
 
         if (err) {
             /* revert to builtin fonts */
