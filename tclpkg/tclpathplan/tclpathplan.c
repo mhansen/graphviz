@@ -31,6 +31,8 @@
 
 #include <inttypes.h>
 #include <assert.h>
+#include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include "makecw.h"
 #include <math.h>
 #include <pathplan/pathutil.h>
@@ -200,7 +202,7 @@ static void triangle_callback(void *vgparg, point pqr[])
     }
 }
 
-static char *buildBindings(char *s1, char *s2)
+static char *buildBindings(char *s1, const char *s2)
 /*
  * previous binding in s1 binding to be added in s2 result in s3
  *
@@ -215,19 +217,17 @@ static char *buildBindings(char *s1, char *s2)
 	if (s1) {
 	    l = strlen(s2) - 1;
 	    if (l) {
-		s3 = malloc(strlen(s1) + l + 2);
-		strcpy(s3, s1);
-		strcat(s3, "\n");
-		strcat(s3, s2 + 1);
+		agxbuf new = {0};
+		agxbprint(&new, "%s\n%s", s1, s2 + 1);
 		free(s1);
+		return agxbdisown(&new);
 	    } else {
 		s3 = s1;
 	    }
 	} else {
 	    l = strlen(s2) - 1;
 	    if (l) {
-		s3 = malloc(l + 2);
-		strcpy(s3, s2 + 1);
+		s3 = gv_strdup(s2 + 1);
 	    } else {
 		s3 = NULL;
 	    }
@@ -236,8 +236,7 @@ static char *buildBindings(char *s1, char *s2)
 	free(s1);
 	l = strlen(s2);
 	if (l) {
-	    s3 = malloc(l + 2);
-	    strcpy(s3, s2);
+	    s3 = gv_strdup(s2);
 	} else {
 	    s3 = NULL;
 	}
