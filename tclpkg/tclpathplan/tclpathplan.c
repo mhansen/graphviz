@@ -32,6 +32,7 @@
 #include <inttypes.h>
 #include <assert.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include "makecw.h"
 #include <math.h>
 #include <pathplan/pathutil.h>
@@ -226,8 +227,7 @@ static char *buildBindings(char *s1, char *s2)
 	} else {
 	    l = strlen(s2) - 1;
 	    if (l) {
-		s3 = malloc(l + 1);
-		strcpy(s3, s2 + 1);
+		s3 = gv_strdup(s2 + 1);
 	    } else {
 		s3 = NULL;
 	    }
@@ -236,8 +236,7 @@ static char *buildBindings(char *s1, char *s2)
 	free(s1);
 	l = strlen(s2);
 	if (l) {
-	    s3 = malloc(l + 1);
-	    strcpy(s3, s2);
+	    s3 = gv_strdup(s2);
 	} else {
 	    s3 = NULL;
 	}
