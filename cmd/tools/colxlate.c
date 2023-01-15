@@ -25,8 +25,6 @@ typedef struct hsbcolor_t {
     unsigned char h, s, b;
 } hsbcolor_t;
 
-
-#ifndef NOCOLORNAMES
 #include "colortbl.h"
 
 static char *canoncolor(const char *orig, char *out)
@@ -76,9 +74,3 @@ char *colorxlate(char *str, char *buf)
 		((double) last->s) / 255, ((double) last->b) / 255);
     return buf;
 }
-#else
-char *colorxlate(char *str, char *buf)
-{
-    return str;
-}
-#endif
