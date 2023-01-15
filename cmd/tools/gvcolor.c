@@ -29,7 +29,7 @@
 #include "colorxlate.h"
 #include <math.h>
 #include <stdlib.h>
-typedef struct Agnodeinfo_t {
+typedef struct {
     Agrec_t h;
     double relrank;	/* coordinate of its rank, smaller means lower rank */
     double x[NC];	/* color vector */
