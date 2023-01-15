@@ -49,8 +49,7 @@ static int colorcmpf(const void *a0, const void *a1)
     return strcmp(p0->name, p1->name);
 }
 
-char *colorxlate(char *str, char *buf)
-{
+void colorxlate(char *str, char *buf) {
     static hsbcolor_t *last;
     char canon[128];
     char *p;
@@ -72,5 +71,4 @@ char *colorxlate(char *str, char *buf)
     } else
 	sprintf(buf, "%.3f %.3f %.3f", ((double) last->h) / 255,
 		((double) last->s) / 255, ((double) last->b) / 255);
-    return buf;
 }

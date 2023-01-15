@@ -50,7 +50,7 @@ int AdjustSaturation;
 double MinRankSaturation;
 double MaxRankSaturation;
 
-extern char *colorxlate(char *str, char *buf);
+extern void colorxlate(char *str, char *buf);
 
 static int cmpf(Agnode_t ** n0, Agnode_t ** n1)
 {
