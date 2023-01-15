@@ -226,7 +226,7 @@ static char *buildBindings(char *s1, char *s2)
 	} else {
 	    l = strlen(s2) - 1;
 	    if (l) {
-		s3 = malloc(l + 2);
+		s3 = malloc(l + 1);
 		strcpy(s3, s2 + 1);
 	    } else {
 		s3 = NULL;
@@ -236,7 +236,7 @@ static char *buildBindings(char *s1, char *s2)
 	free(s1);
 	l = strlen(s2);
 	if (l) {
-	    s3 = malloc(l + 2);
+	    s3 = malloc(l + 1);
 	    strcpy(s3, s2);
 	} else {
 	    s3 = NULL;
