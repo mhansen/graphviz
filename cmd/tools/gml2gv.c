@@ -13,6 +13,7 @@
 #include <string.h>
 
 #include <getopt.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/unreachable.h>
@@ -119,18 +120,12 @@ static void initargs(int argc, char **argv)
 	outFile = stdout;
 }
 
-static char*
-nameOf (char* name, int cnt)
-{
-    static char* buf = 0;
-
+static char *nameOf(agxbuf *buf, char *name, int cnt) {
     if (*name == '\0')
 	return name;
     if (cnt) {
-	if (!buf)
-	    buf = gv_calloc(strlen(name) + 32, sizeof(char)); // 32 to handle any integer plus null byte
-	sprintf (buf, "%s%d", name, cnt);
-	return buf;
+	agxbprint(buf, "%s%d", name, cnt);
+	return agxbuse(buf);
     }
     else
 	return name;
@@ -142,13 +137,14 @@ int main(int argc, char **argv)
     Agraph_t *prev = 0;
     FILE *inFile;
     int gcnt, cnt, rv;
+    agxbuf buf = {0};
 
     rv = 0;
     gcnt = 0;
     initargs(argc, argv);
     while ((inFile = getFile())) {
 	cnt = 0;
-	while ((G = gml_to_gv(nameOf(gname, gcnt), inFile, cnt, &rv))) {
+	while ((G = gml_to_gv(nameOf(&buf, gname, gcnt), inFile, cnt, &rv))) {
 	    cnt++;
 	    gcnt++;
 	    if (prev)
@@ -161,6 +157,7 @@ int main(int argc, char **argv)
 	    fflush(outFile);
 	}
     }
+    agxbfree(&buf);
     graphviz_exit(rv);
 }
 
