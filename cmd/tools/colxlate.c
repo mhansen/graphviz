@@ -26,6 +26,7 @@ typedef struct hsbcolor_t {
 } hsbcolor_t;
 
 #include "colortbl.h"
+#include "colorxlate.h"
 
 static char *canoncolor(const char *orig, char *out)
 {

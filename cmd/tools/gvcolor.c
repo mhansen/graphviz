@@ -26,6 +26,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include "colorxlate.h"
 #include <math.h>
 #include <stdlib.h>
 typedef struct Agnodeinfo_t {
@@ -49,8 +50,6 @@ int LR = 0;			/* rank orientation */
 int AdjustSaturation;
 double MinRankSaturation;
 double MaxRankSaturation;
-
-extern void colorxlate(char *str, char *buf);
 
 static int cmpf(Agnode_t ** n0, Agnode_t ** n1)
 {

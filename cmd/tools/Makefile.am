@@ -10,7 +10,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/common \
 	$(EXPAT_INCLUDES)
 
-noinst_HEADERS = colortbl.h convert.h mmio.h matrix_market.h \
+noinst_HEADERS = colortbl.h colorxlate.h convert.h mmio.h matrix_market.h \
 	graph_generator.h gml2gv.h gmlparse.h openFile.h
 if ENABLE_STATIC
 bin_PROGRAMS = gc gvcolor gxl2gv acyclic nop ccomps sccmap tred \
@@ -118,7 +118,7 @@ nop_LDADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 
-gvcolor_SOURCES = gvcolor.c colxlate.c colortbl.h
+gvcolor_SOURCES = gvcolor.c colxlate.c colortbl.h colorxlate.h
 
 gvcolor_LDADD = \
 	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
