@@ -31,6 +31,7 @@
 
 #include <inttypes.h>
 #include <assert.h>
+#include <cgraph/agxbuf.h>
 #include "makecw.h"
 #include <math.h>
 #include <pathplan/pathutil.h>
@@ -215,11 +216,10 @@ static char *buildBindings(char *s1, char *s2)
 	if (s1) {
 	    l = strlen(s2) - 1;
 	    if (l) {
-		s3 = malloc(strlen(s1) + l + 2);
-		strcpy(s3, s1);
-		strcat(s3, "\n");
-		strcat(s3, s2 + 1);
+		agxbuf new = {0};
+		agxbprint(&new, "%s\n%s", s1, s2 + 1);
 		free(s1);
+		return agxbdisown(&new);
 	    } else {
 		s3 = s1;
 	    }
