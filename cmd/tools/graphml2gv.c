@@ -354,11 +354,10 @@ static void endElementHandler(void *userData, const char *name)
     }
 }
 
-static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
-{
+static Agraph_t *graphml_to_gv(char *graphname, FILE *graphmlFile, int *rv) {
     char buf[BUFSIZ];
     int done;
-    userdata_t udata = genUserdata(gname);
+    userdata_t udata = genUserdata(graphname);
     XML_Parser parser = XML_ParserCreate(NULL);
 
     *rv = 0;
