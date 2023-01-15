@@ -1,3 +1,5 @@
 #pragma once
 
-void colorxlate(char *str, char *buf);
+#include <cgraph/agxbuf.h>
+
+void colorxlate(char *str, agxbuf *buf);

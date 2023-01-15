@@ -13,6 +13,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/agxbuf.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -50,10 +51,9 @@ static int colorcmpf(const void *a0, const void *a1)
     return strcmp(p0->name, p1->name);
 }
 
-void colorxlate(char *str, char *buf) {
+void colorxlate(char *str, agxbuf *buf) {
     static hsbcolor_t *last;
     char canon[128];
-    char *p;
     hsbcolor_t fake;
 
     if (last == NULL || strcmp(last->name, str)) {
@@ -64,12 +64,11 @@ void colorxlate(char *str, char *buf) {
     if (last == NULL) {
 	if (!isdigit((int)canon[0])) {
 	    fprintf(stderr, "warning: %s is not a known color\n", str);
-	    strcpy(buf, str);
+	    agxbput(buf, str);
 	} else
-	    for (p = buf; (*p = *str++); p++)
-		if (*p == ',')
-		    *p = ' ';
+	    for (const char *p = str; *p != '\0'; ++p)
+		agxbputc(buf, *p == ',' ? ' ' : *p);
     } else
-	sprintf(buf, "%.3f %.3f %.3f", ((double) last->h) / 255,
+	agxbprint(buf, "%.3f %.3f %.3f", ((double) last->h) / 255,
 		((double) last->s) / 255, ((double) last->b) / 255);
 }
