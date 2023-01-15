@@ -202,7 +202,7 @@ static void triangle_callback(void *vgparg, point pqr[])
     }
 }
 
-static char *buildBindings(char *s1, char *s2)
+static char *buildBindings(char *s1, const char *s2)
 /*
  * previous binding in s1 binding to be added in s2 result in s3
  *
