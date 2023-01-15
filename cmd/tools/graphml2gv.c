@@ -502,7 +502,7 @@ nameOf (char* name, int cnt)
 
 int main(int argc, char **argv)
 {
-    Agraph_t *G;
+    Agraph_t *graph;
     Agraph_t *prev = 0;
     FILE *inFile;
     int rv = 0, gcnt = 0;
@@ -510,15 +510,15 @@ int main(int argc, char **argv)
 #ifdef HAVE_EXPAT
     initargs(argc, argv);
     while ((inFile = getFile())) {
-	while ((G = graphml_to_gv(nameOf(gname, gcnt), inFile, &rv))) {
+	while ((graph = graphml_to_gv(nameOf(gname, gcnt), inFile, &rv))) {
 	    gcnt++;
 	    if (prev)
 		agclose(prev);
-	    prev = G;
+	    prev = graph;
 	    if (Verbose) 
 		fprintf (stderr, "%s: %d nodes %d edges\n",
-		    agnameof (G), agnnodes(G), agnedges(G));
-	    agwrite(G, outFile);
+		    agnameof(graph), agnnodes(graph), agnedges(graph));
+	    agwrite(graph, outFile);
 	    fflush(outFile);
 	}
     }
