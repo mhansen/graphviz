@@ -557,15 +557,15 @@ attr_list *load_attr_list(Agraph_t * g)
 
 		switch (idx) {
 		case 0:
-		    /**/ attr->name = safestrdup(a);
+		    attr->name = safestrdup(a);
 		    break;
 		case 1:
-		    /**/ attr->defValG = safestrdup(a);
+		    attr->defValG = safestrdup(a);
 		    attr->defValN = safestrdup(a);
 		    attr->defValE = safestrdup(a);
 		    break;
 		case 2:
-		    /**/ set_attr_object_type(a, attr->objType);
+		    set_attr_object_type(a, attr->objType);
 		    break;
 		}
 		idx++;

@@ -257,7 +257,7 @@ typedef struct
 	float minedgelen;
 	float fitin_zoom;
 	xdot* xDot;
-	float global_z;
+	double global_z;
 	attr_list* attributes;/*attribute list*/
 
 	topviewcache cache;

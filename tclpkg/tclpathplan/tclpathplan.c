@@ -307,12 +307,12 @@ static point scale(point c, point p, double gain)
     return q;
 }
 
-static int remove_poly(vgpane_t * vgp, int polyid)
+static int remove_poly(vgpane_t * vgp, int id)
 {
     int i, j;
 
     for (i = 0; i < vgp->Npoly; i++) {
-	if (vgp->poly[i].id == polyid) {
+	if (vgp->poly[i].id == id) {
 	    free(vgp->poly[i].boundary.ps);
 	    for (j = i++; i < vgp->Npoly; i++, j++) {
 		vgp->poly[j] = vgp->poly[i];
@@ -326,13 +326,13 @@ static int remove_poly(vgpane_t * vgp, int polyid)
 }
 
 static int
-insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int polyid, char *vargv[],
+insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int id, char *vargv[],
 	    int vargc)
 {
     poly *np;
     int i, result;
 
-    np = allocpoly(vgp, polyid, vargc);
+    np = allocpoly(vgp, id, vargc);
     for (i = 0; i < vargc; i += 2) {
 	result =
 	    scanpoint(interp, &vargv[i],

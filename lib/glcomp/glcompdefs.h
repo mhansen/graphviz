@@ -78,7 +78,6 @@ extern "C" {
 #define	GLCOMP_DEFAULT_WIDTH	10.0f
 #define	GLCOMP_DEFAULT_HEIGHT	10.0f
 
-    typedef enum { gluttext, pangotext } glCompFontType;
     typedef enum { glAlignNone, glAlignLeft, glAlignTop, glAlignBottom,
 	    glAlignRight, glAlignParent, glAlignCenter } glCompAlignment;
 
@@ -86,8 +85,6 @@ extern "C" {
 	    glFontVJustifyBottom, glFontVJustifyCenter } glCompVJustify;
     typedef enum { glFontHJustifyNone, glFontHJustifyLeft,
 	    glFontHJustifyRight, glFontHJustifyCenter } glCompHJustify;
-    typedef enum { glBorderNone, glBorderSolid, glBorderBevel,
-	    glBorderCustom } glCompBorderType;
 
     typedef enum { glMouseDown, glMouseUp } glCompMouseStatus;
     typedef enum { glMouseLeftButton, glMouseRightButton,
@@ -187,7 +184,6 @@ extern "C" {
     typedef struct {
 	char *fontdesc;		//font description , only used with pango fonts
 	glCompColor color;
-	glCompFontType type;
 	void *glutfont;		/*glut font pointer if used */
 	int transparent;
 	glCompTex *tex;		/* texture, if type is pangotext */
@@ -221,7 +217,6 @@ extern "C" {
 	glCompPoint refPos;	/*calculated pos after anchors and aligns */
 	GLfloat width, height;
 	GLfloat borderWidth;
-	glCompBorderType borderType;
 	glCompColor color;
 	int enabled;
 	int visible;

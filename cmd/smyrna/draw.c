@@ -123,7 +123,7 @@ static void DrawBeziers(sdot_op* o, int param)
     int filled;
     xdot_op *  op=&o->op;
     xdot_point* ps = op->u.bezier.pts;
-    view->Topview->global_z = view->Topview->global_z + o->layer*LAYER_DIFF;
+    view->Topview->global_z += o->layer * LAYER_DIFF;
 
     if (op->kind == xd_filled_bezier)
 	filled = 1;
@@ -140,17 +140,15 @@ static void DrawBeziers(sdot_op* o, int param)
 //void DrawEllipse(xdot_point* xpoint,GLfloat xradius, GLfloat yradius,int filled)
 static void DrawEllipse(sdot_op*  o, int param)
 {
-    //to draw a circle set xradius and yradius same values
-    GLfloat x, y, xradius, yradius;
     int i = 0;
     int filled;
     xdot_op * op=&o->op;
-    view->Topview->global_z=view->Topview->global_z+o->layer*LAYER_DIFF;
+    view->Topview->global_z += o->layer * LAYER_DIFF;
     set_options(param);
-    x = op->u.ellipse.x - dx;
-    y = op->u.ellipse.y - dy;
-    xradius = (GLfloat) op->u.ellipse.w;
-    yradius = (GLfloat) op->u.ellipse.h;
+    double x = op->u.ellipse.x - dx;
+    double y = op->u.ellipse.y - dy;
+    double xradius = op->u.ellipse.w;
+    double yradius = op->u.ellipse.h;
     if (op->kind == xd_filled_ellipse) {
 	if (param == 0)
 	    glColor4f(view->fillColor.R, view->fillColor.G,
@@ -181,7 +179,7 @@ static void DrawEllipse(sdot_op*  o, int param)
 	//convert degrees into radians
 	float degInRad = (float) (i * DEG2RAD);
 	glVertex3f((GLfloat) (x + cos(degInRad) * xradius),
-		   (GLfloat) (y + sin(degInRad) * yradius), view->Topview->global_z);
+		   (GLfloat) (y + sin(degInRad) * yradius), (GLfloat)view->Topview->global_z);
     }
     glEnd();
 }
@@ -189,7 +187,7 @@ static void DrawEllipse(sdot_op*  o, int param)
 static void DrawPolygon(sdot_op * o, int param)
 {
     xdot_op *  op=&o->op;
-    view->Topview->global_z=view->Topview->global_z+o->layer*LAYER_DIFF;
+    view->Topview->global_z += o->layer * LAYER_DIFF;
 
     set_options(param);
 
@@ -219,7 +217,7 @@ static void DrawPolygon(sdot_op * o, int param)
 static void DrawPolyline(sdot_op* o, int param)
 {
     xdot_op * op=&o->op;
-    view->Topview->global_z=view->Topview->global_z+o->layer*LAYER_DIFF;
+    view->Topview->global_z += o->layer * LAYER_DIFF;
 
     if (param == 0)
 	glColor4f(view->penColor.R, view->penColor.G, view->penColor.B,
@@ -233,7 +231,7 @@ static void DrawPolyline(sdot_op* o, int param)
     for (size_t i = 0; i < op->u.polyline.cnt; ++i) {
 	glVertex3f((GLfloat) op->u.polyline.pts[i].x - dx,
 		   (GLfloat) op->u.polyline.pts[i].y - dy,
-		   (GLfloat) op->u.polyline.pts[i].z + view->Topview->global_z);
+		   (GLfloat)(op->u.polyline.pts[i].z + view->Topview->global_z));
     }
     glEnd();
 }
@@ -339,7 +337,7 @@ static void EmbedText(sdot_op* o, int param)
 
 	GLfloat x,y;
 	glColor4f(view->penColor.R,view->penColor.G,view->penColor.B,view->penColor.A);
-	view->Topview->global_z=view->Topview->global_z+o->layer*LAYER_DIFF+0.05;
+	view->Topview->global_z += o->layer * LAYER_DIFF + 0.05;
 	switch (o->op.u.text.align)
 	{
 		case xd_left:
@@ -368,7 +366,7 @@ static void EmbedText(sdot_op* o, int param)
 		char **ptr = &escaped;
 		(void)xml_escape(o->op.u.text.text, flags, put, ptr);
 
-		o->font = glNewFont(view->widgets, escaped, &view->penColor, pangotext,
+		o->font = glNewFont(view->widgets, escaped, &view->penColor,
 		                    font_op->op.u.font.name, font_op->op.u.font.size, 0);
 
 		free(escaped);
@@ -398,13 +396,13 @@ void drawCircle(float x, float y, float radius, float zdepth)
 {
     int i;
     if (radius < 0.3)
-	radius = (float) 0.4;
+	radius = 0.4f;
     glBegin(GL_POLYGON);
     for (i = 0; i < 360; i = i + 36) {
 	float degInRad = (float) (i * DEG2RAD);
 	glVertex3f((GLfloat) (x + cos(degInRad) * radius),
 		   (GLfloat) (y + sin(degInRad) * radius),
-		   (GLfloat) zdepth + view->Topview->global_z);
+		   (GLfloat)(zdepth + view->Topview->global_z));
     }
 
     glEnd();

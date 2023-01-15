@@ -215,10 +215,7 @@ void glCompCalcWidget(glCompCommon * parent, glCompCommon * child,
 	child->refPos.y = child->pos.y;
 	return;
     }
-    if (parent->borderType == glBorderNone)
-	borderWidth = 0.0f;
-    else
-	borderWidth = parent->borderWidth;
+    borderWidth = parent->borderWidth;
     if (child->align != glAlignNone)	//if alignment, make sure width and height is no greater than parent
     {
 	if (child->width > parent->width)

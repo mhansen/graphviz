@@ -149,7 +149,6 @@ void glCompInitCommon(glCompObj * childObj, glCompObj * parentObj,
     c->visible = 1;
     c->pos.x = x;
     c->pos.y = y;
-    c->borderType = glBorderSolid;
     c->borderWidth = GLCOMPSET_BORDERWIDTH;
 
     /*NULL function pointers */
