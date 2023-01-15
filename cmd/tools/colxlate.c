@@ -20,7 +20,7 @@
 #include <search.h>
 #endif
 #include <ctype.h>
-typedef struct hsbcolor_t {
+typedef struct {
     char *name;
     unsigned char h, s, b;
 } hsbcolor_t;
