@@ -619,8 +619,10 @@ def test_1618(long: str, short: str):
                       stderr=subprocess.PIPE, check=True)
 
   # output from both should match
-  assert p1.stdout == p2.stdout, f"`dot {long}` wrote output than `dot {short}`"
-  assert p1.stderr == p2.stderr, f"`dot {long}` wrote output than `dot {short}`"
+  assert p1.stdout == p2.stdout, \
+    f"`dot {long}` wrote differing output than `dot {short}`"
+  assert p1.stderr == p2.stderr, \
+    f"`dot {long}` wrote differing output than `dot {short}`"
 
 @pytest.mark.xfail(strict=True)
 def test_1624():
