@@ -15,9 +15,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-int common_neighbors(vtx_data * graph, int v, int u, int *v_vector)
+int common_neighbors(vtx_data * graph, int u, int *v_vector)
 {
-    /* count number of common neighbors of 'v' and 'u' */
+    // count number of common neighbors of 'v_vector' and 'u'
     int neighbor;
     int num_shared_neighbors = 0;
     int j;
@@ -256,9 +256,7 @@ void compute_new_weights(vtx_data * graph, int n)
 	    neighbor = graph[i].edges[j];
 	    deg_j = graph[neighbor].nedges - 1;
 	    weights[j] =
-		(float) (deg_i + deg_j -
-			 2 * common_neighbors(graph, i, neighbor,
-					      vtx_vec));
+		(float)(deg_i + deg_j - 2 * common_neighbors(graph, neighbor, vtx_vec));
 	}
 	empty_neighbors_vec(graph, i, vtx_vec);
 	weights += graph[i].nedges;

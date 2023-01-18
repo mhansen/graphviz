@@ -791,7 +791,7 @@ float *compute_apsp_artifical_weights_packed(vtx_data * graph, int n)
 		neighbor = graph[i].edges[j];
 		deg_j = graph[neighbor].nedges - 1;
 		weights[j] = fmaxf((float)(deg_i + deg_j -
-			 2 * common_neighbors(graph, i, neighbor, vtx_vec)), graph[i].ewgts[j]);
+			 2 * common_neighbors(graph, neighbor, vtx_vec)), graph[i].ewgts[j]);
 	    }
 	    empty_neighbors_vec(graph, i, vtx_vec);
 	    graph[i].ewgts = weights;
@@ -807,8 +807,7 @@ float *compute_apsp_artifical_weights_packed(vtx_data * graph, int n)
 		neighbor = graph[i].edges[j];
 		deg_j = graph[neighbor].nedges - 1;
 		weights[j] =
-		    ((float) deg_i + deg_j -
-		     2 * common_neighbors(graph, i, neighbor, vtx_vec));
+		    ((float) deg_i + deg_j - 2 * common_neighbors(graph, neighbor, vtx_vec));
 	    }
 	    empty_neighbors_vec(graph, i, vtx_vec);
 	    weights += graph[i].nedges;
