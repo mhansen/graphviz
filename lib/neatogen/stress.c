@@ -827,7 +827,7 @@ float *compute_apsp_artifical_weights_packed(vtx_data * graph, int n)
     return Dij;
 }
 
-#if DEBUG > 1
+#if defined(DEBUG) && DEBUG > 1
 static void dumpMatrix(float *Dij, int n)
 {
     int i, j, count = 0;
