@@ -245,10 +245,6 @@ void compute_new_weights(vtx_data * graph, int n)
     float *weights = gv_calloc(nedges, sizeof(float));
 
     for (i = 0; i < n; i++) {
-	vtx_vec[i] = 0;
-    }
-
-    for (i = 0; i < n; i++) {
 	graph[i].ewgts = weights;
 	fill_neighbors_vec_unweighted(graph, i, vtx_vec);
 	deg_i = graph[i].nedges - 1;
