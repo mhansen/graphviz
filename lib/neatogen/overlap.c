@@ -288,7 +288,9 @@ static void scale_coord(int dim, int m, double *x, double scale){
   }
 }
 
-double overlap_scaling(int dim, int m, double *x, double *width, double scale_sta, double scale_sto, double epsilon, int maxiter){
+static double overlap_scaling(int dim, int m, double *x, double *width,
+                              double scale_sta, double scale_sto,
+                              double epsilon, int maxiter) {
   /* do a bisection between scale_sta and scale_sto, up to maxiter iterations or till interval <= epsilon, to find the best scaling to avoid overlap
      m: number of points
      x: the coordinates
