@@ -103,6 +103,7 @@ static int comp_scan_points(const void *p, const void *q){
 }
 
 static void NodeDest(void* a) {
+  (void)a;
   /*  free((int*)a);*/
 }
 
@@ -117,9 +118,11 @@ static void NodePrint(const void* a) {
 }
 
 static void InfoPrint(void* a) {
+  (void)a;
 }
 
 static void InfoDest(void *a){
+  (void)a;
 }
 
 static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, int check_overlap_only){
