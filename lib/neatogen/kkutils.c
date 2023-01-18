@@ -24,7 +24,7 @@ int common_neighbors(vtx_data * graph, int u, int *v_vector)
     for (j = 1; j < graph[u].nedges; j++) {
 	neighbor = graph[u].edges[j];
 	if (v_vector[neighbor] > 0) {
-	    /* a shared neighobr */
+	    // a shared neighbor
 	    num_shared_neighbors++;
 	}
     }
