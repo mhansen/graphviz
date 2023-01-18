@@ -390,7 +390,6 @@ EXCLUDE = (
   "lib/mingle/ink.cpp",
   "lib/mingle/ink.h",
   "lib/mingle/nearest_neighbor_graph.cpp",
-  "lib/mingle/nearest_neighbor_graph.h",
   "lib/mingle/nearest_neighbor_graph_ann.cpp",
   "lib/neatogen/adjust.c",
   "lib/neatogen/adjust.h",
