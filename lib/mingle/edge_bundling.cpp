@@ -625,6 +625,8 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
     /* plan: merge a node with its neighbors if doing so improve. Form coarsening graph, repeat until no more ink saving */
     edges = agglomerative_ink_bundling(dim, A, edges, nneighbor, max_recursion, angle_param, angle);
 #else
+    (void)max_recursion;
+    (void)nneighbor;
     agerr (AGERR, "Graphviz built without approximate nearest neighbor library ANN; agglomerative inking not available\n");
     edges = edges;
 #endif
