@@ -327,7 +327,6 @@ def test_358():
 
 @pytest.mark.skipif(which("gv2gxl") is None or which("gxl2gv") is None,
                     reason="GXL tools not available")
-@pytest.mark.xfail() # FIXME: #2344
 def test_517():
   """
   round tripping a graph through gv2gxl should not lose HTML labels
