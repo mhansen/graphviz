@@ -23,6 +23,7 @@ extern "C" {
 #define _EXLIB_H
 
 #include <ast/ast.h>
+#include <sfio/sfio_t.h>
 
 #define sfstrseek(f,p,m) \
     ( \

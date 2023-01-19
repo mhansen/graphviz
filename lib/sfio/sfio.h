@@ -56,23 +56,6 @@ extern "C" {
 	Sfdisc_t *disc;		/* the continuing discipline    */
     };
 
-/* a file structure */
-    struct _sfio_s {
-	unsigned char *next;	/* next position to read/write from     */
-	unsigned char *endw;	/* end of write buffer                  */
-	unsigned char *endr;	/* end of read buffer                   */
-	unsigned char *endb;	/* end of buffer                        */
-	Sfio_t *push;		/* the stream that was pushed on        */
-	unsigned short flags;	/* type of stream                       */
-	short file;		/* file descriptor                      */
-	unsigned char *data;	/* base of data buffer                  */
-	ssize_t size;		/* buffer size                          */
-	ssize_t val;		/* values or string lengths             */
-#ifdef _SFIO_PRIVATE
-	 _SFIO_PRIVATE
-#endif
-    };
-
 /* formatting environment */
     typedef struct _sffmt_s Sffmt_t;
     typedef int (*Sffmtext_f)(void *, Sffmt_t *);
