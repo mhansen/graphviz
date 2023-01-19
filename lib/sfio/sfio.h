@@ -221,23 +221,6 @@ extern "C" {
 
 #undef extern
 
-#if defined(__cplusplus)
-#define _SF_(f)		(f)
-#else
-#define _SF_(f)		((Sfio_t*)(f))
-#endif
-#define __sf_putc(f,c)	(_SF_(f)->next >= _SF_(f)->endw ? \
-			 _sfflsbuf(_SF_(f),(int)((unsigned char)(c))) : \
-			 (int)(*_SF_(f)->next++ = (unsigned char)(c)) )
-#define __sf_getc(f)	(_SF_(f)->next >= _SF_(f)->endr ? _sffilbuf(_SF_(f),0) : \
-			 (int)(*_SF_(f)->next++) )
-#define __sf_fileno(f)	((f) ? _SF_(f)->file : -1)
-#define __sf_slen()	(_Sfi)
-
-#define sfputc(f,c)				( __sf_putc((f),(c))		)
-#define sfgetc(f)				( __sf_getc(f)			)
-#define sffileno(f)				( __sf_fileno(f)		)
-#define sfslen()				( __sf_slen()			)
 #ifdef __cplusplus
 }
 #endif
