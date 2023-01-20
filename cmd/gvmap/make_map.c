@@ -1217,24 +1217,22 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 
   {
     int nz, nh = 0;/* the set to highlight */
-    double *xtemp;
     if (HIGHLIGHT_SET){
       if (Verbose) fprintf(stderr," highlight cluster %d, n = %d\n",HIGHLIGHT_SET, n);
-      xtemp = gv_calloc(n * dim, sizeof(double));
       /* shift set to the beginning */
       nz = 0;
       for (i = 0; i < n; i++){
 	if (grouping[i] == HIGHLIGHT_SET){
 	  nh++;
 	  for (j = 0; j < dim; j++){
-	    xtemp[nz++] = x[i*dim+j];
+	    (*xcombined)[nz++] = x[i*dim+j];
 	  }
 	}
       }
       for (i = 0; i < n; i++){
 	if (grouping[i] != HIGHLIGHT_SET){
 	  for (j = 0; j < dim; j++){
-	    xtemp[nz++] = x[i*dim+j];
+	    (*xcombined)[nz++] = x[i*dim+j];
 	  }
 	}
       }
@@ -1245,11 +1243,9 @@ static int make_map_internal(int exclude_random, int include_OK_points,
       for (i = nh; i < n; i++){
 	grouping[i] = 2;
       }
-      memcpy(*xcombined, xtemp, n*dim*sizeof(double));
       *nrandom += n - nh;/* count everything except cluster HIGHLIGHT_SET as random */
       n = nh;
       if (Verbose) fprintf(stderr,"nh = %d\n",nh);
-      free(xtemp);
     }
   }
 
