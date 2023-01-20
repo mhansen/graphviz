@@ -665,7 +665,7 @@ static int same_edge(int ecur, int elast, int *edge_table){
 }
 
 static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_ptr, int *comps,
-			       int *mask, double *x_poly, SparseMatrix *polys){
+			       int *mask, SparseMatrix *polys){
   /*============================================================
 
     polygon slids that will be colored
@@ -992,7 +992,7 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
     polygon solids
 
     ============================================================*/
-  get_polygon_solids(nt, E, ncomps, comps_ptr, comps, mask, *x_poly, polys);
+  get_polygon_solids(nt, E, ncomps, comps_ptr, comps, mask, polys);
 
   B = get_country_graph(n, E, groups, GRP_RANDOM, GRP_BBOX);
   *country_graph = B;
