@@ -277,13 +277,19 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               double *x_poly, int *polys_groups, float *r,
                               float *g, float *b, const char *opacity) {
   int i, j, *ia = polys->ia, *ja = polys->ja, *a = polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
-  int np = 0, maxlen = 0;
+  int np = 0;
   float *xp, *yp;
   int fill = -1;
   char cstring[] = "#aaaaaaff";
   int use_line = (line_width >= 0);
   
-  for (i = 0; i < npolys; i++) maxlen = MAX(maxlen, ia[i+1]-ia[i]);
+  size_t maxlen = 0;
+  for (i = 0; i < npolys; i++) {
+    int len = ia[i + 1] - ia[i];
+    if (len > 0 && (size_t)len > maxlen) {
+      maxlen = (size_t)len;
+    }
+  }
 
   xp = gv_calloc(maxlen, sizeof(float));
   yp = gv_calloc(maxlen, sizeof(float));
