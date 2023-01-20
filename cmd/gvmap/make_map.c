@@ -1014,7 +1014,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
   int dim2 = 2, nn = 0;
   int max_qtree_level = 10;
   double ymin[2], min;
-  int imin, nz, nzok = 0, nzok0 = 0, nt;
+  int imin, nzok = 0, nzok0 = 0, nt;
   double *xran, point[2];
   struct Triangle *Tp;
   SparseMatrix E;
@@ -1137,7 +1137,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
     }
     srand(123);
     xran = gv_calloc((*nrandom + 4) * dim2, sizeof(double));
-    nz = 0;
+    int nz = 0;
     if (INCLUDE_OK_POINTS){
       nzok0 = nzok = *nrandom - 1;/* points that are within tolerance of real or artificial points */
       if (grouping == grouping0) {
