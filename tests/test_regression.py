@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import platform
 import re
+import shutil
 import signal
 import stat
 import subprocess
@@ -2080,6 +2081,27 @@ def test_2325():
 
   # run it through Graphviz
   dot("svg", input)
+
+@pytest.mark.skipif(shutil.which("groff") is None, reason="groff not available")
+def test_2341():
+  """
+  PIC backend should generate correct comments
+  https://gitlab.com/graphviz/graphviz/-/issues/2341
+  """
+
+  # a simple graph
+  source = "digraph { a -> b; }"
+
+  # generate PIC from this
+  pic = dot("pic", source=source)
+
+  # run this through groff
+  groffed = subprocess.check_output(["groff", "-Tascii", "-p"], input=pic,
+                                    universal_newlines=True)
+
+  # it should not contain any comments
+  assert re.search(r"^\s*#", groffed) is None, \
+    "Graphviz comment remains in groff output"
 
 def test_changelog_dates():
   """
