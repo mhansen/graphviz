@@ -277,13 +277,19 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               double *x_poly, int *polys_groups, float *r,
                               float *g, float *b, const char *opacity) {
   int i, j, *ia = polys->ia, *ja = polys->ja, *a = polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
-  int np = 0, maxlen = 0;
+  int np = 0;
   float *xp, *yp;
   int fill = -1;
   char cstring[] = "#aaaaaaff";
   int use_line = (line_width >= 0);
   
-  for (i = 0; i < npolys; i++) maxlen = MAX(maxlen, ia[i+1]-ia[i]);
+  size_t maxlen = 0;
+  for (i = 0; i < npolys; i++) {
+    int len = ia[i + 1] - ia[i];
+    if (len > 0 && (size_t)len > maxlen) {
+      maxlen = (size_t)len;
+    }
+  }
 
   xp = gv_calloc(maxlen, sizeof(float));
   yp = gv_calloc(maxlen, sizeof(float));
@@ -665,7 +671,7 @@ static int same_edge(int ecur, int elast, int *edge_table){
 }
 
 static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_ptr, int *comps,
-			       int *mask, double *x_poly, SparseMatrix *polys){
+			       int *mask, SparseMatrix *polys){
   /*============================================================
 
     polygon slids that will be colored
@@ -992,7 +998,7 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
     polygon solids
 
     ============================================================*/
-  get_polygon_solids(nt, E, ncomps, comps_ptr, comps, mask, *x_poly, polys);
+  get_polygon_solids(nt, E, ncomps, comps_ptr, comps, mask, polys);
 
   B = get_country_graph(n, E, groups, GRP_RANDOM, GRP_BBOX);
   *country_graph = B;
@@ -1014,7 +1020,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
   int dim2 = 2, nn = 0;
   int max_qtree_level = 10;
   double ymin[2], min;
-  int imin, nz, nzok = 0, nzok0 = 0, nt;
+  int imin, nzok = 0, nzok0 = 0, nt;
   double *xran, point[2];
   struct Triangle *Tp;
   SparseMatrix E;
@@ -1137,7 +1143,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
     }
     srand(123);
     xran = gv_calloc((*nrandom + 4) * dim2, sizeof(double));
-    nz = 0;
+    int nz = 0;
     if (INCLUDE_OK_POINTS){
       nzok0 = nzok = *nrandom - 1;/* points that are within tolerance of real or artificial points */
       if (grouping == grouping0) {
@@ -1217,24 +1223,22 @@ static int make_map_internal(int exclude_random, int include_OK_points,
 
   {
     int nz, nh = 0;/* the set to highlight */
-    double *xtemp;
     if (HIGHLIGHT_SET){
       if (Verbose) fprintf(stderr," highlight cluster %d, n = %d\n",HIGHLIGHT_SET, n);
-      xtemp = gv_calloc(n * dim, sizeof(double));
       /* shift set to the beginning */
       nz = 0;
       for (i = 0; i < n; i++){
 	if (grouping[i] == HIGHLIGHT_SET){
 	  nh++;
 	  for (j = 0; j < dim; j++){
-	    xtemp[nz++] = x[i*dim+j];
+	    (*xcombined)[nz++] = x[i*dim+j];
 	  }
 	}
       }
       for (i = 0; i < n; i++){
 	if (grouping[i] != HIGHLIGHT_SET){
 	  for (j = 0; j < dim; j++){
-	    xtemp[nz++] = x[i*dim+j];
+	    (*xcombined)[nz++] = x[i*dim+j];
 	  }
 	}
       }
@@ -1245,11 +1249,9 @@ static int make_map_internal(int exclude_random, int include_OK_points,
       for (i = nh; i < n; i++){
 	grouping[i] = 2;
       }
-      memcpy(*xcombined, xtemp, n*dim*sizeof(double));
       *nrandom += n - nh;/* count everything except cluster HIGHLIGHT_SET as random */
       n = nh;
       if (Verbose) fprintf(stderr,"nh = %d\n",nh);
-      free(xtemp);
     }
   }
 

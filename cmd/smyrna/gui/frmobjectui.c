@@ -376,6 +376,7 @@ static void filter_attributes(const char *prefix, topview *t) {
 
 _BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data)
 {
+  (void)user_data;
   filter_attributes(gtk_entry_get_text((GtkEntry*)widget), view->Topview);
 }
 
