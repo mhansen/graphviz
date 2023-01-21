@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (7.1.1)]
 
+### Fixed
+
+- The `pic` output renderer uses PIC or troff comments where appropriate, fixing
+  a problem that resulted in comments being misinterpreted by `groff` and being
+  visible in the final output. #2341
+
 ## [7.1.0] – 2023-01-21
 
 ### Added
