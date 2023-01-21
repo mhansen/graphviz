@@ -23,12 +23,14 @@
 #define	NC	3		/* size of HSB color vector */
 
 #include <assert.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include "colorxlate.h"
 #include <math.h>
 #include <stdlib.h>
-typedef struct Agnodeinfo_t {
+typedef struct {
     Agrec_t h;
     double relrank;	/* coordinate of its rank, smaller means lower rank */
     double x[NC];	/* color vector */
@@ -50,8 +52,6 @@ int AdjustSaturation;
 double MinRankSaturation;
 double MaxRankSaturation;
 
-extern char *colorxlate(char *str, char *buf);
-
 static int cmpf(Agnode_t ** n0, Agnode_t ** n1)
 {
     double relrank0 = ND_relrank(*n0);
@@ -65,11 +65,12 @@ static int cmpf(Agnode_t ** n0, Agnode_t ** n1)
 
 static void setcolor(char *p, double *v)
 {
-    char buf[64];
+    agxbuf buf = {0};
     if (sscanf(p, "%lf %lf %lf", v, v + 1, v + 2) != 3 && p[0]) {
-	colorxlate(p, buf);
-	sscanf(buf, "%lf %lf %lf", v, v + 1, v + 2);
+	colorxlate(p, &buf);
+	sscanf(agxbuse(&buf), "%lf %lf %lf", v, v + 1, v + 2);
     }
+    agxbfree(&buf);
 }
 
 static char **Files;

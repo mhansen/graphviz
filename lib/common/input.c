@@ -638,9 +638,10 @@ void graph_init(graph_t * g, bool use_rankdir)
 
     /* reparseable input */
     if ((p = agget(g, "postaction"))) {   /* requires a graph wrapper for yyparse */
-        char *buf = gmalloc(strlen("digraph {  }") + strlen(p) + 1);
-        sprintf(buf,"%s { %s }",agisdirected(g)?"digraph":"graph",p);
-        agmemconcat(g, buf);
+        agxbuf buf = {0};
+        agxbprint(&buf, "%s { %s }", agisdirected(g) ? "digraph" : "graph", p);
+        agmemconcat(g, agxbuse(&buf));
+        agxbfree(&buf);
     }
 
     /* set this up fairly early in case any string sizes are needed */
