@@ -754,6 +754,9 @@ setClustNodes(graph_t* root)
 	ND_pos(n)[1] = ctr.y;
 	ND_width(n) = w;
 	ND_height(n) = h;
+	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+	ND_outline_width(n) = w + penwidth;
+	ND_outline_height(n) = h + penwidth;
 	/* ND_xsize(n) = POINTS(w); */
 	ND_lw(n) = ND_rw(n) = w2;
 	ND_ht(n) = h_pts;
