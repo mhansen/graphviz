@@ -10,9 +10,8 @@
 
 #include	<sfio/sfhdr.h>
 
-#undef sfputc
-
 int sfputc(Sfio_t * f, int c)
 {
-    return __sf_putc(f, c);
+  return f->next >= f->endw ? _sfflsbuf(f, (int)((unsigned char)(c)))
+                            : (int)(*f->next++ = (unsigned char)(c));
 }

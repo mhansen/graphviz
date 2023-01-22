@@ -10,9 +10,4 @@
 
 #include	<sfio/sfhdr.h>
 
-#undef sffileno
-
-int sffileno(Sfio_t * f)
-{
-    return __sf_fileno(f);
-}
+int sffileno(Sfio_t *f) { return f ? f->file : -1; }

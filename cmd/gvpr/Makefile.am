@@ -37,6 +37,7 @@ gvpr_static_LDADD = \
 	$(top_builddir)/lib/gvpr/libgvpr_C.la \
 	$(top_builddir)/lib/expr/libexpr_C.la \
 	$(top_builddir)/lib/sfio/libsfio_C.la \
+	$(top_builddir)/lib/sfio/Sfio_f/libsfiof_C.la \
 	$(top_builddir)/lib/vmalloc/libvmalloc_C.la \
 	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/ast/libast_C.la \
