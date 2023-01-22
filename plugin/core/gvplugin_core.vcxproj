@@ -107,7 +107,6 @@
     <ClCompile Include="gvrender_core_ps.c" />
     <ClCompile Include="gvrender_core_svg.c" />
     <ClCompile Include="gvrender_core_tk.c" />
-    <ClCompile Include="gvrender_core_vml.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\lib\cdt\cdt.vcxproj">

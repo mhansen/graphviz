@@ -37,7 +37,6 @@ typedef enum {
     FORMAT_PNG_FIG,  FORMAT_GIF_FIG,  FORMAT_JPEG_FIG,
     FORMAT_PNG_VRML, FORMAT_GIF_VRML, FORMAT_JPEG_VRML,
     FORMAT_PS_PS, FORMAT_PSLIB_PS, 
-    FORMAT_PNG_VML, FORMAT_GIF_VML, FORMAT_JPEG_VML, 
     FORMAT_GIF_TK,
 } format_type;
 
@@ -238,16 +237,6 @@ static void core_loadimage_pslib(GVJ_t * job, usershape_t *us, boxf b, bool fill
     }
 }
 
-static void core_loadimage_vml(GVJ_t * job, usershape_t *us, boxf b, bool filled)
-{
-    (void)filled;
-
-    int  graphHeight = (int)(job->bb.UR.y - job->bb.LL.y);
-    gvprintf (job, "<v:image src=\"%s\" style=\" position:absolute; width:%.2f; height:%.2f; left:%.2f ; top:%.2f\"",
-           us->name,  b.UR.x - b.LL.x, b.UR.y - b.LL.y, b.LL.x, graphHeight-b.UR.y);
-    gvputs(job, " />\n");
-}
-
 static void core_loadimage_tk(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
     (void)filled;
@@ -293,10 +282,6 @@ static gvloadimage_engine_t engine_null = {
 
 static gvloadimage_engine_t engine_xdot = {
     core_loadimage_xdot
-};
-
-static gvloadimage_engine_t engine_vml = {
-    core_loadimage_vml
 };
 
 static gvloadimage_engine_t engine_tk = {
@@ -354,12 +339,6 @@ gvplugin_installed_t gvloadimage_core_types[] = {
     {FORMAT_SVG_XDOT, "svg:xdot", 1, &engine_xdot, NULL},
 
     {FORMAT_SVG_SVG, "svg:svg", 1, &engine_svg, NULL},
-
-    {FORMAT_PNG_VML, "png:vml", 1, &engine_vml, NULL},
-    {FORMAT_GIF_VML, "gif:vml", 1, &engine_vml, NULL},
-    {FORMAT_JPEG_VML, "jpeg:vml", 1, &engine_vml, NULL},
-    {FORMAT_JPEG_VML, "jpe:vml", 1, &engine_vml, NULL},
-    {FORMAT_JPEG_VML, "jpg:vml", 1, &engine_vml, NULL},
 
     {FORMAT_GIF_TK, "gif:tk", 1, &engine_tk, NULL},
 
