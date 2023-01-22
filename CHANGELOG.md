@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The VML output renderer has been removed. This format has been superseded by
   SVG. #799
+- Legacy man page references to `dotty` have been removed. `dotty` was removed
+  in Graphviz 4.0.0.
 
 ### Fixed
 
