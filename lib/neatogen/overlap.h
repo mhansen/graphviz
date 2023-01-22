@@ -50,4 +50,3 @@ double OverlapSmoother_smooth(OverlapSmoother sm, int dim, double *x);
 
 void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int ntry, double initial_scaling, 
 		    int edge_labeling_scheme, int n_constr_nodes, int *constr_nodes, SparseMatrix A_constr, int doShrink);
-double overlap_scaling(int dim, int m, double *x, double *width, double scale_sta, double scale_sto, double epsilon, int maxiter);

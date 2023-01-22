@@ -103,6 +103,7 @@ static int comp_scan_points(const void *p, const void *q){
 }
 
 static void NodeDest(void* a) {
+  (void)a;
   /*  free((int*)a);*/
 }
 
@@ -117,9 +118,11 @@ static void NodePrint(const void* a) {
 }
 
 static void InfoPrint(void* a) {
+  (void)a;
 }
 
 static void InfoDest(void *a){
+  (void)a;
 }
 
 static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, int check_overlap_only){
@@ -285,7 +288,9 @@ static void scale_coord(int dim, int m, double *x, double scale){
   }
 }
 
-double overlap_scaling(int dim, int m, double *x, double *width, double scale_sta, double scale_sto, double epsilon, int maxiter){
+static double overlap_scaling(int dim, int m, double *x, double *width,
+                              double scale_sta, double scale_sto,
+                              double epsilon, int maxiter) {
   /* do a bisection between scale_sta and scale_sto, up to maxiter iterations or till interval <= epsilon, to find the best scaling to avoid overlap
      m: number of points
      x: the coordinates
