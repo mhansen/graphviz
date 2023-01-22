@@ -13,6 +13,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <common/types.h>
 #include <common/utils.h>
@@ -248,21 +249,19 @@ static char *createEdgeId(gxlstate_t * stp, Agedge_t * e)
     int edgeIdCounter = 1;
     char *hname = nodeID(stp, AGHEAD(e));
     char *tname = nodeID(stp, AGTAIL(e));
-    size_t baselen = strlen(hname) + strlen(tname) + sizeof(EDGEOP);
-    size_t len = baselen + EXTRA;
-    char *endp;			/* where to append ':' and number */
     char *rv;
 
-    char *bp = gv_calloc(len, sizeof(bp[0]));
-    endp = bp + (baselen - 1);
+    agxbuf bp = {0};
 
-    sprintf(bp, "%s%s%s", tname, EDGEOP, hname);
-    while (idexists(stp->idList, bp)) {
-	sprintf(endp, ":%d", edgeIdCounter++);
+    agxbprint(&bp, "%s%s%s", tname, EDGEOP, hname);
+    char *id_name = agxbuse(&bp);
+    while (idexists(stp->idList, id_name)) {
+	agxbprint(&bp, "%s%s%s:%d", tname, EDGEOP, hname, edgeIdCounter++);
+	id_name = agxbuse(&bp);
     }
 
-    rv = addid(stp->idList, bp);
-    free(bp);
+    rv = addid(stp->idList, id_name);
+    agxbfree(&bp);
     return rv;
 }
 
