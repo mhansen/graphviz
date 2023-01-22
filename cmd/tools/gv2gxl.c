@@ -443,7 +443,6 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
     char *name;
     char *kind;
     char *uniqueName;
-    size_t len;
 
     Level++;
     stp->attrsNotWritten = AGATTRWF(g);
@@ -456,9 +455,9 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
     if (!top && agparent(g)) {
 	/* this must be anonymous graph */
 
-	len = strlen(name) + sizeof("N_");
-	char *bp = gv_calloc(len, sizeof(bp[0]));
-	sprintf(bp, "N_%s", name);
+	agxbuf buf = {0};
+	agxbprint(&buf, "N_%s", name);
+	char *bp = agxbuse(&buf);
 	if (idexists(stp->idList, bp) || !legalGXLName(bp)) {
 	    bp = createNodeId(stp->idList);
 	} else {
@@ -468,6 +467,7 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
 
 	tabover(gxlFile);
 	fprintf(gxlFile, "<node id=\"%s\">\n", bp);
+	agxbfree(&buf);
 	Level++;
     } else {
 	Tailport = agattr(g, AGEDGE, "tailport", NULL);
