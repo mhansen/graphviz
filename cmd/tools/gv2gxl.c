@@ -468,7 +468,6 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
 
 	tabover(gxlFile);
 	fprintf(gxlFile, "<node id=\"%s\">\n", bp);
-	free(bp);
 	Level++;
     } else {
 	Tailport = agattr(g, AGEDGE, "tailport", NULL);
