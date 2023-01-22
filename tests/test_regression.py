@@ -341,11 +341,13 @@ def test_517():
     '}'
 
   # translate it to GXL
-  gxl = subprocess.check_output(["gv2gxl"], input=input,
+  gv2gxl = which("gv2gxl")
+  gxl = subprocess.check_output([gv2gxl], input=input,
     universal_newlines=True)
 
   # translate this back to Dot
-  dot_output = subprocess.check_output(["gxl2gv"], input=gxl,
+  gxl2gv = which("gxl2gv")
+  dot_output = subprocess.check_output([gxl2gv], input=gxl,
     universal_newlines=True)
 
   # the result should have both expected labels somewhere

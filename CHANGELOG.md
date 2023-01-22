@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `pic` output renderer uses PIC or troff comments where appropriate, fixing
   a problem that resulted in comments being misinterpreted by `groff` and being
   visible in the final output. #2341
+- `gv2gxl` and `gxl2gv` correctly detect their mode (gv→gxl or gxl→gv) on
+  Windows when called via an absolute or relative path. #2344
 
 ## [7.1.0] – 2023-01-21
 
