@@ -23,8 +23,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SMALLBUF    128
-
 #define EMPTY(s)	((s == 0) || (*s == '\0'))
 #define SLEN(s)     (sizeof(s)-1)
 
@@ -217,12 +215,16 @@ static char *createGraphId(Dt_t * ids)
 static char *createNodeId(Dt_t * ids)
 {
     static int nodeIdCounter = 0;
-    char buf[SMALLBUF];
+    agxbuf buf = {0};
+    char *name;
 
     do {
-	snprintf(buf, sizeof(buf), "N_%d", nodeIdCounter++);
-    } while (idexists(ids, buf));
-    return addid(ids, buf);
+	agxbprint(&buf, "N_%d", nodeIdCounter++);
+	name = agxbuse(&buf);
+    } while (idexists(ids, name));
+    char *rv = addid(ids, name);
+    agxbfree(&buf);
+    return rv;
 }
 
 static char *mapLookup(Dt_t * nm, char *name)
