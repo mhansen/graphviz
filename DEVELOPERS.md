@@ -99,6 +99,34 @@ env PATH=${PREFIX}/bin:${PATH} C_INCLUDE_PATH=${PREFIX}/include \
 
 *TODO: on Windows, you probably need to override different environment variables?*
 
+### Writing tests
+
+Graphviz’ use of Pytest is mostly standard. You can find documentation and
+examples elsewhere on the internet about Pytest. The following paragraphs cover
+Graphviz-specific quirks.
+
+Most new tests should be written as functions in tests/test_regression.py.
+Despite this file’s name, it is a home for all sorts of tests, not just
+regression tests.
+
+Common test helpers live in tests/gvtest.py, in particular the `dot` function
+which wraps Graphviz command line execution in a way that covers most needs.
+
+If you need to call a tool from the Graphviz suite via `subprocess`, use the
+`which` function from tests/gvtest.py instead of `shutil.which` or the bare name
+of the tool itself. This avoids accidentally invoking system utilities of the
+same name or components of a prior Graphviz installation.
+
+The vast majority of tests can be written in pure Python. However, sometimes it
+is necessary to write a test in C/C++. In these cases, prefer C because it is
+easier to compile and ensure consistent results on all supported platforms. Use
+the `run_c` helper in tests/gvtest.py. Refer to existing calls to this function
+for examples of how to use it.
+
+The continuous integration tests include running Pylint on all Python files in
+the repository. To check your additions are compliant,
+`pylint --rcfile=.pylintrc tests/test_regression.py`.
+
 ## Performance and profiling
 
 The runtime and memory usage of Graphviz is dependent on the user’s graph. It is
