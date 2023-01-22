@@ -41,7 +41,6 @@
 #define GXL_COMP    "_gxl_composite_"
 #define GXL_LOC     "_gxl_locator_"
 
-#define GXL_ATTR_LEN (SLEN(GXL_ATTR))
 #define GXL_COMP_LEN (SLEN(GXL_COMP))
 #define GXL_LOC_LEN  (SLEN(GXL_LOC))
 
