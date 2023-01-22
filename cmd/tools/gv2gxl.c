@@ -15,6 +15,7 @@
 
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/startswith.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include "convert.h"
@@ -42,7 +43,6 @@
 #define GXL_LOC     "_gxl_locator_"
 
 #define GXL_COMP_LEN (SLEN(GXL_COMP))
-#define GXL_LOC_LEN  (SLEN(GXL_LOC))
 
 typedef struct {
     Agrec_t h;
@@ -174,12 +174,12 @@ static int xml_url_puts(FILE *f, const char *s) {
 
 static int isGxlGrammar(char *name)
 {
-    return (strncmp(name, GXL_ATTR, (sizeof(GXL_ATTR) - 1)) == 0);
+  return startswith(name, GXL_ATTR);
 }
 
 static int isLocatorType(char *name)
 {
-    return (strncmp(name, GXL_LOC, GXL_LOC_LEN) == 0);
+  return startswith(name, GXL_LOC);
 }
 
 static void *idexists(Dt_t * ids, char *id)
@@ -398,7 +398,7 @@ writeDict(Agraph_t * g, FILE * gxlFile, char *name, Dict_t * dict,
 	    }
 	} else {
 	    /* gxl attr; check for special cases like composites */
-	    if (strncmp(sym->name, GXL_COMP, GXL_COMP_LEN) == 0) {
+	    if (startswith(sym->name, GXL_COMP)) {
 		if (EMPTY(sym->defval)) {
 		    if (view == NULL)
 			continue;
@@ -613,7 +613,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 		}
 	    } else {
 		/* gxl attr; check for special cases like composites */
-		if (strncmp(sym->name, GXL_COMP, GXL_COMP_LEN) == 0) {
+		if (startswith(sym->name, GXL_COMP)) {
 		    if (data->str[sym->id] != sym->defval) {
 
 			tabover(gxlFile);
