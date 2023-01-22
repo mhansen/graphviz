@@ -202,12 +202,16 @@ static char *addid(Dt_t * ids, char *id)
 static char *createGraphId(Dt_t * ids)
 {
     static int graphIdCounter = 0;
-    char buf[SMALLBUF];
+    agxbuf buf = {0};
+    char *name;
 
     do {
-	snprintf(buf, sizeof(buf), "G_%d", graphIdCounter++);
-    } while (idexists(ids, buf));
-    return addid(ids, buf);
+	agxbprint(&buf, "G_%d", graphIdCounter++);
+	name = agxbuse(&buf);
+    } while (idexists(ids, name));
+    char *rv = addid(ids, name);
+    agxbfree(&buf);
+    return rv;
 }
 
 static char *createNodeId(Dt_t * ids)
