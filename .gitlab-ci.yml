@@ -1177,6 +1177,8 @@ ubuntu-22.10-cmake-ASan-test-including-ctest:
         - export CXXFLAGS="-g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
         - export LDFLAGS="-g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
         - export UBSAN_OPTIONS=print_stacktrace=1
+        - echo 'leak:*libfontconfig*' > suppressions.txt
+        - export LSAN_OPTIONS=suppressions=$(pwd)/suppressions.txt
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu-22.10-cmake-ASan-build-for-ctest"
