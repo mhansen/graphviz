@@ -1,10 +1,5 @@
 Contributed software
 
-  lefty-grace :
-    user interface enhancements to dotty
-    Robert M. Grace
-    rgrace@draper.com
-
   dirgraph :
     Perl script for creating a dot graph file from a directory hierarchy
     Diomidis Spinellis

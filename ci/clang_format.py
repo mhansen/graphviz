@@ -747,8 +747,6 @@ EXCLUDE = (
   "tclpkg/tkstubs/tkStubLib.c",
   "tests/check-package-version.c",
   "tests/unit_tests/lib/common/command_line.c",
-  "windows/cmd/lefty/dot2l/dotparse.c",
-  "windows/cmd/lefty/dot2l/dotparse.h",
   "windows/gvedit/Application.h",
   "windows/gvedit/GraphX.cpp",
   "windows/gvedit/UAbout.cpp",
