@@ -159,7 +159,7 @@ char *canontoken(char *str)
 /* fullColor:
  * Return "/prefix/str"
  */
-static char *fullColor(agxbuf *xb, char *prefix, char *str) {
+static char *fullColor(agxbuf *xb, const char *prefix, const char *str) {
   agxbprint(xb, "/%s/%s", prefix, str);
   return agxbuse(xb);
 }
