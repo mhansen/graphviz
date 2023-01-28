@@ -85,7 +85,6 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     Agedge_t *e;
     int i, j;
     agxbuf xb;
-    char buf[BUFS];
     char string[BUFS];
     Agsym_t *sym = NULL, *sym2 = NULL, *sym3 = NULL;
     int *ia = A->ia;
@@ -124,8 +123,8 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     }
 
     for (i = 0; i < A->m; i++) {
-	sprintf(buf, "%d", i);
-	n = agnode(g, buf, 1);
+	agxbprint(&xb, "%d", i);
+	n = agnode(g, agxbuse(&xb), 1);
 	agbindrec(n, "nodeinfo", sizeof(Agnodeinfo_t), true);
 	ND_id(n) = i;
 	arr[i] = n;
@@ -185,13 +184,13 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 	    h = arr[ja[j]];
 	    e = agedge(g, n, h, NULL, 1);
 	    if (sym && val) {
-		sprintf(buf, "%f", val[j]);
-		agxset(e, sym, buf);
+		agxbprint(&xb, "%f", val[j]);
+		agxset(e, sym, agxbuse(&xb));
 	    }
 	    if (with_color) {
 		agxset (e, sym2, hue2rgb(.65 * color[j], cstring));
-		sprintf(buf, "%f", color[j]);
-		agxset(e, sym3, buf);
+		agxbprint(&xb, "%f", color[j]);
+		agxset(e, sym3, agxbuse(&xb));
 	    }
 	}
     }
