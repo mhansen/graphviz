@@ -2676,11 +2676,11 @@ emit_edge_label(GVJ_t* job, textlabel_t* lbl, emit_state_t lkind, int explicit,
     int flags = job->flags;
     emit_state_t old_emit_state;
     char* newid;
+    agxbuf xb = {0};
     char* type;
 
     if (lbl == NULL || !lbl->set) return;
     if (id) { /* non-NULL if needed */
-	newid = N_NEW(strlen(id) + sizeof("-headlabel"),char);
 	switch (lkind) {
 	case EMIT_ELABEL :
 	    type = "label";
@@ -2695,7 +2695,8 @@ emit_edge_label(GVJ_t* job, textlabel_t* lbl, emit_state_t lkind, int explicit,
 	    assert (0);
 	    break;
 	}
-	sprintf (newid, "%s-%s", id, type);
+	agxbprint(&xb, "%s-%s", id, type);
+	newid = agxbuse(&xb);
     }
     else
 	newid = NULL;
@@ -2714,7 +2715,7 @@ emit_edge_label(GVJ_t* job, textlabel_t* lbl, emit_state_t lkind, int explicit,
 	}
 	gvrender_end_anchor(job);
     }
-    free (newid);
+    agxbfree(&xb);
     job->obj->emit_state = old_emit_state;
 }
 
