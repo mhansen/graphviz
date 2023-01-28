@@ -13,15 +13,15 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/startswith.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include "convert.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#define SMALLBUF    128
 
 #define EMPTY(s)	((s == 0) || (*s == '\0'))
 #define SLEN(s)     (sizeof(s)-1)
@@ -40,9 +40,7 @@
 #define GXL_COMP    "_gxl_composite_"
 #define GXL_LOC     "_gxl_locator_"
 
-#define GXL_ATTR_LEN (SLEN(GXL_ATTR))
 #define GXL_COMP_LEN (SLEN(GXL_COMP))
-#define GXL_LOC_LEN  (SLEN(GXL_LOC))
 
 typedef struct {
     Agrec_t h;
@@ -174,12 +172,12 @@ static int xml_url_puts(FILE *f, const char *s) {
 
 static int isGxlGrammar(char *name)
 {
-    return (strncmp(name, GXL_ATTR, (sizeof(GXL_ATTR) - 1)) == 0);
+  return startswith(name, GXL_ATTR);
 }
 
 static int isLocatorType(char *name)
 {
-    return (strncmp(name, GXL_LOC, GXL_LOC_LEN) == 0);
+  return startswith(name, GXL_LOC);
 }
 
 static void *idexists(Dt_t * ids, char *id)
@@ -202,23 +200,31 @@ static char *addid(Dt_t * ids, char *id)
 static char *createGraphId(Dt_t * ids)
 {
     static int graphIdCounter = 0;
-    char buf[SMALLBUF];
+    agxbuf buf = {0};
+    char *name;
 
     do {
-	snprintf(buf, sizeof(buf), "G_%d", graphIdCounter++);
-    } while (idexists(ids, buf));
-    return addid(ids, buf);
+	agxbprint(&buf, "G_%d", graphIdCounter++);
+	name = agxbuse(&buf);
+    } while (idexists(ids, name));
+    char *rv = addid(ids, name);
+    agxbfree(&buf);
+    return rv;
 }
 
 static char *createNodeId(Dt_t * ids)
 {
     static int nodeIdCounter = 0;
-    char buf[SMALLBUF];
+    agxbuf buf = {0};
+    char *name;
 
     do {
-	snprintf(buf, sizeof(buf), "N_%d", nodeIdCounter++);
-    } while (idexists(ids, buf));
-    return addid(ids, buf);
+	agxbprint(&buf, "N_%d", nodeIdCounter++);
+	name = agxbuse(&buf);
+    } while (idexists(ids, name));
+    char *rv = addid(ids, name);
+    agxbfree(&buf);
+    return rv;
 }
 
 static char *mapLookup(Dt_t * nm, char *name)
@@ -248,21 +254,19 @@ static char *createEdgeId(gxlstate_t * stp, Agedge_t * e)
     int edgeIdCounter = 1;
     char *hname = nodeID(stp, AGHEAD(e));
     char *tname = nodeID(stp, AGTAIL(e));
-    size_t baselen = strlen(hname) + strlen(tname) + sizeof(EDGEOP);
-    size_t len = baselen + EXTRA;
-    char *endp;			/* where to append ':' and number */
     char *rv;
 
-    char *bp = gv_calloc(len, sizeof(bp[0]));
-    endp = bp + (baselen - 1);
+    agxbuf bp = {0};
 
-    sprintf(bp, "%s%s%s", tname, EDGEOP, hname);
-    while (idexists(stp->idList, bp)) {
-	sprintf(endp, ":%d", edgeIdCounter++);
+    agxbprint(&bp, "%s%s%s", tname, EDGEOP, hname);
+    char *id_name = agxbuse(&bp);
+    while (idexists(stp->idList, id_name)) {
+	agxbprint(&bp, "%s%s%s:%d", tname, EDGEOP, hname, edgeIdCounter++);
+	id_name = agxbuse(&bp);
     }
 
-    rv = addid(stp->idList, bp);
-    free(bp);
+    rv = addid(stp->idList, id_name);
+    agxbfree(&bp);
     return rv;
 }
 
@@ -400,7 +404,7 @@ writeDict(Agraph_t * g, FILE * gxlFile, char *name, Dict_t * dict,
 	    }
 	} else {
 	    /* gxl attr; check for special cases like composites */
-	    if (strncmp(sym->name, GXL_COMP, GXL_COMP_LEN) == 0) {
+	    if (startswith(sym->name, GXL_COMP)) {
 		if (EMPTY(sym->defval)) {
 		    if (view == NULL)
 			continue;
@@ -444,7 +448,6 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
     char *name;
     char *kind;
     char *uniqueName;
-    size_t len;
 
     Level++;
     stp->attrsNotWritten = AGATTRWF(g);
@@ -457,9 +460,9 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
     if (!top && agparent(g)) {
 	/* this must be anonymous graph */
 
-	len = strlen(name) + sizeof("N_");
-	char *bp = gv_calloc(len, sizeof(bp[0]));
-	sprintf(bp, "N_%s", name);
+	agxbuf buf = {0};
+	agxbprint(&buf, "N_%s", name);
+	char *bp = agxbuse(&buf);
 	if (idexists(stp->idList, bp) || !legalGXLName(bp)) {
 	    bp = createNodeId(stp->idList);
 	} else {
@@ -469,7 +472,7 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
 
 	tabover(gxlFile);
 	fprintf(gxlFile, "<node id=\"%s\">\n", bp);
-	free(bp);
+	agxbfree(&buf);
 	Level++;
     } else {
 	Tailport = agattr(g, AGEDGE, "tailport", NULL);
@@ -616,7 +619,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 		}
 	    } else {
 		/* gxl attr; check for special cases like composites */
-		if (strncmp(sym->name, GXL_COMP, GXL_COMP_LEN) == 0) {
+		if (startswith(sym->name, GXL_COMP)) {
 		    if (data->str[sym->id] != sym->defval) {
 
 			tabover(gxlFile);

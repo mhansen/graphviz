@@ -15,6 +15,7 @@
 
 
 #include    "convert.h"
+#include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
 #include    <cgraph/likely.h>
@@ -481,18 +482,12 @@ static void initargs(int argc, char **argv)
 	outFile = stdout;
 }
 
-static char*
-nameOf (char* name, int cnt)
-{
-    static char* buf = 0;
-
+static char *nameOf(agxbuf *buf, char *name, int cnt) {
     if (*name == '\0')
 	return name;
     if (cnt) {
-	if (!buf)
-	    buf = gv_calloc(strlen(name) + 32, sizeof(char)); // 32 to handle any integer plus null byte
-	sprintf (buf, "%s%d", name, cnt);
-	return buf;
+	agxbprint(buf, "%s%d", name, cnt);
+	return agxbuse(buf);
     }
     else
 	return name;
@@ -508,9 +503,10 @@ int main(int argc, char **argv)
     int rv = 0, gcnt = 0;
 
 #ifdef HAVE_EXPAT
+    agxbuf buf = {0};
     initargs(argc, argv);
     while ((inFile = getFile())) {
-	while ((graph = graphml_to_gv(nameOf(gname, gcnt), inFile, &rv))) {
+	while ((graph = graphml_to_gv(nameOf(&buf, gname, gcnt), inFile, &rv))) {
 	    gcnt++;
 	    if (prev)
 		agclose(prev);
@@ -525,6 +521,7 @@ int main(int argc, char **argv)
 
     stack_reset(&Gstack);
 
+    agxbfree(&buf);
     graphviz_exit(rv);
 #else
     fputs("graphml2gv: not configured for conversion from GXL to GV\n", stderr);
