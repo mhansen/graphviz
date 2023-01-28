@@ -16,6 +16,8 @@ The main GIT Repository for graphviz can be found at:
 
 ## Support
 
+Graphviz is maintained by a few very talented volunteers, and with some help from its founders. Financial donations are accepted on [patreon](https://patreon.com/graphviz). Anyone who is able to fund a summer intern project (or other project) based on graphviz is invited to contact any of the project leaders, e.g. send a message to north on graphviz org).
+
 This project has only 3 of its founders remaining as volunteer maintainers, and support is limited and may end soon. If you can help fund to a more formal foundation to continue this project, please contact north on graphviz org.
 
 ## Documentation
@@ -40,4 +42,4 @@ If you have a bug or believe something is not working as expected, please submit
 
 If you have a general question or are unsure how things work, these queries can be posted in the [Graphviz Forum](https://forum.graphviz.org/).
 
-John Ellson
+Graphviz is on twitter and fosstodon.
