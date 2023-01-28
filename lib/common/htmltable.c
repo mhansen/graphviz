@@ -36,6 +36,7 @@
 #include <common/intset.h>
 #include <cdt/cdt.h>
 #include <cgraph/alloc.h>
+#include <cgraph/exit.h>
 #include <cgraph/itos.h>
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
@@ -2010,6 +2011,10 @@ int make_html_label(void *obj, textlabel_t * lp)
     env.finfo.flags = 0;
     lbl = parseHTML(lp->text, &rv, &env);
     if (!lbl) {
+	if (rv == 3) {
+	    // fatal error
+	    graphviz_exit(EXIT_FAILURE);
+	}
 	/* Parse of label failed; revert to simple text label */
 	agxbuf xb;
 	char buf[SMALLBUF];

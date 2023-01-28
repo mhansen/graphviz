@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   SVG. #799
 - Legacy man page references to `dotty` have been removed. `dotty` was removed
   in Graphviz 4.0.0.
+- Graphviz will now exit when encountering a syntactically invalid HTML label
+  instead of attempting to recover and continue. #1311
 
 ### Fixed
 

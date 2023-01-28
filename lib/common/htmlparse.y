@@ -586,7 +586,8 @@ VR  : T_vr T_end_vr
 
 /* parseHTML:
  * Return parsed label or NULL if failure.
- * Set warn to 0 on success; 1 for warning message; 2 if no expat.
+ * Set warn to 0 on success; 1 for warning message; 2 if no expat; 3 for error
+ * message.
  */
 htmllabel_t*
 parseHTML (char* txt, int* warn, htmlenv_t *env)
