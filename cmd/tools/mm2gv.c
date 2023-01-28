@@ -133,7 +133,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     if (with_color) {
 	double maxdist = 0.;
 	double mindist = 0.;
-	int first = TRUE;
+	bool first = true;
 
 	sym2 = agattr(g, AGEDGE, "color", "");
 	sym3 = agattr(g, AGEDGE, "wt", "");
@@ -147,7 +147,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 		    if (i != ja[j]) {
 			if (first) {
 			    mindist = color[j];
-			    first = FALSE;
+			    first = false;
 			} else {
 			    mindist = fmin(mindist, color[j]);
 			}
@@ -161,7 +161,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 		    if (i != ja[j]) {
 			if (first) {
 			    mindist = color[j];
-			    first = FALSE;
+			    first = false;
 			} else {
 			    mindist = fmin(mindist, color[j]);
 			}
