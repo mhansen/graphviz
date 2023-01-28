@@ -60,7 +60,7 @@ static usershape_t *user_init(const char *str)
 	    (line, "%%%%BoundingBox: %d %d %d %d", &lx, &ly, &ux, &uy) == 4) {
 	    saw_bb = true;
 	}
-	if ((line[0] != '%') && strstr(line,"read")) must_inline = true;
+	if (line[0] != '%' && strstr(line,"read")) must_inline = true;
 	if (saw_bb && must_inline) break;
     }
 
@@ -112,8 +112,8 @@ void epsf_init(node_t * n)
 	ND_height(n) = PS2INCH(dy);
 	ND_shape_info(n) = desc = NEW(epsf_t);
 	desc->macro_id = us->macro_id;
-	desc->offset.x = -us->x - (dx) / 2;
-	desc->offset.y = -us->y - (dy) / 2;
+	desc->offset.x = -us->x - dx / 2;
+	desc->offset.y = -us->y - dy / 2;
     } else
 	agerr(AGWARN, "shapefile not set or not found for epsf node %s\n", agnameof(n));
 }
@@ -144,7 +144,7 @@ void cat_libfile(GVJ_t * job, const char **arglib, const char **stdlib)
 
     /* check for empty string to turn off stdlib */
     if (arglib) {
-        for (i = 0; use_stdlib && ((p = arglib[i])); i++) {
+        for (i = 0; use_stdlib && (p = arglib[i]); i++) {
             if (*p == '\0')
                 use_stdlib = false;
         }
@@ -297,7 +297,7 @@ char *ps_string(char *ins, int chset)
     agxbputc (&xb, LPAREN);
     s = base;
     while (*s) {
-        if ((*s == LPAREN) || (*s == RPAREN) || (*s == '\\'))
+        if (*s == LPAREN || *s == RPAREN || *s == '\\')
             agxbputc (&xb, '\\');
         agxbputc (&xb, *s++);
     }
