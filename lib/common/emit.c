@@ -2692,8 +2692,7 @@ emit_edge_label(GVJ_t* job, textlabel_t* lbl, emit_state_t lkind, int explicit,
 	    type = "taillabel";
 	    break;
 	default :
-	    assert (0);
-	    break;
+	    UNREACHABLE();
 	}
 	agxbprint(&xb, "%s-%s", id, type);
 	newid = agxbuse(&xb);
