@@ -149,10 +149,10 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 			    mindist = color[j];
 			    first = FALSE;
 			} else {
-			    mindist = MIN(mindist, color[j]);
+			    mindist = fmin(mindist, color[j]);
 			}
 		    }
-		    maxdist = MAX(color[j], maxdist);
+		    maxdist = fmax(color[j], maxdist);
 		}
 	    } else {
 		for (j = ia[i]; j < ia[i + 1]; j++) {
@@ -163,17 +163,17 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 			    mindist = color[j];
 			    first = FALSE;
 			} else {
-			    mindist = MIN(mindist, color[j]);
+			    mindist = fmin(mindist, color[j]);
 			}
 		    }
-		    maxdist = MAX(color[j], maxdist);
+		    maxdist = fmax(color[j], maxdist);
 		}
 	    }
 	}
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    i = ND_id(n);
 	    for (j = ia[i]; j < ia[i + 1]; j++) {
-		color[j] = (color[j] - mindist) / MAX(maxdist - mindist, 0.000001);
+		color[j] = (color[j] - mindist) / fmax(maxdist - mindist, 0.000001);
 	    }
 	}
     }
