@@ -12,15 +12,15 @@
 /* Module for clipping splines to cluster boxes.
  */
 
+#include	<cgraph/agxbuf.h>
 #include	<dotgen/dot.h>
 
 /* pf2s:
  * Convert a pointf to its string representation.
  */
-static char *pf2s(pointf p, char *buf)
-{
-    sprintf(buf, "(%.5g,%.5g)", p.x, p.y);
-    return buf;
+static char *pf2s(pointf p, agxbuf *xb) {
+  agxbprint(xb, "(%.5g,%.5g)", p.x, p.y);
+  return agxbuse(xb);
 }
 
 /* Return point where line segment [pp,cp] intersects
@@ -66,12 +66,16 @@ static pointf boxIntersectf(pointf pp, pointf cp, boxf * bp)
 
     /* failure */
     {
-	char ppbuf[100], cpbuf[100], llbuf[100], urbuf[100];
+	agxbuf ppbuf = {0}, cpbuf = {0}, llbuf = {0}, urbuf = {0};
 
 	agerr(AGERR,
 		"segment [%s,%s] does not intersect box ll=%s,ur=%s\n",
-		pf2s(pp, ppbuf), pf2s(cp, cpbuf),
-		pf2s(ll, llbuf), pf2s(ur, urbuf));
+		pf2s(pp, &ppbuf), pf2s(cp, &cpbuf),
+		pf2s(ll, &llbuf), pf2s(ur, &urbuf));
+	agxbfree(&ppbuf);
+	agxbfree(&cpbuf);
+	agxbfree(&llbuf);
+	agxbfree(&urbuf);
 	assert(0);
     }
     return ipp;
