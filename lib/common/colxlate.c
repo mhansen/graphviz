@@ -159,18 +159,9 @@ char *canontoken(char *str)
 /* fullColor:
  * Return "/prefix/str"
  */
-static char* fullColor (char* prefix, char* str)
-{
-    static char *fulls;
-    static size_t allocated;
-    size_t len = strlen(prefix) + strlen(str) + 3;
-
-    if (len >= allocated) {
-	allocated = len + 10;
-	fulls = grealloc(fulls, allocated);
-    }
-    sprintf (fulls, "/%s/%s", prefix, str);
-    return fulls;
+static char *fullColor(agxbuf *xb, char *prefix, char *str) {
+  agxbprint(xb, "/%s/%s", prefix, str);
+  return agxbuse(xb);
 }
 
 /* resolveColor:
@@ -218,13 +209,14 @@ static char* resolveColor (char* str)
     if (!strcmp(str, "black")) return str;
     if (!strcmp(str, "white")) return str;
     if (!strcmp(str, "lightgrey")) return str;
+    agxbuf xb = {0};
     if (*str == '/') {   /* if begins with '/' */
 	c2 = str+1;
         if ((ss = strchr(c2, '/'))) {  /* if has second '/' */
 	    if (*c2 == '/') {    /* if second '/' is second character */
 		    /* Do not compare against final '/' */
 		if (ISNONDFLT(colorscheme))
-		    s = fullColor (colorscheme, c2+1);
+		    s = fullColor(&xb, colorscheme, c2+1);
 		else
 		    s = c2+1;
 	    }
@@ -233,9 +225,11 @@ static char* resolveColor (char* str)
 	}
 	else s = c2;
     }
-    else if (ISNONDFLT(colorscheme)) s = fullColor (colorscheme, str);
+    else if (ISNONDFLT(colorscheme)) s = fullColor(&xb, colorscheme, str);
     else s = str;
-    return canontoken(s);
+    s = canontoken(s);
+    agxbfree(&xb);
+    return s;
 }
 
 int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
