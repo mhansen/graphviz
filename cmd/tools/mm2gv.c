@@ -57,8 +57,7 @@ static double Hue2RGB(double v1, double v2, double H)
     return v1;
 }
 
-static char *hue2rgb(double hue, char *color)
-{
+static char *hue2rgb(double hue, agxbuf *xb) {
     double v1, v2, lightness = .5, saturation = 1;
     int red, blue, green;
 
@@ -72,8 +71,8 @@ static char *hue2rgb(double hue, char *color)
     red = (int) (255.0 * Hue2RGB(v1, v2, hue + 1.0 / 3.0) + 0.5);
     green = (int) (255.0 * Hue2RGB(v1, v2, hue) + 0.5);
     blue = (int) (255.0 * Hue2RGB(v1, v2, hue - 1.0 / 3.0) + 0.5);
-    sprintf(color, "#%02x%02x%02x", red, green, blue);
-    return color;
+    agxbprint(xb, "#%02x%02x%02x", red, green, blue);
+    return agxbuse(xb);
 }
 
 static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
@@ -92,7 +91,6 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     double *val = A->a;
     Agnode_t **arr = gv_calloc(A->m, sizeof(Agnode_t*));
     double *color = NULL;
-    char cstring[8];
 
     name = strip_dir(name);
 
@@ -188,7 +186,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 		agxset(e, sym, agxbuse(&xb));
 	    }
 	    if (with_color) {
-		agxset (e, sym2, hue2rgb(.65 * color[j], cstring));
+		agxset(e, sym2, hue2rgb(.65 * color[j], &xb));
 		agxbprint(&xb, "%f", color[j]);
 		agxset(e, sym3, agxbuse(&xb));
 	    }
