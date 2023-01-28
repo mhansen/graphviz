@@ -32,8 +32,6 @@ glCompButton *glCompButtonNew(glCompObj * par, GLfloat x, GLfloat y,
     p->common.color.B = GLCOMPSET_BUTTON_COLOR_B;
     p->common.color.A = GLCOMPSET_BUTTON_COLOR_ALPHA;
 
-    p->common.borderType = glBorderSolid;
-
     p->common.borderWidth = GLCOMPSET_BUTTON_BEVEL;
 
     p->common.width = w;

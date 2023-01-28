@@ -13,6 +13,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/agxbuf.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,14 +21,13 @@
 #include <search.h>
 #endif
 #include <ctype.h>
-typedef struct hsbcolor_t {
+typedef struct {
     char *name;
     unsigned char h, s, b;
 } hsbcolor_t;
 
-
-#ifndef NOCOLORNAMES
 #include "colortbl.h"
+#include "colorxlate.h"
 
 static char *canoncolor(const char *orig, char *out)
 {
@@ -51,11 +51,9 @@ static int colorcmpf(const void *a0, const void *a1)
     return strcmp(p0->name, p1->name);
 }
 
-char *colorxlate(char *str, char *buf)
-{
+void colorxlate(char *str, agxbuf *buf) {
     static hsbcolor_t *last;
     char canon[128];
-    char *p;
     hsbcolor_t fake;
 
     if (last == NULL || strcmp(last->name, str)) {
@@ -66,19 +64,11 @@ char *colorxlate(char *str, char *buf)
     if (last == NULL) {
 	if (!isdigit((int)canon[0])) {
 	    fprintf(stderr, "warning: %s is not a known color\n", str);
-	    strcpy(buf, str);
+	    agxbput(buf, str);
 	} else
-	    for (p = buf; (*p = *str++); p++)
-		if (*p == ',')
-		    *p = ' ';
+	    for (const char *p = str; *p != '\0'; ++p)
+		agxbputc(buf, *p == ',' ? ' ' : *p);
     } else
-	sprintf(buf, "%.3f %.3f %.3f", ((double) last->h) / 255,
+	agxbprint(buf, "%.3f %.3f %.3f", ((double) last->h) / 255,
 		((double) last->s) / 255, ((double) last->b) / 255);
-    return buf;
 }
-#else
-char *colorxlate(char *str, char *buf)
-{
-    return str;
-}
-#endif

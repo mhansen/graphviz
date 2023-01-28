@@ -45,7 +45,7 @@ void glDeleteFont(glCompFont * f)
 
 }
 
-glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c,glCompFontType type, char *fontdesc, int fs,int is2D)
+glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c, char *fontdesc, int fs,int is2D)
 {
     glCompFont *font = gv_alloc(sizeof(glCompFont));
     font->reference = 0;
@@ -55,13 +55,9 @@ glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c,glCompFontType
     font->color.A = c->A;
     font->justify.VJustify = GL_FONTVJUSTIFY;
     font->justify.HJustify = GL_FONTHJUSTIFY;
-    font->type=type;
     font->is2D=is2D;
 
-    if (font->type == gluttext)
-	font->glutfont = DEFAULT_GLUT_FONT;
-    else
-	font->glutfont = NULL;
+    font->glutfont = NULL;
 
     font->fontdesc = gv_strdup(fontdesc);
     font->size = fs;
@@ -90,7 +86,6 @@ glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 	font->color.B = parent->font->color.B;
 	font->color.A = parent->font->color.A;
 
-	font->type = parent->font->type;
 	font->glutfont = parent->font->glutfont;
 	font->fontdesc = gv_strdup(parent->font->fontdesc);
 	font->size = parent->font->size;
@@ -113,16 +108,15 @@ glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 	c.G = GLCOMPSET_FONT_COLOR_G;
 	c.B = GLCOMPSET_FONT_COLOR_B;
 	c.A = GLCOMPSET_FONT_COLOR_ALPHA;
-	font =
-	    glNewFont (o->common.compset, text, &c, pangotext,
+	font = glNewFont(o->common.compset, text, &c,
 		     GLCOMPSET_FONT_DESC, GLCOMPSET_FONT_SIZE,1);
     }
     return font;
 }
 
 /*texture base 3d text rendering*/
-void glCompDrawText3D(glCompFont * f,GLfloat x,GLfloat y,GLfloat z,GLfloat w,GLfloat h)
-{
+void glCompDrawText3D(glCompFont *f, GLfloat x, GLfloat y, double z, GLfloat w,
+                      GLfloat h) {
 	glEnable(GL_BLEND);		// Turn Blending On
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);

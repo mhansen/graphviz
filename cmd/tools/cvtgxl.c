@@ -96,6 +96,11 @@ static char *cmdName(char *path)
 	sp++;
     else
 	sp = path;
+#if _WIN32
+    char *sp2 = strrchr(sp, '\\');
+    if (sp2 != NULL)
+	sp = sp2 + 1;
+#endif
     return sp;
 }
 

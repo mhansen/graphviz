@@ -1972,7 +1972,7 @@ AS_IF([test "x$with_qt" != "xno"], [
   # required for linking with QT
   CXXFLAGS="${CXXFLAGS} -fPIE -fPIC"
   AC_CHECK_PROGS([QMAKE], [qmake6 qmake-qt5 qmake5 qmake], [false])
-  AS_IF([test "$QMAKE" == "qmake6"], [
+  AS_IF([test "$QMAKE" = "qmake6"], [
     # Qt6
     AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_HEADERS)/QtCore/QtCore, [
       QTCORE_CFLAGS="-I$(${QMAKE} -query QT_INSTALL_HEADERS) -I$(${QMAKE} -query QT_INSTALL_HEADERS)/QtCore"

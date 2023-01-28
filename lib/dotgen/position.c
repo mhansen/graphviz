@@ -131,6 +131,7 @@ void dot_position(graph_t * g, aspect_t* asp)
 	connectGraph (g);
 	const int rank_result = rank(g, 2, nsiter2(g));
 	assert(rank_result == 0);
+	(void)rank_result;
     }
     set_xcoords(g);
     set_aspect(g, asp);

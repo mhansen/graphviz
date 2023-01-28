@@ -10,9 +10,7 @@
 
 #include	<sfio/sfhdr.h>
 
-#undef sfgetc
-
 int sfgetc(Sfio_t * f)
 {
-    return __sf_getc(f);
+  return f->next >= f->endr ? _sffilbuf(f, 0) : (int)(*f->next++);
 }

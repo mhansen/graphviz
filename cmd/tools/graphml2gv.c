@@ -15,10 +15,12 @@
 
 
 #include    "convert.h"
+#include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
 #include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
+#include    <cgraph/unreachable.h>
 #include    <getopt.h>
 #include    <stdio.h>
 #include    <string.h>
@@ -354,11 +356,10 @@ static void endElementHandler(void *userData, const char *name)
     }
 }
 
-static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
-{
+static Agraph_t *graphml_to_gv(char *graphname, FILE *graphmlFile, int *rv) {
     char buf[BUFSIZ];
     int done;
-    userdata_t udata = genUserdata(gname);
+    userdata_t udata = genUserdata(graphname);
     XML_Parser parser = XML_ParserCreate(NULL);
 
     *rv = 0;
@@ -466,6 +467,9 @@ static void initargs(int argc, char **argv)
 			optopt);
 		usage(1);
 	    }
+	    break;
+	default:
+	    UNREACHABLE();
 	}
     }
 
@@ -478,18 +482,12 @@ static void initargs(int argc, char **argv)
 	outFile = stdout;
 }
 
-static char*
-nameOf (char* name, int cnt)
-{
-    static char* buf = 0;
-
+static char *nameOf(agxbuf *buf, char *name, int cnt) {
     if (*name == '\0')
 	return name;
     if (cnt) {
-	if (!buf)
-	    buf = gv_calloc(strlen(name) + 32, sizeof(char)); // 32 to handle any integer plus null byte
-	sprintf (buf, "%s%d", name, cnt);
-	return buf;
+	agxbprint(buf, "%s%d", name, cnt);
+	return agxbuse(buf);
     }
     else
 	return name;
@@ -499,29 +497,31 @@ nameOf (char* name, int cnt)
 
 int main(int argc, char **argv)
 {
-    Agraph_t *G;
+    Agraph_t *graph;
     Agraph_t *prev = 0;
     FILE *inFile;
     int rv = 0, gcnt = 0;
 
 #ifdef HAVE_EXPAT
+    agxbuf buf = {0};
     initargs(argc, argv);
     while ((inFile = getFile())) {
-	while ((G = graphml_to_gv(nameOf(gname, gcnt), inFile, &rv))) {
+	while ((graph = graphml_to_gv(nameOf(&buf, gname, gcnt), inFile, &rv))) {
 	    gcnt++;
 	    if (prev)
 		agclose(prev);
-	    prev = G;
+	    prev = graph;
 	    if (Verbose) 
 		fprintf (stderr, "%s: %d nodes %d edges\n",
-		    agnameof (G), agnnodes(G), agnedges(G));
-	    agwrite(G, outFile);
+		    agnameof(graph), agnnodes(graph), agnedges(graph));
+	    agwrite(graph, outFile);
 	    fflush(outFile);
 	}
     }
 
     stack_reset(&Gstack);
 
+    agxbfree(&buf);
     graphviz_exit(rv);
 #else
     fputs("graphml2gv: not configured for conversion from GXL to GV\n", stderr);

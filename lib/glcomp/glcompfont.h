@@ -27,12 +27,13 @@ extern "C" {
     void glprintfglut(void *font, GLfloat xpos, GLfloat ypos, GLfloat zpos, char *bf);
 
     glCompFont *glNewFont(glCompSet * s, char *text, glCompColor * c,
-          glCompFontType type, char *fontdesc, int fs,int is2D);
+                          char *fontdesc, int fs,int is2D);
     glCompFont *glNewFontFromParent(glCompObj * o, char *text);
     void glDeleteFont(glCompFont * f);
     void glCompDrawText(glCompFont * f,GLfloat x,GLfloat y);
     void glCompRenderText(glCompFont * f, glCompObj * parentObj);
-    void glCompDrawText3D(glCompFont * f,GLfloat x,GLfloat y,GLfloat z,GLfloat w,GLfloat h);
+    void glCompDrawText3D(glCompFont *f, GLfloat x, GLfloat y, double z,
+                          GLfloat w, GLfloat h);
 
 #ifdef __cplusplus
 }

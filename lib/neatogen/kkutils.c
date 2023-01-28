@@ -15,16 +15,16 @@
 #include <stdlib.h>
 #include <math.h>
 
-int common_neighbors(vtx_data * graph, int v, int u, int *v_vector)
+int common_neighbors(vtx_data * graph, int u, int *v_vector)
 {
-    /* count number of common neighbors of 'v' and 'u' */
+    // count number of common neighbors of 'v_vector' and 'u'
     int neighbor;
     int num_shared_neighbors = 0;
     int j;
     for (j = 1; j < graph[u].nedges; j++) {
 	neighbor = graph[u].edges[j];
 	if (v_vector[neighbor] > 0) {
-	    /* a shared neighobr */
+	    // a shared neighbor
 	    num_shared_neighbors++;
 	}
     }
@@ -245,10 +245,6 @@ void compute_new_weights(vtx_data * graph, int n)
     float *weights = gv_calloc(nedges, sizeof(float));
 
     for (i = 0; i < n; i++) {
-	vtx_vec[i] = 0;
-    }
-
-    for (i = 0; i < n; i++) {
 	graph[i].ewgts = weights;
 	fill_neighbors_vec_unweighted(graph, i, vtx_vec);
 	deg_i = graph[i].nedges - 1;
@@ -256,9 +252,7 @@ void compute_new_weights(vtx_data * graph, int n)
 	    neighbor = graph[i].edges[j];
 	    deg_j = graph[neighbor].nedges - 1;
 	    weights[j] =
-		(float) (deg_i + deg_j -
-			 2 * common_neighbors(graph, i, neighbor,
-					      vtx_vec));
+		(float)(deg_i + deg_j - 2 * common_neighbors(graph, neighbor, vtx_vec));
 	}
 	empty_neighbors_vec(graph, i, vtx_vec);
 	weights += graph[i].nedges;

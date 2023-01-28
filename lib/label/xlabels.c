@@ -577,6 +577,7 @@ static void xlhdxunload(XLabels_t * xlp)
     }
   }
   assert(size==freed);
+  (void)size;
 }
 
 static int xlspdxload(XLabels_t * xlp)

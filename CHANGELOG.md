@@ -4,7 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (7.0.7)]
+## [Unreleased (8.0.0)]
+
+### Changed
+
+- The VML output renderer has been removed. This format has been superseded by
+  SVG. #799
+- Legacy man page references to `dotty` have been removed. `dotty` was removed
+  in Graphviz 4.0.0.
+
+### Fixed
+
+- The `pic` output renderer uses PIC or troff comments where appropriate, fixing
+  a problem that resulted in comments being misinterpreted by `groff` and being
+  visible in the final output. #2341
+- `gv2gxl` and `gxl2gv` correctly detect their mode (gv→gxl or gxl→gv) on
+  Windows when called via an absolute or relative path. #2344
+
+## [7.1.0] – 2023-01-21
 
 ### Added
 
@@ -16,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Autotools build system no longer errors when attempting libANN discovery
   during cross-compilation. This was a regression in Graphviz 7.0.6. #2335
 - Graphs with more than 46341 (⌈√INT_MAX⌉) nodes no longer crash `twopi`. #1999
+- Compatibility with `/bin/sh` has been restored in the Autotools build system.
+  This was a regression in Graphviz 7.0.6. This restores the ability to compile
+  on NetBSD which was fixed in 7.0.4 but regressed in 7.0.6. #2340
+- `ccomps` no longer crashes when failing to open files.
 
 ## [7.0.6] – 2023-01-06
 
@@ -1997,7 +2018,8 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (7.0.7)]: https://gitlab.com/graphviz/graphviz/compare/7.0.6...main
+[Unreleased (7.1.1)]: https://gitlab.com/graphviz/graphviz/compare/7.1.0...main
+[7.1.0]: https://gitlab.com/graphviz/graphviz/compare/7.0.6...7.1.0
 [7.0.6]: https://gitlab.com/graphviz/graphviz/compare/7.0.5...7.0.6
 [7.0.5]: https://gitlab.com/graphviz/graphviz/compare/7.0.4...7.0.5
 [7.0.4]: https://gitlab.com/graphviz/graphviz/compare/7.0.3...7.0.4

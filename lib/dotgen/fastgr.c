@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/unused.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
 
@@ -41,9 +41,7 @@ edge_t *find_fast_edge(node_t * u, node_t * v)
     return ffe(u, ND_out(u), v, ND_in(v));
 }
 
-static node_t*
-find_fast_node(graph_t * g, node_t * n)
-{
+static UNUSED node_t *find_fast_node(graph_t *g, node_t *n) {
     node_t *v;
     for (v = GD_nlist(g); v; v = ND_next(v))
 	if (v == n)

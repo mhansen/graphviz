@@ -337,7 +337,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     p->common.color.R = 0;
     p->common.color.G = 0;
     p->common.color.B = 1;
-    p->common.color.A = 0.2;
+    p->common.color.A = 0.2f;
     p->common.visible = 0;
     sel = p;
     s->common.callbacks.mouseover = glCompMouseMove;

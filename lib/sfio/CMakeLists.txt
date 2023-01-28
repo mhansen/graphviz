@@ -36,6 +36,10 @@ add_library(sfio STATIC
   sfvscanf.c
   sfwr.c
   sfwrite.c
+  Sfio_f/_sffileno.c
+  Sfio_f/_sfgetc.c
+  Sfio_f/_sfputc.c
+  Sfio_f/_sfslen.c
 )
 
 target_include_directories(sfio PRIVATE

@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import platform
 import re
+import shutil
 import signal
 import stat
 import subprocess
@@ -340,11 +341,13 @@ def test_517():
     '}'
 
   # translate it to GXL
-  gxl = subprocess.check_output(["gv2gxl"], input=input,
+  gv2gxl = which("gv2gxl")
+  gxl = subprocess.check_output([gv2gxl], input=input,
     universal_newlines=True)
 
   # translate this back to Dot
-  dot_output = subprocess.check_output(["gxl2gv"], input=gxl,
+  gxl2gv = which("gxl2gv")
+  dot_output = subprocess.check_output([gxl2gv], input=gxl,
     universal_newlines=True)
 
   # the result should have both expected labels somewhere
@@ -618,8 +621,10 @@ def test_1618(long: str, short: str):
                       stderr=subprocess.PIPE, check=True)
 
   # output from both should match
-  assert p1.stdout == p2.stdout, f"`dot {long}` wrote output than `dot {short}`"
-  assert p1.stderr == p2.stderr, f"`dot {long}` wrote output than `dot {short}`"
+  assert p1.stdout == p2.stdout, \
+    f"`dot {long}` wrote differing output than `dot {short}`"
+  assert p1.stderr == p2.stderr, \
+    f"`dot {long}` wrote differing output than `dot {short}`"
 
 @pytest.mark.xfail(strict=True)
 def test_1624():
@@ -2080,6 +2085,27 @@ def test_2325():
 
   # run it through Graphviz
   dot("svg", input)
+
+@pytest.mark.skipif(shutil.which("groff") is None, reason="groff not available")
+def test_2341():
+  """
+  PIC backend should generate correct comments
+  https://gitlab.com/graphviz/graphviz/-/issues/2341
+  """
+
+  # a simple graph
+  source = "digraph { a -> b; }"
+
+  # generate PIC from this
+  pic = dot("pic", source=source)
+
+  # run this through groff
+  groffed = subprocess.check_output(["groff", "-Tascii", "-p"], input=pic,
+                                    universal_newlines=True)
+
+  # it should not contain any comments
+  assert re.search(r"^\s*#", groffed) is None, \
+    "Graphviz comment remains in groff output"
 
 def test_changelog_dates():
   """

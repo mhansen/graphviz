@@ -319,7 +319,6 @@ static void fig_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
     int cap_style = 0;
     int forward_arrow = 0;
     int backward_arrow = 0;
-    int npoints = n;
     int i;
 
 
@@ -327,16 +326,9 @@ static void fig_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
     point p;
     int j, step;
     int count = 0;
-    int size;
 
-    char *buffer;
-    char *buf;
+    agxbuf buf = {0};
     assert (n >= 4);
-
-	buffer =
-        malloc((npoints + 1) * (BEZIERSUBDIVISION +
-                                1) * 20 * sizeof(char));
-    buf = buffer;
 
     fig_line_style(obj, &line_style, &style_val);
 
@@ -355,8 +347,7 @@ static void fig_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
     /* Write first point in line */
     count++;
     PF2P(A[0], p);
-    size = sprintf(buf, " %d %d", p.x, p.y);
-    buf += size;
+    agxbprint(&buf, " %d %d", p.x, p.y);
     /* write subsequent points */
     for (i = 0; i + 3 < n; i += 3) {
         V[0] = V[3];
@@ -368,8 +359,7 @@ static void fig_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
             count++;
             pf = Bezier (V, 3, (double) step / BEZIERSUBDIVISION, NULL, NULL);
 	    PF2P(pf, p);
-            size = sprintf(buf, " %d %d", p.x, p.y);
-            buf += size;
+            agxbprint(&buf, " %d %d", p.x, p.y);
         }
     }
 
@@ -385,8 +375,8 @@ static void fig_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
             area_fill,
             style_val, cap_style, forward_arrow, backward_arrow, count);
 
-    gvprintf(job, " %s\n", buffer);      /* print points */
-    free(buffer);
+    gvprintf(job, " %s\n", agxbuse(&buf));      /* print points */
+    agxbfree(&buf);
     for (i = 0; i < count; i++) {
         gvprintf(job, " %d", i % (count - 1) ? 1 : 0);   /* -1 on all */
     }

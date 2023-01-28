@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
+#include <cgraph/strview.h>
 #include "gd_psfontResolve.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -31,58 +32,47 @@
  * especially on Windows. Without fontconfig, we provide
  * here some rudimentary name mapping.
  */
-char *gd_alternate_fontlist(char *font)
-{
-    static char *fontbuf;
-    static int fontbufsz;
-    char *p, *fontlist;
-    int len;
-
-    len = strlen(font) + 1;
-    if (len > fontbufsz) {
-	fontbufsz = 2 * len;
-	fontbuf = realloc(fontbuf, fontbufsz);
-    }
+char *gd_alternate_fontlist(const char *font) {
+    char *p;
 
     /* fontbuf to contain font without style descriptions like -Roman or -Italic */
-    strcpy(fontbuf, font);
-    if ((p = strchr(fontbuf, '-')) || (p = strchr(fontbuf, '_')))
-	*p = 0;
+    strview_t fontlist = strview(font, '\0');
+    if ((p = strchr(font, '-')) || (p = strchr(font, '_')))
+	fontlist.size = (size_t)(p - font);
 
-    fontlist = fontbuf;
     if ((strcasecmp(font, "times-bold") == 0)
-	|| (strcasecmp(fontbuf, "timesbd") == 0)
-	|| (strcasecmp(fontbuf, "timesb") == 0))
-	fontlist = "timesbd;Timesbd;TIMESBD;timesb;Timesb;TIMESB";
+	|| strview_case_str_eq(fontlist, "timesbd")
+	|| strview_case_str_eq(fontlist, "timesb"))
+	fontlist = strview("timesbd;Timesbd;TIMESBD;timesb;Timesb;TIMESB", '\0');
 
     else if ((strcasecmp(font, "times-italic") == 0)
-	     || (strcasecmp(fontbuf, "timesi") == 0))
-	fontlist = "timesi;Timesi;TIMESI";
+	     || strview_case_str_eq(fontlist, "timesi"))
+	fontlist = strview("timesi;Timesi;TIMESI", '\0');
 
     else if ((strcasecmp(font, "timesnewroman") == 0)
 	     || (strcasecmp(font, "timesnew") == 0)
 	     || (strcasecmp(font, "timesroman") == 0)
-	     || (strcasecmp(fontbuf, "times") == 0))
-	fontlist = "times;Times;TIMES";
+	     || strview_case_str_eq(fontlist, "times"))
+	fontlist = strview("times;Times;TIMES", '\0');
 
     else if ((strcasecmp(font, "arial-bold") == 0)
-	     || (strcasecmp(fontbuf, "arialb") == 0))
-	fontlist = "arialb;Arialb;ARIALB";
+	     || strview_case_str_eq(fontlist, "arialb"))
+	fontlist = strview("arialb;Arialb;ARIALB", '\0');
 
     else if ((strcasecmp(font, "arial-italic") == 0)
-	     || (strcasecmp(fontbuf, "ariali") == 0))
-	fontlist = "ariali;Ariali;ARIALI";
+	     || strview_case_str_eq(fontlist, "ariali"))
+	fontlist = strview("ariali;Ariali;ARIALI", '\0');
 
-    else if (strcasecmp(fontbuf, "helvetica") == 0)
-	fontlist = "helvetica;Helvetica;HELVETICA;arial;Arial;ARIAL";
+    else if (strview_case_str_eq(fontlist, "helvetica"))
+	fontlist = strview("helvetica;Helvetica;HELVETICA;arial;Arial;ARIAL", '\0');
 
-    else if (strcasecmp(fontbuf, "arial") == 0)
-	fontlist = "arial;Arial;ARIAL";
+    else if (strview_case_str_eq(fontlist, "arial"))
+	fontlist = strview("arial;Arial;ARIAL", '\0');
 
-    else if (strcasecmp(fontbuf, "courier") == 0)
-	fontlist = "courier;Courier;COURIER;cour";
+    else if (strview_case_str_eq(fontlist, "courier"))
+	fontlist = strview("courier;Courier;COURIER;cour", '\0');
 
-    return fontlist;
+    return strview_str(fontlist);
 }
 #endif				/* HAVE_GD_FONTCONFIG */
 
@@ -164,6 +154,9 @@ static bool gd_textlayout(textspan_t * span, char **fontpath)
 
 	err = gdImageStringFTEx(NULL, brect, -1, fontlist,
 				fontsize, 0, 0, 0, span->str, &strex);
+#ifndef HAVE_GD_FONTCONFIG
+	free(fontlist);
+#endif
 
 	if (err) {
 	    agerr(AGERR,"%s\n", err);
