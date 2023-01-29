@@ -47,17 +47,17 @@ static void node_data_delete(void *d){
 }
 
 static double node_data_get_weight(void *d){
-  node_data nd = (node_data) d;
+  node_data nd = d;
   return nd->node_weight;
 }
 
 static double* node_data_get_coord(void *d){
-  node_data nd = (node_data) d;
+  node_data nd = d;
   return nd->coord;
 }
 
 static int node_data_get_id(void *d){
-  node_data nd = (node_data) d;
+  node_data nd = d;
   return nd->id;
 }
 
