@@ -721,7 +721,6 @@ static int traverse(Gpr_t * state, Expr_t* prog, comp_block * bp, int cleanup)
     if (!state->target) {
 	char *target;
 	agxbuf tmp = {0};
-	agxbinit(&tmp, 0, NULL);
 
 	if (state->name_used) {
 	    agxbprint(&tmp, "%s%d", state->tgtname, state->name_used);

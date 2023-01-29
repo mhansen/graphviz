@@ -436,7 +436,6 @@ static int lookup(Expr_t *pgm, Agobj_t *objp, Exid_t *sym, Extype_t * v) {
 	    break;
 	case M_name: {
 	    agxbuf tmp = {0};
-	    agxbinit(&tmp, 0, NULL);
 	    v->string = nameOf(pgm, objp, &tmp);
 	    agxbfree(&tmp);
 	    break;
@@ -536,7 +535,6 @@ static int lookup(Expr_t *pgm, Agobj_t *objp, Exid_t *sym, Extype_t * v) {
 	if (!gsym) {
 	    gsym = agattr(agroot(agraphof(objp)), AGTYPE(objp), sym->name, "");
 	    agxbuf tmp = {0};
-	    agxbinit(&tmp, 0, NULL);
 	    error(ERROR_WARNING,
 	          "Using value of uninitialized %s attribute \"%s\" of \"%s\"",
 	          kindOf (objp), sym->name, nameOf(pgm, objp, &tmp));
@@ -1335,7 +1333,6 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		    if (!gsym) {
 	    		gsym = agattr(agroot(agraphof(objp)), AGTYPE(objp), name, "");
 	    		agxbuf tmp = {0};
-	    		agxbinit(&tmp, 0, NULL);
 	    		error(ERROR_WARNING,
 	    		      "Using value of %s uninitialized attribute \"%s\" of \"%s\" in aget()",
 	    		      kindOf (objp), name, nameOf(pgm, objp, &tmp));
@@ -2107,7 +2104,6 @@ static int stringOf(Expr_t *prog, Exnode_t *x, int arg) {
 	}
 	else {
 	    agxbuf tmp = {0};
-	    agxbinit(&tmp, 0, NULL);
 	    x->data.constant.value.string = nameOf(prog, objp, &tmp);
 	    agxbfree(&tmp);
 	}

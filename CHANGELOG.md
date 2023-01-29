@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (8.0.0)]
 
+### Added
+
+- When specifying a color in HSV format, it is now possible to give an
+  additional fourth component for the alpha channel (opacity). #510
+
 ### Changed
 
 - The VML output renderer has been removed. This format has been superseded by
