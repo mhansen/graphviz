@@ -487,7 +487,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
   } else if (level < max_level){
     /* otherwise open up into 2^dim quadtrees unless the level is too high */
     q->total_weight += weight;
-    for (i = 0; i < q->dim; i++) q->average[i] = ((q->average[i])*q->n + coord[i])/(q->n + 1);
+    for (i = 0; i < q->dim; i++) q->average[i] = (q->average[i] * q->n + coord[i]) / (q->n + 1);
     if (!q->qts){
       q->qts = gv_calloc(1 << dim, sizeof(QuadTree));
     }/* done adding new quadtree, now add points to them */
@@ -495,7 +495,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     /* insert the old node (if exist) and the current node into the appropriate child quadtree */
     ii = QuadTree_get_quadrant(dim, q->center, coord);
     assert(ii < 1<<dim && ii >= 0);
-    if (q->qts[ii] == NULL) q->qts[ii] = QuadTree_new_in_quadrant(q->dim, q->center, (q->width)/2, max_level, ii);
+    if (q->qts[ii] == NULL) q->qts[ii] = QuadTree_new_in_quadrant(q->dim, q->center, q->width / 2, max_level, ii);
     
     q->qts[ii] = QuadTree_add_internal(q->qts[ii], coord, weight, id, level + 1);
     assert(q->qts[ii]);
@@ -518,13 +518,13 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
       q->l = NULL;
     }
     
-    (q->n)++;
+    q->n++;
   } else {
     assert(!(q->qts));
     /* level is too high, append data in the linked list */
-    (q->n)++;
+    q->n++;
     q->total_weight += weight;
-    for (i = 0; i < q->dim; i++) q->average[i] = ((q->average[i])*q->n + coord[i])/(q->n + 1);
+    for (i = 0; i < q->dim; i++) q->average[i] = (q->average[i] * q->n + coord[i]) / (q->n + 1);
     nd = node_data_new(q->dim, weight, coord, id);
     assert(q->l);
     q->l = SingleLinkedList_prepend(q->l, nd);

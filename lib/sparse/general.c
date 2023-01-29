@@ -102,9 +102,9 @@ static int comp_ascend(const void *s1, const void *s2){
   const double *ss1 = s1;
   const double *ss2 = s2;
 
-  if ((ss1)[0] > (ss2)[0]){
+  if (ss1[0] > ss2[0]){
     return 1;
-  } else if ((ss1)[0] < (ss2)[0]){
+  } else if (ss1[0] < ss2[0]){
     return -1;
   }
   return 0;
