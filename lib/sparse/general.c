@@ -148,10 +148,7 @@ void vector_sort_int(int n, int *v){
 }
 
 double distance_cropped(double *x, int dim, int i, int j){
-  int k;
-  double dist = 0.;
-  for (k = 0; k < dim; k++) dist += (x[i*dim+k] - x[j*dim + k])*(x[i*dim+k] - x[j*dim + k]);
-  dist = sqrt(dist);
+  double dist = distance(x, dim, i, j);
   return fmax(dist, MINDIST);
 }
 
