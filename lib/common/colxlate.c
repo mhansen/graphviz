@@ -20,6 +20,7 @@
 #include <common/colorprocs.h>
 #include <common/colortbl.h>
 #include <common/memory.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 
@@ -240,15 +241,12 @@ static char* resolveColor (char* str)
 int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 {
     static hsvrgbacolor_t *last;
-    static char *canon;
-    static size_t allocated;
-    char *p, *q;
+    char *p;
     hsvrgbacolor_t fake;
     char c;
     double H, S, V, A, R, G, B;
     double C, M, Y, K;
     unsigned int r, g, b, a;
-    size_t len;
     int rc;
 
     color->type = target_type;
@@ -313,21 +311,13 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 
     /* test for hsv value such as: ".6,.5,.3" */
     if ((c = *p) == '.' || isdigit(c)) {
-	len = strlen(p);
-	if (len >= allocated) {
-	    allocated = len + 1 + 10;
-	    canon = grealloc(canon, allocated);
-	}
-	q = canon;
+	agxbuf canon = {0};
 	while ((c = *p++)) {
-	    if (c == ',')
-		c = ' ';
-	    *q++ = c;
+	    agxbputc(&canon, c == ',' ? ' ' : c);
 	}
-	*q = '\0';
 
 	A = 1.0; // default
-	if (sscanf(canon, "%lf%lf%lf%lf", &H, &S, &V, &A) >= 3) {
+	if (sscanf(agxbuse(&canon), "%lf%lf%lf%lf", &H, &S, &V, &A) >= 3) {
 	    /* clip to reasonable values */
 	    H = fmax(fmin(H, 1.0), 0.0);
 	    S = fmax(fmin(S, 1.0), 0.0);
@@ -376,8 +366,10 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 	    default:
 		UNREACHABLE();
 	    }
+	    agxbfree(&canon);
 	    return rc;
 	}
+	agxbfree(&canon);
     }
 
     /* test for known color name (generic, not renderer specific known names) */
