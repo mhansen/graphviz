@@ -325,7 +325,6 @@ def test_358():
     assert m is not None, \
       f"font characteristic {1 << i} not enabled in xdot 1.7"
 
-@pytest.mark.xfail(strict=True)
 def test_510():
   """
   HSV colors should also support an alpha channel

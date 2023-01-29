@@ -326,24 +326,26 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 	}
 	*q = '\0';
 
-	if (sscanf(canon, "%lf%lf%lf", &H, &S, &V) == 3) {
+	A = 1.0; // default
+	if (sscanf(canon, "%lf%lf%lf%lf", &H, &S, &V, &A) >= 3) {
 	    /* clip to reasonable values */
 	    H = fmax(fmin(H, 1.0), 0.0);
 	    S = fmax(fmin(S, 1.0), 0.0);
 	    V = fmax(fmin(V, 1.0), 0.0);
+	    A = fmax(fmin(A, 1.0), 0.0);
 	    switch (target_type) {
 	    case HSVA_DOUBLE:
 		color->u.HSVA[0] = H;
 		color->u.HSVA[1] = S;
 		color->u.HSVA[2] = V;
-		color->u.HSVA[3] = 1.0; /* opaque */
+		color->u.HSVA[3] = A;
 		break;
 	    case RGBA_BYTE:
 		hsv2rgb(H, S, V, &R, &G, &B);
 		color->u.rgba[0] = (int) (R * 255);
 		color->u.rgba[1] = (int) (G * 255);
 		color->u.rgba[2] = (int) (B * 255);
-		color->u.rgba[3] = 255;	/* opaque */
+		color->u.rgba[3] = (int) (A * 255);
 		break;
 	    case CMYK_BYTE:
 		hsv2rgb(H, S, V, &R, &G, &B);
@@ -358,14 +360,14 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 		color->u.rrggbbaa[0] = (int) (R * 65535);
 		color->u.rrggbbaa[1] = (int) (G * 65535);
 		color->u.rrggbbaa[2] = (int) (B * 65535);
-		color->u.rrggbbaa[3] = 65535;	/* opaque */
+		color->u.rrggbbaa[3] = (int) (A * 65535);
 		break;
 	    case RGBA_DOUBLE:
 		hsv2rgb(H, S, V, &R, &G, &B);
 		color->u.RGBA[0] = R;
 		color->u.RGBA[1] = G;
 		color->u.RGBA[2] = B;
-		color->u.RGBA[3] = 1.0;	/* opaque */
+		color->u.RGBA[3] = A;
 		break;
 	    case COLOR_STRING:
 		break;
