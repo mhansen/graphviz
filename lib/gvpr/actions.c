@@ -1047,15 +1047,12 @@ static
 int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 {
     static hsvrgbacolor_t *last;
-    static unsigned char *canon;
-    static size_t allocated;
-    unsigned char *p, *q;
+    unsigned char *p;
     hsvrgbacolor_t fake;
     unsigned char c;
     double H, S, V, A, R, G, B;
     double C, M, Y, K;
     unsigned int r, g, b, a;
-    size_t len;
     int rc;
 
     color->type = target_type;
@@ -1120,24 +1117,12 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
     /* test for hsv value such as: ".6,.5,.3" */
     if ((c = *p) == '.' || isdigit(c)) {
 	int cnt;
-	len = strlen((char*)p);
-	if (len >= allocated) {
-	    allocated = len + 1 + 10;
-	    canon = newof(canon, unsigned char, allocated, 0);
-	    if (! canon) {
-		rc = COLOR_MALLOC_FAIL;
-		return rc;
-	    }
-	}
-	q = canon;
+	agxbuf canon = {0};
 	while ((c = *p++)) {
-	    if (c == ',')
-		c = ' ';
-	    *q++ = c;
+	    agxbputc(&canon, c == ',' ? ' ' : (char)c);
 	}
-	*q = '\0';
 
-	if ((cnt = sscanf((char *) canon, "%lf%lf%lf%lf", &H, &S, &V, &A)) >= 3) {
+	if ((cnt = sscanf(agxbuse(&canon), "%lf%lf%lf%lf", &H, &S, &V, &A)) >= 3) {
 	    /* clip to reasonable values */
 	    H = MAX(MIN(H, 1.0), 0.0);
 	    S = MAX(MIN(S, 1.0), 0.0);
@@ -1187,8 +1172,10 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 	    case COLOR_INDEX:
 		break;
 	    }
+	    agxbfree(&canon);
 	    return rc;
 	}
+	agxbfree(&canon);
     }
 
     /* test for known color name (generic, not renderer specific known names) */
