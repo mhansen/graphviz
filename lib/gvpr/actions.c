@@ -1311,7 +1311,6 @@ char *colorx(Expr_t *ex, char *incolor, char *fmt) {
 	return "";
 
     agxbuf fp = {0};
-    agxbinit(&fp, 0, NULL);
 
     switch (type) {
     case HSVA_DOUBLE :
