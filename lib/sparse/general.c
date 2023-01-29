@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <cgraph/alloc.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <sparse/general.h>
@@ -151,7 +152,7 @@ double distance_cropped(double *x, int dim, int i, int j){
   double dist = 0.;
   for (k = 0; k < dim; k++) dist += (x[i*dim+k] - x[j*dim + k])*(x[i*dim+k] - x[j*dim + k]);
   dist = sqrt(dist);
-  return MAX(dist, MINDIST);
+  return fmax(dist, MINDIST);
 }
 
 double distance(double *x, int dim, int i, int j){
