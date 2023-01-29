@@ -791,7 +791,7 @@ int initHTMLlexer(char *src, agxbuf * xb, htmlenv_t *env)
 int clearHTMLlexer()
 {
 #ifdef HAVE_EXPAT
-    int rv = state.warn | state.error;
+    int rv = state.error ? 3 : state.warn;
     XML_ParserFree(state.parser);
     agxbfree (&state.lb);
     return rv;
