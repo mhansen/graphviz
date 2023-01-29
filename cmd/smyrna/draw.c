@@ -14,6 +14,7 @@ XDOT DRAWING FUNCTIONS, maybe need to move them somewhere else
 		for now keep them at the bottom
 */
 #include "draw.h"
+#include <cgraph/unreachable.h>
 #include <common/colorprocs.h>
 #include <common/types.h>
 #include <common/utils.h>
@@ -349,7 +350,8 @@ static void EmbedText(sdot_op* o, int param)
 		case xd_right:
 			x=o->op.u.text.x - o->op.u.text.width;
 			break;
-
+		default:
+			UNREACHABLE();
 	}
 	y=o->op.u.text.y;
 	if (!o->font)
