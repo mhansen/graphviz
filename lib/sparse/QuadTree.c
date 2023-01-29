@@ -358,15 +358,15 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
 
   for (i = 1; i < n; i++){
     for (k = 0; k < dim; k++){
-      xmin[k] = MIN(xmin[k], coord[i*dim+k]);
-      xmax[k] = MAX(xmax[k], coord[i*dim+k]);
+      xmin[k] = fmin(xmin[k], coord[i*dim+k]);
+      xmax[k] = fmax(xmax[k], coord[i*dim+k]);
     }
   }
 
   width = xmax[0] - xmin[0];
   for (i = 0; i < dim; i++) {
     center[i] = (xmin[i] + xmax[i])*0.5;
-    width = MAX(width, xmax[i] - xmin[i]);
+    width = fmax(width, xmax[i] - xmin[i]);
   }
   width = fmax(width, 0.00001);/* if we only have one point, width = 0! */
   width *= 0.52;
