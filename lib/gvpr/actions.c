@@ -1047,7 +1047,6 @@ static
 int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 {
     static hsvrgbacolor_t *last;
-    unsigned char *p;
     hsvrgbacolor_t fake;
     unsigned char c;
     double H, S, V, A, R, G, B;
@@ -1059,13 +1058,12 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 
     rc = COLOR_OK;
     for (; *str == ' '; str++);	/* skip over any leading whitespace */
-    p = (unsigned char *) str;
+    const char *p = str;
 
     /* test for rgb value such as: "#ff0000"
        or rgba value such as "#ff000080" */
     a = 255;			/* default alpha channel value=opaque in case not supplied */
-    if (*p == '#'
-	&& sscanf((char *) p, "#%2x%2x%2x%2x", &r, &g, &b, &a) >= 3) {
+    if (*p == '#' && sscanf(p, "#%2x%2x%2x%2x", &r, &g, &b, &a) >= 3) {
 	switch (target_type) {
 	case HSVA_DOUBLE:
 	    R = (double) r / 255.0;
