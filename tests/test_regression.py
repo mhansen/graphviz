@@ -325,6 +325,28 @@ def test_358():
     assert m is not None, \
       f"font characteristic {1 << i} not enabled in xdot 1.7"
 
+@pytest.mark.xfail(strict=True)
+def test_510():
+  """
+  HSV colors should also support an alpha channel
+  https://gitlab.com/graphviz/graphviz/-/issues/510
+  """
+
+  # a graph with a turquoise, partially transparent node
+  source = 'digraph { a [color="0.482 0.714 0.878 0.5"]; }'
+
+  # process this with dot
+  svg = dot("svg", source=source)
+
+  # see if we can locate an opacity adjustment
+  m = re.search(r'\bstroke-opacity="(?P<opacity>\d*.\d*)"', svg)
+  assert m is not None, "no stroke-opacity set; alpha channel ignored?"
+
+  # it should be something in-between transparent and opaque
+  opacity = float(m.group("opacity"))
+  assert opacity > 0, "node set transparent; misinterpreted alpha channel?"
+  assert opacity < 1, "node set opaque; misinterpreted alpha channel?"
+
 @pytest.mark.skipif(which("gv2gxl") is None or which("gxl2gv") is None,
                     reason="GXL tools not available")
 def test_517():
