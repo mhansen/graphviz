@@ -1001,7 +1001,6 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
 	    showPoints (points, pointn);
 #endif
     }
-    return;
 }
 
 static void
@@ -1075,7 +1074,6 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
 	    showPoints (points, pointn);
 #endif
     }
-    return;
 }
 
 static void

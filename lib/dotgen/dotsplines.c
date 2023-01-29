@@ -65,7 +65,7 @@ static void adjustregularpath(path *, int, int);
 static Agedge_t *bot_bound(Agedge_t *, int);
 static bool pathscross(Agnode_t *, Agnode_t *, Agedge_t *, Agedge_t *);
 static Agraph_t *cl_bound(graph_t*, Agnode_t *, Agnode_t *);
-static int cl_vninside(Agraph_t *, Agnode_t *);
+static bool cl_vninside(Agraph_t *, Agnode_t *);
 static void completeregularpath(path *, Agedge_t *, Agedge_t *,
 				pathend_t *, pathend_t *, boxf *, int, int);
 static int edgecmp(Agedge_t **, Agedge_t **);
@@ -422,18 +422,12 @@ static void _dot_splines(graph_t * g, int normalize)
 
 	if (et == EDGETYPE_CURVED) {
 	    int ii;
-	    edge_t* e0;
-	    edge_t** edgelist;
-	    if (cnt == 1)
-		edgelist = &e0;
-	    else
-		edgelist = gv_calloc(cnt, sizeof(edge_t*));
+	    edge_t** edgelist = gv_calloc(cnt, sizeof(edge_t*));
 	    edgelist[0] = getmainedge((edges+ind)[0]);
 	    for (ii = 1; ii < cnt; ii++)
 		edgelist[ii] = (edges+ind)[ii];
 	    makeStraightEdges (g, edgelist, cnt, et, &sinfo);
-	    if (cnt > 1)
-		free (edgelist);
+	    free(edgelist);
 	}
 	else if (agtail(e0) == aghead(e0)) {
 	    int b, r;
@@ -1269,10 +1263,9 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     rightx = ND_coord(hn).x;
     leftx = ND_coord(tn).x;
     if (GD_flip(g)) {
-        node_t* n;
-        n = tn;
+        node_t *tmp = tn;
         tn = hn;
-        hn = n;
+        hn = tmp;
     }
     auxt = cloneNode(subg, tn);
     auxh = cloneNode(auxg, hn);
@@ -1484,7 +1477,7 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
  */
 static void
 make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
-	ind, int cnt, edge_t* e, int splines)
+	ind, int cnt, edge_t* e, bool use_splines)
 {
     node_t *tn, *hn;
     int j, i, r;
@@ -1541,7 +1534,7 @@ make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges,
 
 	pointf *ps = NULL;
 	int pn = 0;
-	if (splines) ps = routesplines(P, &pn);
+	if (use_splines) ps = routesplines(P, &pn);
 	else ps = routepolylines(P, &pn);
 	if (pn == 0) {
 	    free(ps);
@@ -1678,16 +1671,9 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
     }
 }
 
-/* ccw:
- * Return true if p3 is to left of ray p1->p2
- */
-static int
-leftOf (pointf p1, pointf p2, pointf p3)
-{
-    int d;
-
-    d = (p1.y - p2.y) * (p3.x - p2.x) - (p3.y - p2.y) * (p1.x - p2.x);
-    return d > 0;
+/// Return true if p3 is to left of ray p1->p2
+static bool leftOf(pointf p1, pointf p2, pointf p3) {
+  return (p1.y - p2.y) * (p3.x - p2.x) - (p3.y - p2.y) * (p1.x - p2.x) > 0;
 }
 
 /* makeLineEdge:
@@ -2230,25 +2216,26 @@ void refineregularends(edge_t *left, edge_t *right, pathend_t *endp, int dir,
  *
  * The second for loop was added by ek long ago, and apparently is intended
  * to guarantee an overlap between adjacent boxes of at least MINW.
- * It doesn't do this, and the ifdef'ed part has the potential of moving 
- * a box within a node for more complex paths.
+ * It doesn't do this.
  */
 static void adjustregularpath(path * P, int fb, int lb)
 {
     boxf *bp1, *bp2;
-    int i, x;
+    int i;
 
     for (i = fb-1; i < lb+1; i++) {
 	bp1 = &P->boxes[i];
 	if ((i - fb) % 2 == 0) {
 	    if (bp1->LL.x >= bp1->UR.x) {
-		x = (bp1->LL.x + bp1->UR.x) / 2;
-		bp1->LL.x = x - HALFMINW, bp1->UR.x = x + HALFMINW;
+		double x = (bp1->LL.x + bp1->UR.x) / 2;
+		bp1->LL.x = x - HALFMINW;
+		bp1->UR.x = x + HALFMINW;
 	    }
 	} else {
 	    if (bp1->LL.x + MINW > bp1->UR.x) {
-		x = (bp1->LL.x + bp1->UR.x) / 2;
-		bp1->LL.x = x - HALFMINW, bp1->UR.x = x + HALFMINW;
+		double x = (bp1->LL.x + bp1->UR.x) / 2;
+		bp1->LL.x = x - HALFMINW;
+		bp1->UR.x = x + HALFMINW;
 	    }
 	}
     }
@@ -2390,10 +2377,9 @@ static edge_t *bot_bound(edge_t * e, int side)
 
 /* common routines */
 
-static int cl_vninside(graph_t * cl, node_t * n)
-{
-    return BETWEEN(GD_bb(cl).LL.x, (double)(ND_coord(n).x), GD_bb(cl).UR.x) &&
-	    BETWEEN(GD_bb(cl).LL.y, (double)(ND_coord(n).y), GD_bb(cl).UR.y);
+static bool cl_vninside(graph_t *cl, node_t *n) {
+  return BETWEEN(GD_bb(cl).LL.x, ND_coord(n).x, GD_bb(cl).UR.x) &&
+         BETWEEN(GD_bb(cl).LL.y, ND_coord(n).y, GD_bb(cl).UR.y);
 }
 
 /* All nodes belong to some cluster, which may be the root graph.
