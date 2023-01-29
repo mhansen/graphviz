@@ -195,8 +195,8 @@ void scale_to_box(double xmin, double ymin, double xmax, double ymax, int n, int
 
   for (i = 0; i < n; i++){
     for (k = 0; k < dim; k++) {
-      min[k] = MIN(x[i*dim+k], min[k]);
-      max[k] = MAX(x[i*dim+k], max[k]);
+      min[k] = fmin(x[i*dim+k], min[k]);
+      max[k] = fmax(x[i*dim+k], max[k]);
     }
   }
 
@@ -204,7 +204,7 @@ void scale_to_box(double xmin, double ymin, double xmax, double ymax, int n, int
     ratio = (xmax-xmin)/(max[0] - min[0]);
   }
   if (max[1] - min[1] != 0) {
-    ratio = MIN(ratio, (ymax-ymin)/(max[1] - min[1]));
+    ratio = fmin(ratio, (ymax-ymin)/(max[1] - min[1]));
   }
   
   min0[0] = xmin;
