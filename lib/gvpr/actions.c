@@ -1048,7 +1048,6 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 {
     static hsvrgbacolor_t *last;
     hsvrgbacolor_t fake;
-    unsigned char c;
     double H, S, V, A, R, G, B;
     double C, M, Y, K;
     unsigned int r, g, b, a;
@@ -1113,11 +1112,12 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
     }
 
     /* test for hsv value such as: ".6,.5,.3" */
-    if ((c = *p) == '.' || isdigit(c)) {
+    char c;
+    if ((c = *p) == '.' || isdigit((int)c)) {
 	int cnt;
 	agxbuf canon = {0};
 	while ((c = *p++)) {
-	    agxbputc(&canon, c == ',' ? ' ' : (char)c);
+	    agxbputc(&canon, c == ',' ? ' ' : c);
 	}
 
 	if ((cnt = sscanf(agxbuse(&canon), "%lf%lf%lf%lf", &H, &S, &V, &A)) >= 3) {
