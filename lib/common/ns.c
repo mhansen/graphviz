@@ -819,7 +819,7 @@ static void TB_balance(void)
 
 static int init_graph(graph_t * g)
 {
-    int i, feasible;
+    int feasible;
     node_t *n;
     edge_t *e;
 
@@ -828,7 +828,7 @@ static int init_graph(graph_t * g)
     for (n = GD_nlist(g); n; n = ND_next(n)) {
 	ND_mark(n) = FALSE;
 	N_nodes++;
-	for (i = 0; (e = ND_out(n).list[i]); i++)
+	for (size_t i = 0; (e = ND_out(n).list[i]); i++)
 	    N_edges++;
     }
 
@@ -840,6 +840,7 @@ static int init_graph(graph_t * g)
     feasible = TRUE;
     for (n = GD_nlist(g); n; n = ND_next(n)) {
 	ND_priority(n) = 0;
+	size_t i;
 	for (i = 0; (e = ND_in(n).list[i]); i++) {
 	    ND_priority(n)++;
 	    ED_cutvalue(e) = 0;
