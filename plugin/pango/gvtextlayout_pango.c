@@ -55,9 +55,6 @@ static char* pango_psfontResolve (PostscriptAlias* pa)
 #define FONT_DPI 96.
 
 #define ENABLE_PANGO_MARKUP
-#ifdef ENABLE_PANGO_MARKUP
-#define FULL_MARKUP "<span weight=\"bold\" style=\"italic\" underline=\"single\"><sup><sub></sub></sup></span>"
-#endif
 
 // wrapper to handle difference in calling conventions between `agxbput` and
 // `xml_escape`’s `cb`
