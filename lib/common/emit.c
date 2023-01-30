@@ -2499,7 +2499,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
     char *s;
     textlabel_t *lab = NULL, *tlab = NULL, *hlab = NULL;
     pointf *pbs = NULL;
-    int	i, nump, *pbs_n = NULL, pbs_poly_n = 0;
+    int	i, *pbs_n = NULL, pbs_poly_n = 0;
     char* dflt_url = NULL;
     char* dflt_target = NULL;
     double penwidth;
@@ -2657,9 +2657,13 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    obj->url_bsplinemap_poly_n = pbs_poly_n;
 	    obj->url_bsplinemap_n = pbs_n;
 	    if (! (flags & GVRENDER_DOES_TRANSFORM)) {
-    		for ( nump = 0, i = 0; i < pbs_poly_n; i++)
-        	    nump += pbs_n[i];
-		gvrender_ptf_A(job, pbs, pbs, nump);		
+    		size_t nump;
+    		for ( nump = 0, i = 0; i < pbs_poly_n; i++) {
+        	    assert(pbs_n[i] >= 0);
+        	    nump += (size_t)pbs_n[i];
+    		}
+		assert(nump <= INT_MAX);
+		gvrender_ptf_A(job, pbs, pbs, (int)nump);
 	    }
 	    obj->url_bsplinemap_p = pbs;
 	    obj->url_map_shape = MAP_POLYGON;
