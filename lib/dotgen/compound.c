@@ -12,15 +12,15 @@
 /* Module for clipping splines to cluster boxes.
  */
 
+#include	<cgraph/agxbuf.h>
 #include	<dotgen/dot.h>
 
 /* pf2s:
  * Convert a pointf to its string representation.
  */
-static char *pf2s(pointf p, char *buf)
-{
-    sprintf(buf, "(%.5g,%.5g)", p.x, p.y);
-    return buf;
+static char *pf2s(pointf p, agxbuf *xb) {
+  agxbprint(xb, "(%.5g,%.5g)", p.x, p.y);
+  return agxbuse(xb);
 }
 
 /* Return point where line segment [pp,cp] intersects
@@ -66,12 +66,16 @@ static pointf boxIntersectf(pointf pp, pointf cp, boxf * bp)
 
     /* failure */
     {
-	char ppbuf[100], cpbuf[100], llbuf[100], urbuf[100];
+	agxbuf ppbuf = {0}, cpbuf = {0}, llbuf = {0}, urbuf = {0};
 
 	agerr(AGERR,
 		"segment [%s,%s] does not intersect box ll=%s,ur=%s\n",
-		pf2s(pp, ppbuf), pf2s(cp, cpbuf),
-		pf2s(ll, llbuf), pf2s(ur, urbuf));
+		pf2s(pp, &ppbuf), pf2s(cp, &cpbuf),
+		pf2s(ll, &llbuf), pf2s(ur, &urbuf));
+	agxbfree(&ppbuf);
+	agxbfree(&cpbuf);
+	agxbfree(&llbuf);
+	agxbfree(&urbuf);
 	assert(0);
     }
     return ipp;
@@ -93,7 +97,7 @@ static int inBoxf(pointf p, boxf * bb)
 static graph_t *getCluster(char *cluster_name, Dt_t *map) {
     Agraph_t* sg;
 
-    if (!cluster_name || (*cluster_name == '\0'))
+    if (!cluster_name || *cluster_name == '\0')
 	return NULL;
     sg = findCluster (map, cluster_name);
     if (sg == NULL) {
@@ -127,7 +131,7 @@ static int countVertCross(pointf * pts, double xcoord)
     for (i = 1; i <= 3; i++) {
 	old_sign = sign;
 	sign = CMP(pts[i].x, xcoord);
-	if ((sign != old_sign) && (old_sign != 0))
+	if (sign != old_sign && old_sign != 0)
 	    num_crossings++;
     }
     return num_crossings;
@@ -149,7 +153,7 @@ static int countHorzCross(pointf * pts, double ycoord)
     for (i = 1; i <= 3; i++) {
 	old_sign = sign;
 	sign = CMP(pts[i].y, ycoord);
-	if ((sign != old_sign) && (old_sign != 0))
+	if (sign != old_sign && old_sign != 0)
 	    num_crossings++;
     }
     return num_crossings;
@@ -180,8 +184,8 @@ findVertical(pointf * pts, double tmin, double tmax,
 	return -1.0;
 
     /* if 1 crossing and on the line x == xcoord (within 0.005 point) */
-    if ((no_cross == 1) && (fabs(pts[3].x - xcoord) <= 0.005)) {
-	if ((ymin <= pts[3].y) && (pts[3].y <= ymax)) {
+    if (no_cross == 1 && fabs(pts[3].x - xcoord) <= 0.005) {
+	if (ymin <= pts[3].y && pts[3].y <= ymax) {
 	    return tmax;
 	} else
 	    return -1.0;
@@ -222,8 +226,8 @@ findHorizontal(pointf * pts, double tmin, double tmax,
 	return -1.0;
 
     /* if 1 crossing and on the line y == ycoord (within 0.005 point) */
-    if ((no_cross == 1) && (fabs(pts[3].y - ycoord) <= 0.005)) {
-	if ((xmin <= pts[3].x) && (pts[3].x <= xmax)) {
+    if (no_cross == 1 && fabs(pts[3].y - ycoord) <= 0.005) {
+	if (xmin <= pts[3].x && pts[3].x <= xmax) {
 	    return tmax;
 	} else
 	    return -1.0;
@@ -259,25 +263,25 @@ static int splineIntersectf(pointf * pts, boxf * bb)
     }
 
     t = findVertical(pts, 0.0, 1.0, bb->LL.x, bb->LL.y, bb->UR.y);
-    if ((t >= 0) && (t < tmin)) {
+    if (t >= 0 && t < tmin) {
 	Bezier(origpts, 3, t, pts, NULL);
 	tmin = t;
     }
     t = findVertical(pts, 0.0, MIN(1.0, tmin), bb->UR.x, bb->LL.y,
 		     bb->UR.y);
-    if ((t >= 0) && (t < tmin)) {
+    if (t >= 0 && t < tmin) {
 	Bezier(origpts, 3, t, pts, NULL);
 	tmin = t;
     }
     t = findHorizontal(pts, 0.0, MIN(1.0, tmin), bb->LL.y, bb->LL.x,
 		       bb->UR.x);
-    if ((t >= 0) && (t < tmin)) {
+    if (t >= 0 && t < tmin) {
 	Bezier(origpts, 3, t, pts, NULL);
 	tmin = t;
     }
     t = findHorizontal(pts, 0.0, MIN(1.0, tmin), bb->UR.y, bb->LL.x,
 		       bb->UR.x);
-    if ((t >= 0) && (t < tmin)) {
+    if (t >= 0 && t < tmin) {
 	Bezier(origpts, 3, t, pts, NULL);
 	tmin = t;
     }
@@ -375,7 +379,7 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
 		}
 	    } else {
 		for (endi = 0; endi < size - 1; endi += 3) {
-		    if (splineIntersectf(&(bez->list[endi]), bb))
+		    if (splineIntersectf(&bez->list[endi], bb))
 			break;
 		}
 		if (endi == size - 1) {	/* no intersection */

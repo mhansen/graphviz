@@ -57,8 +57,7 @@ static double Hue2RGB(double v1, double v2, double H)
     return v1;
 }
 
-static char *hue2rgb(double hue, char *color)
-{
+static char *hue2rgb(double hue, agxbuf *xb) {
     double v1, v2, lightness = .5, saturation = 1;
     int red, blue, green;
 
@@ -72,8 +71,8 @@ static char *hue2rgb(double hue, char *color)
     red = (int) (255.0 * Hue2RGB(v1, v2, hue + 1.0 / 3.0) + 0.5);
     green = (int) (255.0 * Hue2RGB(v1, v2, hue) + 0.5);
     blue = (int) (255.0 * Hue2RGB(v1, v2, hue - 1.0 / 3.0) + 0.5);
-    sprintf(color, "#%02x%02x%02x", red, green, blue);
-    return color;
+    agxbprint(xb, "#%02x%02x%02x", red, green, blue);
+    return agxbuse(xb);
 }
 
 static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
@@ -85,7 +84,6 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     Agedge_t *e;
     int i, j;
     agxbuf xb;
-    char buf[BUFS];
     char string[BUFS];
     Agsym_t *sym = NULL, *sym2 = NULL, *sym3 = NULL;
     int *ia = A->ia;
@@ -93,7 +91,6 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     double *val = A->a;
     Agnode_t **arr = gv_calloc(A->m, sizeof(Agnode_t*));
     double *color = NULL;
-    char cstring[8];
 
     name = strip_dir(name);
 
@@ -124,8 +121,8 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     }
 
     for (i = 0; i < A->m; i++) {
-	sprintf(buf, "%d", i);
-	n = agnode(g, buf, 1);
+	agxbprint(&xb, "%d", i);
+	n = agnode(g, agxbuse(&xb), 1);
 	agbindrec(n, "nodeinfo", sizeof(Agnodeinfo_t), true);
 	ND_id(n) = i;
 	arr[i] = n;
@@ -134,7 +131,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     if (with_color) {
 	double maxdist = 0.;
 	double mindist = 0.;
-	int first = TRUE;
+	bool first = true;
 
 	sym2 = agattr(g, AGEDGE, "color", "");
 	sym3 = agattr(g, AGEDGE, "wt", "");
@@ -148,12 +145,12 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 		    if (i != ja[j]) {
 			if (first) {
 			    mindist = color[j];
-			    first = FALSE;
+			    first = false;
 			} else {
-			    mindist = MIN(mindist, color[j]);
+			    mindist = fmin(mindist, color[j]);
 			}
 		    }
-		    maxdist = MAX(color[j], maxdist);
+		    maxdist = fmax(color[j], maxdist);
 		}
 	    } else {
 		for (j = ia[i]; j < ia[i + 1]; j++) {
@@ -162,19 +159,19 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 		    if (i != ja[j]) {
 			if (first) {
 			    mindist = color[j];
-			    first = FALSE;
+			    first = false;
 			} else {
-			    mindist = MIN(mindist, color[j]);
+			    mindist = fmin(mindist, color[j]);
 			}
 		    }
-		    maxdist = MAX(color[j], maxdist);
+		    maxdist = fmax(color[j], maxdist);
 		}
 	    }
 	}
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    i = ND_id(n);
 	    for (j = ia[i]; j < ia[i + 1]; j++) {
-		color[j] = (color[j] - mindist) / MAX(maxdist - mindist, 0.000001);
+		color[j] = (color[j] - mindist) / fmax(maxdist - mindist, 0.000001);
 	    }
 	}
     }
@@ -185,13 +182,13 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 	    h = arr[ja[j]];
 	    e = agedge(g, n, h, NULL, 1);
 	    if (sym && val) {
-		sprintf(buf, "%f", val[j]);
-		agxset(e, sym, buf);
+		agxbprint(&xb, "%f", val[j]);
+		agxset(e, sym, agxbuse(&xb));
 	    }
 	    if (with_color) {
-		agxset (e, sym2, hue2rgb(.65 * color[j], cstring));
-		sprintf(buf, "%f", color[j]);
-		agxset(e, sym3, buf);
+		agxset(e, sym2, hue2rgb(.65 * color[j], &xb));
+		agxbprint(&xb, "%f", color[j]);
+		agxset(e, sym3, agxbuse(&xb));
 	    }
 	}
     }
