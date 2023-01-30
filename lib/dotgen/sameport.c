@@ -26,7 +26,7 @@ typedef struct same_t {
 } same_t;
 
 static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id);
-static void sameport(node_t * u, elist * l);
+static void sameport(node_t *u, elist l);
 
 void dot_sameports(graph_t * g)
 /* merge edge ports in G */
@@ -57,12 +57,12 @@ void dot_sameports(graph_t * g)
 	}
 	for (i = 0; i < n_samehead; i++) {
 	    if (samehead[i].l.size > 1)
-		sameport(n, &samehead[i].l);
+		sameport(n, samehead[i].l);
 	    free_list(samehead[i].l);
 	}
 	for (i = 0; i < n_sametail; i++) {
 	    if (sametail[i].l.size > 1)
-		sameport(n, &sametail[i].l);
+		sameport(n, sametail[i].l);
 	    free_list(sametail[i].l);
 	}
     }
@@ -90,7 +90,7 @@ static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id)
     return n_same;
 }
 
-static void sameport(node_t * u, elist * l)
+static void sameport(node_t *u, elist l)
 /* make all edges in L share the same port on U. The port is placed on the
    node boundary and the average angle between the edges. FIXME: this assumes
    naively that the edges are straight lines, which is wrong if they are long.
@@ -109,8 +109,8 @@ static void sameport(node_t * u, elist * l)
     /* Compute the direction vector (x,y) of the average direction. We compute
        with direction vectors instead of angles because else we have to first
        bring the angles within PI of each other. av(a,b)!=av(a,b+2*PI) */
-    for (i = 0; i < l->size; i++) {
-	e = l->list[i];
+    for (i = 0; i < l.size; i++) {
+	e = l.list[i];
 	if (aghead(e) == u)
 	    v = agtail(e);
 	else
@@ -162,8 +162,8 @@ static void sameport(node_t * u, elist * l)
     prt.name = NULL;
 
     /* assign one of the ports to every edge */
-    for (i = 0; i < l->size; i++) {
-	e = l->list[i];
+    for (i = 0; i < l.size; i++) {
+	e = l.list[i];
 	for (; e; e = ED_to_virt(e)) {	/* assign to all virt edges of e */
 	    for (f = e; f;
 		 f = ED_edge_type(f) == VIRTUAL &&
