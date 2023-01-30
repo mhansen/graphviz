@@ -145,8 +145,7 @@ void init_rank(void)
     node_t *v;
     edge_t *e;
 
-    assert(N_nodes <= INT_MAX);
-    Q = new_queue((int)N_nodes);
+    Q = new_queue(N_nodes);
     size_t ctr = 0;
 
     for (v = GD_nlist(G); v; v = ND_next(v)) {
