@@ -817,9 +817,7 @@ static void TB_balance(void)
     free(nrank);
 }
 
-static int init_graph(graph_t * g)
-{
-    int feasible;
+static bool init_graph(graph_t *g) {
     node_t *n;
     edge_t *e;
 
@@ -837,7 +835,7 @@ static int init_graph(graph_t * g)
     Tree_edge.list = ALLOC(N_nodes, Tree_edge.list, edge_t *);
     Tree_edge.size = 0;
 
-    feasible = TRUE;
+    bool feasible = true;
     for (n = GD_nlist(g); n; n = ND_next(n)) {
 	ND_priority(n) = 0;
 	size_t i;
@@ -847,7 +845,7 @@ static int init_graph(graph_t * g)
 	    ED_tree_index(e) = -1;
 	    if (feasible
 		&& ND_rank(aghead(e)) - ND_rank(agtail(e)) < ED_minlen(e))
-		feasible = FALSE;
+		feasible = false;
 	}
 	ND_tree_in(n).list = N_NEW(i + 1, edge_t *);
 	ND_tree_in(n).size = 0;
@@ -893,7 +891,7 @@ graphSize (graph_t * g, int* nn, int* ne)
  */
 int rank2(graph_t * g, int balance, int maxiter, int search_size)
 {
-    int iter = 0, feasible;
+    int iter = 0;
     char *ns = "network simplex: ";
     edge_t *e, *f;
 
@@ -907,7 +905,7 @@ int rank2(graph_t * g, int balance, int maxiter, int search_size)
 	    nn, ne, maxiter, balance);
 	start_timer();
     }
-    feasible = init_graph(g);
+    bool feasible = init_graph(g);
     if (!feasible)
 	init_rank();
 
