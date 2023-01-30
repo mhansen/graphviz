@@ -1905,10 +1905,8 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
             p[1].x = coord.x + ND_rw(n);
             p[1].y = coord.y + (ND_ht(n) / 2);
         }
-        if (! (flags & GVRENDER_DOES_TRANSFORM)) {
-            assert(nump <= INT_MAX);
-            gvrender_ptf_A(job, p, p, (int)nump);
-        }
+        if (! (flags & GVRENDER_DOES_TRANSFORM))
+            gvrender_ptf_A(job, p, p, nump);
         obj->url_map_p = p;
         obj->url_map_n = nump;
     }
@@ -2661,8 +2659,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
         	    assert(pbs_n[i] >= 0);
         	    nump += (size_t)pbs_n[i];
     		}
-		assert(nump <= INT_MAX);
-		gvrender_ptf_A(job, pbs, pbs, (int)nump);
+		gvrender_ptf_A(job, pbs, pbs, nump);
 	    }
 	    obj->url_bsplinemap_p = pbs;
 	    obj->url_map_shape = MAP_POLYGON;
@@ -3442,10 +3439,8 @@ static void emit_page(GVJ_t * job, graph_t * g)
 	    if (! (flags & (GVRENDER_DOES_MAP_RECTANGLE)))
 		rect2poly(p);
 	}
-	if (! (flags & GVRENDER_DOES_TRANSFORM)) {
-	    assert(nump <= INT_MAX);
-	    gvrender_ptf_A(job, p, p, (int)nump);
-	}
+	if (! (flags & GVRENDER_DOES_TRANSFORM))
+	    gvrender_ptf_A(job, p, p, nump);
 	obj->url_map_p = p;
 	obj->url_map_n = nump;
     }

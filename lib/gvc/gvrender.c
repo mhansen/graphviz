@@ -149,9 +149,7 @@ pointf gvrender_ptf(GVJ_t * job, pointf p)
 /* transform an array of n points */
 /*  *AF and *af must be preallocated */
 /*  *AF can be the same as *af for inplace transforms */
-pointf *gvrender_ptf_A(GVJ_t * job, pointf * af, pointf * AF, int n)
-{
-    int i;
+pointf *gvrender_ptf_A(GVJ_t *job, pointf *af, pointf *AF, size_t n) {
     double t;
     pointf translation, scale;
 
@@ -160,13 +158,13 @@ pointf *gvrender_ptf_A(GVJ_t * job, pointf * af, pointf * AF, int n)
     scale.y = job->zoom * job->devscale.y;
 
     if (job->rotation) {
-	for (i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 	    t = -(af[i].y + translation.y) * scale.x;
 	    AF[i].y = (af[i].x + translation.x) * scale.y;
 	    AF[i].x = t;
 	}
     } else {
-	for (i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 	    AF[i].x = (af[i].x + translation.x) * scale.x;
 	    AF[i].y = (af[i].y + translation.y) * scale.y;
 	}
@@ -561,7 +559,7 @@ void gvrender_polygon(GVJ_t * job, pointf * af, int n, int filled)
 		pointf *AF;
 		assert(n >= 0);
 		AF = gcalloc((size_t)n, sizeof(pointf));
-		gvrender_ptf_A(job, af, AF, n);
+		gvrender_ptf_A(job, af, AF, (size_t)n);
 		gvre->polygon(job, AF, n, filled);
 		free(AF);
 	    }
@@ -600,7 +598,7 @@ void gvrender_beziercurve(GVJ_t * job, pointf * af, int n,
 		pointf *AF;
 		assert(n >= 0);
 		AF = gcalloc((size_t)n, sizeof(pointf));
-		gvrender_ptf_A(job, af, AF, n);
+		gvrender_ptf_A(job, af, AF, (size_t)n);
 		gvre->beziercurve(job, AF, n, arrow_at_start, arrow_at_end,
 				  filled);
 		free(AF);
@@ -621,7 +619,7 @@ void gvrender_polyline(GVJ_t * job, pointf * af, int n)
 		pointf *AF;
 		assert(n >= 0);
 		AF = gcalloc((size_t)n, sizeof(pointf));
-		gvrender_ptf_A(job, af, AF, n);
+		gvrender_ptf_A(job, af, AF, (size_t)n);
 		gvre->polyline(job, AF, n);
 		free(AF);
 	    }

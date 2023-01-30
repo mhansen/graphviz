@@ -13,6 +13,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stddef.h>
 
 /* these are intended to be private entry points - see gvc.h for the public ones */
 
@@ -76,7 +77,7 @@
 #else
     pointf gvrender_ptf(GVJ_t *job, pointf p);
 #endif
-    pointf* gvrender_ptf_A(GVJ_t *job, pointf *af, pointf *AF, int n);
+    pointf *gvrender_ptf_A(GVJ_t *job, pointf *af, pointf *AF, size_t n);
 
     int gvrender_begin_job(GVJ_t * job);
     void gvrender_end_job(GVJ_t * job);
