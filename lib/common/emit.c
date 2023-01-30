@@ -1910,8 +1910,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
             gvrender_ptf_A(job, p, p, (int)nump);
         }
         obj->url_map_p = p;
-        assert(nump <= INT_MAX);
-        obj->url_map_n = (int)nump;
+        obj->url_map_n = nump;
     }
 
     setColorScheme (agget (n, "colorscheme"));
@@ -2668,7 +2667,8 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    obj->url_bsplinemap_p = pbs;
 	    obj->url_map_shape = MAP_POLYGON;
 	    obj->url_map_p = pbs;
-	    obj->url_map_n = pbs_n[0];
+	    assert(pbs_n[0] >= 0);
+	    obj->url_map_n = (size_t)pbs_n[0];
 	}
     }
 
@@ -2773,7 +2773,8 @@ static void emit_end_edge(GVJ_t * job)
 	if (obj->url_bsplinemap_poly_n) {
 	    for ( nump = obj->url_bsplinemap_n[0], i = 1; i < obj->url_bsplinemap_poly_n; i++) {
 		/* additional polygon maps around remaining bezier pieces */
-		obj->url_map_n = obj->url_bsplinemap_n[i];
+		assert(obj->url_bsplinemap_n[i] >= 0);
+		obj->url_map_n = (size_t)obj->url_bsplinemap_n[i];
 		obj->url_map_p = &(obj->url_bsplinemap_p[nump]);
 		gvrender_begin_anchor(job,
 			obj->url, obj->tooltip, obj->target, obj->id);
@@ -3446,8 +3447,7 @@ static void emit_page(GVJ_t * job, graph_t * g)
 	    gvrender_ptf_A(job, p, p, (int)nump);
 	}
 	obj->url_map_p = p;
-	assert(nump <= INT_MAX);
-	obj->url_map_n = (int)nump;
+	obj->url_map_n = nump;
     }
     if ((flags & GVRENDER_DOES_LABELS) && ((lab = GD_label(g))))
 	/* do graph label on every page and rely on clipping to show it on the right one(s) */

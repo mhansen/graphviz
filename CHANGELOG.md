@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   in Graphviz 4.0.0.
 - Graphviz will now exit when encountering a syntactically invalid HTML label
   instead of attempting to recover and continue. #1311
+- **Breaking**: the `url_map_n` field in the `obj_state_t` struct is now a
+  `size_t`.
 
 ### Fixed
 

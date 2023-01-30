@@ -27,11 +27,9 @@ static void xml_url_puts(GVJ_t *job, const char *s) {
   (void)xml_escape(s, flags, (int(*)(void*, const char*))gvputs, job);
 }
 
-static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, int nump,
+static void map_output_shape(GVJ_t *job, map_shape_t map_shape, pointf *AF, size_t nump,
                 char* url, char *tooltip, char *target, char *id)
 {
-    int i;
-
     if (!AF || !nump)
 	return;
 
@@ -54,7 +52,7 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
         }
         case MAP_POLYGON:
             gvprintf(job, "poly %s", url);
-            for (i = 0; i < nump; i++) {
+            for (size_t i = 0; i < nump; i++) {
                 point A;
                 PF2P(AF[i], A);
                 gvprintf(job, " %d,%d", A.x, A.y);
@@ -147,7 +145,7 @@ static void map_output_shape (GVJ_t *job, map_shape_t map_shape, pointf * AF, in
             point A;
             PF2P(AF[0], A);
             gvprintf(job, "%d,%d", A.x, A.y);
-            for (i = 1; i < nump; i++) {
+            for (size_t i = 1; i < nump; i++) {
                 PF2P(AF[i], A);
                 gvprintf(job, ",%d,%d", A.x, A.y);
             }
