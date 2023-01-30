@@ -35,7 +35,7 @@ static void check_cycles(graph_t * g);
 
 static graph_t *G;
 static size_t N_nodes, N_edges;
-static int Minrank, Maxrank;
+static int Maxrank;
 static size_t S_i;			/* search index for enter_edge */
 static int Search_size;
 #define SEARCHSIZE 30
@@ -670,7 +670,7 @@ static void scan_and_normalize(void)
 {
     node_t *n;
 
-    Minrank = INT_MAX;
+    int Minrank = INT_MAX;
     Maxrank = -INT_MAX;
     for (n = GD_nlist(G); n; n = ND_next(n)) {
 	if (ND_node_type(n) == NORMAL) {
@@ -682,7 +682,6 @@ static void scan_and_normalize(void)
 	for (n = GD_nlist(G); n; n = ND_next(n))
 	    ND_rank(n) -= Minrank;
 	Maxrank -= Minrank;
-	Minrank = 0;
     }
 }
 
@@ -761,7 +760,7 @@ static void TB_balance(void)
          if (adj) for (n = GD_nlist(G); n; n = ND_next(n))
               if (ND_node_type(n) == NORMAL) {
                 if (ND_in(n).size == 0 && adj == 1) {
-                   ND_rank(n) = Minrank;
+                   ND_rank(n) = 0;
                 }
                 if (ND_out(n).size == 0 && adj == 2) {
                    ND_rank(n) = Maxrank;
