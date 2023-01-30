@@ -744,7 +744,7 @@ static void TB_balance(void)
 {
     node_t *n;
     edge_t *e;
-    int i, ii, low, high, choice, *nrank;
+    int low, high, choice, *nrank;
     int inweight, outweight;
     int adj = 0;
     char *s;
@@ -753,7 +753,7 @@ static void TB_balance(void)
 
     /* find nodes that are not tight and move to less populated ranks */
     nrank = N_NEW(Maxrank + 1, int);
-    for (i = 0; i <= Maxrank; i++)
+    for (int i = 0; i <= Maxrank; i++)
 	nrank[i] = 0;
     if ( (s = agget(G,"TBbalance")) ) {
          if (streq(s,"min")) adj = 1;
@@ -768,6 +768,7 @@ static void TB_balance(void)
                 }
               }
     }
+    size_t ii;
     for (ii = 0, n = GD_nlist(G); n; ii++, n = ND_next(n)) {
       Tree_node.list[ii] = n;
     }
@@ -775,7 +776,7 @@ static void TB_balance(void)
     qsort(Tree_node.list, Tree_node.size, sizeof(Tree_node.list[0]),
         adj > 1? (int(*)(const void*,const void*))decreasingrankcmpf
                : (int(*)(const void*,const void*))increasingrankcmpf);
-    for (i = 0; i < Tree_node.size; i++) {
+    for (size_t i = 0; i < Tree_node.size; i++) {
         n = Tree_node.list[i];
         if (ND_node_type(n) == NORMAL)
           nrank[ND_rank(n)]++;
@@ -787,11 +788,11 @@ static void TB_balance(void)
       inweight = outweight = 0;
       low = 0;
       high = Maxrank;
-      for (i = 0; (e = ND_in(n).list[i]); i++) {
+      for (size_t i = 0; (e = ND_in(n).list[i]); i++) {
         inweight += ED_weight(e);
         low = MAX(low, ND_rank(agtail(e)) + ED_minlen(e));
       }
-      for (i = 0; (e = ND_out(n).list[i]); i++) {
+      for (size_t i = 0; (e = ND_out(n).list[i]); i++) {
         outweight += ED_weight(e);
         high = MIN(high, ND_rank(aghead(e)) - ED_minlen(e));
       }
@@ -804,7 +805,7 @@ static void TB_balance(void)
       else {
                 if (inweight == outweight) {
                     choice = low;
-                    for (i = low + 1; i <= high; i++)
+                    for (int i = low + 1; i <= high; i++)
                         if (nrank[i] < nrank[choice])
                             choice = i;
                     nrank[ND_rank(n)]--;

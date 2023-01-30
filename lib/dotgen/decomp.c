@@ -50,9 +50,7 @@ add_to_component(graph_t* g, node_t * n)
 static void 
 end_component(graph_t* g)
 {
-    int i;
-
-    i = GD_comp(g).size++;
+    size_t i = GD_comp(g).size++;
     GD_comp(g).list = ALLOC(GD_comp(g).size, GD_comp(g).list, node_t *);
     GD_comp(g).list[i] = GD_nlist(g);
 }
@@ -118,7 +116,8 @@ void decompose(graph_t * g, int pass)
 
     if (++Cmark == 0)
 	Cmark = 1;
-    GD_n_nodes(g) = GD_comp(g).size = 0;
+    GD_n_nodes(g) = 0;
+    GD_comp(g).size = 0;
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	v = n;
 	if ((pass > 0) && (subg = ND_clust(v)))

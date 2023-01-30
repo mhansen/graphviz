@@ -45,9 +45,8 @@ cleanup1(graph_t * g)
 {
     node_t *n;
     edge_t *e, *f;
-    int c;
 
-    for (c = 0; c < GD_comp(g).size; c++) {
+    for (size_t c = 0; c < GD_comp(g).size; c++) {
 	    GD_nlist(g) = GD_comp(g).list[c];
 	    for (n = GD_nlist(g); n; n = ND_next(n)) {
 	        renewlist(&ND_in(n));
@@ -371,12 +370,11 @@ minmax_edges2(graph_t * g, point slen)
 void rank1(graph_t * g)
 {
     int maxiter = INT_MAX;
-    int c;
     char *s;
 
     if ((s = agget(g, "nslimit1")))
 	maxiter = atof(s) * agnnodes(g);
-    for (c = 0; c < GD_comp(g).size; c++) {
+    for (size_t c = 0; c < GD_comp(g).size; c++) {
 	GD_nlist(g) = GD_comp(g).list[c];
 	rank(g, (GD_n_cluster(g) == 0 ? 1 : 0), maxiter);	/* TB balance */
     }

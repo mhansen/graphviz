@@ -251,7 +251,7 @@ extern "C" {
 
     typedef struct nlist_t {
 	node_t **list;
-	int size;
+	size_t size;
     } nlist_t;
 
     typedef struct elist {

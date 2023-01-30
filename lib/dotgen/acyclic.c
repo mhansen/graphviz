@@ -15,6 +15,7 @@
 
 #include <dotgen/dot.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 void reverse_edge(edge_t * e)
 {
@@ -54,10 +55,9 @@ dfs(node_t * n)
 
 void acyclic(graph_t * g)
 {
-    int c;
     node_t *n;
 
-    for (c = 0; c < GD_comp(g).size; c++) {
+    for (size_t c = 0; c < GD_comp(g).size; c++) {
 	GD_nlist(g) = GD_comp(g).list[c];
 	for (n = GD_nlist(g); n; n = ND_next(n))
 	    ND_mark(n) = FALSE;
