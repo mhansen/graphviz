@@ -12,7 +12,7 @@
 /*  this file has functions to test a red-black tree of integers */
 
 void IntDest(void* a) {
-  free((int*)a);
+  free(a);
 }
 
 
