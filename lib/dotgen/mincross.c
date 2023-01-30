@@ -1545,8 +1545,7 @@ static void flat_reorder(graph_t * g)
 	/* else do no harm! */
 	GD_rank(Root)[r].valid = false;
     }
-    if (temprank)
-	free(temprank);
+    free(temprank);
 }
 
 static void reorder(graph_t * g, int r, bool reverse, bool hasfixed)
