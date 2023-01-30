@@ -19,6 +19,8 @@
 
 #include <cgraph/stack.h>
 #include <dotgen/dot.h>
+#include <stddef.h>
+#include <stdint.h>
 
 static node_t *Last_node;
 static size_t Cmark;
@@ -78,7 +80,7 @@ static node_t *pop(gv_stack_t *sp) {
  * so we use mark = Cmark+1 to indicate nodes on the stack.
  */
 static void search_component(gv_stack_t *stk, graph_t *g, node_t *n) {
-    int c, i;
+    int c;
     elist vec[4];
     node_t *other;
     edge_t *e;
@@ -95,7 +97,8 @@ static void search_component(gv_stack_t *stk, graph_t *g, node_t *n) {
 
 	for (c = 3; c >= 0; c--) {
 	    if (vec[c].list) {
-		for (i = vec[c].size-1, ep = vec[c].list+i; i >= 0; i--, ep--) {
+		size_t i;
+		for (i = vec[c].size - 1, ep = vec[c].list + i; i != SIZE_MAX; i--, ep--) {
 		    e = *ep;
 		    if ((other = aghead(e)) == n)
 			other = agtail(e);

@@ -26,6 +26,8 @@
 #include	<dotgen/dot.h>
 #include	<limits.h>
 #include	<stdbool.h>
+#include	<stddef.h>
+#include	<stdint.h>
 
 static void dot1_rank(graph_t * g, aspect_t* asp);
 static void dot2_rank(graph_t * g, aspect_t* asp);
@@ -33,8 +35,7 @@ static void dot2_rank(graph_t * g, aspect_t* asp);
 static void 
 renewlist(elist * L)
 {
-    int i;
-    for (i = L->size; i >= 0; i--)
+    for (size_t i = L->size; i != SIZE_MAX; i--)
 	L->list[i] = NULL;
     L->size = 0;
 }

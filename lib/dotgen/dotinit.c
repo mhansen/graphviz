@@ -14,6 +14,8 @@
 #include <pack/pack.h>
 #include <dotgen/aspect.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 static void
 dot_init_subg(graph_t * g, graph_t* droot)
@@ -101,15 +103,14 @@ dot_cleanup_node(node_t * n)
 static void free_virtual_edge_list(node_t * n)
 {
     edge_t *e;
-    int i;
 
-    for (i = ND_in(n).size - 1; i >= 0; i--) {
+    for (size_t i = ND_in(n).size - 1; i != SIZE_MAX; i--) {
 	e = ND_in(n).list[i];
 	delete_fast_edge(e);
 	free(e->base.data);
 	free(e);
     }
-    for (i = ND_out(n).size - 1; i >= 0; i--) {
+    for (size_t i = ND_out(n).size - 1; i != SIZE_MAX; i--) {
 	e = ND_out(n).list[i];
 	delete_fast_edge(e);
 	free(e->base.data);

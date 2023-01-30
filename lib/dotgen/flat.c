@@ -11,6 +11,7 @@
 
 #include	<dotgen/dot.h>
 #include	<stdbool.h>
+#include	<stddef.h>
 
 static node_t *make_vn_slot(graph_t * g, int r, int pos)
 {
@@ -257,18 +258,18 @@ checkFlatAdjacent (edge_t* e)
 int 
 flat_edges(graph_t * g)
 {
-    int i, j, reset = FALSE;
+    int i, reset = FALSE;
     node_t *n;
     edge_t *e;
     int found = FALSE;
 
     for (n = GD_nlist(g); n; n = ND_next(n)) {
 	if (ND_flat_out(n).list) {
-	    for (j = 0; (e = ND_flat_out(n).list[j]); j++) {
+	    for (size_t j = 0; (e = ND_flat_out(n).list[j]); j++) {
 		checkFlatAdjacent (e);
 	    }
 	}
-	for (j = 0; j < ND_other(n).size; j++) {
+	for (size_t j = 0; j < ND_other(n).size; j++) {
 	    e = ND_other(n).list[j];
 	    if (ND_rank(aghead(e)) == ND_rank(agtail(e)))
 		checkFlatAdjacent (e);
@@ -277,7 +278,7 @@ flat_edges(graph_t * g)
 
     if ((GD_rank(g)[0].flat) || (GD_n_cluster(g) > 0)) {
 	for (i = 0; (n = GD_rank(g)[0].v[i]); i++) {
-	    for (j = 0; (e = ND_flat_in(n).list[j]); j++) {
+	    for (size_t j = 0; (e = ND_flat_in(n).list[j]); j++) {
 		if ((ED_label(e)) && !ED_adjacent(e)) {
 		    abomination(g);
 		    found = TRUE;
@@ -306,7 +307,7 @@ flat_edges(graph_t * g)
 		}
 	    }
 		/* look for other flat edges with labels */
-	    for (j = 0; j < ND_other(n).size; j++) {
+	    for (size_t j = 0; j < ND_other(n).size; j++) {
 		edge_t* le;
 		e = ND_other(n).list[j];
 		if (ND_rank(agtail(e)) != ND_rank(aghead(e))) continue;

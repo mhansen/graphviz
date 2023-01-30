@@ -19,6 +19,7 @@
 #define WITH_CGRAPH 1
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <assert.h>
 #include <signal.h>
@@ -255,7 +256,7 @@ extern "C" {
 
     typedef struct elist {
 	edge_t **list;
-	int size;
+	size_t size;
     } elist;
 
 #define GUI_STATE_ACTIVE    (1<<0)
