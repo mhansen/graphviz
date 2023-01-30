@@ -68,8 +68,8 @@ void dot_sameports(graph_t * g)
     }
 }
 
+/// register \p e in the \p same structure of \p n under \p id
 static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id)
-/* register E in the SAME structure of N under ID. Uses static int N_SAME */
 {
     int i;
 
