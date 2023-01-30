@@ -263,7 +263,6 @@ extern "C" {
 #define GUI_STATE_VISITED   (1<<2)
 #define GUI_STATE_DELETED   (1<<3)
 
-#define elist_fastapp(item,L) do {L.list[L.size++] = item; L.list[L.size] = NULL;} while(0)
 #define elist_append(item,L)  do {L.list = ALLOC(L.size + 2,L.list,edge_t*); L.list[L.size++] = item; L.list[L.size] = NULL;} while(0)
 #define alloc_elist(n,L)      do {L.size = 0; L.list = N_NEW(n + 1,edge_t*); } while (0)
 #define free_list(L)          free(L.list)

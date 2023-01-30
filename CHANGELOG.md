@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   SVG. #799
 - Legacy man page references to `dotty` have been removed. `dotty` was removed
   in Graphviz 4.0.0.
+- **Breaking**: The definition of the `elist_fastapp` macro has been removed.
 
 ## [7.1.0] – 2023-01-21
 
