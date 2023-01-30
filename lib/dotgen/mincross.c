@@ -1359,8 +1359,7 @@ void build_ranks(graph_t * g, int pass)
     edge_t **otheredges;
     nodequeue *q;
 
-    assert(GD_n_nodes(g) >= 0);
-    q = new_queue((size_t)GD_n_nodes(g));
+    q = new_queue(GD_n_nodes(g));
     for (n = GD_nlist(g); n; n = ND_next(n))
 	MARK(n) = FALSE;
 

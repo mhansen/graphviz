@@ -317,7 +317,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	/* connected components */
 	node_t *minset; /* set leaders */
 	node_t *maxset;	/* set leaders */
-	long n_nodes;
+	size_t n_nodes;
 	/* includes virtual */
 	int minrank;
 	int maxrank;

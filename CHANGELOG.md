@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   limited only by available memory. #452
 - **Breaking**: The `size` field of the `elist` struct is now a `size_t`.
 - **Breaking**: The `size` field of the `nlist` struct is now a `size_t`.
+- **Breaking**: The `n_nodes` field of the `Agraphinfo_t` struct is now a
+  `size_t`.
 
 ### Fixed
 
