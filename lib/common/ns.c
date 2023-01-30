@@ -843,8 +843,7 @@ static bool init_graph(graph_t *g) {
 	    ND_priority(n)++;
 	    ED_cutvalue(e) = 0;
 	    ED_tree_index(e) = -1;
-	    if (feasible
-		&& ND_rank(aghead(e)) - ND_rank(agtail(e)) < ED_minlen(e))
+	    if (ND_rank(aghead(e)) - ND_rank(agtail(e)) < ED_minlen(e))
 		feasible = false;
 	}
 	ND_tree_in(n).list = N_NEW(i + 1, edge_t *);
