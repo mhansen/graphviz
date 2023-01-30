@@ -13,19 +13,20 @@
  *	merge edges with specified samehead/sametail onto the same port
  */
 
+#include <cgraph/list.h>
 #include <math.h>
 #include	<dotgen/dot.h>
 #include	<stdbool.h>
 #include	<stddef.h>
-
-#define MAXSAME 5		/* max no of same{head,tail} groups on a node */
 
 typedef struct same_t {
     char *id;			/* group id */
     elist l;			/* edges in the group */
 } same_t;
 
-static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id);
+DEFINE_LIST(same_list, same_t)
+
+static void sameedge(same_list_t *same, edge_t *e, char *id);
 static void sameport(node_t *u, elist l);
 
 void dot_sameports(graph_t * g)
@@ -34,60 +35,53 @@ void dot_sameports(graph_t * g)
     node_t *n;
     edge_t *e;
     char *id;
-    same_t samehead[MAXSAME];
-    same_t sametail[MAXSAME];
-    int n_samehead;		/* number of same_t groups on current node */
-    int n_sametail;		/* number of same_t groups on current node */
-    int i;
+    same_list_t samehead = {0};
+    same_list_t sametail = {0};
 
     E_samehead = agattr(g, AGEDGE, "samehead", NULL);
     E_sametail = agattr(g, AGEDGE, "sametail", NULL);
     if (!(E_samehead || E_sametail))
 	return;
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	n_samehead = n_sametail = 0;
 	for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
 	    if (aghead(e) == agtail(e)) continue;  /* Don't support same* for loops */
 	    if (aghead(e) == n && E_samehead &&
 	        (id = agxget(e, E_samehead))[0])
-		n_samehead = sameedge(samehead, n_samehead, n, e, id);
+		sameedge(&samehead, e, id);
 	    else if (agtail(e) == n && E_sametail &&
 	        (id = agxget(e, E_sametail))[0])
-		n_sametail = sameedge(sametail, n_sametail, n, e, id);
+		sameedge(&sametail, e, id);
 	}
-	for (i = 0; i < n_samehead; i++) {
-	    if (samehead[i].l.size > 1)
-		sameport(n, samehead[i].l);
-	    free_list(samehead[i].l);
+	for (size_t i = 0; i < same_list_size(&samehead); i++) {
+	    if (same_list_get(&samehead, i).l.size > 1)
+		sameport(n, same_list_get(&samehead, i).l);
+	    free_list(same_list_get(&samehead, i).l);
 	}
-	for (i = 0; i < n_sametail; i++) {
-	    if (sametail[i].l.size > 1)
-		sameport(n, sametail[i].l);
-	    free_list(sametail[i].l);
+	same_list_clear(&samehead);
+	for (size_t i = 0; i < same_list_size(&sametail); i++) {
+	    if (same_list_get(&sametail, i).l.size > 1)
+		sameport(n, same_list_get(&sametail, i).l);
+	    free_list(same_list_get(&sametail, i).l);
 	}
+	same_list_clear(&sametail);
     }
+
+    same_list_free(&samehead);
+    same_list_free(&sametail);
 }
 
-/// register \p e in the \p same structure of \p n under \p id
-static int sameedge(same_t * same, int n_same, node_t * n, edge_t * e, char *id)
-{
-    int i;
-
-    for (i = 0; i < n_same; i++)
-	if (streq(same[i].id, id)) {
-	    elist_append(e, same[i].l);
-	    return n_same;
+/// register \p e in the \p same structure of the originating node under \p id
+static void sameedge(same_list_t *same, edge_t *e, char *id) {
+    for (size_t i = 0; i < same_list_size(same); i++)
+	if (streq(same_list_get(same, i).id, id)) {
+	    elist_append(e, same_list_at(same, i)->l);
+	    return;
 	}
-    if (++n_same > MAXSAME) {
-	n_same--;
-	agerr(AGERR, "too many (> %d) same{head,tail} groups for node %s\n",
-	      MAXSAME, agnameof(n));
-	return n_same;
-    }
-    alloc_elist(1, same[i].l);
-    elist_fastapp(e, same[i].l);
-    same[i].id = id;
-    return n_same;
+
+    same_t to_append = {.id = id};
+    alloc_elist(1, to_append.l);
+    elist_fastapp(e, to_append.l);
+    same_list_append(same, to_append);
 }
 
 static void sameport(node_t *u, elist l)

@@ -327,7 +327,6 @@ def test_358():
       f"font characteristic {1 << i} not enabled in xdot 1.7"
 
 @pytest.mark.parametrize("attribute", ("samehead", "sametail"))
-@pytest.mark.xfail(strict=True)
 def test_452(attribute: str):
   """
   more than 5 unique `samehead` and `sametail` values should be usable

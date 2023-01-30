@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   instead of attempting to recover and continue. #1311
 - **Breaking**: the `url_map_n` field in the `obj_state_t` struct is now a
   `size_t`.
+- The limit of 5 unique `samehead` or `sametail` values per node has been
+  removed. The maximum number of unique `samehead` or `sametail` values is now
+  limited only by available memory. #452
 
 ### Fixed
 
