@@ -59,13 +59,11 @@ void dot_sameports(graph_t * g)
 	    if (samehead[i].l.size > 1)
 		sameport(n, &samehead[i].l);
 	    free_list(samehead[i].l);
-	    /* I sure hope I don't need to free the char* id */
 	}
 	for (i = 0; i < n_sametail; i++) {
 	    if (sametail[i].l.size > 1)
 		sameport(n, &sametail[i].l);
 	    free_list(sametail[i].l);
-	    /* I sure hope I don't need to free the char* id */
 	}
     }
 }
