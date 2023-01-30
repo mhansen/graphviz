@@ -3394,7 +3394,8 @@ static void emit_end_graph(GVJ_t * job)
 static void emit_page(GVJ_t * job, graph_t * g)
 {
     obj_state_t *obj = job->obj;
-    int nump = 0, flags = job->flags;
+    int flags = job->flags;
+    size_t nump = 0;
     textlabel_t *lab;
     pointf *p = NULL;
     char* saveid;
@@ -3436,10 +3437,13 @@ static void emit_page(GVJ_t * job, graph_t * g)
 	    if (! (flags & (GVRENDER_DOES_MAP_RECTANGLE)))
 		rect2poly(p);
 	}
-	if (! (flags & GVRENDER_DOES_TRANSFORM))
-	    gvrender_ptf_A(job, p, p, nump);
+	if (! (flags & GVRENDER_DOES_TRANSFORM)) {
+	    assert(nump <= INT_MAX);
+	    gvrender_ptf_A(job, p, p, (int)nump);
+	}
 	obj->url_map_p = p;
-	obj->url_map_n = nump;
+	assert(nump <= INT_MAX);
+	obj->url_map_n = (int)nump;
     }
     if ((flags & GVRENDER_DOES_LABELS) && ((lab = GD_label(g))))
 	/* do graph label on every page and rely on clipping to show it on the right one(s) */
