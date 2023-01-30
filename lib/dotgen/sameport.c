@@ -24,7 +24,11 @@ typedef struct same_t {
     elist l;			/* edges in the group */
 } same_t;
 
-DEFINE_LIST(same_list, same_t)
+static void free_same(same_t s) {
+  free_list(s.l);
+}
+
+DEFINE_LIST_WITH_DTOR(same_list, same_t, free_same)
 
 static void sameedge(same_list_t *same, edge_t *e, char *id);
 static void sameport(node_t *u, elist l);
@@ -55,13 +59,11 @@ void dot_sameports(graph_t * g)
 	for (size_t i = 0; i < same_list_size(&samehead); i++) {
 	    if (same_list_get(&samehead, i).l.size > 1)
 		sameport(n, same_list_get(&samehead, i).l);
-	    free_list(same_list_get(&samehead, i).l);
 	}
 	same_list_clear(&samehead);
 	for (size_t i = 0; i < same_list_size(&sametail); i++) {
 	    if (same_list_get(&sametail, i).l.size > 1)
 		sameport(n, same_list_get(&sametail, i).l);
-	    free_list(same_list_get(&sametail, i).l);
 	}
 	same_list_clear(&sametail);
     }
