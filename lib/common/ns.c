@@ -678,11 +678,9 @@ static void scan_and_normalize(void)
 	    Maxrank = MAX(Maxrank, ND_rank(n));
 	}
     }
-    if (Minrank != 0) {
-	for (n = GD_nlist(G); n; n = ND_next(n))
-	    ND_rank(n) -= Minrank;
-	Maxrank -= Minrank;
-    }
+    for (n = GD_nlist(G); n; n = ND_next(n))
+	ND_rank(n) -= Minrank;
+    Maxrank -= Minrank;
 }
 
 static void
