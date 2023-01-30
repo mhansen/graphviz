@@ -1859,8 +1859,8 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
                 }
                 else { /* ellipse is treated as polygon */
                     obj->url_map_shape= MAP_POLYGON;
-                    p = pEllipse((double)(vertices[2*peripheries - 1].x),
-                                 (double)(vertices[2*peripheries - 1].y), nump);
+                    p = pEllipse(vertices[2 * peripheries - 1].x,
+                                 vertices[2 * peripheries - 1].y, nump);
                     for (i = 0; i < nump; i++) {
                         p[i].x += coord.x;
                         p[i].y += coord.y;
