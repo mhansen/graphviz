@@ -44,10 +44,6 @@ void power_method(void *A, int n, int random_seed,
      . ui ← ui/||ui||
      . do
      .   vi ← ui
-     .   % orthogonalize against previous eigenvectors
-     .   for j = 1 to i − 1 do
-     .     vi ← vi − (vi^Tvi)vj
-     .   end for
      .   ui ← A vi/||A vi||
      . while (ui^T vi < 1-tolerance) (halt when direction change is small)
      . vi = ui
@@ -57,8 +53,7 @@ void power_method(void *A, int n, int random_seed,
   double **v, *u, *vv;
   int iter = 0;
   double res, unorm;
-  int i, j, k;
-  double uij;
+  int i, k;
 
   if (!(*eigv)) *eigv = gv_calloc(n, sizeof(double));
   v = gv_calloc(1, sizeof(double*));
@@ -79,15 +74,6 @@ void power_method(void *A, int n, int random_seed,
     }
     iter = 0;
     do {
-
-
-      /* normalize against previous eigens */
-      for (j = 0; j < k; j++){
-	uij = vector_product(n, u, v[j]);
-	for (i = 0; i < n; i++) {
-	  u[i] = u[i] - uij *v[j][i];
-	}
-      }
       SparseMatrix_multiply_vector(A, u, &vv);
 
       unorm = vector_product(n, vv, vv);/* ||u||^2 */    
