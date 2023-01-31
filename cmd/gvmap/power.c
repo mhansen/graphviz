@@ -18,17 +18,16 @@ static const int maxit = 100;
 // Accuracy control (convergence criterion) for power_method
 static const double tolerance = 0.00001;
 
-void power_method(void *A, int n, int K, int random_seed,
+void power_method(void *A, int n, int random_seed,
     double **eigv, double *eigs){
-  /* find k-largest eigenvectors of a matrix A. Result in eigv. if eigv == NULL; memory will be allocated.
+  /* find largest eigenvector of a matrix A. Result in eigv. if eigv == NULL; memory will be allocated.
 
-     This converges only if the largest eigenvectors/values are real (e.g., if A is symmetric) and the 
+     This converges only if the largest eigenvector/value is real (e.g., if A is symmetric) and the
      next largest eigenvalues separate from the largest ones
 
      input:
      A: the matrix
      n: dimension of matrix A
-     K: number of eigenes to find
      random_seed: seed for eigenvector initialization
      matrix: max number f iterations
 
@@ -40,7 +39,7 @@ void power_method(void *A, int n, int K, int random_seed,
      Function PowerIteration (A – m × m matrix )
      % This function computes u1, u2, . . . , uk, the first k eigenvectors of S.
      const tolerance ← 0.001
-     for i = 1 to k do
+     for i = 1 to 1 do
      . ui ← random
      . ui ← ui/||ui||
      . do
@@ -61,18 +60,15 @@ void power_method(void *A, int n, int K, int random_seed,
   int i, j, k;
   double uij;
 
-  K = MAX(0, MIN(n, K));
-  assert(K <= n && K > 0);
-
-  if (!(*eigv)) *eigv = gv_calloc(n * K, sizeof(double));
-  v = gv_calloc(K, sizeof(double*));
+  if (!(*eigv)) *eigv = gv_calloc(n, sizeof(double));
+  v = gv_calloc(1, sizeof(double*));
 
   vv = gv_calloc(n, sizeof(double));
   u = gv_calloc(n, sizeof(double));
 
   srand(random_seed);
 
-  for (k = 0; k < K; k++){
+  for (k = 0; k < 1; k++){
     v[k] = &((*eigv)[k*n]);
     for (i = 0; i < n; i++) u[i] = drand();
     res = sqrt(vector_product(n, u, u));

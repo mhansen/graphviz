@@ -135,7 +135,7 @@ static void country_graph_coloring_internal(int seed, SparseMatrix A, int **p){
   /* largest eigen vector */
   {
     double eig;
-    power_method(L, L->n, 1, seed, &v, &eig);
+    power_method(L, L->n, seed, &v, &eig);
   }
 
   vector_ordering(n, v, p);
