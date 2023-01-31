@@ -18,8 +18,7 @@ static const int maxit = 100;
 // Accuracy control (convergence criterion) for power_method
 static const double tolerance = 0.00001;
 
-void power_method(void *A, int n, int random_seed,
-    double **eigv, double *eigs){
+void power_method(void *A, int n, int random_seed, double **eigv) {
   /* find largest eigenvector of a matrix A. Result in eigv. if eigv == NULL; memory will be allocated.
 
      This converges only if the largest eigenvector/value is real (e.g., if A is symmetric) and the
@@ -33,8 +32,6 @@ void power_method(void *A, int n, int random_seed,
 
      output:
      eigv: eigenvectors. The i-th is at eigvs[i*n, i*(n+1) - 1]
-     eigs: eigenvalues.  The i-th is at eigs[i]
-
 
      Function PowerIteration (A – m × m matrix )
      % This function computes u1, u2, . . . , uk, the first k eigenvectors of S.
@@ -78,7 +75,6 @@ void power_method(void *A, int n, int random_seed,
 
       unorm = vector_product(n, vv, vv);/* ||u||^2 */    
       unorm = sqrt(unorm);
-      eigs[k] = unorm;
       if (unorm > 0) {
 	unorm = 1/unorm;
       } else {
