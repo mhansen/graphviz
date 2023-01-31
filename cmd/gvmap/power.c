@@ -47,13 +47,12 @@ void power_method(void *A, int n, int random_seed, double **eigv) {
      end for
      return v1,v2,...
    */
-  double **v, *u, *vv;
+  double *v, *u, *vv;
   int iter = 0;
   double res, unorm;
   int i, k;
 
   if (!(*eigv)) *eigv = gv_calloc(n, sizeof(double));
-  v = gv_calloc(1, sizeof(double*));
 
   vv = gv_calloc(n, sizeof(double));
   u = gv_calloc(n, sizeof(double));
@@ -61,13 +60,13 @@ void power_method(void *A, int n, int random_seed, double **eigv) {
   srand(random_seed);
 
   for (k = 0; k < 1; k++){
-    v[k] = &((*eigv)[k*n]);
+    v = &((*eigv)[k*n]);
     for (i = 0; i < n; i++) u[i] = drand();
     res = sqrt(vector_product(n, u, u));
     if (res > 0) res =  1/res;
     for (i = 0; i < n; i++) {
       u[i] = u[i]*res;
-      v[k][i] = u[i];
+      v[i] = u[i];
     }
     iter = 0;
     do {
@@ -87,8 +86,8 @@ void power_method(void *A, int n, int random_seed, double **eigv) {
 
       for (i = 0; i < n; i++) {
 	u[i] = vv[i]*unorm;
-	res = res + u[i]*v[k][i];
-	v[k][i] = u[i];
+	res = res + u[i]*v[i];
+	v[i] = u[i];
       }
     } while (res < 1 - tolerance && iter++ < maxit);
   }
