@@ -36,21 +36,19 @@ void power_method(void *A, int n, int random_seed, double **eigv) {
      Function PowerIteration (A – m × m matrix )
      % This function computes u1, u2, . . . , uk, the first k eigenvectors of S.
      const tolerance ← 0.001
-     for i = 1 to 1 do
-     . ui ← random
-     . ui ← ui/||ui||
-     . do
-     .   vi ← ui
-     .   ui ← A vi/||A vi||
-     . while (ui^T vi < 1-tolerance) (halt when direction change is small)
-     . vi = ui
-     end for
+     ui ← random
+     ui ← ui/||ui||
+     do
+       vi ← ui
+       ui ← A vi/||A vi||
+     while (ui^T vi < 1-tolerance) (halt when direction change is small)
+     vi = ui
      return v1,v2,...
    */
   double *v, *u, *vv;
   int iter = 0;
   double res, unorm;
-  int i, k;
+  int i;
 
   if (!(*eigv)) *eigv = gv_calloc(n, sizeof(double));
 
@@ -59,38 +57,36 @@ void power_method(void *A, int n, int random_seed, double **eigv) {
 
   srand(random_seed);
 
-  for (k = 0; k < 1; k++){
-    v = &((*eigv)[k*n]);
-    for (i = 0; i < n; i++) u[i] = drand();
-    res = sqrt(vector_product(n, u, u));
-    if (res > 0) res =  1/res;
+  v = &((*eigv)[n]);
+  for (i = 0; i < n; i++) u[i] = drand();
+  res = sqrt(vector_product(n, u, u));
+  if (res > 0) res =  1/res;
+  for (i = 0; i < n; i++) {
+    u[i] = u[i]*res;
+    v[i] = u[i];
+  }
+  iter = 0;
+  do {
+    SparseMatrix_multiply_vector(A, u, &vv);
+
+    unorm = vector_product(n, vv, vv);/* ||u||^2 */
+    unorm = sqrt(unorm);
+    if (unorm > 0) {
+      unorm = 1/unorm;
+    } else {
+      // ||A.v||=0, so v must be an eigenvec correspond to eigenvalue zero
+      for (i = 0; i < n; i++) vv[i] = u[i];
+      unorm = sqrt(vector_product(n, vv, vv));
+      if (unorm > 0) unorm = 1/unorm;
+    }
+    res = 0.;
+
     for (i = 0; i < n; i++) {
-      u[i] = u[i]*res;
+      u[i] = vv[i]*unorm;
+      res = res + u[i]*v[i];
       v[i] = u[i];
     }
-    iter = 0;
-    do {
-      SparseMatrix_multiply_vector(A, u, &vv);
-
-      unorm = vector_product(n, vv, vv);/* ||u||^2 */    
-      unorm = sqrt(unorm);
-      if (unorm > 0) {
-	unorm = 1/unorm;
-      } else {
-	// ||A.v||=0, so v must be an eigenvec correspond to eigenvalue zero
-	for (i = 0; i < n; i++) vv[i] = u[i];
-	unorm = sqrt(vector_product(n, vv, vv));
-	if (unorm > 0) unorm = 1/unorm;
-      }
-      res = 0.;
-
-      for (i = 0; i < n; i++) {
-	u[i] = vv[i]*unorm;
-	res = res + u[i]*v[i];
-	v[i] = u[i];
-      }
-    } while (res < 1 - tolerance && iter++ < maxit);
-  }
+  } while (res < 1 - tolerance && iter++ < maxit);
   free(u);
   free(vv);
 }
