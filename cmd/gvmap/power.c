@@ -18,8 +18,8 @@ static const int maxit = 100;
 // Accuracy control (convergence criterion) for power_method
 static const double tolerance = 0.00001;
 
-void power_method(void *A, int n, int random_seed, double **eigv) {
-  /* find largest eigenvector of a matrix A. Result in eigv. if eigv == NULL; memory will be allocated.
+double *power_method(void *A, int n, int random_seed) {
+  /* find largest eigenvector of a matrix A.
 
      This converges only if the largest eigenvector/value is real (e.g., if A is symmetric) and the
      next largest eigenvalues separate from the largest ones
@@ -50,14 +50,14 @@ void power_method(void *A, int n, int random_seed, double **eigv) {
   double res, unorm;
   int i;
 
-  if (!(*eigv)) *eigv = gv_calloc(n, sizeof(double));
+  double *eigv = gv_calloc(n, sizeof(double));
 
   vv = gv_calloc(n, sizeof(double));
   u = gv_calloc(n, sizeof(double));
 
   srand(random_seed);
 
-  v = &((*eigv)[n]);
+  v = &eigv[n];
   for (i = 0; i < n; i++) u[i] = drand();
   res = sqrt(vector_product(n, u, u));
   if (res > 0) res =  1/res;
@@ -89,4 +89,6 @@ void power_method(void *A, int n, int random_seed, double **eigv) {
   } while (res < 1 - tolerance && iter++ < maxit);
   free(u);
   free(vv);
+
+  return eigv;
 }

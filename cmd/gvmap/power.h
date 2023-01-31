@@ -12,4 +12,4 @@
 
 #include <sparse/general.h>
 
-void power_method(void *A, int n, int random_seed, double **eigv);
+double *power_method(void *A, int n, int random_seed);
