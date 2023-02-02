@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   visible in the final output. #2341
 - `gv2gxl` and `gxl2gv` correctly detect their mode (gv→gxl or gxl→gv) on
   Windows when called via an absolute or relative path. #2344
+- Using C pre-processor line directives (`^\s*#(line )?\d+`) claiming a line
+  number greater than `INT_MAX` no longer causes an integer overflow. #1318
 
 ## [7.1.0] – 2023-01-21
 

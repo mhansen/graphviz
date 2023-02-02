@@ -501,7 +501,6 @@ def test_1314():
   # the execution did not fail as expected
   pytest.fail("dot incorrectly exited with success")
 
-@pytest.mark.xfail()
 def test_1318():
   """
   processing a large number in a comment should not trigger integer overflow

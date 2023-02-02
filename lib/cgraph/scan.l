@@ -116,6 +116,10 @@ static void ppDirective (void)
     if (startswith(s, "line")) s += strlen("line");
     r = sscanf(s, "%d %1[\"]%n", &lineno, buf, &cnt);
     if (r > 0) { /* got line number */
+	// ignore if line number was out of range
+	if (lineno <= 0) {
+	    return;
+	}
 	line_num = lineno - 1;
 	if (r > 1) { /* saw quote */
 	    char* p = s + cnt;
