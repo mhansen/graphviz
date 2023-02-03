@@ -12,6 +12,7 @@
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
+#include <common/geom.h>
 #include <math.h>
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
@@ -478,10 +479,6 @@ static void constrainY(graph_t* g, nitem* nlist, int nnodes, intersectfn ifn,
     dtclose(list);
 }
 
-#define overlap(pb,qb) \
-  ((pb.LL.x <= qb.UR.x) && (qb.LL.x <= pb.UR.x) && \
-          (pb.LL.y <= qb.UR.y) && (qb.LL.y <= pb.UR.y))
-
 /* overlaps:
  */
 static int overlaps(nitem * p, int cnt)
@@ -493,7 +490,7 @@ static int overlaps(nitem * p, int cnt)
     for (i = 0; i < cnt - 1; i++) {
 	pj = pi + 1;
 	for (j = i + 1; j < cnt; j++) {
-	    if (overlap(pi->bb, pj->bb))
+	    if (OVERLAP(pi->bb, pj->bb))
 		return 1;
 	    pj++;
 	}
@@ -665,7 +662,7 @@ static double compress(info * nl, int nn)
     for (i = 0; i < nn; i++) {
 	q = p + 1;
 	for (j = i + 1; j < nn; j++) {
-	    if (overlap(p->bb, q->bb))
+	    if (OVERLAP(p->bb, q->bb))
 		return 0;
 	    if (p->pos.x == q->pos.x)
 		pt.x = HUGE_VAL;
@@ -702,7 +699,7 @@ static pointf *mkOverlapSet(info *nl, size_t nn, size_t *cntp) {
     for (size_t i = 0; i < nn; i++) {
 	q = p + 1;
 	for (size_t j = i + 1; j < nn; j++) {
-	    if (overlap(p->bb, q->bb)) {
+	    if (OVERLAP(p->bb, q->bb)) {
 		pointf pt;
 		if (p->pos.x == q->pos.x)
 		    pt.x = HUGE_VAL;
