@@ -160,7 +160,7 @@ static void mapGraphs(graph_t * g, graph_t * cg, distfn dist)
     }
 }
 
-#if DEBUG > 1
+#if defined(DEBUG) && DEBUG > 1
 static int
 indegree (graph_t * g, node_t *n)
 {
