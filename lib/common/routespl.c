@@ -1083,14 +1083,14 @@ makeStraightEdge(graph_t * g, edge_t * e, int et, splineInfo* sinfo)
     e0 = e;
     while (e0 != ED_to_virt(e0) && (e0 = ED_to_virt(e0))) e_cnt++;
 
-    edge_t **edges = N_NEW(e_cnt, edge_t*);
+    edge_t **edge_list = N_NEW(e_cnt, edge_t*);
     e0 = e;
     for (i = 0; i < e_cnt; i++) {
-	edges[i] = e0;
+	edge_list[i] = e0;
 	e0 = ED_to_virt(e0);
     }
-    makeStraightEdges (g, edges, e_cnt, et, sinfo);
-    free(edges);
+    makeStraightEdges(g, edge_list, e_cnt, et, sinfo);
+    free(edge_list);
 }
 
 void 
