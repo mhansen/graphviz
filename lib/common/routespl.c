@@ -624,18 +624,16 @@ pointf *routepolylines(path * pp, int *npoints)
     return _routesplines (pp, npoints, 1);
 }
 
-static int overlap(int i0, int i1, int j0, int j1)
-{
-    /* i'll bet there's an elegant way to do this */
-    if (i1 <= j0)
-	return 0;
-    if (i0 >= j1)
-	return 0;
-    if (j0 <= i0 && i0 <= j1)
-	return j1 - i0;
-    if (j0 <= i1 && i1 <= j1)
-	return i1 - j0;
-    return MIN(i1 - i0, j1 - j0);
+static double overlap(double i0, double i1, double j0, double j1) {
+  if (i1 < j0)
+    return 0;
+  if (i0 > j1)
+    return 0;
+  if (j0 < i0 && i0 < j1)
+    return j1 - i0;
+  if (j0 < i1 && i1 < j1)
+    return i1 - j0;
+  return fmin(i1 - i0, j1 - j0);
 }
 
 
@@ -652,7 +650,6 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 {
     boxf *ba, *bb;
     int bi, i, errs, l, r, d, u;
-    int xoverlap, yoverlap;
 
     /* remove degenerate boxes. */
     i = 0;
@@ -716,9 +713,9 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 	    }
 	}
 	/* check for overlapping boxes */
-	xoverlap = overlap(ba->LL.x, ba->UR.x, bb->LL.x, bb->UR.x);
-	yoverlap = overlap(ba->LL.y, ba->UR.y, bb->LL.y, bb->UR.y);
-	if (xoverlap && yoverlap) {
+	double xoverlap = overlap(ba->LL.x, ba->UR.x, bb->LL.x, bb->UR.x);
+	double yoverlap = overlap(ba->LL.y, ba->UR.y, bb->LL.y, bb->UR.y);
+	if (xoverlap > 0 && yoverlap > 0) {
 	    if (xoverlap < yoverlap) {
 		if (ba->UR.x - ba->LL.x > bb->UR.x - bb->LL.x) {
 		    /* take space from ba */
