@@ -690,7 +690,7 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 	    printpath(thepath);
 	}
 	if (errs > 0) {
-	    int xy;
+	    double xy;
 
 	    if (l == 1)
 		xy = ba->UR.x, ba->UR.x = bb->LL.x, bb->LL.x = xy, l = 0;
