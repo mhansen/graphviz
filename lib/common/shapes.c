@@ -2437,8 +2437,7 @@ static int poly_path(node_t * n, port * p, int side, boxf rv[], int *kptr)
 
 /* invflip_side:
  */
-static int invflip_side(int side, int rankdir)
-{
+static unsigned char invflip_side(unsigned char side, int rankdir) {
     switch (rankdir) {
     case RANKDIR_TB:
 	break;
@@ -2585,7 +2584,7 @@ static pointf compassPoint(inside_t * ictxt, double y, double x)
  * 
  */
 static int
-compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
+compassPort(node_t *n, boxf *bp, port *pp, char *compass, unsigned char sides,
 	    inside_t * ictxt)
 {
     boxf b;
@@ -2594,7 +2593,7 @@ compassPort(node_t * n, boxf * bp, port * pp, char *compass, int sides,
     double theta = 0.0;
     bool constrain = false;
     bool dyna = false;
-    int side = 0;
+    unsigned char side = 0;
     bool clip = true;
     bool defined;
     double maxv;  /* sufficiently large value outside of range of node */
@@ -2772,7 +2771,7 @@ static port poly_port(node_t * n, char *portname, char *compass)
 {
     port rv;
     boxf *bp;
-    int sides;			/* bitmap of which sides the port lies along */
+    unsigned char sides; // bitmap of which sides the port lies along
 
     if (portname[0] == '\0')
 	return Center;
@@ -3669,7 +3668,7 @@ static port record_port(node_t * n, char *portname, char *compass)
     field_t *f;
     field_t *subf;
     port rv;
-    int sides;			/* bitmap of which sides the port lies along */
+    unsigned char sides; // bitmap of which sides the port lies along
 
     if (portname[0] == '\0')
 	return Center;

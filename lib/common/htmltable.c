@@ -927,8 +927,7 @@ static htmldata_t *portToTbl(htmltbl_t * tp, char *id)
  * If successful, return pointer to port's box.
  * Else return NULL.
  */
-boxf *html_port(node_t * n, char *pname, int *sides)
-{
+boxf *html_port(node_t *n, char *pname, unsigned char *sides){
     htmldata_t *tp;
     htmllabel_t *lbl = ND_label(n)->u.html;
     boxf *rv = NULL;
