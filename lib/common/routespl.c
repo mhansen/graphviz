@@ -556,10 +556,6 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	return NULL;  /* Bailout if no memory left */
     }
 
-    for (bi = 0; bi < boxn; bi++) {
-	boxes[bi].LL.x = INT_MAX;
-	boxes[bi].UR.x = INT_MIN;
-    }
     unbounded = true;
     for (splinepi = 0; splinepi < spl.pn; splinepi++) {
 	ps[splinepi] = spl.ps[splinepi];
