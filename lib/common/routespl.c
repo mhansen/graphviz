@@ -17,6 +17,7 @@
 #include <setjmp.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 static int nedges, nboxes; /* total no. of edges and boxes used in routing */
 
@@ -500,8 +501,12 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	    polypoints[i].y *= -1;
     }
 
-    for (bi = 0; bi < boxn; bi++)
-	boxes[bi].LL.x = INT_MAX, boxes[bi].UR.x = INT_MIN;
+    static const double INITIAL_LLX = INT_MAX;
+    static const double INITIAL_URX = INT_MIN;
+    for (bi = 0; bi < boxn; bi++) {
+	boxes[bi].LL.x = INITIAL_LLX;
+	boxes[bi].UR.x = INITIAL_URX;
+    }
     poly.ps = polypoints, poly.pn = pi;
     eps[0].x = pp->start.p.x, eps[0].y = pp->start.p.y;
     eps[1].x = pp->end.p.x, eps[1].y = pp->end.p.y;
@@ -572,7 +577,8 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	for (bi = 0; bi < boxn; bi++) {
 	/* these fp equality tests are used only to detect if the
 	 * values have been changed since initialization - ok */
-	    if (boxes[bi].LL.x == INT_MAX || boxes[bi].UR.x == INT_MIN) {
+	    if (memcmp(&boxes[bi].LL.x, &INITIAL_LLX, sizeof(boxes[bi].LL.x)) == 0 ||
+	        memcmp(&boxes[bi].UR.x, &INITIAL_URX, sizeof(boxes[bi].UR.x)) == 0) {
 		delta *= 2; /* try again with a finer interval */
 		if (delta > INT_MAX/boxn) /* in limitBoxes, boxn*delta must fit in an int, so give up */
 		    loopcnt = LOOP_TRIES;
