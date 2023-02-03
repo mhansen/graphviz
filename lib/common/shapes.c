@@ -2245,7 +2245,7 @@ static void poly_init(node_t * n)
 		pointf P = vertices[i + (peripheries - 1) * sides];
 		bb.x = MAX(2. * fabs(P.x), bb.x);
 		bb.y = MAX(2. * fabs(P.y), bb.y);
-		pointf Q = vertices[i + (outp - 1) * sides];
+		Q = vertices[i + (outp - 1) * sides];
 		outline_bb.x = MAX(2. * fabs(Q.x), outline_bb.x);
 		outline_bb.y = MAX(2. * fabs(Q.y), outline_bb.y);
 	    }
