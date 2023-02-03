@@ -9,9 +9,11 @@
  *************************************************************************/
 
 #include "config.h"
+#include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <common/render.h>
+#include <limits.h>
 #include <math.h>
 #include <pathplan/pathplan.h>
 #include <setjmp.h>
@@ -1077,19 +1079,19 @@ void
 makeStraightEdge(graph_t * g, edge_t * e, int et, splineInfo* sinfo)
 {
     edge_t *e0;
-    int i, e_cnt;
 
-    e_cnt = 1;
+    size_t e_cnt = 1;
     e0 = e;
     while (e0 != ED_to_virt(e0) && (e0 = ED_to_virt(e0))) e_cnt++;
 
     edge_t **edge_list = N_NEW(e_cnt, edge_t*);
     e0 = e;
-    for (i = 0; i < e_cnt; i++) {
+    for (size_t i = 0; i < e_cnt; i++) {
 	edge_list[i] = e0;
 	e0 = ED_to_virt(e0);
     }
-    makeStraightEdges(g, edge_list, e_cnt, et, sinfo);
+    assert(e_cnt <= INT_MAX);
+    makeStraightEdges(g, edge_list, (int)e_cnt, et, sinfo);
     free(edge_list);
 }
 
