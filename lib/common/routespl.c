@@ -1016,7 +1016,6 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 	//cycles of length 2 do their own thing, we want 3 or
 	vec* cycle = find_shortest_cycle_with_edge(cycles, edge, 3);
 	size_t cycle_len;
-	size_t cnt = 0;
     pointf sum = {0.0, 0.0};
 	size_t idx; //edge index
 	node_t *n;
@@ -1029,6 +1028,7 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 
 	cycle_len = vec_length(cycle);
 
+	double cnt = 0;
 	for (idx=0; idx < cycle_len; ++idx) {
 		n = vec_get(cycle, idx);
 		sum.x += ND_coord(n).x;
