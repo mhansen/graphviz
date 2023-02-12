@@ -1732,52 +1732,6 @@ fi
 AM_CONDITIONAL(WITH_FREETYPE2, [test "x$ue_freetype" = "xYes"])
 
 dnl -----------------------------------
-dnl INCLUDES and LIBS for FONTCONFIG
-
-AC_ARG_WITH(fontconfig,
-  [AS_HELP_STRING([--with-fontconfig=yes],[use fontconfig library])],
-  [], [with_fontconfig=yes])
-
-if test "x$with_fontconfig" != "xyes"; then
-  use_fontconfig="No (disabled)"
-else
-  PKG_CHECK_MODULES(FONTCONFIG, [fontconfig],[
-    use_fontconfig="Yes"
-  ],[
-    AC_MSG_WARN(pkg-config did not find a fontconfig.pc.  Looking for fontconfig-config.)
-  ])
-fi
-
-# just in case pkgconfig for fontconfig does not exist
-if test "x$use_fontconfig" = "x"; then
-    if test "x$FONTCONFIG_DIR" = "xyes"; then
-	AC_PATH_PROG(FONTCONFIG_CONFIG,fontconfig-config)
-    else
-	AC_PATH_PROG(FONTCONFIG_CONFIG,fontconfig-config,,[$FONTCONFIG_DIR/bin:$PATH])
-    fi
-
-    if test -n "$FONTCONFIG_CONFIG"; then
-        if test "x$FONTCONFIG_DIR" != "xyes"; then
-	    FONTCONFIG_CFLAGS="`$FONTCONFIG_CONFIG --cflags` -I$FONTCONFIG_DIR/include"
-	else
-	    FONTCONFIG_CFLAGS=`$FONTCONFIG_CONFIG --cflags`
-	fi
-	FONTCONFIG_LIBS=`$FONTCONFIG_CONFIG --libs`
-	use_fontconfig="Yes"
-    else
-	use_fontconfig="No (missing fontconfig-config)"
-        AC_MSG_WARN(fontconfig library not available)
-    fi
-fi
-
-if test "x$use_fontconfig" = "xYes"; then
-  AC_DEFINE_UNQUOTED(HAVE_FONTCONFIG,1,[Define if you have the fontconfig library])
-  AC_SUBST([FONTCONFIG_CFLAGS])
-  AC_SUBST([FONTCONFIG_LIBS])
-fi
-AM_CONDITIONAL(WITH_FONTCONFIG, [test "x$use_fontconfig" = "xYes"])
-
-dnl -----------------------------------
 dnl INCLUDES and LIBS for GDK
 
 AC_ARG_WITH(gdk,
@@ -2588,7 +2542,6 @@ echo "options:"
 echo "  cgraph:        Yes (always enabled)"
 echo "  digcola:       $use_digcola"
 echo "  expat:         $use_expat"
-echo "  fontconfig:    $use_fontconfig"
 echo "  freetype:      $use_freetype"
 echo "  glut:          $use_glut"
 echo "  ann:           $use_ann"
