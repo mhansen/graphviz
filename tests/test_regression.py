@@ -501,6 +501,18 @@ def test_1314():
   # the execution did not fail as expected
   pytest.fail("dot incorrectly exited with success")
 
+def test_1318():
+  """
+  processing a large number in a comment should not trigger integer overflow
+  https://gitlab.com/graphviz/graphviz/-/issues/1318
+  """
+
+  # sample input consisting of a large number in a comment
+  source = "#8828066547613302784"
+
+  # processing this should succeed
+  dot("svg", source=source)
+
 def test_1408():
   """
   parsing particular ortho layouts should not cause an assertion failure
