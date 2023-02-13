@@ -242,7 +242,7 @@ extern "C" {
 
 	/* primary mapped region - node shape, edge labels */
 	map_shape_t url_map_shape; 
-	int url_map_n;                  /* number of points for url map if GVRENDER_DOES_MAPS */
+	size_t url_map_n; // number of points for url map if GVRENDER_DOES_MAPS
 	pointf *url_map_p;
 
 	/* additional mapped regions for edges */

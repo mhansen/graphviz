@@ -753,15 +753,13 @@ static bool isFilled(node_t * n)
  * Assumes 'np' is greater than zero.
  * 'np' should be at least 4 to sample polygon from ellipse
  */
-static pointf *pEllipse(double a, double b, int np)
-{
+static pointf *pEllipse(double a, double b, size_t np) {
     double theta = 0.0;
-    double deltheta = 2 * M_PI / np;
-    int i;
+    double deltheta = 2 * M_PI / (double)np;
     pointf *ps;
 
     ps = N_NEW(np, pointf);
-    for (i = 0; i < np; i++) {
+    for (size_t i = 0; i < np; i++) {
         ps[i].x = a * cos(theta);
         ps[i].y = b * sin(theta);
         theta += deltheta;
@@ -1772,7 +1770,8 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj;
     int flags = job->flags;
-    int sides, peripheries, i, j, rect = 0, shape, nump = 0;
+    int sides, peripheries, rect = 0, shape;
+    size_t nump = 0;
     polygon_t *poly = NULL;
     pointf *vertices, *p = NULL;
     pointf coord;
@@ -1827,14 +1826,14 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
 
             vertices = poly->vertices;
 
+            int nump_int = 0;
             if ((s = agget(n, "samplepoints")))
-                nump = atoi(s);
+                nump_int = atoi(s);
             /* We want at least 4 points. For server-side maps, at most 100
              * points are allowed. To simplify things to fit with the 120 points
              * used for skewed ellipses, we set the bound at 60.
              */
-            if (nump < 4 || nump > 60)
-                nump = DFLT_SAMPLE;
+            nump = (nump_int < 4 || nump_int > 60) ? DFLT_SAMPLE : (size_t)nump_int;
             /* use bounding box of text label or node image for mapping
              * when polygon has no peripheries and node is not filled
              */
@@ -1859,9 +1858,9 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
                 }
                 else { /* ellipse is treated as polygon */
                     obj->url_map_shape= MAP_POLYGON;
-                    p = pEllipse((double)(vertices[2*peripheries - 1].x),
-                                 (double)(vertices[2*peripheries - 1].y), nump);
-                    for (i = 0; i < nump; i++) {
+                    p = pEllipse(vertices[2 * peripheries - 1].x,
+                                 vertices[2 * peripheries - 1].y, nump);
+                    for (size_t i = 0; i < nump; i++) {
                         p[i].x += coord.x;
                         p[i].y += coord.y;
                     }
@@ -1869,22 +1868,25 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
             }
             /* all other polygonal shape */
             else {
-                int offset = (peripheries - 1) * poly->sides;
+                assert(peripheries >= 1);
+                size_t offset = (size_t)((peripheries - 1) * poly->sides);
                 obj->url_map_shape = MAP_POLYGON;
                 /* distorted or skewed ellipses and circles are polygons with 120
                  * sides. For mapping we convert them into polygon with sample sides
                  */
-                if (poly->sides >= nump) {
-                    int delta = poly->sides / nump;
+                if (poly->sides >= 0 && (size_t)poly->sides >= nump) {
+                    assert(poly->sides >= 0);
+                    size_t delta = (size_t)poly->sides / nump;
                     p = N_NEW(nump, pointf);
-                    for (i = 0, j = 0; j < nump; i += delta, j++) {
+                    for (size_t i = 0, j = 0; j < nump; i += delta, j++) {
                         p[j].x = coord.x + vertices[i + offset].x;
                         p[j].y = coord.y + vertices[i + offset].y;
                     }
                 } else {
-                    nump = sides;
+                    assert(sides >= 0);
+                    nump = (size_t)sides;
                     p = N_NEW(nump, pointf);
-                    for (i = 0; i < nump; i++) {
+                    for (size_t i = 0; i < nump; i++) {
                         p[i].x = coord.x + vertices[i + offset].x;
                         p[i].y = coord.y + vertices[i + offset].y;
                     }
@@ -2494,7 +2496,7 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
     char *s;
     textlabel_t *lab = NULL, *tlab = NULL, *hlab = NULL;
     pointf *pbs = NULL;
-    int	i, nump, *pbs_n = NULL, pbs_poly_n = 0;
+    int	i, *pbs_n = NULL, pbs_poly_n = 0;
     char* dflt_url = NULL;
     char* dflt_target = NULL;
     double penwidth;
@@ -2652,14 +2654,18 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
 	    obj->url_bsplinemap_poly_n = pbs_poly_n;
 	    obj->url_bsplinemap_n = pbs_n;
 	    if (! (flags & GVRENDER_DOES_TRANSFORM)) {
-    		for ( nump = 0, i = 0; i < pbs_poly_n; i++)
-        	    nump += pbs_n[i];
-		gvrender_ptf_A(job, pbs, pbs, nump);		
+    		size_t nump;
+    		for ( nump = 0, i = 0; i < pbs_poly_n; i++) {
+        	    assert(pbs_n[i] >= 0);
+        	    nump += (size_t)pbs_n[i];
+    		}
+		gvrender_ptf_A(job, pbs, pbs, nump);
 	    }
 	    obj->url_bsplinemap_p = pbs;
 	    obj->url_map_shape = MAP_POLYGON;
 	    obj->url_map_p = pbs;
-	    obj->url_map_n = pbs_n[0];
+	    assert(pbs_n[0] >= 0);
+	    obj->url_map_n = (size_t)pbs_n[0];
 	}
     }
 
@@ -2764,7 +2770,8 @@ static void emit_end_edge(GVJ_t * job)
 	if (obj->url_bsplinemap_poly_n) {
 	    for ( nump = obj->url_bsplinemap_n[0], i = 1; i < obj->url_bsplinemap_poly_n; i++) {
 		/* additional polygon maps around remaining bezier pieces */
-		obj->url_map_n = obj->url_bsplinemap_n[i];
+		assert(obj->url_bsplinemap_n[i] >= 0);
+		obj->url_map_n = (size_t)obj->url_bsplinemap_n[i];
 		obj->url_map_p = &(obj->url_bsplinemap_p[nump]);
 		gvrender_begin_anchor(job,
 			obj->url, obj->tooltip, obj->target, obj->id);
@@ -3389,7 +3396,8 @@ static void emit_end_graph(GVJ_t * job)
 static void emit_page(GVJ_t * job, graph_t * g)
 {
     obj_state_t *obj = job->obj;
-    int nump = 0, flags = job->flags;
+    int flags = job->flags;
+    size_t nump = 0;
     textlabel_t *lab;
     pointf *p = NULL;
     char* saveid;
