@@ -243,17 +243,24 @@ typedef struct {
     int faces;
 } availfont_t;
 
+/// list of available fonts
+///
+/// The i-th entry corresponds to the i-th entry from \p gv_ps_fontdefs. An
+/// entry will have zeroed fields if the corresponding font is unavailable at
+/// runtime.
+typedef struct {
+  availfont_t fonts[GV_FONT_LIST_SIZE];
+} availfonts_t;
+
 static PostscriptAlias postscript_alias[] = {
 #include "ps_font_equiv.h"
 };
 
 /* Frees memory used by the available system font definitions */
-static void gv_flist_free_af(availfont_t* gv_af_p)
-{
+static void gv_flist_free_af(availfonts_t gv_af_p) {
     for (size_t i = 0; i < GV_FONT_LIST_SIZE; i++) {
-	free(gv_af_p[i].fontname);
+	free(gv_af_p.fonts[i].fontname);
     }
-    free(gv_af_p);
 }
 
 static int get_faces(PangoFontFamily * family)
@@ -284,19 +291,19 @@ static int get_faces(PangoFontFamily * family)
 
 #ifdef DEBUG
 static void
-display_available_fonts(availfont_t* gv_af_p)
-{
+display_available_fonts(availfonts_t gv_af_p) {
     int faces;
 
 /* Displays the Graphviz PS font name, system available font name and associated faces */
     for (size_t j = 0; j < GV_FONT_LIST_SIZE; j++) {
-	if (gv_af_p[j].faces == 0 || gv_af_p[j].fontname == NULL) {
+	if (gv_af_p.fonts[j].faces == 0 || gv_af_p.fonts[j].fontname == NULL) {
 	    fprintf (stderr, "ps font = %s not available\n", gv_ps_fontdefs[j].fontname);
 	    continue;
 	}
 	fprintf (stderr, "ps font = %s available %d font = %s\n",
-	    gv_ps_fontdefs[j].fontname, gv_af_p[j].faces, gv_af_p[j].fontname);
-	faces = gv_af_p[j].faces;
+	         gv_ps_fontdefs[j].fontname, gv_af_p.fonts[j].faces,
+	         gv_af_p.fonts[j].fontname);
+	faces = gv_af_p.fonts[j].faces;
 	for (size_t i = 0; i < FACELIST_SZ; i++) {
 	    if (faces & facelist[i].flag)
 		fprintf (stderr, "\t%s\n", facelist[i].name);
@@ -322,26 +329,22 @@ static char *get_avail_faces(int faces, agxbuf* xb)
    of equivalent fonts that can be used in place of the PS font if the PS font is not
    available on the system
 */
-static availfont_t *gv_get_ps_fontlist(PangoFontMap * fontmap)
-{
+static availfonts_t gv_get_ps_fontlist(PangoFontMap *fontmap) {
     PangoFontFamily **families;
     PangoFontFamily *family;
     fontdef_t* gv_ps_fontdef;
     int n_families;
     int i, k, array_sz, availfaces = 0;
-    availfont_t *gv_af_p, *gv_afs;
     const char *name;
 
     /* Get a list of font families installed on the system */
     pango_font_map_list_families(fontmap, &families, &n_families);
 
-    /* Setup a pointer to available font structs */
-    gv_af_p = gv_calloc(GV_FONT_LIST_SIZE, sizeof(availfont_t));
-
+    availfonts_t gv_af_p = {0};
     for (size_t j = 0; j < GV_FONT_LIST_SIZE; j++) {
 	/* get the Graphviz PS font information and create the
 	   available font definition structs */
-	gv_afs = gv_af_p+j;
+	availfont_t *gv_afs = &gv_af_p.fonts[j];
 	gv_ps_fontdef = gv_ps_fontdefs+j;
 	gv_afs->gv_ps_fontname = gv_ps_fontdef->fontname;
 	strview_t family_name = {0};
@@ -419,7 +422,7 @@ static void copyUpper (agxbuf* xb, char* s)
    AvantGarde-Book may return URW Gothic L, book
    Returns NULL if no appropriate font found.
 */
-static char *gv_get_font(availfont_t* gv_af_p,
+static char *gv_get_font(availfonts_t gv_af_p,
 		  PostscriptAlias * ps_alias, agxbuf* xb, agxbuf *xb2)
 {
     char *avail_faces;
@@ -430,9 +433,10 @@ static char *gv_get_font(availfont_t* gv_af_p,
 	   font string with the available font name and the installed font
 	   faces that match what are required by the Graphviz PS font.
 	 */
-	if (gv_af_p[i].faces && strstr(ps_alias->name, gv_af_p[i].gv_ps_fontname)) {
-	    agxbprint(xb2, "%s, ", gv_af_p[i].fontname);
-	    avail_faces = get_avail_faces(gv_af_p[i].faces, xb);
+	if (gv_af_p.fonts[i].faces &&
+	    strstr(ps_alias->name, gv_af_p.fonts[i].gv_ps_fontname)) {
+	    agxbprint(xb2, "%s, ", gv_af_p.fonts[i].fontname);
+	    avail_faces = get_avail_faces(gv_af_p.fonts[i].faces, xb);
 	    if (ps_alias->weight) {
 		if (strcasestr(avail_faces, ps_alias->weight)) {
 		    agxbputc(xb2, ' ');
@@ -491,7 +495,6 @@ printFontMap (gv_font_map*gv_fmap, int sz)
 gv_font_map* get_font_mapping(PangoFontMap * fontmap)
 {
     PostscriptAlias *ps_alias;
-    availfont_t *gv_af_p;
     static const size_t ps_fontnames_sz =
       sizeof(postscript_alias) / sizeof(PostscriptAlias);
     gv_font_map* gv_fmap = gv_calloc(ps_fontnames_sz, sizeof(gv_font_map));
@@ -502,7 +505,7 @@ gv_font_map* get_font_mapping(PangoFontMap * fontmap)
 
     agxbinit(&xb, BUFSIZ, buf);
     agxbinit(&xb2, BUFSIZ, buf2);
-    gv_af_p = gv_get_ps_fontlist(fontmap);	// get the available installed fonts
+    availfonts_t gv_af_p = gv_get_ps_fontlist(fontmap);	// get the available installed fonts
     /* add the Graphviz PS font name and available system font string to the array */
     for (size_t j = 0; j < ps_fontnames_sz; j++) {
 	ps_alias = &postscript_alias[j];
