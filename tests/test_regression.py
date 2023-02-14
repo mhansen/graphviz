@@ -5,6 +5,7 @@ The test cases in this file relate to previously observed bugs. A failure of one
 of these indicates that a past bug has been reintroduced.
 """
 
+import io
 import json
 import os
 from pathlib import Path
@@ -324,6 +325,28 @@ def test_358():
     m = re.search(f"\\bt {1 << i}\\b", xdot)
     assert m is not None, \
       f"font characteristic {1 << i} not enabled in xdot 1.7"
+
+@pytest.mark.parametrize("attribute", ("samehead", "sametail"))
+def test_452(attribute: str):
+  """
+  more than 5 unique `samehead` and `sametail` values should be usable
+  https://gitlab.com/graphviz/graphviz/-/issues/452
+  """
+
+  # a graph using more than 5 of the same attribute with the same node on one
+  # side of each edge
+  graph = io.StringIO()
+  graph.write("digraph {\n")
+  for i in range(6):
+    if attribute == "samehead":
+      graph.write(f"  m{i} -> n1")
+    else:
+      graph.write(f"  n1 -> m{i}")
+    graph.write(f'[{attribute}="foo{i}"];\n')
+  graph.write("}\n")
+
+  # process this with dot
+  dot("svg", source=graph.getvalue())
 
 def test_510():
   """

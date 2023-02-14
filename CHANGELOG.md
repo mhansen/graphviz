@@ -13,14 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- The VML output renderer has been removed. This format has been superseded by
-  SVG. #799
-- Legacy man page references to `dotty` have been removed. `dotty` was removed
-  in Graphviz 4.0.0.
 - Graphviz will now exit when encountering a syntactically invalid HTML label
   instead of attempting to recover and continue. #1311
 - **Breaking**: the `url_map_n` field in the `obj_state_t` struct is now a
   `size_t`.
+- The limit of 5 unique `samehead` or `sametail` values per node has been
+  removed. The maximum number of unique `samehead` or `sametail` values is now
+  limited only by available memory. #452
 
 ### Fixed
 
@@ -31,6 +30,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Windows when called via an absolute or relative path. #2344
 - Using C pre-processor line directives (`^\s*#(line )?\d+`) claiming a line
   number greater than `INT_MAX` no longer causes an integer overflow. #1318
+
+### Removed
+
+- The VML output renderer has been removed. This format has been superseded by
+  SVG. #799
+- Legacy man page references to `dotty` have been removed. `dotty` was removed
+  in Graphviz 4.0.0.
+- **Breaking**: The definition of the `elist_fastapp` macro has been removed.
 
 ## [7.1.0] – 2023-01-21
 
