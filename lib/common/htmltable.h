@@ -11,6 +11,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -108,13 +109,14 @@ extern "C" {
 		Dt_t *rows;	/* cells */
 	    } p;
 	} u;
-	signed char cb;		/* cell border */
+	int8_t cellborder;
 	int *heights;		/* heights of the rows */
 	int *widths;		/* widths of the columns */
-	int rc;			/* number of rows */
-	int cc;			/* number of columns */
+	int row_count; ///< number of rows
+	int column_count; ///< number of columns
 	textfont_t *font;	/* font info */
-	unsigned char flags;
+	bool hrule:1; ///< horizontal rule
+	bool vrule:1; ///< vertical rule
     };
 
     struct htmllabel_t {
@@ -128,10 +130,10 @@ extern "C" {
 
     struct htmlcell_t {
 	htmldata_t data;
-	unsigned short cspan;
-	unsigned short rspan;
-	unsigned short col;
-	unsigned short row;
+	uint16_t colspan;
+	uint16_t rowspan;
+	uint16_t col;
+	uint16_t row;
 	htmllabel_t child;
 	htmltbl_t *parent;
 	unsigned char ruled;

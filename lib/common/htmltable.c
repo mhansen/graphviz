@@ -37,8 +37,9 @@
 #include <cdt/cdt.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
-#include <cgraph/itos.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/unreachable.h>
+#include <inttypes.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -196,9 +197,9 @@ static void emit_html_txt(GVJ_t * job, htmltxt_t * tp, htmlenv_t * env)
     if (tp->nspans < 1)
 	return;
 
-    halfwidth_x = ((double) (tp->box.UR.x - tp->box.LL.x)) / 2.0;
-    p.x = env->pos.x + ((double) (tp->box.UR.x + tp->box.LL.x)) / 2.0;
-    p.y = env->pos.y + ((double) (tp->box.UR.y + tp->box.LL.y)) / 2.0;
+    halfwidth_x = (tp->box.UR.x - tp->box.LL.x) / 2.0;
+    p.x = env->pos.x + (tp->box.UR.x + tp->box.LL.x) / 2.0;
+    p.y = env->pos.y + (tp->box.UR.y + tp->box.LL.y) / 2.0;
 
     emit_htextspans(job, tp->nspans, tp->spans, p, halfwidth_x, env->finfo,
 		    tp->box, tp->simple);
@@ -472,12 +473,12 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
     pts.UR.y += pos.y;
 
     //Determine vertical line coordinate and length
-    if ((cp->ruled & HTML_VRULE) && cp->col + cp->cspan < cp->parent->cc) {
+    if ((cp->ruled & HTML_VRULE) && cp->col + cp->colspan < cp->parent->column_count) {
 	if (cp->row == 0) {	// first row
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
 	    rule_pt.y = pts.LL.y - cp->parent->data.space / 2;
-	} else if (cp->row + cp->rspan == cp->parent->rc) {	// bottom row
+	} else if (cp->row + cp->rowspan == cp->parent->row_count) { // bottom row
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
 	    rule_pt.y = pts.LL.y - cp->parent->data.space / 2 - base;
@@ -490,18 +491,18 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 	doSide(job, rule_pt, 0, rule_length);
     }
     //Determine the horizontal coordinate and length
-    if ((cp->ruled & HTML_HRULE) && cp->row + cp->rspan < cp->parent->rc) {
+    if ((cp->ruled & HTML_HRULE) && cp->row + cp->rowspan < cp->parent->row_count) {
 	if (cp->col == 0) {	// first column 
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
 	    rule_pt.x = pts.LL.x - base - cp->parent->data.space / 2;
-	    if (cp->col + cp->cspan == cp->parent->cc)	// also last column
+	    if (cp->col + cp->colspan == cp->parent->column_count)	// also last column
 		base *= 2;
 	    /* incomplete row of cells; extend line to end */
 	    else if (nextc && nextc->row != cp->row) {
 		base += cp->parent->data.box.UR.x + pos.x - (pts.UR.x + cp->parent->data.space / 2);
 	    }
-	} else if (cp->col + cp->cspan == cp->parent->cc) {	// last column
+	} else if (cp->col + cp->colspan == cp->parent->column_count) {	// last column
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
 	    rule_pt.x = pts.LL.x - cp->parent->data.space / 2;
@@ -739,6 +740,8 @@ heightOfLbl (htmllabel_t * lp)
     case HTML_TEXT:
 	sz  = lp->u.txt->box.UR.y - lp->u.txt->box.LL.y;
 	break;
+    default:
+	UNREACHABLE();
     }
     return sz;
 }
@@ -849,7 +852,7 @@ static void free_html_tbl(htmltbl_t * tbl)
 {
     htmlcell_t **cells;
 
-    if (tbl->rc == -1) {
+    if (tbl->row_count == -1) {
 	dtclose(tbl->u.p.rows);
     } else {
 	cells = tbl->u.n.cells;
@@ -1123,8 +1126,8 @@ size_html_cell(graph_t * g, htmlcell_t * cp, htmltbl_t * parent,
 	    cp->data.pad = DEFAULT_CELLPADDING;
     }
     if (!(cp->data.flags & BORDER_SET)) {
-	if (parent->cb >= 0)
-	    cp->data.border = (unsigned char)parent->cb;
+	if (parent->cellborder >= 0)
+	    cp->data.border = (unsigned char)parent->cellborder;
 	else if (parent->data.flags & BORDER_SET)
 	    cp->data.border = parent->data.border;
 	else
@@ -1170,7 +1173,7 @@ static int findCol(PointSet * ps, int row, int col, htmlcell_t * cellp)
     int notFound = 1;
     int lastc;
     int i, j, c;
-    int end = cellp->cspan - 1;
+    int end = cellp->colspan - 1;
 
     while (notFound) {
 	lastc = col + end;
@@ -1183,8 +1186,8 @@ static int findCol(PointSet * ps, int row, int col, htmlcell_t * cellp)
 	else
 	    notFound = 0;
     }
-    for (j = col; j < col + cellp->cspan; j++) {
-	for (i = row; i < row + cellp->rspan; i++) {
+    for (j = col; j < col + cellp->colspan; j++) {
+	for (i = row; i < row + cellp->rowspan; i++) {
 	    addPS(ps, j, i);
 	}
     }
@@ -1213,7 +1216,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 
     rp = (pitem *) dtflatten(rows);
     size_t cnt = 0;
-    unsigned short r = 0;
+    uint16_t r = 0;
     while (rp) {
 	cdict = rp->u.rp;
 	cp = (pitem *) dtflatten(cdict);
@@ -1235,7 +1238,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     while (rp) {
 	cdict = rp->u.rp;
 	cp = (pitem *) dtflatten(cdict);
-	unsigned short c = 0;
+	uint16_t c = 0;
 	while (cp) {
 	    cellp = cp->u.cp;
 	    *cells++ = cellp;
@@ -1243,18 +1246,18 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    c = findCol(ps, r, c, cellp);
 	    cellp->row = r;
 	    cellp->col = c;
-	    c += cellp->cspan;
+	    c += cellp->colspan;
 	    n_cols = MAX(c, n_cols);
-	    n_rows = MAX(r + cellp->rspan, n_rows);
-	    if (inIntSet(is, r + cellp->rspan))
+	    n_rows = MAX(r + cellp->rowspan, n_rows);
+	    if (inIntSet(is, r + cellp->rowspan))
 		cellp->ruled |= HTML_HRULE;
 	    cp = (pitem *)dtlink(cdict, cp);
 	}
 	rp = (pitem *)dtlink(rows, rp);
 	r++;
     }
-    tbl->rc = n_rows;
-    tbl->cc = n_cols;
+    tbl->row_count = n_rows;
+    tbl->column_count = n_cols;
     dtclose(rows);
     dtclose(is);
     freePS(ps);
@@ -1279,28 +1282,28 @@ static void sizeLinearArray(htmltbl_t * tbl)
     htmlcell_t **cells;
     int wd, ht, i, x, y;
 
-    tbl->heights = N_NEW(tbl->rc + 1, int);
-    tbl->widths = N_NEW(tbl->cc + 1, int);
+    tbl->heights = N_NEW(tbl->row_count + 1, int);
+    tbl->widths = N_NEW(tbl->column_count + 1, int);
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
-	if (cp->rspan == 1)
+	if (cp->rowspan == 1)
 	    ht = cp->data.box.UR.y;
 	else {
-	    ht = SPLIT(cp->data.box.UR.y, cp->rspan, tbl->data.space);
+	    ht = SPLIT(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
 	    ht = MAX(ht, 1);
 	}
-	if (cp->cspan == 1)
+	if (cp->colspan == 1)
 	    wd = cp->data.box.UR.x;
 	else {
-	    wd = SPLIT(cp->data.box.UR.x, cp->cspan, tbl->data.space);
+	    wd = SPLIT(cp->data.box.UR.x, cp->colspan, tbl->data.space);
 	    wd = MAX(wd, 1);
 	}
-	for (i = cp->row; i < cp->row + cp->rspan; i++) {
+	for (i = cp->row; i < cp->row + cp->rowspan; i++) {
 	    y = tbl->heights[i];
 	    tbl->heights[i] = MAX(y, ht);
 	}
-	for (i = cp->col; i < cp->col + cp->cspan; i++) {
+	for (i = cp->col; i < cp->col + cp->colspan; i++) {
 	    x = tbl->widths[i];
 	    tbl->widths[i] = MAX(x, wd);
 	}
@@ -1367,10 +1370,10 @@ checkEdge (graph_t* g, node_t* t, node_t* h, int sz)
 
 /* makeGraphs:
  * Generate dags modeling the row and column constraints.
- * If the table has cc columns, we create the graph
- *  0 -> 1 -> 2 -> ... -> cc
- * and if a cell starts in column c with span cspan, with
- * width w, we add the edge c -> c+cspan [minlen = w].
+ * If the table has column_count columns, we create the graph
+ *  0 -> 1 -> 2 -> ... -> column_count
+ * and if a cell starts in column c with span colspan, with
+ * width w, we add the edge c -> c+colspan [minlen = w].
  * Ditto for rows.
  *
  */
@@ -1382,15 +1385,15 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
     node_t *lastn;
     node_t *h;
     int i;
-    char value_buffer[CHARS_FOR_NUL_TERM_INT];
+    agxbuf value_buffer = {0};
 
     lastn = NULL;
-    for (i = 0; i <= tbl->cc; i++) {
-	snprintf(value_buffer, sizeof(value_buffer), "%d", i);
-	t = agnode(colg, value_buffer, 1);
+    for (i = 0; i <= tbl->column_count; i++) {
+	agxbprint(&value_buffer, "%d", i);
+	t = agnode(colg, agxbuse(&value_buffer), 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
-	alloc_elist(tbl->rc, ND_in(t));
-	alloc_elist(tbl->rc, ND_out(t));
+	alloc_elist(tbl->row_count, ND_in(t));
+	alloc_elist(tbl->row_count, ND_out(t));
 	if (lastn) {
 	    ND_next(lastn) = t;
 	    lastn = t;
@@ -1399,12 +1402,12 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 	}
     }
     lastn = NULL;
-    for (i = 0; i <= tbl->rc; i++) {
-	snprintf(value_buffer, sizeof(value_buffer), "%d", i);
-	t = agnode(rowg, value_buffer, 1);
+    for (i = 0; i <= tbl->row_count; i++) {
+	agxbprint(&value_buffer, "%d", i);
+	t = agnode(rowg, agxbuse(&value_buffer), 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
-	alloc_elist(tbl->cc, ND_in(t));
-	alloc_elist(tbl->cc, ND_out(t));
+	alloc_elist(tbl->column_count, ND_in(t));
+	alloc_elist(tbl->column_count, ND_out(t));
 	if (lastn) {
 	    ND_next(lastn) = t;
 	    lastn = t;
@@ -1415,18 +1418,20 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
-	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->col);
-	t = agfindnode(colg, value_buffer);
-	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->col + cp->cspan);
-	h = agfindnode(colg, value_buffer);
+	agxbprint(&value_buffer, "%" PRIu16, cp->col);
+	t = agfindnode(colg, agxbuse(&value_buffer));
+	agxbprint(&value_buffer, "%" PRIu16, cp->col + cp->colspan);
+	h = agfindnode(colg, agxbuse(&value_buffer));
 	checkEdge (colg, t, h, cp->data.box.UR.x);
 
-	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->row);
-	t = agfindnode(rowg, value_buffer);
-	snprintf(value_buffer, sizeof(value_buffer), "%d", cp->row + cp->rspan);
-	h = agfindnode(rowg, value_buffer);
+	agxbprint(&value_buffer, "%" PRIu16, cp->row);
+	t = agfindnode(rowg, agxbuse(&value_buffer));
+	agxbprint(&value_buffer, "%" PRIu16, cp->row + cp->rowspan);
+	h = agfindnode(rowg, agxbuse(&value_buffer));
 	checkEdge (rowg, t, h, cp->data.box.UR.y);
     }
+
+    agxbfree(&value_buffer);
 
     /* Make sure that 0 <= 1 <= 2 ...k. This implies graph connected. */
     checkChain(colg);
@@ -1477,13 +1482,13 @@ static void sizeArray(htmltbl_t * tbl)
 #endif
 
     /* Do the 1D cases by hand */
-    if (tbl->rc == 1 || tbl->cc == 1) {
+    if (tbl->row_count == 1 || tbl->column_count == 1) {
 	sizeLinearArray(tbl);
 	return;
     }
 
-    tbl->heights = N_NEW(tbl->rc + 1, int);
-    tbl->widths = N_NEW(tbl->cc + 1, int);
+    tbl->heights = N_NEW(tbl->row_count + 1, int);
+    tbl->widths = N_NEW(tbl->column_count + 1, int);
 
     rowg = agopen("rowg", dir, NULL);
     colg = agopen("colg", dir, NULL);
@@ -1728,17 +1733,17 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 
     /* change sizes to start positions and distribute extra space */
     x = pos.LL.x + tbl->data.border + tbl->data.space;
-    extra = delx / tbl->cc;
-    plus = ROUND(delx - extra * tbl->cc);
-    for (i = 0; i <= tbl->cc; i++) {
+    extra = delx / tbl->column_count;
+    plus = ROUND(delx - extra * tbl->column_count);
+    for (i = 0; i <= tbl->column_count; i++) {
 	delx = tbl->widths[i] + extra + (i < plus ? 1 : 0);
 	tbl->widths[i] = x;
 	x += delx + tbl->data.space;
     }
     y = pos.UR.y - tbl->data.border - tbl->data.space;
-    extra = dely / tbl->rc;
-    plus = ROUND(dely - extra * tbl->rc);
-    for (i = 0; i <= tbl->rc; i++) {
+    extra = dely / tbl->row_count;
+    plus = ROUND(dely - extra * tbl->row_count);
+    for (i = 0; i <= tbl->row_count; i++) {
 	dely = tbl->heights[i] + extra + (i < plus ? 1 : 0);
 	tbl->heights[i] = y;
 	y -= dely + tbl->data.space;
@@ -1751,15 +1756,15 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 		mask |= LEFT;
 	    if (cp->row == 0)
 		mask |= TOP;
-	    if (cp->col + cp->cspan == tbl->cc)
+	    if (cp->col + cp->colspan == tbl->column_count)
 		mask |= RIGHT;
-	    if (cp->row + cp->rspan == tbl->rc)
+	    if (cp->row + cp->rowspan == tbl->row_count)
 		mask |= BOTTOM;
 	}
 	cbox.LL.x = tbl->widths[cp->col];
-	cbox.UR.x = tbl->widths[cp->col + cp->cspan] - tbl->data.space;
+	cbox.UR.x = tbl->widths[cp->col + cp->colspan] - tbl->data.space;
 	cbox.UR.y = tbl->heights[cp->row];
-	cbox.LL.y = tbl->heights[cp->row + cp->rspan] + tbl->data.space;
+	cbox.LL.y = tbl->heights[cp->row + cp->rowspan] + tbl->data.space;
 	pos_html_cell(cp, cbox, sides & mask);
     }
 
@@ -1794,11 +1799,11 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 
     sizeArray(tbl);
 
-    wd = (tbl->cc + 1) * tbl->data.space + 2 * tbl->data.border;
-    ht = (tbl->rc + 1) * tbl->data.space + 2 * tbl->data.border;
-    for (i = 0; i < tbl->cc; i++)
+    wd = (tbl->column_count + 1) * tbl->data.space + 2 * tbl->data.border;
+    ht = (tbl->row_count + 1) * tbl->data.space + 2 * tbl->data.border;
+    for (i = 0; i < tbl->column_count; i++)
 	wd += tbl->widths[i];
-    for (i = 0; i < tbl->rc; i++)
+    for (i = 0; i < tbl->row_count; i++)
 	ht += tbl->heights[i];
 
     if (tbl->data.flags & FIXED_FLAG) {
@@ -1928,7 +1933,7 @@ void printTbl(htmltbl_t * tbl, int ind)
 {
     htmlcell_t **cells = tbl->u.n.cells;
     indent(ind);
-    fprintf(stderr, "tbl (%p) %d %d ", tbl, tbl->cc, tbl->rc);
+    fprintf(stderr, "tbl (%p) %d %d ", tbl, tbl->column_count, tbl->row_count);
     printData(&tbl->data);
     fputs("\n", stderr);
     while (*cells)
@@ -1938,8 +1943,8 @@ void printTbl(htmltbl_t * tbl, int ind)
 static void printCell(htmlcell_t * cp, int ind)
 {
     indent(ind);
-    fprintf(stderr, "cell %d %d %d %d ", cp->cspan, cp->rspan, cp->col,
-	    cp->row);
+    fprintf(stderr, "cell %" PRIu16 " %" PRIu16 " %" PRIu16 " %" PRIu16 " ", cp->colspan,
+            cp->colspan, cp->rowspan, cp->col, cp->row);
     printData(&cp->data);
     fputs("\n", stderr);
     switch (cp->child.kind) {
@@ -1985,7 +1990,6 @@ int make_html_label(void *obj, textlabel_t * lp)
 {
     int rv;
     double wd2, ht2;
-    boxf box;
     graph_t *g;
     htmllabel_t *lbl;
     htmlenv_t env;
@@ -2042,18 +2046,18 @@ int make_html_label(void *obj, textlabel_t * lp)
 	rv |= size_html_tbl(g, lbl->u.tbl, NULL, &env);
 	wd2 = lbl->u.tbl->data.box.UR.x / 2;
 	ht2 = lbl->u.tbl->data.box.UR.y / 2;
-	box = (boxf){{-wd2, -ht2}, {wd2, ht2}};
-	pos_html_tbl(lbl->u.tbl, box, BOTTOM | RIGHT | TOP | LEFT);
-	lp->dimen.x = box.UR.x - box.LL.x;
-	lp->dimen.y = box.UR.y - box.LL.y;
+	boxf b = {{-wd2, -ht2}, {wd2, ht2}};
+	pos_html_tbl(lbl->u.tbl, b, BOTTOM | RIGHT | TOP | LEFT);
+	lp->dimen.x = b.UR.x - b.LL.x;
+	lp->dimen.y = b.UR.y - b.LL.y;
     } else {
 	rv |= size_html_txt(GD_gvc(g), lbl->u.txt, &env);
 	wd2 = lbl->u.txt->box.UR.x  / 2;
 	ht2 = lbl->u.txt->box.UR.y  / 2;
-	box = (boxf){{-wd2, -ht2}, {wd2, ht2}};
-	lbl->u.txt->box = box;
-	lp->dimen.x = box.UR.x - box.LL.x;
-	lp->dimen.y = box.UR.y - box.LL.y;
+	boxf b = {{-wd2, -ht2}, {wd2, ht2}};
+	lbl->u.txt->box = b;
+	lp->dimen.x = b.UR.x - b.LL.x;
+	lp->dimen.y = b.UR.y - b.LL.y;
     }
 
     lp->u.html = lbl;

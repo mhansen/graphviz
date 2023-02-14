@@ -21,7 +21,9 @@
 #include <cgraph/tokenize.h>
 #include <cgraph/unused.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef HAVE_EXPAT
 #ifdef _WIN32
@@ -280,9 +282,9 @@ static int cellborderfn(htmltbl_t * p, char *v)
 {
     long u;
 
-    if (doInt(v, "CELLBORDER", 0, SCHAR_MAX, &u))
+    if (doInt(v, "CELLBORDER", 0, INT8_MAX, &u))
 	return 1;
-    p->cb = (signed char)u;
+    p->cellborder = (int8_t)u;
     return 0;
 }
 
@@ -292,7 +294,7 @@ static int columnsfn(htmltbl_t * p, char *v)
 	agerr(AGWARN, "Unknown value %s for COLUMNS - ignored\n", v);
 	return 1;
     }
-    p->flags |= HTML_VRULE;
+    p->vrule = true;
     return 0;
 }
 
@@ -302,7 +304,7 @@ static int rowsfn(htmltbl_t * p, char *v)
 	agerr(AGWARN, "Unknown value %s for ROWS - ignored\n", v);
 	return 1;
     }
-    p->flags |= HTML_HRULE;
+    p->hrule = true;
     return 0;
 }
 
@@ -400,13 +402,13 @@ static int rowspanfn(htmlcell_t * p, char *v)
 {
     long u;
 
-    if (doInt(v, "ROWSPAN", 0, USHRT_MAX, &u))
+    if (doInt(v, "ROWSPAN", 0, UINT16_MAX, &u))
 	return 1;
     if (u == 0) {
 	agerr(AGWARN, "ROWSPAN value cannot be 0 - ignored\n");
 	return 1;
     }
-    p->rspan = (unsigned short) u;
+    p->rowspan = (uint16_t)u;
     return 0;
 }
 
@@ -414,13 +416,13 @@ static int colspanfn(htmlcell_t * p, char *v)
 {
     long u;
 
-    if (doInt(v, "COLSPAN", 0, USHRT_MAX, &u))
+    if (doInt(v, "COLSPAN", 0, UINT16_MAX, &u))
 	return 1;
     if (u == 0) {
 	agerr(AGWARN, "COLSPAN value cannot be 0 - ignored\n");
 	return 1;
     }
-    p->cspan = (unsigned short) u;
+    p->colspan = (uint16_t)u;
     return 0;
 }
 
@@ -602,8 +604,8 @@ static htmlcell_t *mkCell(char **atts)
 {
     htmlcell_t *cell = NEW(htmlcell_t);
 
-    cell->cspan = 1;
-    cell->rspan = 1;
+    cell->colspan = 1;
+    cell->rowspan = 1;
     doAttrs(cell, cell_items, sizeof(cell_items) / ISIZE, atts, "<TD>");
 
     return cell;
@@ -613,8 +615,8 @@ static htmltbl_t *mkTbl(char **atts)
 {
     htmltbl_t *tbl = NEW(htmltbl_t);
 
-    tbl->rc = -1;		/* flag that table is a raw, parsed table */
-    tbl->cb = -1;		/* unset cell border attribute */
+    tbl->row_count = -1; // flag that table is a raw, parsed table
+    tbl->cellborder = -1; // unset cell border attribute
     doAttrs(tbl, tbl_items, sizeof(tbl_items) / ISIZE, atts, "<TABLE>");
 
     return tbl;

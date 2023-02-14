@@ -261,7 +261,7 @@ static pitem* addRow (void)
   htmltbl_t* tbl = HTMLstate.tblstack;
   pitem*     sp = NEW(pitem);
   sp->u.rp = dp;
-  if (tbl->flags & HTML_HRULE)
+  if (tbl->hrule)
     sp->ruled = 1;
   dtinsert (tbl->u.p.rows, sp);
   return sp;
@@ -278,7 +278,7 @@ static void setCell(htmlcell_t *cp, void *obj, char kind) {
   sp->u.cp = cp;
   dtinsert (row, sp);
   cp->child.kind = kind;
-  if (tbl->flags & HTML_VRULE)
+  if (tbl->vrule)
     cp->ruled = HTML_VRULE;
   
   if(kind == HTML_TEXT)
