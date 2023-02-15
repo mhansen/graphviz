@@ -108,7 +108,6 @@ static void country_graph_coloring_internal(int seed, SparseMatrix A, int **p){
   int *ia = A->ia, *ja = A->ja;
   int a = -1;
   double nrow;
-  double *v = NULL;
   double norm1[3];
   clock_t start, start2;
 
@@ -133,10 +132,7 @@ static void country_graph_coloring_internal(int seed, SparseMatrix A, int **p){
   L = SparseMatrix_from_coordinate_format(L);
 
   /* largest eigen vector */
-  {
-    double eig;
-    power_method(L, L->n, 1, seed, &v, &eig);
-  }
+  double *v = power_method(L, L->n, seed);
 
   vector_ordering(n, v, p);
   if (Verbose)

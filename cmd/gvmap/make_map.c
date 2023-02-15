@@ -244,8 +244,8 @@ static void plot_dot_labels(FILE *f, int n, int dim, double *x, char **labels, f
 
 }
 
-static void dot_polygon(agxbuf *sbuff, int np, float *xp, float *yp, double line_width,  
-                        int fill, const char *cstring){
+static void dot_polygon(agxbuf *sbuff, int np, double *xp, double *yp,
+                        double line_width, int fill, const char *cstring) {
 
   if (np > 0){
     if (fill >= 0){
@@ -268,7 +268,7 @@ static void dot_polygon(agxbuf *sbuff, int np, float *xp, float *yp, double line
 }
 
 static void dot_one_poly(agxbuf *sbuff, double line_width, int fill, int np,
-                         float *xp, float *yp, const char *cstring) {
+                         double *xp, double *yp, const char *cstring) {
   dot_polygon(sbuff, np, xp, yp, line_width, fill, cstring);
 }
 
@@ -278,7 +278,6 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               float *g, float *b, const char *opacity) {
   int i, j, *ia = polys->ia, *ja = polys->ja, *a = polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
   int np = 0;
-  float *xp, *yp;
   int fill = -1;
   char cstring[] = "#aaaaaaff";
   int use_line = (line_width >= 0);
@@ -291,8 +290,8 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
     }
   }
 
-  xp = gv_calloc(maxlen, sizeof(float));
-  yp = gv_calloc(maxlen, sizeof(float));
+  double *xp = gv_calloc(maxlen, sizeof(double));
+  double *yp = gv_calloc(maxlen, sizeof(double));
 
   if (Verbose) fprintf(stderr,"npolys = %d\n",npolys);
   first = abs(a[0]); ipoly = first + 1;
