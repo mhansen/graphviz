@@ -8,6 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <sparse/general.h>
@@ -29,10 +31,9 @@ int irand(int n){
 }
 
 int *random_permutation(int n){
-  int *p;
   int i, j, pp, len;
   if (n <= 0) return NULL;
-  p = MALLOC(sizeof(int)*n);
+  int *p = gv_calloc(n, sizeof(int));
   for (i = 0; i < n; i++) p[i] = i;
 
   len = n;
@@ -88,7 +89,7 @@ void vector_float_take(int n, float *v, int m, int *p, float **u){
   /* take m elements v[p[i]]],i=1,...,m and oput in u */
   int i;
 
-  if (!*u) *u = MALLOC(sizeof(float)*m);
+  if (!*u) *u = gv_calloc(m, sizeof(float));
 
   for (i = 0; i < m; i++) {
     assert(p[i] < n && p[i] >= 0);
@@ -101,9 +102,9 @@ static int comp_ascend(const void *s1, const void *s2){
   const double *ss1 = s1;
   const double *ss2 = s2;
 
-  if ((ss1)[0] > (ss2)[0]){
+  if (ss1[0] > ss2[0]){
     return 1;
-  } else if ((ss1)[0] < (ss2)[0]){
+  } else if (ss1[0] < ss2[0]){
     return -1;
   }
   return 0;
@@ -126,11 +127,10 @@ void vector_ordering(int n, double *v, int **p){
      results in p. If *p == NULL, p is assigned.
   */
 
-  double *u;
   int i;
 
-  if (!*p) *p = MALLOC(sizeof(int)*n);
-  u = MALLOC(sizeof(double)*2*n);
+  if (!*p) *p = gv_calloc(n, sizeof(int));
+  double *u = gv_calloc(2 * n, sizeof(double));
 
   for (i = 0; i < n; i++) {
     u[2*i+1] = i;
@@ -148,11 +148,8 @@ void vector_sort_int(int n, int *v){
 }
 
 double distance_cropped(double *x, int dim, int i, int j){
-  int k;
-  double dist = 0.;
-  for (k = 0; k < dim; k++) dist += (x[i*dim+k] - x[j*dim + k])*(x[i*dim+k] - x[j*dim + k]);
-  dist = sqrt(dist);
-  return MAX(dist, MINDIST);
+  double dist = distance(x, dim, i, j);
+  return fmax(dist, MINDIST);
 }
 
 double distance(double *x, int dim, int i, int j){
@@ -198,8 +195,8 @@ void scale_to_box(double xmin, double ymin, double xmax, double ymax, int n, int
 
   for (i = 0; i < n; i++){
     for (k = 0; k < dim; k++) {
-      min[k] = MIN(x[i*dim+k], min[k]);
-      max[k] = MAX(x[i*dim+k], max[k]);
+      min[k] = fmin(x[i*dim+k], min[k]);
+      max[k] = fmax(x[i*dim+k], max[k]);
     }
   }
 
@@ -207,7 +204,7 @@ void scale_to_box(double xmin, double ymin, double xmax, double ymax, int n, int
     ratio = (xmax-xmin)/(max[0] - min[0]);
   }
   if (max[1] - min[1] != 0) {
-    ratio = MIN(ratio, (ymax-ymin)/(max[1] - min[1]));
+    ratio = fmin(ratio, (ymax-ymin)/(max[1] - min[1]));
   }
   
   min0[0] = xmin;

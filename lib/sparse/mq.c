@@ -87,7 +87,7 @@ static double get_mq(SparseMatrix A, int *assignment, int *ncluster0, double *mq
   assert(A->n == n);
   if (A->type == MATRIX_TYPE_REAL) a = A->a;
 
-  counts = CALLOC(n, sizeof(int));
+  counts = gv_calloc(n, sizeof(int));
 
   for (i = 0; i < n; i++){
     assert(assignment[i] >= 0 && assignment[i] < n);
@@ -125,9 +125,8 @@ static double get_mq(SparseMatrix A, int *assignment, int *ncluster0, double *mq
   }
 
   /* calculate scaled out degree */
-  dout = MALLOC(sizeof(double)*n);
+  dout = gv_calloc(n, sizeof(double));
   for (i = 0; i < n; i++){
-    dout[i] = 0;
     for (j = ia[i]; j < ia[i+1]; j++){
       jj = ja[j];
       if (jj == i) continue;
@@ -162,7 +161,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_init(SparseMatrix A, in
 
   if (!A) return NULL;
   assert(A->m == n);
-  grid = MALLOC(sizeof(struct Multilevel_MQ_Clustering_struct));
+  grid = gv_alloc(sizeof(struct Multilevel_MQ_Clustering_struct));
   grid->level = level;
   grid->n = n;
   grid->A = A;
@@ -171,7 +170,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_init(SparseMatrix A, in
   grid->next = NULL;
   grid->prev = NULL;
   grid->delete_top_level_A = FALSE;
-  matching = grid->matching = MALLOC(sizeof(double)*(n));
+  matching = grid->matching = gv_calloc(n, sizeof(double));
   grid->deg_intra = NULL;
   grid->dout = NULL;
   grid->wgt = NULL;
@@ -181,10 +180,10 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_init(SparseMatrix A, in
     int ncluster;
     double *deg_intra, *wgt, *dout;
 
-    grid->deg_intra = MALLOC(sizeof(double)*(n));
+    grid->deg_intra = gv_calloc(n, sizeof(double));
     deg_intra = grid->deg_intra;
 
-    grid->wgt = MALLOC(sizeof(double)*n);
+    grid->wgt = gv_calloc(n, sizeof(double));
     wgt = grid->wgt;
 
     for (i = 0; i < n; i++){
@@ -544,7 +543,6 @@ static void hierachical_mq_clustering(SparseMatrix A, int maxcluster,
   Multilevel_MQ_Clustering grid, cgrid;
   int *matching, i;
   SparseMatrix P;
-  double *u;
   assert(A->m == A->n);
 
   *mq = 0.;
@@ -558,7 +556,7 @@ static void hierachical_mq_clustering(SparseMatrix A, int maxcluster,
   }
 
   /* project clustering up */
-  u =  MALLOC(sizeof(double)*cgrid->n);
+  double *u = gv_calloc(cgrid->n, sizeof(double));
   for (i = 0; i < cgrid->n; i++) u[i] = (double) (cgrid->matching)[i];
   *nclusters = cgrid->n;
   *mq = cgrid->mq;
@@ -575,7 +573,7 @@ static void hierachical_mq_clustering(SparseMatrix A, int maxcluster,
   if (*assignment){
     matching = *assignment; 
   } else {
-    matching = MALLOC(sizeof(int)*(grid->n));
+    matching = gv_calloc(grid->n, sizeof(int));
     *assignment = matching;
   }
   for (i = 0; i < grid->n; i++) (matching)[i] = (int) u[i];

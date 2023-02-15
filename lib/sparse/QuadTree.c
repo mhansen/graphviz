@@ -29,11 +29,10 @@ typedef struct node_data_struct *node_data;
 
 
 static node_data node_data_new(int dim, double weight, double *coord, int id){
-  node_data nd;
   int i;
-  nd = MALLOC(sizeof(struct node_data_struct));
+  node_data nd = gv_alloc(sizeof(struct node_data_struct));
   nd->node_weight = weight;
-  nd->coord = MALLOC(sizeof(double)*dim);
+  nd->coord = gv_calloc(dim, sizeof(double));
   nd->id = id;
   for (i = 0; i < dim; i++) nd->coord[i] = coord[i];
   nd->data = NULL;
@@ -48,17 +47,17 @@ static void node_data_delete(void *d){
 }
 
 static double node_data_get_weight(void *d){
-  node_data nd = (node_data) d;
+  node_data nd = d;
   return nd->node_weight;
 }
 
 static double* node_data_get_coord(void *d){
-  node_data nd = (node_data) d;
+  node_data nd = d;
   return nd->coord;
 }
 
 static int node_data_get_id(void *d){
-  node_data nd = (node_data) d;
+  node_data nd = d;
   return nd->id;
 }
 
@@ -68,10 +67,11 @@ static int node_data_get_id(void *d){
 static void check_or_realloc_arrays(int dim, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances){
   
   if (*nsuper >= *nsupermax) {
-    *nsupermax = *nsuper + 10;
-    *center = REALLOC(*center, sizeof(double)*(*nsupermax)*dim);
-    *supernode_wgts = REALLOC(*supernode_wgts, sizeof(double)*(*nsupermax));
-    *distances = REALLOC(*distances, sizeof(double)*(*nsupermax));
+    int new_nsupermax = *nsuper + 10;
+    *center = gv_recalloc(*center, dim * *nsupermax, dim * new_nsupermax, sizeof(double));
+    *supernode_wgts = gv_recalloc(*supernode_wgts, *nsupermax, new_nsupermax, sizeof(double));
+    *distances = gv_recalloc(*distances, *nsupermax, new_nsupermax, sizeof(double));
+    *nsupermax = new_nsupermax;
   }
 }
 
@@ -128,9 +128,9 @@ void QuadTree_get_supernodes(QuadTree qt, double bh, double *pt, int nodeid, int
   *nsuper = 0;
 
   *nsupermax = 10;
-  if (!*center) *center = MALLOC(sizeof(double)*(*nsupermax)*dim);
-  if (!*supernode_wgts) *supernode_wgts = MALLOC(sizeof(double)*(*nsupermax));
-  if (!*distances) *distances = MALLOC(sizeof(double)*(*nsupermax));
+  if (!*center) *center = gv_calloc(*nsupermax * dim, sizeof(double));
+  if (!*supernode_wgts) *supernode_wgts = gv_calloc(*nsupermax, sizeof(double));
+  if (!*distances) *distances = gv_calloc(*nsupermax, sizeof(double));
   QuadTree_get_supernodes_internal(qt, bh, pt, nodeid, nsuper, nsupermax, center, supernode_wgts, distances, counts);
 
 }
@@ -343,9 +343,9 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
   QuadTree qt = NULL;
   int i, k;
 
-  xmin = MALLOC(sizeof(double)*dim);
-  xmax = MALLOC(sizeof(double)*dim);
-  center = MALLOC(sizeof(double)*dim);
+  xmin = gv_calloc(dim, sizeof(double));
+  xmax = gv_calloc(dim, sizeof(double));
+  center = gv_calloc(dim, sizeof(double));
   if (!xmin || !xmax || !center) {
       free(xmin);
       free(xmax);
@@ -358,15 +358,15 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
 
   for (i = 1; i < n; i++){
     for (k = 0; k < dim; k++){
-      xmin[k] = MIN(xmin[k], coord[i*dim+k]);
-      xmax[k] = MAX(xmax[k], coord[i*dim+k]);
+      xmin[k] = fmin(xmin[k], coord[i*dim+k]);
+      xmax[k] = fmax(xmax[k], coord[i*dim+k]);
     }
   }
 
   width = xmax[0] - xmin[0];
   for (i = 0; i < dim; i++) {
     center[i] = (xmin[i] + xmax[i])*0.5;
-    width = MAX(width, xmax[i] - xmin[i]);
+    width = fmax(width, xmax[i] - xmin[i]);
   }
   width = fmax(width, 0.00001);/* if we only have one point, width = 0! */
   width *= 0.52;
@@ -384,12 +384,11 @@ QuadTree QuadTree_new_from_point_list(int dim, int n, int max_level, double *coo
 }
 
 QuadTree QuadTree_new(int dim, double *center, double width, int max_level){
-  QuadTree q;
   int i;
-  q = MALLOC(sizeof(struct QuadTree_struct));
+  QuadTree q = gv_alloc(sizeof(struct QuadTree_struct));
   q->dim = dim;
   q->n = 0;
-  q->center = MALLOC(sizeof(double)*dim);
+  q->center = gv_calloc(dim, sizeof(double));
   for (i = 0; i < dim; i++) q->center[i] = center[i];
   assert(width > 0);
   q->width = width;
@@ -480,7 +479,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     /* if this node is empty right now */
     q->n = 1;
     q->total_weight = weight;
-    q->average = MALLOC(sizeof(double)*dim);
+    q->average = gv_calloc(dim, sizeof(double));
     for (i = 0; i < q->dim; i++) q->average[i] = coord[i];
     nd = node_data_new(q->dim, weight, coord, id);
     assert(!(q->l));
@@ -488,16 +487,15 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
   } else if (level < max_level){
     /* otherwise open up into 2^dim quadtrees unless the level is too high */
     q->total_weight += weight;
-    for (i = 0; i < q->dim; i++) q->average[i] = ((q->average[i])*q->n + coord[i])/(q->n + 1);
+    for (i = 0; i < q->dim; i++) q->average[i] = (q->average[i] * q->n + coord[i]) / (q->n + 1);
     if (!q->qts){
-      q->qts = MALLOC(sizeof(QuadTree)*(1<<dim));
-      for (i = 0; i < 1<<dim; i++) q->qts[i] = NULL;
+      q->qts = gv_calloc(1 << dim, sizeof(QuadTree));
     }/* done adding new quadtree, now add points to them */
     
     /* insert the old node (if exist) and the current node into the appropriate child quadtree */
     ii = QuadTree_get_quadrant(dim, q->center, coord);
     assert(ii < 1<<dim && ii >= 0);
-    if (q->qts[ii] == NULL) q->qts[ii] = QuadTree_new_in_quadrant(q->dim, q->center, (q->width)/2, max_level, ii);
+    if (q->qts[ii] == NULL) q->qts[ii] = QuadTree_new_in_quadrant(q->dim, q->center, q->width / 2, max_level, ii);
     
     q->qts[ii] = QuadTree_add_internal(q->qts[ii], coord, weight, id, level + 1);
     assert(q->qts[ii]);
@@ -520,13 +518,13 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
       q->l = NULL;
     }
     
-    (q->n)++;
+    q->n++;
   } else {
     assert(!(q->qts));
     /* level is too high, append data in the linked list */
-    (q->n)++;
+    q->n++;
     q->total_weight += weight;
-    for (i = 0; i < q->dim; i++) q->average[i] = ((q->average[i])*q->n + coord[i])/(q->n + 1);
+    for (i = 0; i < q->dim; i++) q->average[i] = (q->average[i] * q->n + coord[i]) / (q->n + 1);
     nd = node_data_new(q->dim, weight, coord, id);
     assert(q->l);
     q->l = SingleLinkedList_prepend(q->l, nd);
