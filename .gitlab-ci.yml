@@ -1490,5 +1490,6 @@ lint_python:
   script:
     - git ls-files -z -- '**.py' | xargs -0 -- python3 -m pylint --rcfile=.pylintrc --disable=fixme
     - git ls-files -z -- '**.py' | xargs -0 -- python3 -m black --check
+    - git ls-files -z -- '**.py' | xargs -0 -- python3 -m isort --profile=black --check
   except:
     - tags
