@@ -1425,7 +1425,7 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 
 	agxbprint(&value_buffer, "%" PRIu16, cp->row);
 	t = agfindnode(rowg, agxbuse(&value_buffer));
-	agxbprint(&value_buffer, "%" PRIu16, cp->row + cp->rowspan);
+	agxbprint(&value_buffer, "%d", cp->row + cp->rowspan);
 	h = agfindnode(rowg, agxbuse(&value_buffer));
 	checkEdge (rowg, t, h, cp->data.box.UR.y);
     }
