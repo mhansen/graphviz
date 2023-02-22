@@ -9,14 +9,17 @@
  *************************************************************************/
 
 #include "config.h"
+#include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <common/render.h>
+#include <limits.h>
 #include <math.h>
 #include <pathplan/pathplan.h>
 #include <setjmp.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 static int nedges, nboxes; /* total no. of edges and boxes used in routing */
 
@@ -500,8 +503,12 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	    polypoints[i].y *= -1;
     }
 
-    for (bi = 0; bi < boxn; bi++)
-	boxes[bi].LL.x = INT_MAX, boxes[bi].UR.x = INT_MIN;
+    static const double INITIAL_LLX = INT_MAX;
+    static const double INITIAL_URX = INT_MIN;
+    for (bi = 0; bi < boxn; bi++) {
+	boxes[bi].LL.x = INITIAL_LLX;
+	boxes[bi].UR.x = INITIAL_URX;
+    }
     poly.ps = polypoints, poly.pn = pi;
     eps[0].x = pp->start.p.x, eps[0].y = pp->start.p.y;
     eps[1].x = pp->end.p.x, eps[1].y = pp->end.p.y;
@@ -556,10 +563,6 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	return NULL;  /* Bailout if no memory left */
     }
 
-    for (bi = 0; bi < boxn; bi++) {
-	boxes[bi].LL.x = INT_MAX;
-	boxes[bi].UR.x = INT_MIN;
-    }
     unbounded = true;
     for (splinepi = 0; splinepi < spl.pn; splinepi++) {
 	ps[splinepi] = spl.ps[splinepi];
@@ -576,7 +579,8 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	for (bi = 0; bi < boxn; bi++) {
 	/* these fp equality tests are used only to detect if the
 	 * values have been changed since initialization - ok */
-	    if (boxes[bi].LL.x == INT_MAX || boxes[bi].UR.x == INT_MIN) {
+	    if (memcmp(&boxes[bi].LL.x, &INITIAL_LLX, sizeof(boxes[bi].LL.x)) == 0 ||
+	        memcmp(&boxes[bi].UR.x, &INITIAL_URX, sizeof(boxes[bi].UR.x)) == 0) {
 		delta *= 2; /* try again with a finer interval */
 		if (delta > INT_MAX/boxn) /* in limitBoxes, boxn*delta must fit in an int, so give up */
 		    loopcnt = LOOP_TRIES;
@@ -622,18 +626,16 @@ pointf *routepolylines(path * pp, int *npoints)
     return _routesplines (pp, npoints, 1);
 }
 
-static int overlap(int i0, int i1, int j0, int j1)
-{
-    /* i'll bet there's an elegant way to do this */
-    if (i1 <= j0)
-	return 0;
-    if (i0 >= j1)
-	return 0;
-    if (j0 <= i0 && i0 <= j1)
-	return j1 - i0;
-    if (j0 <= i1 && i1 <= j1)
-	return i1 - j0;
-    return MIN(i1 - i0, j1 - j0);
+static double overlap(double i0, double i1, double j0, double j1) {
+  if (i1 < j0)
+    return 0;
+  if (i0 > j1)
+    return 0;
+  if (j0 < i0 && i0 < j1)
+    return j1 - i0;
+  if (j0 < i1 && i1 < j1)
+    return i1 - j0;
+  return fmin(i1 - i0, j1 - j0);
 }
 
 
@@ -650,7 +652,6 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 {
     boxf *ba, *bb;
     int bi, i, errs, l, r, d, u;
-    int xoverlap, yoverlap;
 
     /* remove degenerate boxes. */
     i = 0;
@@ -688,7 +689,7 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 	    printpath(thepath);
 	}
 	if (errs > 0) {
-	    int xy;
+	    double xy;
 
 	    if (l == 1)
 		xy = ba->UR.x, ba->UR.x = bb->LL.x, bb->LL.x = xy, l = 0;
@@ -714,9 +715,9 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 	    }
 	}
 	/* check for overlapping boxes */
-	xoverlap = overlap(ba->LL.x, ba->UR.x, bb->LL.x, bb->UR.x);
-	yoverlap = overlap(ba->LL.y, ba->UR.y, bb->LL.y, bb->UR.y);
-	if (xoverlap && yoverlap) {
+	double xoverlap = overlap(ba->LL.x, ba->UR.x, bb->LL.x, bb->UR.x);
+	double yoverlap = overlap(ba->LL.y, ba->UR.y, bb->LL.y, bb->UR.y);
+	if (xoverlap > 0 && yoverlap > 0) {
 	    if (xoverlap < yoverlap) {
 		if (ba->UR.x - ba->LL.x > bb->UR.x - bb->LL.x) {
 		    /* take space from ba */
@@ -1017,7 +1018,6 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 	//cycles of length 2 do their own thing, we want 3 or
 	vec* cycle = find_shortest_cycle_with_edge(cycles, edge, 3);
 	size_t cycle_len;
-	size_t cnt = 0;
     pointf sum = {0.0, 0.0};
 	size_t idx; //edge index
 	node_t *n;
@@ -1030,6 +1030,7 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 
 	cycle_len = vec_length(cycle);
 
+	double cnt = 0;
 	for (idx=0; idx < cycle_len; ++idx) {
 		n = vec_get(cycle, idx);
 		sum.x += ND_coord(n).x;
@@ -1078,25 +1079,25 @@ void
 makeStraightEdge(graph_t * g, edge_t * e, int et, splineInfo* sinfo)
 {
     edge_t *e0;
-    int i, e_cnt;
 
-    e_cnt = 1;
+    size_t e_cnt = 1;
     e0 = e;
     while (e0 != ED_to_virt(e0) && (e0 = ED_to_virt(e0))) e_cnt++;
 
-    edge_t **edges = N_NEW(e_cnt, edge_t*);
+    edge_t **edge_list = N_NEW(e_cnt, edge_t*);
     e0 = e;
-    for (i = 0; i < e_cnt; i++) {
-	edges[i] = e0;
+    for (size_t i = 0; i < e_cnt; i++) {
+	edge_list[i] = e0;
 	e0 = ED_to_virt(e0);
     }
-    makeStraightEdges (g, edges, e_cnt, et, sinfo);
-    free(edges);
+    assert(e_cnt <= INT_MAX);
+    makeStraightEdges(g, edge_list, (int)e_cnt, et, sinfo);
+    free(edge_list);
 }
 
 void 
-makeStraightEdges(graph_t * g, edge_t** edges, int e_cnt, int et, splineInfo* sinfo)
-{
+makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
+                  splineInfo *sinfo) {
     pointf dumb[4];
     node_t *n;
     node_t *head;
@@ -1104,18 +1105,17 @@ makeStraightEdges(graph_t * g, edge_t** edges, int e_cnt, int et, splineInfo* si
     pointf perp;
     pointf del;
     edge_t *e0;
-    edge_t *e;
     int i, j, xstep, dx;
     double l_perp;
     pointf dumber[4];
 
-    e = edges[0];
+    edge_t *e = edge_list[0];
     n = agtail(e);
     head = aghead(e);
     dumb[1] = dumb[0] = add_pointf(ND_coord(n), ED_tail_port(e).p);
     dumb[2] = dumb[3] = add_pointf(ND_coord(head), ED_head_port(e).p);
     if (e_cnt == 1 || Concentrate) {
-	if (curved) bend(dumb,get_cycle_centroid(g, edges[0]));
+	if (curved) bend(dumb,get_cycle_centroid(g, edge_list[0]));
 	clip_and_install(e, aghead(e), dumb, 4, sinfo);
 	addEdgeLabels(e);
 	return;
@@ -1144,7 +1144,7 @@ makeStraightEdges(graph_t * g, edge_t** edges, int e_cnt, int et, splineInfo* si
     }
 
     for (i = 0; i < e_cnt; i++) {
-	e0 = edges[i];
+	e0 = edge_list[i];
 	if (aghead(e0) == head) {
 	    for (j = 0; j < 4; j++) {
 		dumber[j] = dumb[j];

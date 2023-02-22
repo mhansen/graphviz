@@ -172,7 +172,7 @@ extern "C" {
     extern void free_html_data(htmldata_t *);
     extern void free_html_text(htmltxt_t *);
 
-    extern boxf *html_port(node_t * n, char *pname, int* sides);
+    extern boxf *html_port(node_t *n, char *pname, unsigned char *sides);
 
 #ifdef __cplusplus
 }
