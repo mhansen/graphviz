@@ -1488,6 +1488,6 @@ lint_pylint:
   needs:
     - docker_build_ubuntu-22.10
   script:
-    - python3 -m pylint --rcfile=.pylintrc --disable=fixme `find . -name '*.py' | xargs`
+    - git ls-files -z -- '**.py' | xargs -0 -- python3 -m pylint --rcfile=.pylintrc --disable=fixme
   except:
     - tags
