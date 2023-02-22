@@ -1419,7 +1419,7 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 	cp = *cells;
 	agxbprint(&value_buffer, "%" PRIu16, cp->col);
 	t = agfindnode(colg, agxbuse(&value_buffer));
-	agxbprint(&value_buffer, "%" PRIu16, cp->col + cp->colspan);
+	agxbprint(&value_buffer, "%d", cp->col + cp->colspan);
 	h = agfindnode(colg, agxbuse(&value_buffer));
 	checkEdge (colg, t, h, cp->data.box.UR.x);
 
