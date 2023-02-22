@@ -8,35 +8,37 @@ import subprocess
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../tests"))
-from gvtest import dot #pylint: disable=wrong-import-position
+from gvtest import dot  # pylint: disable=wrong-import-position
+
 
 def test_long_chain():
-  """
-  This test will fail on 32bit Windows machine if compiled with stack size < 16MB.
-  long_chain input file generated using code below:
-    from graphviz import Digraph
+    """
+    This test will fail on 32bit Windows machine if compiled with stack size < 16MB.
+    long_chain input file generated using code below:
+      from graphviz import Digraph
 
-    graph = Digraph(format="svg")
+      graph = Digraph(format="svg")
 
-    prev = "start"
-    graph.node("start", label="start")
+      prev = "start"
+      graph.node("start", label="start")
 
-    for i in range(33000):
-      new_node = str(i)
-      graph.node(new_node, label=new_node, shape="rectangle")
+      for i in range(33000):
+        new_node = str(i)
+        graph.node(new_node, label=new_node, shape="rectangle")
 
-      graph.edge(prev, new_node)
+        graph.edge(prev, new_node)
 
-      prev = new_node
+        prev = new_node
 
-    graph.render("long_chain")
-  """
-  subprocess.check_call([
-    "dot", "-Tsvg", "-o", os.devnull, Path(__file__).parent / "long_chain"
-  ])
+      graph.render("long_chain")
+    """
+    subprocess.check_call(
+        ["dot", "-Tsvg", "-o", os.devnull, Path(__file__).parent / "long_chain"]
+    )
+
 
 def test_wide_clusters():
-  """
-  A simple regression test for https://gitlab.com/graphviz/graphviz/-/issues/2080#
-  """
-  dot("svg", Path(__file__).parent / "wide_clusters")
+    """
+    A simple regression test for https://gitlab.com/graphviz/graphviz/-/issues/2080#
+    """
+    dot("svg", Path(__file__).parent / "wide_clusters")
