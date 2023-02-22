@@ -5,15 +5,16 @@ Graphviz miscellaneous test cases
 import itertools
 import json
 import os
-from pathlib import Path
 import platform
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
+
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import compile_c, dot, ROOT  # pylint: disable=wrong-import-position
+from gvtest import ROOT, compile_c, dot  # pylint: disable=wrong-import-position
 
 
 def test_json_node_order():

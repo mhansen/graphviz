@@ -3,9 +3,9 @@ Tests of large and/or expensive graphs.
 """
 
 import os
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../../tests"))
 from gvtest import dot  # pylint: disable=wrong-import-position

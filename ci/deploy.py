@@ -11,12 +11,12 @@ import hashlib
 import json
 import logging
 import os
-from pathlib import Path
 import re
 import shutil
 import stat
 import subprocess
 import sys
+from pathlib import Path
 from typing import List, Optional
 
 # logging output stream, setup in main()

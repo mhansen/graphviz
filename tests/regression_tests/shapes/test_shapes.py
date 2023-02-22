@@ -3,9 +3,10 @@ Tests that built-in shape types are emitted correctly.
 """
 
 import os.path
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
+
 import pytest
 
 # Import helper function to compare graphs from tests/regressions_tests

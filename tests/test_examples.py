@@ -1,10 +1,11 @@
 """tests that examples provided with Graphviz compile correctly"""
 
 import os
-from pathlib import Path
 import platform
 import subprocess
 import sys
+from pathlib import Path
+
 import pytest
 
 sys.path.append(os.path.dirname(__file__))

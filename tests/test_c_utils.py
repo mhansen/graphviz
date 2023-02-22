@@ -1,9 +1,10 @@
 """test ../lib/cgraph/ internal generic utility code"""
 
 import os
-from pathlib import Path
 import platform
 import sys
+from pathlib import Path
+
 import pytest
 
 sys.path.append(os.path.dirname(__file__))

@@ -11,6 +11,7 @@ import platform
 import re
 import subprocess
 import sys
+
 import pytest
 
 sys.path.append(os.path.dirname(__file__))

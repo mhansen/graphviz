@@ -1,9 +1,9 @@
 """test ../lib/vmalloc"""
 
 import os
-from pathlib import Path
 import platform
 import sys
+from pathlib import Path
 
 sys.path.append(os.path.dirname(__file__))
 from gvtest import run_c  # pylint: disable=wrong-import-position

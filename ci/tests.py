@@ -5,11 +5,12 @@ test cases that are only relevant to run in CI
 """
 
 import os
-from pathlib import Path
 import platform
 import subprocess
 import sys
+from pathlib import Path
 from typing import Dict
+
 import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../tests"))

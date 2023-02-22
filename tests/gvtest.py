@@ -1,7 +1,6 @@
 """common Graphviz test functionality"""
 
 import os
-from pathlib import Path
 import platform
 import re
 import shlex
@@ -10,6 +9,7 @@ import subprocess
 import sys
 import sysconfig
 import tempfile
+from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 ROOT = Path(__file__).resolve().parent.parent

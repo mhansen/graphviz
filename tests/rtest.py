@@ -7,16 +7,16 @@ TODO:
  Report differences with shared version and with new output.
 """
 
+import argparse
+import atexit
 import filecmp
 import os
+import platform
 import re
 import shutil
 import subprocess
 import sys
 from typing import TextIO
-import platform
-import argparse
-import atexit
 
 TESTFILE = os.path.join(os.path.dirname(__file__), "tests.txt")
 # Test specifications

@@ -3,11 +3,13 @@ Tests of Graphviz output against expected reference output.
 """
 
 import difflib
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
+
 import pytest
+
 
 # pylint: disable=line-too-long
 @pytest.mark.xfail

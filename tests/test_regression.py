@@ -8,7 +8,6 @@ of these indicates that a past bug has been reintroduced.
 import io
 import json
 import os
-from pathlib import Path
 import platform
 import re
 import shutil
@@ -17,15 +16,17 @@ import stat
 import subprocess
 import sys
 import tempfile
-from typing import List
 import xml.etree.ElementTree as ET
+from pathlib import Path
+from typing import List
+
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
 from gvtest import (  # pylint: disable=wrong-import-position
+    ROOT,
     dot,
     gvpr,
-    ROOT,
     remove_xtype_warnings,
     run_c,
     which,

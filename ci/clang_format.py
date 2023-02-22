@@ -9,9 +9,9 @@ otherwise be some steps described in awkward YAML in
 """
 
 import difflib
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 # TODO: files that are not yet compliant
 EXCLUDE = (

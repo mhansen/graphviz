@@ -23,10 +23,10 @@ Entry version   Entry collection          Output
 
 import argparse
 import os
-from pathlib import Path
 import re
 import subprocess
 import sys
+from pathlib import Path
 from typing import Tuple
 
 CHANGELOG = Path(__file__).parent / "CHANGELOG.md"
