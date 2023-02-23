@@ -5,6 +5,7 @@ set -o pipefail
 set -u
 set -x
 
+brew tap --repair
 brew update
 brew install autogen || brew upgrade autogen
 brew install automake || brew upgrade automake

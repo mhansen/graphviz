@@ -5,6 +5,7 @@ set -o pipefail
 set -u
 set -x
 
+brew tap --repair
 brew update
 brew install pango || brew upgrade pango
 brew install qt5 || brew upgrade qt5
