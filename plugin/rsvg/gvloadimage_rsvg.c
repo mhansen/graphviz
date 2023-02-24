@@ -70,8 +70,6 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 #if !GLIB_CHECK_VERSION (2, 36, 0)
 		g_type_init();
 #endif
-#else
-		rsvg_init();
 #endif
 
       		rsvgh = rsvg_handle_new();
