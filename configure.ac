@@ -1745,10 +1745,6 @@ else
     use_gdk="Yes"
     AC_SUBST([GDK_CFLAGS])
     AC_SUBST([GDK_LIBS])
-    save_LIBS=$LIBS
-    LIBS="$LIBS $GDK_LIBS"
-    AC_CHECK_FUNCS([g_type_init])
-    LIBS=$save_LIBS
   ],[
     use_gdk="No (gdk library not available)"
   ])
