@@ -88,11 +88,7 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 		fileBuf = calloc(fileSize + 1, sizeof(guchar));
 
 		if (fileBuf == NULL) {
-#if HAVE_G_OBJECT_UNREF
 			g_object_unref(rsvgh);
-#else
-			rsvg_handle_free(rsvgh);
-#endif
 			return NULL;
 		}
 	
@@ -100,22 +96,14 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 
 		if (fread(fileBuf, 1, fileSize, us->f) < fileSize) {
 			free(fileBuf);
-#if HAVE_G_OBJECT_UNREF
 			g_object_unref(rsvgh);
-#else
-			rsvg_handle_free(rsvgh);
-#endif
 			return NULL;
 		}
 
 		if (!rsvg_handle_write(rsvgh, fileBuf, (gsize)fileSize, &err)) {
 			fprintf(stderr, "rsvg_handle_write returned an error: %s\n", err->message);
 			free(fileBuf);
-#if HAVE_G_OBJECT_UNREF
 			g_object_unref(rsvgh);
-#else
-			rsvg_handle_free(rsvgh);
-#endif
 			return NULL;
 		} 
 
