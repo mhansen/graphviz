@@ -754,6 +754,9 @@ setClustNodes(graph_t* root)
 	ND_pos(n)[1] = ctr.y;
 	ND_width(n) = w;
 	ND_height(n) = h;
+	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+	ND_outline_width(n) = w + penwidth;
+	ND_outline_height(n) = h + penwidth;
 	/* ND_xsize(n) = POINTS(w); */
 	ND_lw(n) = ND_rw(n) = w2;
 	ND_ht(n) = h_pts;
@@ -767,6 +770,16 @@ setClustNodes(graph_t* root)
 	vertices[2].y = -h2;
 	vertices[3].x = ND_rw(n);
 	vertices[3].y = -h2;
+	// allocate extra vertices representing the outline, i.e., the outermost
+	// periphery with penwidth taken into account
+	vertices[4].x = ND_rw(n) + penwidth / 2;
+	vertices[4].y = h2 + penwidth / 2;
+	vertices[5].x = -ND_lw(n) - penwidth / 2;
+	vertices[5].y = h2 + penwidth / 2;
+	vertices[6].x = -ND_lw(n) - penwidth / 2;
+	vertices[6].y = -h2 - penwidth / 2;
+	vertices[7].x = ND_rw(n) + penwidth / 2;
+	vertices[7].y = -h2 - penwidth / 2;
     }
 }
 
