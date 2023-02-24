@@ -63,15 +63,6 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 	    return NULL;
         switch (us->type) {
             case FT_SVG:
-
-
-#if HAVE_G_TYPE_INIT
-/* g_type_init() was deprecated in glib 2.36.0 */
-#if !GLIB_CHECK_VERSION (2, 36, 0)
-		g_type_init();
-#endif
-#endif
-
       		rsvgh = rsvg_handle_new();
 		
 		if (rsvgh == NULL) {
