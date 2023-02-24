@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   in Graphviz 4.0.0.
 - **Breaking**: The definition of the `elist_fastapp` macro has been removed.
 - Versions of Librsvg prior to 2.32.0 are no longer supported.
+- Versions of GDK prior to 2.0.0 are no longer supported.
 
 ## [7.1.0] – 2023-01-21
 
