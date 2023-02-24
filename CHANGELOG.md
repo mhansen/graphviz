@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Windows when called via an absolute or relative path. #2344
 - Using C pre-processor line directives (`^\s*#(line )?\d+`) claiming a line
   number greater than `INT_MAX` no longer causes an integer overflow. #1318
-- fdp cluster->cluster edges were correct but now drawn incorrectly. This was a
+- fdp cluster→cluster edges were correct but now drawn incorrectly. This was a
   regression in Graphviz 7.0.0. #2345
 - Failure of arrowhead and arrowtail to respect penwidth #372 \
   Fixed also for the `cylinder`
