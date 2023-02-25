@@ -825,7 +825,7 @@ void graph_init(graph_t * g, bool use_rankdir)
 void graph_cleanup(graph_t *g)
 {
     if (GD_drawing(g) && GD_drawing(g)->xdots)
-	freeXDot ((xdot*)GD_drawing(g)->xdots);
+	freeXDot(GD_drawing(g)->xdots);
     if (GD_drawing(g))
 	free (GD_drawing(g)->id);
     free(GD_drawing(g));

@@ -1639,7 +1639,7 @@ static void emit_background(GVJ_t * job, graph_t *g)
 	}
     }
 
-    if ((xd = (xdot*)GD_drawing(g)->xdots))
+    if ((xd = GD_drawing(g)->xdots))
 	emit_xdot (job, xd);
 }
 
@@ -2937,7 +2937,7 @@ boxf xdotBB (Agraph_t* g)
     pointf pts[2];
     boxf bb0;
     boxf bb = GD_bb(g);
-    xdot* xd = (xdot*)GD_drawing(g)->xdots;
+    xdot* xd = GD_drawing(g)->xdots;
     textfont_t tf, null_tf = {NULL,NULL,NULL,0.0,0,0};
     int fontflags = 0;
 
