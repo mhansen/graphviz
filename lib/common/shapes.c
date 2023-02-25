@@ -2206,26 +2206,51 @@ static void poly_init(node_t * n)
 	}
 
 	if (outp > 1) {
-	    pointf Q = vertices[(sides - 1)];
 	    pointf R = vertices[0];
+	    pointf Q;
+	    for (j = 1; j < sides; j++) {
+		Q = vertices[(i - j) % sides];
+		if (Q.x != R.x || Q.y != R.y) {
+		    break;
+		}
+	    }
+	    assert(R.x != Q.x || R.y != Q.y);
 	    beta = atan2(R.y - Q.y, R.x - Q.x);
+	    pointf Qprev = Q;
 	    for (i = 0; i < sides; i++) {
 
 		/*for each vertex find the bisector */
-		Q = R;
-		R = vertices[(i + 1) % sides];
-		alpha = beta;
-		beta = atan2(R.y - Q.y, R.x - Q.x);
-		gamma = (alpha + M_PI - beta) / 2.;
+		Q = vertices[i % sides];
+		if (Q.x == Qprev.x && Q.y == Qprev.y) {
+		    // The vertex points for the side ending at Q are equal,
+		    // i.e. this side is actually a point and its angle is
+		    // undefined. Therefore we keep the same offset for the end
+		    // point as already calculated for the start point. This may
+		    // occur for shapes which are represented as polygons during
+		    // layout, but are drawn using bezier curves during
+		    // rendering, e.g. for the `cylinder` shape.
+		} else {
+		    for (j = 1; j < sides; j++) {
+			R = vertices[(i + j) % sides];
+			if (R.x != Q.x || R.y != Q.y) {
+			    break;
+			}
+		    }
+		    assert(R.x != Q.x || R.y != Q.y);
+		    alpha = beta;
+		    beta = atan2(R.y - Q.y, R.x - Q.x);
+		    gamma = (alpha + M_PI - beta) / 2.;
 
-		/*find distance along bisector to */
-		/*intersection of next periphery */
-		temp = GAP / sin(gamma);
+		    /*find distance along bisector to */
+		    /*intersection of next periphery */
+		    temp = GAP / sin(gamma);
 
-		/*convert this distance to x and y */
-		sincos((alpha - gamma), &sinx, &cosx);
-		sinx *= temp;
-		cosx *= temp;
+		    /*convert this distance to x and y */
+		    sincos((alpha - gamma), &sinx, &cosx);
+		    sinx *= temp;
+		    cosx *= temp;
+		}
+		Qprev = Q;
 
 		/*save the vertices of all the */
 		/*peripheries at this base vertex */
