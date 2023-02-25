@@ -2123,7 +2123,6 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
     bezier bz0, bz_l, bz_r;
     int i, rv;
     colorsegs_t segs;
-    colorseg_t* s;
     char* endcolor = NULL;
     double left;
     int first;  /* first segment with t > 0 */
@@ -2144,7 +2143,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 	left = 1;
 	bz = ED_spl(e)->list[i];
 	first = 1;
-	for (s = segs.segs; s->color; s++) {
+	for (colorseg_t *s = segs.segs; s->color; s++) {
 	    if (AEQ0(s->t)) continue;
     	    gvrender_set_pencolor(job, s->color);
 	    left -= s->t;
