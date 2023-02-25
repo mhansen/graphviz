@@ -1118,7 +1118,7 @@ static int *parse_layerselect(GVC_t *gvc, char *p) {
  * Split input string into tokens, with separators specified by
  * the layersep attribute. Store the values in the gvc->layerIDs array,
  * starting at index 1, and return the count.
- * Free previously stored list. Note that there is no mechanism
+ * Note that there is no mechanism
  * to free the memory before exit.
  */
 static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
