@@ -568,7 +568,6 @@ int
 wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 {
     colorsegs_t segs;
-    colorseg_t* s;
     int rv;
     double save_penwidth = job->obj->penwidth;
     pointf ctr, semi;
@@ -585,7 +584,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	gvrender_set_penwidth(job, THIN_LINE);
 	
     angle0 = 0;
-    for (s = segs.segs; s->color; s++) {
+    for (colorseg_t *s = segs.segs; s->color; s++) {
 	if (!(s->t > 0)) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
 
