@@ -618,7 +618,6 @@ int
 stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
 {
     colorsegs_t segs;
-    colorseg_t* s;
     int rv;
     double xdelta;
     pointf pts[4];
@@ -644,7 +643,7 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, THIN_LINE);
-    for (s = segs.segs; s->color; s++) {
+    for (colorseg_t *s = segs.segs; s->color; s++) {
 	if (!(s->t > 0)) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
 	/* gvrender_polygon(job, pts, 4, FILL | NO_POLY); */
