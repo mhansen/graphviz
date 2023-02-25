@@ -1770,7 +1770,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj;
     int flags = job->flags;
-    int sides, peripheries, rect = 0, shape;
+    int sides, peripheries, shape;
     size_t nump = 0;
     polygon_t *poly = NULL;
     pointf *vertices, *p = NULL;
@@ -1799,12 +1799,13 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
         /* checking if filled style has been set for node */
         bool filled = isFilled(n);
 
+        bool is_rect = false;
         if (shape == SH_POLY || shape == SH_POINT) {
             poly = ND_shape_info(n);
 
             /* checking if polygon is regular rectangle */
             if (isRect(poly) && (poly->peripheries || filled))
-                rect = 1;
+                is_rect = true;
         }
 
         /* When node has polygon shape and requested output supports polygons
@@ -1812,7 +1813,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
          * circle, ellipse, polygon with n side, or point.
          * For regular rectangular shape we have use node's bounding box to map clickable region
          */
-        if (poly && !rect && (flags & GVRENDER_DOES_MAP_POLYGON)) {
+        if (poly && !is_rect && (flags & GVRENDER_DOES_MAP_POLYGON)) {
 
             if (poly->sides < 3)
                 sides = 1;
