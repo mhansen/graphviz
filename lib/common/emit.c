@@ -2938,7 +2938,7 @@ boxf xdotBB (Agraph_t* g)
     boxf bb0;
     boxf bb = GD_bb(g);
     xdot* xd = GD_drawing(g)->xdots;
-    textfont_t tf, null_tf = {NULL,NULL,NULL,0.0,0,0};
+    textfont_t tf, null_tf = {0};
     int fontflags = 0;
 
     if (!xd) return bb;
