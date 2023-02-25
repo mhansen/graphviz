@@ -1770,7 +1770,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj;
     int flags = job->flags;
-    int sides, peripheries, shape;
+    int sides, shape;
     size_t nump = 0;
     polygon_t *poly = NULL;
     pointf *vertices, *p = NULL;
@@ -1820,10 +1820,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
             else
                 sides = poly->sides;
 
-            if (poly->peripheries < 2)
-                peripheries = 1;
-            else
-                peripheries = poly->peripheries;
+            int peripheries = poly->peripheries < 2 ? 1 : poly->peripheries;
 
             vertices = poly->vertices;
 
