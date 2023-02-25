@@ -4056,7 +4056,9 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
             break;
         }
 
-	/* if we already have an active job list and the device doesn't support mutiple output files, or we are about to write to a different output device */
+	// if we already have an active job list and the device doesn't support
+	// multiple output files, or we are about to write to a different output
+	// device
         firstjob = gvc->active_jobs;
         if (firstjob) {
 	    if (! (firstjob->flags & GVDEVICE_DOES_PAGES)
