@@ -1678,7 +1678,7 @@ static void setup_page(GVJ_t * job)
     }
 
     /* CAUTION - job->translation was difficult to get right. */
-    /* Test with and without assymmetric margins, e.g: -Gmargin="1,0" */
+    // Test with and without asymmetric margins, e.g: -Gmargin="1,0"
     if (job->rotation) {
 	job->translation.y = - job->clip.UR.y - job->canvasBox.LL.y / job->zoom;
         if ((job->flags & GVRENDER_Y_GOES_DOWN) || Y_invert)
