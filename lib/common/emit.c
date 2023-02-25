@@ -2935,7 +2935,6 @@ boxf xdotBB (Agraph_t* g)
     double fontsize = 0.0;
     char* fontname = NULL;
     pointf pts[2];
-    /* pointf sz; */
     boxf bb0;
     boxf bb = GD_bb(g);
     xdot* xd = (xdot*)GD_drawing(g)->xdots;
