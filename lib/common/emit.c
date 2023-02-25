@@ -421,7 +421,6 @@ freeSegs (colorsegs_t* segs)
 {
     free (segs->base);
     free (segs->segs);
-    free (segs);
 }
 
 /* getSegLen:
@@ -470,10 +469,8 @@ static double getSegLen (char* s)
  * Otherwise, psegs is left unchanged and the allocated memory is
  * freed before returning.
  */
-static int
-parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
-{
-    colorsegs_t* segs = NEW(colorsegs_t);
+static int parseSegs(char *clrs, int nseg, colorsegs_t *psegs) {
+    colorsegs_t segs = {0};
     colorseg_t* s;
     char* colors = gv_strdup(clrs);
     char* color;
@@ -491,8 +488,8 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 	}
     }
 
-    segs->base = colors;
-    segs->segs = s = N_NEW(nseg+1,colorseg_t);
+    segs.base = colors;
+    segs.segs = s = N_NEW(nseg+1,colorseg_t);
     for (color = strtok(colors, ":"); color; color = strtok(0, ":")) {
 	if ((v = getSegLen (color)) >= 0) {
 	    double del = v - left;
@@ -517,7 +514,7 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 		rval = 2;
 	    }
 	    else rval = 1;
-	    freeSegs (segs);
+	    freeSegs(&segs);
 	    return rval;
 	}
 	if (AEQ0(left)) {
@@ -549,7 +546,7 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 	if (s[i].t > 0) break;
     }
     s[i+1].color = NULL;
-    segs->numc = i+1;
+    segs.numc = i+1;
 
     *psegs = segs;
     return rval;
@@ -570,7 +567,7 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 int 
 wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 {
-    colorsegs_t* segs;
+    colorsegs_t segs;
     colorseg_t* s;
     int rv;
     double save_penwidth = job->obj->penwidth;
@@ -588,7 +585,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	gvrender_set_penwidth(job, THIN_LINE);
 	
     angle0 = 0;
-    for (s = segs->segs; s->color; s++) {
+    for (s = segs.segs; s->color; s++) {
 	if (s->t == 0) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
 
@@ -604,7 +601,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, save_penwidth);
-    freeSegs (segs);
+    freeSegs(&segs);
     return rv;
 }
 
@@ -621,7 +618,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 int
 stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
 {
-    colorsegs_t* segs;
+    colorsegs_t segs;
     colorseg_t* s;
     int rv;
     double xdelta;
@@ -648,7 +645,7 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, THIN_LINE);
-    for (s = segs->segs; s->color; s++) {
+    for (s = segs.segs; s->color; s++) {
 	if (s->t == 0) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
 	/* gvrender_polygon(job, pts, 4, FILL | NO_POLY); */
@@ -661,7 +658,7 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     }
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, save_penwidth);
-    freeSegs (segs);
+    freeSegs(&segs);
     return rv;
 }
 
@@ -2127,7 +2124,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
     bezier bz;
     bezier bz0, bz_l, bz_r;
     int i, rv;
-    colorsegs_t* segs;
+    colorsegs_t segs;
     colorseg_t* s;
     char* endcolor = NULL;
     double left;
@@ -2149,7 +2146,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 	left = 1;
 	bz = ED_spl(e)->list[i];
 	first = 1;
-	for (s = segs->segs; s->color; s++) {
+	for (s = segs.segs; s->color; s++) {
 	    if (AEQ0(s->t)) continue;
     	    gvrender_set_pencolor(job, s->color);
 	    left -= s->t;
@@ -2183,8 +2180,8 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
                  * Use local copy of penwidth to work around reset.
                  */
 	if (bz.sflag) {
-    	    gvrender_set_pencolor(job, segs->segs->color);
-    	    gvrender_set_fillcolor(job, segs->segs->color);
+    	    gvrender_set_pencolor(job, segs.segs->color);
+    	    gvrender_set_fillcolor(job, segs.segs->color);
 	    arrow_gen(job, EMIT_TDRAW, bz.sp, bz.list[0], arrowsize, penwidth, bz.sflag);
 	}
 	if (bz.eflag) {
@@ -2195,7 +2192,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 	if (ED_spl(e)->size > 1 && (bz.sflag || bz.eflag) && styles)
 	    gvrender_set_style(job, styles);
     }
-    freeSegs (segs);
+    freeSegs(&segs);
     return 0;
 }
 
@@ -4128,36 +4125,36 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
  */
 bool findStopColor (char* colorlist, char* clrs[2], float* frac)
 {
-    colorsegs_t* segs = NULL;
+    colorsegs_t segs = {0};
     int rv;
 
     rv = parseSegs (colorlist, 0, &segs);
-    if (rv || segs->numc < 2 || segs->segs[0].color == NULL) {
+    if (rv || segs.numc < 2 || segs.segs[0].color == NULL) {
 	clrs[0] = NULL;
-	if (segs) freeSegs (segs);
+	freeSegs(&segs);
 	return false;
     }
 
-    if (segs->numc > 2)
+    if (segs.numc > 2)
 	agerr (AGWARN, "More than 2 colors specified for a gradient - ignoring remaining\n");
 
     clrs[0] = N_GNEW (strlen(colorlist)+1,char); 
-    strcpy (clrs[0], segs->segs[0].color);
-    if (segs->segs[1].color) {
+    strcpy(clrs[0], segs.segs[0].color);
+    if (segs.segs[1].color) {
 	clrs[1] = clrs[0] + (strlen(clrs[0])+1);
-	strcpy (clrs[1], segs->segs[1].color);
+	strcpy(clrs[1], segs.segs[1].color);
     }
     else
 	clrs[1] = NULL;
 
-    if (segs->segs[0].hasFraction)
-	*frac = segs->segs[0].t;
-    else if (segs->segs[1].hasFraction)
-	*frac = 1 - segs->segs[1].t;
+    if (segs.segs[0].hasFraction)
+	*frac = segs.segs[0].t;
+    else if (segs.segs[1].hasFraction)
+	*frac = 1 - segs.segs[1].t;
     else 
 	*frac = 0;
 
-    freeSegs (segs);
+    freeSegs(&segs);
     return true;
 }
 
