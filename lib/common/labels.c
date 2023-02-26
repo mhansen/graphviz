@@ -318,7 +318,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
 	    isEdge = 1;
 	    g_str = agnameof(agroot(agraphof(agtail(((edge_t *)obj)))));
 	    t_str = agnameof(agtail(((edge_t *)obj)));
-	    pt = ED_tail_port((edge_t *)obj);
+	    pt = ED_tail_port(obj);
 	    if ((tp_str = pt.name))
 	        has_tp = *tp_str != '\0';
 	    h_str = agnameof(aghead(((edge_t *)obj)));
