@@ -327,16 +327,3 @@ merge_oneway(edge_t * e, edge_t * rep)
     ED_to_virt(e) = rep;
     basic_merge(e, rep);
 }
-
-#ifdef OBSOLETET
-static int 
-is_fast_node(graph_t * g, node_t * v)
-{
-    node_t *n;
-
-    for (n = GD_nlist(g); n; n = ND_next(n))
-	if (v == n)
-	    return TRUE;
-    return FALSE;
-}
-#endif
