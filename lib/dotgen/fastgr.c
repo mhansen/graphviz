@@ -121,15 +121,6 @@ void safe_other_edge(edge_t * e)
     safe_list_append(e, &(ND_other(agtail(e))));
 }
 
-#ifdef OBSOLETE
-void 
-delete_other_edge(edge_t * e)
-{
-    assert(e != NULL);
-    zapinlist(&(ND_other(agtail(e))), e);
-}
-#endif
-
 /* new_virtual_edge:
  * Create and return a new virtual edge e attached to orig.
  * ED_to_orig(e) = orig
