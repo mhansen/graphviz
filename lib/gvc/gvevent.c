@@ -223,7 +223,7 @@ static void gvevent_leave_obj(GVJ_t * job)
     if (obj) {
         switch (agobjkind(obj)) {
         case AGRAPH:
-	    GD_gui_state((graph_t*)obj) &= (unsigned char)~GUI_STATE_ACTIVE;
+	    GD_gui_state(obj) &= (unsigned char)~GUI_STATE_ACTIVE;
 	    break;
         case AGNODE:
 	    ND_gui_state(obj) &= (unsigned char)~GUI_STATE_ACTIVE;
