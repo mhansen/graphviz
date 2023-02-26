@@ -1482,12 +1482,14 @@ lint_html:
   except:
     - tags
 
-lint_pylint:
+lint_python:
   image: "$CI_REGISTRY_IMAGE/ubuntu-22.10:$CI_COMMIT_SHA"
   stage: test
   needs:
     - docker_build_ubuntu-22.10
   script:
-    - python3 -m pylint --rcfile=.pylintrc --disable=fixme `find . -name '*.py' | xargs`
+    - git ls-files -z -- '**.py' | xargs -0 -- python3 -m pylint --rcfile=.pylintrc --disable=fixme
+    - git ls-files -z -- '**.py' | xargs -0 -- python3 -m black --check
+    - git ls-files -z -- '**.py' | xargs -0 -- python3 -m isort --profile=black --check
   except:
     - tags

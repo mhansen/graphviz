@@ -7,10 +7,10 @@ author: Michael Hohn <mhhohn@lbl.gov>
  based on: modgraph.tcl by John Ellson <ellson@research.att.com>
 """
 
-import gv # pylint: disable=import-error
+import gv  # pylint: disable=import-error
 
 with open("/proc/modules", "rt", encoding="utf-8") as mod:
-  modules = mod.readlines()
+    modules = mod.readlines()
 
 G = gv.digraph("G")
 N = gv.protonode(G)
@@ -27,11 +27,11 @@ gv.setv(N, "fontname", "helvetica")
 gv.setv(E, "arrowsize", ".4")
 
 for rec in modules:
-  fields = rec.split(" ")
-  n = gv.node(G, fields[0])
-  for usedby in fields[3].split(","):
-    if usedby not in ("-", ""):
-      gv.edge(n, gv.node(G, usedby))
+    fields = rec.split(" ")
+    n = gv.node(G, fields[0])
+    for usedby in fields[3].split(","):
+        if usedby not in ("-", ""):
+            gv.edge(n, gv.node(G, usedby))
 
 gv.layout(G, "dot")
 gv.render(G, "xlib")

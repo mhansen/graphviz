@@ -4,57 +4,93 @@
 
 import argparse
 import os
-from pathlib import Path
 import shlex
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 from typing import List
 
-def run(args: List[str], cwd: Path): #pylint: disable=C0116
-  print(f"+ {' '.join(shlex.quote(str(x)) for x in args)}")
-  subprocess.check_call(args, stderr=subprocess.STDOUT, cwd=cwd)
 
-def main(args: List[str]) -> int: #pylint: disable=C0116
+def run(args: List[str], cwd: Path):  # pylint: disable=C0116
+    print(f"+ {' '.join(shlex.quote(str(x)) for x in args)}")
+    subprocess.check_call(args, stderr=subprocess.STDOUT, cwd=cwd)
 
-  parser = argparse.ArgumentParser(description="Graphviz CI script for "
-                                   "compilation on Windows")
-  parser.add_argument("--build-system", choices=("cmake", "msbuild"),
-                      required=True, help="build system to run")
-  parser.add_argument("--configuration", choices=("Debug", "Release"),
-                      required=True, help="build configuration to select")
-  parser.add_argument("--platform", choices=("Win32", "x64"),
-                      required=True, help="target platform")
-  options = parser.parse_args(args[1:])
 
-  # find the repository root directory
-  root = Path(__file__).resolve().parent.parent
+def main(args: List[str]) -> int:  # pylint: disable=C0116
 
-  if options.build_system == "cmake":
-    build = root / "build"
-    if build.exists():
-      shutil.rmtree(build)
-    os.makedirs(build)
-    run(["cmake", "--version"], build)
-    run(["cmake", "--log-level=VERBOSE", "-G", "Visual Studio 16 2019", "-A",
-         options.platform, "-Dwith_cxx_api=ON", "-Dwith_gvedit=OFF",
-         "--warn-uninitialized", "-Werror=dev", ".."],
-        build)
-    run(["cmake", "--build", ".", "--config", options.configuration], build)
-    run(["cpack", "-C", options.configuration], build)
+    parser = argparse.ArgumentParser(
+        description="Graphviz CI script for " "compilation on Windows"
+    )
+    parser.add_argument(
+        "--build-system",
+        choices=("cmake", "msbuild"),
+        required=True,
+        help="build system to run",
+    )
+    parser.add_argument(
+        "--configuration",
+        choices=("Debug", "Release"),
+        required=True,
+        help="build configuration to select",
+    )
+    parser.add_argument(
+        "--platform", choices=("Win32", "x64"), required=True, help="target platform"
+    )
+    options = parser.parse_args(args[1:])
 
-  else:
-    run(["msbuild.exe", f"-p:Configuration={options.configuration}",
-         f"-p:Platform={options.platform}", "graphviz.sln"], root)
-    if options.configuration == "Release":
-      for filename in os.listdir(root / "Release" / "Graphviz" / "bin"):
-        src = root / "Release" / "Graphviz" / "bin" / filename
-        if src.suffix in (".lastcodeanalysissucceeded", ".iobj", ".ipdb",
-                          ".ilk"):
-          print(f"deleting {src}")
-          src.unlink()
+    # find the repository root directory
+    root = Path(__file__).resolve().parent.parent
 
-  return 0
+    if options.build_system == "cmake":
+        build = root / "build"
+        if build.exists():
+            shutil.rmtree(build)
+        os.makedirs(build)
+        run(["cmake", "--version"], build)
+        run(
+            [
+                "cmake",
+                "--log-level=VERBOSE",
+                "-G",
+                "Visual Studio 16 2019",
+                "-A",
+                options.platform,
+                "-Dwith_cxx_api=ON",
+                "-Dwith_gvedit=OFF",
+                "--warn-uninitialized",
+                "-Werror=dev",
+                "..",
+            ],
+            build,
+        )
+        run(["cmake", "--build", ".", "--config", options.configuration], build)
+        run(["cpack", "-C", options.configuration], build)
+
+    else:
+        run(
+            [
+                "msbuild.exe",
+                f"-p:Configuration={options.configuration}",
+                f"-p:Platform={options.platform}",
+                "graphviz.sln",
+            ],
+            root,
+        )
+        if options.configuration == "Release":
+            for filename in os.listdir(root / "Release" / "Graphviz" / "bin"):
+                src = root / "Release" / "Graphviz" / "bin" / filename
+                if src.suffix in (
+                    ".lastcodeanalysissucceeded",
+                    ".iobj",
+                    ".ipdb",
+                    ".ilk",
+                ):
+                    print(f"deleting {src}")
+                    src.unlink()
+
+    return 0
+
 
 if __name__ == "__main__":
-  sys.exit(main(sys.argv))
+    sys.exit(main(sys.argv))
