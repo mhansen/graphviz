@@ -55,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   have been removed.
 - **Breaking**: The `Agnodeinfo_t.outleaf` field and its `ND_outleaf` and
   `GD_outleaf` accessors have been removed.
+- **Breaking**: The `Agraphinfo_t.has_sourcerank` field and its
+  `GD_has_sourcerank` accessor has been removed.
 
 ## [7.1.0] – 2023-01-21
 
