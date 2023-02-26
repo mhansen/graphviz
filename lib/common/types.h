@@ -458,7 +458,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	/* for union-find and collapsing nodes */
 	int UF_size;
 	node_t *UF_parent;
-	node_t *inleaf;
 	node_t *outleaf;
 
 	/* for placing nodes */
@@ -500,7 +499,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define ND_hops(n) (((Agnodeinfo_t*)AGDATA(n))->hops)
 #define ND_ht(n) (((Agnodeinfo_t*)AGDATA(n))->ht)
 #define ND_in(n) (((Agnodeinfo_t*)AGDATA(n))->in)
-#define ND_inleaf(n) (((Agnodeinfo_t*)AGDATA(n))->inleaf)
 #define ND_label(n) (((Agnodeinfo_t*)AGDATA(n))->label)
 #define ND_xlabel(n) (((Agnodeinfo_t*)AGDATA(n))->xlabel)
 #define ND_lim(n) (((Agnodeinfo_t*)AGDATA(n))->lim)

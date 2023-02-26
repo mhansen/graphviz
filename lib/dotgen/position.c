@@ -1131,8 +1131,6 @@ static void expand_leaves(graph_t * g)
 
     make_leafslots(g);
     for (n = GD_nlist(g); n; n = ND_next(n)) {
-	if (ND_inleaf(n))
-	    do_leaves(g, ND_inleaf(n));
 	if (ND_outleaf(n))
 	    do_leaves(g, ND_outleaf(n));
 	if (ND_other(n).list)
