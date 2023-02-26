@@ -19,6 +19,8 @@
 
 #include <cgraph/stack.h>
 #include <dotgen/dot.h>
+#include <stddef.h>
+#include <stdint.h>
 
 static node_t *Last_node;
 static size_t Cmark;
@@ -48,9 +50,7 @@ add_to_component(graph_t* g, node_t * n)
 static void 
 end_component(graph_t* g)
 {
-    int i;
-
-    i = GD_comp(g).size++;
+    size_t i = GD_comp(g).size++;
     GD_comp(g).list = ALLOC(GD_comp(g).size, GD_comp(g).list, node_t *);
     GD_comp(g).list[i] = GD_nlist(g);
 }
@@ -78,7 +78,7 @@ static node_t *pop(gv_stack_t *sp) {
  * so we use mark = Cmark+1 to indicate nodes on the stack.
  */
 static void search_component(gv_stack_t *stk, graph_t *g, node_t *n) {
-    int c, i;
+    int c;
     elist vec[4];
     node_t *other;
     edge_t *e;
@@ -95,7 +95,8 @@ static void search_component(gv_stack_t *stk, graph_t *g, node_t *n) {
 
 	for (c = 3; c >= 0; c--) {
 	    if (vec[c].list) {
-		for (i = vec[c].size-1, ep = vec[c].list+i; i >= 0; i--, ep--) {
+		size_t i;
+		for (i = vec[c].size - 1, ep = vec[c].list + i; i != SIZE_MAX; i--, ep--) {
 		    e = *ep;
 		    if ((other = aghead(e)) == n)
 			other = agtail(e);
@@ -115,7 +116,8 @@ void decompose(graph_t * g, int pass)
 
     if (++Cmark == 0)
 	Cmark = 1;
-    GD_n_nodes(g) = GD_comp(g).size = 0;
+    GD_n_nodes(g) = 0;
+    GD_comp(g).size = 0;
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	v = n;
 	if ((pass > 0) && (subg = ND_clust(v)))

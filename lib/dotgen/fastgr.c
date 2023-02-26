@@ -11,6 +11,7 @@
 #include <cgraph/unused.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 /*
  * operations on the fast internal graph.
@@ -58,9 +59,7 @@ edge_t *find_flat_edge(node_t * u, node_t * v)
 static void 
 safe_list_append(edge_t * e, elist * L)
 {
-    int i;
-
-    for (i = 0; i < L->size; i++)
+    for (size_t i = 0; i < L->size; i++)
 	if (e == L->list[i])
 	    return;
     elist_append(e, (*L));
@@ -94,9 +93,7 @@ edge_t *fast_edge(edge_t * e)
 /* zapinlist - remove e from list and fill hole with last member of list */
 void zapinlist(elist * L, edge_t * e)
 {
-    int i;
-
-    for (i = 0; i < L->size; i++) {
+    for (size_t i = 0; i < L->size; i++) {
 	if (L->list[i] == e) {
 	    L->size--;
 	    L->list[i] = L->list[L->size];

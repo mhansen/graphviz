@@ -449,10 +449,9 @@ void initEdgeTypes(graph_t * g)
 {
     edge_t *e;
     node_t *n;
-    int lc;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	for (lc = 0; lc < ND_in(n).size; lc++) {
+	for (size_t lc = 0; lc < ND_in(n).size; lc++) {
 	    e = ND_in(n).list[lc];
 	    ED_edge_type(e) = NORMAL;
 	}

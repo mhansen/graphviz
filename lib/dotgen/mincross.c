@@ -39,7 +39,7 @@ static void flat_reorder(graph_t * g);
 static void flat_search(graph_t * g, node_t * v);
 static void init_mincross(graph_t * g);
 static void merge2(graph_t * g);
-static void init_mccomp(graph_t * g, int c);
+static void init_mccomp(graph_t *g, size_t c);
 static void cleanup2(graph_t * g, int nc);
 static int mincross_clust(graph_t * g, int);
 static int mincross(graph_t * g, int startpass, int endpass, int);
@@ -336,7 +336,7 @@ checkLabelOrder (graph_t* g)
  */
 void dot_mincross(graph_t * g, int doBalance)
 {
-    int c, nc;
+    int nc;
     char *s;
 
     /* check whether malformed input has led to empty cluster that the crossing
@@ -358,15 +358,16 @@ void dot_mincross(graph_t * g, int doBalance)
 
     init_mincross(g);
 
-    for (nc = c = 0; c < GD_comp(g).size; c++) {
-	init_mccomp(g, c);
+    size_t comp;
+    for (nc = 0, comp = 0; comp < GD_comp(g).size; comp++) {
+	init_mccomp(g, comp);
 	nc += mincross(g, 0, 2, doBalance);
     }
 
     merge2(g);
 
     /* run mincross on contents of each cluster */
-    for (c = 1; c <= GD_n_cluster(g); c++) {
+    for (int c = 1; c <= GD_n_cluster(g); c++) {
 	nc += mincross_clust(GD_clust(g)[c], doBalance);
 #ifdef DEBUG
 	check_vlists(GD_clust(g)[c]);
@@ -379,7 +380,7 @@ void dot_mincross(graph_t * g, int doBalance)
 	ReMincross = true;
 	nc = mincross(g, 2, 2, doBalance);
 #ifdef DEBUG
-	for (c = 1; c <= GD_n_cluster(g); c++)
+	for (int c = 1; c <= GD_n_cluster(g); c++)
 	    check_vlists(GD_clust(g)[c]);
 #endif
     }
@@ -405,8 +406,7 @@ static void free_matrix(adjmatrix_t * p)
 
 #define ELT(M,i,j)		(M->data[((i)*M->ncols)+(j)])
 
-static void init_mccomp(graph_t * g, int c)
-{
+static void init_mccomp(graph_t *g, size_t c) {
     int r;
 
     GD_nlist(g) = GD_comp(g).list[c];
@@ -908,13 +908,12 @@ static void save_best(graph_t * g)
 /* merges the connected components of g */
 static void merge_components(graph_t * g)
 {
-    int c;
     node_t *u, *v;
 
     if (GD_comp(g).size <= 1)
 	return;
     u = NULL;
-    for (c = 0; c < GD_comp(g).size; c++) {
+    for (size_t c = 0; c < GD_comp(g).size; c++) {
 	v = GD_comp(g).list[c];
 	if (u)
 	    ND_next(u) = v;
@@ -1416,11 +1415,10 @@ void build_ranks(graph_t * g, int pass)
 
 void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
 {
-    int i;
     edge_t *e;
 
     if (pass == 0) {
-	for (i = 0; i < ND_out(n0).size; i++) {
+	for (size_t i = 0; i < ND_out(n0).size; i++) {
 	    e = ND_out(n0).list[i];
 	    if (!MARK(aghead(e))) {
 		MARK(aghead(e)) = TRUE;
@@ -1428,7 +1426,7 @@ void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
 	    }
 	}
     } else {
-	for (i = 0; i < ND_in(n0).size; i++) {
+	for (size_t i = 0; i < ND_in(n0).size; i++) {
 	    e = ND_in(n0).list[i];
 	    if (!MARK(agtail(e))) {
 		MARK(agtail(e)) = TRUE;
@@ -1469,7 +1467,7 @@ static int postorder(graph_t * g, node_t * v, node_t ** list, int r)
 
 static void flat_reorder(graph_t * g)
 {
-    int i, j, r, pos, n_search, local_in_cnt, local_out_cnt, base_order;
+    int i, r, pos, n_search, local_in_cnt, local_out_cnt, base_order;
     node_t *v, **left, **right, *t;
     node_t **temprank = NULL;
     edge_t *flat_e, *e;
@@ -1490,11 +1488,11 @@ static void flat_reorder(graph_t * g)
 	    else v = GD_rank(g)[r].v[GD_rank(g)[r].n - i - 1];
 
 	    local_in_cnt = local_out_cnt = 0;
-	    for (j = 0; j < ND_flat_in(v).size; j++) {
+	    for (size_t j = 0; j < ND_flat_in(v).size; j++) {
 		flat_e = ND_flat_in(v).list[j];
 		if (constraining_flat_edge(g, flat_e)) local_in_cnt++;
 	    }
-	    for (j = 0; j < ND_flat_out(v).size; j++) {
+	    for (size_t j = 0; j < ND_flat_out(v).size; j++) {
 		flat_e = ND_flat_out(v).list[j];
 		if (constraining_flat_edge(g, flat_e)) local_out_cnt++;
 	    }
@@ -1530,7 +1528,7 @@ static void flat_reorder(graph_t * g)
 	    for (i = 0; i < GD_rank(g)[r].n; i++) {
 		v = GD_rank(g)[r].v[i];
 		if (ND_flat_out(v).list) {
-		    for (j = 0; (e = ND_flat_out(v).list[j]); j++) {
+		    for (size_t j = 0; (e = ND_flat_out(v).list[j]); j++) {
 			if ( (!GD_flip(g) && ND_order(aghead(e)) < ND_order(agtail(e))) ||
 				 ( (GD_flip(g)) && (ND_order(aghead(e)) > ND_order(agtail(e)) ))) {
 			    assert(!constraining_flat_edge(g, e));
@@ -1546,8 +1544,7 @@ static void flat_reorder(graph_t * g)
 	/* else do no harm! */
 	GD_rank(Root)[r].valid = false;
     }
-    if (temprank)
-	free(temprank);
+    free(temprank);
 }
 
 static void reorder(graph_t * g, int r, bool reverse, bool hasfixed)

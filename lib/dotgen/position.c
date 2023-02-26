@@ -20,6 +20,7 @@
 #include <dotgen/dot.h>
 #include <dotgen/aspect.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 static int nsiter2(graph_t * g);
 static void create_aux_edges(graph_t * g);
@@ -39,11 +40,10 @@ dumpNS (graph_t * g)
     node_t* n = GD_nlist(g);
     elist el;
     edge_t* e;
-    int i;
 
     while (n) {
 	el = ND_out(n);
-	for (i = 0; i < el.size; i++) {
+	for (size_t i = 0; i < el.size; i++) {
 	    e = el.list[i];
 	    fprintf (stderr, "%s(%x) -> ", agnameof(agtail(e)),agtail(e));
 	    fprintf (stderr, "%s(%x) : %d\n", agnameof(aghead(e)), aghead(e),
@@ -211,7 +211,7 @@ static void allocate_aux_edges(graph_t * g)
 static void 
 make_LR_constraints(graph_t * g)
 {
-    int i, j, k;
+    int i, j;
     int m0, m1;
     double width;
     int sep[2];
@@ -246,7 +246,7 @@ make_LR_constraints(graph_t * g)
                  * positioning but may also affect interrank spacing.
                  */
 		double sw = 0; // self width
-		for (k = 0; (e = ND_other(u).list[k]); k++) {
+		for (size_t k = 0; (e = ND_other(u).list[k]); k++) {
 		    if (agtail(e) == aghead(e)) {
 			sw += selfRightSpace (e);
 		    }
@@ -283,7 +283,7 @@ make_LR_constraints(graph_t * g)
 	    }
 
 	    /* position flat edge endpoints */
-	    for (k = 0; k < ND_flat_out(u).size; k++) {
+	    for (size_t k = 0; k < ND_flat_out(u).size; k++) {
 		e = ND_flat_out(u).list[k];
 		if (ND_order(agtail(e)) < ND_order(aghead(e))) {
 		    t0 = agtail(e);
