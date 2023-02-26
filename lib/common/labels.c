@@ -325,7 +325,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
 	    pt = ED_head_port(obj);
 	    if ((hp_str = pt.name))
 		has_hp = *hp_str != '\0';
-	    tl = ED_label((edge_t *)obj);
+	    tl = ED_label(obj);
 	    if (tl) {
 		l_str = tl->text;
 	    }
