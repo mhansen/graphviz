@@ -1328,7 +1328,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 
 	e = edges[ind + i];
 	for (; ED_edge_type(e) != NORMAL; e = ED_to_orig(e));
-	auxe = (edge_t*)ED_alg(e);
+	auxe = ED_alg(e);
 	if ((auxe == hvye) & !ED_alg(auxe)) continue; /* pseudo-edge */
 	auxbz = ED_spl(auxe)->list;
 	bz = new_spline(e, auxbz->size);
