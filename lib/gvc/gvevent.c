@@ -229,7 +229,7 @@ static void gvevent_leave_obj(GVJ_t * job)
 	    ND_gui_state((node_t*)obj) &= (unsigned char)~GUI_STATE_ACTIVE;
 	    break;
         case AGEDGE:
-	    ED_gui_state((edge_t*)obj) &= (unsigned char)~GUI_STATE_ACTIVE;
+	    ED_gui_state(obj) &= (unsigned char)~GUI_STATE_ACTIVE;
 	    break;
         }
     }
