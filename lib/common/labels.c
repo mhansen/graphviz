@@ -322,7 +322,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
 	    if ((tp_str = pt.name))
 	        has_tp = *tp_str != '\0';
 	    h_str = agnameof(aghead(((edge_t *)obj)));
-	    pt = ED_head_port((edge_t *)obj);
+	    pt = ED_head_port(obj);
 	    if ((hp_str = pt.name))
 		has_hp = *hp_str != '\0';
 	    tl = ED_label((edge_t *)obj);
