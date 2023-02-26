@@ -324,7 +324,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 
 	/* various flags */
 	bool has_flat_edges;
-	bool has_sinkrank;
 	unsigned char	showboxes;
 	fontname_kind fontnames;		/* to override mangling in SVG */
 
@@ -365,7 +364,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define GD_has_labels(g) (((Agraphinfo_t*)AGDATA(g))->has_labels)
 #define GD_has_images(g) (((Agraphinfo_t*)AGDATA(g))->has_images)
 #define GD_has_flat_edges(g) (((Agraphinfo_t*)AGDATA(g))->has_flat_edges)
-#define GD_has_sinkrank(g)	(((Agraphinfo_t*)AGDATA(g))->has_sinkrank)
 #define GD_ht1(g) (((Agraphinfo_t*)AGDATA(g))->ht1)
 #define GD_ht2(g) (((Agraphinfo_t*)AGDATA(g))->ht2)
 #define GD_installed(g) (((Agraphinfo_t*)AGDATA(g))->installed)
