@@ -421,7 +421,6 @@ freeSegs (colorsegs_t* segs)
 {
     free (segs->base);
     free (segs->segs);
-    free (segs);
 }
 
 /* getSegLen:
@@ -470,10 +469,8 @@ static double getSegLen (char* s)
  * Otherwise, psegs is left unchanged and the allocated memory is
  * freed before returning.
  */
-static int
-parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
-{
-    colorsegs_t* segs = NEW(colorsegs_t);
+static int parseSegs(char *clrs, int nseg, colorsegs_t *psegs) {
+    colorsegs_t segs = {0};
     colorseg_t* s;
     char* colors = gv_strdup(clrs);
     char* color;
@@ -491,8 +488,8 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 	}
     }
 
-    segs->base = colors;
-    segs->segs = s = N_NEW(nseg+1,colorseg_t);
+    segs.base = colors;
+    segs.segs = s = N_NEW(nseg+1,colorseg_t);
     for (color = strtok(colors, ":"); color; color = strtok(0, ":")) {
 	if ((v = getSegLen (color)) >= 0) {
 	    double del = v - left;
@@ -517,7 +514,7 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 		rval = 2;
 	    }
 	    else rval = 1;
-	    freeSegs (segs);
+	    freeSegs(&segs);
 	    return rval;
 	}
 	if (AEQ0(left)) {
@@ -531,12 +528,12 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 	/* count zero segments */
 	nseg = 0;
 	for (i = 0; i < cnum; i++) {
-	    if (s[i].t == 0) nseg++;
+	    if (!(s[i].t > 0)) nseg++;
 	}
 	if (nseg > 0) {
 	    double delta = left/nseg;
 	    for (i = 0; i < cnum; i++) {
-		if (s[i].t == 0) s[i].t = delta;
+		if (!(s[i].t > 0)) s[i].t = delta;
 	    }
 	}
 	else {
@@ -549,7 +546,7 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 	if (s[i].t > 0) break;
     }
     s[i+1].color = NULL;
-    segs->numc = i+1;
+    segs.numc = i+1;
 
     *psegs = segs;
     return rval;
@@ -570,8 +567,7 @@ parseSegs (char* clrs, int nseg, colorsegs_t** psegs)
 int 
 wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 {
-    colorsegs_t* segs;
-    colorseg_t* s;
+    colorsegs_t segs;
     int rv;
     double save_penwidth = job->obj->penwidth;
     pointf ctr, semi;
@@ -588,8 +584,8 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	gvrender_set_penwidth(job, THIN_LINE);
 	
     angle0 = 0;
-    for (s = segs->segs; s->color; s++) {
-	if (s->t == 0) continue;
+    for (colorseg_t *s = segs.segs; s->color; s++) {
+	if (!(s->t > 0)) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
 
 	if (s[1].color == NULL) 
@@ -604,7 +600,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, save_penwidth);
-    freeSegs (segs);
+    freeSegs(&segs);
     return rv;
 }
 
@@ -621,8 +617,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 int
 stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
 {
-    colorsegs_t* segs;
-    colorseg_t* s;
+    colorsegs_t segs;
     int rv;
     double xdelta;
     pointf pts[4];
@@ -648,8 +643,8 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, THIN_LINE);
-    for (s = segs->segs; s->color; s++) {
-	if (s->t == 0) continue;
+    for (colorseg_t *s = segs.segs; s->color; s++) {
+	if (!(s->t > 0)) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
 	/* gvrender_polygon(job, pts, 4, FILL | NO_POLY); */
 	if (s[1].color == NULL) 
@@ -661,7 +656,7 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     }
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, save_penwidth);
-    freeSegs (segs);
+    freeSegs(&segs);
     return rv;
 }
 
@@ -1123,7 +1118,7 @@ static int *parse_layerselect(GVC_t *gvc, char *p) {
  * Split input string into tokens, with separators specified by
  * the layersep attribute. Store the values in the gvc->layerIDs array,
  * starting at index 1, and return the count.
- * Free previously stored list. Note that there is no mechanism
+ * Note that there is no mechanism
  * to free the memory before exit.
  */
 static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
@@ -1644,7 +1639,7 @@ static void emit_background(GVJ_t * job, graph_t *g)
 	}
     }
 
-    if ((xd = (xdot*)GD_drawing(g)->xdots))
+    if ((xd = GD_drawing(g)->xdots))
 	emit_xdot (job, xd);
 }
 
@@ -1683,7 +1678,7 @@ static void setup_page(GVJ_t * job)
     }
 
     /* CAUTION - job->translation was difficult to get right. */
-    /* Test with and without assymmetric margins, e.g: -Gmargin="1,0" */
+    // Test with and without asymmetric margins, e.g: -Gmargin="1,0"
     if (job->rotation) {
 	job->translation.y = - job->clip.UR.y - job->canvasBox.LL.y / job->zoom;
         if ((job->flags & GVRENDER_Y_GOES_DOWN) || Y_invert)
@@ -1770,7 +1765,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj;
     int flags = job->flags;
-    int sides, peripheries, rect = 0, shape;
+    int sides, shape;
     size_t nump = 0;
     polygon_t *poly = NULL;
     pointf *vertices, *p = NULL;
@@ -1799,12 +1794,13 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
         /* checking if filled style has been set for node */
         bool filled = isFilled(n);
 
+        bool is_rect = false;
         if (shape == SH_POLY || shape == SH_POINT) {
             poly = ND_shape_info(n);
 
             /* checking if polygon is regular rectangle */
             if (isRect(poly) && (poly->peripheries || filled))
-                rect = 1;
+                is_rect = true;
         }
 
         /* When node has polygon shape and requested output supports polygons
@@ -1812,17 +1808,14 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
          * circle, ellipse, polygon with n side, or point.
          * For regular rectangular shape we have use node's bounding box to map clickable region
          */
-        if (poly && !rect && (flags & GVRENDER_DOES_MAP_POLYGON)) {
+        if (poly && !is_rect && (flags & GVRENDER_DOES_MAP_POLYGON)) {
 
             if (poly->sides < 3)
                 sides = 1;
             else
                 sides = poly->sides;
 
-            if (poly->peripheries < 2)
-                peripheries = 1;
-            else
-                peripheries = poly->peripheries;
+            int peripheries = poly->peripheries < 2 ? 1 : poly->peripheries;
 
             vertices = poly->vertices;
 
@@ -2129,8 +2122,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
     bezier bz;
     bezier bz0, bz_l, bz_r;
     int i, rv;
-    colorsegs_t* segs;
-    colorseg_t* s;
+    colorsegs_t segs;
     char* endcolor = NULL;
     double left;
     int first;  /* first segment with t > 0 */
@@ -2151,7 +2143,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 	left = 1;
 	bz = ED_spl(e)->list[i];
 	first = 1;
-	for (s = segs->segs; s->color; s++) {
+	for (colorseg_t *s = segs.segs; s->color; s++) {
 	    if (AEQ0(s->t)) continue;
     	    gvrender_set_pencolor(job, s->color);
 	    left -= s->t;
@@ -2185,8 +2177,8 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
                  * Use local copy of penwidth to work around reset.
                  */
 	if (bz.sflag) {
-    	    gvrender_set_pencolor(job, segs->segs->color);
-    	    gvrender_set_fillcolor(job, segs->segs->color);
+    	    gvrender_set_pencolor(job, segs.segs->color);
+    	    gvrender_set_fillcolor(job, segs.segs->color);
 	    arrow_gen(job, EMIT_TDRAW, bz.sp, bz.list[0], arrowsize, penwidth, bz.sflag);
 	}
 	if (bz.eflag) {
@@ -2197,7 +2189,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 	if (ED_spl(e)->size > 1 && (bz.sflag || bz.eflag) && styles)
 	    gvrender_set_style(job, styles);
     }
-    freeSegs (segs);
+    freeSegs(&segs);
     return 0;
 }
 
@@ -2943,11 +2935,10 @@ boxf xdotBB (Agraph_t* g)
     double fontsize = 0.0;
     char* fontname = NULL;
     pointf pts[2];
-    /* pointf sz; */
     boxf bb0;
     boxf bb = GD_bb(g);
-    xdot* xd = (xdot*)GD_drawing(g)->xdots;
-    textfont_t tf, null_tf = {NULL,NULL,NULL,0.0,0,0};
+    xdot* xd = GD_drawing(g)->xdots;
+    textfont_t tf, null_tf = {0};
     int fontflags = 0;
 
     if (!xd) return bb;
@@ -4061,7 +4052,9 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
             break;
         }
 
-	/* if we already have an active job list and the device doesn't support mutiple output files, or we are about to write to a different output device */
+	// if we already have an active job list and the device doesn't support
+	// multiple output files, or we are about to write to a different output
+	// device
         firstjob = gvc->active_jobs;
         if (firstjob) {
 	    if (! (firstjob->flags & GVDEVICE_DOES_PAGES)
@@ -4130,36 +4123,36 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
  */
 bool findStopColor (char* colorlist, char* clrs[2], float* frac)
 {
-    colorsegs_t* segs = NULL;
+    colorsegs_t segs = {0};
     int rv;
 
     rv = parseSegs (colorlist, 0, &segs);
-    if (rv || segs->numc < 2 || segs->segs[0].color == NULL) {
+    if (rv || segs.numc < 2 || segs.segs[0].color == NULL) {
 	clrs[0] = NULL;
-	if (segs) freeSegs (segs);
+	freeSegs(&segs);
 	return false;
     }
 
-    if (segs->numc > 2)
+    if (segs.numc > 2)
 	agerr (AGWARN, "More than 2 colors specified for a gradient - ignoring remaining\n");
 
     clrs[0] = N_GNEW (strlen(colorlist)+1,char); 
-    strcpy (clrs[0], segs->segs[0].color);
-    if (segs->segs[1].color) {
+    strcpy(clrs[0], segs.segs[0].color);
+    if (segs.segs[1].color) {
 	clrs[1] = clrs[0] + (strlen(clrs[0])+1);
-	strcpy (clrs[1], segs->segs[1].color);
+	strcpy(clrs[1], segs.segs[1].color);
     }
     else
 	clrs[1] = NULL;
 
-    if (segs->segs[0].hasFraction)
-	*frac = segs->segs[0].t;
-    else if (segs->segs[1].hasFraction)
-	*frac = 1 - segs->segs[1].t;
+    if (segs.segs[0].hasFraction)
+	*frac = segs.segs[0].t;
+    else if (segs.segs[1].hasFraction)
+	*frac = 1 - segs.segs[1].t;
     else 
 	*frac = 0;
 
-    freeSegs (segs);
+    freeSegs(&segs);
     return true;
 }
 
