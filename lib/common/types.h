@@ -393,7 +393,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define GD_neato_nlist(g) (((Agraphinfo_t*)AGDATA(g))->neato_nlist)
 #define GD_nlist(g) (((Agraphinfo_t*)AGDATA(g))->nlist)
 #define GD_nodesep(g) (((Agraphinfo_t*)AGDATA(g))->nodesep)
-#define GD_outleaf(g) (((Agraphinfo_t*)AGDATA(g))->outleaf)
 #define GD_rank(g) (((Agraphinfo_t*)AGDATA(g))->rank)
 #define GD_rankleader(g) (((Agraphinfo_t*)AGDATA(g))->rankleader)
 #define GD_ranksep(g) (((Agraphinfo_t*)AGDATA(g))->ranksep)
@@ -458,7 +457,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	/* for union-find and collapsing nodes */
 	int UF_size;
 	node_t *UF_parent;
-	node_t *outleaf;
 
 	/* for placing nodes */
 	int rank;
@@ -513,7 +511,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define ND_order(n) (((Agnodeinfo_t*)AGDATA(n))->order)
 #define ND_other(n) (((Agnodeinfo_t*)AGDATA(n))->other)
 #define ND_out(n) (((Agnodeinfo_t*)AGDATA(n))->out)
-#define ND_outleaf(n) (((Agnodeinfo_t*)AGDATA(n))->outleaf)
 #define ND_outline_width(n) (((Agnodeinfo_t*)AGDATA(n))->outline_width)
 #define ND_outline_height(n) (((Agnodeinfo_t*)AGDATA(n))->outline_height)
 #define ND_par(n) (((Agnodeinfo_t*)AGDATA(n))->par)

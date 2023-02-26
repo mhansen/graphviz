@@ -53,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Versions of Glib prior to 2.36.0 are no longer supported.
 - **Breaking**: The `Agnodeinfo_t.inleaf` field and its `ND_inleaf` accessor
   have been removed.
+- **Breaking**: The `Agnodeinfo_t.outleaf` field and its `ND_outleaf` and
+  `GD_outleaf` accessors have been removed.
 
 ## [7.1.0] – 2023-01-21
 

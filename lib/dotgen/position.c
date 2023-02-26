@@ -1024,29 +1024,6 @@ static void set_aspect(graph_t * g, aspect_t* asp)
     if (asp) adjustAspectRatio (g, asp);
 }
 
-static point resize_leaf(node_t * leaf, point lbound)
-{
-    gv_nodesize(leaf, GD_flip(agraphof(leaf)));
-    ND_coord(leaf).y = lbound.y;
-    ND_coord(leaf).x = lbound.x + ND_lw(leaf);
-    lbound.x = lbound.x + ND_lw(leaf) + ND_rw(leaf) + GD_nodesep(agraphof(leaf));
-    return lbound;
-}
-
-static point place_leaf(graph_t* ing, node_t * leaf, point lbound, int order)
-{
-    node_t *leader;
-    graph_t *g = dot_root(ing);
-
-    leader = UF_find(leaf);
-    if (leaf != leader)
-	fast_nodeapp(leader, leaf);
-    ND_order(leaf) = order;
-    ND_rank(leaf) = ND_rank(leader);
-    GD_rank(g)[ND_rank(leaf)].v[ND_order(leaf)] = leaf;
-    return resize_leaf(leaf, lbound);
-}
-
 /* make space for the leaf nodes of each rank */
 static void make_leafslots(graph_t * g)
 {
@@ -1075,42 +1052,6 @@ static void make_leafslots(graph_t * g)
     }
 }
 
-static void do_leaves(graph_t * g, node_t * leader)
-{
-    int j;
-    point lbound;
-    node_t *n;
-    edge_t *e;
-
-    if (ND_UF_size(leader) <= 1)
-	return;
-    lbound.x = ND_coord(leader).x - ND_lw(leader);
-    lbound.y = ND_coord(leader).y;
-    lbound = resize_leaf(leader, lbound);
-    if (ND_out(leader).size > 0) {	/* in-edge leaves */
-	n = aghead(ND_out(leader).list[0]);
-	j = ND_order(leader) + 1;
-	for (e = agfstin(g, n); e; e = agnxtin(g, e)) {
-	    edge_t *e1 = AGMKOUT(e);
-	    if ((agtail(e1) != leader) && (UF_find(agtail(e1)) == leader)) {
-		lbound = place_leaf(g, agtail(e1), lbound, j++);
-		unmerge_oneway(e1);
-		elist_append(e1, ND_in(aghead(e1)));
-	    }
-	}
-    } else {			/* out edge leaves */
-	n = agtail(ND_in(leader).list[0]);
-	j = ND_order(leader) + 1;
-	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-	    if ((aghead(e) != leader) && (UF_find(aghead(e)) == leader)) {
-		lbound = place_leaf(g, aghead(e), lbound, j++);
-		unmerge_oneway(e);
-		elist_append(e, ND_out(agtail(e)));
-	    }
-	}
-    }
-}
-
 int ports_eq(edge_t * e, edge_t * f)
 {
     return ((ED_head_port(e).defined == ED_head_port(f).defined)
@@ -1131,8 +1072,6 @@ static void expand_leaves(graph_t * g)
 
     make_leafslots(g);
     for (n = GD_nlist(g); n; n = ND_next(n)) {
-	if (ND_outleaf(n))
-	    do_leaves(g, ND_outleaf(n));
 	if (ND_other(n).list)
 	    for (i = 0; (e = ND_other(n).list[i]); i++) {
 		if ((d = ND_rank(aghead(e)) - ND_rank(aghead(e))) == 0)
