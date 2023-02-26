@@ -301,7 +301,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
     switch (agobjkind(obj)) {
 	case AGRAPH:
 	    g_str = agnameof(obj);
-	    tl = GD_label((graph_t *)obj);
+	    tl = GD_label(obj);
 	    if (tl) {
 		l_str = tl->text;
 	    }
