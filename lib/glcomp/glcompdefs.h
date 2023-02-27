@@ -308,7 +308,6 @@ extern "C" {
 	glCompPanel **panels;
 	glCompButton **buttons;
 	glCompLabel **labels;
-	int groupCount;		/*group id counter */
 	int active;		//0 don't draw, 1 draw
 	int enabled;		//0 disabled 1 enabled(allow mouse interaction)
 

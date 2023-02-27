@@ -202,7 +202,6 @@ glCompSet *glCompSetNew(int w, int h)
     glCompInitCommon((glCompObj *) s, NULL, 0.0f, 0.0f);
     s->common.width = (GLfloat) w;
     s->common.height = (GLfloat) h;
-    s->groupCount = 0;
     s->objcnt = 0;
     s->obj = NULL;
     s->textureCount = 0;
