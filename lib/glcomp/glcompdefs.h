@@ -305,8 +305,6 @@ extern "C" {
 
 	glCompObj **obj;
 	int objcnt;
-	int enabled;		//0 disabled 1 enabled(allow mouse interaction)
-
 	int textureCount;
 	glCompTex **textures;
 	glCompMouse mouse;
