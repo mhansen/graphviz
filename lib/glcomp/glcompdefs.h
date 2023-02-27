@@ -305,7 +305,7 @@ extern "C" {
 
 	glCompObj **obj;
 	size_t objcnt;
-	int textureCount;
+	size_t textureCount;
 	glCompTex **textures;
 	glCompMouse mouse;
     } glCompSet;

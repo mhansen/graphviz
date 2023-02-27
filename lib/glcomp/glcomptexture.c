@@ -11,6 +11,7 @@
 #include <cgraph/alloc.h>
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glpangofont.h>
+#include <stddef.h>
 
 static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
 					 int height, unsigned char *data,
@@ -97,7 +98,7 @@ glCompTex *glCompSetAddNewTexImage(glCompSet * s, int width, int height,
 glCompTex *glCompSetAddNewTexLabel(glCompSet * s, char *def, int fs,
 				   char *text, int is2D)
 {
-    int ind, Er, width, height;
+    int Er, width, height;
     glCompTex *t;
     cairo_surface_t *surface = NULL;
     unsigned char *data = NULL;
@@ -107,7 +108,7 @@ glCompTex *glCompSetAddNewTexLabel(glCompSet * s, char *def, int fs,
     /*first check if the same label with same font def created before
        if it was , return its id
      */
-    for (ind = 0; ind < s->textureCount; ind++) {
+    for (size_t ind = 0; ind < s->textureCount; ind++) {
 	if (s->textures[ind]->type == glTexLabel) {
 	    if (strcmp(def, s->textures[ind]->def) == 0
 		&& s->textures[ind]->type == glTexLabel
