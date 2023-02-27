@@ -16,16 +16,13 @@
 unsigned char *glCompLoadPng (char *filename, int *imageWidth, int *imageHeight)
 {
     cairo_surface_t *surface;
-    int w, h;
     unsigned char *d;
     surface = NULL;
 
     surface = cairo_image_surface_create_from_png(filename);
     if (!surface) return 0;
-    w = cairo_image_surface_get_width(surface);
-    h = cairo_image_surface_get_height(surface);
-    *imageWidth = w;
-    *imageHeight = h;
+    *imageWidth = cairo_image_surface_get_width(surface);
+    *imageHeight = cairo_image_surface_get_height(surface);
     d = cairo_image_surface_get_data(surface);
     return d;
 }
