@@ -251,14 +251,12 @@ void glCompDrawEnd(void)	//pops the gl stack
     glEnable(GL_DEPTH_TEST);
 }
 
-int glCompSetDraw(glCompSet * s)
-{
+void glCompSetDraw(glCompSet *s) {
     glCompDrawBegin();
     for (size_t ind = 0; ind < s->objcnt; ind++) {
 	s->obj[ind]->common.functions.draw(s->obj[ind]);
     }
     glCompDrawEnd();
-    return 1;
 }
 
 void glcompsetUpdateBorder(glCompSet * s, int w, int h)
