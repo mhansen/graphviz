@@ -305,7 +305,6 @@ extern "C" {
 
 	glCompObj **obj;
 	int objcnt;
-	glCompButton **buttons;
 	glCompLabel **labels;
 	int active;		//0 don't draw, 1 draw
 	int enabled;		//0 disabled 1 enabled(allow mouse interaction)
