@@ -84,8 +84,6 @@ static void appmouse_down(ViewInfo* v,int x,int y)
 static void appmouse_up(ViewInfo* v,int x,int y)
 {
     v->mouse.down=0;
-    v->mouse.finalPos.x=x;
-    v->mouse.finalPos.y=y;
     to3D(x,y, &v->mouse.GLfinalPos.x,&v->mouse.GLfinalPos.y,&v->mouse.GLfinalPos.z);
     apply_actions(v,x,y);
     view->mouse.dragX = 0;

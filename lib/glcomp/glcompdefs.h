@@ -283,7 +283,6 @@ extern "C" {
 	glCompMouseStatus status;
 	glMouseButtonType t;
 	glCompPoint pos; /*current mouse pos,*/
-	glCompPoint finalPos; /*current mouse pos,*/
 	glCompPoint GLpos;/*3d converted opengl position*/
 	glCompPoint GLinitPos;/*mouse button down pos*/
 	glCompPoint GLfinalPos;/*mouse button up pos*/
