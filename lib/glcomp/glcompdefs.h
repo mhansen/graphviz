@@ -305,7 +305,6 @@ extern "C" {
 
 	glCompObj **obj;
 	int objcnt;
-	glCompPanel **panels;
 	glCompButton **buttons;
 	glCompLabel **labels;
 	int active;		//0 don't draw, 1 draw
