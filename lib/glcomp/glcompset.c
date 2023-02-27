@@ -31,11 +31,10 @@ static int glCompPointInObject(glCompObj * p, float x, float y)
 glCompObj *glCompGetObjByMouse(glCompSet * s, glCompMouse * m,
 			       int onlyClickable)
 {
-    int ind;
     glCompObj *rv = NULL;
     if (!s || !m)
 	return NULL;
-    for (ind = 0; ind < s->objcnt; ind++) {
+    for (size_t ind = 0; ind < s->objcnt; ind++) {
 	if (s->obj[ind]->common.visible
 	    && glCompPointInObject(s->obj[ind], m->pos.x, m->pos.y)) {
 	    if (!rv || s->obj[ind]->common.layer >= rv->common.layer) {
@@ -254,9 +253,8 @@ void glCompDrawEnd(void)	//pops the gl stack
 
 int glCompSetDraw(glCompSet * s)
 {
-    int ind = 0;
     glCompDrawBegin();
-    for (; ind < s->objcnt; ind++) {
+    for (size_t ind = 0; ind < s->objcnt; ind++) {
 	s->obj[ind]->common.functions.draw(s->obj[ind]);
     }
     glCompDrawEnd();
