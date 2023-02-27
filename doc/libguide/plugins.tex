@@ -218,13 +218,8 @@ provide, as additional plug-ins, its own functions for handling the conversion.
 \multicolumn{1}{|c|}{Flag} & \multicolumn{1}{c|}{Description} \\ \hline
 {\tt GVRENDER\_DOES\_ARROWS} & Built-in arrowheads on splines \\
 {\tt GVRENDER\_DOES\_LAYERS} & Supports graph layers \\
-{\tt GVRENDER\_DOES\_MULTIGRAPH\_OUTPUT\_FILES} & If true, the renderer's
-output can contain multiple renderings \\
-{\tt GVRENDER\_DOES\_TRUECOLOR} & Supports a truecolor color model \\
 {\tt GVRENDER\_Y\_GOES\_DOWN} & Output coordinate system has the origin in
 the upper left corner \\
-{\tt GVRENDER\_X11\_EVENTS} & For GUI plug-ins, defers actual rendering until
-the GUI event loop invokes {\tt job->callbacks->refresh()} \\
 {\tt GVRENDER\_DOES\_TRANSFORM} & Can handle transformation (scaling,
 translation, rotation) from universal
 to device coordinates. If false, the library will do the transformation
@@ -247,6 +242,8 @@ function \\
 either as part of the {\tt job->obj} or via the renderer's {\tt begin\_anchor}
 function \\
 {\tt GVRENDER\_DOES\_Z} & Uses a 3D output model \\
+{\tt GVRENDER\_NO\_WHITE\_BG} & Does not paint white background, assumes white
+paper -Tps \\
 \hline
 \end{tabular}
 \caption{Renderer properties}
