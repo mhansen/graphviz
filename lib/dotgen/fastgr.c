@@ -196,17 +196,6 @@ void fast_node(graph_t * g, Agnode_t * n)
     assert(n != ND_next(n));
 }
 
-void fast_nodeapp(node_t * u, node_t * v)
-{
-    assert(u != v);
-    assert(ND_next(v) == NULL);
-    ND_next(v) = ND_next(u);
-    if (ND_next(u))
-	ND_prev(ND_next(u)) = v;
-    ND_prev(v) = u;
-    ND_next(u) = v;
-}
-
 void delete_fast_node(graph_t * g, node_t * n)
 {
     assert(find_fast_node(g, n));
