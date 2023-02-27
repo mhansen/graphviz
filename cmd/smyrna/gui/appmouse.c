@@ -75,8 +75,6 @@ static void appmouse_down(ViewInfo* v,int x,int y)
     view->mouse.dragX = 0;
     view->mouse.dragY = 0;
     v->mouse.down=1;
-    v->mouse.initPos.x=x;
-    v->mouse.initPos.y=y;
     v->mouse.pos.x=x;
     v->mouse.pos.y=y;
     
