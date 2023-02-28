@@ -1678,8 +1678,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
  */
 static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 {
-    int x, y, delx, dely, oldsz;
-    int i, extra, plus;
+    int i, plus;
     htmlcell_t **cells = tbl->u.n.cells;
     htmlcell_t *cp;
     boxf cbox;
@@ -1688,10 +1687,10 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 	&& !tbl->data.pencolor)
 	tbl->data.pencolor = gv_strdup(tbl->u.n.parent->data.pencolor);
 
-    oldsz = tbl->data.box.UR.x;
-    delx = fmax(pos.UR.x - pos.LL.x - oldsz, 0);
+    double oldsz = tbl->data.box.UR.x;
+    double delx = fmax(pos.UR.x - pos.LL.x - oldsz, 0);
     oldsz = tbl->data.box.UR.y;
-    dely = fmax(pos.UR.y - pos.LL.y - oldsz, 0);
+    double dely = fmax(pos.UR.y - pos.LL.y - oldsz, 0);
 
     /* If fixed, align box */
     if (tbl->data.flags & FIXED_FLAG) {
@@ -1730,15 +1729,15 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
     }
 
     /* change sizes to start positions and distribute extra space */
-    x = pos.LL.x + tbl->data.border + tbl->data.space;
-    extra = delx / tbl->column_count;
+    double x = pos.LL.x + tbl->data.border + tbl->data.space;
+    double extra = delx / tbl->column_count;
     plus = ROUND(delx - extra * tbl->column_count);
     for (i = 0; i <= tbl->column_count; i++) {
 	delx = tbl->widths[i] + extra + (i < plus ? 1 : 0);
 	tbl->widths[i] = x;
 	x += delx + tbl->data.space;
     }
-    y = pos.UR.y - tbl->data.border - tbl->data.space;
+    double y = pos.UR.y - tbl->data.border - tbl->data.space;
     extra = dely / tbl->row_count;
     plus = ROUND(dely - extra * tbl->row_count);
     for (i = 0; i <= tbl->row_count; i++) {
