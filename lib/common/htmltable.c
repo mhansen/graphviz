@@ -1809,7 +1809,8 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 		agerr(AGWARN, "table size too small for content\n");
 		rv = 1;
 	    }
-	    wd = ht = 0;
+	    wd = 0;
+	    ht = 0;
 	} else {
 	    agerr(AGWARN,
 		  "fixed table size with unspecified width or height\n");
