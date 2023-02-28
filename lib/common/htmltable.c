@@ -1817,8 +1817,8 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 	    rv = 1;
 	}
     }
-    tbl->data.box.UR.x = MAX(wd, tbl->data.width);
-    tbl->data.box.UR.y = MAX(ht, tbl->data.height);
+    tbl->data.box.UR.x = fmax(wd, tbl->data.width);
+    tbl->data.box.UR.y = fmax(ht, tbl->data.height);
 
     if (tbl->font)
 	popFontInfo(env, &savef);
