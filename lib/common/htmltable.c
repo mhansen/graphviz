@@ -1280,13 +1280,14 @@ static void sizeLinearArray(htmltbl_t * tbl)
 {
     htmlcell_t *cp;
     htmlcell_t **cells;
-    int wd, ht, i, x, y;
+    int wd, i, x;
 
-    tbl->heights = N_NEW(tbl->row_count + 1, int);
+    tbl->heights = N_NEW(tbl->row_count + 1, double);
     tbl->widths = N_NEW(tbl->column_count + 1, int);
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
+	double ht;
 	if (cp->rowspan == 1)
 	    ht = cp->data.box.UR.y;
 	else {
@@ -1300,8 +1301,7 @@ static void sizeLinearArray(htmltbl_t * tbl)
 	    wd = MAX(wd, 1);
 	}
 	for (i = cp->row; i < cp->row + cp->rowspan; i++) {
-	    y = tbl->heights[i];
-	    tbl->heights[i] = MAX(y, ht);
+	    tbl->heights[i] = MAX(tbl->heights[i], ht);
 	}
 	for (i = cp->col; i < cp->col + cp->colspan; i++) {
 	    x = tbl->widths[i];
@@ -1487,7 +1487,7 @@ static void sizeArray(htmltbl_t * tbl)
 	return;
     }
 
-    tbl->heights = N_NEW(tbl->row_count + 1, int);
+    tbl->heights = N_NEW(tbl->row_count + 1, double);
     tbl->widths = N_NEW(tbl->column_count + 1, int);
 
     rowg = agopen("rowg", dir, NULL);
@@ -1777,7 +1777,7 @@ static int
 size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 	      htmlenv_t * env)
 {
-    int i, wd, ht;
+    int i, wd;
     int rv = 0;
     static textfont_t savef;
 
@@ -1797,7 +1797,7 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
     sizeArray(tbl);
 
     wd = (tbl->column_count + 1) * tbl->data.space + 2 * tbl->data.border;
-    ht = (tbl->row_count + 1) * tbl->data.space + 2 * tbl->data.border;
+    double ht = (tbl->row_count + 1) * tbl->data.space + 2 * tbl->data.border;
     for (i = 0; i < tbl->column_count; i++)
 	wd += tbl->widths[i];
     for (i = 0; i < tbl->row_count; i++)

@@ -110,7 +110,7 @@ extern "C" {
 	    } p;
 	} u;
 	int8_t cellborder;
-	int *heights;		/* heights of the rows */
+	double *heights; ///< heights of the rows
 	int *widths;		/* widths of the columns */
 	int row_count; ///< number of rows
 	int column_count; ///< number of columns
