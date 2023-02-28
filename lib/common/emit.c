@@ -1107,7 +1107,6 @@ static int *parse_layerselect(GVC_t *gvc, char *p) {
     }
     else {
 	agerr(AGWARN, "The layerselect attribute \"%s\" does not match any layer specifed by the layers attribute - ignored.\n", p);
-	laylist[0] = cnt;
 	free (laylist);
 	laylist = NULL;
     }
