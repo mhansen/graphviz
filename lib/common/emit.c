@@ -25,6 +25,7 @@
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/list.h>
 #include <cgraph/unreachable.h>
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
@@ -1114,6 +1115,8 @@ static int *parse_layerselect(GVC_t *gvc, char *p) {
     return laylist;
 }
 
+DEFINE_LIST(layer_names, char*)
+
 /* parse_layers:
  * Split input string into tokens, with separators specified by
  * the layersep attribute. Store the values in the gvc->layerIDs array,
@@ -1123,9 +1126,7 @@ static int *parse_layerselect(GVC_t *gvc, char *p) {
  */
 static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
 {
-    int ntok;
     char *tok;
-    int sz;
 
     gvc->layerDelims = agget(g, "layersep");
     if (!gvc->layerDelims)
@@ -1138,24 +1139,26 @@ static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
         gvc->layerListDelims = "";
     }
 
-    ntok = 0;
-    sz = 0;
     gvc->layers = gv_strdup(p);
+    layer_names_t layerIDs = {0};
+
+    // inferred entry for the first (unnamed) layer
+    layer_names_append(&layerIDs, NULL);
 
     for (tok = strtok(gvc->layers, gvc->layerDelims); tok;
          tok = strtok(NULL, gvc->layerDelims)) {
-        ntok++;
-        if (ntok > sz) {
-            sz += SMALLBUF;
-            gvc->layerIDs = ALLOC(sz, gvc->layerIDs, char *);
-        }
-        gvc->layerIDs[ntok] = tok;
+        layer_names_append(&layerIDs, tok);
     }
-    if (ntok) {
-        gvc->layerIDs = RALLOC(ntok + 2, gvc->layerIDs, char *);        /* shrink to minimum size */
-        gvc->layerIDs[0] = NULL;
-        gvc->layerIDs[ntok + 1] = NULL;
+
+    assert(layer_names_size(&layerIDs) - 1 <= INT_MAX);
+    int ntok = (int)(layer_names_size(&layerIDs) - 1);
+
+    // if we found layers, save them for later reference
+    if (layer_names_size(&layerIDs) > 1) {
+        layer_names_append(&layerIDs, NULL); // add a terminating entry
+        gvc->layerIDs = layer_names_detach(&layerIDs);
     }
+    layer_names_free(&layerIDs);
 
     return ntok;
 }

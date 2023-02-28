@@ -2339,7 +2339,6 @@ def test_2341():
     ), "Graphviz comment remains in groff output"
 
 
-@pytest.mark.xfail()
 def test_2355():
     """
     Using >127 layers should not crash Graphviz
