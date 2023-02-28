@@ -113,7 +113,7 @@ extern "C" {
 	double *heights; ///< heights of the rows
 	double *widths; ///< widths of the columns
 	size_t row_count; ///< number of rows
-	int column_count; ///< number of columns
+	size_t column_count; ///< number of columns
 	textfont_t *font;	/* font info */
 	bool hrule:1; ///< horizontal rule
 	bool vrule:1; ///< vertical rule
