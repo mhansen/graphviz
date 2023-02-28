@@ -32,6 +32,7 @@
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <common/pointset.h>
 #include <common/intset.h>
 #include <cdt/cdt.h>
@@ -39,6 +40,7 @@
 #include <cgraph/exit.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
+#include <float.h>
 #include <inttypes.h>
 #include <math.h>
 #include <stddef.h>
@@ -853,7 +855,7 @@ static void free_html_tbl(htmltbl_t * tbl)
 {
     htmlcell_t **cells;
 
-    if (tbl->row_count == -1) {
+    if (tbl->row_count == SIZE_MAX) { // raw, parsed table
 	dtclose(tbl->u.p.rows);
     } else {
 	cells = tbl->u.n.cells;
@@ -1209,7 +1211,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     htmlcell_t **cells;
     Dt_t *rows = tbl->u.p.rows;
     int rv = 0;
-    int n_rows = 0;
+    size_t n_rows = 0;
     int n_cols = 0;
     PointSet *ps = newPS();
     Dt_t *is = openIntSet();
@@ -1384,11 +1386,10 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
     node_t *t;
     node_t *lastn;
     node_t *h;
-    int i;
     agxbuf value_buffer = {0};
 
     lastn = NULL;
-    for (i = 0; i <= tbl->column_count; i++) {
+    for (int i = 0; i <= tbl->column_count; i++) {
 	agxbprint(&value_buffer, "%d", i);
 	t = agnode(colg, agxbuse(&value_buffer), 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
@@ -1402,8 +1403,8 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 	}
     }
     lastn = NULL;
-    for (i = 0; i <= tbl->row_count; i++) {
-	agxbprint(&value_buffer, "%d", i);
+    for (size_t i = 0; i <= tbl->row_count; i++) {
+	agxbprint(&value_buffer, "%" PRISIZE_T, i);
 	t = agnode(rowg, agxbuse(&value_buffer), 1);
 	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	alloc_elist(tbl->column_count, ND_in(t));
@@ -1678,7 +1679,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
  */
 static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 {
-    int i, plus;
+    int plus;
     htmlcell_t **cells = tbl->u.n.cells;
     htmlcell_t *cp;
     boxf cbox;
@@ -1732,16 +1733,17 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
     double x = pos.LL.x + tbl->data.border + tbl->data.space;
     double extra = delx / tbl->column_count;
     plus = ROUND(delx - extra * tbl->column_count);
-    for (i = 0; i <= tbl->column_count; i++) {
+    for (int i = 0; i <= tbl->column_count; i++) {
 	delx = tbl->widths[i] + extra + (i < plus ? 1 : 0);
 	tbl->widths[i] = x;
 	x += delx + tbl->data.space;
     }
     double y = pos.UR.y - tbl->data.border - tbl->data.space;
-    extra = dely / tbl->row_count;
-    plus = ROUND(dely - extra * tbl->row_count);
-    for (i = 0; i <= tbl->row_count; i++) {
-	dely = tbl->heights[i] + extra + (i < plus ? 1 : 0);
+    assert(tbl->row_count <= DBL_MAX);
+    extra = dely / (double)tbl->row_count;
+    plus = ROUND(dely - extra * (double)tbl->row_count);
+    for (size_t i = 0; i <= tbl->row_count; i++) {
+	dely = tbl->heights[i] + extra + ((i <= INT_MAX && (int)i < plus) ? 1 : 0);
 	tbl->heights[i] = y;
 	y -= dely + tbl->data.space;
     }
@@ -1777,7 +1779,6 @@ static int
 size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 	      htmlenv_t * env)
 {
-    int i;
     int rv = 0;
     static textfont_t savef;
 
@@ -1797,10 +1798,11 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
     sizeArray(tbl);
 
     double wd = (tbl->column_count + 1) * tbl->data.space + 2 * tbl->data.border;
-    double ht = (tbl->row_count + 1) * tbl->data.space + 2 * tbl->data.border;
-    for (i = 0; i < tbl->column_count; i++)
+    assert(tbl->row_count <= DBL_MAX);
+    double ht = ((double)tbl->row_count + 1) * tbl->data.space + 2 * tbl->data.border;
+    for (int i = 0; i < tbl->column_count; i++)
 	wd += tbl->widths[i];
-    for (i = 0; i < tbl->row_count; i++)
+    for (size_t i = 0; i < tbl->row_count; i++)
 	ht += tbl->heights[i];
 
     if (tbl->data.flags & FIXED_FLAG) {
@@ -1931,7 +1933,7 @@ void printTbl(htmltbl_t * tbl, int ind)
 {
     htmlcell_t **cells = tbl->u.n.cells;
     indent(ind);
-    fprintf(stderr, "tbl (%p) %d %d ", tbl, tbl->column_count, tbl->row_count);
+    fprintf(stderr, "tbl (%p) %d %" PRISIZE_T " ", tbl, tbl->column_count, tbl->row_count);
     printData(&tbl->data);
     fputs("\n", stderr);
     while (*cells)
