@@ -754,6 +754,24 @@ def test_1618(long: str, short: str):
     ), f"`dot {long}` wrote differing output than `dot {short}`"
 
 
+@pytest.mark.parametrize(
+    "test_case", ("1622_0.dot", "1622_1.dot", "1622_2.dot", "1622_3.dot")
+)
+@pytest.mark.xfail()
+def test_1622(test_case: str):
+    """
+    Narrow HTML table cells should not cause assertion failures
+    https://gitlab.com/graphviz/graphviz/-/issues/1622
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / test_case
+    assert input.exists(), "unexpectedly missing test case"
+
+    # process it with Graphviz
+    dot("png:cairo:cairo", input)
+
+
 @pytest.mark.xfail(strict=True)
 def test_1624():
     """
