@@ -1194,7 +1194,6 @@ static void init_layering(GVC_t * gvc, graph_t * g)
 	    gvc->layerlist = parse_layerselect(gvc, str);
 	}
     } else {
-	gvc->layerIDs = NULL;
 	gvc->numLayers = 1;
     }
 }
