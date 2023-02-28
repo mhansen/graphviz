@@ -1049,7 +1049,8 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 	w1 = w0 = strtok_r (cur, gvc->layerDelims, &buf_p);
 	if (w0)
 	    w1 = strtok_r (NULL, gvc->layerDelims, &buf_p);
-	if (w0 != NULL && w1 != NULL) {
+	if (w1 != NULL) {
+	    assert(w0 != NULL);
 	    n0 = layer_index(gvc, w0, 0);
 	    n1 = layer_index(gvc, w1, numLayers);
 	    if (n0 >= 0 || n1 >= 0) {
