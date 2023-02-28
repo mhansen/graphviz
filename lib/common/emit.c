@@ -1042,7 +1042,6 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
     char *spec_copy = gv_strdup(spec);
     part_in_p = spec_copy;
 
-    /* Thanks to Matteo Nastasi for this extended code. */
     while (!rval && (cur = strtok_r(part_in_p, gvc->layerListDelims, &buf_part_p))) {
 	w1 = w0 = strtok_r (cur, gvc->layerDelims, &buf_p);
 	if (w0)
