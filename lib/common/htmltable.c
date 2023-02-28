@@ -1292,20 +1292,20 @@ static void sizeLinearArray(htmltbl_t * tbl)
 	    ht = cp->data.box.UR.y;
 	else {
 	    ht = SPLIT(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
-	    ht = MAX(ht, 1);
+	    ht = fmax(ht, 1);
 	}
 	double wd;
 	if (cp->colspan == 1)
 	    wd = cp->data.box.UR.x;
 	else {
 	    wd = SPLIT(cp->data.box.UR.x, cp->colspan, tbl->data.space);
-	    wd = MAX(wd, 1);
+	    wd = fmax(wd, 1);
 	}
 	for (i = cp->row; i < cp->row + cp->rowspan; i++) {
-	    tbl->heights[i] = MAX(tbl->heights[i], ht);
+	    tbl->heights[i] = fmax(tbl->heights[i], ht);
 	}
 	for (i = cp->col; i < cp->col + cp->colspan; i++) {
-	    tbl->widths[i] = MAX(tbl->widths[i], wd);
+	    tbl->widths[i] = fmax(tbl->widths[i], wd);
 	}
     }
 }
