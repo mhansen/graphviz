@@ -2339,6 +2339,26 @@ def test_2341():
     ), "Graphviz comment remains in groff output"
 
 
+@pytest.mark.xfail()
+def test_2355():
+    """
+    Using >127 layers should not crash Graphviz
+    https://gitlab.com/graphviz/graphviz/-/issues/2355
+    """
+
+    # construct a graph with 128 layers
+    graph = io.StringIO()
+    graph.write("digraph {\n")
+    layers = ":".join(f"l{i}" for i in range(128))
+    graph.write(f'  layers="{layers}";\n')
+    for i in range(128):
+        graph.write(f'  n{i}[layer="l{i}"];\n')
+    graph.write("}\n")
+
+    # process this with dot
+    dot("svg", source=graph.getvalue())
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
