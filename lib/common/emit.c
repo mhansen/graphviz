@@ -1061,7 +1061,7 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 		}
 		rval = BETWEEN(n0, layerNum, n1);
 	    }
-	} else if (w0 != NULL || w1 != NULL) {
+	} else if (w0 != NULL) {
 	    n0 = layer_index(gvc, w0, layerNum);
 	    rval = (n0 == layerNum);
 	} else {
