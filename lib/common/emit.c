@@ -1034,15 +1034,13 @@ static int layer_index(GVC_t *gvc, char *str, int all)
 static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 {
     int n0, n1;
-    char buf[SMALLBUF];
     char *w0, *w1;
     char *buf_part_p = NULL, *buf_p = NULL, *cur, *part_in_p;
-    agxbuf xb;
     bool rval = false;
 
-    agxbinit(&xb, SMALLBUF, buf);
-    agxbput(&xb, spec);
-    part_in_p = agxbuse(&xb);
+    // copy `spec` so we can `strtok_r` it
+    char *spec_copy = gv_strdup(spec);
+    part_in_p = spec_copy;
 
     /* Thanks to Matteo Nastasi for this extended code. */
     while (!rval && (cur = strtok_r(part_in_p, gvc->layerListDelims, &buf_part_p))) {
@@ -1069,7 +1067,7 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 	}
 	part_in_p = NULL;
     }
-    agxbfree(&xb);
+    free(spec_copy);
     return rval;
 }
 
