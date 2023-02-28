@@ -1018,7 +1018,6 @@ static bool is_natural_number(const char *sstr)
 
 static int layer_index(GVC_t *gvc, char *str, int all)
 {
-    /* GVJ_t *job = gvc->job; */
     int i;
 
     if (streq(str, "all"))
