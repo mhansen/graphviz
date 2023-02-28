@@ -40,6 +40,7 @@
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 #include <inttypes.h>
+#include <math.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -1688,11 +1689,9 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
 	tbl->data.pencolor = gv_strdup(tbl->u.n.parent->data.pencolor);
 
     oldsz = tbl->data.box.UR.x;
-    delx = pos.UR.x - pos.LL.x - oldsz;
-    assert(delx >= 0);
+    delx = fmax(pos.UR.x - pos.LL.x - oldsz, 0);
     oldsz = tbl->data.box.UR.y;
-    dely = pos.UR.y - pos.LL.y - oldsz;
-    assert(dely >= 0);
+    dely = fmax(pos.UR.y - pos.LL.y - oldsz, 0);
 
     /* If fixed, align box */
     if (tbl->data.flags & FIXED_FLAG) {

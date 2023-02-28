@@ -757,7 +757,6 @@ def test_1618(long: str, short: str):
 @pytest.mark.parametrize(
     "test_case", ("1622_0.dot", "1622_1.dot", "1622_2.dot", "1622_3.dot")
 )
-@pytest.mark.xfail()
 def test_1622(test_case: str):
     """
     Narrow HTML table cells should not cause assertion failures
