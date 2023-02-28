@@ -44,6 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Graphs with more than 127 layers no longer cause out of bound writes. #2355
 - htmltable.c assertions are no longer triggered by using HTML table cells too
   small to fit their content. #1622
+- `dot2gxl -d` no longer crashes when receiving a closing `node` tag following a
+  closing `graph` tag. #2094
 
 ### Removed
 

@@ -73,16 +73,6 @@ static void popString(gv_stack_t *stk) {
   free(s);
 }
 
-static char *topString(gv_stack_t *stk) {
-
-  if (UNLIKELY(stack_is_empty(stk))) {
-    fprintf(stderr, "PANIC: gxl2gv: empty element stack\n");
-    graphviz_exit(EXIT_FAILURE);
-  }
-
-  return stack_top(stk);
-}
-
 static void freeString(gv_stack_t *stk) {
   while (!stack_is_empty(stk)) {
     char *s = stack_pop(stk);
@@ -600,11 +590,6 @@ static void endElementHandler(void *userData, const char *name)
 	popString(&ud->elements);
 	ud->closedElementType = TAG_GRAPH;
     } else if (strcmp(name, "node") == 0) {
-	char *ele_name = topString(&ud->elements);
-	if (ud->closedElementType == TAG_GRAPH) {
-	    Agnode_t *node = agnode(root, ele_name, 0);
-	    agdelete(root, node);
-	}
 	popString(&ud->elements);
 	Current_class = TAG_GRAPH;
 	N = 0;

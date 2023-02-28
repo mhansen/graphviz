@@ -1579,7 +1579,6 @@ def test_2093():
 
 
 @pytest.mark.skipif(which("dot2gxl") is None, reason="dot2gxl not available")
-@pytest.mark.xfail()
 def test_2094():
     """
     dot2gxl should not crash when decoding a closing node tag after a closing
