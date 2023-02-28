@@ -18,7 +18,6 @@
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
-#include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
 #include    <stdio.h>
 #ifdef HAVE_EXPAT
@@ -53,39 +52,10 @@ typedef enum {
   TAG_HTML_LIKE_STRING,
 } attr_t;
 
-static void pushString(gv_stack_t *stk, const char *s) {
-
-  // duplicate the string we will push
-  char *copy = gv_strdup(s);
-
-  // push this onto the stack
-  stack_push_or_exit(stk, copy);
-}
-
-static void popString(gv_stack_t *stk) {
-
-  if (UNLIKELY(stack_is_empty(stk))) {
-    fprintf(stderr, "PANIC: gxl2gv: empty element stack\n");
-    graphviz_exit(EXIT_FAILURE);
-  }
-
-  char *s = stack_pop(stk);
-  free(s);
-}
-
-static void freeString(gv_stack_t *stk) {
-  while (!stack_is_empty(stk)) {
-    char *s = stack_pop(stk);
-    free(s);
-  }
-  stack_reset(stk);
-}
-
 typedef struct {
     agxbuf xml_attr_name;
     agxbuf xml_attr_value;
     agxbuf composite_buffer;
-    gv_stack_t elements;
     int listen;
     attr_t closedElementType;
     attr_t globalAttrType;
@@ -141,7 +111,6 @@ static Dtdisc_t nameDisc = {
 static userdata_t genUserdata(void) {
   userdata_t user = {0};
   user.listen = FALSE;
-  user.elements = (gv_stack_t){0};
   user.closedElementType = TAG_NONE;
   user.globalAttrType = TAG_NONE;
   user.compositeReadState = FALSE;
@@ -155,7 +124,6 @@ static void freeUserdata(userdata_t ud) {
   agxbfree(&ud.xml_attr_name);
   agxbfree(&ud.xml_attr_value);
   agxbfree(&ud.composite_buffer);
-  freeString(&ud.elements);
 }
 
 static void addToMap(Dt_t * map, char *name, char *uniqueName)
@@ -465,7 +433,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    setGraphAttr(G, GXL_HYPER, (char *) atts[pos], ud);
 	}
 
-	pushString(&ud->elements, id);
     } else if (strcmp(name, "node") == 0) {
 	Current_class = TAG_NODE;
 	pos = get_xml_attr("id", atts);
@@ -475,8 +442,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 
 	    if (attrname != NULL && strcmp(attrname, "") != 0) {
 		bind_node(attrname);
-
-		pushString(&ud->elements, attrname);
 	    }
 	}
 
@@ -587,10 +552,8 @@ static void endElementHandler(void *userData, const char *name)
 
     if (strcmp(name, "graph") == 0) {
 	pop_subg();
-	popString(&ud->elements);
 	ud->closedElementType = TAG_GRAPH;
     } else if (strcmp(name, "node") == 0) {
-	popString(&ud->elements);
 	Current_class = TAG_GRAPH;
 	N = 0;
 	ud->closedElementType = TAG_NODE;
