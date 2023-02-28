@@ -111,7 +111,7 @@ extern "C" {
 	} u;
 	int8_t cellborder;
 	double *heights; ///< heights of the rows
-	int *widths;		/* widths of the columns */
+	double *widths; ///< widths of the columns
 	int row_count; ///< number of rows
 	int column_count; ///< number of columns
 	textfont_t *font;	/* font info */

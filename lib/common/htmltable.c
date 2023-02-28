@@ -1280,10 +1280,10 @@ static void sizeLinearArray(htmltbl_t * tbl)
 {
     htmlcell_t *cp;
     htmlcell_t **cells;
-    int wd, i, x;
+    int i;
 
     tbl->heights = N_NEW(tbl->row_count + 1, double);
-    tbl->widths = N_NEW(tbl->column_count + 1, int);
+    tbl->widths = N_NEW(tbl->column_count + 1, double);
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
@@ -1294,6 +1294,7 @@ static void sizeLinearArray(htmltbl_t * tbl)
 	    ht = SPLIT(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
 	    ht = MAX(ht, 1);
 	}
+	double wd;
 	if (cp->colspan == 1)
 	    wd = cp->data.box.UR.x;
 	else {
@@ -1304,8 +1305,7 @@ static void sizeLinearArray(htmltbl_t * tbl)
 	    tbl->heights[i] = MAX(tbl->heights[i], ht);
 	}
 	for (i = cp->col; i < cp->col + cp->colspan; i++) {
-	    x = tbl->widths[i];
-	    tbl->widths[i] = MAX(x, wd);
+	    tbl->widths[i] = MAX(tbl->widths[i], wd);
 	}
     }
 }
@@ -1488,7 +1488,7 @@ static void sizeArray(htmltbl_t * tbl)
     }
 
     tbl->heights = N_NEW(tbl->row_count + 1, double);
-    tbl->widths = N_NEW(tbl->column_count + 1, int);
+    tbl->widths = N_NEW(tbl->column_count + 1, double);
 
     rowg = agopen("rowg", dir, NULL);
     colg = agopen("colg", dir, NULL);
@@ -1777,7 +1777,7 @@ static int
 size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 	      htmlenv_t * env)
 {
-    int i, wd;
+    int i;
     int rv = 0;
     static textfont_t savef;
 
@@ -1796,7 +1796,7 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 
     sizeArray(tbl);
 
-    wd = (tbl->column_count + 1) * tbl->data.space + 2 * tbl->data.border;
+    double wd = (tbl->column_count + 1) * tbl->data.space + 2 * tbl->data.border;
     double ht = (tbl->row_count + 1) * tbl->data.space + 2 * tbl->data.border;
     for (i = 0; i < tbl->column_count; i++)
 	wd += tbl->widths[i];
