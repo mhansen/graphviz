@@ -12,7 +12,6 @@
 #include    <circogen/circular.h>
 #include    <circogen/blocktree.h>
 #include    <circogen/circpos.h>
-#include	<string.h>
 
 #define		MINDIST			1.0
 
