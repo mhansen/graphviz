@@ -1106,7 +1106,6 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
     pointf del;
     edge_t *e0;
     int i, j, xstep, dx;
-    double l_perp;
     pointf dumber[4];
 
     edge_t *e = edge_list[0];
@@ -1132,7 +1131,7 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
     else {
         perp.x = dumb[0].y - dumb[3].y;
         perp.y = dumb[3].x - dumb[0].x;
-	l_perp = LEN(perp.x, perp.y);
+	double l_perp = hypot(perp.x, perp.y);
 	xstep = GD_nodesep(g->root);
 	dx = xstep * (e_cnt - 1) / 2;
 	dumb[1].x = dumb[0].x + dx * perp.x / l_perp;
