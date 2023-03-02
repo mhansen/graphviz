@@ -3441,9 +3441,9 @@ static void emit_page(GVJ_t * job, graph_t * g)
     emit_view(job,g,flags);
     gvrender_end_page(job);
     if (saveid) {
-	agxbfree(&xb);
 	obj->id = saveid;
     }
+    agxbfree(&xb);
 }
 
 void emit_graph(GVJ_t * job, graph_t * g)
