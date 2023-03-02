@@ -1847,7 +1847,7 @@ static void poly_init(node_t * n)
     double temp, alpha, beta, gamma;
     double orientation, distortion, skew;
     double sectorangle, sidelength, skewdist, gdistortion, gskew;
-    double angle, sinx, cosx, xmax, ymax, scalex, scaley;
+    double angle, sinx = 0, cosx = 0, xmax, ymax, scalex, scaley;
     double width, height, marginx, marginy, spacex;
     int regular, peripheries, sides;
     int i, j, isBox, outp;
