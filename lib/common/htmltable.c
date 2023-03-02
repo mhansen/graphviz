@@ -115,7 +115,6 @@ static void
 emit_htextspans(GVJ_t *job, size_t nspans, htextspan_t *spans, pointf p,
 		double halfwidth_x, textfont_t finfo, boxf b, int simple)
 {
-    int j;
     double center_x, left_x, right_x;
     textspan_t tl;
     textfont_t tf;
@@ -149,7 +148,7 @@ emit_htextspans(GVJ_t *job, size_t nspans, htextspan_t *spans, pointf p,
 	p_.y -= spans[i].lfsize;	/* move to current base line */
 
 	ti = spans[i].items;
-	for (j = 0; j < spans[i].nitems; j++) {
+	for (size_t j = 0; j < spans[i].nitems; j++) {
 	    if (ti->font && ti->font->size > 0)
 		tf.size = ti->font->size;
 	    else
@@ -814,7 +813,6 @@ void free_html_text(htmltxt_t * t)
 {
     htextspan_t *tl;
     textspan_t *ti;
-    int j;
 
     if (!t)
 	return;
@@ -822,7 +820,7 @@ void free_html_text(htmltxt_t * t)
     tl = t->spans;
     for (size_t i = 0; i < t->nspans; i++) {
 	ti = tl->items;
-	for (j = 0; j < tl->nitems; j++) {
+	for (size_t j = 0; j < tl->nitems; j++) {
 	    free(ti->str);
 	    if (ti->layout && ti->free_layout)
 		ti->free_layout(ti->layout);
@@ -956,7 +954,6 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
     double mxfsize = 0.0;	/* max. font size for the current line */
     double curbline = 0.0;	/* dist. of current base line from top */
     pointf sz;
-    int j;
     double width;
     textspan_t lp;
     textfont_t tf = {NULL,NULL,NULL,0.0,0,0};
@@ -1006,7 +1003,7 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
     for (size_t i = 0; i < ftxt->nspans; i++) {
 	width = 0;
 	mxysize = maxoffset = mxfsize = 0;
-	for (j = 0; j < ftxt->spans[i].nitems; j++) {
+	for (size_t j = 0; j < ftxt->spans[i].nitems; j++) {
 	    lp.str =
 		strdup_and_subst_obj(ftxt->spans[i].items[j].str,
 				     env->obj);
@@ -1871,16 +1868,15 @@ void printImage(htmlimg_t * ip, int ind)
 
 void printTxt(htmltxt_t * txt, int ind)
 {
-    int j;
-
     indent(ind);
     fprintf(stderr, "txt spans = %" PRISIZE_T " \n", txt->nspans);
     for (size_t i = 0; i < txt->nspans; i++) {
 	indent(ind + 1);
-	fprintf(stderr, "[%" PRISIZE_T "] %d items\n", i, txt->spans[i].nitems);
-	for (j = 0; j < txt->spans[i].nitems; j++) {
+	fprintf(stderr, "[%" PRISIZE_T "] %" PRISIZE_T " items\n", i,
+	        txt->spans[i].nitems);
+	for (size_t j = 0; j < txt->spans[i].nitems; j++) {
 	    indent(ind + 2);
-	    fprintf(stderr, "[%d] (%f,%f) \"%s\" ",
+	    fprintf(stderr, "[%" PRISIZE_T "] (%f,%f) \"%s\" ",
 		    j, txt->spans[i].items[j].size.x,
             txt->spans[i].items[j].size.y,
 		    txt->spans[i].items[j].str);
