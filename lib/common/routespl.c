@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <common/geomprocs.h>
 #include <common/render.h>
 #include <limits.h>
 #include <math.h>
@@ -1048,12 +1049,11 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 
 static void bend(pointf spl[4], pointf centroid)
 {
-    pointf  midpt,a;
+    pointf  a;
     double  r;
     double  dist,dx,dy;
 
-    midpt.x = (spl[0].x + spl[3].x)/2.0;
-    midpt.y = (spl[0].y + spl[3].y)/2.0;
+    pointf midpt = mid_pointf(spl[0], spl[3]);
     dx = spl[3].x - spl[0].x;
     dy = spl[3].y - spl[0].y;
     dist = hypot(dx, dy);
