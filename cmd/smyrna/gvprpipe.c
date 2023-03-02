@@ -10,6 +10,7 @@
 
 #include "smyrnadefs.h"
 #include "gvprpipe.h"
+#include <cgraph/agxbuf.h>
 #include <common/const.h>
 #include <limits.h>
 #include <stdio.h>
@@ -42,7 +43,7 @@ int run_gvpr(Agraph_t * srcGraph, size_t argc, char *argv[]) {
     gvpropts opts;
     Agraph_t *gs[2];
     static int count;
-    char buf[SMALLBUF];
+    agxbuf buf = {0};
 
     gs[0] = srcGraph;
     gs[1] = 0;
@@ -60,9 +61,9 @@ int run_gvpr(Agraph_t * srcGraph, size_t argc, char *argv[]) {
     } else if (opts.n_outgraphs) 
     {
 	refreshViewport();
-	snprintf(buf, sizeof(buf), "<%d>", ++count);
+	agxbprint(&buf, "<%d>", ++count);
 	if (opts.outgraphs[0] != view->g[view->activeGraph])
-	    add_graph_to_viewport(opts.outgraphs[0], buf);
+	    add_graph_to_viewport(opts.outgraphs[0], agxbuse(&buf));
 	if (opts.n_outgraphs > 1)
 	    fprintf(stderr, "Warning: multiple output graphs-discarded\n");
 	for (i = 1; i < opts.n_outgraphs; i++) {
@@ -73,5 +74,6 @@ int run_gvpr(Agraph_t * srcGraph, size_t argc, char *argv[]) {
 	updateRecord (srcGraph);
         update_graph_from_settings(srcGraph);
     }
+    agxbfree(&buf);
     return rv;
 }
