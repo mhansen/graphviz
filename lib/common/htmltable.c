@@ -2012,9 +2012,7 @@ int make_html_label(void *obj, textlabel_t * lp)
 	    graphviz_exit(EXIT_FAILURE);
 	}
 	/* Parse of label failed; revert to simple text label */
-	agxbuf xb;
-	char buf[SMALLBUF];
-	agxbinit(&xb, SMALLBUF, buf);
+	agxbuf xb = {0};
 	lp->html = false;
 	lp->text = gv_strdup(nameOf(obj, &xb));
 	switch (lp->charset) {
