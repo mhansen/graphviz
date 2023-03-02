@@ -377,11 +377,12 @@ static Agraph_t *spanning_tree(Agraph_t * g)
 {
     Agnode_t *n;
     Agraph_t *tree;
-    char gname[SMALLBUF];
+    agxbuf gname = {0};
     static int id = 0;
 
-    snprintf(gname, sizeof(gname), "_span_%d", id++);
-    tree = agsubg(g, gname,1);
+    agxbprint(&gname, "_span_%d", id++);
+    tree = agsubg(g, agxbuse(&gname), 1);
+    agxbfree(&gname);
     agbindrec(tree, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
