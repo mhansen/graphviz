@@ -14,6 +14,7 @@
 #include <common/htmltable.h>
 #include <limits.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash);
 
@@ -22,7 +23,7 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, char *line, char terminator)
     pointf size;
     textspan_t *span;
     static textfont_t tf;
-    int oldsz = lp->u.txt.nspans + 1;
+    size_t oldsz = lp->u.txt.nspans + 1;
 
     lp->u.txt.span = ZALLOC(oldsz + 1, lp->u.txt.span, textspan_t, oldsz);
     span = &lp->u.txt.span[lp->u.txt.nspans];
@@ -189,13 +190,11 @@ textlabel_t *make_label(void *obj, char *str, int kind, double fontsize, char *f
  * is all stored in one large buffer shared by all of the textspan_t,
  * so only the first one needs to free its tlp->str.
  */
-void free_textspan(textspan_t * tl, int cnt)
-{
-    int i;
+void free_textspan(textspan_t *tl, size_t cnt) {
     textspan_t* tlp = tl;
 
     if (!tl) return;
-    for (i = 0; i < cnt; i++) { 
+    for (size_t i = 0; i < cnt; i++) {
 	if (i == 0)
 	    free(tlp->str);
 	if (tlp->layout && tlp->free_layout)
@@ -221,7 +220,6 @@ void free_label(textlabel_t * p)
 void emit_label(GVJ_t * job, emit_state_t emit_state, textlabel_t * lp)
 {
     obj_state_t *obj = job->obj;
-    int i;
     pointf p;
     emit_state_t old_emit_state;
 
@@ -256,7 +254,7 @@ void emit_label(GVJ_t * job, emit_state_t emit_state, textlabel_t * lp)
     }
     if (obj->labeledgealigned)
 	p.y -= lp->pos.y;
-    for (i = 0; i < lp->u.txt.nspans; i++) {
+    for (size_t i = 0; i < lp->u.txt.nspans; i++) {
 	switch (lp->u.txt.span[i].just) {
 	case 'l':
 	    p.x = lp->pos.x - lp->space.x / 2.0;

@@ -220,7 +220,6 @@ appendFLineList (int v)
 static htmltxt_t*
 mkText(void)
 {
-    int cnt;
     Dt_t * ispan = HTMLstate.fspanList;
     fspan *fl ;
     htmltxt_t *hft = NEW(htmltxt_t);
@@ -228,7 +227,7 @@ mkText(void)
     if (dtsize (HTMLstate.fitemList)) 
 	appendFLineList (UNSET_ALIGN);
 
-    cnt = dtsize(ispan);
+    size_t cnt = (size_t)dtsize(ispan);
     hft->nspans = cnt;
     	
     if (cnt) {

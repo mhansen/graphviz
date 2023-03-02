@@ -94,7 +94,7 @@ extern "C" {
     RENDER_API void epsf_free(node_t * n);
     RENDER_API shape_desc *find_user_shape(const char *);
     RENDER_API void free_label(textlabel_t *);
-    RENDER_API void free_textspan(textspan_t * tl, int);
+    RENDER_API void free_textspan(textspan_t *tl, size_t);
     RENDER_API void getdouble(graph_t * g, char *name, double *result);
     RENDER_API splines *getsplinepoints(edge_t * e);
     RENDER_API void gv_fixLocale (int set);

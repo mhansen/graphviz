@@ -11,6 +11,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -55,7 +56,7 @@ extern "C" {
 	
     typedef struct {
 	htextspan_t *spans;
-	short nspans;
+	size_t nspans;
 	char simple;
 	boxf box;
     } htmltxt_t;

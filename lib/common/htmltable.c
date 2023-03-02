@@ -38,6 +38,7 @@
 #include <cdt/cdt.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 #include <float.h>
@@ -111,10 +112,10 @@ static void popFontInfo(htmlenv_t * env, textfont_t * savp)
 }
 
 static void
-emit_htextspans(GVJ_t * job, int nspans, htextspan_t * spans, pointf p,
+emit_htextspans(GVJ_t *job, size_t nspans, htextspan_t *spans, pointf p,
 		double halfwidth_x, textfont_t finfo, boxf b, int simple)
 {
-    int i, j;
+    int j;
     double center_x, left_x, right_x;
     textspan_t tl;
     textfont_t tf;
@@ -131,7 +132,7 @@ emit_htextspans(GVJ_t * job, int nspans, htextspan_t * spans, pointf p,
     p_.y = p.y + (b.UR.y - b.LL.y) / 2.0;
 
     gvrender_begin_label(job, LABEL_HTML);
-    for (i = 0; i < nspans; i++) {
+    for (size_t i = 0; i < nspans; i++) {
 	/* set p.x to leftmost point where the line of text begins */
 	switch (spans[i].just) {
 	case 'l':
@@ -813,13 +814,13 @@ void free_html_text(htmltxt_t * t)
 {
     htextspan_t *tl;
     textspan_t *ti;
-    int i, j;
+    int j;
 
     if (!t)
 	return;
 
     tl = t->spans;
-    for (i = 0; i < t->nspans; i++) {
+    for (size_t i = 0; i < t->nspans; i++) {
 	ti = tl->items;
 	for (j = 0; j < tl->nitems; j++) {
 	    free(ti->str);
@@ -955,7 +956,7 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
     double mxfsize = 0.0;	/* max. font size for the current line */
     double curbline = 0.0;	/* dist. of current base line from top */
     pointf sz;
-    int i, j;
+    int j;
     double width;
     textspan_t lp;
     textfont_t tf = {NULL,NULL,NULL,0.0,0,0};
@@ -964,7 +965,7 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
     double prev_fsize = -1;
     char* prev_fname = NULL;
 
-    for (i = 0; i < ftxt->nspans; i++) {
+    for (size_t i = 0; i < ftxt->nspans; i++) {
 	if (ftxt->spans[i].nitems > 1) {
 	    simple = false;
 	    break;
@@ -1002,7 +1003,7 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
     }
     ftxt->simple = simple;
 
-    for (i = 0; i < ftxt->nspans; i++) {
+    for (size_t i = 0; i < ftxt->nspans; i++) {
 	width = 0;
 	mxysize = maxoffset = mxfsize = 0;
 	for (j = 0; j < ftxt->spans[i].nitems; j++) {
@@ -1520,9 +1521,7 @@ static void pos_html_img(htmlimg_t * cp, boxf pos)
  */
 static void pos_html_txt(htmltxt_t * ftxt, char c)
 {
-    int i;
-
-    for (i = 0; i < ftxt->nspans; i++) {
+    for (size_t i = 0; i < ftxt->nspans; i++) {
 	if (ftxt->spans[i].just == UNSET_ALIGN)	/* unset */
 	    ftxt->spans[i].just = c;
     }
@@ -1872,13 +1871,13 @@ void printImage(htmlimg_t * ip, int ind)
 
 void printTxt(htmltxt_t * txt, int ind)
 {
-    int i, j;
+    int j;
 
     indent(ind);
-    fprintf(stderr, "txt spans = %d \n", txt->nspans);
-    for (i = 0; i < txt->nspans; i++) {
+    fprintf(stderr, "txt spans = %" PRISIZE_T " \n", txt->nspans);
+    for (size_t i = 0; i < txt->nspans; i++) {
 	indent(ind + 1);
-	fprintf(stderr, "[%d] %d items\n", i, txt->spans[i].nitems);
+	fprintf(stderr, "[%" PRISIZE_T "] %d items\n", i, txt->spans[i].nitems);
 	for (j = 0; j < txt->spans[i].nitems; j++) {
 	    indent(ind + 2);
 	    fprintf(stderr, "[%d] (%f,%f) \"%s\" ",
