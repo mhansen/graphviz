@@ -384,7 +384,6 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
     int changed;
     char *id;
     static int anchorId;
-    int internalId = 0;
     agxbuf xb = {0};
 
     save->url = obj->url;
@@ -400,13 +399,11 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
 	}
 	agxbprint(&xb, "%s_%d", env->objid, anchorId++);
 	id = agxbuse(&xb);
-	internalId = 1;
     }
     changed =
 	initMapData(job, NULL, data->href, data->title, data->target, id,
 		    obj->u.g);
-    if (internalId)
-	agxbfree(&xb);
+    agxbfree(&xb);
 
     if (changed) {
 	if (obj->url || obj->explicit_tooltip) {
