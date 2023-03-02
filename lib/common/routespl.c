@@ -1096,18 +1096,12 @@ void
 makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
                   splineInfo *sinfo) {
     pointf dumb[4];
-    node_t *n;
-    node_t *head;
     bool curved = et == EDGETYPE_CURVED;
-    pointf perp;
     pointf del;
-    edge_t *e0;
-    int i, j, xstep, dx;
-    pointf dumber[4];
 
     edge_t *e = edge_list[0];
-    n = agtail(e);
-    head = aghead(e);
+    node_t *n = agtail(e);
+    node_t *head = aghead(e);
     dumb[1] = dumb[0] = add_pointf(ND_coord(n), ED_tail_port(e).p);
     dumb[2] = dumb[3] = add_pointf(ND_coord(head), ED_head_port(e).p);
     if (e_cnt == 1 || Concentrate) {
@@ -1117,7 +1111,7 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	return;
     }
 
-    e0 = e;
+    edge_t *e0 = e;
     if (APPROXEQPT(dumb[0], dumb[3], MILLIPOINT)) {
 	/* degenerate case */
 	dumb[1] = dumb[0];
@@ -1126,11 +1120,13 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	del.y = 0;
     }
     else {
-        perp.x = dumb[0].y - dumb[3].y;
-        perp.y = dumb[3].x - dumb[0].x;
+        pointf perp = {
+          .x = dumb[0].y - dumb[3].y,
+          .y = dumb[3].x - dumb[0].x
+        };
 	double l_perp = hypot(perp.x, perp.y);
-	xstep = GD_nodesep(g->root);
-	dx = xstep * (e_cnt - 1) / 2;
+	int xstep = GD_nodesep(g->root);
+	int dx = xstep * (e_cnt - 1) / 2;
 	dumb[1].x = dumb[0].x + dx * perp.x / l_perp;
 	dumb[1].y = dumb[0].y + dx * perp.y / l_perp;
 	dumb[2].x = dumb[3].x + dx * perp.x / l_perp;
@@ -1139,14 +1135,15 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	del.y = -xstep * perp.y / l_perp;
     }
 
-    for (i = 0; i < e_cnt; i++) {
+    for (int i = 0; i < e_cnt; i++) {
 	e0 = edge_list[i];
+	pointf dumber[4];
 	if (aghead(e0) == head) {
-	    for (j = 0; j < 4; j++) {
+	    for (size_t j = 0; j < 4; j++) {
 		dumber[j] = dumb[j];
 	    }
 	} else {
-	    for (j = 0; j < 4; j++) {
+	    for (size_t j = 0; j < 4; j++) {
 		dumber[3 - j] = dumb[j];
 	    }
 	}
