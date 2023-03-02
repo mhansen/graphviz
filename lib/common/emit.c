@@ -318,10 +318,7 @@ initObjMapData (GVJ_t* job, textlabel_t *lab, void* gobj)
     char* tooltip = agget(gobj, "tooltip");
     char* target = agget(gobj, "target");
     char* id;
-    char buf[SMALLBUF];
-    agxbuf xb;
-
-    agxbinit(&xb, SMALLBUF, buf);
+    agxbuf xb = {0};
 
     if (lab) lbl = lab->text;
     else lbl = NULL;
@@ -2525,10 +2522,8 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
     }
 
     if (flags & GVRENDER_DOES_MAPS) {
-	agxbuf xb;
-	char xbuf[SMALLBUF];
+	agxbuf xb = {0};
 
-	agxbinit(&xb, SMALLBUF, xbuf);
 	s = getObjId (job, e, &xb);
 	obj->id = strdup_and_subst_obj(s, e);
 	agxbfree(&xb);
