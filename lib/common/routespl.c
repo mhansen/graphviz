@@ -1166,9 +1166,7 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	    clip_and_install(e0, aghead(e0), dumber, 4, sinfo);
 
 	addEdgeLabels(e0);
-	dumb[1].x += del.x;
-	dumb[1].y += del.y;
-	dumb[2].x += del.x;
-	dumb[2].y += del.y;
+	dumb[1] = add_pointf(dumb[1], del);
+	dumb[2] = add_pointf(dumb[2], del);
     }
 }
