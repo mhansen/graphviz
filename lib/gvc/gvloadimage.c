@@ -15,9 +15,7 @@
  */
 
 #include "config.h"
-
-#include <string.h>
-
+#include <cgraph/agxbuf.h>
 #include <common/const.h>
 #include <gvc/gvplugin_loadimage.h>
 #include <gvc/gvcint.h>
@@ -45,20 +43,21 @@ static int gvloadimage_select(GVJ_t * job, char *str)
 void gvloadimage(GVJ_t * job, usershape_t *us, boxf b, bool filled, const char *target)
 {
     gvloadimage_engine_t *gvli;
-    char type[SMALLBUF];
+    agxbuf type_buf = {0};
 
     assert(job);
     assert(us);
     assert(us->name);
     assert(us->name[0]);
 
-    strcpy(type, us->stringtype);
-    strcat(type, ":");
-    strcat(type, target);
+    agxbprint(&type_buf, "%s:%s", us->stringtype, target);
+    char *type = agxbuse(&type_buf);
 
     if (gvloadimage_select(job, type) == NO_SUPPORT)
 	    agerr (AGWARN, "No loadimage plugin for \"%s\"\n", type);
 
     if ((gvli = job->loadimage.engine) && gvli->loadimage)
 	gvli->loadimage(job, us, b, filled);
+
+    agxbfree(&type_buf);
 }
