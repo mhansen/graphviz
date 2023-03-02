@@ -3380,14 +3380,12 @@ static void emit_page(GVJ_t * job, graph_t * g)
     textlabel_t *lab;
     pointf *p = NULL;
     char* saveid;
-    char buf[SMALLBUF];
-    agxbuf xb;
+    agxbuf xb = {0};
 
     /* For the first page, we can use the values generated in emit_begin_graph. 
      * For multiple pages, we need to generate a new id.
      */
     if (NotFirstPage(job)) {
-	agxbinit(&xb, SMALLBUF, buf);
 	saveid = obj->id;
 	layerPagePrefix (job, &xb);
 	agxbput (&xb, saveid);
