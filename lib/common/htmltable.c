@@ -985,7 +985,7 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
 	    tf.size = env->finfo.size;
 	    tf.name = env->finfo.name;
 	}
-	if (prev_fsize == -1)
+	if (i == 0)
 	    prev_fsize = tf.size;
 	else if (tf.size != prev_fsize) {
 	    simple = false;
