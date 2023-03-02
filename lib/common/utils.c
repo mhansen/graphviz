@@ -1102,15 +1102,13 @@ void processClusterEdges(graph_t * g)
     node_t *nxt;
     edge_t *e;
     graph_t *clg;
-    agxbuf xb;
+    agxbuf xb = {0};
     Dt_t *map;
     Dt_t *cmap = mkClustMap (g);
-    char buf[SMALLBUF];
 
     map = dtopen(&mapDisc, Dtoset);
     clg = agsubg(g, "__clusternodes",1);
     agbindrec(clg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-    agxbinit(&xb, SMALLBUF, buf);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (IS_CLUST_NODE(n)) continue;
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
