@@ -1151,14 +1151,11 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	    }
 	}
 	if (et == EDGETYPE_PLINE) {
-	    Ppoint_t pts[4];
+	    Ppoint_t pts[] = {dumber[0], dumber[1], dumber[2], dumber[3]};
 	    Ppolyline_t spl, line;
 
 	    line.pn = 4;
 	    line.ps = pts;
-	    for (j=0; j < 4; j++) {
-		pts[j] = dumber[j];
-	    }
 	    make_polyline (line, &spl);
 	    clip_and_install(e0, aghead(e0), spl.ps, spl.pn, sinfo);
 	}
