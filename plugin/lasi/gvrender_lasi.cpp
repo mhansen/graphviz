@@ -449,8 +449,7 @@ static void lasi_ellipse(GVJ_t * job, pointf * A, int filled)
     }
 }
 
-static void lasi_bezier(GVJ_t * job, pointf * A, int n, int, int, int filled)
-{
+static void lasi_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     int j;
 
     if (filled && job->obj->fillcolor.u.HSVA[3] > .5) {

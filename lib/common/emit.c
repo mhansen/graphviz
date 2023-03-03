@@ -594,7 +594,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	else
 	    angle1 = angle0 + 2 * M_PI * s->t;
 	pp = ellipticWedge (ctr, semi.x, semi.y, angle0, angle1);
-	gvrender_beziercurve(job, pp->ps, pp->pn, 0, 0, 1);
+	gvrender_beziercurve(job, pp->ps, pp->pn, 1);
 	angle0 = angle1;
 	freePath (pp);
     }
@@ -1501,7 +1501,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 		pts = copyPts (pts, &ptsize, op->op.u.bezier.pts, op->op.u.bezier.cnt);
 		assert(op->op.u.bezier.cnt <= INT_MAX &&
 		       "polygon count exceeds gvrender_beizercurve support");
-		gvrender_beziercurve(job, pts, (int)op->op.u.bezier.cnt, 0, 0,
+		gvrender_beziercurve(job, pts, (int)op->op.u.bezier.cnt,
 		                     op->op.kind == xd_filled_bezier ? filled : 0);
 	    }
 	    break;
@@ -2149,7 +2149,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 	    if (first) {
 		first = 0;
 		splitBSpline (&bz, s->t, &bz_l, &bz_r);
-		gvrender_beziercurve(job, bz_l.list, bz_l.size, FALSE, FALSE, FALSE);
+		gvrender_beziercurve(job, bz_l.list, bz_l.size, FALSE);
 		free (bz_l.list);
 		if (AEQ0(left)) {
 		    free (bz_r.list);
@@ -2157,7 +2157,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 		}
 	    }
 	    else if (AEQ0(left)) {
-		gvrender_beziercurve(job, bz_r.list, bz_r.size, FALSE, FALSE, FALSE);
+		gvrender_beziercurve(job, bz_r.list, bz_r.size, FALSE);
 		free (bz_r.list);
 		break;
 	    }
@@ -2165,7 +2165,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 		bz0 = bz_r;
 		splitBSpline(&bz0, s->t / (left + s->t), &bz_l, &bz_r);
 		free (bz0.list);
-		gvrender_beziercurve(job, bz_l.list, bz_l.size, FALSE, FALSE, FALSE);
+		gvrender_beziercurve(job, bz_l.list, bz_l.size, FALSE);
 		free (bz_l.list);
 	    }
 		
@@ -2391,8 +2391,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 			tmplist[j].x += offlist[j].x;
 			tmplist[j].y += offlist[j].y;
 		    }
-		    gvrender_beziercurve(job, tmplist, tmpspl.list[i].size,
-					 FALSE, FALSE, FALSE);
+		    gvrender_beziercurve(job, tmplist, tmpspl.list[i].size, FALSE);
 		}
 	    }
 	    if (bz.sflag) {
@@ -2440,9 +2439,9 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	    for (i = 0; i < ED_spl(e)->size; i++) {
 		bz = ED_spl(e)->list[i];
 		if (job->flags & GVRENDER_DOES_ARROWS) {
-		    gvrender_beziercurve(job, bz.list, bz.size, bz.sflag, bz.eflag, FALSE);
+		    gvrender_beziercurve(job, bz.list, bz.size, FALSE);
 		} else {
-		    gvrender_beziercurve(job, bz.list, bz.size, FALSE, FALSE, FALSE);
+		    gvrender_beziercurve(job, bz.list, bz.size, FALSE);
 		    if (bz.sflag) {
 			arrow_gen(job, EMIT_TDRAW, bz.sp, bz.list[0],
 				arrowsize, penwidth, bz.sflag);

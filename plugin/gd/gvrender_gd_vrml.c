@@ -478,10 +478,7 @@ nearTail (GVJ_t* job, pointf a, Agedge_t* e)
 #define GETZ(jp,op,p,e) (nearTail(jp,p,e)?op->tail_z:op->head_z) 
 
 static void
-vrml_bezier(GVJ_t *job, pointf * A, int n, int arrow_at_start, int arrow_at_end, int filled)
-{
-    (void)arrow_at_start;
-    (void)arrow_at_end;
+vrml_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     (void)filled;
 
     obj_state_t *obj = job->obj;

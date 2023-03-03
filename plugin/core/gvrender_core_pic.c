@@ -354,11 +354,7 @@ static void pic_ellipse(GVJ_t * job, pointf * A, int filled)
 		PS2INCH(A[0].y));
 }
 
-static void pic_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
-	      int arrow_at_end, int filled)
-{
-    (void)arrow_at_start;
-    (void)arrow_at_end;
+static void pic_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     (void)filled;
 
     obj_state_t *obj = job->obj;

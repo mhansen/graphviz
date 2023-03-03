@@ -403,16 +403,10 @@ cairogen_polygon(GVJ_t * job, pointf * A, int n, int filled)
 }
 
 static void
-cairogen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
-		int arrow_at_end, int filled)
-{
+cairogen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     obj_state_t *obj = job->obj;
     cairo_t *cr = job->context;
     int i;
-
-    // suppress unused parameter warnings
-    (void)arrow_at_start;
-    (void)arrow_at_end;
 
     cairogen_set_penstyle(job, cr);
 

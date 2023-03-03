@@ -608,7 +608,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	}
 	pts[i++] = pts[0];
 	pts[i++] = pts[1];
-	gvrender_beziercurve(job, pts+1, i-1, FALSE, FALSE, filled);
+	gvrender_beziercurve(job, pts+1, i-1, filled);
 	free (pts);
 	
 	break;
@@ -4167,8 +4167,8 @@ static void cylinder_draw(GVJ_t * job, pointf * AF, int sides, int filled)
     vertices[5].y = y02 - AF[5].y;
     vertices[6] = AF[6];
 
-    gvrender_beziercurve(job, AF, sides, FALSE, FALSE, filled);
-    gvrender_beziercurve(job, vertices, 7, FALSE, FALSE, FALSE);
+    gvrender_beziercurve(job, AF, sides, filled);
+    gvrender_beziercurve(job, vertices, 7, FALSE);
 }
 
 static char *side_port[] = { "s", "e", "n", "w" };
