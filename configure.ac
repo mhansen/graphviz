@@ -1611,23 +1611,6 @@ fi
 AM_CONDITIONAL(WITH_GS, [test "x$use_ghostscript" = "xYes"])
 
 dnl -----------------------------------
-dnl INCLUDES and LIBS for VISIO
-
-AC_ARG_WITH(visio,
-  [AS_HELP_STRING([--with-visio=yes],[visio library])],
-  [], [with_visio=yes])
-
-if test "x$with_visio" != "xyes"; then
-  use_visio="No (disabled)"
-else
-  use_visio="Yes"
-  AC_DEFINE_UNQUOTED(HAVE_VISIO,1,[Define if you have the visio library])
-  AC_SUBST([VISIO_CFLAGS])
-  AC_SUBST([VISIO_LIBS])
-fi
-AM_CONDITIONAL(WITH_VISIO, [test "x$use_visio" = "xYes"])
-
-dnl -----------------------------------
 dnl INCLUDES and LIBS for PANGOCAIRO
 
 AC_ARG_WITH(pangocairo,
@@ -2450,7 +2433,6 @@ AC_CONFIG_FILES(Makefile
 	plugin/poppler/Makefile
 	plugin/quartz/Makefile
 	plugin/rsvg/Makefile
-	plugin/visio/Makefile
 	plugin/webp/Makefile
 	plugin/xlib/Makefile
 	plugin/dot_layout/Makefile
@@ -2579,7 +2561,6 @@ echo "  pangocairo:    $use_pangocairo"
 echo "  poppler:       $use_poppler"
 echo "  quartz:        $use_quartz"
 echo "  rsvg:          $use_rsvg"
-echo "  visio:         $use_visio"
 echo "  webp:          $use_webp"
 echo "  xlib:          $use_xlib"
 echo ""

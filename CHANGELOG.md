@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `GD_has_sourcerank` accessor has been removed.
 - **Breaking**: The `Agraphinfo_t.has_sinkrank` field and its
   `GD_has_sinkrank` accessor has been removed.
+- Support for the legacy Microsoft Visio VDX format has been removed.
 
 ## [7.1.0] – 2023-01-21
 
