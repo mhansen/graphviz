@@ -255,7 +255,7 @@ void circo_cleanup(graph_t * g)
     if (n == NULL)
 	return;			/* g is empty */
 
-    closeDerivedGraph((graph_t*)GD_alg(g));	/* delete derived graph */
+    closeDerivedGraph(GD_alg(g)); // delete derived graph
 
     /* free (ND_alg(n)); */
     for (; n; n = agnxtnode(g, n)) {

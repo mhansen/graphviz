@@ -324,8 +324,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 
 	/* various flags */
 	bool has_flat_edges;
-	bool has_sourcerank;
-	bool has_sinkrank;
 	unsigned char	showboxes;
 	fontname_kind fontnames;		/* to override mangling in SVG */
 
@@ -366,8 +364,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define GD_has_labels(g) (((Agraphinfo_t*)AGDATA(g))->has_labels)
 #define GD_has_images(g) (((Agraphinfo_t*)AGDATA(g))->has_images)
 #define GD_has_flat_edges(g) (((Agraphinfo_t*)AGDATA(g))->has_flat_edges)
-#define GD_has_sourcerank(g)	(((Agraphinfo_t*)AGDATA(g))->has_sourcerank)
-#define GD_has_sinkrank(g)	(((Agraphinfo_t*)AGDATA(g))->has_sinkrank)
 #define GD_ht1(g) (((Agraphinfo_t*)AGDATA(g))->ht1)
 #define GD_ht2(g) (((Agraphinfo_t*)AGDATA(g))->ht2)
 #define GD_installed(g) (((Agraphinfo_t*)AGDATA(g))->installed)
@@ -393,7 +389,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define GD_neato_nlist(g) (((Agraphinfo_t*)AGDATA(g))->neato_nlist)
 #define GD_nlist(g) (((Agraphinfo_t*)AGDATA(g))->nlist)
 #define GD_nodesep(g) (((Agraphinfo_t*)AGDATA(g))->nodesep)
-#define GD_outleaf(g) (((Agraphinfo_t*)AGDATA(g))->outleaf)
 #define GD_rank(g) (((Agraphinfo_t*)AGDATA(g))->rank)
 #define GD_rankleader(g) (((Agraphinfo_t*)AGDATA(g))->rankleader)
 #define GD_ranksep(g) (((Agraphinfo_t*)AGDATA(g))->ranksep)
@@ -458,8 +453,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	/* for union-find and collapsing nodes */
 	int UF_size;
 	node_t *UF_parent;
-	node_t *inleaf;
-	node_t *outleaf;
 
 	/* for placing nodes */
 	int rank;
@@ -500,7 +493,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define ND_hops(n) (((Agnodeinfo_t*)AGDATA(n))->hops)
 #define ND_ht(n) (((Agnodeinfo_t*)AGDATA(n))->ht)
 #define ND_in(n) (((Agnodeinfo_t*)AGDATA(n))->in)
-#define ND_inleaf(n) (((Agnodeinfo_t*)AGDATA(n))->inleaf)
 #define ND_label(n) (((Agnodeinfo_t*)AGDATA(n))->label)
 #define ND_xlabel(n) (((Agnodeinfo_t*)AGDATA(n))->xlabel)
 #define ND_lim(n) (((Agnodeinfo_t*)AGDATA(n))->lim)
@@ -515,7 +507,6 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 #define ND_order(n) (((Agnodeinfo_t*)AGDATA(n))->order)
 #define ND_other(n) (((Agnodeinfo_t*)AGDATA(n))->other)
 #define ND_out(n) (((Agnodeinfo_t*)AGDATA(n))->out)
-#define ND_outleaf(n) (((Agnodeinfo_t*)AGDATA(n))->outleaf)
 #define ND_outline_width(n) (((Agnodeinfo_t*)AGDATA(n))->outline_width)
 #define ND_outline_height(n) (((Agnodeinfo_t*)AGDATA(n))->outline_height)
 #define ND_par(n) (((Agnodeinfo_t*)AGDATA(n))->par)

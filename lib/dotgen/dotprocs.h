@@ -36,7 +36,6 @@ extern "C" {
     extern void expand_cluster(Agraph_t *);
     extern Agedge_t *fast_edge(Agedge_t *);
     extern void fast_node(Agraph_t *, Agnode_t *);
-    extern void fast_nodeapp(Agnode_t *, Agnode_t *);
     extern Agedge_t *find_fast_edge(Agnode_t *, Agnode_t *);
     extern Agedge_t *find_flat_edge(Agnode_t *, Agnode_t *);
     extern void flat_edge(Agraph_t *, Agedge_t *);
@@ -63,7 +62,6 @@ extern "C" {
     extern void reverse_edge(Agedge_t *);
     extern void safe_other_edge(Agedge_t *);
     extern void save_vlist(Agraph_t *);
-    extern void unmerge_oneway(Agedge_t *);
     extern Agedge_t *virtual_edge(Agnode_t *, Agnode_t *, Agedge_t *);
     extern Agnode_t *virtual_node(Agraph_t *);
     extern void virtual_weight(Agedge_t *);

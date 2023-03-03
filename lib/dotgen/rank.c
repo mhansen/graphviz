@@ -637,16 +637,14 @@ static void compile_samerank(graph_t * ug, graph_t * parent_clust)
 
     /* process this subgraph as a rankset */
     switch (rankset_kind(ug)) {
-    case SOURCERANK:
-	GD_has_sourcerank(clust) = true;	/* fall through */
+    case SOURCERANK: // fall through
     case MINRANK:
 	leader = union_all(ug);
 	if (clust != NULL) {
 	    GD_minrep(clust) = union_one(leader, GD_minrep(clust));
 	}
 	break;
-    case SINKRANK:
-	GD_has_sinkrank(clust) = true;	/* fall through */
+    case SINKRANK: // fall through
     case MAXRANK:
 	leader = union_all(ug);
 	if (clust != NULL) {

@@ -111,21 +111,6 @@ void delete_fast_edge(edge_t * e)
     zapinlist(&(ND_in(aghead(e))), e);
 }
 
-static void 
-safe_delete_fast_edge(edge_t * e)
-{
-    int i;
-    edge_t *f;
-
-    assert(e != NULL);
-    for (i = 0; (f = ND_out(agtail(e)).list[i]); i++)
-	if (f == e)
-	    zapinlist(&(ND_out(agtail(e))), e);
-    for (i = 0; (f = ND_in(aghead(e)).list[i]); i++)
-	if (f == e)
-	    zapinlist(&(ND_in(aghead(e))), e);
-}
-
 void other_edge(edge_t * e)
 {
     elist_append(e, ND_other(agtail(e)));
@@ -135,15 +120,6 @@ void safe_other_edge(edge_t * e)
 {
     safe_list_append(e, &(ND_other(agtail(e))));
 }
-
-#ifdef OBSOLETE
-void 
-delete_other_edge(edge_t * e)
-{
-    assert(e != NULL);
-    zapinlist(&(ND_other(agtail(e))), e);
-}
-#endif
 
 /* new_virtual_edge:
  * Create and return a new virtual edge e attached to orig.
@@ -209,17 +185,6 @@ void fast_node(graph_t * g, Agnode_t * n)
     GD_nlist(g) = n;
     ND_prev(n) = NULL;
     assert(n != ND_next(n));
-}
-
-void fast_nodeapp(node_t * u, node_t * v)
-{
-    assert(u != v);
-    assert(ND_next(v) == NULL);
-    ND_next(v) = ND_next(u);
-    if (ND_next(u))
-	ND_prev(ND_next(u)) = v;
-    ND_prev(v) = u;
-    ND_next(u) = v;
 }
 
 void delete_fast_node(graph_t * g, node_t * n)
@@ -342,44 +307,3 @@ merge_oneway(edge_t * e, edge_t * rep)
     ED_to_virt(e) = rep;
     basic_merge(e, rep);
 }
-
-static void 
-unrep(edge_t * rep, edge_t * e)
-{
-    ED_count(rep) -= ED_count(e);
-    ED_xpenalty(rep) -= ED_xpenalty(e);
-    ED_weight(rep) -= ED_weight(e);
-}
-
-void unmerge_oneway(edge_t * e)
-{
-    edge_t *rep, *nextrep;
-    for (rep = ED_to_virt(e); rep; rep = nextrep) {
-	unrep(rep, e);
-	nextrep = ED_to_virt(rep);
-	if (ED_count(rep) == 0)
-	    safe_delete_fast_edge(rep);	/* free(rep)? */
-
-	/* unmerge from a virtual edge chain */
-	while ((ED_edge_type(rep) == VIRTUAL)
-	       && (ND_node_type(aghead(rep)) == VIRTUAL)
-	       && (ND_out(aghead(rep)).size == 1)) {
-	    rep = ND_out(aghead(rep)).list[0];
-	    unrep(rep, e);
-	}
-    }
-    ED_to_virt(e) = NULL;
-}
-
-#ifdef OBSOLETET
-static int 
-is_fast_node(graph_t * g, node_t * v)
-{
-    node_t *n;
-
-    for (n = GD_nlist(g); n; n = ND_next(n))
-	if (v == n)
-	    return TRUE;
-    return FALSE;
-}
-#endif

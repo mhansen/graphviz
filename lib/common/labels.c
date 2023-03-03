@@ -301,7 +301,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
     switch (agobjkind(obj)) {
 	case AGRAPH:
 	    g_str = agnameof(obj);
-	    tl = GD_label((graph_t *)obj);
+	    tl = GD_label(obj);
 	    if (tl) {
 		l_str = tl->text;
 	    }
@@ -309,7 +309,7 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
 	case AGNODE:
 	    g_str = agnameof(agraphof(obj));
 	    n_str = agnameof(obj);
-	    tl = ND_label((node_t *)obj);
+	    tl = ND_label(obj);
 	    if (tl) {
 		l_str = tl->text;
 	    }
@@ -318,14 +318,14 @@ static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash)
 	    isEdge = 1;
 	    g_str = agnameof(agroot(agraphof(agtail(((edge_t *)obj)))));
 	    t_str = agnameof(agtail(((edge_t *)obj)));
-	    pt = ED_tail_port((edge_t *)obj);
+	    pt = ED_tail_port(obj);
 	    if ((tp_str = pt.name))
 	        has_tp = *tp_str != '\0';
 	    h_str = agnameof(aghead(((edge_t *)obj)));
-	    pt = ED_head_port((edge_t *)obj);
+	    pt = ED_head_port(obj);
 	    if ((hp_str = pt.name))
 		has_hp = *hp_str != '\0';
-	    tl = ED_label((edge_t *)obj);
+	    tl = ED_label(obj);
 	    if (tl) {
 		l_str = tl->text;
 	    }
