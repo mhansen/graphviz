@@ -2438,22 +2438,18 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	    }
 	    for (i = 0; i < ED_spl(e)->size; i++) {
 		bz = ED_spl(e)->list[i];
-		if (job->flags & GVRENDER_DOES_ARROWS) {
-		    gvrender_beziercurve(job, bz.list, bz.size, FALSE);
-		} else {
-		    gvrender_beziercurve(job, bz.list, bz.size, FALSE);
-		    if (bz.sflag) {
-			arrow_gen(job, EMIT_TDRAW, bz.sp, bz.list[0],
-				arrowsize, penwidth, bz.sflag);
-		    }
-		    if (bz.eflag) {
-			arrow_gen(job, EMIT_HDRAW, bz.ep, bz.list[bz.size - 1],
-				arrowsize, penwidth, bz.eflag);
-		    }
-		    if (ED_spl(e)->size > 1 && (bz.sflag || bz.eflag) && styles)
-			gvrender_set_style(job, styles);
+		gvrender_beziercurve(job, bz.list, bz.size, FALSE);
+		if (bz.sflag) {
+		    arrow_gen(job, EMIT_TDRAW, bz.sp, bz.list[0],
+		              arrowsize, penwidth, bz.sflag);
 		}
-	    }
+		if (bz.eflag) {
+		    arrow_gen(job, EMIT_HDRAW, bz.ep, bz.list[bz.size - 1],
+		              arrowsize, penwidth, bz.eflag);
+		}
+		if (ED_spl(e)->size > 1 && (bz.sflag || bz.eflag) && styles)
+		    gvrender_set_style(job, styles);
+		}
 	}
     }
 }
