@@ -282,9 +282,7 @@ extern "C" {
     typedef struct _glCompMouse {
 	glCompMouseStatus status;
 	glMouseButtonType t;
-	glCompPoint initPos; /*current mouse pos,*/
 	glCompPoint pos; /*current mouse pos,*/
-	glCompPoint finalPos; /*current mouse pos,*/
 	glCompPoint GLpos;/*3d converted opengl position*/
 	glCompPoint GLinitPos;/*mouse button down pos*/
 	glCompPoint GLfinalPos;/*mouse button up pos*/
@@ -306,16 +304,8 @@ extern "C" {
 	glCompCommon common;
 
 	glCompObj **obj;
-	int objcnt;
-	glCompPanel **panels;
-	glCompButton **buttons;
-	glCompLabel **labels;
-	int groupCount;		/*group id counter */
-	int active;		//0 don't draw, 1 draw
-	int enabled;		//0 disabled 1 enabled(allow mouse interaction)
-	GLfloat clickedX, clickedY;
-
-	int textureCount;
+	size_t objcnt;
+	size_t textureCount;
 	glCompTex **textures;
 	glCompMouse mouse;
     } glCompSet;

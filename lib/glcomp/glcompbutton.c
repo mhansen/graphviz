@@ -142,11 +142,10 @@ void glCompButtonClick(glCompObj * o, GLfloat x, GLfloat y,
     glCompButton *p = (glCompButton *) o;
     glCompObj *obj;
     glCompSet *s = o->common.compset;
-    int ind = 0;
     ((glCompButton *) o)->status=((glCompButton *) o)->refStatus ;
     if (p->groupid > 0) 
     {
-	for (; ind < s->objcnt; ind++) {
+	for (size_t ind = 0; ind < s->objcnt; ind++) {
 	    obj = s->obj[ind];
 	    if (obj->objType == glButtonObj && obj != o) {
 		if (((glCompButton *) obj)->groupid == p->groupid)

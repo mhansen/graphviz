@@ -31,11 +31,10 @@ static int glCompPointInObject(glCompObj * p, float x, float y)
 glCompObj *glCompGetObjByMouse(glCompSet * s, glCompMouse * m,
 			       int onlyClickable)
 {
-    int ind;
     glCompObj *rv = NULL;
     if (!s || !m)
 	return NULL;
-    for (ind = 0; ind < s->objcnt; ind++) {
+    for (size_t ind = 0; ind < s->objcnt; ind++) {
 	if (s->obj[ind]->common.visible
 	    && glCompPointInObject(s->obj[ind], m->pos.x, m->pos.y)) {
 	    if (!rv || s->obj[ind]->common.layer >= rv->common.layer) {
@@ -202,7 +201,6 @@ glCompSet *glCompSetNew(int w, int h)
     glCompInitCommon((glCompObj *) s, NULL, 0.0f, 0.0f);
     s->common.width = (GLfloat) w;
     s->common.height = (GLfloat) h;
-    s->groupCount = 0;
     s->objcnt = 0;
     s->obj = NULL;
     s->textureCount = 0;
@@ -253,15 +251,12 @@ void glCompDrawEnd(void)	//pops the gl stack
     glEnable(GL_DEPTH_TEST);
 }
 
-int glCompSetDraw(glCompSet * s)
-{
-    int ind = 0;
+void glCompSetDraw(glCompSet *s) {
     glCompDrawBegin();
-    for (; ind < s->objcnt; ind++) {
+    for (size_t ind = 0; ind < s->objcnt; ind++) {
 	s->obj[ind]->common.functions.draw(s->obj[ind]);
     }
     glCompDrawEnd();
-    return 1;
 }
 
 void glcompsetUpdateBorder(glCompSet * s, int w, int h)
