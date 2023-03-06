@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <common/geomprocs.h>
 #include <common/render.h>
 #include <limits.h>
 #include <math.h>
@@ -1048,15 +1049,11 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 
 static void bend(pointf spl[4], pointf centroid)
 {
-    pointf  midpt,a;
+    pointf  a;
     double  r;
-    double  dist,dx,dy;
 
-    midpt.x = (spl[0].x + spl[3].x)/2.0;
-    midpt.y = (spl[0].y + spl[3].y)/2.0;
-    dx = spl[3].x - spl[0].x;
-    dy = spl[3].y - spl[0].y;
-    dist = hypot(dx, dy);
+    pointf midpt = mid_pointf(spl[0], spl[3]);
+    double dist = DIST(spl[3], spl[0]);
     r = dist/5.0;
     {
         double vX = centroid.x - midpt.x;
@@ -1099,19 +1096,12 @@ void
 makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
                   splineInfo *sinfo) {
     pointf dumb[4];
-    node_t *n;
-    node_t *head;
     bool curved = et == EDGETYPE_CURVED;
-    pointf perp;
     pointf del;
-    edge_t *e0;
-    int i, j, xstep, dx;
-    double l_perp;
-    pointf dumber[4];
 
     edge_t *e = edge_list[0];
-    n = agtail(e);
-    head = aghead(e);
+    node_t *n = agtail(e);
+    node_t *head = aghead(e);
     dumb[1] = dumb[0] = add_pointf(ND_coord(n), ED_tail_port(e).p);
     dumb[2] = dumb[3] = add_pointf(ND_coord(head), ED_head_port(e).p);
     if (e_cnt == 1 || Concentrate) {
@@ -1121,7 +1111,7 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	return;
     }
 
-    e0 = e;
+    edge_t *e0 = e;
     if (APPROXEQPT(dumb[0], dumb[3], MILLIPOINT)) {
 	/* degenerate case */
 	dumb[1] = dumb[0];
@@ -1130,11 +1120,13 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	del.y = 0;
     }
     else {
-        perp.x = dumb[0].y - dumb[3].y;
-        perp.y = dumb[3].x - dumb[0].x;
-	l_perp = LEN(perp.x, perp.y);
-	xstep = GD_nodesep(g->root);
-	dx = xstep * (e_cnt - 1) / 2;
+        pointf perp = {
+          .x = dumb[0].y - dumb[3].y,
+          .y = dumb[3].x - dumb[0].x
+        };
+	double l_perp = hypot(perp.x, perp.y);
+	int xstep = GD_nodesep(g->root);
+	int dx = xstep * (e_cnt - 1) / 2;
 	dumb[1].x = dumb[0].x + dx * perp.x / l_perp;
 	dumb[1].y = dumb[0].y + dx * perp.y / l_perp;
 	dumb[2].x = dumb[3].x + dx * perp.x / l_perp;
@@ -1143,26 +1135,21 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	del.y = -xstep * perp.y / l_perp;
     }
 
-    for (i = 0; i < e_cnt; i++) {
+    for (int i = 0; i < e_cnt; i++) {
 	e0 = edge_list[i];
+	pointf dumber[4];
 	if (aghead(e0) == head) {
-	    for (j = 0; j < 4; j++) {
+	    for (size_t j = 0; j < 4; j++) {
 		dumber[j] = dumb[j];
 	    }
 	} else {
-	    for (j = 0; j < 4; j++) {
+	    for (size_t j = 0; j < 4; j++) {
 		dumber[3 - j] = dumb[j];
 	    }
 	}
 	if (et == EDGETYPE_PLINE) {
-	    Ppoint_t pts[4];
-	    Ppolyline_t spl, line;
-
-	    line.pn = 4;
-	    line.ps = pts;
-	    for (j=0; j < 4; j++) {
-		pts[j] = dumber[j];
-	    }
+	    Ppoint_t pts[] = {dumber[0], dumber[1], dumber[2], dumber[3]};
+	    Ppolyline_t spl, line = {.pn = 4, .ps = pts};
 	    make_polyline (line, &spl);
 	    clip_and_install(e0, aghead(e0), spl.ps, spl.pn, sinfo);
 	}
@@ -1170,9 +1157,7 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	    clip_and_install(e0, aghead(e0), dumber, 4, sinfo);
 
 	addEdgeLabels(e0);
-	dumb[1].x += del.x;
-	dumb[1].y += del.y;
-	dumb[2].x += del.x;
-	dumb[2].y += del.y;
+	dumb[1] = add_pointf(dumb[1], del);
+	dumb[2] = add_pointf(dumb[2], del);
     }
 }

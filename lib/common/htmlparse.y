@@ -145,9 +145,8 @@ free_fspan(Dt_t* d, fspan* p, Dtdisc_t* ds)
     textspan_t* ti;
 
     if (p->lp.nitems) {
-	int i;
 	ti = p->lp.items;
-	for (i = 0; i < p->lp.nitems; i++) {
+	for (size_t i = 0; i < p->lp.nitems; i++) {
 	    free (ti->str);
 	    ti++;
 	}
@@ -184,12 +183,11 @@ appendFItemList (agxbuf *ag)
 static void 
 appendFLineList (int v)
 {
-    int cnt;
     fspan *ln = NEW(fspan);
     fitem *fi;
     Dt_t *ilist = HTMLstate.fitemList;
 
-    cnt = dtsize(ilist);
+    size_t cnt = (size_t)dtsize(ilist);
     ln->lp.just = v;
     if (cnt) {
         int i = 0;
@@ -220,7 +218,6 @@ appendFLineList (int v)
 static htmltxt_t*
 mkText(void)
 {
-    int cnt;
     Dt_t * ispan = HTMLstate.fspanList;
     fspan *fl ;
     htmltxt_t *hft = NEW(htmltxt_t);
@@ -228,7 +225,7 @@ mkText(void)
     if (dtsize (HTMLstate.fitemList)) 
 	appendFLineList (UNSET_ALIGN);
 
-    cnt = dtsize(ispan);
+    size_t cnt = (size_t)dtsize(ispan);
     hft->nspans = cnt;
     	
     if (cnt) {

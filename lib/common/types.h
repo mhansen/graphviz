@@ -137,7 +137,7 @@ extern "C" {
 	union {
 	    struct {
 		textspan_t *span;
-		short nspans;
+		size_t nspans;
 	    } txt;
 	    htmllabel_t *html;
 	} u;
