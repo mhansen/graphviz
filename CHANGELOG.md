@@ -60,6 +60,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `GD_has_sourcerank` accessor has been removed.
 - **Breaking**: The `Agraphinfo_t.has_sinkrank` field and its
   `GD_has_sinkrank` accessor has been removed.
+- Support for the legacy Microsoft Visio VDX format has been removed.
+- **Breaking**: The `arrow_at_start` and `arrow_at_end` parameters from the
+  `gvrender_engine_t.beziercurve` callback have been removed.
+- **Breaking**: The `GVRENDER_DOES_ARROWS` constant has been removed.
 
 ## [7.1.0] – 2023-01-21
 

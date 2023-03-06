@@ -256,11 +256,7 @@ static void tkgen_ellipse(GVJ_t * job, pointf * A, int filled)
 }
 
 static void
-tkgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
-	      int arrow_at_end, int filled)
-{
-    (void)arrow_at_start;
-    (void)arrow_at_end;
+tkgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     (void)filled;
 
     assert(n >= 0);

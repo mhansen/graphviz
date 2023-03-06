@@ -584,23 +584,19 @@ void gvrender_box(GVJ_t * job, boxf B, int filled)
     gvrender_polygon(job, A, 4, filled);
 }
 
-void gvrender_beziercurve(GVJ_t * job, pointf * af, int n,
-			  int arrow_at_start, int arrow_at_end, int filled)
-{
+void gvrender_beziercurve(GVJ_t *job, pointf *af, int n, int filled) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {
 	if (gvre->beziercurve && job->obj->pen != PEN_NONE) {
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->beziercurve(job, af, n, arrow_at_start, arrow_at_end,
-				  filled);
+		gvre->beziercurve(job, af, n, filled);
 	    else {
 		pointf *AF;
 		assert(n >= 0);
 		AF = gcalloc((size_t)n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, (size_t)n);
-		gvre->beziercurve(job, AF, n, arrow_at_start, arrow_at_end,
-				  filled);
+		gvre->beziercurve(job, AF, n, filled);
 		free(AF);
 	    }
 	}

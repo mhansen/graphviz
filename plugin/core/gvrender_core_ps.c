@@ -324,12 +324,7 @@ static void psgen_ellipse(GVJ_t * job, pointf * A, int filled)
 }
 
 static void
-psgen_bezier(GVJ_t * job, pointf * A, int n, int arrow_at_start,
-	     int arrow_at_end, int filled)
-{
-    (void)arrow_at_start;
-    (void)arrow_at_end;
-
+psgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     int j;
 
     if (filled && job->obj->fillcolor.u.HSVA[3] > .5) {

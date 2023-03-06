@@ -430,27 +430,6 @@ LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 %{_libdir}/graphviz/libgvplugin_webp.so.*
 %endif
 
-#-- graphviz-plugins-visio rpm --------------------------------------------------
-%package plugins-visio
-Group:            Applications/Multimedia
-Summary:          Graphviz plugin for visio format images
-Requires:         %{name}-nox = %{version}-%{release}
-
-%description plugins-visio
-Graphviz plugin for visio image rendering. 
-
-# run "dot -c" to generate plugin config in {_libdir}/graphviz/config6
-%post plugins-visio
-LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
-
-%postun plugins-visio
-[ -x %{_bindir}/dot ] && LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c || :
-
-%files plugins-visio
-%defattr(-,root,root,-)
-%dir %{_libdir}/graphviz
-%{_libdir}/graphviz/libgvplugin_visio.so.*
-
 #-- graphviz-plugins-devil rpm --------------------------------------------------
 %if %{DEVIL}
 %package plugins-devil
@@ -938,7 +917,6 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --without-smyrna \
 %endif
         --with-qt \
-        --with-visio \
         --with-pangocairo \
         --with-poppler \
         --with-rsvg \
