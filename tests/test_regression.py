@@ -1578,6 +1578,28 @@ def test_2093():
         assert p.returncode == 1, "dot2gxl did not reject missing ID"
 
 
+@pytest.mark.skipif(which("dot2gxl") is None, reason="dot2gxl not available")
+def test_2094():
+    """
+    dot2gxl should not crash when decoding a closing node tag after a closing
+    graph tag
+    https://gitlab.com/graphviz/graphviz/-/issues/2094
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2094.xml"
+    assert input.exists(), "unexpectedly missing test case"
+
+    dot2gxl = which("dot2gxl")
+    ret = subprocess.call([dot2gxl, "-d", input])
+
+    assert ret in (
+        0,
+        1,
+    ), "dot2gxl crashed when processing a closing node tag after a closing graph tag"
+    assert ret == 1, "dot2gxl did not reject malformed XML"
+
+
 @pytest.mark.skipif(
     os.environ.get("build_system") == "msbuild"
     and os.environ.get("configuration") == "Debug",
