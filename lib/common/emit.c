@@ -25,6 +25,7 @@
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/list.h>
 #include <cgraph/unreachable.h>
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
@@ -1017,7 +1018,6 @@ static bool is_natural_number(const char *sstr)
 
 static int layer_index(GVC_t *gvc, char *str, int all)
 {
-    /* GVJ_t *job = gvc->job; */
     int i;
 
     if (streq(str, "all"))
@@ -1034,22 +1034,20 @@ static int layer_index(GVC_t *gvc, char *str, int all)
 static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 {
     int n0, n1;
-    char buf[SMALLBUF];
     char *w0, *w1;
     char *buf_part_p = NULL, *buf_p = NULL, *cur, *part_in_p;
-    agxbuf xb;
     bool rval = false;
 
-    agxbinit(&xb, SMALLBUF, buf);
-    agxbput(&xb, spec);
-    part_in_p = agxbuse(&xb);
+    // copy `spec` so we can `strtok_r` it
+    char *spec_copy = gv_strdup(spec);
+    part_in_p = spec_copy;
 
-    /* Thanks to Matteo Nastasi for this extended code. */
     while (!rval && (cur = strtok_r(part_in_p, gvc->layerListDelims, &buf_part_p))) {
 	w1 = w0 = strtok_r (cur, gvc->layerDelims, &buf_p);
 	if (w0)
 	    w1 = strtok_r (NULL, gvc->layerDelims, &buf_p);
-	if (w0 != NULL && w1 != NULL) {
+	if (w1 != NULL) {
+	    assert(w0 != NULL);
 	    n0 = layer_index(gvc, w0, 0);
 	    n1 = layer_index(gvc, w1, numLayers);
 	    if (n0 >= 0 || n1 >= 0) {
@@ -1060,7 +1058,7 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 		}
 		rval = BETWEEN(n0, layerNum, n1);
 	    }
-	} else if (w0 != NULL || w1 != NULL) {
+	} else if (w0 != NULL) {
 	    n0 = layer_index(gvc, w0, layerNum);
 	    rval = (n0 == layerNum);
 	} else {
@@ -1068,7 +1066,7 @@ static bool selectedLayer(GVC_t *gvc, int layerNum, int numLayers, char *spec)
 	}
 	part_in_p = NULL;
     }
-    agxbfree(&xb);
+    free(spec_copy);
     return rval;
 }
 
@@ -1107,12 +1105,13 @@ static int *parse_layerselect(GVC_t *gvc, char *p) {
     }
     else {
 	agerr(AGWARN, "The layerselect attribute \"%s\" does not match any layer specifed by the layers attribute - ignored.\n", p);
-	laylist[0] = cnt;
 	free (laylist);
 	laylist = NULL;
     }
     return laylist;
 }
+
+DEFINE_LIST(layer_names, char*)
 
 /* parse_layers:
  * Split input string into tokens, with separators specified by
@@ -1123,9 +1122,7 @@ static int *parse_layerselect(GVC_t *gvc, char *p) {
  */
 static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
 {
-    int ntok;
     char *tok;
-    int sz;
 
     gvc->layerDelims = agget(g, "layersep");
     if (!gvc->layerDelims)
@@ -1138,24 +1135,26 @@ static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
         gvc->layerListDelims = "";
     }
 
-    ntok = 0;
-    sz = 0;
     gvc->layers = gv_strdup(p);
+    layer_names_t layerIDs = {0};
+
+    // inferred entry for the first (unnamed) layer
+    layer_names_append(&layerIDs, NULL);
 
     for (tok = strtok(gvc->layers, gvc->layerDelims); tok;
          tok = strtok(NULL, gvc->layerDelims)) {
-        ntok++;
-        if (ntok > sz) {
-            sz += SMALLBUF;
-            gvc->layerIDs = ALLOC(sz, gvc->layerIDs, char *);
-        }
-        gvc->layerIDs[ntok] = tok;
+        layer_names_append(&layerIDs, tok);
     }
-    if (ntok) {
-        gvc->layerIDs = RALLOC(ntok + 2, gvc->layerIDs, char *);        /* shrink to minimum size */
-        gvc->layerIDs[0] = NULL;
-        gvc->layerIDs[ntok + 1] = NULL;
+
+    assert(layer_names_size(&layerIDs) - 1 <= INT_MAX);
+    int ntok = (int)(layer_names_size(&layerIDs) - 1);
+
+    // if we found layers, save them for later reference
+    if (layer_names_size(&layerIDs) > 1) {
+        layer_names_append(&layerIDs, NULL); // add a terminating entry
+        gvc->layerIDs = layer_names_detach(&layerIDs);
     }
+    layer_names_free(&layerIDs);
 
     return ntok;
 }
@@ -1193,7 +1192,6 @@ static void init_layering(GVC_t * gvc, graph_t * g)
 	    gvc->layerlist = parse_layerselect(gvc, str);
 	}
     } else {
-	gvc->layerIDs = NULL;
 	gvc->numLayers = 1;
     }
 }

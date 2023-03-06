@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Fixed also for the `cylinder`
   [node shape](https://graphviz.org/doc/info/shapes.html#polygon).
 - Second periphery of a cylinder shaped node is not correct. #2297
+- Graphs with more than 127 layers no longer cause out of bound writes. #2355
 
 ### Removed
 
