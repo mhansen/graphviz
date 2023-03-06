@@ -110,10 +110,10 @@ extern "C" {
 	    } p;
 	} u;
 	int8_t cellborder;
-	int *heights;		/* heights of the rows */
-	int *widths;		/* widths of the columns */
-	int row_count; ///< number of rows
-	int column_count; ///< number of columns
+	double *heights; ///< heights of the rows
+	double *widths; ///< widths of the columns
+	size_t row_count; ///< number of rows
+	size_t column_count; ///< number of columns
 	textfont_t *font;	/* font info */
 	bool hrule:1; ///< horizontal rule
 	bool vrule:1; ///< vertical rule
