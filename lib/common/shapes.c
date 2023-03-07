@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <common/htmltable.h>
@@ -2250,6 +2251,7 @@ static void poly_init(node_t * n)
 		    sinx *= temp;
 		    cosx *= temp;
 		}
+		assert(cosx != 0 || sinx != 0);
 		Qprev = Q;
 
 		/*save the vertices of all the */
