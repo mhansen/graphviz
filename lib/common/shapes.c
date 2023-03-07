@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <common/htmltable.h>
@@ -1847,7 +1848,7 @@ static void poly_init(node_t * n)
     double temp, alpha, beta, gamma;
     double orientation, distortion, skew;
     double sectorangle, sidelength, skewdist, gdistortion, gskew;
-    double angle, sinx, cosx, xmax, ymax, scalex, scaley;
+    double angle, sinx = 0, cosx = 0, xmax, ymax, scalex, scaley;
     double width, height, marginx, marginy, spacex;
     int regular, peripheries, sides;
     int i, j, isBox, outp;
@@ -2220,7 +2221,7 @@ static void poly_init(node_t * n)
 	    for (i = 0; i < sides; i++) {
 
 		/*for each vertex find the bisector */
-		Q = vertices[i % sides];
+		Q = vertices[i];
 		if (Q.x == Qprev.x && Q.y == Qprev.y) {
 		    // The vertex points for the side ending at Q are equal,
 		    // i.e. this side is actually a point and its angle is
@@ -2250,6 +2251,7 @@ static void poly_init(node_t * n)
 		    sinx *= temp;
 		    cosx *= temp;
 		}
+		assert(cosx != 0 || sinx != 0);
 		Qprev = Q;
 
 		/*save the vertices of all the */
