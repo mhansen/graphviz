@@ -21,6 +21,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <assert.h>
 #include <signal.h>
 
@@ -111,8 +112,8 @@ extern "C" {
     typedef struct bezier {
 	pointf *list;
 	int size;
-	int sflag;
-	int eflag;
+	uint32_t sflag;
+	uint32_t eflag;
 	pointf sp;
 	pointf ep;
     } bezier;

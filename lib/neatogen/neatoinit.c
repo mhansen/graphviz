@@ -268,13 +268,13 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
     pointf sp = { 0, 0 }, ep = { 0, 0};
     bezier *newspl;
     int more = 1;
-    int stype, etype;
     static bool warned;
 
     pos = agxget(e, E_pos);
     if (*pos == '\0')
 	return 0;
 
+    uint32_t stype, etype;
     arrow_flags(e, &stype, &etype);
     do {
 	/* check for s head */

@@ -19,6 +19,7 @@
 #include <common/render.h>
 #include <cgraph/unreachable.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifdef DEBUG
 static int debugleveln(edge_t* e, int i)
@@ -64,7 +65,6 @@ arrow_clip(edge_t * fe, node_t * hn,
 	   bezier * spl, splineInfo * info)
 {
     edge_t *e;
-    int i, sflag, eflag;
     bool j;
 
     for (e = fe; ED_to_orig(e); e = ED_to_orig(e));
@@ -73,6 +73,7 @@ arrow_clip(edge_t * fe, node_t * hn,
 	j = false;
     else
 	j = info->swapEnds(e);
+    uint32_t sflag, eflag;
     arrow_flags(e, &sflag, &eflag);
     if (info->splineMerge(hn))
 	eflag = ARR_NONE;
@@ -80,7 +81,7 @@ arrow_clip(edge_t * fe, node_t * hn,
 	sflag = ARR_NONE;
     /* swap the two ends */
     if (j) {
-	i = sflag;
+	uint32_t i = sflag;
 	sflag = eflag;
 	eflag = i;
     }
