@@ -589,8 +589,7 @@ VR  : T_vr T_end_vr
 htmllabel_t*
 parseHTML (char* txt, int* warn, htmlenv_t *env)
 {
-  char buf[SMALLBUF];
-  agxbuf        str;
+  agxbuf        str = {0};
   htmllabel_t*  l;
   sfont_t       dfltf;
 
@@ -603,7 +602,6 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
   HTMLstate.fitemList = dtopen(&fstrDisc, Dtqueue);
   HTMLstate.fspanList = dtopen(&fspanDisc, Dtqueue);
 
-  agxbinit (&str, SMALLBUF, buf);
   HTMLstate.str = &str;
   
   if (initHTMLlexer (txt, &str, env)) {/* failed: no libexpat - give up */

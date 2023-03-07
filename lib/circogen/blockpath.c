@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include	<cgraph/list.h>
+#include	<cgraph/agxbuf.h>
 #include	<cgraph/alloc.h>
 #include	<circogen/blockpath.h>
 #include	<circogen/edgelist.h>
@@ -35,14 +36,15 @@ static Agraph_t *clone_graph(Agraph_t * ing, Agraph_t ** xg)
     Agnode_t *xh;
     Agedge_t *e;
     Agedge_t *xe;
-    char gname[SMALLBUF];
+    agxbuf gname = {0};
     static int id = 0;
 
-    snprintf(gname, sizeof(gname), "_clone_%d", id++);
-    clone = agsubg(ing, gname,1);
+    agxbprint(&gname, "_clone_%d", id++);
+    clone = agsubg(ing, agxbuse(&gname), 1);
     agbindrec(clone, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
-    snprintf(gname, sizeof(gname), "_clone_%d", id++);
-    xclone = agopen(gname, ing->desc,NULL);
+    agxbprint(&gname, "_clone_%d", id++);
+    xclone = agopen(agxbuse(&gname), ing->desc, NULL);
+    agxbfree(&gname);
     for (n = agfstnode(ing); n; n = agnxtnode(ing, n)) {
 	agsubnode(clone,n,1);
 	xn = agnode(xclone, agnameof(n),1);
@@ -375,11 +377,12 @@ static Agraph_t *spanning_tree(Agraph_t * g)
 {
     Agnode_t *n;
     Agraph_t *tree;
-    char gname[SMALLBUF];
+    agxbuf gname = {0};
     static int id = 0;
 
-    snprintf(gname, sizeof(gname), "_span_%d", id++);
-    tree = agsubg(g, gname,1);
+    agxbprint(&gname, "_span_%d", id++);
+    tree = agsubg(g, agxbuse(&gname), 1);
+    agxbfree(&gname);
     agbindrec(tree, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {

@@ -384,9 +384,7 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
     int changed;
     char *id;
     static int anchorId;
-    int internalId = 0;
-    agxbuf xb;
-    char buf[SMALLBUF];
+    agxbuf xb = {0};
 
     save->url = obj->url;
     save->tooltip = obj->tooltip;
@@ -395,20 +393,17 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
     save->explicit_tooltip = obj->explicit_tooltip != 0;
     id = data->id;
     if (!id || !*id) {		/* no external id, so use the internal one */
-	agxbinit(&xb, SMALLBUF, buf);
 	if (!env->objid) {
 	    env->objid = gv_strdup(getObjId(job, obj->u.n, &xb));
 	    env->objid_set = true;
 	}
 	agxbprint(&xb, "%s_%d", env->objid, anchorId++);
 	id = agxbuse(&xb);
-	internalId = 1;
     }
     changed =
 	initMapData(job, NULL, data->href, data->title, data->target, id,
 		    obj->u.g);
-    if (internalId)
-	agxbfree(&xb);
+    agxbfree(&xb);
 
     if (changed) {
 	if (obj->url || obj->explicit_tooltip) {
@@ -2017,9 +2012,7 @@ int make_html_label(void *obj, textlabel_t * lp)
 	    graphviz_exit(EXIT_FAILURE);
 	}
 	/* Parse of label failed; revert to simple text label */
-	agxbuf xb;
-	char buf[SMALLBUF];
-	agxbinit(&xb, SMALLBUF, buf);
+	agxbuf xb = {0};
 	lp->html = false;
 	lp->text = gv_strdup(nameOf(obj, &xb));
 	switch (lp->charset) {

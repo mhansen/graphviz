@@ -351,13 +351,10 @@ void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
 
     FILE *input_file = NULL;
     char *str;
-    agxbuf xbuf;
+    agxbuf xbuf = {0};
     GtkTextBuffer *gtkbuf;	/*GTK buffer from glade GUI */
 
     char buf[BUFSIZ];
-    char xbuffer[BUFSIZ];
-
-    agxbinit(&xbuf, SMALLBUF, xbuffer);
 
     char *filename = NULL;
     if (openfiledlg(&filename)) {

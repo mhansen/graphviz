@@ -318,10 +318,7 @@ initObjMapData (GVJ_t* job, textlabel_t *lab, void* gobj)
     char* tooltip = agget(gobj, "tooltip");
     char* target = agget(gobj, "target");
     char* id;
-    char buf[SMALLBUF];
-    agxbuf xb;
-
-    agxbinit(&xb, SMALLBUF, buf);
+    agxbuf xb = {0};
 
     if (lab) lbl = lab->text;
     else lbl = NULL;
@@ -2525,10 +2522,8 @@ static void emit_begin_edge(GVJ_t * job, edge_t * e, char** styles)
     }
 
     if (flags & GVRENDER_DOES_MAPS) {
-	agxbuf xb;
-	char xbuf[SMALLBUF];
+	agxbuf xb = {0};
 
-	agxbinit(&xb, SMALLBUF, xbuf);
 	s = getObjId (job, e, &xb);
 	obj->id = strdup_and_subst_obj(s, e);
 	agxbfree(&xb);
@@ -3385,14 +3380,12 @@ static void emit_page(GVJ_t * job, graph_t * g)
     textlabel_t *lab;
     pointf *p = NULL;
     char* saveid;
-    char buf[SMALLBUF];
-    agxbuf xb;
+    agxbuf xb = {0};
 
     /* For the first page, we can use the values generated in emit_begin_graph. 
      * For multiple pages, we need to generate a new id.
      */
     if (NotFirstPage(job)) {
-	agxbinit(&xb, SMALLBUF, buf);
 	saveid = obj->id;
 	layerPagePrefix (job, &xb);
 	agxbput (&xb, saveid);
@@ -3448,9 +3441,9 @@ static void emit_page(GVJ_t * job, graph_t * g)
     emit_view(job,g,flags);
     gvrender_end_page(job);
     if (saveid) {
-	agxbfree(&xb);
 	obj->id = saveid;
     }
+    agxbfree(&xb);
 }
 
 void emit_graph(GVJ_t * job, graph_t * g)

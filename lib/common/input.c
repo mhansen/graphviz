@@ -178,19 +178,21 @@ static void use_library(GVC_t *gvc, const char *name)
     gvc->common.lib = Lib;
 }
 
-static void global_def(agxbuf* xb, char *dcl, int kind) {
+static void global_def(char *dcl, int kind) {
     char *p;
     char *rhs = "true";
+    agxbuf xb = {0};
 
     attrsym_t *sym;
     if ((p = strchr(dcl, '='))) {
-        agxbput_n(xb, dcl, (size_t)(p - dcl));
+        agxbput_n(&xb, dcl, (size_t)(p - dcl));
         rhs = p+1;
     }
     else
-	agxbput (xb, dcl);
-    sym = agattr(NULL, kind, agxbuse (xb), rhs);
+	agxbput(&xb, dcl);
+    sym = agattr(NULL, kind, agxbuse(&xb), rhs);
     sym->fixed = 1;
+    agxbfree(&xb);
 }
 
 static int gvg_init(GVC_t *gvc, graph_t *g, char *fn, int gidx)
@@ -228,8 +230,6 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     char c, *rest, *layout;
     const char *val;
     int i, v, nfiles;
-    char buf[SMALLBUF];
-    agxbuf xb;
     int Kflag = 0;
 
     /* establish if we are running in a CGI environment */
@@ -268,7 +268,6 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 	    nfiles++;
     gvc->input_filenames = N_NEW(nfiles + 1, char *);
     nfiles = 0;
-    agxbinit(&xb, SMALLBUF, buf);
     for (i = 1; i < argc; i++) {
 	if (argv[i] &&
 	    (startswith(argv[i], "-V") || strcmp(argv[i], "--version") == 0)) {
@@ -285,7 +284,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 	    switch (c = argv[i][1]) {
 	    case 'G':
 		if (*rest)
-		    global_def(&xb, rest, AGRAPH);
+		    global_def(rest, AGRAPH);
 		else {
 		    fprintf(stderr, "Missing argument for -G flag\n");
 		    return (dotneato_usage(1));
@@ -293,7 +292,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 		break;
 	    case 'N':
 		if (*rest)
-		    global_def(&xb, rest, AGNODE);
+		    global_def(rest, AGNODE);
 		else {
 		    fprintf(stderr, "Missing argument for -N flag\n");
 		    return (dotneato_usage(1));
@@ -301,7 +300,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 		break;
 	    case 'E':
 		if (*rest)
-		    global_def(&xb, rest, AGEDGE);
+		    global_def(rest, AGEDGE);
 		else {
 		    fprintf(stderr, "Missing argument for -E flag\n");
 		    return (dotneato_usage(1));
@@ -419,7 +418,6 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 	} else if (argv[i])
 	    gvc->input_filenames[nfiles++] = argv[i];
     }
-    agxbfree (&xb);
 
     /* if no -K, use cmd name to set layout type */
     if (!Kflag) {

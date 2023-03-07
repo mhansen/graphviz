@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/agxbuf.h>
 #include <circogen/blocktree.h>
 #include <stdbool.h>
 
@@ -20,11 +20,12 @@ static void addNode(block_t * bp, Agnode_t * n)
 
 static Agraph_t *makeBlockGraph(Agraph_t * g, circ_state * state)
 {
-    char name[SMALLBUF];
+    agxbuf name = {0};
     Agraph_t *subg;
 
-    snprintf(name, sizeof(name), "_block_%d", state->blockCount++);
-    subg = agsubg(g, name,1);
+    agxbprint(&name, "_block_%d", state->blockCount++);
+    subg = agsubg(g, agxbuse(&name), 1);
+    agxbfree(&name);
     agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
     return subg;
 }

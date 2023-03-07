@@ -8,11 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include    <cgraph/agxbuf.h>
 #include    <circogen/circular.h>
 #include    <circogen/blocktree.h>
 #include    <circogen/circpos.h>
-#include	<string.h>
 
 #define		MINDIST			1.0
 
@@ -49,12 +48,13 @@ static block_t*
 createOneBlock(Agraph_t * g, circ_state * state)
 {
     Agraph_t *subg;
-    char name[SMALLBUF];
+    agxbuf name = {0};
     block_t *bp;
     Agnode_t* n;
 
-    snprintf(name, sizeof(name), "_block_%d", state->blockCount++);
-    subg = agsubg(g, name, 1);
+    agxbprint(&name, "_block_%d", state->blockCount++);
+    subg = agsubg(g, agxbuse(&name), 1);
+    agxbfree(&name);
     bp = mkBlock(subg);
 
     for (n = agfstnode(g); n; n = agnxtnode(g,n)) {

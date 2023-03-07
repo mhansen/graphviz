@@ -46,6 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   small to fit their content. #1622
 - `dot2gxl -d` no longer crashes when receiving a closing `node` tag following a
   closing `graph` tag. #2094
+- A buffer overflow in Smyrna when loading GVPR scripts has been corrected.
+- A buffer overflow when loading a plugin with a long type string has been
+  corrected.
 
 ### Removed
 
