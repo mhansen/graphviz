@@ -25,7 +25,7 @@ if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
   )
 
   target_include_directories(gvplugin_pango SYSTEM PRIVATE
-    ${CAIRO_INCLUDE_DIRS}/cairo
+    ${CAIRO_INCLUDE_DIRS}
     ${PANGOCAIRO_INCLUDE_DIRS}
   )
 
