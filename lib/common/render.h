@@ -20,6 +20,7 @@ extern "C" {
 #include <sys/types.h>
 #endif
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -57,13 +58,14 @@ extern "C" {
 #endif
 
 	RENDER_API void add_box(path *, boxf);
-    RENDER_API void arrow_flags(Agedge_t * e, int *sflag, int *eflag);
+    RENDER_API void arrow_flags(Agedge_t *e, uint32_t *sflag, uint32_t *eflag);
     RENDER_API boxf arrow_bb(pointf p, pointf u, double arrowsize);
     RENDER_API void arrow_gen(GVJ_t * job, emit_state_t emit_state, pointf p, pointf u,
-			  double arrowsize, double penwidth, int flag);
-    RENDER_API int arrowEndClip(edge_t*, pointf*, int, int , bezier*, int eflag);
-    RENDER_API int arrowStartClip(edge_t*, pointf* ps, int, int, bezier*, int sflag);
-    RENDER_API void arrowOrthoClip(edge_t*, pointf* ps, int, int, bezier*, int sflag, int eflag);
+                              double arrowsize, double penwidth, uint32_t flag);
+    RENDER_API int arrowEndClip(edge_t*, pointf*, int, int , bezier*, uint32_t eflag);
+    RENDER_API int arrowStartClip(edge_t*, pointf* ps, int, int, bezier*, uint32_t sflag);
+    RENDER_API void arrowOrthoClip(edge_t*, pointf *ps, int, int, bezier*,
+                                   uint32_t sflag, uint32_t eflag);
     RENDER_API void beginpath(path *, Agedge_t *, int, pathend_t *, bool);
     RENDER_API void bezier_clip(inside_t * inside_context,
 			    bool(*insidefn) (inside_t * inside_context,

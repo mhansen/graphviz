@@ -10,7 +10,6 @@
 
 #pragma once
 
-#define SMALLBUF	128
 #define LPAREN		'('
 #define RPAREN		')'
 #define LBRACE		'{'
