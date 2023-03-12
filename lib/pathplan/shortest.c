@@ -24,7 +24,7 @@
 #define DQ_BACK  2
 
 #define prerror(msg) \
-        fprintf (stderr, "libpath/%s:%d: %s\n", __FILE__, __LINE__, (msg))
+        fprintf (stderr, "lib/pathplan/%s:%d: %s\n", __FILE__, __LINE__, (msg))
 
 #define POINTSIZE sizeof (Ppoint_t)
 
