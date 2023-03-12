@@ -581,7 +581,6 @@ def test_1318():
     dot("svg", source=source)
 
 
-@pytest.mark.xfail()
 def test_1332():
     """
     Triangulation calculation on the associated example should succeed.
