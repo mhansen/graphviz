@@ -478,7 +478,7 @@ static void _dot_splines(graph_t * g, int normalize)
 #ifdef ORTHO
 finish :
 #endif
-    /* vladimir: place port labels */
+    /* place port labels */
     /* FIX: head and tail labels are not part of cluster bbox */
     if ((E_headlabel || E_taillabel) && (E_labelangle || E_labeldistance)) {
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -500,7 +500,6 @@ finish :
 	    }
 	}
     }
-    /* end vladimir */
 
 #ifdef ORTHO
     if (et != EDGETYPE_ORTHO && et != EDGETYPE_CURVED)  {

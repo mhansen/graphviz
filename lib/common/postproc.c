@@ -110,7 +110,6 @@ static void map_edge(edge_t * e)
 	ED_label(e)->pos = map_point(ED_label(e)->pos);
     if (ED_xlabel(e))
 	ED_xlabel(e)->pos = map_point(ED_xlabel(e)->pos);
-    /* vladimir */
     if (ED_head_label(e))
 	ED_head_label(e)->pos = map_point(ED_head_label(e)->pos);
     if (ED_tail_label(e))

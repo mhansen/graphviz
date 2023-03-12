@@ -1354,7 +1354,6 @@ void addEdgeLabels(edge_t *e) {
 
 #define AGXGET(o,a) agxget(o,a)
 
-/* vladimir */
 /* place_portlabel:
  * place the {head,tail}label (depending on HEAD_P) of edge E
  * N.B. Assume edges are normalized, so tail is at spl->list[0].list[0]

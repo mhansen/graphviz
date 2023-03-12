@@ -652,8 +652,6 @@ int common_init_edge(edge_t * e)
 	GD_has_labels(sg) |= EDGE_XLABEL;
     }
 
-
-    /* vladimir */
     if (E_headlabel && (str = agxget(e, E_headlabel)) && str[0]) {
 	initFontLabelEdgeAttr(e, &fi, &lfi);
 	ED_head_label(e) = make_label(e, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
@@ -667,7 +665,6 @@ int common_init_edge(edge_t * e)
 				lfi.fontsize, lfi.fontname, lfi.fontcolor);
 	GD_has_labels(sg) |= TAIL_LABEL;
     }
-    /* end vladimir */
 
     /* We still accept ports beginning with colons but this is deprecated
      * That is, we allow tailport = ":abc" as well as the preferred
