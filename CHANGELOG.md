@@ -78,6 +78,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `GVRENDER_DOES_ARROWS` constant has been removed.
 - The extra cmpnd.c code is no longer shipped in the Graphviz distribution
   tarball.
+- **Breaking**: The `STROKE_CLOSED`, `STROKE_FILLED`, `STROKE_PENDOWN`, and
+  `STROKE_VERTICES_ALLOCATED` constants have been removed.
 
 ## [7.1.0] – 2023-01-21
 
