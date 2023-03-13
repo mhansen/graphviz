@@ -63,8 +63,6 @@ static int pnll;
 
 static triangles_t tris;
 
-static deque_t dq;
-
 static Ppoint_t *ops;
 static int opn;
 
@@ -74,9 +72,9 @@ static int loadtriangle(pointnlink_t *, pointnlink_t *, pointnlink_t *);
 static void connecttris(size_t, size_t);
 static bool marktripath(size_t, size_t);
 
-static void add2dq(int, pointnlink_t *);
-static void splitdq(int, size_t);
-static size_t finddqsplit(pointnlink_t *);
+static void add2dq(deque_t *dq, int, pointnlink_t*);
+static void splitdq(deque_t *dq, int, size_t);
+static size_t finddqsplit(const deque_t *dq, pointnlink_t*);
 
 static int ccw(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
@@ -84,7 +82,6 @@ static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(size_t, Ppoint_t *);
 
 static int growpnls(size_t);
-static int growdq(size_t);
 static int growops(int);
 
 /* Pshortestpath:
@@ -111,8 +108,13 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	return -2;
     pnll = 0;
     triangles_clear(&tris);
-    if (growdq((size_t)polyp->pn * 2) != 0)
+
+    deque_t dq = {.pnlpn = (size_t)polyp->pn * 2};
+    dq.pnlps = calloc(dq.pnlpn, POINTNLINKPSIZE);
+    if (dq.pnlps == NULL) {
+	prerror("cannot realloc dq.pnls");
 	return -2;
+    }
     dq.fpnlpi = dq.pnlpn / 2;
     dq.lpnlpi = dq.fpnlpi - 1;
 
@@ -155,8 +157,10 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 #endif
 
     /* generate list of triangles */
-    if (triangulate(pnlps, pnll))
+    if (triangulate(pnlps, pnll)) {
+	free(dq.pnlps);
 	return -2;
+    }
 
 #if defined(DEBUG) && DEBUG >= 2
     fprintf(stderr, "triangles\n%" PRISIZE_T "\n", triangles_size(&tris));
@@ -177,6 +181,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	    break;
     if (trii == triangles_size(&tris)) {
 	prerror("source point not in any triangle");
+	free(dq.pnlps);
 	return -1;
     }
     ftrii = trii;
@@ -185,6 +190,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	    break;
     if (trii == triangles_size(&tris)) {
 	prerror("destination point not in any triangle");
+	free(dq.pnlps);
 	return -1;
     }
     ltrii = trii;
@@ -192,6 +198,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     /* mark the strip of triangles from eps[0] to eps[1] */
     if (!marktripath(ftrii, ltrii)) {
 	prerror("cannot find triangle path");
+	free(dq.pnlps);
 	/* a straight line is better than failing */
 	if (growops(2) != 0)
 		return -2;
@@ -203,6 +210,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 
     /* if endpoints in same triangle, use a single line */
     if (ftrii == ltrii) {
+	free(dq.pnlps);
 	if (growops(2) != 0)
 		return -2;
 	output->pn = 2;
@@ -214,7 +222,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     /* build funnel and shortest path linked list (in add2dq) */
     epnls[0].pp = &eps[0], epnls[0].link = NULL;
     epnls[1].pp = &eps[1], epnls[1].link = NULL;
-    add2dq(DQ_FRONT, &epnls[0]);
+    add2dq(&dq, DQ_FRONT, &epnls[0]);
     dq.apex = dq.fpnlpi;
     trii = ftrii;
     while (trii != SIZE_MAX) {
@@ -242,23 +250,23 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 
 	/* update deque */
 	if (trii == ftrii) {
-	    add2dq(DQ_BACK, lpnlp);
-	    add2dq(DQ_FRONT, rpnlp);
+	    add2dq(&dq, DQ_BACK, lpnlp);
+	    add2dq(&dq, DQ_FRONT, rpnlp);
 	} else {
 	    if (dq.pnlps[dq.fpnlpi] != rpnlp
 		&& dq.pnlps[dq.lpnlpi] != rpnlp) {
 		/* add right point to deque */
-		size_t splitindex = finddqsplit(rpnlp);
-		splitdq(DQ_BACK, splitindex);
-		add2dq(DQ_FRONT, rpnlp);
+		size_t splitindex = finddqsplit(&dq, rpnlp);
+		splitdq(&dq, DQ_BACK, splitindex);
+		add2dq(&dq, DQ_FRONT, rpnlp);
 		/* if the split is behind the apex, then reset apex */
 		if (splitindex > dq.apex)
 		    dq.apex = splitindex;
 	    } else {
 		/* add left point to deque */
-		size_t splitindex = finddqsplit(lpnlp);
-		splitdq(DQ_FRONT, splitindex);
-		add2dq(DQ_BACK, lpnlp);
+		size_t splitindex = finddqsplit(&dq, lpnlp);
+		splitdq(&dq, DQ_FRONT, splitindex);
+		add2dq(&dq, DQ_BACK, lpnlp);
 		/* if the split is in front of the apex, then reset apex */
 		if (splitindex < dq.apex)
 		    dq.apex = splitindex;
@@ -279,6 +287,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     fprintf(stderr, "\n");
 #endif
 
+    free(dq.pnlps);
     for (pi = 0, pnlp = &epnls[1]; pnlp; pnlp = pnlp->link)
 	pi++;
     if (growops(pi) != 0)
@@ -401,36 +410,35 @@ static bool marktripath(size_t trii, size_t trij) {
 }
 
 /* add a new point to the deque, either front or back */
-static void add2dq(int side, pointnlink_t * pnlp)
-{
+static void add2dq(deque_t *dq, int side, pointnlink_t *pnlp) {
     if (side == DQ_FRONT) {
-	if (dq.lpnlpi >= dq.fpnlpi)
-	    pnlp->link = dq.pnlps[dq.fpnlpi];	/* shortest path links */
-	dq.fpnlpi--;
-	dq.pnlps[dq.fpnlpi] = pnlp;
+	if (dq->lpnlpi >= dq->fpnlpi)
+	    pnlp->link = dq->pnlps[dq->fpnlpi];	/* shortest path links */
+	dq->fpnlpi--;
+	dq->pnlps[dq->fpnlpi] = pnlp;
     } else {
-	if (dq.lpnlpi >= dq.fpnlpi)
-	    pnlp->link = dq.pnlps[dq.lpnlpi];	/* shortest path links */
-	dq.lpnlpi++;
-	dq.pnlps[dq.lpnlpi] = pnlp;
+	if (dq->lpnlpi >= dq->fpnlpi)
+	    pnlp->link = dq->pnlps[dq->lpnlpi];	/* shortest path links */
+	dq->lpnlpi++;
+	dq->pnlps[dq->lpnlpi] = pnlp;
     }
 }
 
-static void splitdq(int side, size_t index) {
+static void splitdq(deque_t *dq, int side, size_t index) {
     if (side == DQ_FRONT)
-	dq.lpnlpi = index;
+	dq->lpnlpi = index;
     else
-	dq.fpnlpi = index;
+	dq->fpnlpi = index;
 }
 
-static size_t finddqsplit(pointnlink_t *pnlp) {
-    for (size_t index = dq.fpnlpi; index < dq.apex; index++)
-	if (ccw(dq.pnlps[index + 1]->pp, dq.pnlps[index]->pp, pnlp->pp) == ISCCW)
+static size_t finddqsplit(const deque_t *dq, pointnlink_t *pnlp) {
+    for (size_t index = dq->fpnlpi; index < dq->apex; index++)
+	if (ccw(dq->pnlps[index + 1]->pp, dq->pnlps[index]->pp, pnlp->pp) == ISCCW)
 	    return index;
-    for (size_t index = dq.lpnlpi; index > dq.apex; index--)
-	if (ccw(dq.pnlps[index - 1]->pp, dq.pnlps[index]->pp, pnlp->pp) == ISCW)
+    for (size_t index = dq->lpnlpi; index > dq->apex; index--)
+	if (ccw(dq->pnlps[index - 1]->pp, dq->pnlps[index]->pp, pnlp->pp) == ISCW)
 	    return index;
-    return dq.apex;
+    return dq->apex;
 }
 
 /* ccw test: CCW, CW, or co-linear */
@@ -501,18 +509,6 @@ static int growpnls(size_t newpnln) {
 	return -1;
     }
     pnln = newpnln;
-    return 0;
-}
-
-static int growdq(size_t newdqn) {
-    if (newdqn <= dq.pnlpn)
-	return 0;
-    dq.pnlps = realloc(dq.pnlps, POINTNLINKPSIZE * newdqn);
-    if (dq.pnlps == NULL) {
-	prerror("cannot realloc dq.pnls");
-	return -1;
-    }
-    dq.pnlpn = newdqn;
     return 0;
 }
 
