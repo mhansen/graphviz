@@ -41,7 +41,7 @@ typedef struct pointnlink_t {
 typedef struct {
     pointnlink_t *pnl0p;
     pointnlink_t *pnl1p;
-    struct triangle_t *rtp;
+    size_t right_index; ///< index into \p tris of the triangle to the right
 } tedge_t;
 
 typedef struct triangle_t {
@@ -225,7 +225,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 
 	/* find the left and right points of the exiting edge */
 	for (ei = 0; ei < 3; ei++)
-	    if (trip->e[ei].rtp && trip->e[ei].rtp->mark == 1)
+	    if (trip->e[ei].right_index != SIZE_MAX && tris[trip->e[ei].right_index].mark == 1)
 		break;
 	if (ei == 3) {		/* in last triangle */
 	    if (ccw(&eps[1], dq.pnlps[dq.fpnlpi]->pp,
@@ -268,8 +268,8 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	}
 	trii = SIZE_MAX;
 	for (ei = 0; ei < 3; ei++)
-	    if (trip->e[ei].rtp && trip->e[ei].rtp->mark == 1) {
-		trii = (size_t)(trip->e[ei].rtp - tris);
+	    if (trip->e[ei].right_index != SIZE_MAX && tris[trip->e[ei].right_index].mark == 1) {
+		trii = trip->e[ei].right_index;
 		break;
 	    }
     }
@@ -363,9 +363,9 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
     }
     trip = &tris[tril++];
     trip->mark = 0;
-    trip->e[0].pnl0p = pnlap, trip->e[0].pnl1p = pnlbp, trip->e[0].rtp = NULL;
-    trip->e[1].pnl0p = pnlbp, trip->e[1].pnl1p = pnlcp, trip->e[1].rtp = NULL;
-    trip->e[2].pnl0p = pnlcp, trip->e[2].pnl1p = pnlap, trip->e[2].rtp = NULL;
+    trip->e[0].pnl0p = pnlap, trip->e[0].pnl1p = pnlbp, trip->e[0].right_index = SIZE_MAX;
+    trip->e[1].pnl0p = pnlbp, trip->e[1].pnl1p = pnlcp, trip->e[1].right_index = SIZE_MAX;
+    trip->e[2].pnl0p = pnlcp, trip->e[2].pnl1p = pnlap, trip->e[2].right_index = SIZE_MAX;
 
     return 0;
 }
@@ -383,7 +383,7 @@ static void connecttris(size_t tri1, size_t tri2) {
 		 tri1p->e[ei].pnl1p->pp == tri2p->e[ej].pnl1p->pp) ||
 		(tri1p->e[ei].pnl0p->pp == tri2p->e[ej].pnl1p->pp &&
 		 tri1p->e[ei].pnl1p->pp == tri2p->e[ej].pnl0p->pp))
-		tri1p->e[ei].rtp = tri2p, tri2p->e[ej].rtp = tri1p;
+		tri1p->e[ei].right_index = tri2, tri2p->e[ej].right_index = tri1;
 	}
     }
 }
@@ -398,8 +398,8 @@ static bool marktripath(size_t trii, size_t trij) {
     if (trii == trij)
 	return true;
     for (ei = 0; ei < 3; ei++)
-	if (tris[trii].e[ei].rtp &&
-	    marktripath((size_t)(tris[trii].e[ei].rtp - tris), trij))
+	if (tris[trii].e[ei].right_index != SIZE_MAX &&
+	    marktripath(tris[trii].e[ei].right_index, trij))
 	    return true;
     tris[trii].mark = 0;
     return false;
