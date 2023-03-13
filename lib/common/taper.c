@@ -374,14 +374,13 @@ main ()
 {
     stroke_t* sp;
     bezier bez;
-    int i;
 
     bez.size = sizeof(pts)/sizeof(pointf);
     bez.list = pts;
     sp = taper(&bez, halffunc, 20.0, 0, 0);
     printf ("newpath\n");
     printf ("%.02f %.02f moveto\n", sp->vertices[0].x, sp->vertices[0].y);
-    for (i=1; i<sp->nvertices; i++)
+    for (size_t i = 1; i < sp->nvertices; i++)
         printf ("%.02f %.02f lineto\n", sp->vertices[i].x, sp->vertices[i].y);
     printf ("fill showpage\n");
 }

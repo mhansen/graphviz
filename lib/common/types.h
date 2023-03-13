@@ -160,7 +160,7 @@ extern "C" {
 
     typedef struct stroke_t {	/* information about a single stroke */
 	/* we would have called it a path if that term wasn't already used */
-	int nvertices;		/* number of points in the stroke */
+	size_t nvertices; ///< number of points in the stroke
 	pointf *vertices;	/* array of vertex points */
     } stroke_t;
 
