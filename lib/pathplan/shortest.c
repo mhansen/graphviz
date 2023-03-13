@@ -113,7 +113,8 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     triangles_clear(&tris);
     if (growdq((size_t)polyp->pn * 2) != 0)
 	return -2;
-    dq.fpnlpi = dq.pnlpn / 2, dq.lpnlpi = dq.fpnlpi - 1;
+    dq.fpnlpi = dq.pnlpn / 2;
+    dq.lpnlpi = dq.fpnlpi - 1;
 
     /* make sure polygon is CCW and load pnls array */
     for (pi = 0, minx = HUGE_VAL, minpi = -1; pi < polyp->pn; pi++) {
