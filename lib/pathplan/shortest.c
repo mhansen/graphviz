@@ -64,7 +64,7 @@ static int pnll;
 static triangles_t tris;
 
 static Ppoint_t *ops;
-static int opn;
+static size_t opn;
 
 static int triangulate(pointnlink_t **, int);
 static bool isdiagonal(int, int, pointnlink_t **, int);
@@ -82,7 +82,7 @@ static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(size_t, Ppoint_t *);
 
 static int growpnls(size_t);
-static int growops(int);
+static int growops(size_t);
 
 /* Pshortestpath:
  * Find a shortest path contained in the polygon polyp going between the
@@ -288,13 +288,15 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 #endif
 
     free(dq.pnlps);
-    for (pi = 0, pnlp = &epnls[1]; pnlp; pnlp = pnlp->link)
-	pi++;
-    if (growops(pi) != 0)
+    size_t i;
+    for (i = 0, pnlp = &epnls[1]; pnlp; pnlp = pnlp->link)
+	i++;
+    if (growops(i) != 0)
 	return -2;
-    output->pn = pi;
-    for (pi = pi - 1, pnlp = &epnls[1]; pnlp; pi--, pnlp = pnlp->link)
-	ops[pi] = *pnlp->pp;
+    assert(i <= INT_MAX);
+    output->pn = (int)i;
+    for (i = i - 1, pnlp = &epnls[1]; pnlp; i--, pnlp = pnlp->link)
+	ops[i] = *pnlp->pp;
     output->ps = ops;
 
     return 0;
@@ -512,8 +514,7 @@ static int growpnls(size_t newpnln) {
     return 0;
 }
 
-static int growops(int newopn)
-{
+static int growops(size_t newopn) {
     if (newopn <= opn)
 	return 0;
     ops = realloc(ops, POINTSIZE * newopn);
