@@ -404,12 +404,12 @@ static bool marktripath(size_t trii, size_t trij) {
 static void add2dq(int side, pointnlink_t * pnlp)
 {
     if (side == DQ_FRONT) {
-	if (dq.lpnlpi - dq.fpnlpi >= 0)
+	if (dq.lpnlpi >= dq.fpnlpi)
 	    pnlp->link = dq.pnlps[dq.fpnlpi];	/* shortest path links */
 	dq.fpnlpi--;
 	dq.pnlps[dq.fpnlpi] = pnlp;
     } else {
-	if (dq.lpnlpi - dq.fpnlpi >= 0)
+	if (dq.lpnlpi >= dq.fpnlpi)
 	    pnlp->link = dq.pnlps[dq.lpnlpi];	/* shortest path links */
 	dq.lpnlpi++;
 	dq.pnlps[dq.lpnlpi] = pnlp;
