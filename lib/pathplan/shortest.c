@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/list.h>
 #include <cgraph/prisize_t.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -49,7 +50,7 @@ typedef struct triangle_t {
     tedge_t e[3];
 } triangle_t;
 
-#define TRIANGLESIZE sizeof (triangle_t)
+DEFINE_LIST(triangles, triangle_t)
 
 typedef struct deque_t {
     pointnlink_t **pnlps;
@@ -60,9 +61,7 @@ static pointnlink_t *pnls, **pnlps;
 static size_t pnln;
 static int pnll;
 
-static triangle_t *tris;
-static size_t trin;
-static size_t tril;
+static triangles_t tris;
 
 static deque_t dq;
 
@@ -85,7 +84,6 @@ static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(size_t, Ppoint_t *);
 
 static int growpnls(size_t);
-static int growtris(size_t);
 static int growdq(int);
 static int growops(int);
 
@@ -113,7 +111,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     if (growpnls((size_t)polyp->pn) != 0)
 	return -2;
     pnll = 0;
-    tril = 0;
+    triangles_clear(&tris);
     if (growdq(polyp->pn * 2) != 0)
 	return -2;
     dq.fpnlpi = dq.pnlpn / 2, dq.lpnlpi = dq.fpnlpi - 1;
@@ -161,31 +159,31 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	return -2;
 
 #if defined(DEBUG) && DEBUG >= 2
-    fprintf(stderr, "triangles\n%" PRISIZE_T "\n", tril);
-    for (trii = 0; trii < tril; trii++)
+    fprintf(stderr, "triangles\n%" PRISIZE_T "\n", triangles_size(&tris));
+    for (trii = 0; trii < triangles_size(&tris); trii++)
 	for (ei = 0; ei < 3; ei++)
-	    fprintf(stderr, "%f %f\n", tris[trii].e[ei].pnl0p->pp->x,
-		    tris[trii].e[ei].pnl0p->pp->y);
+	    fprintf(stderr, "%f %f\n", triangles_get(&tris, trii).e[ei].pnl0p->pp->x,
+		    triangles_get(&tris, trii).e[ei].pnl0p->pp->y);
 #endif
 
     /* connect all pairs of triangles that share an edge */
-    for (trii = 0; trii < tril; trii++)
-	for (trij = trii + 1; trij < tril; trij++)
+    for (trii = 0; trii < triangles_size(&tris); trii++)
+	for (trij = trii + 1; trij < triangles_size(&tris); trij++)
 	    connecttris(trii, trij);
 
     /* find first and last triangles */
-    for (trii = 0; trii < tril; trii++)
+    for (trii = 0; trii < triangles_size(&tris); trii++)
 	if (pointintri(trii, &eps[0]))
 	    break;
-    if (trii == tril) {
+    if (trii == triangles_size(&tris)) {
 	prerror("source point not in any triangle");
 	return -1;
     }
     ftrii = trii;
-    for (trii = 0; trii < tril; trii++)
+    for (trii = 0; trii < triangles_size(&tris); trii++)
 	if (pointintri(trii, &eps[1]))
 	    break;
-    if (trii == tril) {
+    if (trii == triangles_size(&tris)) {
 	prerror("destination point not in any triangle");
 	return -1;
     }
@@ -220,12 +218,12 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     dq.apex = dq.fpnlpi;
     trii = ftrii;
     while (trii != SIZE_MAX) {
-	trip = &tris[trii];
+	trip = triangles_at(&tris, trii);
 	trip->mark = 2;
 
 	/* find the left and right points of the exiting edge */
 	for (ei = 0; ei < 3; ei++)
-	    if (trip->e[ei].right_index != SIZE_MAX && tris[trip->e[ei].right_index].mark == 1)
+	    if (trip->e[ei].right_index != SIZE_MAX && triangles_get(&tris, trip->e[ei].right_index).mark == 1)
 		break;
 	if (ei == 3) {		/* in last triangle */
 	    if (ccw(&eps[1], dq.pnlps[dq.fpnlpi]->pp,
@@ -268,7 +266,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	}
 	trii = SIZE_MAX;
 	for (ei = 0; ei < 3; ei++)
-	    if (trip->e[ei].right_index != SIZE_MAX && tris[trip->e[ei].right_index].mark == 1) {
+	    if (trip->e[ei].right_index != SIZE_MAX && triangles_get(&tris, trip->e[ei].right_index).mark == 1) {
 		trii = trip->e[ei].right_index;
 		break;
 	    }
@@ -354,18 +352,15 @@ static bool isdiagonal(int pnli, int pnlip2, pointnlink_t **points,
 static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
 			 pointnlink_t * pnlcp)
 {
-    triangle_t *trip;
+    triangle_t trip = {0};
+    trip.e[0].pnl0p = pnlap, trip.e[0].pnl1p = pnlbp, trip.e[0].right_index = SIZE_MAX;
+    trip.e[1].pnl0p = pnlbp, trip.e[1].pnl1p = pnlcp, trip.e[1].right_index = SIZE_MAX;
+    trip.e[2].pnl0p = pnlcp, trip.e[2].pnl1p = pnlap, trip.e[2].right_index = SIZE_MAX;
 
-    /* make space */
-    if (tril >= trin) {
-	if (growtris(trin + 20) != 0)
-		return -1;
+    if (triangles_try_append(&tris, trip) != 0) {
+	prerror("cannot realloc tris");
+	return -1;
     }
-    trip = &tris[tril++];
-    trip->mark = 0;
-    trip->e[0].pnl0p = pnlap, trip->e[0].pnl1p = pnlbp, trip->e[0].right_index = SIZE_MAX;
-    trip->e[1].pnl0p = pnlbp, trip->e[1].pnl1p = pnlcp, trip->e[1].right_index = SIZE_MAX;
-    trip->e[2].pnl0p = pnlcp, trip->e[2].pnl1p = pnlap, trip->e[2].right_index = SIZE_MAX;
 
     return 0;
 }
@@ -377,8 +372,8 @@ static void connecttris(size_t tri1, size_t tri2) {
 
     for (ei = 0; ei < 3; ei++) {
 	for (ej = 0; ej < 3; ej++) {
-	    tri1p = &tris[tri1];
-	    tri2p = &tris[tri2];
+	    tri1p = triangles_at(&tris, tri1);
+	    tri2p = triangles_at(&tris, tri2);
 	    if ((tri1p->e[ei].pnl0p->pp == tri2p->e[ej].pnl0p->pp &&
 		 tri1p->e[ei].pnl1p->pp == tri2p->e[ej].pnl1p->pp) ||
 		(tri1p->e[ei].pnl0p->pp == tri2p->e[ej].pnl1p->pp &&
@@ -392,16 +387,16 @@ static void connecttris(size_t tri1, size_t tri2) {
 static bool marktripath(size_t trii, size_t trij) {
     int ei;
 
-    if (tris[trii].mark)
+    if (triangles_get(&tris, trii).mark)
 	return false;
-    tris[trii].mark = 1;
+    triangles_at(&tris, trii)->mark = 1;
     if (trii == trij)
 	return true;
     for (ei = 0; ei < 3; ei++)
-	if (tris[trii].e[ei].right_index != SIZE_MAX &&
-	    marktripath(tris[trii].e[ei].right_index, trij))
+	if (triangles_get(&tris, trii).e[ei].right_index != SIZE_MAX &&
+	    marktripath(triangles_get(&tris, trii).e[ei].right_index, trij))
 	    return true;
-    tris[trii].mark = 0;
+    triangles_at(&tris, trii)->mark = 0;
     return false;
 }
 
@@ -490,7 +485,8 @@ static int pointintri(size_t trii, Ppoint_t *pp) {
     int ei, sum;
 
     for (ei = 0, sum = 0; ei < 3; ei++)
-	if (ccw(tris[trii].e[ei].pnl0p->pp, tris[trii].e[ei].pnl1p->pp, pp) != ISCW)
+	if (ccw(triangles_get(&tris, trii).e[ei].pnl0p->pp,
+	        triangles_get(&tris, trii).e[ei].pnl1p->pp, pp) != ISCW)
 	    sum++;
     return sum == 3 || sum == 0;
 }
@@ -509,17 +505,6 @@ static int growpnls(size_t newpnln) {
 	return -1;
     }
     pnln = newpnln;
-    return 0;
-}
-
-static int growtris(size_t newtrin) {
-    tris = realloc(tris, TRIANGLESIZE * newtrin);
-    if (tris == NULL) {
-	prerror("cannot realloc tris");
-	return -1;
-    }
-    trin = newtrin;
-
     return 0;
 }
 
