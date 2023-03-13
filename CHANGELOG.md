@@ -80,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   tarball.
 - **Breaking**: The `STROKE_CLOSED`, `STROKE_FILLED`, `STROKE_PENDOWN`, and
   `STROKE_VERTICES_ALLOCATED` constants have been removed.
+- **Breaking**: The `stoke_t.flags` field has been removed.
 
 ## [7.1.0] – 2023-01-21
 
