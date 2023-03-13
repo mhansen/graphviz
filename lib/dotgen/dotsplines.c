@@ -1089,7 +1089,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	poly.pn = 8;
 	poly.ps = (Ppoint_t*)points;
 	pointf *ps = simpleSplineRoute(tp, hp, poly, &pn, et == EDGETYPE_PLINE);
-	if (pn == 0) {
+	if (ps == NULL || pn == 0) {
 	    free(ps);
 	    return;
 	}
@@ -1145,7 +1145,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	poly.pn = 8;
 	poly.ps = (Ppoint_t*)points;
 	pointf *ps = simpleSplineRoute(tp, hp, poly, &pn, et == EDGETYPE_PLINE);
-	if (pn == 0) {
+	if (ps == NULL || pn == 0) {
 	    free(ps);
 	    return;
 	}
