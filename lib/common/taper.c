@@ -77,11 +77,9 @@ static double myatan (double y, double x)
     double v;
     if (x == 0 && y == 0)
 	return 0;
-    else {
-	v = atan2 (y, x);
-	if (v >= 0) return v;
-	else return v + 2 * M_PI;
-    }
+    v = atan2 (y, x);
+    if (v >= 0) return v;
+    return v + 2 * M_PI;
 }
 
 /*
