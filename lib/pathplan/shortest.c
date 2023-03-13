@@ -54,7 +54,7 @@ DEFINE_LIST(triangles, triangle_t)
 
 typedef struct deque_t {
     pointnlink_t **pnlps;
-    int pnlpn, fpnlpi, lpnlpi, apex;
+    size_t pnlpn, fpnlpi, lpnlpi, apex;
 } deque_t;
 
 static pointnlink_t *pnls, **pnlps;
@@ -75,8 +75,8 @@ static void connecttris(size_t, size_t);
 static bool marktripath(size_t, size_t);
 
 static void add2dq(int, pointnlink_t *);
-static void splitdq(int, int);
-static int finddqsplit(pointnlink_t *);
+static void splitdq(int, size_t);
+static size_t finddqsplit(pointnlink_t *);
 
 static int ccw(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
@@ -84,7 +84,7 @@ static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(size_t, Ppoint_t *);
 
 static int growpnls(size_t);
-static int growdq(int);
+static int growdq(size_t);
 static int growops(int);
 
 /* Pshortestpath:
@@ -101,7 +101,6 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     int ei;
     pointnlink_t epnls[2], *lpnlp, *rpnlp, *pnlp;
     triangle_t *trip;
-    int splitindex;
 #ifdef DEBUG
     int pnli;
 #endif
@@ -112,7 +111,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	return -2;
     pnll = 0;
     triangles_clear(&tris);
-    if (growdq(polyp->pn * 2) != 0)
+    if (growdq((size_t)polyp->pn * 2) != 0)
 	return -2;
     dq.fpnlpi = dq.pnlpn / 2, dq.lpnlpi = dq.fpnlpi - 1;
 
@@ -248,7 +247,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	    if (dq.pnlps[dq.fpnlpi] != rpnlp
 		&& dq.pnlps[dq.lpnlpi] != rpnlp) {
 		/* add right point to deque */
-		splitindex = finddqsplit(rpnlp);
+		size_t splitindex = finddqsplit(rpnlp);
 		splitdq(DQ_BACK, splitindex);
 		add2dq(DQ_FRONT, rpnlp);
 		/* if the split is behind the apex, then reset apex */
@@ -256,7 +255,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 		    dq.apex = splitindex;
 	    } else {
 		/* add left point to deque */
-		splitindex = finddqsplit(lpnlp);
+		size_t splitindex = finddqsplit(lpnlp);
 		splitdq(DQ_FRONT, splitindex);
 		add2dq(DQ_BACK, lpnlp);
 		/* if the split is in front of the apex, then reset apex */
@@ -416,22 +415,18 @@ static void add2dq(int side, pointnlink_t * pnlp)
     }
 }
 
-static void splitdq(int side, int index)
-{
+static void splitdq(int side, size_t index) {
     if (side == DQ_FRONT)
 	dq.lpnlpi = index;
     else
 	dq.fpnlpi = index;
 }
 
-static int finddqsplit(pointnlink_t * pnlp)
-{
-    int index;
-
-    for (index = dq.fpnlpi; index < dq.apex; index++)
+static size_t finddqsplit(pointnlink_t *pnlp) {
+    for (size_t index = dq.fpnlpi; index < dq.apex; index++)
 	if (ccw(dq.pnlps[index + 1]->pp, dq.pnlps[index]->pp, pnlp->pp) == ISCCW)
 	    return index;
-    for (index = dq.lpnlpi; index > dq.apex; index--)
+    for (size_t index = dq.lpnlpi; index > dq.apex; index--)
 	if (ccw(dq.pnlps[index - 1]->pp, dq.pnlps[index]->pp, pnlp->pp) == ISCW)
 	    return index;
     return dq.apex;
@@ -508,8 +503,7 @@ static int growpnls(size_t newpnln) {
     return 0;
 }
 
-static int growdq(int newdqn)
-{
+static int growdq(size_t newdqn) {
     if (newdqn <= dq.pnlpn)
 	return 0;
     dq.pnlps = realloc(dq.pnlps, POINTNLINKPSIZE * newdqn);
