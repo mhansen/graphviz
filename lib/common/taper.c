@@ -64,7 +64,7 @@ static void arcn (stroke_t* p, double x, double y, double r, double a1, double a
     while (a2 > a1) a2 -= 2*M_PI;
     theta = a1 - a2; 
     while (theta > 2*M_PI) theta -= 2*M_PI;
-    theta /= (BEZIERSUBDIVISION-1);
+    theta /= BEZIERSUBDIVISION - 1;
     for (i = 1; i < BEZIERSUBDIVISION; i++)
 	addto (p, x+r*cos(a1-i*theta), y+r*sin(a1-i*theta));
 }
@@ -75,12 +75,12 @@ static void arcn (stroke_t* p, double x, double y, double r, double a1, double a
 static double myatan (double y, double x)
 {
     double v;
-    if ((x == 0) && (y == 0))
+    if (x == 0 && y == 0)
 	return 0;
     else {
 	v = atan2 (y, x);
 	if (v >= 0) return v;
-	else return (v + 2*M_PI);
+	else return v + 2 * M_PI;
     }
 }
 
@@ -90,9 +90,9 @@ static double myatan (double y, double x)
 static double mymod (double original, double modulus)
 {
     double v;
-    if ((original < 0) || (original >= modulus)) {
+    if (original < 0 || original >= modulus) {
 	v = -floor(original/modulus);
-	return ((v*modulus) + original);
+	return v * modulus + original;
     }
     return original;
 }
@@ -254,7 +254,7 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	    /* effective line radius at this point */
 	linerad = radfunc(dist, linelen, initwid);
 
- 	if ((i == 0) || (i == pathcount-1)) {
+ 	if (i == 0 || i == pathcount-1) {
 	    lineout = linerad;
 	    if (i == 0) {
 		direction = ndir + D2R(90);
@@ -275,16 +275,16 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	    if (theta < 0) {
 		theta += D2R(360);
 	    }
-	    phi = D2R(90)-(theta/2);
+	    phi = D2R(90) - theta / 2;
 		 /* actual distance to junction point */
 	    if (cos(phi) == 0) {
 		lineout = 0;
 	    } else {
-		lineout = linerad/(cos(phi));
+		lineout = linerad / cos(phi);
 	    }
 		 /* direction to junction point */
 	    direction = ndir+D2R(90)+phi;
-	    if ((0 != linejoin) || (lineout > currentmiterlimit * linerad)) {
+	    if (0 != linejoin || lineout > currentmiterlimit * linerad) {
 		bevel = true;
 		lineout = linerad;
 		direction = mymod(ldir-D2R(90),D2R(360));
@@ -360,7 +360,7 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 #ifdef TEST
 static double halffunc (double curlen, double totallen, double initwid)
 {
-    return ((1 - (curlen/totallen))*initwid/2.0);
+  return (1 - curlen / totallen) * initwid / 2.0;
 }
 
 static pointf pts[] = {
