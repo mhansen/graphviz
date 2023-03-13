@@ -51,6 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A buffer overflow in Smyrna when loading GVPR scripts has been corrected.
 - A buffer overflow when loading a plugin with a long type string has been
   corrected.
+- Graphs that involve more than 2000 stroke points during tapering calculations
+  no longer cause out of bounds writes.
 
 ### Removed
 

@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <types.h>
 #include <common/memory.h>
+#include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/list.h>
 #include <cgraph/prisize_t.h>
@@ -28,9 +29,6 @@
 
   /* sample point size; should be dynamic based on dpi or under user control */
 #define BEZIERSUBDIVISION 20
-
-  /* initial guess of array size */
-#define INITSZ 2000
 
   /* convert degrees to radians and vice versa */
 #ifndef M_PI
@@ -48,10 +46,8 @@ static void addto (stroke_t* p, double x, double y)
 {
     pointf pt;
 
-    if (p->nvertices >= p->flags) {
-	p->flags =+ INITSZ;
-	p->vertices = RALLOC(p->flags,p->vertices,pointf);
-    }
+    p->vertices = gv_recalloc(p->vertices, p->nvertices, p->nvertices + 1,
+                              sizeof(pointf));
     pt.x = x;
     pt.y = y;
     p->vertices[p->nvertices++] = pt;
