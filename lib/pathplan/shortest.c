@@ -39,7 +39,6 @@ typedef struct pointnlink_t {
 typedef struct tedge_t {
     pointnlink_t *pnl0p;
     pointnlink_t *pnl1p;
-    struct triangle_t *ltp;
     struct triangle_t *rtp;
 } tedge_t;
 
@@ -354,7 +353,6 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
 			 pointnlink_t * pnlcp)
 {
     triangle_t *trip;
-    int ei;
 
     /* make space */
     if (tril >= 0 && (size_t)tril >= trin) {
@@ -366,8 +364,6 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
     trip->e[0].pnl0p = pnlap, trip->e[0].pnl1p = pnlbp, trip->e[0].rtp = NULL;
     trip->e[1].pnl0p = pnlbp, trip->e[1].pnl1p = pnlcp, trip->e[1].rtp = NULL;
     trip->e[2].pnl0p = pnlcp, trip->e[2].pnl1p = pnlap, trip->e[2].rtp = NULL;
-    for (ei = 0; ei < 3; ei++)
-	trip->e[ei].ltp = trip;
 
     return 0;
 }
