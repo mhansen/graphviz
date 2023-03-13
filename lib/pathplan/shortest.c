@@ -36,7 +36,7 @@ typedef struct pointnlink_t {
 #define POINTNLINKSIZE sizeof (pointnlink_t)
 #define POINTNLINKPSIZE sizeof (pointnlink_t *)
 
-typedef struct tedge_t {
+typedef struct {
     pointnlink_t *pnl0p;
     pointnlink_t *pnl1p;
     struct triangle_t *rtp;
@@ -44,7 +44,7 @@ typedef struct tedge_t {
 
 typedef struct triangle_t {
     int mark;
-    struct tedge_t e[3];
+    tedge_t e[3];
 } triangle_t;
 
 #define TRIANGLESIZE sizeof (triangle_t)
