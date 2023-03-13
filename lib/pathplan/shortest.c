@@ -9,8 +9,10 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/prisize_t.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <limits.h>
 #include <math.h>
@@ -60,7 +62,7 @@ static int pnll;
 
 static triangle_t *tris;
 static size_t trin;
-static int tril;
+static size_t tril;
 
 static deque_t dq;
 
@@ -70,8 +72,8 @@ static int opn;
 static int triangulate(pointnlink_t **, int);
 static bool isdiagonal(int, int, pointnlink_t **, int);
 static int loadtriangle(pointnlink_t *, pointnlink_t *, pointnlink_t *);
-static void connecttris(long, long);
-static bool marktripath(long, long);
+static void connecttris(size_t, size_t);
+static bool marktripath(size_t, size_t);
 
 static void add2dq(int, pointnlink_t *);
 static void splitdq(int, int);
@@ -80,7 +82,7 @@ static int finddqsplit(pointnlink_t *);
 static int ccw(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
-static int pointintri(long, Ppoint_t *);
+static int pointintri(size_t, Ppoint_t *);
 
 static int growpnls(size_t);
 static int growtris(size_t);
@@ -97,7 +99,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     int pi, minpi;
     double minx;
     Ppoint_t p1, p2, p3;
-    long trii, trij, ftrii, ltrii;
+    size_t trii, trij, ftrii, ltrii;
     int ei;
     pointnlink_t epnls[2], *lpnlp, *rpnlp, *pnlp;
     triangle_t *trip;
@@ -159,7 +161,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	return -2;
 
 #if defined(DEBUG) && DEBUG >= 2
-    fprintf(stderr, "triangles\n%d\n", tril);
+    fprintf(stderr, "triangles\n%" PRISIZE_T "\n", tril);
     for (trii = 0; trii < tril; trii++)
 	for (ei = 0; ei < 3; ei++)
 	    fprintf(stderr, "%f %f\n", tris[trii].e[ei].pnl0p->pp->x,
@@ -217,7 +219,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     add2dq(DQ_FRONT, &epnls[0]);
     dq.apex = dq.fpnlpi;
     trii = ftrii;
-    while (trii != -1) {
+    while (trii != SIZE_MAX) {
 	trip = &tris[trii];
 	trip->mark = 2;
 
@@ -264,10 +266,10 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 		    dq.apex = splitindex;
 	    }
 	}
-	trii = -1;
+	trii = SIZE_MAX;
 	for (ei = 0; ei < 3; ei++)
 	    if (trip->e[ei].rtp && trip->e[ei].rtp->mark == 1) {
-		trii = trip->e[ei].rtp - tris;
+		trii = (size_t)(trip->e[ei].rtp - tris);
 		break;
 	    }
     }
@@ -355,7 +357,7 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
     triangle_t *trip;
 
     /* make space */
-    if (tril >= 0 && (size_t)tril >= trin) {
+    if (tril >= trin) {
 	if (growtris(trin + 20) != 0)
 		return -1;
     }
@@ -369,7 +371,7 @@ static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
 }
 
 /* connect a pair of triangles at their common edge (if any) */
-static void connecttris(long tri1, long tri2) {
+static void connecttris(size_t tri1, size_t tri2) {
     triangle_t *tri1p, *tri2p;
     int ei, ej;
 
@@ -387,7 +389,7 @@ static void connecttris(long tri1, long tri2) {
 }
 
 /* find and mark path from trii, to trij */
-static bool marktripath(long trii, long trij) {
+static bool marktripath(size_t trii, size_t trij) {
     int ei;
 
     if (tris[trii].mark)
@@ -397,7 +399,7 @@ static bool marktripath(long trii, long trij) {
 	return true;
     for (ei = 0; ei < 3; ei++)
 	if (tris[trii].e[ei].rtp &&
-	    marktripath(tris[trii].e[ei].rtp - tris, trij))
+	    marktripath((size_t)(tris[trii].e[ei].rtp - tris), trij))
 	    return true;
     tris[trii].mark = 0;
     return false;
@@ -484,7 +486,7 @@ static bool between(Ppoint_t * pap, Ppoint_t * pbp, Ppoint_t * pcp)
 	p2.x * p2.x + p2.y * p2.y <= p1.x * p1.x + p1.y * p1.y;
 }
 
-static int pointintri(long trii, Ppoint_t *pp) {
+static int pointintri(size_t trii, Ppoint_t *pp) {
     int ei, sum;
 
     for (ei = 0, sum = 0; ei < 3; ei++)
