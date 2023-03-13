@@ -16,6 +16,7 @@
 #include <assert.h>
 #include <limits.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -103,7 +104,7 @@ typedef struct {
     char type;
     double dir;
     double lout;
-    int bevel;
+    bool bevel;
     double dir2;
 } pathpoint;
 
@@ -212,7 +213,6 @@ typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
 stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, int linecap)
 {
     int l, n;
-    int bevel;
     double direction=0, direction_2=0;
     vararr_t arr = pathtolines(bez);
     pathpoint cur_point, last_point, next_point;
@@ -248,7 +248,7 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	ly = last_point.y;
 	ldir = myatan (ly-y, lx-x);
 
-	bevel = FALSE;
+	bool bevel = false;
 	direction_2 = 0;
 
 	    /* effective line radius at this point */
@@ -285,12 +285,12 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 		 /* direction to junction point */
 	    direction = ndir+D2R(90)+phi;
 	    if ((0 != linejoin) || (lineout > currentmiterlimit * linerad)) {
-		bevel = TRUE;
+		bevel = true;
 		lineout = linerad;
 		direction = mymod(ldir-D2R(90),D2R(360));
 		direction_2 = mymod(ndir+D2R(90),D2R(360));
 		if (i == pathcount-1) {
-		    bevel = FALSE;
+		    bevel = false;
 		}
 	    } else {
 		direction_2 = direction;
@@ -315,7 +315,7 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	y = cur_point.y;
 	direction = cur_point.dir;
 	lineout = cur_point.lout;
-	bevel = cur_point.bevel;
+	bool bevel = cur_point.bevel;
 	direction_2 = cur_point.dir2;
 	if (i == 0) {
 	    moveto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
@@ -341,7 +341,7 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	y = cur_point.y;
 	direction = cur_point.dir + D2R(180);
 	lineout = cur_point.lout;
-	bevel = cur_point.bevel;
+	bool bevel = cur_point.bevel;
 	direction_2 = cur_point.dir2 + D2R(180);
 	lineto(&p, x+cos(direction_2)*lineout, y+sin(direction_2)*lineout);
 	if (bevel) { 
