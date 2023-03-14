@@ -403,7 +403,7 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 	if (hlen + tlen >= d) {
 	    hlen = tlen = d/3.0;
 	}
-	if (p.y == q.y) { /* horz segment */
+	if (p.y == q.y) { // horizontal segment
 	    s.y = t.y = p.y;
 	    if (p.x < q.x) {
 		t.x = q.x - hlen;
@@ -414,7 +414,7 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 		s.x = p.x - tlen;
 	    }
 	}
-	else {            /* vert segment */
+	else {            // vertical segment
 	    s.x = t.x = p.x;
 	    if (p.y < q.y) {
 		t.y = q.y - hlen;
@@ -440,12 +440,12 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 	if (hlen >= maxd) {   /* arrow too long */
 	    hlen = maxd;
 	}
-	if (p.y == q.y) { /* horz segment */
+	if (p.y == q.y) { // horizontal segment
 	    r.y = p.y;
 	    if (p.x < q.x) r.x = q.x - hlen;
 	    else r.x = q.x + hlen;
 	}
-	else {            /* vert segment */
+	else {            // vertical segment
 	    r.x = p.x;
 	    if (p.y < q.y) r.y = q.y - hlen;
 	    else r.y = q.y + hlen;
@@ -464,12 +464,12 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 	if (tlen >= maxd) {   /* arrow too long */
 	    tlen = maxd;
 	}
-	if (p.y == q.y) { /* horz segment */
+	if (p.y == q.y) { // horizontal segment
 	    r.y = p.y;
 	    if (p.x < q.x) r.x = p.x + tlen;
 	    else r.x = p.x - tlen;
 	}
-	else {            /* vert segment */
+	else {            // vertical segment
 	    r.x = p.x;
 	    if (p.y < q.y) r.y = p.y + tlen;
 	    else r.y = p.y - tlen;
