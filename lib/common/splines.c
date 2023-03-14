@@ -33,22 +33,16 @@ static int debugleveln(edge_t* e, int i)
 
 static void showPoints(pointf ps[], int pn)
 {
-    int newcnt = Show_cnt + pn + 3;
-    int bi, li;
+    int bi;
 
-    Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
-    li = Show_cnt+1;
-    Show_boxes[li++] = gv_strdup("%% self list");
-    Show_boxes[li++] = gv_strdup("dbgstart");
+    show_boxes_append(&Show_boxes, gv_strdup("%% self list"));
+    show_boxes_append(&Show_boxes, gv_strdup("dbgstart"));
     for (bi = 0; bi < pn; bi++) {
 	agxbuf buf = {0};
 	agxbprint(&buf, "%.5g %.5g point", ps[bi].x, ps[bi].y);
-	Show_boxes[li++] = agxbdisown(&buf);
+	show_boxes_append(&Show_boxes, agxbdisown(&buf));
     }
-    Show_boxes[li++] = gv_strdup("grestore");
-
-    Show_cnt = newcnt;
-    Show_boxes[Show_cnt+1] = NULL;
+    show_boxes_append(&Show_boxes, gv_strdup("grestore"));
 }
 #endif
 

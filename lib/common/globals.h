@@ -10,6 +10,9 @@
 
 #pragma once
 
+#include <cgraph/list.h>
+#include <stdlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -30,6 +33,8 @@ extern "C" {
 #define EXTERN extern
 #endif
 
+DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
+
     GLOBALS_API EXTERN char *Version;
     GLOBALS_API EXTERN char **Files;	/* from command line */
     GLOBALS_API EXTERN const char **Lib;		/* from command line */
@@ -43,8 +48,7 @@ extern "C" {
     GLOBALS_API EXTERN int graphviz_errors;
     GLOBALS_API EXTERN int Nop;
     GLOBALS_API EXTERN double PSinputscale;
-    GLOBALS_API EXTERN int Show_cnt;
-    GLOBALS_API EXTERN char** Show_boxes;	/* emit code for correct box coordinates */
+    GLOBALS_API EXTERN show_boxes_t Show_boxes; // emit code for correct box coordinates
     GLOBALS_API EXTERN int CL_type;		/* NONE, LOCAL, GLOBAL */
     GLOBALS_API EXTERN unsigned char Concentrate;	/* if parallel edges should be merged */
     GLOBALS_API EXTERN double Epsilon;	/* defined in input_graph */
