@@ -1088,7 +1088,7 @@ static double arrow_length_normal(double lenfact, double arrowsize,
   assert(full_base_width > 0 && "non-positive full base width");
 
   // we want a small overlap between the edge path (stem) and the arrow to avoid
-  // gaps beetween them in case the arrow has a corner towards the edge path
+  // gaps between them in case the arrow has a corner towards the edge path
   const double overlap_at_base = penwidth / 2;
   // overlap the tip to a point where its width is equal to the penwidth.
   const double length_where_width_is_penwidth =
@@ -1167,7 +1167,7 @@ static double arrow_length_diamond(double lenfact, double arrowsize,
   assert(full_base_width > 0 && "non-positive full base width");
 
   // we want a small overlap between the edge path (stem) and the arrow to avoid
-  // gaps beetween them in case the arrow has a corner towards the edge path
+  // gaps between them in case the arrow has a corner towards the edge path
 
   // overlap the tip to a point where its width is equal to the penwidth
   const double length_where_width_is_penwidth =
