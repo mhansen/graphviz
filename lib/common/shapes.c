@@ -809,7 +809,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//the arrow's thickness is (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides + 5, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (AF[0].x - AF[1].x)/8; //x_center + width
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)*3/2; //D[4].y + width
@@ -979,7 +980,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides + 1, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (B[2].x-B[3].x);//x_center + width*2
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/4;//y_center + 1/2 width
@@ -1019,7 +1021,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides + 4, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (AF[0].x - AF[1].x)/8 + (B[2].x-B[3].x)/2;//x_center + scalable_width + width
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/4;//y_center + 1/2 width
@@ -1072,7 +1075,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[1].x;//the very left edge
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
@@ -1123,7 +1127,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[0].x;//the very right edge
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
@@ -1175,7 +1180,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	/*upper left rectangle*/
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x)*9/8; //x_center - 2*width - 1/4*width
@@ -1259,7 +1265,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x); //x_center - 2*width
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
@@ -1313,7 +1320,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[0].x;
 	D[0].y = B[1].y - (B[3].y - B[4].y)/2;
