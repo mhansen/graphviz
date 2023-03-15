@@ -237,13 +237,10 @@ rescaleLayout(v_data * graph, int n, double *x_coords, double *y_coords,
     free(ordering);
 }
 
-void
-rescale_layout(double *x_coords, double *y_coords,
-	       int n, int interval, double width, double height,
-	       double margin, double distortion)
-{
+void rescale_layout(double *x_coords, double *y_coords, size_t n, int interval,
+                    double width, double height, double margin,
+                    double distortion) {
     // Rectlinear distortion - main function
-    int i;
     double minX, maxX, minY, maxY;
     double aspect_ratio;
     v_data *graph;
@@ -256,7 +253,7 @@ rescale_layout(double *x_coords, double *y_coords,
     // compute original aspect ratio
     minX = maxX = x_coords[0];
     minY = maxY = y_coords[0];
-    for (i = 1; i < n; i++) {
+    for (size_t i = 1; i < n; i++) {
 	if (x_coords[i] < minX)
 	    minX = x_coords[i];
 	if (y_coords[i] < minY)
@@ -269,15 +266,16 @@ rescale_layout(double *x_coords, double *y_coords,
     aspect_ratio = (maxX - minX) / (maxY - minY);
 
     // construct mutual neighborhood graph
-    graph = UG_graph(x_coords, y_coords, n, 0);
-    rescaleLayout(graph, n, x_coords, y_coords, interval, distortion);
+    assert(n <= INT_MAX);
+    graph = UG_graph(x_coords, y_coords, (int)n, 0);
+    rescaleLayout(graph, (int)n, x_coords, y_coords, interval, distortion);
     free(graph[0].edges);
     free(graph);
 
     // compute new aspect ratio
     minX = maxX = x_coords[0];
     minY = maxY = y_coords[0];
-    for (i = 1; i < n; i++) {
+    for (size_t i = 1; i < n; i++) {
 	if (x_coords[i] < minX)
 	    minX = x_coords[i];
 	if (y_coords[i] < minY)
@@ -289,14 +287,14 @@ rescale_layout(double *x_coords, double *y_coords,
     }
 
     // shift points:
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] -= minX;
 	y_coords[i] -= minY;
     }
 
     // rescale x_coords to maintain aspect ratio:
     scaleX = aspect_ratio * (maxY - minY) / (maxX - minX);
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] *= scaleX;
     }
 
@@ -304,12 +302,12 @@ rescale_layout(double *x_coords, double *y_coords,
     scale_ratio =
 	MIN((width) / (aspect_ratio * (maxY - minY)),
 	    (height) / (maxY - minY));
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] *= scale_ratio;
 	y_coords[i] *= scale_ratio;
     }
 
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] += margin;
 	y_coords[i] += margin;
     }

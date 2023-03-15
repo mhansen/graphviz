@@ -8,11 +8,9 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <assert.h>
 #include <cgraph/alloc.h>
 #include "smyrnadefs.h"
 #include "hier.h"
-#include <limits.h>
 #include <math.h>
 #include <neatogen/delaunay.h>
 #include <stddef.h>
@@ -76,7 +74,6 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
 	    extract_active_logical_coords(hp, i, max_level, x_coords,
 					  y_coords, counter);
     }
-    assert(counter <= INT_MAX);
 
     /* distort logical coordinates in order to get uniform density
      * (equivalent to concentrating on the focus area)
@@ -96,7 +93,7 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
 				 distortion);
 	    break;
 	case Rectilinear:
-	    rescale_layout(x_coords, y_coords, (int)counter, interval,
+	    rescale_layout(x_coords, y_coords, counter, interval,
 			   width, height, margin, distortion);
 	    break;
 	case Scale:
