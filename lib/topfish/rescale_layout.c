@@ -427,14 +427,10 @@ rescale_layout_polar(double *x_coords, double *y_coords,
     minY = maxY = y_coords[0];
     for (size_t i = 1; i < n; i++)
 	{
-		if (x_coords[i] < minX)
-		    minX = x_coords[i];
-		if (y_coords[i] < minY)
-			minY = y_coords[i];
-		if (x_coords[i] > maxX)
-			maxX = x_coords[i];
-		if (y_coords[i] > maxY)
-			maxY = y_coords[i];
+		minX = fmin(minX, x_coords[i]);
+		minY = fmin(minY, y_coords[i]);
+		maxX = fmax(maxX, x_coords[i]);
+		maxY = fmax(maxY, y_coords[i]);
     }
     aspect_ratio = (maxX - minX) / (maxY - minY);
 
@@ -478,14 +474,10 @@ rescale_layout_polar(double *x_coords, double *y_coords,
     minX = maxX = x_coords[0];
     minY = maxY = y_coords[0];
     for (size_t i = 1; i < n; i++) {
-	if (x_coords[i] < minX)
-	    minX = x_coords[i];
-	if (y_coords[i] < minY)
-	    minY = y_coords[i];
-	if (x_coords[i] > maxX)
-	    maxX = x_coords[i];
-	if (y_coords[i] > maxY)
-	    maxY = y_coords[i];
+	minX = fmin(minX, x_coords[i]);
+	minY = fmin(minY, y_coords[i]);
+	maxX = fmax(maxX, x_coords[i]);
+	maxY = fmax(maxY, y_coords[i]);
     }
 
     // shift points:
