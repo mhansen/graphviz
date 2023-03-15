@@ -196,8 +196,6 @@ rescaleLayout(v_data * graph, int n, double *x_coords, double *y_coords,
     int *ordering = N_NEW(n, int);
     double factor;
 
-    //compute_densities(graph, n, x_coords, y_coords, densities);
-
     for (i = 0; i < n; i++) {
 	ordering[i] = i;
     }
