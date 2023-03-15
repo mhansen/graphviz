@@ -21,7 +21,7 @@
 //                                   // 
 ///////////////////////////////////////
 
-
+#include <cgraph/alloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,13 +51,11 @@ static double *compute_densities(v_data * graph, int n, double *x,
     return densities;
 }
 
-static double *recompute_densities(v_data * graph, int n, double *x,
-				   double *densities)
-{
+static double *recompute_densities(v_data *graph, int n, double *x) {
 // compute density of every node by calculating the average edge length in a 1-D layout
     int i, j, neighbor;
     double sum;
-    densities = RALLOC(n, densities, double);
+    double *densities = gv_calloc(n, sizeof(double));
 
     for (i = 0; i < n; i++) {
 	sum = 0;
@@ -191,7 +189,7 @@ rescaleLayout(v_data * graph, int n, double *x_coords, double *y_coords,
 {
     // Rectlinear distortion - auxiliary function
     int i;
-    double *densities = NULL, *smoothed_densities = NULL;
+    double *smoothed_densities = NULL;
     double *copy_coords = N_NEW(n, double);
     int *ordering = N_NEW(n, int);
     double factor;
@@ -210,8 +208,11 @@ rescaleLayout(v_data * graph, int n, double *x_coords, double *y_coords,
     }
 
     quicksort_place(x_coords, ordering, 0, n - 1);
-    densities = recompute_densities(graph, n, x_coords, densities);
-    smoothed_densities = smooth_vec(densities, ordering, n, interval, smoothed_densities);
+    {
+	double *densities = recompute_densities(graph, n, x_coords);
+	smoothed_densities = smooth_vec(densities, ordering, n, interval, smoothed_densities);
+	free(densities);
+    }
     cpvec(copy_coords, 0, n - 1, x_coords);
     for (i = 1; i < n; i++) {
 	x_coords[ordering[i]] =
@@ -221,8 +222,11 @@ rescaleLayout(v_data * graph, int n, double *x_coords, double *y_coords,
     }
 
     quicksort_place(y_coords, ordering, 0, n - 1);
-    densities = recompute_densities(graph, n, y_coords, densities);
-    smoothed_densities = smooth_vec(densities, ordering, n, interval, smoothed_densities);
+    {
+	double *densities = recompute_densities(graph, n, y_coords);
+	smoothed_densities = smooth_vec(densities, ordering, n, interval, smoothed_densities);
+	free(densities);
+    }
     cpvec(copy_coords, 0, n - 1, y_coords);
     for (i = 1; i < n; i++) {
 	y_coords[ordering[i]] =
@@ -231,7 +235,6 @@ rescaleLayout(v_data * graph, int n, double *x_coords, double *y_coords,
 	    pow(smoothed_densities[ordering[i]], factor);
     }
 
-    free(densities);
     free(smoothed_densities);
     free(copy_coords);
     free(ordering);
