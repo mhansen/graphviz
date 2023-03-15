@@ -29,7 +29,7 @@ static inline bool stack_is_empty(const gv_stack_t *stack) {
   return stack_size(stack) == 0;
 }
 
-static inline int stack_push(gv_stack_t *stack, void *item) {
+static inline void stack_push_or_exit(gv_stack_t *stack, void *item) {
 
   assert(stack != NULL);
 
@@ -43,13 +43,15 @@ static inline int stack_push(gv_stack_t *stack, void *item) {
 
     // will our resize calculation overflow?
     if (UNLIKELY(SIZE_MAX / 2 < stack->capacity)) {
-      return EOVERFLOW;
+      fprintf(stderr, "stack_push failed: %s\n", strerror(EOVERFLOW));
+      graphviz_exit(EXIT_FAILURE);
     }
 
     size_t c = stack->capacity == 0 ? FIRST_ALLOCATION : (2 * stack->capacity);
     void **b = realloc(stack->base, sizeof(b[0]) * c);
     if (UNLIKELY(b == NULL)) {
-      return ENOMEM;
+      fprintf(stderr, "stack_push failed: %s\n", strerror(ENOMEM));
+      graphviz_exit(EXIT_FAILURE);
     }
     stack->capacity = c;
     stack->base = b;
@@ -61,19 +63,6 @@ static inline int stack_push(gv_stack_t *stack, void *item) {
   // insert the new item
   stack->base[stack->size] = item;
   ++stack->size;
-
-  return 0;
-}
-
-static inline void stack_push_or_exit(gv_stack_t *stack, void *item) {
-
-  assert(stack != NULL);
-
-  int r = stack_push(stack, item);
-  if (UNLIKELY(r != 0)) {
-    fprintf(stderr, "stack_push failed: %s\n", strerror(r));
-    graphviz_exit(EXIT_FAILURE);
-  }
 }
 
 static inline void *stack_top(gv_stack_t *stack) {
