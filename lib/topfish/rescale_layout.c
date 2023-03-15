@@ -449,9 +449,6 @@ rescale_layout_polar(double *x_coords, double *y_coords,
 	double *final_y_coords = gv_calloc(n, sizeof(double));
 	double *cp_x_coords = gv_calloc(n, sizeof(double));
 	double *cp_y_coords = gv_calloc(n, sizeof(double));
-	for (size_t i = 0; i < n; i++) {
-	    final_x_coords[i] = final_y_coords[i] = 0;
-	}
 	assert(n <= INT_MAX);
 	for (int i = 0; i < num_foci; i++) {
 	    cpvec(cp_x_coords, 0, (int)n - 1, x_coords);
