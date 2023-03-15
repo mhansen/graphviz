@@ -29,7 +29,7 @@ static inline bool stack_is_empty(const gv_stack_t *stack) {
   return stack_size(stack) == 0;
 }
 
-static inline void stack_push_or_exit(gv_stack_t *stack, void *item) {
+static inline void stack_push(gv_stack_t *stack, void *item) {
 
   assert(stack != NULL);
 

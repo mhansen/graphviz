@@ -38,7 +38,7 @@ static void push(gv_stack_t *s, Pair x) {
   Pair *copy = gv_alloc(sizeof(x));
   *copy = x;
 
-  stack_push_or_exit(s, copy);
+  stack_push(s, copy);
 }
 
 static bool pop(gv_stack_t *s, Pair *x) {

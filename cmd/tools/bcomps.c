@@ -167,7 +167,7 @@ dfs(Agraph_t * g, Agnode_t * u, bcstate * stp, Agnode_t * parent)
 	if (v == u)
 	    continue;
 	if (N(v) == 0) {
-	    stack_push_or_exit(&stp->stk, e);
+	    stack_push(&stp->stk, e);
 	    dfs(g, v, stp, u);
 	    Low(u) = min(Low(u), Low(v));
 	    if (Low(v) >= N(u)) {	/* u is an articulation point */
@@ -182,7 +182,7 @@ dfs(Agraph_t * g, Agnode_t * u, bcstate * stp, Agnode_t * parent)
 	} else if (parent != v) {
 	    Low(u) = min(Low(u), N(v));
 	    if (N(v) < N(u))
-		stack_push_or_exit(&stp->stk, e);
+		stack_push(&stp->stk, e);
 	}
     }
 }

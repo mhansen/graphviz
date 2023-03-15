@@ -621,7 +621,7 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
 			evalEdge(state, prog, xprog, cure);
 		} else {
 		    evalEdge(state, prog, xprog, cure);
-		    stack_push_or_exit(&stk, entry);
+		    stack_push(&stk, entry);
 		    state->tvedge = entry = cure;
 		    curn = cure->node;
 		    cure = 0;

@@ -45,7 +45,7 @@ static void freeStk (stk_t* sp)
 
 static void push(stk_t *sp, Agnode_t *np) {
   MARK(sp, np);
-  stack_push_or_exit(&sp->data, np);
+  stack_push(&sp->data, np);
 }
 
 static Agnode_t *pop(stk_t* sp)

@@ -151,7 +151,7 @@ static gv_stack_t Stk;
 static void push(Agnode_t * np)
 {
     ND_dfs_mark(np) = -1;
-    stack_push_or_exit(&Stk, np);
+    stack_push(&Stk, np);
 }
 
 static Agnode_t *pop(void)
