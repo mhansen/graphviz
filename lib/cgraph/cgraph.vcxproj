@@ -106,6 +106,7 @@ win_flex -oscan.c scan.l</Command>
     <ClInclude Include="likely.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="prisize_t.h" />
+    <ClInclude Include="sort.h" />
     <ClInclude Include="stack.h" />
     <ClInclude Include="startswith.h" />
     <ClInclude Include="strcasecmp.h" />
