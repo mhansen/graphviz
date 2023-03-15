@@ -89,7 +89,7 @@ void rescale_layout(double *x_coords, double *y_coords,
     int n, int interval, double width, double height,
     double margin, double distortion);
 void rescale_layout_polar(double * x_coords, double * y_coords, 
-    double * x_foci, double * y_foci, int num_foci, int n, int interval, 
+    double * x_foci, double * y_foci, int num_foci, size_t n, int interval,
     double width, double height, double margin, double distortion);
 
 void find_physical_coords(Hierarchy*, int, int, double *x, double *y);

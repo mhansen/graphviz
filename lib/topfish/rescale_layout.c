@@ -21,7 +21,9 @@
 //                                   // 
 ///////////////////////////////////////
 
+#include <assert.h>
 #include <cgraph/alloc.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -407,11 +409,10 @@ rescale_layout_polarFocus(v_data * graph, int n,
 void
 rescale_layout_polar(double *x_coords, double *y_coords,
 		     double *x_foci, double *y_foci, int num_foci,
-		     int n, int interval, double width,
+		     size_t n, int interval, double width,
 		     double height, double margin, double distortion)
 {
     // Polar distortion - main function
-    int i;
     double minX, maxX, minY, maxY;
     double aspect_ratio;
     v_data *graph;
@@ -424,7 +425,7 @@ rescale_layout_polar(double *x_coords, double *y_coords,
     // compute original aspect ratio
     minX = maxX = x_coords[0];
     minY = maxY = y_coords[0];
-    for (i = 1; i < n; i++) 
+    for (size_t i = 1; i < n; i++)
 	{
 		if (x_coords[i] < minX)
 		    minX = x_coords[i];
@@ -438,11 +439,12 @@ rescale_layout_polar(double *x_coords, double *y_coords,
     aspect_ratio = (maxX - minX) / (maxY - minY);
 
     // construct mutual neighborhood graph
-    graph = UG_graph(x_coords, y_coords, n, 0);
+    assert(n <= INT_MAX);
+    graph = UG_graph(x_coords, y_coords, (int)n, 0);
 
     if (num_foci == 1) 
 	{	// accelerate execution of most common case
-		rescale_layout_polarFocus(graph, n, x_coords, y_coords, x_foci[0],
+		rescale_layout_polarFocus(graph, (int)n, x_coords, y_coords, x_foci[0],
 				  y_foci[0], interval, distortion);
     } else
 	{
@@ -451,19 +453,20 @@ rescale_layout_polar(double *x_coords, double *y_coords,
 	double *final_y_coords = N_NEW(n, double);
 	double *cp_x_coords = N_NEW(n, double);
 	double *cp_y_coords = N_NEW(n, double);
-	for (i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 	    final_x_coords[i] = final_y_coords[i] = 0;
 	}
-	for (i = 0; i < num_foci; i++) {
-	    cpvec(cp_x_coords, 0, n - 1, x_coords);
-	    cpvec(cp_y_coords, 0, n - 1, y_coords);
-	    rescale_layout_polarFocus(graph, n, cp_x_coords, cp_y_coords,
+	assert(n <= INT_MAX);
+	for (int i = 0; i < num_foci; i++) {
+	    cpvec(cp_x_coords, 0, (int)n - 1, x_coords);
+	    cpvec(cp_y_coords, 0, (int)n - 1, y_coords);
+	    rescale_layout_polarFocus(graph, (int)n, cp_x_coords, cp_y_coords,
 				      x_foci[i], y_foci[i], interval, distortion);
-	    scadd(final_x_coords, 0, n - 1, 1.0 / num_foci, cp_x_coords);
-	    scadd(final_y_coords, 0, n - 1, 1.0 / num_foci, cp_y_coords);
+	    scadd(final_x_coords, 0, (int)n - 1, 1.0 / num_foci, cp_x_coords);
+	    scadd(final_y_coords, 0, (int)n - 1, 1.0 / num_foci, cp_y_coords);
 	}
-	cpvec(x_coords, 0, n - 1, final_x_coords);
-	cpvec(y_coords, 0, n - 1, final_y_coords);
+	cpvec(x_coords, 0, (int)n - 1, final_x_coords);
+	cpvec(y_coords, 0, (int)n - 1, final_y_coords);
 	free(final_x_coords);
 	free(final_y_coords);
 	free(cp_x_coords);
@@ -474,7 +477,7 @@ rescale_layout_polar(double *x_coords, double *y_coords,
 
     minX = maxX = x_coords[0];
     minY = maxY = y_coords[0];
-    for (i = 1; i < n; i++) {
+    for (size_t i = 1; i < n; i++) {
 	if (x_coords[i] < minX)
 	    minX = x_coords[i];
 	if (y_coords[i] < minY)
@@ -486,14 +489,14 @@ rescale_layout_polar(double *x_coords, double *y_coords,
     }
 
     // shift points:
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] -= minX;
 	y_coords[i] -= minY;
     }
 
     // rescale x_coords to maintain aspect ratio:
     scaleX = aspect_ratio * (maxY - minY) / (maxX - minX);
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] *= scaleX;
     }
 
@@ -502,12 +505,12 @@ rescale_layout_polar(double *x_coords, double *y_coords,
     scale_ratio =
 	MIN((width) / (aspect_ratio * (maxY - minY)),
 	    (height) / (maxY - minY));
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] *= scale_ratio;
 	y_coords[i] *= scale_ratio;
     }
 
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] += margin;
 	y_coords[i] += margin;
     }

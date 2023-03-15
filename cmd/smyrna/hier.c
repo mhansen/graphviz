@@ -91,7 +91,7 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
 	switch (parms->rescale) {
 	case Polar:
 	    rescale_layout_polar(x_coords, y_coords, fs->x_foci,
-				 fs->y_foci, fs->num_foci, (int)counter,
+				 fs->y_foci, fs->num_foci, counter,
 				 interval, width, height, margin,
 				 distortion);
 	    break;
