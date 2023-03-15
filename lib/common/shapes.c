@@ -3657,7 +3657,7 @@ static void record_init(node_t * n)
     }
     resize_reclbl(info, sz,
                   mapbool(late_string(n, N_nojustify, "false")) ? TRUE : FALSE);
-    pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce ronding error - see Kluge below */
+    pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce rounding error - see Kluge below */
     pos_reclbl(info, ul, sides);
     ND_width(n) = PS2INCH(info->size.x);
     ND_height(n) = PS2INCH(info->size.y + 1);	/* Kluge!!  +1 to fix rounding diff between layout and rendering 
