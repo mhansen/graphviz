@@ -702,7 +702,7 @@ Hierarchy *create_hierarchy(v_data * graph, int nvtxs, int nedges,
     ex_vtx_data *geom_graph_level;
     int nodeIndex = 0;
     int i, j;
-    int min_nvtxs = parms->min_nvtxs;
+    static const int min_nvtxs = 20;
     int nlevels = MAX(5, 10 * (int) log((float) (nvtxs / min_nvtxs)));	// just an estimate
 
     hierarchy->graphs = gv_calloc(nlevels, sizeof(v_data*));
