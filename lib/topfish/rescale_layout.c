@@ -322,39 +322,38 @@ rescale_layout(double *x_coords, double *y_coords,
 
 #define DIST(x1, y1, x2, y2) hypot((x1) - (x2), (y1) - (y2))
 
-static void
-rescale_layout_polarFocus(v_data * graph, int n,
-	  double *x_coords, double *y_coords,
-	  double x_focus, double y_focus, int interval, double distortion)
-{
+static void rescale_layout_polarFocus(v_data *graph, size_t n, double *x_coords,
+                                      double *y_coords, double x_focus,
+                                      double y_focus, int interval,
+                                      double distortion) {
     // Polar distortion - auxiliary function
-    int i;
     double *densities = NULL, *smoothed_densities = NULL;
     double *distances = N_NEW(n, double);
     double *orig_distances = N_NEW(n, double);
     int *ordering;
     double ratio;
 
-    for (i = 0; i < n; i++) 
+    for (size_t i = 0; i < n; i++)
 	{
 		distances[i] = DIST(x_coords[i], y_coords[i], x_focus, y_focus);
     }
-    cpvec(orig_distances, 0, n - 1, distances);
+    assert(n <= INT_MAX);
+    cpvec(orig_distances, 0, (int)n - 1, distances);
 
     ordering = N_NEW(n, int);
-    for (i = 0; i < n; i++) 
+    for (size_t i = 0; i < n; i++)
 	{
-		ordering[i] = i;
+		ordering[i] = (int)i;
     }
-    quicksort_place(distances, ordering, 0, n - 1);
+    quicksort_place(distances, ordering, 0, (int)n - 1);
 
-    densities = compute_densities(graph, n, x_coords, y_coords);
-    smoothed_densities = smooth_vec(densities, ordering, n, interval, smoothed_densities);
+    densities = compute_densities(graph, (int)n, x_coords, y_coords);
+    smoothed_densities = smooth_vec(densities, ordering, (int)n, interval, smoothed_densities);
 
     // rescale distances
     if (distortion < 1.01 && distortion > 0.99) 
 	{
-		for (i = 1; i < n; i++) 
+		for (size_t i = 1; i < n; i++)
 		{
 			distances[ordering[i]] =	distances[ordering[i - 1]] + (orig_distances[ordering[i]] -
 					      orig_distances[ordering
@@ -373,7 +372,7 @@ rescale_layout_polarFocus(v_data * graph, int n,
 		{
 			factor = -sqrt(-distortion);
 		}
-		for (i = 1; i < n; i++) 
+		for (size_t i = 1; i < n; i++)
 		{
 			distances[ordering[i]] =
 				distances[ordering[i - 1]] + (orig_distances[ordering[i]] -
@@ -385,7 +384,7 @@ rescale_layout_polarFocus(v_data * graph, int n,
     }
 
     // compute new coordinate:
-    for (i = 0; i < n; i++) 
+    for (size_t i = 0; i < n; i++)
 	{
 		if (orig_distances[i] == 0) 
 		{
@@ -440,7 +439,7 @@ rescale_layout_polar(double *x_coords, double *y_coords,
 
     if (num_foci == 1) 
 	{	// accelerate execution of most common case
-		rescale_layout_polarFocus(graph, (int)n, x_coords, y_coords, x_foci[0],
+		rescale_layout_polarFocus(graph, n, x_coords, y_coords, x_foci[0],
 				  y_foci[0], interval, distortion);
     } else
 	{
@@ -453,7 +452,7 @@ rescale_layout_polar(double *x_coords, double *y_coords,
 	for (int i = 0; i < num_foci; i++) {
 	    cpvec(cp_x_coords, 0, (int)n - 1, x_coords);
 	    cpvec(cp_y_coords, 0, (int)n - 1, y_coords);
-	    rescale_layout_polarFocus(graph, (int)n, cp_x_coords, cp_y_coords,
+	    rescale_layout_polarFocus(graph, n, cp_x_coords, cp_y_coords,
 				      x_foci[i], y_foci[i], interval, distortion);
 	    scadd(final_x_coords, 0, (int)n - 1, 1.0 / num_foci, cp_x_coords);
 	    scadd(final_y_coords, 0, (int)n - 1, 1.0 / num_foci, cp_y_coords);
