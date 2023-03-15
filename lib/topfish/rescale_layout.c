@@ -52,13 +52,13 @@ static double *compute_densities(v_data *graph, size_t n, double *x, double *y)
     return densities;
 }
 
-static double *recompute_densities(v_data *graph, int n, double *x) {
+static double *recompute_densities(v_data *graph, size_t n, double *x) {
 // compute density of every node by calculating the average edge length in a 1-D layout
-    int i, j, neighbor;
+    int j, neighbor;
     double sum;
     double *densities = gv_calloc(n, sizeof(double));
 
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	sum = 0;
 	for (j = 1; j < graph[i].nedges; j++) {
 	    neighbor = graph[i].edges[j];
@@ -203,7 +203,7 @@ static void rescaleLayout(v_data *graph, size_t n, double *x_coords,
     assert(n <= INT_MAX);
     quicksort_place(x_coords, ordering, 0, (int)n - 1);
     {
-	double *densities = recompute_densities(graph, (int)n, x_coords);
+	double *densities = recompute_densities(graph, n, x_coords);
 	double *smoothed_densities = smooth_vec(densities, ordering, (int)n, interval);
 	free(densities);
 
@@ -218,7 +218,7 @@ static void rescaleLayout(v_data *graph, size_t n, double *x_coords,
 
     quicksort_place(y_coords, ordering, 0, (int)n - 1);
     {
-	double *densities = recompute_densities(graph, (int)n, y_coords);
+	double *densities = recompute_densities(graph, n, y_coords);
 	double *smoothed_densities = smooth_vec(densities, ordering, (int)n, interval);
 	free(densities);
 
