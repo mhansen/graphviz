@@ -34,15 +34,14 @@
 #include <common/memory.h>
 #include <common/arith.h>
 
-static double *compute_densities(v_data * graph, int n, double *x,
-				 double *y)
+static double *compute_densities(v_data *graph, size_t n, double *x, double *y)
 {
 // compute density of every node by calculating the average edge length in a 2-D layout
-    int i, j, neighbor;
+    int j, neighbor;
     double sum;
     double *densities = gv_calloc(n, sizeof(double));
 
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	sum = 0;
 	for (j = 1; j < graph[i].nedges; j++) {
 	    neighbor = graph[i].edges[j];
@@ -345,7 +344,7 @@ static void rescale_layout_polarFocus(v_data *graph, size_t n, double *x_coords,
     }
     quicksort_place(distances, ordering, 0, (int)n - 1);
 
-    densities = compute_densities(graph, (int)n, x_coords, y_coords);
+    densities = compute_densities(graph, n, x_coords, y_coords);
     smoothed_densities = smooth_vec(densities, ordering, (int)n, interval, smoothed_densities);
 
     // rescale distances
