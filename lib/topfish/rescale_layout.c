@@ -182,18 +182,15 @@ void quicksort_place(double *place, int *ordering, int first, int last)
     }
 }
 
-static void
-rescaleLayout(v_data * graph, int n, double *x_coords, double *y_coords,
-	      int interval, double distortion)
-{
+static void rescaleLayout(v_data *graph, size_t n, double *x_coords,
+                          double *y_coords, int interval, double distortion) {
     // Rectlinear distortion - auxiliary function
-    int i;
     double *copy_coords = N_NEW(n, double);
     int *ordering = N_NEW(n, int);
     double factor;
 
-    for (i = 0; i < n; i++) {
-	ordering[i] = i;
+    for (size_t i = 0; i < n; i++) {
+	ordering[i] = (int)i;
     }
 
     // just to make milder behavior:
@@ -203,14 +200,15 @@ rescaleLayout(v_data * graph, int n, double *x_coords, double *y_coords,
 	factor = -sqrt(-distortion);
     }
 
-    quicksort_place(x_coords, ordering, 0, n - 1);
+    assert(n <= INT_MAX);
+    quicksort_place(x_coords, ordering, 0, (int)n - 1);
     {
-	double *densities = recompute_densities(graph, n, x_coords);
-	double *smoothed_densities = smooth_vec(densities, ordering, n, interval);
+	double *densities = recompute_densities(graph, (int)n, x_coords);
+	double *smoothed_densities = smooth_vec(densities, ordering, (int)n, interval);
 	free(densities);
 
-	cpvec(copy_coords, 0, n - 1, x_coords);
-	for (i = 1; i < n; i++) {
+	cpvec(copy_coords, 0, (int)n - 1, x_coords);
+	for (size_t i = 1; i < n; i++) {
 	    x_coords[ordering[i]] = x_coords[ordering[i - 1]] +
 	      (copy_coords[ordering[i]] - copy_coords[ordering[i - 1]]) /
 	      pow(smoothed_densities[ordering[i]], factor);
@@ -218,14 +216,14 @@ rescaleLayout(v_data * graph, int n, double *x_coords, double *y_coords,
 	free(smoothed_densities);
     }
 
-    quicksort_place(y_coords, ordering, 0, n - 1);
+    quicksort_place(y_coords, ordering, 0, (int)n - 1);
     {
-	double *densities = recompute_densities(graph, n, y_coords);
-	double *smoothed_densities = smooth_vec(densities, ordering, n, interval);
+	double *densities = recompute_densities(graph, (int)n, y_coords);
+	double *smoothed_densities = smooth_vec(densities, ordering, (int)n, interval);
 	free(densities);
 
-	cpvec(copy_coords, 0, n - 1, y_coords);
-	for (i = 1; i < n; i++) {
+	cpvec(copy_coords, 0, (int)n - 1, y_coords);
+	for (size_t i = 1; i < n; i++) {
 	    y_coords[ordering[i]] = y_coords[ordering[i - 1]] +
 	      (copy_coords[ordering[i]] - copy_coords[ordering[i - 1]]) /
 	      pow(smoothed_densities[ordering[i]], factor);
@@ -264,7 +262,7 @@ void rescale_layout(double *x_coords, double *y_coords, size_t n, int interval,
     // construct mutual neighborhood graph
     assert(n <= INT_MAX);
     graph = UG_graph(x_coords, y_coords, (int)n, 0);
-    rescaleLayout(graph, (int)n, x_coords, y_coords, interval, distortion);
+    rescaleLayout(graph, n, x_coords, y_coords, interval, distortion);
     free(graph[0].edges);
     free(graph);
 
