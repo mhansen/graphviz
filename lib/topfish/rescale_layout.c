@@ -69,36 +69,36 @@ static double *recompute_densities(v_data *graph, size_t n, double *x) {
     return densities;
 }
 
-static double *smooth_vec(double *vec, int *ordering, int n, int interval) {
+static double *smooth_vec(double *vec, int *ordering, size_t n, int interval) {
 // smooth 'vec' by setting each components to the average of is 'interval'-neighborhood in 'ordering'
-    int len, i, n1;
+    assert(interval >= 0);
 	double sum;
     double *smoothed_vec = gv_calloc(n, sizeof(double));
-    n1 = MIN(1 + interval, n);
+    size_t n1 = MIN(1 + (size_t)interval, n);
     sum = 0;
-    for (i = 0; i < n1; i++) {
+    for (size_t i = 0; i < n1; i++) {
 	sum += vec[ordering[i]];
     }
 
-    len = n1;
-    for (i = 0; i < MIN(n, interval); i++) {
-	smoothed_vec[ordering[i]] = sum / len;
+    size_t len = n1;
+    for (size_t i = 0; i < MIN(n, (size_t)interval); i++) {
+	smoothed_vec[ordering[i]] = sum / (double)len;
 	if (len < n) {
 	    sum += vec[ordering[len++]];
 	}
     }
-    if (n <= interval) {
+    if (n <= (size_t)interval) {
 	return smoothed_vec;
     }
 
-    for (i = interval; i < n - interval - 1; i++) {
-	smoothed_vec[ordering[i]] = sum / len;
+    for (size_t i = (size_t)interval; i < n - (size_t)interval - 1; i++) {
+	smoothed_vec[ordering[i]] = sum / (double)len;
 	sum +=
-	    vec[ordering[i + interval + 1]] - vec[ordering[i - interval]];
+	    vec[ordering[i + (size_t)interval + 1]] - vec[ordering[i - (size_t)interval]];
     }
-    for (i = MAX(n - interval - 1, interval); i < n; i++) {
-	smoothed_vec[ordering[i]] = sum / len;
-	sum -= vec[ordering[i - interval]];
+    for (size_t i = MAX(n - (size_t)interval - 1, (size_t)interval); i < n; i++) {
+	smoothed_vec[ordering[i]] = sum / (double)len;
+	sum -= vec[ordering[i - (size_t)interval]];
 	len--;
     }
     return smoothed_vec;
@@ -204,7 +204,7 @@ static void rescaleLayout(v_data *graph, size_t n, double *x_coords,
     quicksort_place(x_coords, ordering, 0, (int)n - 1);
     {
 	double *densities = recompute_densities(graph, n, x_coords);
-	double *smoothed_densities = smooth_vec(densities, ordering, (int)n, interval);
+	double *smoothed_densities = smooth_vec(densities, ordering, n, interval);
 	free(densities);
 
 	cpvec(copy_coords, 0, (int)n - 1, x_coords);
@@ -219,7 +219,7 @@ static void rescaleLayout(v_data *graph, size_t n, double *x_coords,
     quicksort_place(y_coords, ordering, 0, (int)n - 1);
     {
 	double *densities = recompute_densities(graph, n, y_coords);
-	double *smoothed_densities = smooth_vec(densities, ordering, (int)n, interval);
+	double *smoothed_densities = smooth_vec(densities, ordering, n, interval);
 	free(densities);
 
 	cpvec(copy_coords, 0, (int)n - 1, y_coords);
@@ -330,7 +330,7 @@ static void rescale_layout_polarFocus(v_data *graph, size_t n, double *x_coords,
     quicksort_place(distances, ordering, 0, (int)n - 1);
 
     densities = compute_densities(graph, n, x_coords, y_coords);
-    double *smoothed_densities = smooth_vec(densities, ordering, (int)n, interval);
+    double *smoothed_densities = smooth_vec(densities, ordering, n, interval);
 
     // rescale distances
     if (distortion < 1.01 && distortion > 0.99) 
