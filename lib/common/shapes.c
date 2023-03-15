@@ -2311,8 +2311,6 @@ static void poly_free(node_t * n)
     }
 }
 
-#define GET_PORT_BOX(n,e) ((n) == (e)->head ? ED_head_port(e).bp : ED_tail_port(e).bp)
-
 /* poly_inside:
  * Return true if point p is inside polygonal shape of node inside_context->s.n.
  * Calculations are done using unrotated node shape. Thus, if p is in a rotated
