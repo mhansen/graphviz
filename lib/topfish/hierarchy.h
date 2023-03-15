@@ -98,4 +98,3 @@ int find_active_ancestor(Hierarchy*, int, int);
 void find_active_ancestor_info(Hierarchy * hierarchy, int level, int node, int *levell,int *nodee);
 
 int locateByIndex(Hierarchy*, int, int*);
-int findGlobalIndexesOfActiveNeighbors(Hierarchy*, int, int**);
