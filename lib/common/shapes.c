@@ -901,11 +901,11 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[2].y = D[1].y;
 	D[3].x = D[2].x;
 	D[3].y = D[2].y + (B[3].y-B[4].y)/2;
-	D[4].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)*3/4; //D[3].y mirrowed across the center
+	D[4].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)*3/4; //D[3].y mirrored across the center
 	D[4].y = D[3].y;
 	D[5].x = D[4].x;
 	D[5].y = D[2].y;
-	D[6].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[1].x mirrowed across the center
+	D[6].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[1].x mirrored across the center
 	D[6].y = D[1].y;
 	D[7].x = D[6].x;
 	D[7].y = D[0].y;
@@ -946,7 +946,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[1].y = D[0].y + (B[3].y-B[4].y)/4; //D[0].y+width/2
 	D[2].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center+width/2
 	D[2].y = D[1].y + (B[3].y-B[4].y)/2; //D[1].y+width
-	D[3].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[2].x mirrowed across the center
+	D[3].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[2].x mirrored across the center
 	D[3].y = D[2].y;
 	D[4].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)*3/4;
 	D[4].y = D[1].y;
@@ -1436,7 +1436,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[5].y = D[4].y;
 	D[6].x = AF[1].x + (AF[0].x - AF[1].x)/2; //x_center
 	D[6].y = D[3].y; //top nook
-	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrowed across y
+	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrored across y
 	D[7].y = D[5].y;
 	D[8].x = D[7].x - (B[2].x-B[3].x)/8;//top left corner
 	D[8].y = D[7].y;
@@ -1567,7 +1567,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[5].y = D[4].y;
 	D[6].x = AF[1].x + (AF[0].x - AF[1].x)/2; //x_center
 	D[6].y = D[3].y; //top nook
-	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrowed across y
+	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrored across y
 	D[7].y = D[5].y;
 	D[8].x = D[7].x - (B[2].x-B[3].x)/8;//top left corner
 	D[8].y = D[7].y;
