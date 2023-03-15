@@ -11,6 +11,7 @@
 #pragma once
 
 #include <neatogen/sparsegraph.h>
+#include <stddef.h>
 
 typedef struct {
     int nedges;       // degree, including self-loop
@@ -71,8 +72,8 @@ Hierarchy* create_hierarchy(v_data * graph, int nvtxs, int nedges,
 void set_active_levels(Hierarchy*, int*, int, levelparms_t*);
 double find_closest_active_node(Hierarchy*, double x, double y, int*);
 
-int extract_active_logical_coords(Hierarchy * hierarchy, int node, int level, 
-    double *x_coords, double *y_coords, int counter);
+size_t extract_active_logical_coords(Hierarchy *hierarchy, int node, int level,
+    double *x_coords, double *y_coords, size_t counter);
 int set_active_physical_coords(Hierarchy *, int node, int level,
     double *x_coords, double *y_coords, int counter);
 

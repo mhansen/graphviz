@@ -1026,11 +1026,9 @@ init_ex_graph(v_data * graph1, v_data * graph2, int n,
  * Store (universal) coords in x_coords and y_coords and increment index.
  * Return index.
  */
-int
-extract_active_logical_coords(Hierarchy * hierarchy, int node,
-			      int level, double *x_coords,
-			      double *y_coords, int counter)
-{
+size_t extract_active_logical_coords(Hierarchy *hierarchy, int node, int level,
+                                     double *x_coords, double *y_coords,
+                                     size_t counter) {
 
     ex_vtx_data *graph = hierarchy->geom_graphs[level];
 

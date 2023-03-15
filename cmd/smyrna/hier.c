@@ -8,11 +8,14 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/alloc.h>
 #include "smyrnadefs.h"
 #include "hier.h"
+#include <limits.h>
 #include <math.h>
 #include <neatogen/delaunay.h>
+#include <stddef.h>
 
 /* scale_coords:
  */
@@ -60,9 +63,8 @@ scale_coords(double *x_coords, double *y_coords, int n,
 
 void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
 {
-    int i;
     int interval = 20;
-    int counter = 0;		/* no. of active nodes */
+    size_t counter = 0; // no. of active nodes
     double *x_coords = gv_calloc(hp->nvtxs[0], sizeof(double));
     double *y_coords = gv_calloc(hp->nvtxs[0], sizeof(double));
     int max_level = hp->nlevels - 1;	// coarsest level
@@ -72,11 +74,12 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
     double distortion = parms->distortion;
 
     /* get all logical coordinates of active nodes */
-    for (i = 0; i < hp->nvtxs[max_level]; i++) {
+    for (int i = 0; i < hp->nvtxs[max_level]; i++) {
 	counter =
 	    extract_active_logical_coords(hp, i, max_level, x_coords,
 					  y_coords, counter);
     }
+    assert(counter <= INT_MAX);
 
     /* distort logical coordinates in order to get uniform density
      * (equivalent to concentrating on the focus area)
@@ -85,22 +88,22 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
     height *= parms->graphSize / 100.0;
     if (fs->num_foci == 0) {
 	if (parms->rescale == Scale)
-	    scale_coords(x_coords, y_coords, counter, width, height,
+	    scale_coords(x_coords, y_coords, (int)counter, width, height,
 			 margin);
     } else
 	switch (parms->rescale) {
 	case Polar:
 	    rescale_layout_polar(x_coords, y_coords, fs->x_foci,
-				 fs->y_foci, fs->num_foci, counter,
+				 fs->y_foci, fs->num_foci, (int)counter,
 				 interval, width, height, margin,
 				 distortion);
 	    break;
 	case Rectilinear:
-	    rescale_layout(x_coords, y_coords, counter, interval,
+	    rescale_layout(x_coords, y_coords, (int)counter, interval,
 			   width, height, margin, distortion);
 	    break;
 	case Scale:
-	    scale_coords(x_coords, y_coords, counter, width, height,
+	    scale_coords(x_coords, y_coords, (int)counter, width, height,
 			 margin);
 	    break;
 	case NoRescale:
@@ -108,10 +111,10 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
 	}
 
     /* Update the final physical coordinates of the active nodes */
-    for (counter = 0, i = 0; i < hp->nvtxs[max_level]; i++) {
-	counter =
+    for (int count = 0, i = 0; i < hp->nvtxs[max_level]; i++) {
+	count =
 	    set_active_physical_coords(hp, i, max_level, x_coords,
-				       y_coords, counter);
+				       y_coords, count);
     }
 
     free(x_coords);
