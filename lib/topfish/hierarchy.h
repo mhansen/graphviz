@@ -76,7 +76,6 @@ size_t extract_active_logical_coords(Hierarchy *hierarchy, int node, int level,
 int set_active_physical_coords(Hierarchy *, int node, int level,
     double *x_coords, double *y_coords, int counter);
 
-int count_active_nodes(Hierarchy *);
 void init_active_level(Hierarchy* hierarchy, int level);
 
 // creating a geometric graph:

@@ -1087,39 +1087,6 @@ set_active_physical_coords(Hierarchy * hierarchy, int node, int level,
     return counter;
 }
 
-static int countActiveNodes(Hierarchy * hierarchy, int node, int level)
-{
-    ex_vtx_data *graph = hierarchy->geom_graphs[level];
-    int cnt, other;
-
-    if (graph[node].active_level == level) {	// node is active
-#ifdef DEBUG
-fprintf (stderr, "(%d,%d) (%f,%f)\n", level,node,graph[node].x_coord,graph[node].y_coord);
-#endif
-	return 1;
-    } 
-    cnt = countActiveNodes(hierarchy, hierarchy->cv2v[level][2*node], level-1);
-
-    if ((other = hierarchy->cv2v[level][2 * node + 1]) >= 0) {
-	cnt += countActiveNodes(hierarchy, other, level - 1);
-    } 
-    return cnt;
-}
-
-/* count_active_nodes:
- * Return number of active nodes.
- */
-int count_active_nodes(Hierarchy * hierarchy)
-{
-    int i = 0;
-    int max_level = hierarchy->nlevels - 1;	// coarsest level
-    int sum = 0;
-    for (i = 0; i < hierarchy->nvtxs[max_level]; i++) {
-	sum += countActiveNodes(hierarchy, i, max_level);
-    }
-    return sum;
-}
-
 /* locateByIndex:
  * Given global index, find level and index on level.
  * Return -1 if no such node.
