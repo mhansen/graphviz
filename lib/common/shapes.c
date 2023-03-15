@@ -408,8 +408,6 @@ isBox (node_t* n)
 	return 0;
 }
 
-/* isEllipse:
- */
 static int
 isEllipse(node_t* n)
 {
@@ -2447,8 +2445,6 @@ static bool poly_inside(inside_t * inside_context, pointf p)
     return true;
 }
 
-/* poly_path:
- */
 static int poly_path(node_t * n, port * p, int side, boxf rv[], int *kptr)
 {
   (void)n;
@@ -2460,8 +2456,6 @@ static int poly_path(node_t * n, port * p, int side, boxf rv[], int *kptr)
   return 0;
 }
 
-/* invflip_side:
- */
 static unsigned char invflip_side(unsigned char side, int rankdir) {
     switch (rankdir) {
     case RANKDIR_TB:
@@ -2516,8 +2510,6 @@ static unsigned char invflip_side(unsigned char side, int rankdir) {
     return side;
 }
 
-/* invflip_angle:
- */
 static double invflip_angle(double angle, int rankdir)
 {
     switch (rankdir) {
