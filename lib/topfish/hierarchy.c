@@ -1087,36 +1087,6 @@ set_active_physical_coords(Hierarchy * hierarchy, int node, int level,
     return counter;
 }
 
-/* locateByIndex:
- * Given global index, find level and index on level.
- * Return -1 if no such node.
- */
-int locateByIndex(Hierarchy * hierarchy, int index, int *lp)
-{
-    int globalIndex;
-    int level;
-    int nlevels;
-
-    assert(hierarchy);
-    globalIndex = index;
-    nlevels = hierarchy->nlevels;
-    for (level = 0; level < nlevels && index >= hierarchy->nvtxs[level];
-	 level++) {
-	index -= hierarchy->nvtxs[level];
-    }
-    if (level < nlevels && index >= 0
-	&& hierarchy->geom_graphs[level][index].globalIndex ==
-	globalIndex) {
-	*lp = level;
-	return index;
-    } else {
-	// index not found
-	// return an arbitrary node
-	*lp = 0;
-	return -1;
-    }
-}
-
 /* find_physical_coords:
  * find the 'physical_coords' of the active-ancestor of 'node'
  */
