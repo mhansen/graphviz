@@ -964,16 +964,10 @@ static char *canontoken(char *str)
  */
 static char* fullColor (char* prefix, char* str)
 {
-    static char *fulls;
-    static size_t allocated;
-    size_t len = strlen (prefix) + strlen (str) + 3;
+    static agxbuf fulls;
 
-    if (len >= allocated) {
-	fulls = gv_realloc(fulls, allocated, len + 10);
-	allocated = len + 10;
-    }
-    sprintf (fulls, "/%s/%s", prefix, str);
-    return fulls;
+    agxbprint(&fulls, "/%s/%s", prefix, str);
+    return agxbuse(&fulls);
 }
 
 /* resolveColor:
