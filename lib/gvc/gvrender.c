@@ -23,6 +23,7 @@
 #include <common/macros.h>
 #include <common/colorprocs.h>
 #include <gvc/gvplugin_render.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/cgraph.h>
 #include <gvc/gvcint.h>
 #include <common/geom.h>
@@ -202,11 +203,11 @@ static void gvrender_resolve_color(gvrender_features_t * features,
 	rc = colorxlate(name, color, features->color_type);
 	if (rc != COLOR_OK) {
 	    if (rc == COLOR_UNKNOWN) {
-		char *missedcolor = gmalloc(strlen(name) + 16);
-		sprintf(missedcolor, "color %s", name);
-		if (emit_once(missedcolor))
+		agxbuf missedcolor = {0};
+		agxbprint(&missedcolor, "color %s", name);
+		if (emit_once(agxbuse(&missedcolor)))
 		    agerr(AGWARN, "%s is not a known color.\n", name);
-		free(missedcolor);
+		agxbfree(&missedcolor);
 	    } else {
 		agerr(AGERR, "error in colxlate()\n");
 	    }
