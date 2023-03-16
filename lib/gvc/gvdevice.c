@@ -45,6 +45,7 @@ static uint64_t crc;
 #endif /* HAVE_LIBZ */
 
 #include <assert.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/exit.h>
 #include <common/const.h>
 #include <common/memory.h>
@@ -84,48 +85,32 @@ static size_t gvwrite_no_z(GVJ_t * job, const void *s, size_t len) {
 
 static void auto_output_filename(GVJ_t *job)
 {
-    static char *buf;
-    static size_t bufsz;
-    char gidx[100];  /* large enough for '.' plus any integer */
+    static agxbuf buf;
     char *fn;
-    size_t len;
 
-    if (job->graph_index)
-        snprintf(gidx, sizeof(gidx), ".%d", job->graph_index + 1);
-    else
-        gidx[0] = '\0';
     if (!(fn = job->input_filename))
         fn = "noname.gv";
-    len = strlen(fn)                    /* typically "something.gv" */
-        + strlen(gidx)                  /* "", ".2", ".3", ".4", ... */
-        + 1                             /* "." */
-        + strlen(job->output_langname)  /* e.g. "png" */
-        + 1;                            /* null terminator */
-    if (bufsz < len) {
-            bufsz = len + 10;
-            buf = realloc(buf, bufsz * sizeof(char));
-    }
-    strcpy(buf, fn);
-    strcat(buf, gidx);
-    strcat(buf, ".");
+    agxbput(&buf, fn);
+    if (job->graph_index)
+        agxbprint(&buf, ".%d", job->graph_index + 1);
+    agxbputc(&buf, '.');
 
     {
-        char *dst = buf + strlen(buf);
         const char *src = job->output_langname;
         const char *src_end = src + strlen(src);
         for (const char *q = src_end; ; --q) {
             if (*q == ':') {
-                dst += sprintf(dst, "%.*s.", (int)(src_end - q - 1), q + 1);
+                agxbprint(&buf, "%.*s.", (int)(src_end - q - 1), q + 1);
                 src_end = q;
             }
             if (q == src) {
-                sprintf(dst, "%.*s", (int)(src_end - src), src);
+                agxbprint(&buf, "%.*s", (int)(src_end - src), src);
                 break;
             }
         }
     }
 
-    job->output_filename = buf;
+    job->output_filename = agxbuse(&buf);
 }
 
 /* gvdevice_initialize:
