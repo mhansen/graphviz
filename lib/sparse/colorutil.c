@@ -28,30 +28,3 @@ void rgb2hex(float r, float g, float b, char *cstring, const char *opacity) {
     cstring[7] = '\0';
   }
 }
-
-static double Hue2RGB(double v1, double v2, double H) {
-  if(H < 0.0) H += 1.0;
-  if(H > 1.0) H -= 1.0;
-  if((6.0*H) < 1.0) return (v1 + (v2 - v1) * 6.0 * H);
-  if((2.0*H) < 1.0) return v2;
-  if((3.0*H) < 2.0) return (v1 + (v2 - v1) * ((2.0/3.0) - H) * 6.0);
-  return v1;
-}
-
-char * hue2rgb(double hue, char *color){
-  double v1, v2, lightness = .5, saturation = 1;
-  int red, blue, green;
-
-  if(lightness < 0.5) 
-    v2 = lightness * (1.0 + saturation);
-  else
-    v2 = (lightness + saturation) - (saturation * lightness);
-
-  v1 = 2.0 * lightness - v2;
-
-  red =   (int)(255.0 * Hue2RGB(v1, v2, hue + (1.0/3.0)) + 0.5);
-  green = (int)(255.0 * Hue2RGB(v1, v2, hue) + 0.5);
-  blue =  (int)(255.0 * Hue2RGB(v1, v2, hue - (1.0/3.0)) + 0.5);
-  sprintf(color, "#%02x%02x%02x", red, green, blue);
-  return color;
-}

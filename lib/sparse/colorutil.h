@@ -20,8 +20,6 @@ extern "C" {
 void rgb2hex(float r, float g, float b, char *cstring, const char* opacity);
   /* dimension of cstring must be >=7 */
 
-char* hue2rgb(double hue, char *color);
-
 #ifdef __cplusplus
 }
 #endif
