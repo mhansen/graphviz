@@ -788,7 +788,6 @@ void graph_init(graph_t * g, bool use_rankdir)
     E_label = agfindedgeattr(g, "label");
     E_xlabel = agfindedgeattr(g, "xlabel");
     E_label_float = agfindedgeattr(g, "labelfloat");
-    /* vladimir */
     E_dir = agfindedgeattr(g, "dir");
     E_arrowhead = agfindedgeattr(g, "arrowhead");
     E_arrowtail = agfindedgeattr(g, "arrowtail");
@@ -799,7 +798,6 @@ void graph_init(graph_t * g, bool use_rankdir)
     E_labelfontcolor = agfindedgeattr(g, "labelfontcolor");
     E_labeldistance = agfindedgeattr(g, "labeldistance");
     E_labelangle = agfindedgeattr(g, "labelangle");
-    /* end vladimir */
     E_minlen = agfindedgeattr(g, "minlen");
     E_showboxes = agfindedgeattr(g, "showboxes");
     E_style = agfindedgeattr(g, "style");

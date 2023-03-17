@@ -581,6 +581,31 @@ def test_1318():
     dot("svg", source=source)
 
 
+def test_1332():
+    """
+    Triangulation calculation on the associated example should succeed.
+
+    A prior change that was intended to increase accuracy resulted in the
+    example in this test now failing some triangulation calculations. It is not
+    clear whether the outcome before or after is correct, but this test ensures
+    that the older behavior users are accustomed to is preserved.
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "1332.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # process it with Graphviz
+    warnings = subprocess.check_output(
+        ["dot", "-Tpdf", "-o", os.devnull, input], stderr=subprocess.STDOUT
+    )
+
+    # no warnings should have been printed
+    assert (
+        warnings == b""
+    ), "warnings were printed when processing graph involving triangulation"
+
+
 def test_1408():
     """
     parsing particular ortho layouts should not cause an assertion failure
