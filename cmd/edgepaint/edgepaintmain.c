@@ -34,11 +34,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum {
-	FMT_GV,
-	FMT_SIMPLE,
-} fmt_t;
-
 typedef struct {
 	Agrec_t hdr;
 	int idx;
