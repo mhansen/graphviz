@@ -43,9 +43,6 @@ typedef struct {
 	int idx;
 } etoi_t;
 
-#define ED_idx(e) (((etoi_t*)AGDATA(e))->idx)
-
-
 static char *fname;
 static FILE *outfile;
 
