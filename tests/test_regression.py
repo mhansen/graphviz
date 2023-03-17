@@ -1968,6 +1968,21 @@ def test_2215():
     subprocess.run(["dot", "-v"], input=input, check=True, universal_newlines=True)
 
 
+@pytest.mark.xfail(strict=True)
+def test_2342():
+    """
+    using an arrow with size 0 should not trigger an assertion failure
+    https://gitlab.com/graphviz/graphviz/-/issues/2342
+    """
+
+    # find our collocated test case
+    input = Path(__file__).parent / "2342.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("svg", input)
+
+
 def test_package_version():
     """
     The graphviz_version.h header should define a non-empty PACKAGE_VERSION
