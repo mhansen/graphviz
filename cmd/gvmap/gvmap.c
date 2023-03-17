@@ -42,7 +42,6 @@ typedef struct {
     int dim;
     double shore_depth_tol;
     int nrandom; 
-    int show_points; 
     double bbox_margin[2]; 
     int useClusters;
     int clusterMethod;
@@ -91,11 +90,7 @@ static const char usestr[] =
     -m v - bounding box margin. If 0, auto-assigned (0)\n\
     -o <file> - put output in <file> (stdout)\n\
     -O   - do NOT do color assignment optimization that maximizes color difference between neighboring countries\n\
-    -p k - show points. (0)\n\
-       0 : no points\n\
-       1 : all points\n\
-       2 : label points\n\
-       3 : random/artificial points\n\
+    -p k - ignored\n\
     -r k - number of random points k used to define sea and lake boundaries. If 0, auto assigned. (0)\n\
     -s v - depth of the sea and lake shores in points. If < 0, auto assigned. (0)\n\
     -t n - improve contiguity up to n times. (0)\n\
@@ -165,7 +160,6 @@ init(int argc, char **argv, params_t* pm)
   pm->useClusters = 0;
   pm->clusterMethod = CLUSTERING_MODULARITY;
   pm->plotedges = false;
-  pm->show_points = 0;
   pm->color_scheme = COLOR_SCHEME_PASTEL; 
   pm->line_width = 0;
   pm->improve_contiguity_n = 0;
@@ -223,11 +217,7 @@ init(int argc, char **argv, params_t* pm)
         pm->improve_contiguity_n = r;
       }
       break;
-    case 'p':
-      pm->show_points = 1;
-      if (sscanf(optarg, "%d", &r) > 0) {
-        pm->show_points = MIN(3, r);
-      }
+    case 'p': // ignored
       break;
     case 'k':
       pm->include_OK_points = TRUE;
