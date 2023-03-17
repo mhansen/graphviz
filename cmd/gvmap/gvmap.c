@@ -330,7 +330,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   int i;
   SparseMatrix poly_lines, polys, poly_point_map;
   double edge_bridge_tol = 0.;
-  int npolys, nverts, *polys_groups, exclude_random;
+  int npolys, nverts, *polys_groups;
   double *x_poly, *xcombined;
   SparseMatrix country_graph;
   int improve_contiguity_n = pm->improve_contiguity_n;
@@ -340,9 +340,6 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   int nr0, nart0;
   int nart, nrandom;
 
-  exclude_random = TRUE;
-
-
 #ifdef TIME
   cpu = clock();
 #endif
@@ -350,7 +347,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   if (pm->highlight_cluster) {
     pm->highlight_cluster = validateCluster (n, grouping, pm->highlight_cluster);
   }
-  make_map_from_rectangle_groups(exclude_random, pm->include_OK_points,
+  make_map_from_rectangle_groups(pm->include_OK_points,
 				 n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
 				 pm->shore_depth_tol, edge_bridge_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
 				 &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
@@ -376,7 +373,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       improve_contiguity(n, dim, grouping, poly_point_map, x, graph);
       nart = nart0;
       nrandom = nr0;
-      make_map_from_rectangle_groups(exclude_random, pm->include_OK_points,
+      make_map_from_rectangle_groups(pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, edge_bridge_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
@@ -389,7 +386,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       
       nart = nart0;
       nrandom = nr0;
-      make_map_from_rectangle_groups(exclude_random, pm->include_OK_points,
+      make_map_from_rectangle_groups(pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, edge_bridge_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);

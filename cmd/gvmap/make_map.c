@@ -489,8 +489,7 @@ static void conn_comp(int n, SparseMatrix A, int *groups, SparseMatrix *poly_poi
 
 }
 
-
-static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, SparseMatrix E, int ncomps, int *comps_ptr, int *comps, 
+static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomps, int *comps_ptr, int *comps,
 			   int *groups, int *mask, SparseMatrix *poly_lines, int **polys_groups,
 			   int GRP_RANDOM, int GRP_BBOX){
   /*============================================================
@@ -541,7 +540,7 @@ static void get_poly_lines(int exclude_random, int nt, SparseMatrix graph, Spars
       (*polys_groups)[i] = groups[ii];/* assign the grouping of each poly */
 
       /* skip the country formed by random points */
-      if (exclude_random && (groups[ii] == GRP_RANDOM || groups[ii] == GRP_BBOX)) continue;
+      if (groups[ii] == GRP_RANDOM || groups[ii] == GRP_BBOX) continue;
 
       /* always skip bounding box */
       if (groups[ii] == GRP_BBOX) continue;
@@ -929,7 +928,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
   free(edge_table);
 }
 
-static void get_polygons(int exclude_random, int n, int nrandom, int dim, SparseMatrix graph, int *grouping,
+static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *grouping,
 			 int nt, struct Triangle *Tp, SparseMatrix E, int *nverts, double **x_poly, 
 			 int *npolys, SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, SparseMatrix *country_graph){
   int i, j;
@@ -966,22 +965,14 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
   comps = (*poly_point_map)->ja;
   comps_ptr = (*poly_point_map)->ia;
 
-  if (exclude_random){
-    /* connected components are such that  the random points and the bounding box 4 points forms the last
+  /* connected components are such that  the random points and the bounding box 4 points forms the last
      remaining components */
-    for (i = ncomps - 1; i >= 0; i--) {
-      if (groups[comps[comps_ptr[i]]] != GRP_RANDOM &&
-	  groups[comps[comps_ptr[i]]] != GRP_BBOX) break;
-    }
-    ncomps = i + 1;
-    if (Verbose) fprintf(stderr,"ncomps = %d\n",ncomps);
-  } else {/* always exclude bounding box */
-    for (i = ncomps - 1; i >= 0; i--) {
-      if (groups[comps[comps_ptr[i]]] != GRP_BBOX) break;
-    }
-    ncomps = i + 1;
-    if (Verbose) fprintf(stderr," ncomops = %d\n",ncomps);
+  for (i = ncomps - 1; i >= 0; i--) {
+    if (groups[comps[comps_ptr[i]]] != GRP_RANDOM &&
+        groups[comps[comps_ptr[i]]] != GRP_BBOX) break;
   }
+  ncomps = i + 1;
+  if (Verbose) fprintf(stderr,"ncomps = %d\n",ncomps);
   *npolys = ncomps;
 
   *x_poly = gv_calloc(dim * nt, sizeof(double));
@@ -996,7 +987,7 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
     polygon outlines 
 
     ============================================================*/
-  get_poly_lines(exclude_random, nt, graph, E, ncomps, comps_ptr, comps, groups, mask, poly_lines, polys_groups, GRP_RANDOM, GRP_BBOX);
+  get_poly_lines(nt, graph, E, ncomps, comps_ptr, comps, groups, mask, poly_lines, polys_groups, GRP_RANDOM, GRP_BBOX);
 
   /*============================================================
 
@@ -1012,7 +1003,7 @@ static void get_polygons(int exclude_random, int n, int nrandom, int dim, Sparse
   free(mask);
 }
 
-static int make_map_internal(int exclude_random, int include_OK_points,
+static int make_map_internal(int include_OK_points,
 		      int n, int dim, double *x0, int *grouping0, SparseMatrix graph, double bounding_box_margin[], int *nrandom, int nedgep, 
 		      double shore_depth_tol, double **xcombined, int *nverts, double **x_poly, 
 		      int *npolys, SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map,
@@ -1261,7 +1252,7 @@ static int make_map_internal(int exclude_random, int include_OK_points,
   }
 
   get_tri(n + *nrandom, dim2, *xcombined, &nt, &Tp, &E);
-  get_polygons(exclude_random, n, *nrandom, dim2, graph, grouping, nt, Tp, E, nverts, x_poly, npolys, poly_lines, polys, polys_groups,
+  get_polygons(n, *nrandom, dim2, graph, grouping, nt, Tp, E, nverts, x_poly, npolys, poly_lines, polys, polys_groups,
 	       poly_point_map, country_graph);
 
   SparseMatrix_delete(E);
@@ -1300,7 +1291,7 @@ static void get_boundingbox(int n, int dim, double *x, double *width, double *bb
   }
 }
 
-int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
+int make_map_from_rectangle_groups(int include_OK_points,
 				   int n, int dim, double *x, double *sizes, 
 				   int *grouping, SparseMatrix graph0, double bounding_box_margin[], int *nrandom, int *nart, int nedgep, 
 				   double shore_depth_tol, double edge_bridge_tol,
@@ -1395,7 +1386,7 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
   }
 
   if (!sizes){
-    return make_map_internal(exclude_random, include_OK_points, n, dim, x, grouping, graph, bounding_box_margin, nrandom, nedgep, 
+    return make_map_internal(include_OK_points, n, dim, x, grouping, graph, bounding_box_margin, nrandom, nedgep,
 			    shore_depth_tol, xcombined, nverts, x_poly, 
 			     npolys, poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
   } else {
@@ -1559,7 +1550,7 @@ int make_map_from_rectangle_groups(int exclude_random, int include_OK_points,
       }/* done adding artificial points for edges */
     }
 
-    res = make_map_internal(exclude_random, include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep, 
+    res = make_map_internal(include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep,
 			    shore_depth_tol, xcombined, nverts, x_poly, 
 			    npolys, poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
     if (graph != graph0) SparseMatrix_delete(graph);
