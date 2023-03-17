@@ -18,6 +18,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/exit.h>
+#include <cgraph/startswith.h>
 #include <cgraph/unreachable.h>
 #include <ingraphs/ingraphs.h>
 #include <common/pointset.h>
@@ -99,10 +100,6 @@ checkG (Agraph_t* g)
 	return 0;
 }
 
-static bool strprefix(const char *s1, const char *s2) {
-  return strncmp(s1, s2, strlen(s2)) == 0;
-}
-
 static void init(int argc, char *argv[], double *angle, double *accuracy, int *check_edges_with_same_endpoint, int *seed, char **color_scheme, char **lightness){
 
   char* cmd = argv[0];
@@ -150,22 +147,22 @@ static void init(int argc, char *argv[], double *angle, double *accuracy, int *c
     const char *arg = optarg;
 
     // legacy handling of single-dash-prefixed options
-    if (c == 'a' && strprefix(arg, "ccuracy=")) {
+    if (c == 'a' && startswith(arg, "ccuracy=")) {
       c = OPT_ACCURACY;
       arg += strlen("ccuracy=");
-    } else if (c == 'a' && strprefix(arg, "ngle=")) {
+    } else if (c == 'a' && startswith(arg, "ngle=")) {
       c = OPT_ANGLE;
       arg += strlen("ngle=");
-    } else if (c == 'c' && strprefix(arg, "olor_scheme=")) {
+    } else if (c == 'c' && startswith(arg, "olor_scheme=")) {
       c = OPT_COLOR_SCHEME;
       arg += strlen("olor_scheme=");
-    } else if (c == 'r' && strprefix(arg, "andom_seed=")) {
+    } else if (c == 'r' && startswith(arg, "andom_seed=")) {
       c = OPT_RANDOM_SEED;
       arg += strlen("andom_seed=");
-    } else if (c == 'l' && strprefix(arg, "ightness=")) {
+    } else if (c == 'l' && startswith(arg, "ightness=")) {
       c = OPT_LIGHTNESS;
       arg += strlen("ightness=");
-    } else if (c == 's' && strprefix(arg, "hare_endpoint")) {
+    } else if (c == 's' && startswith(arg, "hare_endpoint")) {
       c = OPT_SHARE_ENDPOINT;
     }
 
