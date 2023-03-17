@@ -34,11 +34,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct {
-	Agrec_t hdr;
-	int idx;
-} etoi_t;
-
 static char *fname;
 static FILE *outfile;
 
