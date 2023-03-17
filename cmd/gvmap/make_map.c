@@ -1294,7 +1294,7 @@ static void get_boundingbox(int n, int dim, double *x, double *width, double *bb
 int make_map_from_rectangle_groups(int include_OK_points,
 				   int n, int dim, double *x, double *sizes, 
 				   int *grouping, SparseMatrix graph0, double bounding_box_margin[], int *nrandom, int *nart, int nedgep, 
-				   double shore_depth_tol, double edge_bridge_tol,
+				   double shore_depth_tol,
 				   double **xcombined, int *nverts, double **x_poly, 
 				   int *npolys, SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, 
 				   SparseMatrix *country_graph, int highlight_cluster){
@@ -1328,9 +1328,6 @@ int make_map_from_rectangle_groups(int include_OK_points,
      shore_depth_tol: nrandom random points are inserted in the bounding box of the points,
      .      such random points are then weeded out if it is within distance of shore_depth_tol from 
      .      real points. If 0, auto assigned
-     edge_bridge_tol: insert points on edges to give an bridge effect.These points will be evenly spaced
-     .       along each edge, and be less than a distance of edge_bridge_tol from each other and from the two ends of the edge.
-     .       If < 0, -edge_bridge_tol is the average number of points inserted per half edge
 
      output:
      xcombined: combined points which contains n + ncombined number of points, dimension 2x(n+nrandom)
@@ -1358,7 +1355,6 @@ int make_map_from_rectangle_groups(int include_OK_points,
 
      
   */
-    double dist, avgdist;
   double *X;
   int N, nmax, i, j, k, igrp;
   int *groups, K = *nart;/* average number of points added per side of rectangle */
@@ -1490,65 +1486,6 @@ int make_map_from_rectangle_groups(int include_OK_points,
       *nart = N - n;
 
     }/* done adding artificial points due to node size*/
-
-
-    /* add artificial node due to edges */
-    if (graph && edge_bridge_tol != 0){
-      int *ia = graph->ia, *ja = graph->ja, nz = 0, jj;
-      int KB;
-
-      graph = SparseMatrix_symmetrize(graph, true);
-      ia = graph->ia; ja = graph->ja;
-      dist=avgdist = 0.;
-      for (i = 0; i < n; i++){
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  jj = ja[j];
-	  if (jj <= i) continue;
-	  dist = distance(x, dim, i, jj);
-	  avgdist += dist;
-	  nz++;
-	}
-      }
-      avgdist /= nz;
-      if (edge_bridge_tol < 0){
-	KB = (int) (-edge_bridge_tol);
-      } else {
-	KB = (int) (avgdist/edge_bridge_tol);
-      }
-
-      assert(avgdist > 0);
-      for (i = 0; i < n; i++){
-	for (j = ia[i]; j < ia[i+1]; j++){
-	  jj = ja[j];
-	  if (jj <= i) continue;
-	  dist = distance(x, dim, i, jj);
-	  nadded[0] = (int) 2*KB*dist/avgdist;
-
-	  /* half the line segment near i */
-	  h[0] = 0.5*(x[jj*dim] - x[i*dim])/nadded[0];
-	  h[1] = 0.5*(x[jj*dim+1] - x[i*dim+1])/nadded[0];
-	  point[0] = x[i*dim];
-	  point[1] = x[i*dim+1];
-	  for (k = 0; k < nadded[0] - 1; k++){
-	    point[0] += h[0];
-	    point[1] += h[1];
-	    add_point(&N, grouping[i], &X, &nmax, point, &groups);
-	  }	
-
-	  /* half the line segment near jj */
-	  h[0] = 0.5*(x[i*dim] - x[jj*dim])/nadded[0];
-	  h[1] = 0.5*(x[i*dim+1] - x[jj*dim+1])/nadded[0];
-	  point[0] = x[jj*dim];
-	  point[1] = x[jj*dim+1];
-	  for (k = 0; k < nadded[0] - 1; k++){
-	    point[0] += h[0];
-	    point[1] += h[1];
-	    add_point(&N, grouping[jj], &X, &nmax, point, &groups);
-	  }	
-	}
-
-      }/* done adding artificial points for edges */
-    }
 
     res = make_map_internal(include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep,
 			    shore_depth_tol, xcombined, nverts, x_poly, 
