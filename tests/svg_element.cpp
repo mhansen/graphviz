@@ -852,13 +852,9 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
    */
 
   if (segment_start == segment_end || segment_end == following_segment_end) {
-    // TODO: this is a pathological case and this function should really
-    // instead assert that it's not called with these parameter combinations.
-    // However, some Graphviz arrows currently create this case in some
-    // circumstances and right now it's too much work to change this or to
-    // ensure that the callers don't call this function in those cases. Instead
-    // we just return the "corner" point without extending it with stroke width
-    // in any direction, which seems to be the way SVG renderers render this.
+    // the stroke shape is really a point so we just return this point without
+    // extending it with stroke width in any direction, which seems to be the
+    // way SVG renderers render this.
     return segment_end;
   }
 

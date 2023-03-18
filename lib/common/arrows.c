@@ -486,6 +486,13 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 
 static pointf miter_point(pointf base_left, pointf P, pointf base_right,
                           double penwidth) {
+  if ((base_left.x == P.x && base_left.y == P.y) ||
+      (base_right.x == P.x && base_right.y == P.y)) {
+    // the stroke shape is really a point so we just return this point without
+    // extending it with penwidth in any direction, which seems to be the way
+    // SVG renderers render this.
+    return P;
+  }
   const pointf A[] = {base_left, P};
   const double dxA = A[1].x - A[0].x;
   const double dyA = A[1].y - A[0].y;
