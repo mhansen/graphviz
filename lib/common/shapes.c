@@ -408,8 +408,6 @@ isBox (node_t* n)
 	return 0;
 }
 
-/* isEllipse:
- */
 static int
 isEllipse(node_t* n)
 {
@@ -811,7 +809,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//the arrow's thickness is (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides + 5, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (AF[0].x - AF[1].x)/8; //x_center + width
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)*3/2; //D[4].y + width
@@ -902,11 +901,11 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[2].y = D[1].y;
 	D[3].x = D[2].x;
 	D[3].y = D[2].y + (B[3].y-B[4].y)/2;
-	D[4].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)*3/4; //D[3].y mirrowed across the center
+	D[4].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)*3/4; //D[3].y mirrored across the center
 	D[4].y = D[3].y;
 	D[5].x = D[4].x;
 	D[5].y = D[2].y;
-	D[6].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[1].x mirrowed across the center
+	D[6].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[1].x mirrored across the center
 	D[6].y = D[1].y;
 	D[7].x = D[6].x;
 	D[7].y = D[0].y;
@@ -947,7 +946,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[1].y = D[0].y + (B[3].y-B[4].y)/4; //D[0].y+width/2
 	D[2].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center+width/2
 	D[2].y = D[1].y + (B[3].y-B[4].y)/2; //D[1].y+width
-	D[3].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[2].x mirrowed across the center
+	D[3].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[2].x mirrored across the center
 	D[3].y = D[2].y;
 	D[4].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)*3/4;
 	D[4].y = D[1].y;
@@ -981,7 +980,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides + 1, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (B[2].x-B[3].x);//x_center + width*2
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/4;//y_center + 1/2 width
@@ -1021,7 +1021,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides + 4, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (AF[0].x - AF[1].x)/8 + (B[2].x-B[3].x)/2;//x_center + scalable_width + width
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/4;//y_center + 1/2 width
@@ -1074,7 +1075,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[1].x;//the very left edge
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
@@ -1125,7 +1127,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[0].x;//the very right edge
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
@@ -1177,7 +1180,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	/*upper left rectangle*/
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x)*9/8; //x_center - 2*width - 1/4*width
@@ -1261,7 +1265,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x); //x_center - 2*width
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
@@ -1315,7 +1320,8 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
-	//the thickness is subituted with (AF[0].x - AF[1].x)/8 to make it scalable in the y with label length
+	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
+	// in the y with label length
 	D = N_NEW(sides, pointf);
 	D[0].x = AF[0].x;
 	D[0].y = B[1].y - (B[3].y - B[4].y)/2;
@@ -1430,7 +1436,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[5].y = D[4].y;
 	D[6].x = AF[1].x + (AF[0].x - AF[1].x)/2; //x_center
 	D[6].y = D[3].y; //top nook
-	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrowed across y
+	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrored across y
 	D[7].y = D[5].y;
 	D[8].x = D[7].x - (B[2].x-B[3].x)/8;//top left corner
 	D[8].y = D[7].y;
@@ -1561,7 +1567,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[5].y = D[4].y;
 	D[6].x = AF[1].x + (AF[0].x - AF[1].x)/2; //x_center
 	D[6].y = D[3].y; //top nook
-	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrowed across y
+	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrored across y
 	D[7].y = D[5].y;
 	D[8].x = D[7].x - (B[2].x-B[3].x)/8;//top left corner
 	D[8].y = D[7].y;
@@ -2311,8 +2317,6 @@ static void poly_free(node_t * n)
     }
 }
 
-#define GET_PORT_BOX(n,e) ((n) == (e)->head ? ED_head_port(e).bp : ED_tail_port(e).bp)
-
 /* poly_inside:
  * Return true if point p is inside polygonal shape of node inside_context->s.n.
  * Calculations are done using unrotated node shape. Thus, if p is in a rotated
@@ -2449,8 +2453,6 @@ static bool poly_inside(inside_t * inside_context, pointf p)
     return true;
 }
 
-/* poly_path:
- */
 static int poly_path(node_t * n, port * p, int side, boxf rv[], int *kptr)
 {
   (void)n;
@@ -2462,8 +2464,6 @@ static int poly_path(node_t * n, port * p, int side, boxf rv[], int *kptr)
   return 0;
 }
 
-/* invflip_side:
- */
 static unsigned char invflip_side(unsigned char side, int rankdir) {
     switch (rankdir) {
     case RANKDIR_TB:
@@ -2518,8 +2518,6 @@ static unsigned char invflip_side(unsigned char side, int rankdir) {
     return side;
 }
 
-/* invflip_angle:
- */
 static double invflip_angle(double angle, int rankdir)
 {
     switch (rankdir) {
@@ -3659,7 +3657,7 @@ static void record_init(node_t * n)
     }
     resize_reclbl(info, sz,
                   mapbool(late_string(n, N_nojustify, "false")) ? TRUE : FALSE);
-    pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce ronding error - see Kluge below */
+    pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce rounding error - see Kluge below */
     pos_reclbl(info, ul, sides);
     ND_width(n) = PS2INCH(info->size.x);
     ND_height(n) = PS2INCH(info->size.y + 1);	/* Kluge!!  +1 to fix rounding diff between layout and rendering 

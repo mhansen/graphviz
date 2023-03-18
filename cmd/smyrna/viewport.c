@@ -319,7 +319,6 @@ void init_viewport(ViewInfo * view)
     view->Topview->fisheyeParams.level.num_fine_nodes = 10;
     view->Topview->fisheyeParams.level.coarsening_rate = 2.5;
     view->Topview->fisheyeParams.hier.dist2_limit = 1;
-    view->Topview->fisheyeParams.hier.min_nvtxs = 20;
     view->Topview->fisheyeParams.repos.rescale = Polar;
     view->Topview->fisheyeParams.repos.width =
 	(int) (view->bdxRight - view->bdxLeft);

@@ -13,14 +13,12 @@
 #include "hier.h"
 #include <math.h>
 #include <neatogen/delaunay.h>
+#include <stddef.h>
 
 /* scale_coords:
  */
-static void
-scale_coords(double *x_coords, double *y_coords, int n,
-	     double w, double h, double margin)
-{
-    int i;
+static void scale_coords(double *x_coords, double *y_coords, size_t n, double w,
+                         double h, double margin) {
     double minX, maxX, minY, maxY;
     double scale_ratioX;
     double scale_ratioY;
@@ -31,13 +29,13 @@ scale_coords(double *x_coords, double *y_coords, int n,
 
     minX = maxX = x_coords[0];
     minY = maxY = y_coords[0];
-    for (i = 1; i < n; i++) {
+    for (size_t i = 1; i < n; i++) {
 	minX = fmin(minX, x_coords[i]);
 	minY = fmin(minY, y_coords[i]);
 	maxX = fmax(maxX, x_coords[i]);
 	maxY = fmax(maxY, y_coords[i]);
     }
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] -= minX;
 	y_coords[i] -= minY;
     }
@@ -47,12 +45,12 @@ scale_coords(double *x_coords, double *y_coords, int n,
     scale_ratioX = w / (maxX - minX);
     scale_ratioY = h / (maxY - minY);
     scale_ratio = MIN(scale_ratioX, scale_ratioY);
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] *= scale_ratio;
 	y_coords[i] *= scale_ratio;
     }
 
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	x_coords[i] += margin;
 	y_coords[i] += margin;
     }
@@ -60,9 +58,8 @@ scale_coords(double *x_coords, double *y_coords, int n,
 
 void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
 {
-    int i;
     int interval = 20;
-    int counter = 0;		/* no. of active nodes */
+    size_t counter = 0; // no. of active nodes
     double *x_coords = gv_calloc(hp->nvtxs[0], sizeof(double));
     double *y_coords = gv_calloc(hp->nvtxs[0], sizeof(double));
     int max_level = hp->nlevels - 1;	// coarsest level
@@ -72,7 +69,7 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
     double distortion = parms->distortion;
 
     /* get all logical coordinates of active nodes */
-    for (i = 0; i < hp->nvtxs[max_level]; i++) {
+    for (int i = 0; i < hp->nvtxs[max_level]; i++) {
 	counter =
 	    extract_active_logical_coords(hp, i, max_level, x_coords,
 					  y_coords, counter);
@@ -108,10 +105,10 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
 	}
 
     /* Update the final physical coordinates of the active nodes */
-    for (counter = 0, i = 0; i < hp->nvtxs[max_level]; i++) {
-	counter =
+    for (int count = 0, i = 0; i < hp->nvtxs[max_level]; i++) {
+	count =
 	    set_active_physical_coords(hp, i, max_level, x_coords,
-				       y_coords, counter);
+				       y_coords, count);
     }
 
     free(x_coords);

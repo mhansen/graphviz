@@ -702,7 +702,7 @@ Hierarchy *create_hierarchy(v_data * graph, int nvtxs, int nedges,
     ex_vtx_data *geom_graph_level;
     int nodeIndex = 0;
     int i, j;
-    int min_nvtxs = parms->min_nvtxs;
+    static const int min_nvtxs = 20;
     int nlevels = MAX(5, 10 * (int) log((float) (nvtxs / min_nvtxs)));	// just an estimate
 
     hierarchy->graphs = gv_calloc(nlevels, sizeof(v_data*));
@@ -1026,11 +1026,9 @@ init_ex_graph(v_data * graph1, v_data * graph2, int n,
  * Store (universal) coords in x_coords and y_coords and increment index.
  * Return index.
  */
-int
-extract_active_logical_coords(Hierarchy * hierarchy, int node,
-			      int level, double *x_coords,
-			      double *y_coords, int counter)
-{
+size_t extract_active_logical_coords(Hierarchy *hierarchy, int node, int level,
+                                     double *x_coords, double *y_coords,
+                                     size_t counter) {
 
     ex_vtx_data *graph = hierarchy->geom_graphs[level];
 
@@ -1087,237 +1085,6 @@ set_active_physical_coords(Hierarchy * hierarchy, int node, int level,
 				       counter);
     }
     return counter;
-}
-
-static int countActiveNodes(Hierarchy * hierarchy, int node, int level)
-{
-    ex_vtx_data *graph = hierarchy->geom_graphs[level];
-    int cnt, other;
-
-    if (graph[node].active_level == level) {	// node is active
-#ifdef DEBUG
-fprintf (stderr, "(%d,%d) (%f,%f)\n", level,node,graph[node].x_coord,graph[node].y_coord);
-#endif
-	return 1;
-    } 
-    cnt = countActiveNodes(hierarchy, hierarchy->cv2v[level][2*node], level-1);
-
-    if ((other = hierarchy->cv2v[level][2 * node + 1]) >= 0) {
-	cnt += countActiveNodes(hierarchy, other, level - 1);
-    } 
-    return cnt;
-}
-
-/* count_active_nodes:
- * Return number of active nodes.
- */
-int count_active_nodes(Hierarchy * hierarchy)
-{
-    int i = 0;
-    int max_level = hierarchy->nlevels - 1;	// coarsest level
-    int sum = 0;
-    for (i = 0; i < hierarchy->nvtxs[max_level]; i++) {
-	sum += countActiveNodes(hierarchy, i, max_level);
-    }
-    return sum;
-}
-
-/* locateByIndex:
- * Given global index, find level and index on level.
- * Return -1 if no such node.
- */
-int locateByIndex(Hierarchy * hierarchy, int index, int *lp)
-{
-    int globalIndex;
-    int level;
-    int nlevels;
-
-    assert(hierarchy);
-    globalIndex = index;
-    nlevels = hierarchy->nlevels;
-    for (level = 0; level < nlevels && index >= hierarchy->nvtxs[level];
-	 level++) {
-	index -= hierarchy->nvtxs[level];
-    }
-    if (level < nlevels && index >= 0
-	&& hierarchy->geom_graphs[level][index].globalIndex ==
-	globalIndex) {
-	*lp = level;
-	return index;
-    } else {
-	// index not found
-	// return an arbitrary node
-	*lp = 0;
-	return -1;
-    }
-}
-
-/* isActiveAncestorOfNeighbors:
- * check whether 'activeAncestorIdx' is an active ancestor of one 
- * of the neighbors of 'node' 
- */
-static int
-isActiveAncestorOfNeighbors(Hierarchy * hierarchy, int node, int level,
-			    int activeAncestorIdx)
-{
-    int i,	active_level ;
-    v_data neighborsInLevel;
-    int neighbor, neighborLevel;
-    assert(hierarchy);
-    neighborsInLevel = hierarchy->graphs[level][node];
-
-    for (i = 1; i < neighborsInLevel.nedges; i++) {
-	neighbor = neighborsInLevel.edges[i];
-	active_level =
-	    hierarchy->geom_graphs[level][neighbor].active_level;
-	if (active_level > level) {
-	    // ancestor of neighbor is active
-	    neighborLevel = level;
-	    do {
-		neighbor = hierarchy->v2cv[neighborLevel][neighbor];
-		neighborLevel++;
-	    } while (active_level > neighborLevel);
-	    if (hierarchy->geom_graphs[neighborLevel][neighbor].
-		globalIndex == activeAncestorIdx) {
-		return 1;
-	    }
-	}
-    }
-    return 0;
-}
-
-/* findGlobalIndexesOfActiveNeighbors:
- * Find indices of active neighbors. Store in allocated array.
- * Return pointer to array in np, and return number of neighbors.
- * Return -1 on error
- */
-int
-findGlobalIndexesOfActiveNeighbors(Hierarchy * hierarchy, int index,
-				   int **np)
-{
-    int numNeighbors = 0;
-    int i, j;
-    int level, node,active_level,found;
-    v_data neighborsInLevel;
-    int nAllocNeighbors;
-    int *stack;			// 4*hierarchy->nlevels should be enough for the DFS scan
-    int stackHeight;
-    int neighbor, neighborLevel;
-
-    if (hierarchy == NULL) {
-	return -1;
-    }
-
-    if ((node = locateByIndex(hierarchy, index, &level)) < 0) 
-	node = 0;
-
-    neighborsInLevel = hierarchy->graphs[level][node];
-    nAllocNeighbors = 2 * neighborsInLevel.nedges;
-    int *neighbors = gv_calloc(nAllocNeighbors, sizeof(int));
-
-    stack = gv_calloc(5 * hierarchy->nlevels + 1, sizeof(int));
-
-    for (i = 1; i < neighborsInLevel.nedges; i++) {
-	neighbor = neighborsInLevel.edges[i];
-	active_level =
-	    hierarchy->geom_graphs[level][neighbor].active_level;
-	if (active_level == level) {
-	    // neighbor is active - add it
-	    if (numNeighbors >= nAllocNeighbors) {
-		neighbors = gv_recalloc(neighbors, nAllocNeighbors, 2 * nAllocNeighbors + 1,
-		                        sizeof(int));
-		nAllocNeighbors = 2 * nAllocNeighbors + 1;
-	    }
-	    neighbors[numNeighbors] =
-		hierarchy->geom_graphs[level][neighbor].globalIndex;
-	    numNeighbors++;
-	} else if (active_level > level) {
-	    // ancestor of neighbor is active - add it if not already added
-	    neighborLevel = level;
-	    do {
-
-		neighbor = hierarchy->v2cv[neighborLevel][neighbor];
-		neighborLevel++;
-	    } while (active_level > neighborLevel);
-	    found = 0;
-	    for (j = 0; j < numNeighbors && !found; j++) {
-		if (neighbors[j] ==
-		    hierarchy->geom_graphs[neighborLevel][neighbor].
-		    globalIndex) {
-		    found = 1;
-		}
-	    }
-	    if (!found) {
-		if (numNeighbors >= nAllocNeighbors) {
-		    neighbors = gv_recalloc(neighbors, nAllocNeighbors,
-		                            2 * nAllocNeighbors + 1, sizeof(int));
-		    nAllocNeighbors = 2 * nAllocNeighbors + 1;
-		}
-		neighbors[numNeighbors] =
-		    hierarchy->geom_graphs[neighborLevel][neighbor].
-		    globalIndex;
-		numNeighbors++;
-	    }
-	} else {
-	    // descendants of neighbor are active - add those of them that really point back 
-	    // using A DFS search below neighbor
-	    stack[0] = level;
-	    stack[1] = neighbor;
-	    stackHeight = 2;
-	    while (stackHeight > 0) {
-		stackHeight--;
-		neighbor = stack[stackHeight];
-		stackHeight--;
-		neighborLevel = stack[stackHeight];
-		if (hierarchy->geom_graphs[neighborLevel][neighbor].
-		    active_level == neighborLevel) {
-		    if (numNeighbors >= nAllocNeighbors) {
-			neighbors = gv_recalloc(neighbors, nAllocNeighbors,
-			                        2 * nAllocNeighbors + 1, sizeof(int));
-			nAllocNeighbors = 2 * nAllocNeighbors + 1;
-		    }
-		    neighbors[numNeighbors] =
-			hierarchy->geom_graphs[neighborLevel][neighbor].
-			globalIndex;
-		    numNeighbors++;
-		} else if (hierarchy->geom_graphs[neighborLevel][neighbor].
-			   active_level < level) {
-		    // check if node points back to original node (or just was clustered with neighbors)
-
-		    if (isActiveAncestorOfNeighbors
-			(hierarchy,
-			 hierarchy->cv2v[neighborLevel][2 * neighbor],
-			 neighborLevel - 1, index)) {
-			stack[stackHeight] = neighborLevel - 1;
-			stackHeight++;
-			stack[stackHeight] =
-			    hierarchy->cv2v[neighborLevel][2 * neighbor];
-			stackHeight++;
-		    }
-		    if (hierarchy->cv2v[neighborLevel][2 * neighbor + 1] >=
-			0) {
-
-			if (isActiveAncestorOfNeighbors
-			    (hierarchy,
-			     hierarchy->cv2v[neighborLevel][2 * neighbor +
-							    1],
-			     neighborLevel - 1, index)) {
-			    stack[stackHeight] = neighborLevel - 1;
-			    stackHeight++;
-			    stack[stackHeight] =
-				hierarchy->cv2v[neighborLevel][2 *
-							       neighbor +
-							       1];
-			    stackHeight++;
-			}
-		    }
-		}
-	    }
-	}
-    }
-    free(stack);
-    *np = neighbors;
-    return numNeighbors;
 }
 
 /* find_physical_coords:
@@ -1378,20 +1145,6 @@ int
 find_active_ancestor(Hierarchy * hierarchy, int level, int node)
 {
     int active_level = hierarchy->geom_graphs[level][node].active_level;
-    while (active_level > level) {
-	node = hierarchy->v2cv[level][node];
-	level++;
-    }
-
-    if (active_level == level) 
-	return hierarchy->geom_graphs[level][node].globalIndex;
-    else
-	return -1;
-}
-int
-find_old_active_ancestor(Hierarchy * hierarchy, int level, int node)
-{
-    int active_level = hierarchy->geom_graphs[level][node].old_active_level;
     while (active_level > level) {
 	node = hierarchy->v2cv[level][node];
 	level++;

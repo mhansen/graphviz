@@ -11,6 +11,7 @@
 #pragma once
 
 #include <neatogen/sparsegraph.h>
+#include <stddef.h>
 
 typedef struct {
     int nedges;       // degree, including self-loop
@@ -60,7 +61,6 @@ typedef struct {
     // if dist2_limit true, don't contract nodes of distance larger than 2
     // if false then also distance 3 is possible
     int dist2_limit; /* TRUE */
-    int min_nvtxs;   /* 20 */
 } hierparms_t;
 
 void release(Hierarchy*);
@@ -71,12 +71,11 @@ Hierarchy* create_hierarchy(v_data * graph, int nvtxs, int nedges,
 void set_active_levels(Hierarchy*, int*, int, levelparms_t*);
 double find_closest_active_node(Hierarchy*, double x, double y, int*);
 
-int extract_active_logical_coords(Hierarchy * hierarchy, int node, int level, 
-    double *x_coords, double *y_coords, int counter);
+size_t extract_active_logical_coords(Hierarchy *hierarchy, int node, int level,
+    double *x_coords, double *y_coords, size_t counter);
 int set_active_physical_coords(Hierarchy *, int node, int level,
     double *x_coords, double *y_coords, int counter);
 
-int count_active_nodes(Hierarchy *);
 void init_active_level(Hierarchy* hierarchy, int level);
 
 // creating a geometric graph:
@@ -85,10 +84,10 @@ int init_ex_graph(v_data * graph1, v_data * graph2, int n,
 
 // layout distortion:
 void rescale_layout(double *x_coords, double *y_coords,
-    int n, int interval, double width, double height,
+    size_t n, int interval, double width, double height,
     double margin, double distortion);
 void rescale_layout_polar(double * x_coords, double * y_coords, 
-    double * x_foci, double * y_foci, int num_foci, int n, int interval, 
+    double * x_foci, double * y_foci, int num_foci, size_t n, int interval,
     double width, double height, double margin, double distortion);
 
 void find_physical_coords(Hierarchy*, int, int, double *x, double *y);
@@ -97,7 +96,3 @@ void find_old_physical_coords(Hierarchy * hierarchy, int level, int node, double
 
 int find_active_ancestor(Hierarchy*, int, int);
 void find_active_ancestor_info(Hierarchy * hierarchy, int level, int node, int *levell,int *nodee);
-
-int find_old_active_ancestor(Hierarchy * hierarchy, int level, int node);
-int locateByIndex(Hierarchy*, int, int*);
-int findGlobalIndexesOfActiveNeighbors(Hierarchy*, int, int**);
