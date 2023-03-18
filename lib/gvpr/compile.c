@@ -23,7 +23,6 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
-#include <cgraph/itos.h>
 #include <cgraph/unreachable.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
@@ -2318,27 +2317,22 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
                           int cnt, const char *lbl)
 {
     int i;
-    static const char LONGEST_CALLER_PREFIX[] = "_begin_g_";
-    static const char LONGEST_INFIX[] = "__a";
-    char tmp[sizeof(LONGEST_CALLER_PREFIX) - 1 + CHARS_FOR_NUL_TERM_INT - 1 +
-             sizeof(LONGEST_INFIX) - 1 + CHARS_FOR_NUL_TERM_INT - 1 + 1];
-
-    // the logic in our caller, mkBlock, should guarantee this
-    assert(strlen(lbl) + sizeof(LONGEST_INFIX) - 1 +
-           CHARS_FOR_NUL_TERM_INT - 1 + 1 <= sizeof(tmp));
+    agxbuf tmp = {0};
 
     case_stmt *cs = gv_calloc(cnt, sizeof(case_stmt));
 
     for (i = 0; i < cnt; i++) {
 	if (sp->guard) {
-	    snprintf(tmp, sizeof(tmp), "%s_g%d", lbl, i);
-	    cs[i].guard = compile(prog, src, sp->guard, sp->gstart, tmp, 0, INTEGER);
+	    agxbprint(&tmp, "%s_g%d", lbl, i);
+	    cs[i].guard = compile(prog, src, sp->guard, sp->gstart, agxbuse(&tmp), 0,
+	                          INTEGER);
 	    if (getErrorErrors()) break;
 	    checkGuard(cs[i].guard, src, sp->gstart);
 	}
 	if (sp->action) {
-	    snprintf(tmp, sizeof(tmp), "%s_a%d", lbl, i);
-	    cs[i].action = compile(prog, src, sp->action, sp->astart, tmp, 0, INTEGER);
+	    agxbprint(&tmp, "%s_a%d", lbl, i);
+	    cs[i].action = compile(prog, src, sp->action, sp->astart, agxbuse(&tmp),
+	                           0, INTEGER);
 	    if (getErrorErrors()) break;
 	    /* If no error but no compiled action, the input action must
 	     * have been essentially an empty block, which should be
@@ -2346,13 +2340,14 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
 	     * trivial block.
 	     */
 	    if (!cs[i].action) {
-		snprintf(tmp, sizeof(tmp), "%s__a%d", lbl, i);
-		cs[i].action = compile(prog, src, "1", sp->astart, tmp, 0, INTEGER);
+		agxbprint(&tmp, "%s__a%d", lbl, i);
+		cs[i].action = compile(prog, src, "1", sp->astart, agxbuse(&tmp), 0,
+		                       INTEGER);
 	    }
 	}
 	sp = sp->next;
     }
-
+    agxbfree(&tmp);
     return cs;
 }
 
@@ -2365,12 +2360,13 @@ static int mkBlock(comp_block* bp, Expr_t * prog, char *src, parse_block *inp, i
     codePhase = 1;
     if (inp->begg_stmt) {
 	static const char PREFIX[] = "_begin_g_";
-	char label[sizeof(PREFIX) - 1 + CHARS_FOR_NUL_TERM_INT - 1 + 1 /* for NUL */];
-	snprintf(label, sizeof(label), "%s%d", PREFIX, i);
+	agxbuf label = {0};
+	agxbprint(&label, "%s%d", PREFIX, i);
 	symbols[0].type = T_graph;
 	tchk[V_this][1] = Y(G);
 	bp->begg_stmt = compile(prog, src, inp->begg_stmt,
-                          inp->l_beging, label, 0, VOIDTYPE);
+                          inp->l_beging, agxbuse(&label), 0, VOIDTYPE);
+	agxbfree(&label);
 	if (getErrorErrors())
 	    goto finishBlk;
 	rv |= BEGG;
@@ -2379,12 +2375,14 @@ static int mkBlock(comp_block* bp, Expr_t * prog, char *src, parse_block *inp, i
     codePhase = 2;
     if (inp->node_stmts) {
 	static const char PREFIX[] = "_nd";
-	char label[sizeof(PREFIX) - 1 + CHARS_FOR_NUL_TERM_INT - 1 + 1 /* for NUL */];
+	agxbuf label = {0};
 	symbols[0].type = T_node;
 	tchk[V_this][1] = Y(V);
 	bp->n_nstmts = inp->n_nstmts;
-	snprintf(label, sizeof(label), "%s%d", PREFIX, i);
-	bp->node_stmts = mkStmts(prog, src, inp->node_stmts, inp->n_nstmts, label);
+	agxbprint(&label, "%s%d", PREFIX, i);
+	bp->node_stmts = mkStmts(prog, src, inp->node_stmts, inp->n_nstmts,
+	                         agxbuse(&label));
+	agxbfree(&label);
 	if (getErrorErrors())
 	    goto finishBlk;
 	bp->walks |= WALKSG;
@@ -2393,12 +2391,14 @@ static int mkBlock(comp_block* bp, Expr_t * prog, char *src, parse_block *inp, i
     codePhase = 3;
     if (inp->edge_stmts) {
 	static const char PREFIX[] = "_eg";
-	char label[sizeof(PREFIX) - 1 + CHARS_FOR_NUL_TERM_INT - 1 + 1 /* for NUL */];
+	agxbuf label = {0};
 	symbols[0].type = T_edge;
 	tchk[V_this][1] = Y(E);
 	bp->n_estmts = inp->n_estmts;
-	snprintf(label, sizeof(label), "%s%d", PREFIX, i);
-	bp->edge_stmts = mkStmts(prog, src, inp->edge_stmts, inp->n_estmts, label);
+	agxbprint(&label, "%s%d", PREFIX, i);
+	bp->edge_stmts = mkStmts(prog, src, inp->edge_stmts, inp->n_estmts,
+	                         agxbuse(&label));
+	agxbfree(&label);
 	if (getErrorErrors())
 	    goto finishBlk;
 	bp->walks |= WALKSG;

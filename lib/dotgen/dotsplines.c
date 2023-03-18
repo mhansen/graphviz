@@ -14,6 +14,7 @@
  */
 
 #include <assert.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <common/boxes.h>
 #include <dotgen/dot.h>
@@ -922,11 +923,10 @@ static node_t *cloneNode(graph_t *g, node_t *orign) {
     agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
     agcopyattr (orign, n);
     if (shapeOf(orign) == SH_RECORD) {
-        size_t lbllen = strlen(ND_label(orign)->text);
-        char* buf = gv_calloc(lbllen + 3, sizeof(char));
-        sprintf (buf, "{%s}", ND_label(orign)->text);
-	agset (n, "label", buf);
-        free(buf);
+        agxbuf buf = {0};
+        agxbprint(&buf, "{%s}", ND_label(orign)->text);
+        agset (n, "label", agxbuse(&buf));
+        agxbfree(&buf);
     }
 
     return n;

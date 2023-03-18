@@ -885,10 +885,11 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
 #ifdef VIS_MULTILEVEL
   {
     FILE *f;
-    char fname[10000];
+    agxbuf fname = {0};
     static int count = 0;
-    sprintf(fname, "/tmp/multilevel_%d",count++);
-    f = fopen(fname,"w");
+    agxbprint(&fname, "/tmp/multilevel_%d", count++);
+    f = fopen(agxbuse(&fname), "w");
+    agxbfree(&fname);
     export_embedding(f, dim, A, x, NULL);
     fclose(f);
   }

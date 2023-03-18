@@ -304,34 +304,26 @@ char *Fgets(FILE * fp)
 #define PATHSEP ":"
 #endif
 
-static strview_t *mkDirlist(const char *list, size_t *maxdirlen) {
+static strview_t *mkDirlist(const char *list) {
     size_t cnt = 0;
     strview_t *dirs = gv_calloc(1, sizeof(strview_t));
-    size_t maxlen = 0;
 
     for (tok_t t = tok(list, PATHSEP); !tok_end(&t); tok_next(&t)) {
         strview_t dir = tok_get(&t);
         dirs = gv_recalloc(dirs, cnt + 1, cnt + 2, sizeof(strview_t));
         dirs[cnt++] = dir;
-        maxlen = MAX(maxlen, dir.size);
     }
-    *maxdirlen = maxlen;
     return dirs;
 }
 
-static char *findPath(const strview_t *dirs, size_t maxdirlen, const char *str) {
-    static char *safefilename = NULL;
-
-	/* allocate a buffer that we are sure is big enough
-         * +1 for null character.
-         * +1 for directory separator character.
-         */
-    safefilename = realloc(safefilename, maxdirlen + strlen(str) + 2);
+static char *findPath(const strview_t *dirs, const char *str) {
+    static agxbuf safefilename;
 
     for (const strview_t *dp = dirs; dp != NULL && dp->data != NULL; dp++) {
-	sprintf(safefilename, "%.*s%s%s", (int)dp->size, dp->data, DIRSEP, str);
-	if (access (safefilename, R_OK) == 0)
-	    return safefilename;
+	agxbprint(&safefilename, "%.*s%s%s", (int)dp->size, dp->data, DIRSEP, str);
+	char *filename = agxbuse(&safefilename);
+	if (access(filename, R_OK) == 0)
+	    return filename;
     }
     return NULL;
 }
@@ -340,7 +332,6 @@ const char *safefile(const char *filename)
 {
     static bool onetime = true;
     static char *pathlist = NULL;
-    static size_t maxdirlen;
     static strview_t *dirs;
 
     if (!filename || !filename[0])
@@ -361,13 +352,13 @@ const char *safefile(const char *filename)
 	dirs = NULL;
 	pathlist = Gvimagepath;
 	if (pathlist && *pathlist)
-	    dirs = mkDirlist (pathlist, &maxdirlen);
+	    dirs = mkDirlist(pathlist);
     }
 
     if (*filename == DIRSEP[0] || !dirs)
 	return filename;
 
-    return findPath (dirs, maxdirlen, filename);
+    return findPath(dirs, filename);
 }
 
 int maptoken(char *p, char **name, int *val) {

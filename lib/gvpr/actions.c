@@ -936,27 +936,16 @@ static int colorcmpf(const void *p0, const void *p1)
 
 static char *canontoken(char *str)
 {
-    static char *canon;
-    static size_t allocated;
-    char c, *p, *q;
-    size_t len;
+    static agxbuf canon;
+    char c, *p;
 
     p = str;
-    len = strlen(str);
-    if (len >= allocated) {
-	allocated = len + 1 + 10;
-	canon = newof(canon, char, allocated, 0);
-	if (!canon)
-	    return NULL;
-    }
-    q = canon;
     while ((c = *p++)) {
 	if (isupper((int)c))
 	    c = (char)tolower((int)c);
-	*q++ = c;
+	agxbputc(&canon, c);
     }
-    *q = '\0';
-    return canon;
+    return agxbuse(&canon);
 }
 
 /* fullColor:
@@ -964,16 +953,10 @@ static char *canontoken(char *str)
  */
 static char* fullColor (char* prefix, char* str)
 {
-    static char *fulls;
-    static size_t allocated;
-    size_t len = strlen (prefix) + strlen (str) + 3;
+    static agxbuf fulls;
 
-    if (len >= allocated) {
-	fulls = gv_realloc(fulls, allocated, len + 10);
-	allocated = len + 10;
-    }
-    sprintf (fulls, "/%s/%s", prefix, str);
-    return fulls;
+    agxbprint(&fulls, "/%s/%s", prefix, str);
+    return agxbuse(&fulls);
 }
 
 /* resolveColor:

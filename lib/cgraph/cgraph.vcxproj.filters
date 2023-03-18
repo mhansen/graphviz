@@ -33,9 +33,6 @@
     <ClInclude Include="exit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="itos.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="likely.h">
       <Filter>Header Files</Filter>
     </ClInclude>

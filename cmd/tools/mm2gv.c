@@ -61,10 +61,7 @@ static char *hue2rgb(double hue, agxbuf *xb) {
     double v1, v2, lightness = .5, saturation = 1;
     int red, blue, green;
 
-    if (lightness < 0.5)
-	v2 = lightness * (1.0 + saturation);
-    else
-	v2 = lightness + saturation - saturation * lightness;
+    v2 = lightness + saturation - saturation * lightness;
 
     v1 = 2.0 * lightness - v2;
 
