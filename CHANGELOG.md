@@ -74,6 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `arrow_at_start` and `arrow_at_end` parameters from the
   `gvrender_engine_t.beziercurve` callback have been removed.
 - **Breaking**: The `GVRENDER_DOES_ARROWS` constant has been removed.
+- The extra cmpnd.c code is no longer shipped in the Graphviz distribution
+  tarball.
 
 ## [7.1.0] – 2023-01-21
 

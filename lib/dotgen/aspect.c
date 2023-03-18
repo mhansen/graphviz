@@ -252,8 +252,8 @@ static void computeLayerWidths(graph_t * g)
  */
 static int compFunction(const void *a, const void *b)
 {
-    const int *ind1 = (const int *) a;
-    const int *ind2 = (const int *) b;
+    const int *ind1 = a;
+    const int *ind2 = b;
 
     return (layerWidthInfo[*ind2].width >
 	    layerWidthInfo[*ind1].width) - (layerWidthInfo[*ind2].width <

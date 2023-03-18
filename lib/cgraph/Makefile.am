@@ -42,7 +42,7 @@ grammar.c grammar.h: $(top_srcdir)/lib/cgraph/grammar.y
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
 
-EXTRA_DIST = cmpnd.c \
+EXTRA_DIST = \
 	grammar.c grammar.h scan.c \
 	cgraph.vcxproj*
 
