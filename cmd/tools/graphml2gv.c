@@ -54,7 +54,7 @@ static void pushString(gv_stack_t *stk, const char *s) {
   char *copy = gv_strdup(s);
 
   // push this onto the stack
-  stack_push_or_exit(stk, copy);
+  stack_push(stk, copy);
 }
 
 static void popString(gv_stack_t *stk) {
@@ -130,7 +130,7 @@ static void push_subg(Agraph_t * g)
   }
 
   // insert the new graph
-  stack_push_or_exit(&Gstack, g);
+  stack_push(&Gstack, g);
 
   // update the top graph
   G = g;

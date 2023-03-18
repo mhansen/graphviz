@@ -43,10 +43,9 @@ static void freeStk (stk_t* sp)
   stack_reset(&sp->data);
 }
 
-static int push(stk_t* sp, Agnode_t * np)
-{
+static void push(stk_t *sp, Agnode_t *np) {
   MARK(sp, np);
-  return stack_push(&sp->data, np);
+  stack_push(&sp->data, np);
 }
 
 static Agnode_t *pop(stk_t* sp)
@@ -65,9 +64,7 @@ static size_t dfs(Agraph_t * g, Agnode_t * n, void *state, stk_t* stk)
     Agnode_t *other;
     size_t cnt = 0;
 
-    if (push (stk, n) != 0) {
-	return SIZE_MAX;
-    }
+    push(stk, n);
     while ((n = pop(stk))) {
 	cnt++;
 	if (stk->actionfn) stk->actionfn(n, state);
@@ -75,9 +72,7 @@ static size_t dfs(Agraph_t * g, Agnode_t * n, void *state, stk_t* stk)
 	    if ((other = agtail(e)) == n)
 		other = aghead(e);
             if (!MARKED(stk,other))
-                if (push(stk, other) != 0) {
-                    return SIZE_MAX;
-                }
+                push(stk, other);
         }
     }
     return cnt;
@@ -125,7 +120,7 @@ static void setPrefix(agxbuf *xb, const char *pfx) {
  * and the first component is the one containing the pinned nodes.
  * Note that the component subgraphs do not contain any edges. These must
  * be obtained from the root graph.
- * Return NULL on error or if graph is empty.
+ * Return NULL if graph is empty.
  */
 Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 {
@@ -136,7 +131,6 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
     size_t bnd = 10;
     bool pin = false;
     stk_t stk;
-    int error = 0;
 
     if (agnnodes(g) == 0) {
 	*ncc = 0;
@@ -162,10 +156,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 	    c_cnt++;
 	    pin = true;
 	}
-	if (dfs (g, n, out, &stk) == SIZE_MAX) {
-	    error = 1;
-	    goto packerror;
-	}
+	dfs(g, n, out, &stk);
     }
 
     /* Remaining nodes */
@@ -176,10 +167,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 	agxbprint(&name, "%" PRISIZE_T, c_cnt);
 	out = agsubg(g, agxbuse(&name), 1);
 	agbindrec(out, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
-	if (dfs(g, n, out, &stk) == SIZE_MAX) {
-	    error = 1;
-	    goto packerror;
-	}
+	dfs(g, n, out, &stk);
 	if (c_cnt == bnd) {
 	    ccs = gv_recalloc(ccs, bnd, bnd * 2, sizeof(Agraph_t*));
 	    bnd *= 2;
@@ -187,22 +175,11 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 	ccs[c_cnt] = out;
 	c_cnt++;
     }
-packerror:
     freeStk (&stk);
     agxbfree(&name);
-    if (error) {
-	*ncc = 0;
-	for (size_t i=0; i < c_cnt; i++) {
-	    agclose (ccs[i]);
-	}
-	free (ccs);
-	ccs = NULL;
-    }
-    else {
-	ccs = gv_recalloc(ccs, bnd, c_cnt, sizeof(Agraph_t*));
-	*ncc = (int) c_cnt;
-	*pinned = pin;
-    }
+    ccs = gv_recalloc(ccs, bnd, c_cnt, sizeof(Agraph_t*));
+    *ncc = (int) c_cnt;
+    *pinned = pin;
     return ccs;
 }
 

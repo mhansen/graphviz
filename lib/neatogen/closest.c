@@ -38,7 +38,7 @@ static void push(gv_stack_t *s, Pair x) {
   Pair *copy = gv_alloc(sizeof(x));
   *copy = x;
 
-  stack_push_or_exit(s, copy);
+  stack_push(s, copy);
 }
 
 static bool pop(gv_stack_t *s, Pair *x) {
@@ -58,7 +58,7 @@ static bool pop(gv_stack_t *s, Pair *x) {
   return true;
 }
 
-#define sub(h,i) (*(Pair*)(h)->base[i])
+#define sub(h,i) (*(Pair*)gv_stack_get((h), (i)))
 
 /* An auxulliary data structure (a heap) for 
  * finding the closest pair in the layout

@@ -56,7 +56,7 @@ static void push(gv_stack_t *sp, Agedge_t *ep, nodeinfo_t *ninfo) {
   ON_STACK(ninfo, aghead(ep)) = 1;
 
   // insert the new edge
-  stack_push_or_exit(sp, ep);
+  stack_push(sp, ep);
 }
 
 static Agedge_t *pop(gv_stack_t *sp, nodeinfo_t *ninfo) {

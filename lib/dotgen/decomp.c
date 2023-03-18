@@ -57,7 +57,7 @@ end_component(graph_t* g)
 
 static void push(gv_stack_t *sp, node_t *np) {
   ND_mark(np) = Cmark + 1;
-  stack_push_or_exit(sp, np);
+  stack_push(sp, np);
 }
 
 static node_t *pop(gv_stack_t *sp) {

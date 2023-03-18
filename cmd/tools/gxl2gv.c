@@ -156,7 +156,7 @@ static int isAnonGraph(const char *name)
 static void push_subg(Agraph_t * g)
 {
   // insert the new graph
-  stack_push_or_exit(&Gstack, g);
+  stack_push(&Gstack, g);
 
   // save the root if this is the first graph
   if (stack_size(&Gstack) == 1) {

@@ -118,7 +118,7 @@ static unsigned visit(Agnode_t *n, Agraph_t *map, gv_stack_t *sp, sccstate *st) 
 
     min = ++st->ID;
     setval(n, min);
-    stack_push_or_exit(sp, n);
+    stack_push(sp, n);
 
     for (e = agfstout(n->root, n); e; e = agnxtout(n->root, e)) {
 	t = aghead(e);

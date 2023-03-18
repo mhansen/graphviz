@@ -136,7 +136,7 @@ pushAlist (void)
     Dt_t* lp = dtopen (&attrDisc, Dtqueue);
 
     if (L) {
-	stack_push_or_exit(&liststk, L);
+	stack_push(&liststk, L);
     }
     L = lp;
 }
