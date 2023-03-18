@@ -561,6 +561,8 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
     q.x = p.x + u.x;
     q.y = p.y + u.y;
 
+    pointf delta_base = {0, 0};
+
     const pointf origin = {0, 0};
     const pointf v_inv = {-v.x, -v.y};
     const pointf normal_left = flag.mod_right ? origin : v_inv;
@@ -573,12 +575,14 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
 
     const pointf P3 = miter_point(base_left, P, base_right, penwidth);
 
-    const pointf delta_tip = {P3.x - P.x, P3.y - P.y};
+    const point delta_tip = {P3.x - P.x, P3.y - P.y};
 
-    // phi = angle of arrow
-    const double cosPhi = P.x / hypot(P.x, P.y);
-    const double sinPhi = P.y / hypot(P.x, P.y);
-    const pointf delta_base = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    if (u.x != 0 || u.y != 0) {
+	// phi = angle of arrow
+	const double cosPhi = P.x / hypot(P.x, P.y);
+	const double sinPhi = P.y / hypot(P.x, P.y);
+	delta_base = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    }
 
     if (flag.mod_inv) {
 	p.x += delta_base.x;
