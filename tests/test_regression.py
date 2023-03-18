@@ -597,12 +597,17 @@ def test_1332():
 
     # process it with Graphviz
     warnings = subprocess.check_output(
-        ["dot", "-Tpdf", "-o", os.devnull, input], stderr=subprocess.STDOUT
+        ["dot", "-Tpdf", "-o", os.devnull, input],
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
     )
+
+    # work around macOS warnings
+    warnings = remove_xtype_warnings(warnings).strip()
 
     # no warnings should have been printed
     assert (
-        warnings == b""
+        warnings == ""
     ), "warnings were printed when processing graph involving triangulation"
 
 
