@@ -357,8 +357,8 @@ ang1 = 0; ang2 = 2*PI; maxang = 2*PI;
       assert(ang2 >= ang1);
       step = 0.;
       if (nleaves > 1) step = (ang2 - ang1)/(nleaves - 1);
-      for (i = 0; i < nleaves; i++) {
-	set_leaves(x, dim, dist, ang1, p, leaves[i]);
+      for (int k = 0; k < nleaves; k++) {
+	set_leaves(x, dim, dist, ang1, p, leaves[k]);
 	ang1 += step;
       }
     }
