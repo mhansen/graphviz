@@ -34,6 +34,24 @@ if(GD_FOUND)
     ${GD_LIBRARIES}
   )
 
+  if(CAIRO_FOUND)
+    target_include_directories(gvplugin_gd SYSTEM PRIVATE
+      ${CAIRO_INCLUDE_DIRS}
+    )
+    target_link_libraries(gvplugin_gd
+      ${CAIRO_LINK_LIBRARIES}
+    )
+    if(PANGOCAIRO_FOUND)
+      target_include_directories(gvplugin_gd SYSTEM PRIVATE
+        ${PANGOCAIRO_INCLUDE_DIRS}
+      )
+
+      target_link_libraries(gvplugin_gd
+        ${PANGOCAIRO_LINK_LIBRARIES}
+      )
+    endif()
+  endif()
+
   # Installation location of library files
   install(
     TARGETS gvplugin_gd

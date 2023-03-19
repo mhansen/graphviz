@@ -28,6 +28,24 @@ if(WEBP_FOUND)
     ${WEBP_LINK_LIBRARIES}
   )
 
+  if(CAIRO_FOUND)
+    target_include_directories(gvplugin_webp SYSTEM PRIVATE
+      ${CAIRO_INCLUDE_DIRS}
+    )
+    target_link_libraries(gvplugin_webp
+      ${CAIRO_LINK_LIBRARIES}
+    )
+    if(PANGOCAIRO_FOUND)
+      target_include_directories(gvplugin_webp SYSTEM PRIVATE
+        ${PANGOCAIRO_INCLUDE_DIRS}
+      )
+
+      target_link_libraries(gvplugin_webp
+        ${PANGOCAIRO_LINK_LIBRARIES}
+      )
+    endif()
+  endif()
+
   install(
     TARGETS gvplugin_webp
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}

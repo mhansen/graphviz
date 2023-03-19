@@ -1,7 +1,10 @@
 include(FindPackageHandleStandardArgs)
 
 if(WIN32)
-  find_path(CAIRO_INCLUDE_DIR cairo/cairo.h)
+  find_path(
+    CAIRO_INCLUDE_DIR cairo.h
+    PATH_SUFFIXES cairo
+  )
 
   find_library(CAIRO_LIBRARY NAMES cairo)
 
