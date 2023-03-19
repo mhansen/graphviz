@@ -964,6 +964,10 @@ bool SVG::SVGPoint::operator==(const SVGPoint &rhs) const {
   return x == rhs.x && y == rhs.y;
 }
 
+bool SVG::SVGPoint::operator!=(const SVGPoint &rhs) const {
+  return !(*this == rhs);
+}
+
 bool SVG::SVGPoint::is_higher_than(const SVGPoint &other) const {
   // SVG uses inverted y axis, so smaller is higher
   return y < other.y;
