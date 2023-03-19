@@ -251,6 +251,13 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
         points.front().y != points.back().y) {
       throw std::runtime_error{"First and last point are not the same"};
     }
+    if (has_all_points_equal()) {
+      // the polygon has no size and will not be visible, so just arbitrarily
+      // select one of its (equal) points as its outline bounding box
+      const auto first_point = points.at(0);
+      m_bbox->extend(first_point);
+      break;
+    }
     const auto clockwise = has_clockwise_points();
     // the first and last points are always the same so we skip the last
     for (auto it = points.cbegin(); it != points.cend() - 1; ++it) {
