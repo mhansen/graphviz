@@ -738,7 +738,7 @@ static pointf arrow_type_tee(GVJ_t *job, pointf p, pointf u, double arrowsize,
 
     const double length = hypot(u.x, u.y);
     const double polygon_extend_over_polyline = penwidth / 2 - 0.2 * length;
-    if (polygon_extend_over_polyline > 0) {
+    if (length > 0 && polygon_extend_over_polyline > 0) {
 	// the polygon part of the 'tee' arrow will visually overlap the
 	// 'polyline' part so we need to move the whole arrow in order not to
 	// overlap the node
