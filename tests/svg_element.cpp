@@ -231,14 +231,18 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
   case SVG::SVGElementType::Group:
     // SVG group bounding box is detemined solely by its children
     break;
-  case SVG::SVGElementType::Ellipse:
+  case SVG::SVGElementType::Ellipse: {
+    const auto stroke_width = (attributes.rx == 0 && attributes.ry == 0)
+                                  ? 0
+                                  : attributes.stroke_width;
     m_bbox = {
-        .x = attributes.cx - attributes.rx - attributes.stroke_width / 2,
-        .y = attributes.cy - attributes.ry - attributes.stroke_width / 2,
-        .width = attributes.rx * 2 + attributes.stroke_width,
-        .height = attributes.ry * 2 + attributes.stroke_width,
+        .x = attributes.cx - attributes.rx - stroke_width / 2,
+        .y = attributes.cy - attributes.ry - stroke_width / 2,
+        .width = attributes.rx * 2 + stroke_width,
+        .height = attributes.ry * 2 + stroke_width,
     };
     break;
+  }
   case SVG::SVGElementType::Polygon: {
     // it takes at least 3 points to make a polygon (triangle) and Graphviz
     // always generates the last point to be the same as the first so there
