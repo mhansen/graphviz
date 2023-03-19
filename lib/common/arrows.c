@@ -344,9 +344,11 @@ int arrowEndClip(edge_t* e, pointf * ps, int startp,
     sp[1] = ps[endp + 2];
     sp[0] = spl->ep;	/* ensure endpoint starts inside */
 
-    inside_context.a.p = &sp[0];
-    inside_context.a.r = &elen2;
-    bezier_clip(&inside_context, inside, sp, true);
+    if (elen > 0) {
+	inside_context.a.p = &sp[0];
+	inside_context.a.r = &elen2;
+	bezier_clip(&inside_context, inside, sp, true);
+    }
 
     ps[endp] = sp[3];
     ps[endp + 1] = sp[2];
