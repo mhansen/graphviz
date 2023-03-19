@@ -2,7 +2,12 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/exit.h>
+#include <cgraph/likely.h>
+#include <errno.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -62,19 +67,43 @@
     return name##_size(list) == 0;                                             \
   }                                                                            \
                                                                                \
-  static inline LIST_UNUSED void name##_append(name##_t *list, type item) {    \
+  static inline int name##_try_append(name##_t *list, type item) {             \
     assert(list != NULL);                                                      \
                                                                                \
     /* do we need to expand the backing storage? */                            \
     if (list->size == list->capacity) {                                        \
       size_t c = list->capacity == 0 ? 1 : (list->capacity * 2);               \
-      list->data =                                                             \
-          (type *)gv_recalloc(list->data, list->capacity, c, sizeof(type));    \
+                                                                               \
+      /* will the calculation of the new size overflow? */                     \
+      if (UNLIKELY(SIZE_MAX / c < sizeof(type))) {                             \
+        return ERANGE;                                                         \
+      }                                                                        \
+                                                                               \
+      type *data = (type *)realloc(list->data, c * sizeof(type));              \
+      if (UNLIKELY(data == NULL)) {                                            \
+        return ENOMEM;                                                         \
+      }                                                                        \
+                                                                               \
+      /* zero the new memory */                                                \
+      memset((char *)data + list->capacity * sizeof(type), 0,                  \
+             (c - list->capacity) * sizeof(type));                             \
+                                                                               \
+      list->data = data;                                                       \
       list->capacity = c;                                                      \
     }                                                                          \
                                                                                \
     list->data[list->size] = item;                                             \
     ++list->size;                                                              \
+                                                                               \
+    return 0;                                                                  \
+  }                                                                            \
+                                                                               \
+  static inline LIST_UNUSED void name##_append(name##_t *list, type item) {    \
+    int rc = name##_try_append(list, item);                                    \
+    if (rc != 0) {                                                             \
+      fprintf(stderr, "realloc failed: %s\n", strerror(rc));                   \
+      graphviz_exit(EXIT_FAILURE);                                             \
+    }                                                                          \
   }                                                                            \
                                                                                \
   /** retrieve an element from a list                                          \
