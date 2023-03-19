@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <common/htmltable.h>
@@ -1858,7 +1859,7 @@ static void poly_init(node_t * n)
     double width, height, marginx, marginy, spacex;
     int regular, peripheries, sides;
     int i, j, isBox, outp;
-    polygon_t *poly = NEW(polygon_t);
+    polygon_t *poly = gv_alloc(sizeof(polygon_t));
     bool isPlain = IS_PLAIN(n);
 
     regular = ND_shape(n)->polygon->regular;
@@ -3052,7 +3053,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
  */
 static void point_init(node_t * n)
 {
-    polygon_t *poly = NEW(polygon_t);
+    polygon_t *poly = gv_alloc(sizeof(polygon_t));
     int sides, outp, peripheries = ND_shape(n)->polygon->peripheries;
     double sz;
     pointf P, *vertices;
@@ -3313,7 +3314,7 @@ static field_t *parse_error(field_t * rv, char *port)
 }
 
 static field_t *parse_reclbl(node_t *n, bool LR, int flag, char *text) {
-    field_t *fp, *rv = NEW(field_t);
+    field_t *fp, *rv = gv_alloc(sizeof(field_t));
     char *tsp, *psp=NULL, *hstsp, *hspsp=NULL, *sp;
     char *tmpport = NULL;
     int maxf, cnt, mode, wflag, ishardspace, fi;
@@ -3384,7 +3385,7 @@ static field_t *parse_reclbl(node_t *n, bool LR, int flag, char *text) {
 	    if ((!*reclblp && !flag) || (mode & INPORT))
 		return parse_error(rv, tmpport);
 	    if (!(mode & HASTABLE))
-		fp = rv->fld[fi++] = NEW(field_t);
+		fp = rv->fld[fi++] = gv_alloc(sizeof(field_t));
 	    if (tmpport) {
 		fp->id = tmpport;
 		tmpport = NULL;
@@ -3909,7 +3910,7 @@ static shape_desc *user_shape(char *name)
 	return p;
     i = N_UserShape++;
     UserShape = ALLOC(N_UserShape, UserShape, shape_desc *);
-    p = UserShape[i] = NEW(shape_desc);
+    p = UserShape[i] = gv_alloc(sizeof(shape_desc));
     *p = Shapes[0];
     p->name = strdup(name);
     if (Lib == NULL && !streq(name, "custom")) {

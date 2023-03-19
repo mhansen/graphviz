@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <common/pointset.h>
 
@@ -19,9 +19,7 @@ typedef struct {
 
 static pair *mkPair(point p)
 {
-    pair *pp;
-
-    pp = NEW(pair);
+    pair *pp = gv_alloc(sizeof(pair));
     pp->id = p;
     return pp;
 }

@@ -2314,7 +2314,8 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	    gvrender_set_fillcolor(job, color);
 	    bz = ED_spl(e)->list[0];
 	    stroke_t stp = taper(&bz, taperfun (e), penwidth, 0, 0);
-	    gvrender_polygon(job, stp.vertices, stp.nvertices, TRUE);
+	    assert(stp.nvertices <= INT_MAX);
+	    gvrender_polygon(job, stp.vertices, (int)stp.nvertices, TRUE);
 	    free_stroke(stp);
     	    gvrender_set_pencolor(job, color);
 	    if (fillcolor != color)
@@ -2963,7 +2964,7 @@ boxf xdotBB (Agraph_t* g)
 	    op->bb = ptsBB (op->op.u.polygon.pts, op->op.u.polygon.cnt, &bb);
 	    break;
 	case xd_text :
-	    op->span = NEW(textspan_t);
+	    op->span = gv_alloc(sizeof(textspan_t));
 	    op->span->str = gv_strdup (op->op.u.text.text);
 	    op->span->just = adjust [op->op.u.text.align];
 	    tf.name = fontname;

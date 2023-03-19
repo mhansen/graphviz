@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `nspans` field of `textlabel_t.u.txt` is now a `size_t`.
 - **Breaking**: The `sflag` and `eflag` fields of the `bezier` struct are now
   `uint32_t`s.
+- **Breaking**: The `nvertices` field of the `stroke_t` struct is now a
+  `size_t`.
 
 ### Fixed
 
@@ -51,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A buffer overflow in Smyrna when loading GVPR scripts has been corrected.
 - A buffer overflow when loading a plugin with a long type string has been
   corrected.
+- Graphs that involve more than 2000 stroke points during tapering calculations
+  no longer cause out of bounds writes.
 
 ### Removed
 
@@ -76,6 +80,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `GVRENDER_DOES_ARROWS` constant has been removed.
 - The extra cmpnd.c code is no longer shipped in the Graphviz distribution
   tarball.
+- **Breaking**: The `STROKE_CLOSED`, `STROKE_FILLED`, `STROKE_PENDOWN`, and
+  `STROKE_VERTICES_ALLOCATED` constants have been removed.
+- **Breaking**: The `stoke_t.flags` field has been removed.
 
 ## [7.1.0] – 2023-01-21
 

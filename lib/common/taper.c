@@ -13,20 +13,23 @@
  */
 
 #include "config.h"
-
+#include <assert.h>
+#include <limits.h>
 #include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <types.h>
 #include <common/memory.h>
+#include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/list.h>
+#include <cgraph/prisize_t.h>
 #include <common/utils.h>
 
   /* sample point size; should be dynamic based on dpi or under user control */
 #define BEZIERSUBDIVISION 20
-
-  /* initial guess of array size */
-#define INITSZ 2000
 
   /* convert degrees to radians and vice versa */
 #ifndef M_PI
@@ -44,10 +47,8 @@ static void addto (stroke_t* p, double x, double y)
 {
     pointf pt;
 
-    if (p->nvertices >= p->flags) {
-	p->flags =+ INITSZ;
-	p->vertices = RALLOC(p->flags,p->vertices,pointf);
-    }
+    p->vertices = gv_recalloc(p->vertices, p->nvertices, p->nvertices + 1,
+                              sizeof(pointf));
     pt.x = x;
     pt.y = y;
     p->vertices[p->nvertices++] = pt;
@@ -63,7 +64,7 @@ static void arcn (stroke_t* p, double x, double y, double r, double a1, double a
     while (a2 > a1) a2 -= 2*M_PI;
     theta = a1 - a2; 
     while (theta > 2*M_PI) theta -= 2*M_PI;
-    theta /= (BEZIERSUBDIVISION-1);
+    theta /= BEZIERSUBDIVISION - 1;
     for (i = 1; i < BEZIERSUBDIVISION; i++)
 	addto (p, x+r*cos(a1-i*theta), y+r*sin(a1-i*theta));
 }
@@ -74,13 +75,11 @@ static void arcn (stroke_t* p, double x, double y, double r, double a1, double a
 static double myatan (double y, double x)
 {
     double v;
-    if ((x == 0) && (y == 0))
+    if (x == 0 && y == 0)
 	return 0;
-    else {
-	v = atan2 (y, x);
-	if (v >= 0) return v;
-	else return (v + 2*M_PI);
-    }
+    v = atan2 (y, x);
+    if (v >= 0) return v;
+    return v + 2 * M_PI;
 }
 
 /*
@@ -89,9 +88,9 @@ static double myatan (double y, double x)
 static double mymod (double original, double modulus)
 {
     double v;
-    if ((original < 0) || (original >= modulus)) {
+    if (original < 0 || original >= modulus) {
 	v = -floor(original/modulus);
-	return ((v*modulus) + original);
+	return v * modulus + original;
     }
     return original;
 }
@@ -103,70 +102,30 @@ typedef struct {
     char type;
     double dir;
     double lout;
-    int bevel;
+    bool bevel;
     double dir2;
 } pathpoint;
 
-typedef struct {
-    pathpoint* pts;
-    int cnt;
-    int sz;
-} vararr_t;
-
-
-static vararr_t*
-newArr (void)
-{
-    vararr_t* arr = NEW(vararr_t);
-
-    arr->cnt = 0;
-    arr->sz = INITSZ;
-    arr->pts = N_NEW(INITSZ,pathpoint);
-
-    return arr;
-}
+DEFINE_LIST(vararr, pathpoint)
 
 static void
 insertArr (vararr_t* arr, pointf p, double l)
 {
-    if (arr->cnt >= arr->sz) {
-	arr->sz *= 2;
-	arr->pts = RALLOC(arr->sz,arr->pts,pathpoint);
-    }
-
-    arr->pts[arr->cnt].x = p.x; 
-    arr->pts[arr->cnt].y = p.y; 
-    arr->pts[arr->cnt++].lengthsofar = l; 
+  pathpoint pt = {.x = p.x, .y = p.y, .lengthsofar = l};
+  vararr_append(arr, pt);
 }
 
 #ifdef DEBUG
 static void
 printArr (vararr_t* arr, FILE* fp)
 {
-    int i;
-    pathpoint pt;
-
-    fprintf (fp, "cnt %d sz %d\n", arr->cnt, arr->sz);
-    for (i = 0; i < arr->cnt; i++) {
-	pt = arr->pts[i];
+    fprintf(fp, "size %" PRISIZE_T "\n", vararr_size(arr));
+    for (size_t i = 0; i < vararr_size(arr); i++) {
+	pathpoint pt = vararr_get(arr, i);
 	fprintf (fp, "  [%d] x %.02f y  %.02f d %.02f\n", i, pt.x, pt.y, pt.lengthsofar);
     }
 }
 #endif
-
-static void
-fixArr (vararr_t* arr)
-{
-    if (arr->sz > arr->cnt)
-	arr->pts = RALLOC(arr->cnt,arr->pts,pathpoint);
-}
-
-static void
-freeArr (vararr_t* arr)
-{
-    free (arr->pts);
-    free (arr);
-}
 
 static double l2dist (pointf p0, pointf p1)
 {
@@ -178,16 +137,15 @@ static double l2dist (pointf p0, pointf p1)
 /* analyze current path, creating pathpoints array
  * turn all curves into lines
  */
-static vararr_t* pathtolines (bezier* bez)
-{
+static vararr_t pathtolines(bezier *bez) {
     int i, j, step;
     double seglen, linelen = 0;
-    vararr_t* arr = newArr();
+    vararr_t arr = {0};
     pointf p0, p1, V[4];
     int n = bez->size;
     pointf* A = bez->list;
 
-    insertArr (arr, A[0], 0);
+    insertArr(&arr, A[0], 0);
     V[3] = A[0];
     for (i = 0; i + 3 < n; i += 3) {
 	V[0] = V[3];
@@ -203,14 +161,13 @@ static vararr_t* pathtolines (bezier* bez)
 	     */
 	    /* if (seglen > initwid/10) { */
 		linelen += seglen;
-		insertArr (arr, p1, linelen); 
+		insertArr(&arr, p1, linelen);
 	    /* } */
 	    p0 = p1;
 	}
     }
-    fixArr (arr);
 #ifdef DEBUG
-    printArr (arr, stderr);
+    printArr(&arr, stderr);
 #endif
     return arr;
 }
@@ -253,11 +210,9 @@ typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
  */
 stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, int linecap)
 {
-    int i, l, n;
-    int pathcount, bevel;
+    int l, n;
     double direction=0, direction_2=0;
-    vararr_t* arr = pathtolines (bez);
-    pathpoint* pathpoints;
+    vararr_t arr = pathtolines(bez);
     pathpoint cur_point, last_point, next_point;
     double x=0, y=0, dist;
     double nx, ny, ndir;
@@ -265,14 +220,16 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
     double lineout=0, linerad=0, linelen=0;
     double theta, phi;
 
-    pathcount = arr->cnt;
-    pathpoints = arr->pts;
+    size_t pathcount = vararr_size(&arr);
+    pathpoint *pathpoints = vararr_detach(&arr);
     linelen = pathpoints[pathcount-1].lengthsofar;
 
     /* determine miter and bevel points and directions */
-    for (i = 0; i < pathcount; i++) {
-	l = mymod(i-1,pathcount);
-	n = mymod(i+1,pathcount);
+    for (size_t i = 0; i < pathcount; i++) {
+	assert(i <= INT_MAX);
+	assert(pathcount <= INT_MAX);
+	l = mymod((int)i - 1, (int)pathcount);
+	n = mymod((int)i + 1, (int)pathcount);
 
 	cur_point = pathpoints[i];
 	x = cur_point.x;
@@ -289,13 +246,13 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	ly = last_point.y;
 	ldir = myatan (ly-y, lx-x);
 
-	bevel = FALSE;
+	bool bevel = false;
 	direction_2 = 0;
 
 	    /* effective line radius at this point */
 	linerad = radfunc(dist, linelen, initwid);
 
- 	if ((i == 0) || (i == pathcount-1)) {
+ 	if (i == 0 || i == pathcount-1) {
 	    lineout = linerad;
 	    if (i == 0) {
 		direction = ndir + D2R(90);
@@ -316,22 +273,22 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	    if (theta < 0) {
 		theta += D2R(360);
 	    }
-	    phi = D2R(90)-(theta/2);
+	    phi = D2R(90) - theta / 2;
 		 /* actual distance to junction point */
 	    if (cos(phi) == 0) {
 		lineout = 0;
 	    } else {
-		lineout = linerad/(cos(phi));
+		lineout = linerad / cos(phi);
 	    }
 		 /* direction to junction point */
 	    direction = ndir+D2R(90)+phi;
-	    if ((0 != linejoin) || (lineout > currentmiterlimit * linerad)) {
-		bevel = TRUE;
+	    if (0 != linejoin || lineout > currentmiterlimit * linerad) {
+		bevel = true;
 		lineout = linerad;
 		direction = mymod(ldir-D2R(90),D2R(360));
 		direction_2 = mymod(ndir+D2R(90),D2R(360));
 		if (i == pathcount-1) {
-		    bevel = FALSE;
+		    bevel = false;
 		}
 	    } else {
 		direction_2 = direction;
@@ -350,13 +307,13 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	 /* draw line */
     stroke_t p = {0};
 	 /* side 1 */
-    for (i = 0; i < pathcount; i++) {
+    for (size_t i = 0; i < pathcount; i++) {
 	cur_point = pathpoints[i];
 	x = cur_point.x;
 	y = cur_point.y;
 	direction = cur_point.dir;
 	lineout = cur_point.lout;
-	bevel = cur_point.bevel;
+	bool bevel = cur_point.bevel;
 	direction_2 = cur_point.dir2;
 	if (i == 0) {
 	    moveto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
@@ -375,13 +332,14 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
     }
 	 /* side 2 */
-    for (i = pathcount-2; i >= 0; i--) {
+    assert(pathcount > 0);
+    for (size_t i = pathcount - 2; i != SIZE_MAX; i--) {
 	cur_point = pathpoints[i];
 	x = cur_point.x;
 	y = cur_point.y;
 	direction = cur_point.dir + D2R(180);
 	lineout = cur_point.lout;
-	bevel = cur_point.bevel;
+	bool bevel = cur_point.bevel;
 	direction_2 = cur_point.dir2 + D2R(180);
 	lineto(&p, x+cos(direction_2)*lineout, y+sin(direction_2)*lineout);
 	if (bevel) { 
@@ -393,14 +351,14 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	arcn(&p, x,y,lineout,direction,direction+D2R(180));
     }
     /* closepath(&p); */
-    freeArr (arr);
+    free(pathpoints);
     return p;
 }
 
 #ifdef TEST
 static double halffunc (double curlen, double totallen, double initwid)
 {
-    return ((1 - (curlen/totallen))*initwid/2.0);
+  return (1 - curlen / totallen) * initwid / 2.0;
 }
 
 static pointf pts[] = {
@@ -414,14 +372,13 @@ main ()
 {
     stroke_t* sp;
     bezier bez;
-    int i;
 
     bez.size = sizeof(pts)/sizeof(pointf);
     bez.list = pts;
     sp = taper(&bez, halffunc, 20.0, 0, 0);
     printf ("newpath\n");
     printf ("%.02f %.02f moveto\n", sp->vertices[0].x, sp->vertices[0].y);
-    for (i=1; i<sp->nvertices; i++)
+    for (size_t i = 1; i < sp->nvertices; i++)
         printf ("%.02f %.02f lineto\n", sp->vertices[i].x, sp->vertices[i].y);
     printf ("fill showpage\n");
 }

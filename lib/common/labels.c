@@ -114,7 +114,7 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
  */
 textlabel_t *make_label(void *obj, char *str, int kind, double fontsize, char *fontname, char *fontcolor)
 {
-    textlabel_t *rv = NEW(textlabel_t);
+    textlabel_t *rv = gv_alloc(sizeof(textlabel_t));
     graph_t *g = NULL, *sg = NULL;
     node_t *n = NULL;
     edge_t *e = NULL;

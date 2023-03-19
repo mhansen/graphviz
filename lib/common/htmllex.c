@@ -580,7 +580,7 @@ static void mkBR(char **atts)
 
 static htmlimg_t *mkImg(char **atts)
 {
-    htmlimg_t *img = NEW(htmlimg_t);
+    htmlimg_t *img = gv_alloc(sizeof(htmlimg_t));
 
     doAttrs(img, img_items, sizeof(img_items) / ISIZE, atts, "<IMG>");
 
@@ -602,7 +602,7 @@ static textfont_t *mkFont(GVC_t *gvc, char **atts, unsigned char flags) {
 
 static htmlcell_t *mkCell(char **atts)
 {
-    htmlcell_t *cell = NEW(htmlcell_t);
+    htmlcell_t *cell = gv_alloc(sizeof(htmlcell_t));
 
     cell->colspan = 1;
     cell->rowspan = 1;
@@ -613,7 +613,7 @@ static htmlcell_t *mkCell(char **atts)
 
 static htmltbl_t *mkTbl(char **atts)
 {
-    htmltbl_t *tbl = NEW(htmltbl_t);
+    htmltbl_t *tbl = gv_alloc(sizeof(htmltbl_t));
 
     tbl->row_count = SIZE_MAX; // flag that table is a raw, parsed table
     tbl->cellborder = -1; // unset cell border attribute

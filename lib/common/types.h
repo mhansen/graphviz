@@ -160,16 +160,9 @@ extern "C" {
 
     typedef struct stroke_t {	/* information about a single stroke */
 	/* we would have called it a path if that term wasn't already used */
-	int nvertices;		/* number of points in the stroke */
-	int flags;		/* stroke style flags */
+	size_t nvertices; ///< number of points in the stroke
 	pointf *vertices;	/* array of vertex points */
     } stroke_t;
-
-/* flag definitions for stroke_t */
-#define STROKE_CLOSED (1 << 0)
-#define STROKE_FILLED (1 << 1)
-#define STROKE_PENDOWN (1 << 2)
-#define STROKE_VERTICES_ALLOCATED (1 << 3)
 
     typedef struct shape_functions {	/* read-only shape functions */
 	void (*initfn) (node_t *);	/* initializes shape from node u.shape_info structure */

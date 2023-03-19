@@ -9,10 +9,9 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
 #include <stddef.h>
 #include <common/intset.h>
-#include <common/memory.h>
 
 static void*
 mkIntItem(Dt_t* d,intitem* obj,Dtdisc_t* disc)
@@ -20,7 +19,7 @@ mkIntItem(Dt_t* d,intitem* obj,Dtdisc_t* disc)
     (void)d;
     (void)disc;
 
-    intitem* np = NEW(intitem);
+    intitem* np = gv_alloc(sizeof(intitem));
     np->id = obj->id;
     return np;
 }

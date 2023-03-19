@@ -15,6 +15,7 @@
 #include <gvc/gvc.h>
 #include <xdot/xdot.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
@@ -632,7 +633,7 @@ void graph_init(graph_t * g, bool use_rankdir)
     static char *fontnamenames[] = {"gd","ps","svg", NULL};
     static int fontnamecodes[] = {NATIVEFONTS,PSFONTS,SVGFONTS,-1};
     int rankdir;
-    GD_drawing(g) = NEW(layout_t);
+    GD_drawing(g) = gv_alloc(sizeof(layout_t));
 
     /* reparseable input */
     if ((p = agget(g, "postaction"))) {   /* requires a graph wrapper for yyparse */

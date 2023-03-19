@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include <sys/stat.h>
-
+#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <gvc/gvio.h>
 #include <cgraph/strcasecmp.h>
@@ -110,7 +110,7 @@ void epsf_init(node_t * n)
 	dy = us->h;
 	ND_width(n) = PS2INCH(dx);
 	ND_height(n) = PS2INCH(dy);
-	ND_shape_info(n) = desc = NEW(epsf_t);
+	ND_shape_info(n) = desc = gv_alloc(sizeof(epsf_t));
 	desc->macro_id = us->macro_id;
 	desc->offset.x = -us->x - dx / 2;
 	desc->offset.y = -us->y - dy / 2;

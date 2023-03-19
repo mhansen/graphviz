@@ -14,6 +14,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/prisize_t.h>
 #include <common/render.h>
 #include <limits.h>
@@ -330,7 +331,7 @@ static int tight_subtree_search(Agnode_t *v, subtree_t *st)
 static subtree_t *find_tight_subtree(Agnode_t *v)
 {
     subtree_t       *rv;
-    rv = NEW(subtree_t);
+    rv = gv_alloc(sizeof(subtree_t));
     rv->rep = v;
     rv->size = tight_subtree_search(v,rv);
     if (rv->size < 0) {
@@ -448,8 +449,7 @@ static
 STheap_t *STbuildheap(subtree_t **elt, int size)
 {
     int     i;
-    STheap_t *heap;
-    heap = NEW(STheap_t);
+    STheap_t *heap = gv_alloc(sizeof(STheap_t));
     heap->elt = elt;
     heap->size = size;
     for (i = 0; i < heap->size; i++) heap->elt[i]->heap_index = i;
