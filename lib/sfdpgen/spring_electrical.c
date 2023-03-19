@@ -49,7 +49,7 @@ spring_electrical_control spring_electrical_control_new(){
   ctrl->step = 0.1;
   ctrl->adaptive_cooling = TRUE;
   ctrl->random_seed = 123;
-  ctrl->beautify_leaves = FALSE;
+  ctrl->beautify_leaves = false;
   ctrl->smoothing = SMOOTHING_NONE;
   ctrl->overlap = 0;
   ctrl->do_shrinking = 1;
@@ -87,7 +87,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
   fprintf (stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool, ctrl->step, ctrl->adaptive_cooling);
   fprintf (stderr, "  beautify_leaves %d node weights %d rotation %.03f\n",
-    ctrl->beautify_leaves, 0, ctrl->rotation);
+           (int)ctrl->beautify_leaves, 0, ctrl->rotation);
   fprintf (stderr, "  smoothing %s overlap %d initial_scaling %.03f do_shrinking %d\n",
     smoothings[ctrl->smoothing], ctrl->overlap, ctrl->initial_scaling, ctrl->do_shrinking);
   fprintf (stderr, "  octree scheme %s method %s\n", tschemes[ctrl->tscheme], methods[ctrl->method]);

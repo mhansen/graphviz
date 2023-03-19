@@ -11,6 +11,7 @@
 #pragma once
 
 #include <sparse/SparseMatrix.h>
+#include <stdbool.h>
 
 enum {ERROR_NOT_SQUARE_MATRIX = -100};
 
@@ -41,7 +42,7 @@ struct spring_electrical_control_struct {
   double step;/* initial step size */
   int adaptive_cooling;
   int random_seed;
-  int beautify_leaves;
+  bool beautify_leaves : 1;
   int smoothing;
   int overlap;
   int do_shrinking;

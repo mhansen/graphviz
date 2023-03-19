@@ -241,7 +241,7 @@ tuneControl (graph_t* g, spring_electrical_control ctrl)
     ctrl->smoothing = late_smooth(g, agfindgraphattr(g, "smoothing"), SMOOTHING_NONE);
     ctrl->tscheme = late_quadtree_scheme(g, agfindgraphattr(g, "quadtree"), QUAD_TREE_NORMAL);
     ctrl->method = METHOD_SPRING_ELECTRICAL;
-    ctrl->beautify_leaves = mapBool(agget(g, "beautify"), false) ? TRUE : FALSE;
+    ctrl->beautify_leaves = mapBool(agget(g, "beautify"), false);
     ctrl->do_shrinking = mapBool(agget(g, "overlap_shrink"), true) ? TRUE : FALSE;
     ctrl->rotation = late_double(g, agfindgraphattr(g, "rotation"), 0.0, -MAXDOUBLE);
     ctrl->edge_labeling_scheme = late_int(g, agfindgraphattr(g, "label_scheme"), 0, 0);
