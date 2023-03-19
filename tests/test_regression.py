@@ -7,6 +7,7 @@ of these indicates that a past bug has been reintroduced.
 
 import io
 import json
+import math
 import os
 import platform
 import re
@@ -27,6 +28,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     ROOT,
     dot,
     gvpr,
+    is_python36,
     remove_xtype_warnings,
     run_c,
     which,
@@ -2335,6 +2337,90 @@ def test_2282():
 
     # confirm this is valid JSON
     json.loads(output)
+
+
+@pytest.mark.skipif(is_python36(), reason=".='text' XPath syntax not supported")
+@pytest.mark.xfail()
+def test_2283():
+    """
+    `beautify=true` should correctly space nodes
+    https://gitlab.com/graphviz/graphviz/-/issues/2283
+    """
+
+    # find our collocated test case
+    input = Path(__file__).parent / "2283.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # translate this to SVG
+    p = subprocess.run(
+        ["dot", "-Tsvg", input],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    # if sfdp was built without libgts, it will not handle anything non-trivial
+    no_gts_error = "remove_overlap: Graphviz not built with triangulation library"
+    if no_gts_error in p.stderr:
+        assert p.returncode != 0, "sfdp returned success after an error message"
+        return
+    p.check_returncode()
+
+    svg = p.stdout
+
+    # parse this into something we can inspect
+    root = ET.fromstring(svg)
+
+    # find node N0
+    n0s = root.findall(
+        ".//{http://www.w3.org/2000/svg}title[.='N0']/../{http://www.w3.org/2000/svg}ellipse"
+    )
+    assert len(n0s) == 1, "failed to locate node N0"
+    n0 = n0s[0]
+
+    # find node N1
+    n1s = root.findall(
+        ".//{http://www.w3.org/2000/svg}title[.='N1']/../{http://www.w3.org/2000/svg}ellipse"
+    )
+    assert len(n1s) == 1, "failed to locate node N1"
+    n1 = n1s[0]
+
+    # find node N6
+    n6s = root.findall(
+        ".//{http://www.w3.org/2000/svg}title[.='N6']/../{http://www.w3.org/2000/svg}ellipse"
+    )
+    assert len(n6s) == 1, "failed to locate node N6"
+    n6 = n6s[0]
+
+    # N1 and N6 should not have been drawn on top of each other
+    n1_x = float(n1.attrib["cx"])
+    n1_y = float(n1.attrib["cy"])
+    n6_x = float(n6.attrib["cx"])
+    n6_y = float(n6.attrib["cy"])
+
+    def sameish(a: float, b: float) -> bool:
+        EPSILON = 0.2
+        return -EPSILON < abs(a - b) < EPSILON
+
+    assert not (
+        sameish(n1_x, n6_x) and sameish(n1_y, n6_y)
+    ), "N1 and N6 placed identically"
+
+    # use the Law of Cosines to compute the angle between N0→N1 and N0→N6
+    n0_x = float(n0.attrib["cx"])
+    n0_y = float(n0.attrib["cy"])
+    n0_n1_dist = math.dist((n0_x, n0_y), (n1_x, n1_y))
+    n0_n6_dist = math.dist((n0_x, n0_y), (n6_x, n6_y))
+    n1_n6_dist = math.dist((n1_x, n1_y), (n6_x, n6_y))
+    angle = math.acos(
+        (n0_n1_dist**2 + n0_n6_dist**2 - n1_n6_dist**2)
+        / (2 * n0_n1_dist * n0_n6_dist)
+    )
+
+    number_of_radial_nodes = 6
+    assert sameish(
+        angle, 2 * math.pi / number_of_radial_nodes
+    ), "nodes not placed evenly"
 
 
 @pytest.mark.skipif(which("gxl2gv") is None, reason="gxl2gv not available")
