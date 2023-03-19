@@ -905,15 +905,20 @@ static pointf arrow_type_dot(GVJ_t *job, pointf p, pointf u, double arrowsize,
 
     r = hypot(u.x, u.y) / 2.;
 
-    const pointf P = {-u.x, -u.y};
-    // phi = angle of arrow
-    const double cosPhi = P.x / hypot(P.x, P.y);
-    const double sinPhi = P.y / hypot(P.x, P.y);
-    const pointf delta = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    pointf delta = {0, 0};
 
-    // move the arrow backwards to not visually overlap the node
-    p.x -= delta.x;
-    p.y -= delta.y;
+    if (u.x != 0 || u.y != 0) {
+	const pointf P = {-u.x, -u.y};
+	// phi = angle of arrow
+	const double cosPhi = P.x / hypot(P.x, P.y);
+	const double sinPhi = P.y / hypot(P.x, P.y);
+	delta = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+
+	// move the arrow backwards to not visually overlap the node
+	p.x -= delta.x;
+	p.y -= delta.y;
+    }
+
 
     AF[0].x = p.x + u.x / 2. - r;
     AF[0].y = p.y + u.y / 2. - r;
