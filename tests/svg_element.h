@@ -14,6 +14,7 @@ namespace SVG {
 struct SVGPoint {
   double x;
   double y;
+  bool operator==(const SVGPoint &rhs) const;
   bool is_higher_than(const SVGPoint &other) const;
   bool is_lower_than(const SVGPoint &other) const;
   bool is_more_left_than(const SVGPoint &other) const;

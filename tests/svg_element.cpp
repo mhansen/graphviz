@@ -960,6 +960,10 @@ std::string_view SVG::tag(SVGElementType type) {
   UNREACHABLE();
 }
 
+bool SVG::SVGPoint::operator==(const SVGPoint &rhs) const {
+  return x == rhs.x && y == rhs.y;
+}
+
 bool SVG::SVGPoint::is_higher_than(const SVGPoint &other) const {
   // SVG uses inverted y axis, so smaller is higher
   return y < other.y;
