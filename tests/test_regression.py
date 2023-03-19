@@ -2039,7 +2039,7 @@ def test_xdot_json():
         # https://gitlab.com/graphviz/graphviz/-/issues/1777 is fixed
         if os.getenv("build_system") == "msbuild":
             pytest.skip(
-                "Windows MSBuild release does not contain any header " "files (#1777)"
+                "Windows MSBuild release does not contain any header files (#1777)"
             )
         raise
     assert err == ""
