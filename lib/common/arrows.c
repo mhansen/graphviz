@@ -16,6 +16,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #define EPSILON .0001
 
@@ -25,32 +26,63 @@
 #define NUMB_OF_ARROW_HEADS  4
 /* each arrow in 8 bits.  Room for NUMB_OF_ARROW_HEADS arrows in 32 bit int. */
 
-#define BITS_PER_ARROW 8
-
 #define BITS_PER_ARROW_TYPE 4
-/* arrow types (in BITS_PER_ARROW_TYPE bits) */
-#define ARR_TYPE_NONE	  (ARR_NONE)
-#define ARR_TYPE_NORM	  1
-#define ARR_TYPE_CROW	  2
-#define ARR_TYPE_TEE	  3
-#define ARR_TYPE_BOX	  4
-#define ARR_TYPE_DIAMOND  5
-#define ARR_TYPE_DOT      6
-#define ARR_TYPE_CURVE    7
-#define ARR_TYPE_GAP      8
-/* Spare: 9-15 */
+/// arrow types
+enum {
+  ARR_TYPE_NONE = ARR_NONE,
+  ARR_TYPE_NORM = 1,
+  ARR_TYPE_CROW = 2,
+  ARR_TYPE_TEE = 3,
+  ARR_TYPE_BOX = 4,
+  ARR_TYPE_DIAMOND = 5,
+  ARR_TYPE_DOT = 6,
+  ARR_TYPE_CURVE = 7,
+  ARR_TYPE_GAP = 8
+};
 
-/* arrow mods (in (BITS_PER_ARROW - BITS_PER_ARROW_TYPE) bits) */
-#define ARR_MOD_OPEN      (1<<(BITS_PER_ARROW_TYPE+0))
-#define ARR_MOD_INV       (1<<(BITS_PER_ARROW_TYPE+1))
-#define ARR_MOD_LEFT      (1<<(BITS_PER_ARROW_TYPE+2))
-#define ARR_MOD_RIGHT     (1<<(BITS_PER_ARROW_TYPE+3))
-/* No spares */
+/// an arrow type with optional modifications
+typedef struct {
+  uint8_t type : BITS_PER_ARROW_TYPE;
+  bool mod_open : 1;
+  bool mod_inv : 1;
+  bool mod_left : 1;
+  bool mod_right : 1;
+} arrowflag_t;
+
+/// does this arrow have any modifications set?
+static bool flag_has_mods(arrowflag_t f) {
+  if (f.mod_open) return true;
+  if (f.mod_inv) return true;
+  if (f.mod_left) return true;
+  if (f.mod_right) return true;
+  return false;
+}
+
+/// a collection of up to 4 arrows
+typedef struct {
+  arrowflag_t flags[NUMB_OF_ARROW_HEADS];
+} arrowflags_t;
+
+/// serialize an arrow collection
+static uint32_t flags_to_int(arrowflags_t f) {
+  assert(sizeof(f) <= sizeof(uint32_t));
+  uint32_t u = 0;
+  memcpy(&u, &f, sizeof(f));
+  return u;
+}
+
+/// deserialize an arrow collection
+static arrowflags_t int_to_flags(uint32_t f) {
+  assert(sizeof(f) <= sizeof(uint32_t));
+  arrowflags_t flags = {0};
+  memcpy(&flags, &f, sizeof(flags));
+  return flags;
+}
 
 typedef struct {
     char *dir;
-    uint32_t sflag;
-    uint32_t eflag;
+    uint8_t stype : BITS_PER_ARROW_TYPE;
+    uint8_t etype : BITS_PER_ARROW_TYPE;
 } arrowdir_t;
 
 static const arrowdir_t Arrowdirs[] = {
@@ -63,77 +95,77 @@ static const arrowdir_t Arrowdirs[] = {
 
 typedef struct {
     char *name;
-    uint32_t type;
+    arrowflag_t type;
 } arrowname_t;
 
 static const arrowname_t Arrowsynonyms[] = {
     /* synonyms for deprecated arrow names - included for backward compatibility */
     /*  evaluated before primary names else "invempty" would give different results */
-    {"invempty", (ARR_TYPE_NORM | ARR_MOD_INV | ARR_MOD_OPEN)},	/* oinv     */
+    {"invempty", {.type = ARR_TYPE_NORM, .mod_inv = true, .mod_open = true}}, // oinv
     {0}
 };
 
 static const arrowname_t Arrowmods[] = {
-    {"o", ARR_MOD_OPEN},
-    {"r", ARR_MOD_RIGHT},
-    {"l", ARR_MOD_LEFT},
+    {"o", {.mod_open = true}},
+    {"r", {.mod_right = true}},
+    {"l", {.mod_left = true}},
     /* deprecated alternates for backward compat */
-    {"e", ARR_MOD_OPEN},	/* o  - needed for "ediamond" */
-    {"half", ARR_MOD_LEFT},	/* l  - needed for "halfopen" */
+    {"e", {.mod_open = true}}, // o  - needed for "ediamond"
+    {"half", {.mod_left = true}}, // l  - needed for "halfopen"
     {0}
 };
 
 static const arrowname_t Arrownames[] = {
-    {"normal", ARR_TYPE_NORM},
-    {"crow", ARR_TYPE_CROW},
-    {"tee", ARR_TYPE_TEE},
-    {"box", ARR_TYPE_BOX},
-    {"diamond", ARR_TYPE_DIAMOND},
-    {"dot", ARR_TYPE_DOT},
-    {"none", ARR_TYPE_GAP},
-    /* ARR_MOD_INV is used only here to define two additional shapes
-       since not all types can use it */
-    {"inv", (ARR_TYPE_NORM | ARR_MOD_INV)},
-    {"vee", (ARR_TYPE_CROW | ARR_MOD_INV)},
+    {"normal", {.type = ARR_TYPE_NORM}},
+    {"crow", {.type = ARR_TYPE_CROW}},
+    {"tee", {.type = ARR_TYPE_TEE}},
+    {"box", {.type = ARR_TYPE_BOX}},
+    {"diamond", {.type = ARR_TYPE_DIAMOND}},
+    {"dot", {.type = ARR_TYPE_DOT}},
+    {"none", {.type = ARR_TYPE_GAP}},
+    // mod_inv is used only here to define two additional shapes
+    // since not all types can use it
+    {"inv", {.type = ARR_TYPE_NORM, .mod_inv = true}},
+    {"vee", {.type = ARR_TYPE_CROW, .mod_inv = true}},
     /* WARNING ugly kludge to deal with "o" v "open" conflict */
-    /* Define "open" as just "pen" since "o" already taken as ARR_MOD_OPEN */
-    /* Note that ARR_MOD_OPEN has no meaning for ARR_TYPE_CROW shape */
-    {"pen", (ARR_TYPE_CROW | ARR_MOD_INV)},
+    // Define "open" as just "pen" since "o" already taken as mod_open
+    // Note that mod_open has no meaning for ARR_TYPE_CROW shape
+    {"pen", {.type = ARR_TYPE_CROW, .mod_inv = true}},
     /* WARNING ugly kludge to deal with "e" v "empty" conflict */
-    /* Define "empty" as just "mpty" since "e" already taken as ARR_MOD_OPEN */
-    /* Note that ARR_MOD_OPEN has expected meaning for ARR_TYPE_NORM shape */
-    {"mpty", ARR_TYPE_NORM},
-    {"curve", ARR_TYPE_CURVE},
-    {"icurve", (ARR_TYPE_CURVE | ARR_MOD_INV)},
+    // Define "empty" as just "mpty" since "e" already taken as mod_open
+    // Note that mod_open has expected meaning for ARR_TYPE_NORM shape
+    {"mpty", {.type = ARR_TYPE_NORM}},
+    {"curve", {.type = ARR_TYPE_CURVE}},
+    {"icurve", {.type = ARR_TYPE_CURVE, .mod_inv = true}},
     {0}
 };
 
 typedef struct {
-    uint32_t type;
+    uint8_t type : BITS_PER_ARROW_TYPE;
     double lenfact;		/* ratio of length of this arrow type to standard arrow */
     pointf (*gen)(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                  double penwidth, uint32_t flag); ///< generator function for
-                                                   ///< type
+                  double penwidth, arrowflag_t flag); ///< generator function
+                                                      ///< for type
     double (*len)(double lenfact, double arrowsize, double penwidth,
-                  uint32_t flag); ///< penwidth dependent length
+                  arrowflag_t flag); ///< penwidth dependent length
 } arrowtype_t;
 
 /* forward declaration of functions used in Arrowtypes[] */
-static pointf arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
-static pointf arrow_type_crow(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
-static pointf arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
-static pointf arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
-static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
-static pointf arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
-static pointf arrow_type_curve(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
-static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
+static pointf arrow_type_normal(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, arrowflag_t flag);
+static pointf arrow_type_crow(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, arrowflag_t flag);
+static pointf arrow_type_tee(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, arrowflag_t flag);
+static pointf arrow_type_box(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, arrowflag_t flag);
+static pointf arrow_type_diamond(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, arrowflag_t flag);
+static pointf arrow_type_dot(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, arrowflag_t flag);
+static pointf arrow_type_curve(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, arrowflag_t flag);
+static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, arrowflag_t flag);
 
-static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, uint32_t flag);
-static double arrow_length_normal(double lenfact, double arrowsize, double penwidth, uint32_t flag);
-static double arrow_length_tee(double lenfact, double arrowsize, double penwidth, uint32_t flag);
-static double arrow_length_box(double lenfact, double arrowsize, double penwidth, uint32_t flag);
-static double arrow_length_diamond(double lenfact, double arrowsize, double penwidth, uint32_t flag);
-static double arrow_length_dot(double lenfact, double arrowsize, double penwidth, uint32_t flag);
+static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, arrowflag_t flag);
+static double arrow_length_normal(double lenfact, double arrowsize, double penwidth, arrowflag_t flag);
+static double arrow_length_tee(double lenfact, double arrowsize, double penwidth, arrowflag_t flag);
+static double arrow_length_box(double lenfact, double arrowsize, double penwidth, arrowflag_t flag);
+static double arrow_length_diamond(double lenfact, double arrowsize, double penwidth, arrowflag_t flag);
+static double arrow_length_dot(double lenfact, double arrowsize, double penwidth, arrowflag_t flag);
 
 static const arrowtype_t Arrowtypes[] = {
     {ARR_TYPE_NORM, 1.0, arrow_type_normal, arrow_length_normal},
@@ -149,8 +181,19 @@ static const arrowtype_t Arrowtypes[] = {
 static const size_t Arrowtypes_size =
   sizeof(Arrowtypes) / sizeof(Arrowtypes[0]);
 
+/// perform something like bitwise OR on two arrow flags
+static arrowflag_t arrow_or(arrowflag_t a, arrowflag_t b) {
+  return (arrowflag_t){
+    .type = a.type == ARR_TYPE_NONE ? b.type : a.type,
+    .mod_open = a.mod_open | b.mod_open,
+    .mod_inv = a.mod_inv | b.mod_inv,
+    .mod_left = a.mod_left | b.mod_left,
+    .mod_right = a.mod_right | b.mod_right
+  };
+}
+
 static char *arrow_match_name_frag(char *name, const arrowname_t *arrownames,
-                                   uint32_t *flag) {
+                                   arrowflag_t *flag) {
     size_t namelen = 0;
     char *rest = name;
 
@@ -158,7 +201,7 @@ static char *arrow_match_name_frag(char *name, const arrowname_t *arrownames,
          arrowname++) {
 	namelen = strlen(arrowname->name);
 	if (startswith(name, arrowname->name)) {
-	    *flag |= arrowname->type;
+	    *flag = arrow_or(*flag, arrowname->type);
 	    rest += namelen;
 	    break;
 	}
@@ -166,9 +209,9 @@ static char *arrow_match_name_frag(char *name, const arrowname_t *arrownames,
     return rest;
 }
 
-static char *arrow_match_shape(char *name, uint32_t *flag) {
+static char *arrow_match_shape(char *name, arrowflag_t *flag) {
     char *next, *rest;
-    uint32_t f = ARR_TYPE_NONE;
+    arrowflag_t f = {.type = ARR_TYPE_NONE};
 
     rest = arrow_match_name_frag(name, Arrowsynonyms, &f);
     if (rest == name) {
@@ -178,64 +221,66 @@ static char *arrow_match_shape(char *name, uint32_t *flag) {
 	} while (next != rest);
 	rest = arrow_match_name_frag(rest, Arrownames, &f);
     }
-    if (f && !(f & ((1 << BITS_PER_ARROW_TYPE) - 1)))
-	f |= ARR_TYPE_NORM;
+    if (flag_has_mods(f) && f.type == ARR_TYPE_NONE)
+	f = arrow_or(f, (arrowflag_t){.type = ARR_TYPE_NORM});
     *flag = f;
     return rest;
 }
 
-static void arrow_match_name(char *name, uint32_t *flag) {
+static void arrow_match_name(char *name, arrowflags_t *flag) {
     char *rest = name;
     char *next;
     int i;
 
-    *flag = 0;
+    memset(flag, 0, sizeof(*flag));
     for (i = 0; *rest != '\0' && i < NUMB_OF_ARROW_HEADS; ) {
-	uint32_t f = ARR_TYPE_NONE;
+	arrowflag_t f = {.type = ARR_TYPE_NONE};
 	next = rest;
         rest = arrow_match_shape(next, &f);
-	if (f == ARR_TYPE_NONE) {
+	if (f.type == ARR_TYPE_NONE && !flag_has_mods(f)) {
 	    agerr(AGWARN, "Arrow type \"%s\" unknown - ignoring\n", next);
 	    return;
 	}
-	if (f == ARR_TYPE_GAP && i == NUMB_OF_ARROW_HEADS - 1)
-	    f = ARR_TYPE_NONE;
-	if (f == ARR_TYPE_GAP && i == 0 && *rest == '\0')
-	    f = ARR_TYPE_NONE;
-	if (f != ARR_TYPE_NONE)
-	    *flag |= (f << (i++ * BITS_PER_ARROW));
+	if (f.type == ARR_TYPE_GAP && !flag_has_mods(f) && i == NUMB_OF_ARROW_HEADS - 1)
+	    f.type = ARR_TYPE_NONE;
+	if (f.type == ARR_TYPE_GAP && !flag_has_mods(f) && i == 0 && *rest == '\0')
+	    f.type = ARR_TYPE_NONE;
+	if (f.type != ARR_TYPE_NONE || flag_has_mods(f))
+	    flag->flags[i] = arrow_or(flag->flags[i], f);
     }
 }
 
 void arrow_flags(Agedge_t *e, uint32_t *sflag, uint32_t *eflag) {
     char *attr;
 
-    *sflag = ARR_TYPE_NONE;
-    *eflag = agisdirected(agraphof(e)) ? ARR_TYPE_NORM : ARR_TYPE_NONE;
+    arrowflags_t sf = {.flags = {{.type = ARR_TYPE_NONE}}};
+    arrowflags_t ef = {.flags = {{.type = agisdirected(agraphof(e)) ? ARR_TYPE_NORM : ARR_TYPE_NONE}}};
     if (E_dir && ((attr = agxget(e, E_dir)))[0]) {
 	for (const arrowdir_t *arrowdir = Arrowdirs; arrowdir->dir; arrowdir++) {
 	    if (streq(attr, arrowdir->dir)) {
-		*sflag = arrowdir->sflag;
-		*eflag = arrowdir->eflag;
+		sf.flags[0].type = arrowdir->stype;
+		ef.flags[0].type = arrowdir->etype;
 		break;
 	    }
 	}
     }
-    if (*eflag == ARR_TYPE_NORM) {
+    if (ef.flags[0].type == ARR_TYPE_NORM) {
 	/* we cannot use the pre-constructed E_arrowhead here because the order in
 	 * which edge attributes appear and are thus parsed into a dictionary mean
 	 * E_arrowhead->id potentially points at a stale attribute value entry
 	 */
 	Agsym_t *arrowhead = agfindedgeattr(agraphof(e), "arrowhead");
 	if (arrowhead != NULL && ((attr = agxget(e, arrowhead)))[0])
-		arrow_match_name(attr, eflag);
+		arrow_match_name(attr, &ef);
     }
-    if (*sflag == ARR_TYPE_NORM) {
+    if (sf.flags[0].type == ARR_TYPE_NORM) {
 	/* similar to above, we cannot use E_arrowtail here */
 	Agsym_t *arrowtail = agfindedgeattr(agraphof(e), "arrowtail");
 	if (arrowtail != NULL && ((attr = agxget(e, arrowtail)))[0])
-		arrow_match_name(attr, sflag);
+		arrow_match_name(attr, &sf);
     }
+    *sflag = flags_to_int(sf);
+    *eflag = flags_to_int(ef);
     if (ED_conc_opp_flag(e)) {
 	edge_t *f;
 	uint32_t s0, e0;
@@ -254,13 +299,15 @@ static double arrow_length(edge_t * e, uint32_t flag) {
     const double penwidth = late_double(e, E_penwidth, 1.0, 0.0);
     const double arrowsize = late_double(e, E_arrowsz, 1.0, 0.0);
 
+    arrowflags_t f = int_to_flags(flag);
+
     for (i = 0; i < NUMB_OF_ARROW_HEADS; i++) {
         /* we don't simply index with flag because arrowtypes are not necessarily sorted */
-        uint32_t f = (flag >> (i * BITS_PER_ARROW)) & ((1 << BITS_PER_ARROW_TYPE) - 1);
+        uint8_t type = f.flags[i].type;
         for (size_t j = 0; j < Arrowtypes_size; ++j) {
 	    const arrowtype_t *arrowtype = &Arrowtypes[j];
-	    if (f == arrowtype->type) {
-		const uint32_t arrow_flag = (flag >> (i * BITS_PER_ARROW)) & ((1 << BITS_PER_ARROW) - 1);
+	    if (type == arrowtype->type) {
+		const arrowflag_t arrow_flag = f.flags[i];
 		length += (arrowtype->len)(arrowtype->lenfact, arrowsize, penwidth, arrow_flag);
 	        break;
 	    }
@@ -356,7 +403,7 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 	if (hlen + tlen >= d) {
 	    hlen = tlen = d/3.0;
 	}
-	if (p.y == q.y) { /* horz segment */
+	if (p.y == q.y) { // horizontal segment
 	    s.y = t.y = p.y;
 	    if (p.x < q.x) {
 		t.x = q.x - hlen;
@@ -367,7 +414,7 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 		s.x = p.x - tlen;
 	    }
 	}
-	else {            /* vert segment */
+	else {            // vertical segment
 	    s.x = t.x = p.x;
 	    if (p.y < q.y) {
 		t.y = q.y - hlen;
@@ -393,12 +440,12 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 	if (hlen >= maxd) {   /* arrow too long */
 	    hlen = maxd;
 	}
-	if (p.y == q.y) { /* horz segment */
+	if (p.y == q.y) { // horizontal segment
 	    r.y = p.y;
 	    if (p.x < q.x) r.x = q.x - hlen;
 	    else r.x = q.x + hlen;
 	}
-	else {            /* vert segment */
+	else {            // vertical segment
 	    r.x = p.x;
 	    if (p.y < q.y) r.y = q.y - hlen;
 	    else r.y = q.y + hlen;
@@ -417,12 +464,12 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 	if (tlen >= maxd) {   /* arrow too long */
 	    tlen = maxd;
 	}
-	if (p.y == q.y) { /* horz segment */
+	if (p.y == q.y) { // horizontal segment
 	    r.y = p.y;
 	    if (p.x < q.x) r.x = p.x + tlen;
 	    else r.x = p.x - tlen;
 	}
-	else {            /* vert segment */
+	else {            // vertical segment
 	    r.x = p.x;
 	    if (p.y < q.y) r.y = p.y + tlen;
 	    else r.y = p.y - tlen;
@@ -494,7 +541,7 @@ static pointf miter_point(pointf base_left, pointf P, pointf base_right,
 }
 
 static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
-                                 uint32_t flag, pointf *a) {
+                                 arrowflag_t flag, pointf *a) {
     pointf q, v;
     double arrowwidth;
 
@@ -509,13 +556,13 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
 
     const pointf origin = {0, 0};
     const pointf v_inv = {-v.x, -v.y};
-    const pointf normal_left = flag & ARR_MOD_RIGHT ? origin : v_inv;
-    const pointf normal_right = flag & ARR_MOD_LEFT ? origin : v;
-    const pointf base_left = flag & ARR_MOD_INV ? normal_right : normal_left;
-    const pointf base_right = flag & ARR_MOD_INV ? normal_left : normal_right;
+    const pointf normal_left = flag.mod_right ? origin : v_inv;
+    const pointf normal_right = flag.mod_left ? origin : v;
+    const pointf base_left = flag.mod_inv ? normal_right : normal_left;
+    const pointf base_right = flag.mod_inv ? normal_left : normal_right;
     const pointf normal_tip = {-u.x, -u.y};
     const pointf inv_tip = u;
-    const pointf P = flag & ARR_MOD_INV ? inv_tip : normal_tip ;
+    const pointf P = flag.mod_inv ? inv_tip : normal_tip ;
 
     const pointf P3 = miter_point(base_left, P, base_right, penwidth);
 
@@ -526,7 +573,7 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
     const double sinPhi = P.y / hypot(P.x, P.y);
     const pointf delta_base = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
 
-    if (flag & ARR_MOD_INV) {
+    if (flag.mod_inv) {
 	p.x += delta_base.x;
 	p.y += delta_base.y;
 	q.x += delta_base.x;
@@ -559,34 +606,34 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
 
 static pointf arrow_type_normal(GVJ_t *job, pointf p, pointf u,
                                 double arrowsize, double penwidth,
-                                uint32_t flag) {
+                                arrowflag_t flag) {
     (void)arrowsize;
 
     pointf a[5];
 
     pointf q = arrow_type_normal0(p, u, penwidth, flag, a);
 
-    if (flag & ARR_MOD_LEFT)
-	gvrender_polygon(job, a, 3, !(flag & ARR_MOD_OPEN));
-    else if (flag & ARR_MOD_RIGHT)
-	gvrender_polygon(job, &a[2], 3, !(flag & ARR_MOD_OPEN));
+    if (flag.mod_left)
+	gvrender_polygon(job, a, 3, !flag.mod_open);
+    else if (flag.mod_right)
+	gvrender_polygon(job, &a[2], 3, !flag.mod_open);
     else
-	gvrender_polygon(job, &a[1], 3, !(flag & ARR_MOD_OPEN));
+	gvrender_polygon(job, &a[1], 3, !flag.mod_open);
 
     return q;
 }
 
 static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                              double penwidth, uint32_t flag) {
+                              double penwidth, arrowflag_t flag) {
     pointf m, q, v, w, a[9];
     double arrowwidth, shaftwidth;
 
     arrowwidth = 0.45;
-    if (penwidth > 4 * arrowsize && (flag & ARR_MOD_INV))
+    if (penwidth > 4 * arrowsize && flag.mod_inv)
         arrowwidth *= penwidth / (4 * arrowsize);
 
     shaftwidth = 0;
-    if (penwidth > 1 && (flag & ARR_MOD_INV))
+    if (penwidth > 1 && flag.mod_inv)
 	shaftwidth = 0.05 * (penwidth - 1) / arrowsize;   /* arrowsize to cancel the arrowsize term already in u */
 
     v.x = -u.y * arrowwidth;
@@ -597,7 +644,7 @@ static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
     q.y = p.y + u.y;
     m.x = p.x + u.x * 0.5;
     m.y = p.y + u.y * 0.5;
-    if (flag & ARR_MOD_INV) {  /* vee */
+    if (flag.mod_inv) {  /* vee */
 	a[0] = a[8] = p;
 	a[1].x = q.x - v.x;
 	a[1].y = q.y - v.y;
@@ -628,9 +675,9 @@ static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
 	a[7].x = p.x + v.x;
 	a[7].y = p.y + v.y;
     }
-    if (flag & ARR_MOD_LEFT)
+    if (flag.mod_left)
 	gvrender_polygon(job, a, 6, 1);
-    else if (flag & ARR_MOD_RIGHT)
+    else if (flag.mod_right)
 	gvrender_polygon(job, &a[3], 6, 1);
     else
 	gvrender_polygon(job, a, 9, 1);
@@ -639,7 +686,7 @@ static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
 }
 
 static pointf arrow_type_gap(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                             double penwidth, uint32_t flag) {
+                             double penwidth, arrowflag_t flag) {
     (void)arrowsize;
     (void)penwidth;
     (void)flag;
@@ -656,7 +703,7 @@ static pointf arrow_type_gap(GVJ_t *job, pointf p, pointf u, double arrowsize,
 }
 
 static pointf arrow_type_tee(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                             double penwidth, uint32_t flag) {
+                             double penwidth, arrowflag_t flag) {
     (void)arrowsize;
 
     pointf m, n, q, v, a[4];
@@ -697,10 +744,10 @@ static pointf arrow_type_tee(GVJ_t *job, pointf p, pointf u, double arrowsize,
     a[2].y = n.y - v.y;
     a[3].x = n.x + v.x;
     a[3].y = n.y + v.y;
-    if (flag & ARR_MOD_LEFT) {
+    if (flag.mod_left) {
 	a[0] = m;
 	a[3] = n;
-    } else if (flag & ARR_MOD_RIGHT) {
+    } else if (flag.mod_right) {
 	a[1] = m;
 	a[2] = n;
     }
@@ -716,7 +763,7 @@ static pointf arrow_type_tee(GVJ_t *job, pointf p, pointf u, double arrowsize,
 }
 
 static pointf arrow_type_box(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                             double penwidth, uint32_t flag) {
+                             double penwidth, arrowflag_t flag) {
     (void)arrowsize;
     (void)penwidth;
 
@@ -751,14 +798,14 @@ static pointf arrow_type_box(GVJ_t *job, pointf p, pointf u, double arrowsize,
     a[2].y = m.y - v.y;
     a[3].x = m.x + v.x;
     a[3].y = m.y + v.y;
-    if (flag & ARR_MOD_LEFT) {
+    if (flag.mod_left) {
 	a[0] = p;
 	a[3] = m;
-    } else if (flag & ARR_MOD_RIGHT) {
+    } else if (flag.mod_right) {
 	a[1] = p;
 	a[2] = m;
     }
-    gvrender_polygon(job, a, 4, !(flag & ARR_MOD_OPEN));
+    gvrender_polygon(job, a, 4, !flag.mod_open);
     a[0] = m;
     a[1] = q;
     gvrender_polyline(job, a, 2);
@@ -770,7 +817,7 @@ static pointf arrow_type_box(GVJ_t *job, pointf p, pointf u, double arrowsize,
 }
 
 static pointf arrow_type_diamond0(pointf p, pointf u, double penwidth,
-                                  uint32_t flag, pointf *a) {
+                                  arrowflag_t flag, pointf *a) {
     pointf q, r, v;
 
     v.x = -u.y / 3.;
@@ -783,8 +830,8 @@ static pointf arrow_type_diamond0(pointf p, pointf u, double penwidth,
     const pointf origin = {0, 0};
     const pointf unmod_left = sub_pointf(scale(-0.5, u), v);
     const pointf unmod_right = add_pointf(scale(-0.5, u), v);
-    const pointf base_left = flag & ARR_MOD_RIGHT ? origin : unmod_left;
-    const pointf base_right = flag & ARR_MOD_LEFT ? origin : unmod_right;
+    const pointf base_left = flag.mod_right ? origin : unmod_left;
+    const pointf base_right = flag.mod_left ? origin : unmod_right;
     const pointf tip = scale(-1, u);
     const pointf P = tip;
 
@@ -812,25 +859,25 @@ static pointf arrow_type_diamond0(pointf p, pointf u, double penwidth,
 
 static pointf arrow_type_diamond(GVJ_t *job, pointf p, pointf u,
                                  double arrowsize, double penwidth,
-                                 uint32_t flag) {
+                                 arrowflag_t flag) {
     (void)arrowsize;
 
     pointf a[5];
 
     pointf q = arrow_type_diamond0(p, u, penwidth, flag, a);
 
-    if (flag & ARR_MOD_LEFT)
-	gvrender_polygon(job, &a[2], 3, !(flag & ARR_MOD_OPEN));
-    else if (flag & ARR_MOD_RIGHT)
-	gvrender_polygon(job, a, 3, !(flag & ARR_MOD_OPEN));
+    if (flag.mod_left)
+	gvrender_polygon(job, &a[2], 3, !flag.mod_open);
+    else if (flag.mod_right)
+	gvrender_polygon(job, a, 3, !flag.mod_open);
     else
-	gvrender_polygon(job, a, 4, !(flag & ARR_MOD_OPEN));
+	gvrender_polygon(job, a, 4, !flag.mod_open);
 
     return q;
 }
 
 static pointf arrow_type_dot(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                             double penwidth, uint32_t flag) {
+                             double penwidth, arrowflag_t flag) {
     (void)arrowsize;
     (void)penwidth;
 
@@ -853,7 +900,7 @@ static pointf arrow_type_dot(GVJ_t *job, pointf p, pointf u, double arrowsize,
     AF[0].y = p.y + u.y / 2. - r;
     AF[1].x = p.x + u.x / 2. + r;
     AF[1].y = p.y + u.y / 2. + r;
-    gvrender_ellipse(job, AF, !(flag & ARR_MOD_OPEN));
+    gvrender_ellipse(job, AF, !flag.mod_open);
 
     pointf q = {p.x + u.x, p.y + u.y};
 
@@ -869,7 +916,7 @@ static pointf arrow_type_dot(GVJ_t *job, pointf p, pointf u, double arrowsize,
  * See http://digerati-illuminatus.blogspot.com.au/2008/05/approximating-semicircle-with-cubic.html for details.
  */
 static pointf arrow_type_curve(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                               double penwidth, uint32_t flag) {
+                               double penwidth, arrowflag_t flag) {
     (void)arrowsize;
 
     double arrowwidth = penwidth > 4 ? 0.5 * penwidth / 4 : 0.5;
@@ -891,7 +938,7 @@ static pointf arrow_type_curve(GVJ_t *job, pointf p, pointf u, double arrowsize,
     AF[3].x = p.x - v.x + w.x;
     AF[3].y = p.y - v.y + w.y;
 
-    if (flag & ARR_MOD_INV) {  /* ----(-| */
+    if (flag.mod_inv) {  /* ----(-| */
         AF[1].x = p.x + 0.95 * v.x + w.x + w.x * 4.0 / 3.0;
         AF[1].y = AF[0].y + w.y * 4.0 / 3.0;
 
@@ -907,9 +954,9 @@ static pointf arrow_type_curve(GVJ_t *job, pointf p, pointf u, double arrowsize,
     }
 
     gvrender_polyline(job, a, 2);
-    if (flag & ARR_MOD_LEFT)
+    if (flag.mod_left)
 	Bezier(AF, 3, 0.5, NULL, AF);
-    else if (flag & ARR_MOD_RIGHT)
+    else if (flag.mod_right)
 	Bezier(AF, 3, 0.5, AF, NULL);
     gvrender_beziercurve(job, AF, sizeof(AF) / sizeof(pointf), FALSE);
 
@@ -918,8 +965,8 @@ static pointf arrow_type_curve(GVJ_t *job, pointf p, pointf u, double arrowsize,
 
 
 static pointf arrow_gen_type(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                             double penwidth, uint32_t flag) {
-    uint32_t f = flag & ((1 << BITS_PER_ARROW_TYPE) - 1);
+                             double penwidth, arrowflag_t flag) {
+    uint8_t f = flag.type;
     for (size_t i = 0; i < Arrowtypes_size; ++i) {
 	const arrowtype_t *arrowtype = &Arrowtypes[i];
 	if (f == arrowtype->type) {
@@ -997,9 +1044,10 @@ void arrow_gen(GVJ_t *job, emit_state_t emit_state, pointf p, pointf u,
     u.y *= s;
 
     /* the first arrow head - closest to node */
+    arrowflags_t flags = int_to_flags(flag);
     for (i = 0; i < NUMB_OF_ARROW_HEADS; i++) {
-        uint32_t f = (flag >> (i * BITS_PER_ARROW)) & ((1 << BITS_PER_ARROW) - 1);
-	if (f == ARR_TYPE_NONE)
+        arrowflag_t f = flags.flags[i];
+	if (f.type == ARR_TYPE_NONE && !flag_has_mods(f))
 	    break;
         p = arrow_gen_type(job, p, u, arrowsize, penwidth, f);
     }
@@ -1008,7 +1056,7 @@ void arrow_gen(GVJ_t *job, emit_state_t emit_state, pointf p, pointf u,
 }
 
 static double arrow_length_generic(double lenfact, double arrowsize,
-                                   double penwidth, uint32_t flag) {
+                                   double penwidth, arrowflag_t flag) {
   (void)penwidth;
   (void)flag;
 
@@ -1016,7 +1064,7 @@ static double arrow_length_generic(double lenfact, double arrowsize,
 }
 
 static double arrow_length_normal(double lenfact, double arrowsize,
-                                  double penwidth, uint32_t flag) {
+                                  double penwidth, arrowflag_t flag) {
   pointf a[5];
   // set arrow end point at origin
   const pointf p = {0, 0};
@@ -1040,14 +1088,14 @@ static double arrow_length_normal(double lenfact, double arrowsize,
   assert(full_base_width > 0 && "non-positive full base width");
 
   // we want a small overlap between the edge path (stem) and the arrow to avoid
-  // gaps beetween them in case the arrow has a corner towards the edge path
+  // gaps between them in case the arrow has a corner towards the edge path
   const double overlap_at_base = penwidth / 2;
   // overlap the tip to a point where its width is equal to the penwidth.
   const double length_where_width_is_penwidth =
       full_length * penwidth / full_base_width;
   const double overlap_at_tip = length_where_width_is_penwidth;
 
-  const double overlap = flag & ARR_MOD_INV ? overlap_at_tip : overlap_at_base;
+  const double overlap = flag.mod_inv ? overlap_at_tip : overlap_at_base;
 
   // arrow length is the x value of the start point since the arrow points along
   // the positive x axis and ends at origin
@@ -1055,7 +1103,7 @@ static double arrow_length_normal(double lenfact, double arrowsize,
 }
 
 static double arrow_length_tee(double lenfact, double arrowsize,
-                               double penwidth, uint32_t flag) {
+                               double penwidth, arrowflag_t flag) {
     (void)flag;
 
     // The `tee` arrow shape normally begins and ends with a polyline which
@@ -1082,7 +1130,7 @@ static double arrow_length_tee(double lenfact, double arrowsize,
 }
 
 static double arrow_length_box(double lenfact, double arrowsize,
-                               double penwidth, uint32_t flag) {
+                               double penwidth, arrowflag_t flag) {
   (void)flag;
 
   // The `box` arrow shape begins with a polyline which doesn't extend
@@ -1093,7 +1141,7 @@ static double arrow_length_box(double lenfact, double arrowsize,
 }
 
 static double arrow_length_diamond(double lenfact, double arrowsize,
-                                   double penwidth, uint32_t flag) {
+                                   double penwidth, arrowflag_t flag) {
   pointf a[5];
   // set arrow end point at origin
   const pointf p = {0, 0};
@@ -1119,7 +1167,7 @@ static double arrow_length_diamond(double lenfact, double arrowsize,
   assert(full_base_width > 0 && "non-positive full base width");
 
   // we want a small overlap between the edge path (stem) and the arrow to avoid
-  // gaps beetween them in case the arrow has a corner towards the edge path
+  // gaps between them in case the arrow has a corner towards the edge path
 
   // overlap the tip to a point where its width is equal to the penwidth
   const double length_where_width_is_penwidth =
@@ -1134,7 +1182,7 @@ static double arrow_length_diamond(double lenfact, double arrowsize,
 }
 
 static double arrow_length_dot(double lenfact, double arrowsize,
-                               double penwidth, uint32_t flag) {
+                               double penwidth, arrowflag_t flag) {
   (void)flag;
 
   return lenfact * arrowsize * ARROW_LENGTH + penwidth;
