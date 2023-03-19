@@ -197,6 +197,7 @@ private:
                         const std::string &attribute) const;
   // Return true if the points of a polygon are defined clockwise
   bool has_clockwise_points() const;
+  bool has_all_points_equal() const;
   std::string id_attribute_to_string() const;
   std::string fill_attribute_to_string() const;
   std::string fill_opacity_attribute_to_string() const;

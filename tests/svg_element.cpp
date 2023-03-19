@@ -493,6 +493,15 @@ void SVG::SVGElement::append_attribute(std::string &output,
   output += attribute;
 }
 
+bool SVG::SVGElement::has_all_points_equal() const {
+  assert((type == SVG::SVGElementType::Polygon ||
+          type == SVG::SVGElementType::Polyline) &&
+         "not a polygon or polyline");
+  const auto points = attributes.points;
+  assert(!points.empty() > 0 && "no points");
+  return std::equal(points.begin() + 1, points.end(), points.begin());
+}
+
 bool SVG::SVGElement::has_clockwise_points() const {
   assert((type == SVG::SVGElementType::Polygon ||
           type == SVG::SVGElementType::Polyline) &&
