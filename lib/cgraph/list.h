@@ -47,7 +47,7 @@
    * \return A new empty list                                                  \
    */                                                                          \
   static inline LIST_UNUSED name##_t name##_new(void) {                        \
-    return (name##_t){0};                                                      \
+    return (name##_t){.data = NULL, .size = 0, .capacity = 0};                 \
   }                                                                            \
                                                                                \
   /** get the number of elements in a list */                                  \
@@ -68,7 +68,8 @@
     /* do we need to expand the backing storage? */                            \
     if (list->size == list->capacity) {                                        \
       size_t c = list->capacity == 0 ? 1 : (list->capacity * 2);               \
-      list->data = gv_recalloc(list->data, list->capacity, c, sizeof(type));   \
+      list->data =                                                             \
+          (type *)gv_recalloc(list->data, list->capacity, c, sizeof(type));    \
       list->capacity = c;                                                      \
     }                                                                          \
                                                                                \
@@ -210,8 +211,8 @@
     assert(list != NULL);                                                      \
                                                                                \
     if (list->capacity > list->size) {                                         \
-      list->data =                                                             \
-          gv_recalloc(list->data, list->capacity, list->size, sizeof(type));   \
+      list->data = (type *)gv_recalloc(list->data, list->capacity, list->size, \
+                                       sizeof(type));                          \
       list->capacity = list->size;                                             \
     }                                                                          \
   }                                                                            \
@@ -221,7 +222,7 @@
     assert(list != NULL);                                                      \
     name##_clear(list);                                                        \
     free(list->data);                                                          \
-    *list = (name##_t){0};                                                     \
+    *list = (name##_t){.data = NULL, .size = 0, .capacity = 0};                \
   }                                                                            \
                                                                                \
   /** alias for append */                                                      \
@@ -271,6 +272,6 @@
   static inline LIST_UNUSED type *name##_detach(name##_t *list) {              \
     assert(list != NULL);                                                      \
     type *data = list->data;                                                   \
-    *list = (name##_t){0};                                                     \
+    *list = (name##_t){.data = NULL, .size = 0, .capacity = 0};                \
     return data;                                                               \
   }

@@ -678,14 +678,14 @@ void gv_postprocess(Agraph_t * g, int allowTranslation)
     if (GD_label(g) && !GD_label(g)->set)
 	place_root_label(g, dimen);
 
-    if (Show_boxes) {
+    if (!show_boxes_is_empty(&Show_boxes)) {
 	agxbuf buf = {0};
 	if (Flip)
 	    agxbprint(&buf, M2, Offset.x, Offset.y, Offset.x, Offset.y);
 	else
 	    agxbprint(&buf, M1, Offset.y, Offset.x, Offset.y, Offset.x,
 		    -Offset.x, -Offset.y);
-	Show_boxes[0] = agxbdisown(&buf);
+	show_boxes_append(&Show_boxes, agxbdisown(&buf));
     }
 }
 
