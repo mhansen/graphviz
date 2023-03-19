@@ -2340,7 +2340,6 @@ def test_2282():
 
 
 @pytest.mark.skipif(is_python36(), reason=".='text' XPath syntax not supported")
-@pytest.mark.xfail()
 def test_2283():
     """
     `beautify=true` should correctly space nodes

@@ -358,7 +358,7 @@ static void beautify_leaves(int dim, SparseMatrix A, double *x){
       ang2 -= pad;
       assert(ang2 >= ang1);
       step = 0.;
-      if (nleaves > 1) step = (ang2 - ang1)/(nleaves - 1);
+      if (nleaves > 1) step = (ang2 - ang1) / nleaves;
       for (int k = 0; k < nleaves; k++) {
 	set_leaves(x, dim, dist, ang1, p, leaves[k]);
 	ang1 += step;

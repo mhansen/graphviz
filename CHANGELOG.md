@@ -60,6 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When using the `beautify=true` attribute, beautification no longer confuses
   leaves and dimensions. This previously could have led to skipping calculations
   or infinite loops.
+- When using the `beautify=true` attribute, the first and last nodes around a
+  circular layout are no longer placed on top of each other. #2283
 
 ### Removed
 
