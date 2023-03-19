@@ -395,6 +395,14 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
 
     if (points.size() >= 3) {
       // at least one corner
+      if (has_all_points_equal()) {
+        // the polyline has no size and will not be visible, so just arbitrarily
+        // select one of its (equal) points as its outline bounding box
+        const auto first_point = points.at(0);
+        m_bbox->extend(first_point);
+        break;
+      }
+
       const auto clockwise = has_clockwise_points();
       for (auto it = points.cbegin() + 1; it < points.cend() - 1; ++it) {
         // there is always a previous point since we iterate from the second
