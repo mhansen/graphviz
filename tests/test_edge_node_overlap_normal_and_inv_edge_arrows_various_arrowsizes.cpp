@@ -7,8 +7,8 @@
 
 TEST_CASE(
     "Edge node overlap for normal and inv arrow using various arrow sizes",
-    "[!shouldfail] An edge connected to a node shall touch that node and "
-    "not overlap it too much, regardless of if the arrow shape is 'normal' or "
+    "An edge connected to a node shall touch that node and not overlap it too "
+    "much, regardless of if the arrow shape is 'normal' or "
     "'inv'") {
 
   std::string filename_base = AUTO_NAME();

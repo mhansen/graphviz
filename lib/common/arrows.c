@@ -375,9 +375,11 @@ int arrowStartClip(edge_t* e, pointf * ps, int startp,
     sp[2] = ps[startp + 1];
     sp[3] = spl->sp;	/* ensure endpoint starts inside */
 
-    inside_context.a.p = &sp[3];
-    inside_context.a.r = &slen2;
-    bezier_clip(&inside_context, inside, sp, false);
+    if (slen > 0) {
+	inside_context.a.p = &sp[3];
+	inside_context.a.r = &slen2;
+	bezier_clip(&inside_context, inside, sp, false);
+    }
 
     ps[startp] = sp[3];
     ps[startp + 1] = sp[2];
