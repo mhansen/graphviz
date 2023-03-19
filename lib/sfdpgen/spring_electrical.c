@@ -324,7 +324,7 @@ static void beautify_leaves(int dim, SparseMatrix A, double *x){
   int p;
   double dist;
   int nleaves, nleaves_max = 10;
-  double maxang, ang1 = 0, ang2 = 0, pad, step;
+  double step;
   int *leaves;
 
   assert(!SparseMatrix_has_diagonal(A));
@@ -350,10 +350,12 @@ static void beautify_leaves(int dim, SparseMatrix A, double *x){
       }
       assert(nleaves > 0);
       dist /= nleaves;
-      pad = MAX(maxang - PI*0.166667*(nleaves-1), 0)*0.5;
-      ang1 += pad*0.95;
-      ang2 -= pad*0.95;
-ang1 = 0; ang2 = 2*PI; maxang = 2*PI;
+      double ang1 = 0;
+      double ang2 = 2 * M_PI;
+      const double pad = 0.1; // fudge factor to account for the size and
+                              // placement of the nodes themselves
+      ang1 += pad;
+      ang2 -= pad;
       assert(ang2 >= ang1);
       step = 0.;
       if (nleaves > 1) step = (ang2 - ang1)/(nleaves - 1);
