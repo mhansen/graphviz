@@ -1289,7 +1289,7 @@ static void get_boundingbox(int n, int dim, double *x, double *width, double *bb
   }
 }
 
-int make_map_from_rectangle_groups(int include_OK_points,
+void make_map_from_rectangle_groups(int include_OK_points,
 				   int n, int dim, double *x, double *sizes, 
 				   int *grouping, SparseMatrix graph0, double bounding_box_margin[], int *nrandom, int *nart, int nedgep, 
 				   double shore_depth_tol,
@@ -1359,7 +1359,6 @@ int make_map_from_rectangle_groups(int include_OK_points,
   double avgsize[2],  avgsz, h[2], p1, p0;
   double point[2];
   int nadded[2];
-  int res;
   double delta[2];
   SparseMatrix graph = graph0;
   double bbox[4];
@@ -1382,7 +1381,7 @@ int make_map_from_rectangle_groups(int include_OK_points,
     make_map_internal(include_OK_points, n, dim, x, grouping, graph, bounding_box_margin, nrandom, nedgep,
 			    shore_depth_tol, xcombined, nverts, x_poly, 
 			     poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
-    return 0;
+    return;
   } else {
 
     /* add artificial node due to node sizes */
@@ -1488,11 +1487,8 @@ int make_map_from_rectangle_groups(int include_OK_points,
     make_map_internal(include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep,
 			    shore_depth_tol, xcombined, nverts, x_poly, 
 			    poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
-    res = 0;
     if (graph != graph0) SparseMatrix_delete(graph);
     free(groups);
     free(X);
   }
-
-  return res;
 }
