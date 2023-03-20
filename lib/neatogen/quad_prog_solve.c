@@ -80,21 +80,10 @@ ensureMonotonicOrderingWithGaps(float *place, int n, int *ordering,
     }
 }
 
-static void
-computeHierarchyBoundaries(float *place, int *ordering, int *levels,
-			   int num_levels, float *hierarchy_boundaries)
-{
-    int i;
-    for (i = 0; i < num_levels; i++) {
-	hierarchy_boundaries[i] = place[ordering[levels[i] - 1]];
-    }
-}
-
 int
 constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 				       float **coords,
 				       int cur_axis, int max_iterations,
-				       float *hierarchy_boundaries,
 				       float levels_gap)
 {
     float *place = coords[cur_axis];
@@ -417,8 +406,6 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 	    }
 	}
 	orthog1f(n, place);	/* for numerical stability, keep ||place|| small */
-	computeHierarchyBoundaries(place, ordering, levels, num_levels,
-				   hierarchy_boundaries);
     }
 
     return counter;
