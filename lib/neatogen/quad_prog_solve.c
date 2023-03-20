@@ -80,7 +80,7 @@ ensureMonotonicOrderingWithGaps(float *place, int n, int *ordering,
     }
 }
 
-int
+void
 constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 				       float **coords,
 				       int cur_axis, int max_iterations,
@@ -111,12 +111,11 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
     int first_next_level;
     int *lev;
     int level = -1, max_in_level = 0;
-    int counter;
     float *gap;
     float target_place;
 
     if (max_iterations <= 0) {
-	return 0;
+	return;
     }
 
     ensureMonotonicOrderingWithGaps(place, n, ordering, levels, num_levels,
@@ -153,7 +152,7 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
     /* displacement of block's nodes from block's reference point */
     gap = e->fArray4;
 
-    for (counter = 0; counter < max_iterations && !converged; counter++) {
+    for (int counter = 0; counter < max_iterations && !converged; counter++) {
 	converged = true;
 	lower_bound = -1e9;	/* no lower bound for first level */
 	for (left = 0; left < n; left = right) {
@@ -407,8 +406,6 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 	}
 	orthog1f(n, place);	/* for numerical stability, keep ||place|| small */
     }
-
-    return counter;
 }
 
 void deleteCMajEnv(CMajEnv * e)

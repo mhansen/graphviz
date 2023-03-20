@@ -34,8 +34,8 @@ typedef struct {
 
 extern CMajEnv* initConstrainedMajorization(float *, int, int*, int*, int);
 
-extern int constrained_majorization_new_with_gaps(CMajEnv*, float*, float**, 
-                                                  int, int, float);
+extern void constrained_majorization_new_with_gaps(CMajEnv*, float*, float**, 
+                                                   int, int, float);
 extern void deleteCMajEnv(CMajEnv *e);
 
 extern float** unpackMatrix(float * packedMat, int n);
