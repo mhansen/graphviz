@@ -93,8 +93,7 @@ static char *gdirname(char *pathname)
     return pathname;
 }
 
-static char *nodefilename(const char *filename, node_t * n, char *buf)
-{
+static char *nodefilename(const char *filename, node_t *n, agxbuf *buf) {
     static char *dir;
     static char disposable[1024];
 
@@ -104,16 +103,17 @@ static char *nodefilename(const char *filename, node_t * n, char *buf)
 	else
 	    dir = ".";
     }
-    sprintf(buf, "%s/node%d.png", dir, AGSEQ(n));
-    return buf;
+    agxbprint(buf, "%s/node%d.png", dir, AGSEQ(n));
+    return agxbuse(buf);
 }
 
 static FILE *nodefile(const char *filename, node_t * n)
 {
     FILE *rv;
-    char buf[1024];
+    agxbuf buf = {0};
 
-    rv = fopen(nodefilename(filename, n, buf), "wb");
+    rv = fopen(nodefilename(filename, n, &buf), "wb");
+    agxbfree(&buf);
     return rv;
 }
 
