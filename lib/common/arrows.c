@@ -299,6 +299,10 @@ static double arrow_length(edge_t * e, uint32_t flag) {
     const double penwidth = late_double(e, E_penwidth, 1.0, 0.0);
     const double arrowsize = late_double(e, E_arrowsz, 1.0, 0.0);
 
+    if (arrowsize == 0) {
+	return 0;
+    }
+
     arrowflags_t f = int_to_flags(flag);
 
     for (i = 0; i < NUMB_OF_ARROW_HEADS; i++) {

@@ -1968,7 +1968,6 @@ def test_2215():
     subprocess.run(["dot", "-v"], input=input, check=True, universal_newlines=True)
 
 
-@pytest.mark.xfail(strict=True)
 def test_2342():
     """
     using an arrow with size 0 should not trigger an assertion failure
