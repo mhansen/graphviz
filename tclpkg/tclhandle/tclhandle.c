@@ -270,23 +270,6 @@ int tclhandleIndex(tblHeader_pt tblHdrPtr, char *handle,
 }
 
 /*=============================================================================
- * tclhandleString --
- *   Translate a handleTable Index into a string handle
- *       NB. No check is performed on the Index provided.
- *
- * Parameters:
- *   o headerPtr (I) - A pointer to the table header.
- *   o handle (O) - The handle string -- <prefix><int>
- *   o entryIdxPtr (I) - If not NULL, the index is returned here.
- *-----------------------------------------------------------------------------
- */
-void tclhandleString(tblHeader_pt tblHdrPtr, char *handle,
-		     uint64_t entryIdx)
-{
-    sprintf(handle, tblHdrPtr->handleFormat, entryIdx);
-}
-
-/*=============================================================================
  * tclhandleXlateIndex --
  *   Translate an index to an entry pointer.
  *

@@ -99,8 +99,6 @@ extern "C" {
     void *tclhandleXlate(tblHeader_pt headerPtr, char *handle);
     entryHeader_pt tclhandleAlloc(tblHeader_pt tblHdrPtr, char **handle,
 				  uint64_t *entryIdxPtr);
-    void tclhandleString(tblHeader_pt tblHdrPtr, char *handle,
-			 uint64_t entryIdx);
     int tclhandleIndex(tblHeader_pt tblHdrPtr, char *handle,
 		       uint64_t *entryIdxPtr);
 
