@@ -336,13 +336,13 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
 #ifdef TIME
   clock_t  cpu;
 #endif
-  int nr0, nart0;
+  int nart0;
   int nart, nrandom;
 
 #ifdef TIME
   cpu = clock();
 #endif
-  nr0 = nrandom = pm->nrandom; nart0 = nart = pm->nart;
+  nrandom = pm->nrandom; nart0 = nart = pm->nart;
   if (pm->highlight_cluster) {
     pm->highlight_cluster = validateCluster (n, grouping, pm->highlight_cluster);
   }
@@ -371,7 +371,6 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
     for (i = 0; i < improve_contiguity_n; i++){
       improve_contiguity(n, dim, grouping, poly_point_map, x, graph);
       nart = nart0;
-      nrandom = nr0;
       make_map_from_rectangle_groups(pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
@@ -384,7 +383,6 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
 		     ELSCHEME_NONE, 0, NULL, NULL, TRUE);
       
       nart = nart0;
-      nrandom = nr0;
       make_map_from_rectangle_groups(pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
