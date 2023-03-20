@@ -269,6 +269,8 @@ who will be affected by a new Graphviz release.
   [@ryandesign on Github](https://github.com/ryandesign)
 * [PyGraphviz](https://github.com/pygraphviz/pygraphviz),
   [@jarrodmillman on Gitlab](https://gitlab.com/jarrodmillman)
+* [Spack](https://spack.readthedocs.io/en/latest/package_list.html#graphviz),
+  [@alecbcs on Github](https://github.com/alecbcs)
 * [SUSE](https://software.opensuse.org/package/graphviz),
   Christian Vögl cvoegl@suse.de
 * [Winget](https://github.com/microsoft/winget-pkgs),
