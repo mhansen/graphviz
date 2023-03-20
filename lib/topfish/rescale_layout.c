@@ -23,6 +23,7 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/sort.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -104,81 +105,24 @@ static double *smooth_vec(double *vec, int *ordering, size_t n, int interval) {
     return smoothed_vec;
 }
 
-/* quicksort_place:
- * Available in lib/neatogen.
- */
-static int
-split_by_place(double *place, int *nodes, int first, int last)
-{
-    int middle;
-    unsigned int splitter=((unsigned int)rand()|((unsigned int)rand())<<16)%(unsigned int)(last-first+1)+(unsigned int)first;
-    int val;
-    double place_val;
-    int left = first + 1;
-    int right = last;
-    int temp;
+static int cmp(const void *a, const void *b, void *context) {
+  const int *x = a;
+  const int *y = b;
+  const double *place = context;
 
-    val = nodes[splitter];
-    nodes[splitter] = nodes[first];
-    nodes[first] = val;
-    place_val = place[val];
-
-    while (left < right) {
-	while (left < right && place[nodes[left]] <= place_val)
-	    left++;
-        /* use here ">" and not ">=" to enable robustness
-         * by ensuring that ALL equal values move to the same side
-         */
-	while (left < right && place[nodes[right]] > place_val)
-	    right--;
-	if (left < right) {
-	    temp = nodes[left];
-	    nodes[left] = nodes[right];
-	    nodes[right] = temp;
-	    left++;
-	    right--;		/* (1) */
-
-	}
-    }
-    /* at this point either, left==right (meeting), or 
-     * left=right+1 (because of (1)) 
-     * we have to decide to which part the meeting point (or left) belongs.
-     *
-     * notice that always left>first, because of its initialization
-     */
-    if (place[nodes[left]] > place_val)
-	left = left - 1;
-    middle = left;
-    nodes[first] = nodes[middle];
-    nodes[middle] = val;
-    return middle;
-}
-
-static int 
-sorted_place(double * place, int * ordering, int first, int last)
-{
-    int i, isSorted = 1; 
-    for (i=first+1; i<=last && isSorted; i++) {
-        if (place[ordering[i-1]]>place[ordering[i]]) {
-            isSorted = 0;
-        }
-    }
-    return isSorted;
+  if (place[*x] < place[*y]) {
+    return -1;
+  }
+  if (place[*x] > place[*y]) {
+    return 1;
+  }
+  return 0;
 }
 
 void quicksort_place(double *place, int *ordering, int first, int last)
 {
     if (first < last) {
-	int middle = split_by_place(place, ordering, first, last);
-        /* Checking for "already sorted" dramatically improves running time 
-	 * and robustness (against uneven recursion) when not all values are 
-         * distinct (thefore we expect emerging chunks of equal values)
-	 * it never increased running time even when values were distinct
-         */
-	if (!sorted_place(place,ordering,first,middle-1))
-	    quicksort_place(place,ordering,first,middle-1);
-	if (!sorted_place(place,ordering,middle+1,last))
-	    quicksort_place(place,ordering,middle+1,last);
+        gv_sort(ordering + first, last - first + 1, sizeof(ordering[0]), cmp, place);
     }
 }
 
