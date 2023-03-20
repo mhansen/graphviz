@@ -795,11 +795,15 @@ static pointf arrow_type_box(GVJ_t *job, pointf p, pointf u, double arrowsize,
     q.x = p.x + u.x;
     q.y = p.y + u.y;
 
-    const pointf P = {-u.x, -u.y};
-    // phi = angle of arrow
-    const double cosPhi = P.x / hypot(P.x, P.y);
-    const double sinPhi = P.y / hypot(P.x, P.y);
-    const pointf delta = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    pointf delta = {0, 0};
+
+    if (u.x != 0 || u.y != 0) {
+	const pointf P = {-u.x, -u.y};
+	// phi = angle of arrow
+	const double cosPhi = P.x / hypot(P.x, P.y);
+	const double sinPhi = P.y / hypot(P.x, P.y);
+	delta = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    }
 
     // move the arrow backwards to not visually overlap the node
     p.x -= delta.x;
