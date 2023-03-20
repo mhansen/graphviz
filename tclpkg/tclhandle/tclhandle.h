@@ -76,10 +76,6 @@ extern "C" {
 #define HEADER_AREA(entryPtr) \
  (entryHeader_pt) (((ubyte_pt) entryPtr) - ENTRY_HEADER_SIZE);
 
-/*
- * Function prototypes.
- */
-
     void *tclhandleFreeIndex(tblHeader_pt headerPtr,
 			     uint64_t entryIdx);
     void *tclhandleFree(tblHeader_pt headerPtr, char *handle);
