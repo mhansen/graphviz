@@ -329,7 +329,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   int dim = pm->dim;
   int i;
   SparseMatrix poly_lines, polys, poly_point_map;
-  int npolys, nverts, *polys_groups;
+  int nverts, *polys_groups;
   double *x_poly, *xcombined;
   SparseMatrix country_graph;
   int improve_contiguity_n = pm->improve_contiguity_n;
@@ -348,7 +348,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   }
   make_map_from_rectangle_groups(pm->include_OK_points,
 				 n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
-				 pm->shore_depth_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
+				 pm->shore_depth_tol, &xcombined, &nverts, &x_poly, &poly_lines, 
 				 &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
 
   if (Verbose) fprintf(stderr,"nart = %d\n",nart);
@@ -374,7 +374,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       nrandom = nr0;
       make_map_from_rectangle_groups(pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
-				     pm->shore_depth_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
+				     pm->shore_depth_tol, &xcombined, &nverts, &x_poly, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
     }
     {
@@ -387,7 +387,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       nrandom = nr0;
       make_map_from_rectangle_groups(pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
-				     pm->shore_depth_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
+				     pm->shore_depth_tol, &xcombined, &nverts, &x_poly, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
     }
     
