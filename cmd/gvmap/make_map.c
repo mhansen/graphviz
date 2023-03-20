@@ -1003,7 +1003,7 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
 }
 
 static void make_map_internal(int include_OK_points,
-		      int n, int dim, double *x0, int *grouping0, SparseMatrix graph, double bounding_box_margin[], int nrandom, int nedgep, 
+		      int n, int dim, double *x0, int *grouping0, SparseMatrix graph, double bounding_box_margin, int nrandom, int nedgep, 
 		      double shore_depth_tol, int *nverts, double **x_poly, 
 		      SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map,
 		      SparseMatrix *country_graph, int highlight_cluster){
@@ -1102,32 +1102,25 @@ static void make_map_internal(int include_OK_points,
   /* generate random points for lake/sea effect */
   if (nrandom != 0){
     for (i = 0; i < dim2; i++) {
-      if (bounding_box_margin[i] > 0){
-	xmin[i] -= bounding_box_margin[i];
-	xmax[i] += bounding_box_margin[i];
-      } else if (bounding_box_margin[i] < 0) {
-	xmin[i] -= boxsize[i]*(-bounding_box_margin[i]);
-	xmax[i] += boxsize[i]*(-bounding_box_margin[i]);
+      if (bounding_box_margin > 0){
+	xmin[i] -= bounding_box_margin;
+	xmax[i] += bounding_box_margin;
+      } else if (bounding_box_margin < 0) {
+	xmin[i] -= boxsize[i]*(-bounding_box_margin);
+	xmax[i] += boxsize[i]*(-bounding_box_margin);
       } else { // auto bounding box
 	xmin[i] -= MAX(boxsize[i]*0.2, 2.*shore_depth_tol);
 	xmax[i] += MAX(boxsize[i]*0.2, 2*shore_depth_tol);
       }
     }
     if (Verbose) {
-      double bbm0 = bounding_box_margin[0];
-      double bbm1 = bounding_box_margin[1];
-      if (bbm0 > 0)
-	fprintf (stderr, "bounding box margin: %.06f", bbm0);
-      else if (bbm0 < 0)
-	fprintf (stderr, "bounding box margin: (%.06f * %.06f)", boxsize[0], -bbm0);
+      double bbm = bounding_box_margin;
+      if (bbm > 0)
+	fprintf (stderr, "bounding box margin: %.06f", bbm);
+      else if (bbm < 0)
+	fprintf (stderr, "bounding box margin: (%.06f * %.06f)", boxsize[0], -bbm);
       else
 	fprintf (stderr, "bounding box margin: %.06f", MAX(boxsize[0]*0.2, 2*shore_depth_tol));
-      if (bbm1 > 0)
-	fprintf (stderr, " %.06f\n", bbm1);
-      else if (bbm1 < 0)
-	fprintf (stderr, " (%.06f * %.06f)\n", boxsize[1], -bbm1);
-      else
-	fprintf (stderr, " %.06f\n", MAX(boxsize[1]*0.2, 2*shore_depth_tol));
     }
     if (nrandom < 0) {
       double n1, n2, area2;
@@ -1293,7 +1286,7 @@ static void get_boundingbox(int n, int dim, double *x, double *width, double *bb
 
 void make_map_from_rectangle_groups(int include_OK_points,
 				   int n, int dim, double *x, double *sizes, 
-				   int *grouping, SparseMatrix graph0, double bounding_box_margin[], int nrandom, int *nart, int nedgep, 
+				   int *grouping, SparseMatrix graph0, double bounding_box_margin, int nrandom, int *nart, int nedgep, 
 				   double shore_depth_tol,
 				   int *nverts, double **x_poly, 
 				   SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, 
@@ -1315,7 +1308,7 @@ void make_map_from_rectangle_groups(int include_OK_points,
      grouping: which group each of the vertex belongs to
      graph: the link structure between points. If graph == NULL, this is not used. otherwise
      .      it is assumed that matrix is symmetric and the graph is undirected
-     bounding_box_margin: margins used to form the bounding box. Dimension 2.
+     bounding_box_margin: margin used to form the bounding box.
      .      if negative, it is taken as relative. i.e., -0.5 means a margin of 0.5*box_size
      nrandom (input): number of random points to insert in the bounding box to figure out lakes and seas.
      .        If nrandom = 0, no points are inserted, if nrandom < 0, the number is decided automatically.

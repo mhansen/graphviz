@@ -42,7 +42,7 @@ typedef struct {
     int dim;
     double shore_depth_tol;
     int nrandom; 
-    double bbox_margin[2]; 
+    double bbox_margin;
     int useClusters;
     int clusterMethod;
     bool plotedges;
@@ -174,15 +174,14 @@ init(int argc, char **argv, params_t* pm)
   pm->include_OK_points = FALSE;
   pm->seed = 123;
 
-  /*  bbox_margin[0] =  bbox_margin[1] = -0.2;*/
-  pm->bbox_margin[0] =  pm->bbox_margin[1] = 0;
+  pm->bbox_margin = 0;
 
   opterr = 0;
   while ((c = getopt(argc, argv, ":evODQko:m:s:r:p:c:C:l:b:g:t:a:h:z:d:?")) != -1) {
     switch (c) {
     case 'm':
       if (sscanf(optarg, "%lf", &s) > 0 && s != 0) {
-	    pm->bbox_margin[0] =  pm->bbox_margin[1] = s;
+	    pm->bbox_margin = s;
       } else {
         usage(cmd, 1);
       }
