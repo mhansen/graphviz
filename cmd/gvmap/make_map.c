@@ -1004,7 +1004,7 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
 
 static void make_map_internal(int include_OK_points,
 		      int n, int dim, double *x0, int *grouping0, SparseMatrix graph, double bounding_box_margin[], int *nrandom, int nedgep, 
-		      double shore_depth_tol, double **xcombined, int *nverts, double **x_poly, 
+		      double shore_depth_tol, int *nverts, double **x_poly, 
 		      SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map,
 		      SparseMatrix *country_graph, int highlight_cluster){
 
@@ -1196,21 +1196,22 @@ static void make_map_internal(int include_OK_points,
   *nrandom += 4;
 
 
+  double *xcombined;
   if (INCLUDE_OK_POINTS){
-    *xcombined = gv_calloc((nn + *nrandom) * dim2, sizeof(double));
+    xcombined = gv_calloc((nn + *nrandom) * dim2, sizeof(double));
   } else {
-    *xcombined = gv_calloc((n + *nrandom) * dim2, sizeof(double));
+    xcombined = gv_calloc((n + *nrandom) * dim2, sizeof(double));
   }
   for (i = 0; i < n; i++) {
-    for (j = 0; j < dim2; j++) (*xcombined)[i*dim2+j] = x[i*dim+j];
+    for (j = 0; j < dim2; j++) xcombined[i*dim2+j] = x[i*dim+j];
   }
   for (i = 0; i < *nrandom; i++) {
-    for (j = 0; j < dim2; j++) (*xcombined)[(i + nn)*dim2+j] = xran[i*dim+j];
+    for (j = 0; j < dim2; j++) xcombined[(i + nn)*dim2+j] = xran[i*dim+j];
   }
 
   if (INCLUDE_OK_POINTS){
     for (i = 0; i < nn - n; i++) {
-      for (j = 0; j < dim2; j++) (*xcombined)[(i + n)*dim2+j] = xran[(nzok0 - i)*dim+j];
+      for (j = 0; j < dim2; j++) xcombined[(i + n)*dim2+j] = xran[(nzok0 - i)*dim+j];
     }
     n = nn;
   }
@@ -1226,14 +1227,14 @@ static void make_map_internal(int include_OK_points,
 	if (grouping[i] == HIGHLIGHT_SET){
 	  nh++;
 	  for (j = 0; j < dim; j++){
-	    (*xcombined)[nz++] = x[i*dim+j];
+	    xcombined[nz++] = x[i*dim+j];
 	  }
 	}
       }
       for (i = 0; i < n; i++){
 	if (grouping[i] != HIGHLIGHT_SET){
 	  for (j = 0; j < dim; j++){
-	    (*xcombined)[nz++] = x[i*dim+j];
+	    xcombined[nz++] = x[i*dim+j];
 	  }
 	}
       }
@@ -1250,10 +1251,11 @@ static void make_map_internal(int include_OK_points,
     }
   }
 
-  get_tri(n + *nrandom, dim2, *xcombined, &nt, &Tp, &E);
+  get_tri(n + *nrandom, dim2, xcombined, &nt, &Tp, &E);
   get_polygons(n, *nrandom, dim2, graph, grouping, nt, Tp, E, nverts, x_poly, poly_lines, polys, polys_groups,
 	       poly_point_map, country_graph);
 
+  free(xcombined);
   SparseMatrix_delete(E);
   free(Tp);
   free(xran);
@@ -1293,7 +1295,7 @@ void make_map_from_rectangle_groups(int include_OK_points,
 				   int n, int dim, double *x, double *sizes, 
 				   int *grouping, SparseMatrix graph0, double bounding_box_margin[], int *nrandom, int *nart, int nedgep, 
 				   double shore_depth_tol,
-				   double **xcombined, int *nverts, double **x_poly, 
+				   int *nverts, double **x_poly, 
 				   SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, 
 				   SparseMatrix *country_graph, int highlight_cluster){
 
@@ -1328,7 +1330,6 @@ void make_map_from_rectangle_groups(int include_OK_points,
      .      real points. If 0, auto assigned
 
      output:
-     xcombined: combined points which contains n + ncombined number of points, dimension 2x(n+nrandom)
      nverts: number of vertices in the Voronoi diagram
      x_poly: the 2D coordinates of these polygons, dimension nverts*2
      poly_lines: the sparse matrix representation of the polygon indices, as well as their identity. The matrix is of size
@@ -1379,7 +1380,7 @@ void make_map_from_rectangle_groups(int include_OK_points,
 
   if (!sizes){
     make_map_internal(include_OK_points, n, dim, x, grouping, graph, bounding_box_margin, nrandom, nedgep,
-			    shore_depth_tol, xcombined, nverts, x_poly, 
+			    shore_depth_tol, nverts, x_poly, 
 			     poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
     return;
   } else {
@@ -1485,7 +1486,7 @@ void make_map_from_rectangle_groups(int include_OK_points,
     }/* done adding artificial points due to node size*/
 
     make_map_internal(include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep,
-			    shore_depth_tol, xcombined, nverts, x_poly, 
+			    shore_depth_tol, nverts, x_poly, 
 			    poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
     if (graph != graph0) SparseMatrix_delete(graph);
     free(groups);
