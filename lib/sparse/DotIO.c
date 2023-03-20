@@ -309,7 +309,7 @@ void Dot_SetClusterColor(Agraph_t* g, float *rgb_r,  float *rgb_g,  float *rgb_b
   for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
     i = ND_id(n);
     if (rgb_r && rgb_g && rgb_b) {
-      rgb2hex((rgb_r)[(clusters)[i]],(rgb_g)[(clusters)[i]],(rgb_b)[(clusters)[i]], scluster, NULL);
+      rgb2hex(rgb_r[clusters[i]], rgb_g[clusters[i]], rgb_b[clusters[i]], scluster, NULL);
     }
     agxset(n,clust_clr_sym,scluster);
   }
