@@ -185,34 +185,6 @@ tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
 }
 
 /*=============================================================================
- * tclhandleDestroy --
- *   Destroy a Tcl dynamic handle table. 
- * Parameters:
- *   tblHdrPtr - A pointer to the table header.
- * Returns:
- *   TCL_OK if success
- *   TCL_ERROR if the table was not empty.
- *-----------------------------------------------------------------------------
- */
-int tclhandleDestroy(tblHeader_pt tblHdrPtr)
-{
-    uint64_t entIdx, lastIdx;
-    entryHeader_pt entryPtr;
-
-    lastIdx = tblHdrPtr->tableSize;
-    for (entIdx = 0; entIdx < lastIdx; entIdx++) {
-	entryPtr = TBL_INDEX(tblHdrPtr, entIdx);
-	if (entryPtr->freeLink == ALLOCATED_IDX)
-	    return TCL_ERROR;
-    }
-    free(tblHdrPtr->bodyPtr);
-    free(tblHdrPtr->handleFormat);
-    free(tblHdrPtr);
-
-    return TCL_OK;
-}
-
-/*=============================================================================
  * tclhandleIndex --
  *   Translate a string handle to a handleTable Index.
  *
