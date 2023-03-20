@@ -119,11 +119,8 @@ static int cmp(const void *a, const void *b, void *context) {
   return 0;
 }
 
-void quicksort_place(double *place, int *ordering, int first, int last)
-{
-    if (first < last) {
-        gv_sort(ordering + first, last - first + 1, sizeof(ordering[0]), cmp, place);
-    }
+void quicksort_place(double *place, int *ordering, size_t size) {
+  gv_sort(ordering, size, sizeof(ordering[0]), cmp, place);
 }
 
 static void rescaleLayout(v_data *graph, size_t n, double *x_coords,
@@ -144,13 +141,13 @@ static void rescaleLayout(v_data *graph, size_t n, double *x_coords,
 	factor = -sqrt(-distortion);
     }
 
-    assert(n <= INT_MAX);
-    quicksort_place(x_coords, ordering, 0, (int)n - 1);
+    quicksort_place(x_coords, ordering, n);
     {
 	double *densities = recompute_densities(graph, n, x_coords);
 	double *smoothed_densities = smooth_vec(densities, ordering, n, interval);
 	free(densities);
 
+	assert(n <= INT_MAX);
 	cpvec(copy_coords, 0, (int)n - 1, x_coords);
 	for (size_t i = 1; i < n; i++) {
 	    x_coords[ordering[i]] = x_coords[ordering[i - 1]] +
@@ -160,7 +157,7 @@ static void rescaleLayout(v_data *graph, size_t n, double *x_coords,
 	free(smoothed_densities);
     }
 
-    quicksort_place(y_coords, ordering, 0, (int)n - 1);
+    quicksort_place(y_coords, ordering, n);
     {
 	double *densities = recompute_densities(graph, n, y_coords);
 	double *smoothed_densities = smooth_vec(densities, ordering, n, interval);
@@ -271,7 +268,7 @@ static void rescale_layout_polarFocus(v_data *graph, size_t n, double *x_coords,
 	{
 		ordering[i] = (int)i;
     }
-    quicksort_place(distances, ordering, 0, (int)n - 1);
+    quicksort_place(distances, ordering, n);
 
     densities = compute_densities(graph, n, x_coords, y_coords);
     double *smoothed_densities = smooth_vec(densities, ordering, n, interval);

@@ -127,7 +127,7 @@ static double ddist(ex_vtx_data * geom_graph, int v, int u)
     return hypot(x_v - x_u, y_v - y_u);
 }
 
-extern void quicksort_place(double *, int *, int first, int last);
+extern void quicksort_place(double *, int *, size_t size);
 
 static int 
 maxmatch(v_data * graph,	/* array of vtx data for graph */
@@ -225,7 +225,7 @@ maxmatch(v_data * graph,	/* array of vtx data for graph */
 	matchability[vtx] += min_edge_len;	// we less want to match distant nodes
 	matchability[vtx] += ((double) rand()) / RAND_MAX;	// add some randomness 
     }
-    quicksort_place(matchability, order, 0, nvtxs - 1);
+    quicksort_place(matchability, order, nvtxs);
     free(matchability);
 
     // Start determining the matched pairs
@@ -808,7 +808,7 @@ set_active_levels(Hierarchy * hierarchy, int *foci_nodes, int num_foci,
     }
 
     // sort nodes according to their distance from foci
-    quicksort_place(distances, nodes, 0, n - 1);
+    quicksort_place(distances, nodes, n);
 
     /* compute *desired* levels of fine nodes by distributing them into buckets
      * The sizes of the buckets is a geometric series with 
