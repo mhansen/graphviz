@@ -94,15 +94,13 @@ static char *gdirname(char *pathname)
 }
 
 static char *nodefilename(const char *filename, node_t *n, agxbuf *buf) {
-    static char *dir;
-    static char disposable[1024];
+    char *dir;
+    char disposable[1024] = {0};
 
-    if (dir == 0) {
-	if (filename)
-	    dir = gdirname(strcpy(disposable, filename));
-	else
-	    dir = ".";
-    }
+    if (filename)
+	dir = gdirname(strcpy(disposable, filename));
+    else
+	dir = ".";
     agxbprint(buf, "%s/node%d.png", dir, AGSEQ(n));
     return agxbuse(buf);
 }
