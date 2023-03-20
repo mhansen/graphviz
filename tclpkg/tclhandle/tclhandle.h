@@ -92,7 +92,6 @@ extern "C" {
     void *tclhandleFree(tblHeader_pt headerPtr, char *handle);
     tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
 			       uint64_t initEntries);
-    int tclhandleReset(tblHeader_pt tblHdrPtr, uint64_t initEntries);
     int tclhandleDestroy(tblHeader_pt tblHdrPtr);
     void *tclhandleXlateIndex(tblHeader_pt headerPtr,
 			      uint64_t entryIdx);

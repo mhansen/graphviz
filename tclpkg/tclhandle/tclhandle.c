@@ -213,38 +213,6 @@ int tclhandleDestroy(tblHeader_pt tblHdrPtr)
 }
 
 /*=============================================================================
- * tclhandleReset --
- *   Reset a Tcl dynamic handle table.  
- * Parameters:
- *   tblHdrPtr - A pointer to the table header.
- *   initEntries - The number of initial entries in the reset table.
- * Returns:
- *   TCL_OK if success
- *   TCL_ERROR if any handles still in use in the old handle table.
- *-----------------------------------------------------------------------------
- */
-
-int tclhandleReset(tblHeader_pt tblHdrPtr, uint64_t initEntries)
-{
-    uint64_t entIdx, lastIdx;
-    entryHeader_pt entryPtr;
-
-    lastIdx = tblHdrPtr->tableSize;
-    for (entIdx = 0; entIdx < lastIdx; entIdx++) {
-	entryPtr = TBL_INDEX(tblHdrPtr, entIdx);
-	if (entryPtr->freeLink == ALLOCATED_IDX)
-	    return TCL_ERROR;
-    }
-    free(tblHdrPtr->bodyPtr);
-    tblHdrPtr->freeHeadIdx = NULL_IDX;
-    tblHdrPtr->tableSize = initEntries;
-    tblHdrPtr->bodyPtr = malloc(initEntries * tblHdrPtr->entrySize);
-    tclhandleLinkInNewEntries(tblHdrPtr, 0, initEntries);
-
-    return TCL_OK;
-}
-
-/*=============================================================================
  * tclhandleIndex --
  *   Translate a string handle to a handleTable Index.
  *
