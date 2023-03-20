@@ -883,9 +883,6 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
     int exp = opts & opt_exp_flag;
     int len;
     int havePinned;		/* some node is pinned */
-#ifdef ALTERNATIVE_STRESS_CALC
-    double mat_stress;
-#endif
 
 	/*************************************************
 	** Computation of full, dense, unrestricted k-D ** 
@@ -1150,15 +1147,6 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	    right_mult_with_vector_ff(lap2, n, coords[k], tmp_coords);
 	    new_stress -= vectors_inner_productf(n, coords[k], tmp_coords);
 	}
-#ifdef ALTERNATIVE_STRESS_CALC
-	mat_stress = new_stress;
-	new_stress = compute_stressf(coords, lap2, dim, n);
-	if (fabs(mat_stress - new_stress) / min(mat_stress, new_stress) >
-	    0.001) {
-	    fprintf(stderr, "Diff stress vals: %lf %lf (iteration #%d)\n",
-		    mat_stress, new_stress, iterations);
-	}
-#endif
 	/* Invariant: old_stress > 0. In theory, old_stress >= new_stress
 	 * but we use fabs in case of numerical error.
 	 */
