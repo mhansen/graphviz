@@ -28,6 +28,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/strview.h>
 #include <common/render.h>
 
 /* for wind() */
@@ -63,45 +64,40 @@ static void vrml_end_job(GVJ_t *job) {
  * Returns directory pathname prefix
  * Code adapted from dgk
  */
-static char *gdirname(char *pathname)
-{
-    char *last;
-
+static strview_t gdirname(const char *pathname){
     /* go to end of path */
-    for (last = pathname; *last; last++);
+    size_t last = strlen(pathname);
     /* back over trailing '/' */
-    while (last > pathname && *--last == '/');
+    while (last > 0 && pathname[--last] == '/');
     /* back over non-slash chars */
-    for (; last > pathname && *last != '/'; last--);
-    if (last == pathname) {
+    for (; last > 0 && pathname[last] != '/'; last--);
+    if (last == 0) {
 	/* all '/' or "" */
 	if (*pathname != '/')
-	    *last = '.';
+	    return strview(".", '\0');
 	/* preserve // */
 	else if (pathname[1] == '/')
 	    last++;
     } else {
 	/* back over trailing '/' */
-	for (; *last == '/' && last > pathname; last--);
+	for (; pathname[last] == '/' && last > 0; last--);
 	/* preserve // */
-	if (last == pathname && *pathname == '/' && pathname[1] == '/')
+	if (last == 0 && *pathname == '/' && pathname[1] == '/')
 	    last++;
     }
     last++;
-    *last = '\0';
 
-    return pathname;
+    return (strview_t){.data = pathname, .size = last};
 }
 
 static char *nodefilename(const char *filename, node_t *n, agxbuf *buf) {
-    char *dir;
-    char disposable[1024] = {0};
+    strview_t dir;
 
     if (filename)
-	dir = gdirname(strcpy(disposable, filename));
+	dir = gdirname(filename);
     else
-	dir = ".";
-    agxbprint(buf, "%s/node%d.png", dir, AGSEQ(n));
+	dir = strview(".", '\0');
+    agxbprint(buf, "%.*s/node%d.png", (int)dir.size, dir.data, AGSEQ(n));
     return agxbuse(buf);
 }
 
