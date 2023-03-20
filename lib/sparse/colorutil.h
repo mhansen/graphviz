@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <cgraph/agxbuf.h>
 #include <color.h>
 #include <common/colorprocs.h>
 
@@ -17,8 +18,7 @@
 extern "C" {
 #endif
 
-void rgb2hex(float r, float g, float b, char *cstring, const char* opacity);
-  /* dimension of cstring must be >=7 */
+void rgb2hex(float r, float g, float b, agxbuf *cstring, const char* opacity);
 
 #ifdef __cplusplus
 }

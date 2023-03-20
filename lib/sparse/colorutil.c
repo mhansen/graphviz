@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/agxbuf.h>
 #include <sparse/general.h>
 #include <sparse/colorutil.h>
 #include <stdio.h>
@@ -17,14 +18,10 @@ static int r2i(float r){
   return (int)(255*r+0.5);
 }
 
-void rgb2hex(float r, float g, float b, char *cstring, const char *opacity) {
-  sprintf(cstring, "#%02x%02x%02x", r2i(r), r2i(g), r2i(b));
+void rgb2hex(float r, float g, float b, agxbuf *cstring, const char *opacity) {
+  agxbprint(cstring, "#%02x%02x%02x", r2i(r), r2i(g), r2i(b));
   //set to semitransparent for multiple sets vis
   if (opacity && strlen(opacity) >= 2){
-    cstring[7] = opacity[0];
-    cstring[8] = opacity[1];
-    cstring[9]='\0';
-  } else {
-    cstring[7] = '\0';
+    agxbput_n(cstring, opacity, 2);
   }
 }

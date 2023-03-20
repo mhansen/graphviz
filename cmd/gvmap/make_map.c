@@ -279,9 +279,12 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
   int i, j, *ia = polys->ia, *ja = polys->ja, *a = polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
   int np = 0;
   int fill = -1;
-  char cstring[] = "#aaaaaaff";
   int use_line = (line_width >= 0);
   
+  agxbuf cstring_buffer = {0};
+  agxbput(&cstring_buffer, "#aaaaaaff");
+  char *cstring = agxbuse(&cstring_buffer);
+
   size_t maxlen = 0;
   for (i = 0; i < npolys; i++) {
     int len = ia[i + 1] - ia[i];
@@ -303,7 +306,9 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
       if (abs(a[j]) != ipoly){/* the first poly, or a hole */
 	ipoly = abs(a[j]);
 	if (r && g && b) {
-	  rgb2hex(r[polys_groups[i]], g[polys_groups[i]], b[polys_groups[i]], cstring, opacity);
+	  rgb2hex(r[polys_groups[i]], g[polys_groups[i]], b[polys_groups[i]],
+	          &cstring_buffer, opacity);
+	  cstring = agxbuse(&cstring_buffer);
 	}
 	dot_one_poly(sbuff, line_width, fill, np, xp, yp, cstring);
 	np = 0;/* start a new polygon */
@@ -317,6 +322,7 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
       dot_one_poly(sbuff, -1, 1, np, xp, yp, cstring);
     }
   }
+  agxbfree(&cstring_buffer);
   free(xp);
   free(yp);
 }
