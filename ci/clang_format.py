@@ -577,7 +577,6 @@ EXCLUDE = (
     "lib/sparse/clustering.h",
     "lib/sparse/color_palette.c",
     "lib/sparse/color_palette.h",
-    "lib/sparse/colorutil.h",
     "lib/sparse/general.c",
     "lib/sparse/general.h",
     "lib/sparse/mq.c",
