@@ -34,6 +34,7 @@
  *-----------------------------------------------------------------------------
  */
 
+#include <cgraph/agxbuf.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -121,7 +122,7 @@ static void tclhandleExpandTable(tblHeader_pt tblHdrPtr, uint64_t neededIdx)
  *    The a pointer to the entry.
  *-----------------------------------------------------------------------------
  */
-entryHeader_pt tclhandleAlloc(tblHeader_pt headerPtr, char *handle,
+entryHeader_pt tclhandleAlloc(tblHeader_pt headerPtr, char **handle,
 			      uint64_t *entryIdxPtr)
 {
     tblHeader_pt tblHdrPtr = headerPtr;
@@ -136,8 +137,11 @@ entryHeader_pt tclhandleAlloc(tblHeader_pt headerPtr, char *handle,
     tblHdrPtr->freeHeadIdx = entryPtr->freeLink;
     entryPtr->freeLink = ALLOCATED_IDX;
 
-    if (handle)
-	sprintf(handle, tblHdrPtr->handleFormat, entryIdx);
+    if (handle) {
+	agxbuf buf = {0};
+	agxbprint(&buf, tblHdrPtr->handleFormat, entryIdx);
+	*handle = agxbdisown(&buf);
+    }
     if (entryIdxPtr)
 	*entryIdxPtr = entryIdx;
     return USER_AREA(entryPtr);

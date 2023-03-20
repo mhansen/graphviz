@@ -843,11 +843,12 @@ vgpane(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[])
     (void)argc;
     (void)argv;
 
-    char vbuf[30];
+    char *vbuf = NULL;
     vgpane_t *vgp;
 
     vgp = malloc(sizeof(vgpane_t));
-    *(vgpane_t **) tclhandleAlloc(vgpaneTable, vbuf, NULL) = vgp;
+    *(vgpane_t **) tclhandleAlloc(vgpaneTable, &vbuf, NULL) = vgp;
+    assert(vbuf != NULL);
 
     vgp->vc = NULL;
     vgp->Npoly = 0;
@@ -858,6 +859,7 @@ vgpane(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[])
 
     Tcl_CreateCommand(interp, vbuf, vgpanecmd, (ClientData)NULL, NULL);
     Tcl_AppendResult(interp, vbuf, NULL);
+    free(vbuf);
     return TCL_OK;
 }
 
