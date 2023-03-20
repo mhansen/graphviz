@@ -68,13 +68,6 @@ extern "C" {
     ((entryHeader_pt) (hdrPtr->bodyPtr + (hdrPtr->entrySize * idx)))
 
 /*
- * This macro is used to return an index to an entry, given its pointer.
- *    **** This macro provides no checks *****
- */
-#define TBL_ENTRY(hdrPtr, entryPtr) \
-    ((uint64_t) ((entryPtr - (hdrPtr->bodyPtr)) / (hdrPtr->entrySize)))
-
-/*
  * This macros to convert between pointers to the user and header area of
  * an table entry.
  */
