@@ -28,7 +28,6 @@ typedef struct {
 	float *fArray2;
 	float *fArray3;
 	float *fArray4;
-	float *A_r;
 	int *ordering;
 	int *levels;
 	int num_levels;
