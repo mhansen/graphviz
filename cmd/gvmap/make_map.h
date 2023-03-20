@@ -14,7 +14,7 @@
 #include <cgraph/cgraph.h>
 
 void make_map_from_rectangle_groups(int include_OK_points, int n, int dim, double *x, double *sizes,
-				   int *grouping, SparseMatrix graph, double bounding_box_margin[], int *nrandom,int *nart, int nedgep, 
+				   int *grouping, SparseMatrix graph, double bounding_box_margin[], int nrandom, int *nart, int nedgep,
 				   double shore_depth_tol, int *nverts, double **x_poly,
 				   SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, 
 				   SparseMatrix *country_graph, int highlight_cluster);

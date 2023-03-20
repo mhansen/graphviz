@@ -347,7 +347,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
     pm->highlight_cluster = validateCluster (n, grouping, pm->highlight_cluster);
   }
   make_map_from_rectangle_groups(pm->include_OK_points,
-				 n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
+				 n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
 				 pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
 				 &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
 
@@ -373,7 +373,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       nart = nart0;
       nrandom = nr0;
       make_map_from_rectangle_groups(pm->include_OK_points,
-				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
+				     n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
     }
@@ -386,7 +386,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       nart = nart0;
       nrandom = nr0;
       make_map_from_rectangle_groups(pm->include_OK_points,
-				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
+				     n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
     }
