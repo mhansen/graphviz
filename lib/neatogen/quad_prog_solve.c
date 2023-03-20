@@ -415,7 +415,6 @@ void deleteCMajEnv(CMajEnv * e)
 {
     free(e->A[0]);
     free(e->A);
-    free(e->lev);
     free(e->fArray1);
     free(e->fArray2);
     free(e->fArray3);
@@ -431,7 +430,6 @@ CMajEnv *initConstrainedMajorization(float *packedMat, int n,
 				     int *ordering, int *levels,
 				     int num_levels)
 {
-    int i, level = -1, start_of_level_above = 0;
     CMajEnv *e = GNEW(CMajEnv);
     e->A = NULL;
     e->n = n;
@@ -439,15 +437,6 @@ CMajEnv *initConstrainedMajorization(float *packedMat, int n,
     e->levels = levels;
     e->num_levels = num_levels;
     e->A = unpackMatrix(packedMat, n);
-    e->lev = N_GNEW(n, int);
-    for (i = 0; i < e->n; i++) {
-	if (i >= start_of_level_above) {
-	    level++;
-	    start_of_level_above =
-		(level == num_levels) ? e->n : levels[level];
-	}
-	e->lev[ordering[i]] = level;
-    }
     e->fArray1 = N_GNEW(n, float);
     e->fArray2 = N_GNEW(n, float);
     e->fArray3 = N_GNEW(n, float);

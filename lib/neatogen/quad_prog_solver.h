@@ -19,7 +19,6 @@ extern "C" {
 typedef struct {
 	float **A;
 	int n;
-	int *lev;
 	int *iArray1;
 	int *iArray2;
 	int *iArray3;
