@@ -164,11 +164,8 @@ static int cmp(const void *a, const void *b, void *context) {
   return 0;
 }
 
-void quicksort_place(double *place, int *ordering, int first, int last)
-{
-    if (first < last) {
-	gv_sort(ordering + first, last - first + 1, sizeof(ordering[0]), cmp, place);
-    }
+void quicksort_place(double *place, int *ordering, int size) {
+  gv_sort(ordering, size, sizeof(ordering[0]), cmp, place);
 }
 
 void compute_new_weights(vtx_data * graph, int n)

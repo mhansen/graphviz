@@ -73,7 +73,7 @@ compute_hierarchy(vtx_data * graph, int n, double abs_tol,
     for (i = 0; i < n; i++) {
 	ordering[i] = i;
     }
-    quicksort_place(y, ordering, 0, n - 1);
+    quicksort_place(y, ordering, n);
 
     /* take the y-coords as the given levels */
     if (given_levels) {
@@ -87,7 +87,7 @@ compute_hierarchy(vtx_data * graph, int n, double abs_tol,
 	    y[i] = given_levels[i];
 	    ordering[i] = i;
 	}
-	quicksort_place(y, ordering, 0, n - 1);
+	quicksort_place(y, ordering, n);
     }
 
     /* compute tolerance
