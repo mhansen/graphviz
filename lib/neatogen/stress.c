@@ -641,7 +641,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 					     directions[k], coords[k]);
 	}
 
-	if ((converged = iterations % 2 == 0)) {	/* check for convergence each two iterations */
+	if (iterations % 2 == 0) { // check for convergence each two iterations
 	    new_stress = compute_stress1(coords, distances, dim, n, exp);
 	    converged = fabs(new_stress - old_stress) / (new_stress + 1e-10) < Epsilon;
 	    old_stress = new_stress;
