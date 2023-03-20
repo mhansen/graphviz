@@ -1002,7 +1002,7 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
   free(mask);
 }
 
-static int make_map_internal(int include_OK_points,
+static void make_map_internal(int include_OK_points,
 		      int n, int dim, double *x0, int *grouping0, SparseMatrix graph, double bounding_box_margin[], int *nrandom, int nedgep, 
 		      double shore_depth_tol, double **xcombined, int *nverts, double **x_poly, 
 		      SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map,
@@ -1259,7 +1259,6 @@ static int make_map_internal(int include_OK_points,
   free(xran);
   if (grouping != grouping0) free(grouping);
   if (x != x0) free(x);
-  return 0;
 }
 
 static void add_point(int *n, int igrp, double **x, int *nmax, double point[], int **groups){
@@ -1380,9 +1379,10 @@ int make_map_from_rectangle_groups(int include_OK_points,
   }
 
   if (!sizes){
-    return make_map_internal(include_OK_points, n, dim, x, grouping, graph, bounding_box_margin, nrandom, nedgep,
+    make_map_internal(include_OK_points, n, dim, x, grouping, graph, bounding_box_margin, nrandom, nedgep,
 			    shore_depth_tol, xcombined, nverts, x_poly, 
 			     poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
+    return 0;
   } else {
 
     /* add artificial node due to node sizes */
@@ -1485,9 +1485,10 @@ int make_map_from_rectangle_groups(int include_OK_points,
 
     }/* done adding artificial points due to node size*/
 
-    res = make_map_internal(include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep,
+    make_map_internal(include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep,
 			    shore_depth_tol, xcombined, nverts, x_poly, 
 			    poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
+    res = 0;
     if (graph != graph0) SparseMatrix_delete(graph);
     free(groups);
     free(X);
