@@ -55,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   corrected.
 - Graphs that involve more than 2000 stroke points during tapering calculations
   no longer cause out of bounds writes.
+- Using `arrowsize=0.0` no longer triggers an assertion failure or crash during
+  miter calculations. This was a regression in Graphviz 7.0.0. #2342
 
 ### Removed
 

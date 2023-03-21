@@ -14,6 +14,8 @@ namespace SVG {
 struct SVGPoint {
   double x;
   double y;
+  bool operator==(const SVGPoint &rhs) const;
+  bool operator!=(const SVGPoint &rhs) const;
   bool is_higher_than(const SVGPoint &other) const;
   bool is_lower_than(const SVGPoint &other) const;
   bool is_more_left_than(const SVGPoint &other) const;
@@ -195,6 +197,7 @@ private:
                         const std::string &attribute) const;
   // Return true if the points of a polygon are defined clockwise
   bool has_clockwise_points() const;
+  bool has_all_points_equal() const;
   std::string id_attribute_to_string() const;
   std::string fill_attribute_to_string() const;
   std::string fill_opacity_attribute_to_string() const;

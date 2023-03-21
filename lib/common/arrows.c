@@ -299,6 +299,10 @@ static double arrow_length(edge_t * e, uint32_t flag) {
     const double penwidth = late_double(e, E_penwidth, 1.0, 0.0);
     const double arrowsize = late_double(e, E_arrowsz, 1.0, 0.0);
 
+    if (arrowsize == 0) {
+	return 0;
+    }
+
     arrowflags_t f = int_to_flags(flag);
 
     for (i = 0; i < NUMB_OF_ARROW_HEADS; i++) {
@@ -340,9 +344,11 @@ int arrowEndClip(edge_t* e, pointf * ps, int startp,
     sp[1] = ps[endp + 2];
     sp[0] = spl->ep;	/* ensure endpoint starts inside */
 
-    inside_context.a.p = &sp[0];
-    inside_context.a.r = &elen2;
-    bezier_clip(&inside_context, inside, sp, true);
+    if (elen > 0) {
+	inside_context.a.p = &sp[0];
+	inside_context.a.r = &elen2;
+	bezier_clip(&inside_context, inside, sp, true);
+    }
 
     ps[endp] = sp[3];
     ps[endp + 1] = sp[2];
@@ -369,9 +375,11 @@ int arrowStartClip(edge_t* e, pointf * ps, int startp,
     sp[2] = ps[startp + 1];
     sp[3] = spl->sp;	/* ensure endpoint starts inside */
 
-    inside_context.a.p = &sp[3];
-    inside_context.a.r = &slen2;
-    bezier_clip(&inside_context, inside, sp, false);
+    if (slen > 0) {
+	inside_context.a.p = &sp[3];
+	inside_context.a.r = &slen2;
+	bezier_clip(&inside_context, inside, sp, false);
+    }
 
     ps[startp] = sp[3];
     ps[startp + 1] = sp[2];
@@ -486,6 +494,13 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 
 static pointf miter_point(pointf base_left, pointf P, pointf base_right,
                           double penwidth) {
+  if ((base_left.x == P.x && base_left.y == P.y) ||
+      (base_right.x == P.x && base_right.y == P.y)) {
+    // the stroke shape is really a point so we just return this point without
+    // extending it with penwidth in any direction, which seems to be the way
+    // SVG renderers render this.
+    return P;
+  }
   const pointf A[] = {base_left, P};
   const double dxA = A[1].x - A[0].x;
   const double dyA = A[1].y - A[0].y;
@@ -554,6 +569,8 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
     q.x = p.x + u.x;
     q.y = p.y + u.y;
 
+    pointf delta_base = {0, 0};
+
     const pointf origin = {0, 0};
     const pointf v_inv = {-v.x, -v.y};
     const pointf normal_left = flag.mod_right ? origin : v_inv;
@@ -566,12 +583,14 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
 
     const pointf P3 = miter_point(base_left, P, base_right, penwidth);
 
-    const pointf delta_tip = {P3.x - P.x, P3.y - P.y};
+    const point delta_tip = {P3.x - P.x, P3.y - P.y};
 
-    // phi = angle of arrow
-    const double cosPhi = P.x / hypot(P.x, P.y);
-    const double sinPhi = P.y / hypot(P.x, P.y);
-    const pointf delta_base = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    if (u.x != 0 || u.y != 0) {
+	// phi = angle of arrow
+	const double cosPhi = P.x / hypot(P.x, P.y);
+	const double sinPhi = P.y / hypot(P.x, P.y);
+	delta_base = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    }
 
     if (flag.mod_inv) {
 	p.x += delta_base.x;
@@ -719,7 +738,7 @@ static pointf arrow_type_tee(GVJ_t *job, pointf p, pointf u, double arrowsize,
 
     const double length = hypot(u.x, u.y);
     const double polygon_extend_over_polyline = penwidth / 2 - 0.2 * length;
-    if (polygon_extend_over_polyline > 0) {
+    if (length > 0 && polygon_extend_over_polyline > 0) {
 	// the polygon part of the 'tee' arrow will visually overlap the
 	// 'polyline' part so we need to move the whole arrow in order not to
 	// overlap the node
@@ -776,11 +795,15 @@ static pointf arrow_type_box(GVJ_t *job, pointf p, pointf u, double arrowsize,
     q.x = p.x + u.x;
     q.y = p.y + u.y;
 
-    const pointf P = {-u.x, -u.y};
-    // phi = angle of arrow
-    const double cosPhi = P.x / hypot(P.x, P.y);
-    const double sinPhi = P.y / hypot(P.x, P.y);
-    const pointf delta = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    pointf delta = {0, 0};
+
+    if (u.x != 0 || u.y != 0) {
+	const pointf P = {-u.x, -u.y};
+	// phi = angle of arrow
+	const double cosPhi = P.x / hypot(P.x, P.y);
+	const double sinPhi = P.y / hypot(P.x, P.y);
+	delta = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    }
 
     // move the arrow backwards to not visually overlap the node
     p.x -= delta.x;
@@ -886,15 +909,20 @@ static pointf arrow_type_dot(GVJ_t *job, pointf p, pointf u, double arrowsize,
 
     r = hypot(u.x, u.y) / 2.;
 
-    const pointf P = {-u.x, -u.y};
-    // phi = angle of arrow
-    const double cosPhi = P.x / hypot(P.x, P.y);
-    const double sinPhi = P.y / hypot(P.x, P.y);
-    const pointf delta = {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+    pointf delta = {0, 0};
 
-    // move the arrow backwards to not visually overlap the node
-    p.x -= delta.x;
-    p.y -= delta.y;
+    if (u.x != 0 || u.y != 0) {
+	const pointf P = {-u.x, -u.y};
+	// phi = angle of arrow
+	const double cosPhi = P.x / hypot(P.x, P.y);
+	const double sinPhi = P.y / hypot(P.x, P.y);
+	delta = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+
+	// move the arrow backwards to not visually overlap the node
+	p.x -= delta.x;
+	p.y -= delta.y;
+    }
+
 
     AF[0].x = p.x + u.x / 2. - r;
     AF[0].y = p.y + u.y / 2. - r;

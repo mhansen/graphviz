@@ -231,14 +231,18 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
   case SVG::SVGElementType::Group:
     // SVG group bounding box is detemined solely by its children
     break;
-  case SVG::SVGElementType::Ellipse:
+  case SVG::SVGElementType::Ellipse: {
+    const auto stroke_width = (attributes.rx == 0 && attributes.ry == 0)
+                                  ? 0
+                                  : attributes.stroke_width;
     m_bbox = {
-        .x = attributes.cx - attributes.rx - attributes.stroke_width / 2,
-        .y = attributes.cy - attributes.ry - attributes.stroke_width / 2,
-        .width = attributes.rx * 2 + attributes.stroke_width,
-        .height = attributes.ry * 2 + attributes.stroke_width,
+        .x = attributes.cx - attributes.rx - stroke_width / 2,
+        .y = attributes.cy - attributes.ry - stroke_width / 2,
+        .width = attributes.rx * 2 + stroke_width,
+        .height = attributes.ry * 2 + stroke_width,
     };
     break;
+  }
   case SVG::SVGElementType::Polygon: {
     // it takes at least 3 points to make a polygon (triangle) and Graphviz
     // always generates the last point to be the same as the first so there
@@ -250,6 +254,13 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
     if (points.front().x != points.back().x ||
         points.front().y != points.back().y) {
       throw std::runtime_error{"First and last point are not the same"};
+    }
+    if (has_all_points_equal()) {
+      // the polygon has no size and will not be visible, so just arbitrarily
+      // select one of its (equal) points as its outline bounding box
+      const auto first_point = points.at(0);
+      m_bbox->extend(first_point);
+      break;
     }
     const auto clockwise = has_clockwise_points();
     // the first and last points are always the same so we skip the last
@@ -388,6 +399,14 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
 
     if (points.size() >= 3) {
       // at least one corner
+      if (has_all_points_equal()) {
+        // the polyline has no size and will not be visible, so just arbitrarily
+        // select one of its (equal) points as its outline bounding box
+        const auto first_point = points.at(0);
+        m_bbox->extend(first_point);
+        break;
+      }
+
       const auto clockwise = has_clockwise_points();
       for (auto it = points.cbegin() + 1; it < points.cend() - 1; ++it) {
         // there is always a previous point since we iterate from the second
@@ -491,6 +510,15 @@ void SVG::SVGElement::append_attribute(std::string &output,
     output += " ";
   }
   output += attribute;
+}
+
+bool SVG::SVGElement::has_all_points_equal() const {
+  assert((type == SVG::SVGElementType::Polygon ||
+          type == SVG::SVGElementType::Polyline) &&
+         "not a polygon or polyline");
+  const auto points = attributes.points;
+  assert(!points.empty() > 0 && "no points");
+  return std::equal(points.begin() + 1, points.end(), points.begin());
 }
 
 bool SVG::SVGElement::has_clockwise_points() const {
@@ -827,6 +855,13 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
    * 'bevel' when stroke-miterlimit is exceeded.
    */
 
+  if (segment_start == segment_end || segment_end == following_segment_end) {
+    // the stroke shape is really a point so we just return this point without
+    // extending it with stroke width in any direction, which seems to be the
+    // way SVG renderers render this.
+    return segment_end;
+  }
+
   const auto stroke_width = attributes.stroke_width;
 
   // SVG has inverted y axis so invert all y values before use
@@ -958,6 +993,14 @@ std::string_view SVG::tag(SVGElementType type) {
     return "title";
   }
   UNREACHABLE();
+}
+
+bool SVG::SVGPoint::operator==(const SVGPoint &rhs) const {
+  return x == rhs.x && y == rhs.y;
+}
+
+bool SVG::SVGPoint::operator!=(const SVGPoint &rhs) const {
+  return !(*this == rhs);
 }
 
 bool SVG::SVGPoint::is_higher_than(const SVGPoint &other) const {

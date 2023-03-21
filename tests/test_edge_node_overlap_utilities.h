@@ -46,6 +46,7 @@ struct graph_options {
   double node_penwidth = 1;
   std::string_view dir = "forward";
   double edge_penwidth = 1;
+  double edge_arrowsize = 1;
   std::string_view primitive_arrowhead_shape = "normal";
   std::string_view primitive_arrowtail_shape = "normal";
   std::string_view arrowhead_modifier = "";
