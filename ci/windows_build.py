@@ -9,12 +9,21 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, TextIO
 
 
-def run(args: List[str], cwd: Path):  # pylint: disable=C0116
+def run(args: List[str], cwd: Path, out: TextIO):  # pylint: disable=C0116
     print(f"+ {' '.join(shlex.quote(str(x)) for x in args)}")
-    subprocess.check_call(args, stderr=subprocess.STDOUT, cwd=cwd)
+    p = subprocess.run(
+        args,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        cwd=cwd,
+        universal_newlines=True,
+    )
+    sys.stdout.write(p.stdout)
+    out.write(p.stdout)
+    p.check_returncode()
 
 
 def main(args: List[str]) -> int:  # pylint: disable=C0116
@@ -35,6 +44,12 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
         help="build configuration to select",
     )
     parser.add_argument(
+        "--logfile",
+        type=argparse.FileType("at"),
+        required=True,
+        help="file to pipe stdout and stderr to",
+    )
+    parser.add_argument(
         "--platform", choices=("Win32", "x64"), required=True, help="target platform"
     )
     options = parser.parse_args(args[1:])
@@ -47,7 +62,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
         if build.exists():
             shutil.rmtree(build)
         os.makedirs(build)
-        run(["cmake", "--version"], build)
+        run(["cmake", "--version"], build, options.logfile)
         run(
             [
                 "cmake",
@@ -63,9 +78,14 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
                 "..",
             ],
             build,
+            options.logfile,
         )
-        run(["cmake", "--build", ".", "--config", options.configuration], build)
-        run(["cpack", "-C", options.configuration], build)
+        run(
+            ["cmake", "--build", ".", "--config", options.configuration],
+            build,
+            options.logfile,
+        )
+        run(["cpack", "-C", options.configuration], build, options.logfile)
 
     else:
         run(
@@ -76,6 +96,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
                 "graphviz.sln",
             ],
             root,
+            options.logfile,
         )
         if options.configuration == "Release":
             for filename in os.listdir(root / "Release" / "Graphviz" / "bin"):
@@ -87,6 +108,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
                     ".ilk",
                 ):
                     print(f"deleting {src}")
+                    options.logfile.write(f"deleting {src}\n")
                     src.unlink()
 
     return 0
