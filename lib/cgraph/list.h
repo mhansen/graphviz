@@ -239,7 +239,7 @@
     assert(list != NULL);                                                      \
     name##_clear(list);                                                        \
     free(list->data);                                                          \
-    *list = (name##_t){.data = NULL, .size = 0, .capacity = 0};                \
+    memset(list, 0, sizeof(*list));                                            \
   }                                                                            \
                                                                                \
   /** alias for append */                                                      \
@@ -274,7 +274,8 @@
    */                                                                          \
   static inline LIST_UNUSED name##_t name##_attach(type *data, size_t size) {  \
     assert(data != NULL || size == 0);                                         \
-    return (name##_t){.data = data, .size = size, .capacity = size};           \
+    name##_t list = {data, size, size};                                        \
+    return list;                                                               \
   }                                                                            \
                                                                                \
   /** transform a managed list into a bare array                               \
@@ -289,6 +290,6 @@
   static inline LIST_UNUSED type *name##_detach(name##_t *list) {              \
     assert(list != NULL);                                                      \
     type *data = list->data;                                                   \
-    *list = (name##_t){.data = NULL, .size = 0, .capacity = 0};                \
+    memset(list, 0, sizeof(*list));                                            \
     return data;                                                               \
   }
