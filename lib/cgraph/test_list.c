@@ -14,7 +14,7 @@ DEFINE_LIST(ints, int)
 
 // test construction and destruction, with nothing in-between
 static void test_create_reset(void) {
-  ints_t i = ints_new();
+  ints_t i = {0};
   ints_free(&i);
 }
 
