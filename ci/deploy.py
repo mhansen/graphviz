@@ -232,6 +232,8 @@ def main() -> int:  # pylint: disable=missing-function-docstring
         )
         return -1
 
+    assert len(webdata["windows"]) > 0, "no Windows artifacts found"
+
     # construct a command to create the release itself
     cmd = [
         "release-cli",
