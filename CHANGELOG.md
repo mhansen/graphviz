@@ -6,8 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (8.0.1)]
 
-## [8.0.0] – 2023-03-20
-
 ### Added
 
 - When specifying a color in HSV format, it is now possible to give an
@@ -2085,8 +2083,7 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (8.0.1)]: https://gitlab.com/graphviz/graphviz/compare/8.0.0...main
-[8.0.0]: https://gitlab.com/graphviz/graphviz/compare/7.1.0...8.0.0
+[Unreleased (8.0.1)]: https://gitlab.com/graphviz/graphviz/compare/7.1.0...main
 [7.1.0]: https://gitlab.com/graphviz/graphviz/compare/7.0.6...7.1.0
 [7.0.6]: https://gitlab.com/graphviz/graphviz/compare/7.0.5...7.0.6
 [7.0.5]: https://gitlab.com/graphviz/graphviz/compare/7.0.4...7.0.5
