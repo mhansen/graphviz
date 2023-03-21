@@ -21,7 +21,7 @@ def run(args: List[str], cwd: Path, out: TextIO):  # pylint: disable=C0116
         cwd=cwd,
         universal_newlines=True,
     )
-    sys.stdout.write(p.stdout)
+    sys.stderr.write(p.stdout)
     out.write(p.stdout)
     p.check_returncode()
 
@@ -107,7 +107,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
                     ".ipdb",
                     ".ilk",
                 ):
-                    print(f"deleting {src}")
+                    sys.stderr.write(f"deleting {src}\n")
                     options.logfile.write(f"deleting {src}\n")
                     src.unlink()
 
