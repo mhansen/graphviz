@@ -135,7 +135,7 @@ static void tabover(FILE * gxlFile)
  *   ID := (alpha|'_'|':')(NameChar)*
  *   NameChar := alpha|digit|'.'|':'|'-'|'_'
  */
-static bool legalGXLName(char *id) {
+static bool legalGXLName(const char *id) {
     char c = *id++;
     if (!isalpha(c) && c != '_' && c != ':')
 	return false;
@@ -164,11 +164,11 @@ static int xml_url_puts(FILE *f, const char *s) {
   return xml_escape(s, flags, put, f);
 }
 
-static bool isGxlGrammar(char *name) {
+static bool isGxlGrammar(const char *name) {
   return startswith(name, GXL_ATTR);
 }
 
-static bool isLocatorType(char *name) {
+static bool isLocatorType(const char *name) {
   return startswith(name, GXL_LOC);
 }
 
@@ -179,8 +179,7 @@ static bool idexists(Dt_t * ids, char *id) {
 /* addid:
  * assume id is not in ids.
  */
-static char *addid(Dt_t * ids, char *id)
-{
+static char *addid(Dt_t *ids, const char *id) {
     idv_t *idp = gv_alloc(sizeof(*idp));
 
     idp->name = gv_strdup(id);
@@ -321,7 +320,7 @@ static void printHref(FILE * gxlFile, void *n)
 
 
 static void
-writeDict(FILE *gxlFile, char *name, Dict_t *dict, bool isGraph) {
+writeDict(FILE *gxlFile, const char *name, Dict_t *dict, bool isGraph) {
     Dict_t *view = dtview(dict, NULL);
     for (Agsym_t *sym = dtfirst(dict); sym; sym = dtnext(dict, sym)) {
 	if (!isGxlGrammar(sym->name)) {
