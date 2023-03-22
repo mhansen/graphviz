@@ -223,7 +223,7 @@ static char *mapLookup(Dt_t * nm, char *name)
     namev_t *objp = dtmatch(nm, name);
     if (objp)
 	return objp->unique_name;
-    return 0;
+    return NULL;
 }
 
 /* nodeID:
@@ -263,7 +263,7 @@ static void addToMap(Dt_t * map, char *name, char *uniqueName)
 {
     namev_t obj = {.name = name};
     namev_t *objp = dtinsert(map, &obj);
-    assert(objp->unique_name == 0);
+    assert(objp->unique_name == NULL);
     objp->unique_name = uniqueName;
 }
 
