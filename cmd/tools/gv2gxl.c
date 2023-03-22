@@ -321,9 +321,7 @@ static void printHref(FILE * gxlFile, void *n)
 
 
 static void
-writeDict(Agraph_t *g, FILE *gxlFile, char *name, Dict_t *dict, bool isGraph) {
-    (void)g;
-
+writeDict(FILE *gxlFile, char *name, Dict_t *dict, bool isGraph) {
     Dict_t *view = dtview(dict, NULL);
     for (Agsym_t *sym = dtfirst(dict); sym; sym = dtnext(dict, sym)) {
 	if (!isGxlGrammar(sym->name)) {
@@ -409,9 +407,9 @@ static void writeDicts(Agraph_t * g, FILE * gxlFile)
 {
     Agdatadict_t *def;
     if ((def = agdatadict(g, FALSE))) {
-	writeDict(g, gxlFile, "graph", def->dict.g, true);
-	writeDict(g, gxlFile, "node", def->dict.n, false);
-	writeDict(g, gxlFile, "edge", def->dict.e, false);
+	writeDict(gxlFile, "graph", def->dict.g, true);
+	writeDict(gxlFile, "node", def->dict.n, false);
+	writeDict(gxlFile, "edge", def->dict.e, false);
     }
 }
 
