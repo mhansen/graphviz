@@ -246,7 +246,6 @@ static char *nodeID(gxlstate_t * stp, Agnode_t * n)
     return uniqueName;
 }
 
-#define EXTRA 32		/* space for ':' followed by a number */
 #define EDGEOP "--"		/* cannot use '>'; illegal in ID in GXL */
 
 static char *createEdgeId(gxlstate_t * stp, Agedge_t * e)
