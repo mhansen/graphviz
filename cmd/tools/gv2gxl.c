@@ -26,10 +26,6 @@
 #define EMPTY(s)	((s == 0) || (*s == '\0'))
 #define SLEN(s)     (sizeof(s)-1)
 
-#define NODE		1
-#define EDGE		2
-#define GRAPH		3
-
 #define GXL_ATTR    "_gxl_"
 #define GXL_ROLE	"_gxl_role"
 #define GXL_HYPER	"_gxl_hypergraph"
