@@ -226,6 +226,9 @@ static char *mapLookup(Dt_t * nm, char *name)
     return 0;
 }
 
+/* nodeID:
+ * Return id associated with the given node.
+ */
 static char *nodeID(gxlstate_t * stp, Agnode_t * n)
 {
     char *name = agnameof(n);
@@ -593,9 +596,6 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
     AGATTRWF(obj) = !(AGATTRWF(obj));
 }
 
-/* nodeID:
- * Return id associated with the given node.
- */
 static bool attrs_written(gxlstate_t * stp, void *obj) {
   return AGATTRWF(obj) != stp->attrsNotWritten;
 }
