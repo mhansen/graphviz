@@ -17,7 +17,6 @@ from pathlib import Path
 EXCLUDE = (
     "cmd/dot/dot.c",
     "cmd/dot/dot_builtins.cpp",
-    "cmd/dot/no_builtins.c",
     "cmd/edgepaint/edgepaintmain.c",
     "cmd/gvedit/csettings.cpp",
     "cmd/gvedit/csettings.h",

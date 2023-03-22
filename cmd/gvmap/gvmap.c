@@ -42,8 +42,7 @@ typedef struct {
     int dim;
     double shore_depth_tol;
     int nrandom; 
-    int show_points; 
-    double bbox_margin[2]; 
+    double bbox_margin;
     int useClusters;
     int clusterMethod;
     bool plotedges;
@@ -91,11 +90,7 @@ static const char usestr[] =
     -m v - bounding box margin. If 0, auto-assigned (0)\n\
     -o <file> - put output in <file> (stdout)\n\
     -O   - do NOT do color assignment optimization that maximizes color difference between neighboring countries\n\
-    -p k - show points. (0)\n\
-       0 : no points\n\
-       1 : all points\n\
-       2 : label points\n\
-       3 : random/artificial points\n\
+    -p k - ignored\n\
     -r k - number of random points k used to define sea and lake boundaries. If 0, auto assigned. (0)\n\
     -s v - depth of the sea and lake shores in points. If < 0, auto assigned. (0)\n\
     -t n - improve contiguity up to n times. (0)\n\
@@ -165,7 +160,6 @@ init(int argc, char **argv, params_t* pm)
   pm->useClusters = 0;
   pm->clusterMethod = CLUSTERING_MODULARITY;
   pm->plotedges = false;
-  pm->show_points = 0;
   pm->color_scheme = COLOR_SCHEME_PASTEL; 
   pm->line_width = 0;
   pm->improve_contiguity_n = 0;
@@ -180,15 +174,14 @@ init(int argc, char **argv, params_t* pm)
   pm->include_OK_points = FALSE;
   pm->seed = 123;
 
-  /*  bbox_margin[0] =  bbox_margin[1] = -0.2;*/
-  pm->bbox_margin[0] =  pm->bbox_margin[1] = 0;
+  pm->bbox_margin = 0;
 
   opterr = 0;
   while ((c = getopt(argc, argv, ":evODQko:m:s:r:p:c:C:l:b:g:t:a:h:z:d:?")) != -1) {
     switch (c) {
     case 'm':
       if (sscanf(optarg, "%lf", &s) > 0 && s != 0) {
-	    pm->bbox_margin[0] =  pm->bbox_margin[1] = s;
+	    pm->bbox_margin = s;
       } else {
         usage(cmd, 1);
       }
@@ -223,11 +216,7 @@ init(int argc, char **argv, params_t* pm)
         pm->improve_contiguity_n = r;
       }
       break;
-    case 'p':
-      pm->show_points = 1;
-      if (sscanf(optarg, "%d", &r) > 0) {
-        pm->show_points = MIN(3, r);
-      }
+    case 'p': // ignored
       break;
     case 'k':
       pm->include_OK_points = TRUE;
@@ -339,30 +328,26 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   int dim = pm->dim;
   int i;
   SparseMatrix poly_lines, polys, poly_point_map;
-  double edge_bridge_tol = 0.;
-  int npolys, nverts, *polys_groups, exclude_random;
-  double *x_poly, *xcombined;
+  int nverts, *polys_groups;
+  double *x_poly;
   SparseMatrix country_graph;
   int improve_contiguity_n = pm->improve_contiguity_n;
 #ifdef TIME
   clock_t  cpu;
 #endif
-  int nr0, nart0;
+  int nart0;
   int nart, nrandom;
-
-  exclude_random = TRUE;
-
 
 #ifdef TIME
   cpu = clock();
 #endif
-  nr0 = nrandom = pm->nrandom; nart0 = nart = pm->nart;
+  nrandom = pm->nrandom; nart0 = nart = pm->nart;
   if (pm->highlight_cluster) {
     pm->highlight_cluster = validateCluster (n, grouping, pm->highlight_cluster);
   }
-  make_map_from_rectangle_groups(exclude_random, pm->include_OK_points,
-				 n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
-				 pm->shore_depth_tol, edge_bridge_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
+  make_map_from_rectangle_groups(pm->include_OK_points,
+				 n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
+				 pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
 				 &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
 
   if (Verbose) fprintf(stderr,"nart = %d\n",nart);
@@ -385,10 +370,9 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
     for (i = 0; i < improve_contiguity_n; i++){
       improve_contiguity(n, dim, grouping, poly_point_map, x, graph);
       nart = nart0;
-      nrandom = nr0;
-      make_map_from_rectangle_groups(exclude_random, pm->include_OK_points,
-				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
-				     pm->shore_depth_tol, edge_bridge_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
+      make_map_from_rectangle_groups(pm->include_OK_points,
+				     n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
+				     pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
     }
     {
@@ -398,10 +382,9 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
 		     ELSCHEME_NONE, 0, NULL, NULL, TRUE);
       
       nart = nart0;
-      nrandom = nr0;
-      make_map_from_rectangle_groups(exclude_random, pm->include_OK_points,
-				     n, dim, x, width, grouping, graph, pm->bbox_margin, &nrandom, &nart, pm->nedgep, 
-				     pm->shore_depth_tol, edge_bridge_tol, &xcombined, &nverts, &x_poly, &npolys, &poly_lines, 
+      make_map_from_rectangle_groups(pm->include_OK_points,
+				     n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
+				     pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
     }
     
@@ -413,7 +396,6 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   SparseMatrix_delete(polys);
   SparseMatrix_delete(poly_lines);
   SparseMatrix_delete(poly_point_map);
-  free(xcombined);
   free(x_poly);
   free(polys_groups);
 }
