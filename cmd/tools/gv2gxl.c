@@ -231,8 +231,7 @@ static char *mapLookup(Dt_t * nm, char *name)
     namev_t *objp = dtmatch(nm, name);
     if (objp)
 	return objp->unique_name;
-    else
-	return 0;
+    return 0;
 }
 
 static char *nodeID(gxlstate_t * stp, Agnode_t * n)
@@ -515,8 +514,6 @@ static void writeSubgs(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile)
 
 static int writeEdgeName(Agedge_t * e, FILE * gxlFile)
 {
-    int rv;
-
     char *p = agnameof(e);
     if (!(EMPTY(p))) {
 	tabover(gxlFile);
@@ -527,10 +524,9 @@ static int writeEdgeName(Agedge_t * e, FILE * gxlFile)
 	fprintf(gxlFile, "</string>\n");
 	tabover(gxlFile);
 	fprintf(gxlFile, "\t</attr>\n");
-	rv = TRUE;
-    } else
-	rv = FALSE;
-    return rv;
+	return TRUE;
+    }
+    return FALSE;
 }
 
 
