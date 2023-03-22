@@ -20,6 +20,7 @@
 #include <common/utils.h>
 #include "convert.h"
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -134,16 +135,15 @@ static void tabover(FILE * gxlFile)
  *   ID := (alpha|'_'|':')(NameChar)*
  *   NameChar := alpha|digit|'.'|':'|'-'|'_'
  */
-static int legalGXLName(char *id)
-{
+static bool legalGXLName(char *id) {
     char c = *id++;
     if (!isalpha(c) && c != '_' && c != ':')
-	return 0;
+	return false;
     while ((c = *id++)) {
 	if (!isalnum(c) && c != '_' && c != ':' && c != '-' && c != '.')
-	    return 0;
+	    return false;
     }
-    return 1;
+    return true;
 }
 
 // `fputs` wrapper to handle the difference in calling convention to what
@@ -164,19 +164,16 @@ static int xml_url_puts(FILE *f, const char *s) {
   return xml_escape(s, flags, put, f);
 }
 
-static int isGxlGrammar(char *name)
-{
+static bool isGxlGrammar(char *name) {
   return startswith(name, GXL_ATTR);
 }
 
-static int isLocatorType(char *name)
-{
+static bool isLocatorType(char *name) {
   return startswith(name, GXL_LOC);
 }
 
-static void *idexists(Dt_t * ids, char *id)
-{
-    return dtmatch(ids, id);
+static bool idexists(Dt_t * ids, char *id) {
+  return dtmatch(ids, id) != NULL;
 }
 
 /* addid:
@@ -321,9 +318,7 @@ static void printHref(FILE * gxlFile, void *n)
 
 
 static void
-writeDict(Agraph_t * g, FILE * gxlFile, char *name, Dict_t * dict,
-	  int isGraph)
-{
+writeDict(Agraph_t *g, FILE *gxlFile, char *name, Dict_t *dict, bool isGraph) {
     (void)g;
 
     Dict_t *view = dtview(dict, NULL);
@@ -411,15 +406,13 @@ static void writeDicts(Agraph_t * g, FILE * gxlFile)
 {
     Agdatadict_t *def;
     if ((def = agdatadict(g, FALSE))) {
-	writeDict(g, gxlFile, "graph", def->dict.g, 1);
-	writeDict(g, gxlFile, "node", def->dict.n, 0);
-	writeDict(g, gxlFile, "edge", def->dict.e, 0);
+	writeDict(g, gxlFile, "graph", def->dict.g, true);
+	writeDict(g, gxlFile, "node", def->dict.n, false);
+	writeDict(g, gxlFile, "edge", def->dict.e, false);
     }
 }
 
-static void
-writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
-{
+static void writeHdr(gxlstate_t *stp, Agraph_t *g, FILE *gxlFile, bool top) {
     char *kind;
 
     Level++;
@@ -484,8 +477,7 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
     AGATTRWF(g) = !(AGATTRWF(g));
 }
 
-static void writeTrl(Agraph_t * g, FILE * gxlFile, int top)
-{
+static void writeTrl(Agraph_t *g, FILE *gxlFile, bool top) {
     tabover(gxlFile);
     fprintf(gxlFile, "</graph>\n");
     Level--;
@@ -500,14 +492,13 @@ static void writeTrl(Agraph_t * g, FILE * gxlFile, int top)
 static void writeSubgs(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile)
 {
     for (Agraph_t *subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
-	writeHdr(stp, subg, gxlFile, FALSE);
+	writeHdr(stp, subg, gxlFile, false);
 	writeBody(stp, subg, gxlFile);
-	writeTrl(subg, gxlFile, FALSE);
+	writeTrl(subg, gxlFile, false);
     }
 }
 
-static int writeEdgeName(Agedge_t * e, FILE * gxlFile)
-{
+static bool writeEdgeName(Agedge_t *e, FILE *gxlFile) {
     char *p = agnameof(e);
     if (!(EMPTY(p))) {
 	tabover(gxlFile);
@@ -518,9 +509,9 @@ static int writeEdgeName(Agedge_t * e, FILE * gxlFile)
 	fprintf(gxlFile, "</string>\n");
 	tabover(gxlFile);
 	fprintf(gxlFile, "\t</attr>\n");
-	return TRUE;
+	return true;
     }
-    return FALSE;
+    return false;
 }
 
 
@@ -605,8 +596,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 /* nodeID:
  * Return id associated with the given node.
  */
-static int attrs_written(gxlstate_t * stp, void *obj)
-{
+static bool attrs_written(gxlstate_t * stp, void *obj) {
   return AGATTRWF(obj) != stp->attrsNotWritten;
 }
 
@@ -656,14 +646,13 @@ static void writePort(Agedge_t * e, FILE * gxlFile, char *name)
     }
 }
 
-static int writeEdgeTest(Agraph_t * g, Agedge_t * e)
-{
+static bool writeEdgeTest(Agraph_t *g, Agedge_t *e) {
     /* can use agedge() because we subverted the dict compar_f */
     for (Agraph_t *subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	if (agsubedge(subg, e, FALSE))
-	    return FALSE;
+	    return false;
     }
-    return TRUE;
+    return true;
 }
 
 static void
