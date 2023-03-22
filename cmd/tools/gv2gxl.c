@@ -344,8 +344,7 @@ writeDict(Agraph_t * g, FILE * gxlFile, char *name, Dict_t * dict,
 	    }
 
 	    if (isLocatorType(sym->defval)) {
-		char *locatorVal = sym->defval;
-		locatorVal += 13;
+		char *locatorVal = sym->defval + strlen(GXL_LOC);
 
 		tabover(gxlFile);
 		fprintf(gxlFile, "\t<attr name=\"");
@@ -556,8 +555,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 			continue;
 
 		    if (isLocatorType(data->str[sym->id])) {
-			char *locatorVal = data->str[sym->id];
-			locatorVal += 13;
+			char *locatorVal = data->str[sym->id] + strlen(GXL_LOC);
 
 			tabover(gxlFile);
 			fprintf(gxlFile, "\t<attr name=\"");
