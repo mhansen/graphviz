@@ -12,6 +12,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
+#include <cgraph/list.h>
 #include <sparse/SparseMatrix.h>
 #include <sfdpgen/spring_electrical.h>
 #include <sparse/QuadTree.h>
@@ -49,7 +50,7 @@ spring_electrical_control spring_electrical_control_new(){
   ctrl->step = 0.1;
   ctrl->adaptive_cooling = TRUE;
   ctrl->random_seed = 123;
-  ctrl->beautify_leaves = FALSE;
+  ctrl->beautify_leaves = false;
   ctrl->smoothing = SMOOTHING_NONE;
   ctrl->overlap = 0;
   ctrl->do_shrinking = 1;
@@ -87,7 +88,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
   fprintf (stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool, ctrl->step, ctrl->adaptive_cooling);
   fprintf (stderr, "  beautify_leaves %d node weights %d rotation %.03f\n",
-    ctrl->beautify_leaves, 0, ctrl->rotation);
+           (int)ctrl->beautify_leaves, 0, ctrl->rotation);
   fprintf (stderr, "  smoothing %s overlap %d initial_scaling %.03f do_shrinking %d\n",
     smoothings[ctrl->smoothing], ctrl->overlap, ctrl->initial_scaling, ctrl->do_shrinking);
   fprintf (stderr, "  octree scheme %s method %s\n", tschemes[ctrl->tscheme], methods[ctrl->method]);
@@ -306,76 +307,22 @@ static double update_step(int adaptive_cooling, double step, double Fnorm, doubl
 
 #define node_degree(i) (ia[(i)+1] - ia[(i)])
 
-static void check_real_array_size(double **a, int len, int *lenmax){
-  if (len >= *lenmax){
-    *a = gv_recalloc(*a, *lenmax, len + 10, sizeof(double));
-    *lenmax = len + 10;
-  }
-
-}
-static void check_int_array_size(int **a, int len, int *lenmax){
-  if (len >= *lenmax){
-    *a = gv_recalloc(*a, *lenmax, len + 10, sizeof(int));
-    *lenmax = len + 10;
-  }
-
-}
-
-static double get_angle(double *x, int dim, int i, int j){
-  /* between [0, 2Pi)*/
-  int k;
-  double y[2], res;
-  double eps = 0.00001;
-  for (k = 0; k < 2; k++){
-    y[k] = x[j*dim+k] - x[i*dim+k];
-  }
-  if (fabs(y[0]) <= fabs(y[1])*eps){
-    if (y[1] > 0) return 0.5*PI;
-    return 1.5*PI;
-  }
-  res = atan(y[1]/y[0]);
-  if (y[0] > 0){
-    if (y[1] < 0) res = 2*PI+res;
-  } else if (y[0] < 0){
-    res = res + PI;
-  }
-  return res;
-}
-
-static int comp_real(const void *x, const void *y){
-  const double *xx = x;
-  const double *yy = y;
-
-  if (*xx > *yy){
-    return 1;
-  } else if (*xx < *yy){
-    return -1;
-  }
-  return 0;
-}
-static void sort_real(int n, double *a){
-  qsort(a, n, sizeof(double), comp_real);
-}
-
-
 static void set_leaves(double *x, int dim, double dist, double ang, int i, int j){
   x[dim*j] = cos(ang)*dist + x[dim*i];
   x[dim*j+1] = sin(ang)*dist + x[dim*i+1];
 }
 
+DEFINE_LIST(ints, int)
+
 static void beautify_leaves(int dim, SparseMatrix A, double *x){
-  int m = A->m, i, j, *ia = A->ia, *ja = A->ja, k;
+  int m = A->m, i, j, *ia = A->ia, *ja = A->ja;
   int p;
   double dist;
-  int nleaves, nleaves_max = 10;
-  double *angles, maxang, ang1 = 0, ang2 = 0, pad, step;
-  int *leaves, nangles_max = 10, nangles;
+  double step;
 
   assert(!SparseMatrix_has_diagonal(A));
 
   bitarray_t checked = bitarray_new(m);
-  angles = gv_calloc(nangles_max, sizeof(double));
-  leaves = gv_calloc(nleaves_max, sizeof(int));
 
   for (i = 0; i < m; i++){
     if (ia[i+1] - ia[i] != 1) continue;
@@ -383,55 +330,35 @@ static void beautify_leaves(int dim, SparseMatrix A, double *x){
     p = ja[ia[i]];
     if (!bitarray_get(checked, p)) {
       bitarray_set(&checked, p, true);
-      dist = 0; nleaves = 0; nangles = 0;
+      dist = 0;
+      ints_t leaves = {0};
       for (j = ia[p]; j < ia[p+1]; j++){
 	if (node_degree(ja[j]) == 1){
 	  bitarray_set(&checked, ja[j], true);
-	  check_int_array_size(&leaves, nleaves, &nleaves_max);
 	  dist += distance(x, dim, p, ja[j]);
-	  leaves[nleaves] = ja[j];
-	  nleaves++;
-	} else {
-	  check_real_array_size(&angles, nangles, &nangles_max);
-	  angles[nangles++] = get_angle(x, dim, p, ja[j]);
+	  ints_append(&leaves, ja[j]);
 	}
       }
-      assert(nleaves > 0);
-      dist /= nleaves;
-      if (nangles > 0){
-	sort_real(nangles, angles);
-	maxang = 0;
-	for (k = 0; k < nangles - 1; k++){
-	  if (angles[k+1] - angles[k] > maxang){
-	    maxang = angles[k+1] - angles[k];
-	    ang1 = angles[k]; ang2 = angles[k+1];
-	  }
-	}
-	if (2*PI + angles[0] - angles[nangles - 1] > maxang){
-	  maxang = 2*PI + angles[0] - angles[nangles - 1];
-	  ang1 = angles[nangles - 1];
-	  ang2 = 2*PI + angles[0];
-	}
-      } else {
-	ang1 = 0; ang2 = 2*PI; maxang = 2*PI;
-      }
-      pad = MAX(maxang - PI*0.166667*(nleaves-1), 0)*0.5;
-      ang1 += pad*0.95;
-      ang2 -= pad*0.95;
-ang1 = 0; ang2 = 2*PI; maxang = 2*PI;
+      assert(!ints_is_empty(&leaves));
+      dist /= (double)ints_size(&leaves);
+      double ang1 = 0;
+      double ang2 = 2 * M_PI;
+      const double pad = 0.1; // fudge factor to account for the size and
+                              // placement of the nodes themselves
+      ang1 += pad;
+      ang2 -= pad;
       assert(ang2 >= ang1);
       step = 0.;
-      if (nleaves > 1) step = (ang2 - ang1)/(nleaves - 1);
-      for (i = 0; i < nleaves; i++) {
-	set_leaves(x, dim, dist, ang1, p, leaves[i]);
+      if (ints_size(&leaves) > 1) step = (ang2 - ang1) / (double)ints_size(&leaves);
+      for (size_t k = 0; k < ints_size(&leaves); k++) {
+	set_leaves(x, dim, dist, ang1, p, ints_get(&leaves, k));
 	ang1 += step;
       }
+      ints_free(&leaves);
     }
   }
 
   bitarray_reset(&checked);
-  free(angles);
-  free(leaves);
 }
 
 void force_print(FILE *fp, int n, int dim, double *x, double *force){

@@ -57,6 +57,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   no longer cause out of bounds writes.
 - Using `arrowsize=0.0` no longer triggers an assertion failure or crash during
   miter calculations. This was a regression in Graphviz 7.0.0. #2342
+- When using the `beautify=true` attribute, beautification no longer confuses
+  leaves and dimensions. This previously could have led to skipping calculations
+  or infinite loops.
+- When using the `beautify=true` attribute, the first and last nodes around a
+  circular layout are no longer placed on top of each other. #2283
 
 ### Removed
 

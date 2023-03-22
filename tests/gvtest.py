@@ -130,6 +130,11 @@ def is_mingw() -> bool:
     return "mingw" in sysconfig.get_platform()
 
 
+def is_python36() -> bool:
+    """are we running Python 3.6?"""
+    return sys.version_info.major == 3 and sys.version_info.minor == 6
+
+
 def remove_xtype_warnings(s: str) -> str:
     """
     Remove macOS XType warnings from a string. These appear to be harmless, but
