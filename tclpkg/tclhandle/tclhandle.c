@@ -34,6 +34,7 @@
  *-----------------------------------------------------------------------------
  */
 
+#include <cgraph/agxbuf.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -121,7 +122,7 @@ static void tclhandleExpandTable(tblHeader_pt tblHdrPtr, uint64_t neededIdx)
  *    The a pointer to the entry.
  *-----------------------------------------------------------------------------
  */
-entryHeader_pt tclhandleAlloc(tblHeader_pt headerPtr, char *handle,
+entryHeader_pt tclhandleAlloc(tblHeader_pt headerPtr, char **handle,
 			      uint64_t *entryIdxPtr)
 {
     tblHeader_pt tblHdrPtr = headerPtr;
@@ -136,8 +137,11 @@ entryHeader_pt tclhandleAlloc(tblHeader_pt headerPtr, char *handle,
     tblHdrPtr->freeHeadIdx = entryPtr->freeLink;
     entryPtr->freeLink = ALLOCATED_IDX;
 
-    if (handle)
-	sprintf(handle, tblHdrPtr->handleFormat, entryIdx);
+    if (handle) {
+	agxbuf buf = {0};
+	agxbprint(&buf, tblHdrPtr->handleFormat, entryIdx);
+	*handle = agxbdisown(&buf);
+    }
     if (entryIdxPtr)
 	*entryIdxPtr = entryIdx;
     return USER_AREA(entryPtr);
@@ -181,66 +185,6 @@ tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
 }
 
 /*=============================================================================
- * tclhandleDestroy --
- *   Destroy a Tcl dynamic handle table. 
- * Parameters:
- *   tblHdrPtr - A pointer to the table header.
- * Returns:
- *   TCL_OK if success
- *   TCL_ERROR if the table was not empty.
- *-----------------------------------------------------------------------------
- */
-int tclhandleDestroy(tblHeader_pt tblHdrPtr)
-{
-    uint64_t entIdx, lastIdx;
-    entryHeader_pt entryPtr;
-
-    lastIdx = tblHdrPtr->tableSize;
-    for (entIdx = 0; entIdx < lastIdx; entIdx++) {
-	entryPtr = TBL_INDEX(tblHdrPtr, entIdx);
-	if (entryPtr->freeLink == ALLOCATED_IDX)
-	    return TCL_ERROR;
-    }
-    free(tblHdrPtr->bodyPtr);
-    free(tblHdrPtr->handleFormat);
-    free(tblHdrPtr);
-
-    return TCL_OK;
-}
-
-/*=============================================================================
- * tclhandleReset --
- *   Reset a Tcl dynamic handle table.  
- * Parameters:
- *   tblHdrPtr - A pointer to the table header.
- *   initEntries - The number of initial entries in the reset table.
- * Returns:
- *   TCL_OK if success
- *   TCL_ERROR if any handles still in use in the old handle table.
- *-----------------------------------------------------------------------------
- */
-
-int tclhandleReset(tblHeader_pt tblHdrPtr, uint64_t initEntries)
-{
-    uint64_t entIdx, lastIdx;
-    entryHeader_pt entryPtr;
-
-    lastIdx = tblHdrPtr->tableSize;
-    for (entIdx = 0; entIdx < lastIdx; entIdx++) {
-	entryPtr = TBL_INDEX(tblHdrPtr, entIdx);
-	if (entryPtr->freeLink == ALLOCATED_IDX)
-	    return TCL_ERROR;
-    }
-    free(tblHdrPtr->bodyPtr);
-    tblHdrPtr->freeHeadIdx = NULL_IDX;
-    tblHdrPtr->tableSize = initEntries;
-    tblHdrPtr->bodyPtr = malloc(initEntries * tblHdrPtr->entrySize);
-    tclhandleLinkInNewEntries(tblHdrPtr, 0, initEntries);
-
-    return TCL_OK;
-}
-
-/*=============================================================================
  * tclhandleIndex --
  *   Translate a string handle to a handleTable Index.
  *
@@ -263,23 +207,6 @@ int tclhandleIndex(tblHeader_pt tblHdrPtr, char *handle,
     if (entryIdxPtr)
 	*entryIdxPtr = entryIdx;
     return TCL_OK;
-}
-
-/*=============================================================================
- * tclhandleString --
- *   Translate a handleTable Index into a string handle
- *       NB. No check is performed on the Index provided.
- *
- * Parameters:
- *   o headerPtr (I) - A pointer to the table header.
- *   o handle (O) - The handle string -- <prefix><int>
- *   o entryIdxPtr (I) - If not NULL, the index is returned here.
- *-----------------------------------------------------------------------------
- */
-void tclhandleString(tblHeader_pt tblHdrPtr, char *handle,
-		     uint64_t entryIdx)
-{
-    sprintf(handle, tblHdrPtr->handleFormat, entryIdx);
 }
 
 /*=============================================================================

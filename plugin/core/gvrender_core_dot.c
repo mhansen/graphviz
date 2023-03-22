@@ -125,31 +125,30 @@ static void xdot_trim_zeros (char* buf, int addSpace)
  * Convert double to string with space at end.
  * Trailing zeros are removed and decimal point, if possible.
  */
-static void xdot_fmt_num (char* buf, double v)
-{
+static void xdot_fmt_num(char *buf, size_t buf_size, double v) {
     // Prevents values like -0
     if (v > -0.00000001 && v < 0.00000001)
     {
-        strcpy(buf, "0 ");
+        snprintf(buf, buf_size, "0 ");
         return;
     }
-    sprintf(buf, "%.02f", v);
+    snprintf(buf, buf_size, "%.02f", v);
     xdot_trim_zeros (buf, 1);
 }
 
 static void xdot_point(agxbuf *xb, pointf p)
 {
     char buf[BUFSIZ];
-    xdot_fmt_num (buf, p.x);
+    xdot_fmt_num(buf, sizeof(buf), p.x);
     agxbput(xb, buf);
-    xdot_fmt_num (buf, yDir(p.y));
+    xdot_fmt_num(buf, sizeof(buf), yDir(p.y));
     agxbput(xb, buf);
 }
 
 static void xdot_num(agxbuf *xb, double v)
 {
     char buf[BUFSIZ];
-    xdot_fmt_num (buf, v);
+    xdot_fmt_num(buf, sizeof(buf), v);
     agxbput(xb, buf);
 }
 
@@ -569,7 +568,7 @@ static void xdot_textspan(GVJ_t * job, pointf p, textspan_t * span)
     int j;
     
     agxbput(xbufs[emit_state], "F ");
-    xdot_fmt_num (buf, span->font->size);
+    xdot_fmt_num(buf, sizeof(buf), span->font->size);
     agxbput(xbufs[emit_state], buf);
     xdot_str (job, "", span->font->name);
     xdot_pencolor(job);
@@ -603,7 +602,7 @@ static void xdot_textspan(GVJ_t * job, pointf p, textspan_t * span)
     agxbput(xbufs[emit_state], "T ");
     xdot_point(xbufs[emit_state], p);
     agxbprint(xbufs[emit_state], "%d ", j);
-    xdot_fmt_num (buf, span->size.x);
+    xdot_fmt_num(buf, sizeof(buf), span->size.x);
     agxbput(xbufs[emit_state], buf);
     xdot_str (job, "", span->str);
 }
@@ -696,9 +695,9 @@ static void xdot_ellipse(GVJ_t * job, pointf * A, int filled)
     else
         agxbput(xbufs[emit_state], "e ");
     xdot_point(xbufs[emit_state], A[0]);
-    xdot_fmt_num (buf, A[1].x - A[0].x);
+    xdot_fmt_num(buf, sizeof(buf), A[1].x - A[0].x);
     agxbput(xbufs[emit_state], buf);
-    xdot_fmt_num (buf, A[1].y - A[0].y);
+    xdot_fmt_num(buf, sizeof(buf), A[1].y - A[0].y);
     agxbput(xbufs[emit_state], buf);
 }
 
@@ -749,9 +748,9 @@ void core_loadimage_xdot(GVJ_t * job, usershape_t *us, boxf b, bool filled)
     
     agxbput(xbufs[emit_state], "I ");
     xdot_point(xbufs[emit_state], b.LL);
-    xdot_fmt_num (buf, b.UR.x - b.LL.x);
+    xdot_fmt_num(buf, sizeof(buf), b.UR.x - b.LL.x);
     agxbput(xbufs[emit_state], buf);
-    xdot_fmt_num (buf, b.UR.y - b.LL.y);
+    xdot_fmt_num(buf, sizeof(buf), b.UR.y - b.LL.y);
     agxbput(xbufs[emit_state], buf);
     xdot_str (job, "", us->name);
 }

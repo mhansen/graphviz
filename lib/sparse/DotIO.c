@@ -301,7 +301,7 @@ static float hexcol2rgb(char *h){
 void Dot_SetClusterColor(Agraph_t* g, float *rgb_r,  float *rgb_g,  float *rgb_b, int *clusters){
 
   Agnode_t* n;
-  char scluster[20];
+  agxbuf scluster = {0};
   unsigned i;
   Agsym_t* clust_clr_sym = agattr(g, AGNODE, "clustercolor", NULL); 
 
@@ -309,10 +309,12 @@ void Dot_SetClusterColor(Agraph_t* g, float *rgb_r,  float *rgb_g,  float *rgb_b
   for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
     i = ND_id(n);
     if (rgb_r && rgb_g && rgb_b) {
-      rgb2hex((rgb_r)[(clusters)[i]],(rgb_g)[(clusters)[i]],(rgb_b)[(clusters)[i]], scluster, NULL);
+      rgb2hex(rgb_r[clusters[i]], rgb_g[clusters[i]], rgb_b[clusters[i]],
+              &scluster, NULL);
     }
-    agxset(n,clust_clr_sym,scluster);
+    agxset(n, clust_clr_sym, agxbuse(&scluster));
   }
+  agxbfree(&scluster);
 }
 
 SparseMatrix Import_coord_clusters_from_dot(Agraph_t* g, int maxcluster, int dim, int *nn, double **label_sizes, double **x, int **clusters, float **rgb_r,  float **rgb_g,  float **rgb_b,  float **fsz, char ***labels, int default_color_scheme, int clustering_scheme, int useClusters){
