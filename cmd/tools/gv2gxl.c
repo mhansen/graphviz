@@ -137,11 +137,10 @@ static void tabover(FILE * gxlFile)
 static int legalGXLName(char *id)
 {
     char c = *id++;
-    if (!isalpha(c) && (c != '_') && (c != ':'))
+    if (!isalpha(c) && c != '_' && c != ':')
 	return 0;
     while ((c = *id++)) {
-	if (!isalnum(c) && (c != '_') && (c != ':') &&
-	    (c != '-') && (c != '.'))
+	if (!isalnum(c) && c != '_' && c != ':' && c != '-' && c != '.')
 	    return 0;
     }
     return 1;
@@ -490,7 +489,7 @@ static void writeTrl(Agraph_t * g, FILE * gxlFile, int top)
     tabover(gxlFile);
     fprintf(gxlFile, "</graph>\n");
     Level--;
-    if (!(top) && agparent(g)) {
+    if (!top && agparent(g)) {
 	tabover(gxlFile);
 	fprintf(gxlFile, "</node>\n");
 	Level--;
@@ -530,7 +529,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 {
     int cnt = 0;
 
-    if ((AGTYPE(obj) == AGINEDGE) || (AGTYPE(obj) == AGOUTEDGE)) {
+    if (AGTYPE(obj) == AGINEDGE || AGTYPE(obj) == AGOUTEDGE) {
 	if (writeEdgeName(obj, gxlFile))
 	    cnt++;
     }
@@ -538,11 +537,10 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
     if (data) {
 	for (Agsym_t *sym = dtfirst(defdict); sym; sym = dtnext(defdict, sym)) {
 	    if (!isGxlGrammar(sym->name)) {
-		if ((AGTYPE(obj) == AGINEDGE)
-		    || (AGTYPE(obj) == AGOUTEDGE)) {
-		    if (Tailport && (sym->id == Tailport->id))
+		if (AGTYPE(obj) == AGINEDGE || AGTYPE(obj) == AGOUTEDGE) {
+		    if (Tailport && sym->id == Tailport->id)
 			continue;
-		    if (Headport && (sym->id == Headport->id))
+		    if (Headport && sym->id == Headport->id)
 			continue;
 		}
 		if (data->str[sym->id] != sym->defval) {
@@ -609,7 +607,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
  */
 static int attrs_written(gxlstate_t * stp, void *obj)
 {
-    return !(AGATTRWF(obj) == stp->attrsNotWritten);
+  return AGATTRWF(obj) != stp->attrsNotWritten;
 }
 
 static void
