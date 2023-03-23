@@ -270,7 +270,11 @@ void class2(graph_t * g)
 	    /* backward edges */
 	    else {
 		/* avoid when opp==e in undirected graph */
-		if ((opp = agfindedge(g, aghead(e), agtail(e))) && (aghead(opp) != aghead(e))) {
+		for (opp = agfstout(g, aghead(e)); opp != NULL; opp = agnxtout(g, opp)) {
+		    if (aghead(opp) != agtail(e) || aghead(opp) == aghead(e) ||
+		        ED_edge_type(opp) == IGNORED) {
+			continue;
+		    }
 		    /* shadows a forward edge */
 		    if (ED_to_virt(opp) == NULL)
 			make_chain(g, agtail(opp), aghead(opp), opp);
@@ -283,8 +287,11 @@ void class2(graph_t * g)
 			    other_edge(e);
 			    merge_chain(g, e, ED_to_virt(opp), TRUE);
 			}
-			continue;
+			break;
 		    }
+		}
+		if (opp != NULL) {
+		    continue;
 		}
 		make_chain(g, aghead(e), agtail(e), e);
 		prev = e;

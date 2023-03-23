@@ -490,9 +490,7 @@ def test_827():
     b15gv = Path(__file__).parent / "graphs/b15.gv"
     assert b15gv.exists(), "missing test case file"
 
-    ret = subprocess.call(["dot", "-Tsvg", "-o", os.devnull, b15gv])
-
-    assert ret == 1, "Graphviz crashed when processing b15.gv"
+    dot("svg", b15gv)
 
 
 def test_925():
@@ -1567,7 +1565,6 @@ def test_2082():
     dot("png", input)
 
 
-@pytest.mark.xfail(strict=True)
 def test_2087():
     """
     spline routing should be aware of and ignore concentrated edges
