@@ -1568,6 +1568,33 @@ def test_2082():
 
 
 @pytest.mark.xfail(strict=True)
+def test_2087():
+    """
+    spline routing should be aware of and ignore concentrated edges
+    https://gitlab.com/graphviz/graphviz/-/issues/2087
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2087.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # process it with Graphviz
+    warnings = subprocess.check_output(
+        ["dot", "-Tpng", "-o", os.devnull, input],
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
+
+    # work around macOS warnings
+    warnings = remove_xtype_warnings(warnings).strip()
+
+    # no warnings should have been printed
+    assert (
+        warnings == ""
+    ), "warnings were printed when processing concentrated duplicate edges"
+
+
+@pytest.mark.xfail(strict=True)
 @pytest.mark.parametrize("html_like_first", (False, True))
 def test_2089(html_like_first: bool):  # FIXME
     """
