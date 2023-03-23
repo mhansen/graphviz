@@ -91,7 +91,7 @@ def dot(
     ), "one of `source_file` or `source` needs to be provided"
 
     # is the output format a textual format?
-    output_is_text = T in ("canon", "cmapx", "json", "pic", "svg", "xdot")
+    output_is_text = T in ("canon", "cmapx", "dot", "json", "pic", "svg", "xdot")
 
     kwargs = {}
     if output_is_text:
