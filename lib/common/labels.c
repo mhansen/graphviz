@@ -18,8 +18,8 @@
 
 static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash);
 
-static void storeline(GVC_t *gvc, textlabel_t *lp, char *line, char terminator)
-{
+static void storeline(GVC_t *gvc, textlabel_t *lp, const char *line,
+                      char terminator) {
     pointf size;
     textspan_t *span;
     static textfont_t tf;
@@ -27,7 +27,7 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, char *line, char terminator)
 
     lp->u.txt.span = ZALLOC(oldsz + 1, lp->u.txt.span, textspan_t, oldsz);
     span = &lp->u.txt.span[lp->u.txt.nspans];
-    span->str = line;
+    span->str = gv_strdup(line);
     span->just = terminator;
     if (line && line[0]) {
 	tf.name = lp->fontname;
@@ -50,7 +50,7 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, char *line, char terminator)
 /* compiles <str> into a label <lp> */
 void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 {
-    char c, *p, *line, *lineptr, *str = lp->text;
+    char c, *p, *linebase, *line, *lineptr, *str = lp->text;
     unsigned char byte = 0x00;
 
     lp->dimen.x = lp->dimen.y = 0.0;
@@ -58,7 +58,7 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 	return;
 
     p = str;
-    line = lineptr = N_GNEW(strlen(p) + 1, char);
+    linebase = line = lineptr = N_GNEW(strlen(p) + 1, char);
     *line = 0;
     while ((c = *p++)) {
 	byte = (unsigned char) c;
@@ -104,6 +104,7 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 	storeline(gvc, lp, line, 'n');
     }
 
+    free(linebase);
     lp->space = lp->dimen;
 }
 
@@ -194,8 +195,7 @@ void free_textspan(textspan_t *tl, size_t cnt) {
 
     if (!tl) return;
     for (size_t i = 0; i < cnt; i++) {
-	if (i == 0)
-	    free(tlp->str);
+	free(tlp->str);
 	if (tlp->layout && tlp->free_layout)
 	    tlp->free_layout (tlp->layout);
 	tlp++;
