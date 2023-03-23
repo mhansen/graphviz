@@ -50,17 +50,13 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, const char *line,
 /* compiles <str> into a label <lp> */
 void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 {
-    char c, *p, *str = lp->text;
-    unsigned char byte = 0x00;
-
     lp->dimen.x = lp->dimen.y = 0.0;
-    if (*str == '\0')
+    if (*lp->text == '\0')
 	return;
 
-    p = str;
     agxbuf line = {0};
-    while ((c = *p++)) {
-	byte = (unsigned char) c;
+    for (char c, *p = lp->text; (c = *p++);) {
+	unsigned char byte = (unsigned char) c;
 	/* wingraphviz allows a combination of ascii and big-5. The latter
          * is a two-byte encoding, with the first byte in 0xA1-0xFE, and
          * the second in 0x40-0x7e or 0xa1-0xfe. We assume that the input
