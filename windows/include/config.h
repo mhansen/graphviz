@@ -165,9 +165,6 @@
 /* Define if you have the tcl library */
 /* #undef HAVE_TCL */
 
-/* Define to 1 if you have the <termios.h> header file. */
-/* #undef HAVE_TERMIOS_H */
-
 /* Define to 1 if you have the <tkInt.h> header file. */
 /* #undef HAVE_TKINT_H */
 
