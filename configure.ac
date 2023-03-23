@@ -403,9 +403,6 @@ AC_CHECK_HEADERS( \
 	sys/stat.h sys/mman.h \
 	sys/ioctl.h sys/inotify.h)
 
-# Internationalization macros
-# AM_GNU_GETTEXT
-
 dnl -----------------------------------
 dnl Checks for -lm library
 
