@@ -126,9 +126,7 @@ interclrep(graph_t * g, edge_t * e)
     /* else ignore intra-cluster edges at this point */
 }
 
-static int 
-is_cluster_edge(edge_t * e)
-{
+static bool is_cluster_edge(edge_t *e) {
   return ND_ranktype(agtail(e)) == CLUSTER || ND_ranktype(aghead(e)) == CLUSTER;
 }
 
