@@ -56,7 +56,6 @@ static node_t *leader_of(node_t * v) {
     node_t *rv;
 
     if (ND_ranktype(v) != CLUSTER) {
-	/*assert(v == UF_find(v));  could be leaf, so comment out */
 	rv = UF_find(v);
     } else {
 	clust = ND_clust(v);
