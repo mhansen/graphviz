@@ -130,7 +130,7 @@ static bool is_cluster_edge(edge_t *e) {
   return ND_ranktype(agtail(e)) == CLUSTER || ND_ranktype(aghead(e)) == CLUSTER;
 }
 
-void merge_chain(graph_t *g, edge_t *e, edge_t *f, bool flag) {
+void merge_chain(graph_t *g, edge_t *e, edge_t *f, bool update_count) {
     edge_t *rep;
     int lastrank = MAX(ND_rank(agtail(e)), ND_rank(aghead(e)));
 
@@ -139,7 +139,7 @@ void merge_chain(graph_t *g, edge_t *e, edge_t *f, bool flag) {
     rep = f;
     do {
 	/* interclust multi-edges are not counted now */
-	if (flag)
+	if (update_count)
 	    ED_count(rep) += ED_count(e);
 	ED_xpenalty(rep) += ED_xpenalty(e);
 	ED_weight(rep) += ED_weight(e);
