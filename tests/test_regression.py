@@ -2028,6 +2028,21 @@ def test_2342():
     dot("svg", input)
 
 
+@pytest.mark.xfail(strict=True)
+def test_2361():
+    """
+    using `ortho` and `concentrate` in combination should not cause a crash
+    https://gitlab.com/graphviz/graphviz/-/issues/2361
+    """
+
+    # find our collocated test case
+    input = Path(__file__).parent / "2361.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("png", input)
+
+
 def test_package_version():
     """
     The graphviz_version.h header should define a non-empty PACKAGE_VERSION
