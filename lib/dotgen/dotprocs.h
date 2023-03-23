@@ -48,7 +48,7 @@ extern "C" {
     extern void mark_clusters(Agraph_t *);
     extern void mark_lowclusters(Agraph_t *);
     extern int mergeable(edge_t * e, edge_t * f);
-    extern void merge_chain(Agraph_t *, Agedge_t *, Agedge_t *, int);
+    extern void merge_chain(Agraph_t*, Agedge_t*, Agedge_t*, bool);
     extern void merge_oneway(Agedge_t *, Agedge_t *);
     extern int ncross(Agraph_t *);
     extern Agedge_t *new_virtual_edge(Agnode_t *, Agnode_t *, Agedge_t *);

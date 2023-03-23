@@ -111,7 +111,7 @@ interclrep(graph_t * g, edge_t * e)
     }
     if (ND_clust(t) != ND_clust(h)) {
 	if ((ve = find_fast_edge(t, h))) {
-	    merge_chain(g, e, ve, TRUE);
+	    merge_chain(g, e, ve, true);
 	    return;
 	}
 	if (ND_rank(t) == ND_rank(h))
@@ -130,8 +130,7 @@ static bool is_cluster_edge(edge_t *e) {
   return ND_ranktype(agtail(e)) == CLUSTER || ND_ranktype(aghead(e)) == CLUSTER;
 }
 
-void merge_chain(graph_t * g, edge_t * e, edge_t * f, int flag)
-{
+void merge_chain(graph_t *g, edge_t *e, edge_t *f, bool flag) {
     edge_t *rep;
     int lastrank = MAX(ND_rank(agtail(e)), ND_rank(aghead(e)));
 
@@ -199,7 +198,7 @@ void class2(graph_t * g)
 		/* following is new cluster multi-edge code */
 		if (mergeable(prev, e)) {
 		    if (ED_to_virt(prev)) {
-			merge_chain(g, e, ED_to_virt(prev), FALSE);
+			merge_chain(g, e, ED_to_virt(prev), false);
 			other_edge(e);
 		    } else if (ND_rank(agtail(e)) == ND_rank(aghead(e))) {
 			merge_oneway(e, prev);
@@ -224,7 +223,7 @@ void class2(graph_t * g)
 		    if (Concentrate)
 			ED_edge_type(e) = IGNORED;
 		    else {
-			merge_chain(g, e, ED_to_virt(prev), TRUE);
+			merge_chain(g, e, ED_to_virt(prev), true);
 			other_edge(e);
 		    }
 		    continue;
@@ -281,7 +280,7 @@ void class2(graph_t * g)
 			    ED_conc_opp_flag(opp) = true;
 			} else {	/* see above.  this is getting out of hand */
 			    other_edge(e);
-			    merge_chain(g, e, ED_to_virt(opp), TRUE);
+			    merge_chain(g, e, ED_to_virt(opp), true);
 			}
 			break;
 		    }
