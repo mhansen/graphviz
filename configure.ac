@@ -682,37 +682,6 @@ fi
 AM_CONDITIONAL(WITH_GUILE, [test "x$use_guile" = "xYes"])
 
 dnl -----------------------------------
-dnl INCLUDES and LIBS for IO   (disabled until supported by swig)
-
-AC_ARG_ENABLE(io,
-  [AS_HELP_STRING([--enable-io=no],[io language bindings])],
-  [], [enable_io=no])
-
-if test "x$enable_io" != "xyes"; then
-  use_io="No (disabled by default - no swig support yet)"
-else
-  if test "x$use_swig" != "xYes"; then
-    use_io="No (swig not available)"
-  else
-    if test `$SWIG -help 2>&1 | $EGREP -c '\-io *- Generate'` = 0; then
-      use_io="No (swig does not support -io option)"
-    else
-      AC_CHECK_PROG(IO,io,io)
-      if test "x$IO" = "x"; then
-        use_io="No (io not available)"
-      else
-        use_io="Yes"
-        IO_INCLUDES=
-        IO_LIBS=
-        AC_SUBST([IO_INCLUDES])
-        AC_SUBST([IO_LIBS])
-      fi
-    fi
-  fi
-fi
-AM_CONDITIONAL(WITH_IO, [test "x$use_io" = "xYes"])
-
-dnl -----------------------------------
 dnl INCLUDES and LIBS for JAVA
 
 AC_ARG_ENABLE(java,
@@ -2565,7 +2534,6 @@ echo "  gv_sharp:      $use_sharp"
 echo "  gv_d:          $use_d"
 echo "  gv_go:         $use_go"
 echo "  gv_guile:      $use_guile"
-echo "  gv_io:         $use_io"
 echo "  gv_java:       $use_java"
 echo "  gv_javascript: $use_javascript"
 echo "  gv_lua:        $use_lua"
