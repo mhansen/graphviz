@@ -50,7 +50,7 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, const char *line,
 /* compiles <str> into a label <lp> */
 void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 {
-    char c, *p, *linebase, *line, *lineptr, *str = lp->text;
+    char c, *p, *str = lp->text;
     unsigned char byte = 0x00;
 
     lp->dimen.x = lp->dimen.y = 0.0;
@@ -58,8 +58,7 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 	return;
 
     p = str;
-    linebase = line = lineptr = N_GNEW(strlen(p) + 1, char);
-    *line = 0;
+    agxbuf line = {0};
     while ((c = *p++)) {
 	byte = (unsigned char) c;
 	/* wingraphviz allows a combination of ascii and big-5. The latter
@@ -68,9 +67,9 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
          * is well-formed, but check that we don't go past the ending '\0'.
          */
 	if (lp->charset == CHAR_BIG5 && 0xA1 <= byte && byte <= 0xFE) {
-	    *lineptr++ = c;
+	    agxbputc(&line, c);
 	    c = *p++;
-	    *lineptr++ = c;
+	    agxbputc(&line, c);
 	    if (!c) /* NB. Protect against unexpected string end here */
 		break;
 	} else {
@@ -79,32 +78,27 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 		case 'n':
 		case 'l':
 		case 'r':
-		    *lineptr++ = '\0';
-		    storeline(gvc, lp, line, *p);
-		    line = lineptr;
+		    storeline(gvc, lp, agxbuse(&line), *p);
 		    break;
 		default:
-		    *lineptr++ = *p;
+		    agxbputc(&line, *p);
 		}
 		if (*p)
 		    p++;
 		/* tcldot can enter real linend characters */
 	    } else if (c == '\n') {
-		*lineptr++ = '\0';
-		storeline(gvc, lp, line, 'n');
-		line = lineptr;
+		storeline(gvc, lp, agxbuse(&line), 'n');
 	    } else {
-		*lineptr++ = c;
+		agxbputc(&line, c);
 	    }
 	}
     }
 
-    if (line != lineptr) {
-	*lineptr++ = '\0';
-	storeline(gvc, lp, line, 'n');
+    if (agxblen(&line) > 0) {
+	storeline(gvc, lp, agxbuse(&line), 'n');
     }
 
-    free(linebase);
+    agxbfree(&line);
     lp->space = lp->dimen;
 }
 
