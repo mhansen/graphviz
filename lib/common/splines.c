@@ -213,7 +213,7 @@ void shape_clip(node_t * n, pointf curve[4])
 bezier *new_spline(edge_t * e, int sz)
 {
     bezier *rv;
-    while (ED_edge_type(e) != NORMAL)
+    while (ED_to_orig(e) != NULL && ED_edge_type(e) != NORMAL)
 	e = ED_to_orig(e);
     if (ED_spl(e) == NULL)
 	ED_spl(e) = gv_alloc(sizeof(splines));
@@ -249,7 +249,8 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
     g = agraphof(tn);
     newspl = new_spline(fe, pn);
 
-    for (orig = fe; ED_edge_type(orig) != NORMAL; orig = ED_to_orig(orig));
+    for (orig = fe; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
+         orig = ED_to_orig(orig));
 
     /* may be a reversed flat edge */
     if (!info->ignoreSwap && ND_rank(tn) == ND_rank(hn) && ND_order(tn) > ND_order(hn)) {

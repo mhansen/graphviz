@@ -2028,7 +2028,6 @@ def test_2342():
     dot("svg", input)
 
 
-@pytest.mark.xfail(strict=True)
 def test_2361():
     """
     using `ortho` and `concentrate` in combination should not cause a crash
