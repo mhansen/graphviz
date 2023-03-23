@@ -57,7 +57,6 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
     if (*str == '\0')
 	return;
 
-    line = lineptr = NULL;
     p = str;
     line = lineptr = N_GNEW(strlen(p) + 1, char);
     *line = 0;
