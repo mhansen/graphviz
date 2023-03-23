@@ -387,7 +387,6 @@ dnl Check for various typedefs and provide substitutes if they do not exist.
 
 AC_TYPE_PID_T
 AC_TYPE_SSIZE_T
-AC_TYPE_UID_T
 
 AC_CHECK_TYPES([
 	off64_t,
