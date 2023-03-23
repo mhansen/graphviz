@@ -269,7 +269,6 @@ void class2(graph_t * g)
 
 	    /* backward edges */
 	    else {
-		/*other_edge(e); */
 		/* avoid when opp==e in undirected graph */
 		if ((opp = agfindedge(g, aghead(e), agtail(e))) && (aghead(opp) != aghead(e))) {
 		    /* shadows a forward edge */
