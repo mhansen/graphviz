@@ -71,6 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to non-normal edges being found. #2087
 - `splines=ortho` and `concentrate=true` when used in combination no longer
   causes crashes during spline construction. #2361
+- Externally referenced SVG files with their opening `<svg` tag on the same line
+  as their XML declaration are no longer ignored. #2352
 
 ### Removed
 

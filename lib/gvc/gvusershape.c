@@ -80,7 +80,7 @@ static knowntype_t knowntypes[] = {
 
 static int imagetype (usershape_t *us)
 {
-    char header[HDRLEN];
+    char header[HDRLEN] = {0};
     char line[200];
 
     if (us->f && fread(header, 1, HDRLEN, us->f) == HDRLEN) {
@@ -89,6 +89,17 @@ static int imagetype (usershape_t *us)
 	        us->stringtype = knowntypes[i].stringtype;
 		us->type = knowntypes[i].type;
 		if (us->type == FT_XML) {
+		    // if we did not see the closing of the XML declaration, scan for it
+		    if (memchr(header, '>', HDRLEN) == NULL) {
+		        while (true) {
+    			    int c = fgetc(us->f);
+    			    if (c == EOF) {
+    			        return us->type;
+    			    } else if (c == '>') {
+    			        break;
+    			    }
+		        }
+		    }
 		    /* check for SVG in case of XML */
 		    while (fgets(line, sizeof(line), us->f) != NULL) {
 		        if (!memcmp(line, SVG_MAGIC, sizeof(SVG_MAGIC)-1)) {

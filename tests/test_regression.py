@@ -2565,7 +2565,6 @@ def test_2341():
     ), "Graphviz comment remains in groff output"
 
 
-@pytest.mark.xfail(strict=True)
 def test_2352():
     """
     referencing an all-one-line external SVG file should work
