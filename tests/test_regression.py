@@ -2540,3 +2540,27 @@ def test_changelog_dates():
             assert (
                 d is not None
             ), f"CHANGELOG.md:{lineno}: date in incorrect format: {line}"
+
+
+@pytest.mark.skipif(which("gvpack") is None, reason="gvpack not available")
+@pytest.mark.xfail()
+def test_duplicate_hard_coded_metrics_warnings():
+    """
+    Check “no hard-coded metrics” warnings are not repeated
+    """
+
+    # use the #2239 test case that happens to provoke this
+    input = Path(__file__).parent / "2239.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through gvpack
+    gvpack = which("gvpack")
+    p = subprocess.run(
+        [gvpack, "-u", "-o", os.devnull, input],
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    assert (
+        p.stderr.count("no hard-coded metrics for 'sans'") <= 1
+    ), "multiple identical “no hard-coded metrics” warnings printed"
