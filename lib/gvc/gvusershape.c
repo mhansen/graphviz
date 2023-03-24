@@ -72,7 +72,6 @@ static knowntype_t knowntypes[] = {
     { JPEG_MAGIC, sizeof(JPEG_MAGIC)-1,  FT_JPEG, "jpeg", },
     { PDF_MAGIC,  sizeof(PDF_MAGIC)-1,   FT_PDF,  "pdf",  },
     { EPS_MAGIC,  sizeof(EPS_MAGIC)-1,   FT_EPS,  "eps",  },
-/*    { SVG_MAGIC,  sizeof(SVG_MAGIC)-1,  FT_SVG,  "svg",  },  - viewers expect xml preamble */
     { XML_MAGIC,  sizeof(XML_MAGIC)-1,   FT_XML,  "xml",  },
     { RIFF_MAGIC, sizeof(RIFF_MAGIC)-1,  FT_RIFF, "riff", },
     { ICO_MAGIC,  sizeof(ICO_MAGIC)-1,   FT_ICO,  "ico",  },
