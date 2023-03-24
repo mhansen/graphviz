@@ -2583,6 +2583,25 @@ def test_2352():
     assert '<image xlink:href="EDA.svg" ' in svg, "external file reference missing"
 
 
+@pytest.mark.xfail(strict=True)
+def test_2352_1():
+    """
+    variant of 2352 with a leading space in front of `<svg`
+    https://gitlab.com/graphviz/graphviz/-/issues/2352
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2352_1.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # translate it to SVG
+    svg = subprocess.check_output(
+        ["dot", "-Tsvg", input], cwd=Path(__file__).parent, universal_newlines=True
+    )
+
+    assert '<image xlink:href="EDA_1.svg" ' in svg, "external file reference missing"
+
+
 def test_2355():
     """
     Using >127 layers should not crash Graphviz
