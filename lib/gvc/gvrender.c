@@ -28,12 +28,11 @@
 #include <gvc/gvcint.h>
 #include <common/geom.h>
 #include <common/geomprocs.h>
+#include <common/render.h>
 #include <gvc/gvcproc.h>
 #include <cgraph/strcasecmp.h>
 #include <stdlib.h>
 
-extern int emit_once(char *str);
-extern shape_desc *find_user_shape(char *name);
 extern bool mapbool(const char *s);
 
 int gvrender_select(GVJ_t * job, const char *str)
