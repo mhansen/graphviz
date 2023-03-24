@@ -1,14 +1,14 @@
 #include <assert.h>
-#include <ctype.h>
-#include <math.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
 #include <cgraph/agxbuf.h>
 #include <common/render.h>
 #include <common/textspan_lut.h>
 #include <common/types.h>
 #include <common/utils.h>
+#include <ctype.h>
+#include <math.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <string.h>
 
 // Currently we just store the width of every ASCII character, which seems to
 // produce good enough results. We could also store kerning metrics and line
