@@ -2543,7 +2543,6 @@ def test_changelog_dates():
 
 
 @pytest.mark.skipif(which("gvpack") is None, reason="gvpack not available")
-@pytest.mark.xfail()
 def test_duplicate_hard_coded_metrics_warnings():
     """
     Check “no hard-coded metrics” warnings are not repeated

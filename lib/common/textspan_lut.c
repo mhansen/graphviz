@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <cgraph/agxbuf.h>
+#include <common/render.h>
 #include <common/textspan_lut.h>
 #include <common/types.h>
 #include <common/utils.h>
@@ -763,10 +765,15 @@ get_metrics_for_font_family(const char *font_name) {
       return &all_font_metrics[i];
     }
   }
-  fprintf(stderr,
-          "Warning: no hard-coded metrics for '%s'.  Falling back to 'Times' "
-          "metrics\n",
-          font_name);
+  agxbuf warning = {0};
+  agxbprint(&warning,
+            "Warning: no hard-coded metrics for '%s'.  Falling back to 'Times' "
+            "metrics\n",
+            font_name);
+  char *warning_text = agxbuse(&warning);
+  if (emit_once(warning_text)) {
+    fputs(warning_text, stderr);
+  }
   return get_metrics_for_font_family("Times");
 }
 
