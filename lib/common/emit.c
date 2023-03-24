@@ -3514,15 +3514,14 @@ static Dtdisc_t stringdict = {
     .freef = (Dtfree_f)free_string_entry,
 };
 
-int emit_once(char *str)
-{
+bool emit_once(char *str) {
     if (strings == 0)
 	strings = dtopen(&stringdict, Dtoset);
     if (!dtsearch(strings, str)) {
 	dtinsert(strings, gv_strdup(str));
-	return TRUE;
+	return true;
     }
-    return FALSE;
+    return false;
 }
 
 void emit_once_reset(void)
