@@ -22,7 +22,6 @@
 #define S_ISDIR(mode) (((mode) & _S_IFDIR) == _S_IFDIR)
 
 #define access _access
-#define execve _execve
 #define ftruncate _chsize
 #define fileno _fileno
 #define getcwd _getcwd
