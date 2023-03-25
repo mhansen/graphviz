@@ -28,7 +28,7 @@
 #include <common/types.h>
 #include <common/memory.h>
 #include <cgraph/agxbuf.h>
-
+#include <cgraph/strview.h>
 #include <common/utils.h>
 #include <gvc/gvplugin_loadimage.h>
 #include <gvc/gvplugin.h>
@@ -187,10 +187,8 @@ static int svg_units_convert(double n, char *u) {
 }
 
 typedef struct {
-  size_t key_start;
-  size_t key_extent;
-  size_t value_start;
-  size_t value_extent;
+  strview_t key;
+  strview_t value;
 } match_t;
 
 static int find_attribute(const char *s, match_t *result) {
@@ -198,20 +196,20 @@ static int find_attribute(const char *s, match_t *result) {
   // look for an attribute string matching ([a-z][a-zA-Z]*)="([^"]*)"
   for (size_t i = 0; s[i] != '\0'; ) {
     if (s[i] >= 'a' && s[i] <= 'z') {
-      result->key_start = i;
-      result->key_extent = 1;
+      result->key.data = &s[i];
+      result->key.size = 1;
       ++i;
       while ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')) {
         ++i;
-        ++result->key_extent;
+        ++result->key.size;
       }
       if (s[i] == '=' && s[i + 1] == '"') {
         i += 2;
-        result->value_start = i;
-        result->value_extent = 0;
+        result->value.data = &s[i];
+        result->value.size = 0;
         while (s[i] != '"' && s[i] != '\0') {
           ++i;
-          ++result->value_extent;
+          ++result->value.size;
         }
         if (s[i] == '"') {
           // found a valid attribute
@@ -232,7 +230,6 @@ static void svg_size (usershape_t *us)
     int w = 0, h = 0;
     double n, x0, y0, x1, y1;
     char u[10];
-    char *attribute, *value, *re_string;
     agxbuf line = {0};
     bool eof = false;
     bool wFlag = false, hFlag = false;
@@ -251,16 +248,13 @@ static void svg_size (usershape_t *us)
 	    agxbputc(&line, (char)c);
 	}
 
-	re_string = agxbuse(&line);
+	const char *re_string = agxbuse(&line);
 	match_t match;
 	while (find_attribute(re_string, &match) == 0) {
-	    re_string[match.value_start + match.value_extent] = '\0';
-	    attribute = re_string + match.key_start;
-	    value = re_string + match.value_start;
-	    re_string += match.value_start + match.value_extent + 1;
+	    re_string = match.value.data + match.value.size + 1;
 
-	    if (match.key_extent == strlen("width") &&
-	        strncmp(attribute, "width", match.key_extent) == 0) {
+	    if (strview_str_eq(match.key, "width")) {
+	        char *value = strview_str(match.value);
 	        if (sscanf(value, "%lf%2s", &n, u) == 2) {
 	            w = svg_units_convert(n, u);
 	            wFlag = true;
@@ -269,11 +263,12 @@ static void svg_size (usershape_t *us)
 	            w = svg_units_convert(n, "pt");
 	            wFlag = true;
 		}
+		free(value);
 		if (hFlag)
 		    break;
 	    }
-	    else if (match.key_extent == strlen("height") &&
-	             strncmp(attribute, "height", match.key_extent) == 0) {
+	    else if (strview_str_eq(match.key, "height")) {
+	        char *value = strview_str(match.value);
 	        if (sscanf(value, "%lf%2s", &n, u) == 2) {
 	            h = svg_units_convert(n, u);
 	            hFlag = true;
@@ -282,17 +277,21 @@ static void svg_size (usershape_t *us)
 	            h = svg_units_convert(n, "pt");
 	            hFlag = true;
 		}
+		free(value);
                 if (wFlag)
 		    break;
 	    }
-	    else if (match.key_extent == strlen("viewBox")
-	      && strncmp(attribute, "viewBox", match.key_extent) == 0
-	      && sscanf(value, "%lf %lf %lf %lf", &x0,&y0,&x1,&y1) == 4) {
-		w = x1 - x0 + 1;
-		h = y1 - y0 + 1;
-	        wFlag = true;
-	        hFlag = true;
-	        break;
+	    else if (strview_str_eq(match.key, "viewBox")) {
+	        char *value = strview_str(match.value);
+	        if (sscanf(value, "%lf %lf %lf %lf", &x0, &y0, &x1, &y1) == 4) {
+	            w = x1 - x0 + 1;
+	            h = y1 - y0 + 1;
+	            wFlag = true;
+	            hFlag = true;
+	            free(value);
+	            break;
+	        }
+		free(value);
 	    }
 	}
     }
