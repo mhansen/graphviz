@@ -12,8 +12,6 @@
 #include <BaseTsd.h>
 #include <sys/stat.h>
 
-#define random rand
-
 /* Values for the second argument to access.
    These may be OR'd together.  */
 #define R_OK    4       /* Test for read permission.  */
