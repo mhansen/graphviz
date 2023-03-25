@@ -204,12 +204,10 @@ typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
  * edge, starting with width initwid.
  * The radfunc determines the half-width along the curve. Typically, this will
  * decrease from initwid to 0 as the curlen goes from 0 to totallen.
- * The linejoin and linecap parameters have roughly the same meaning as in postscript.
+ * The linejoin parameter has roughly the same meaning as in postscript.
  *  - linejoin = 0 or 1 
- *  - linecap = 0 or 1 or 2 
  */
-stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, int linecap)
-{
+stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid, int linejoin) {
     int l, n;
     double direction=0, direction_2=0;
     vararr_t arr = pathtolines(bez);
@@ -256,16 +254,8 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	    lineout = linerad;
 	    if (i == 0) {
 		direction = ndir + D2R(90);
-		if (linecap == 2) {
-		    x -= cos(ndir)*lineout;
-		    y -= sin(ndir)*lineout;
-		}
 	    } else {
 		direction = ldir - D2R(90);
-		if (linecap == 2) {
-		    x -= cos(ldir)*lineout;
-		    y -= sin(ldir)*lineout;
-		}
 	    }
 	    direction_2 = direction;
 	} else {
@@ -325,12 +315,8 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	}
     }
 	 /* end circle as needed */
-    if (linecap == 1) {
-	arcn(&p, x,y,lineout,direction,direction+D2R(180));
-    } else {
-	direction += D2R(180);
-	lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
-    }
+    direction += D2R(180);
+    lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
 	 /* side 2 */
     assert(pathcount > 0);
     for (size_t i = pathcount - 2; i != SIZE_MAX; i--) {
@@ -345,10 +331,6 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	if (bevel) { 
 	    drawbevel(x, y, lineout, FALSE, direction, direction_2, linejoin, &p);
 	}
-    }
-	 /* start circle if needed */
-    if (linecap == 1) {
-	arcn(&p, x,y,lineout,direction,direction+D2R(180));
     }
     /* closepath(&p); */
     free(pathpoints);
@@ -375,7 +357,7 @@ main ()
 
     bez.size = sizeof(pts)/sizeof(pointf);
     bez.list = pts;
-    sp = taper(&bez, halffunc, 20.0, 0, 0);
+    sp = taper(&bez, halffunc, 20.0, 0);
     printf ("newpath\n");
     printf ("%.02f %.02f moveto\n", sp->vertices[0].x, sp->vertices[0].y);
     for (size_t i = 1; i < sp->nvertices; i++)
