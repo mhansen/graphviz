@@ -12,7 +12,6 @@
 #include <BaseTsd.h>
 #include <sys/stat.h>
 
-#define srandom srand
 #define random rand
 
 /* Values for the second argument to access.
