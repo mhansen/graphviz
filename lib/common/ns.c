@@ -1133,23 +1133,6 @@ void tchk(void)
 	fprintf(stderr, "something missing\n");
 }
 
-int check_ranks(void)
-{
-    int cost = 0;
-    node_t *n;
-    edge_t *e;
-
-    for (n = agfstnode(G); n; n = agnxtnode(G, n)) {
-	for (e = agfstout(G, n); e; e = agnxtout(G, e)) {
-	    cost += (ED_weight(e)) * abs(LENGTH(e));
-	    if (ND_rank(aghead(e)) - ND_rank(agtail(e)) - ED_minlen(e) < 0)
-		abort();
-	}
-    }
-    fprintf(stderr, "rank cost %d\n", cost);
-    return cost;
-}
-
 void checktree(void)
 {
     int i, n = 0, m = 0;
