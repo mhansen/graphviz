@@ -22,12 +22,6 @@ extern "C" {
 #define PATH_MAX    1024
 #endif
 
-#define PATH_REGULAR    010
-#define PATH_EXECUTE      001
-#define PATH_READ 004
-#define PATH_WRITE        002
-#define PATH_ABSOLUTE     020
-
 /*
  * strgrpmatch() flags
  */
@@ -59,8 +53,7 @@ extern "C" {
     extern char *pathpath(char *, const char *);
     extern char *pathfind(const char *, const char *, const char *, char *,
 			  size_t);
-    extern char *pathaccess(char *, const char *, const char *,
-			    const char *, int);
+    extern char *pathaccess(char*, const char*, const char*, const char*);
     extern char *pathcanon(char*);
     extern const char *pathcat(char *, const char *, int, const char *,
 			 const char *);

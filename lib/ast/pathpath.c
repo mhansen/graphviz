@@ -12,7 +12,7 @@
  * Glenn Fowler
  * AT&T Research
  *
- * return full path to p with PATH_REGULAR access using $PATH
+ * return full path to p using $PATH
  * if a!=0 then it and $0 and $_ with $PWD are used for
  * related root searching
  * the related root must have a bin subdir
@@ -95,7 +95,7 @@ char *pathpath(char *path, const char *p)
 		    while (*--s != '/');
 		    strcpy(s + 1, "bin");
 		    if (access(path, X_OK) == 0) {
-			if ((s = pathaccess(path, path, p, a, PATH_REGULAR)))
+			if ((s = pathaccess(path, path, p, a)))
 			    return path == buf ? strdup(s) : s;
 			goto normal;
 		    }
@@ -105,8 +105,8 @@ char *pathpath(char *path, const char *p)
 	}
     }
     x = !a && strchr(p, '/') ? "" : getenv_path();
-    if (!(s = pathaccess(path, x, p, a, PATH_REGULAR)) && !*x
+    if (!(s = pathaccess(path, x, p, a)) && !*x
 	&& (x = getenv("FPATH")))
-	s = pathaccess(path, x, p, a, PATH_REGULAR);
+	s = pathaccess(path, x, p, a);
     return (s && path == buf) ? strdup(s) : s;
 }
