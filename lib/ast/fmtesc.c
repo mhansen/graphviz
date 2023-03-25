@@ -22,16 +22,9 @@
 
 /*
  * quote string as of length n with qb...qe
- * (flags&FMT_ALWAYS) always quotes, otherwise quote output only if necessary
- * qe and the usual suspects are \... escaped
- * (flags&FMT_WIDE) doesn't escape 8 bit chars
- * (flags&FMT_ESCAPED) doesn't \... escape the usual suspects
- * (flags&FMT_SHELL) escape $`"#;~&|()<>[]*?
  */
 
-char *fmtquote(const char *as, const char *qb, const char *qe, size_t n,
-	       int flags)
-{
+char *fmtquote(const char *as, const char *qb, const char *qe, size_t n) {
     const unsigned char *s = (const unsigned char *) as;
     const unsigned char *e = s + n;
     char *b;
@@ -55,11 +48,10 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n,
 	    b++;
     }
     f = b;
-    escaped = spaced = !!(flags & FMT_ALWAYS);
+    escaped = spaced = 0;
     while (s < e) {
 	    int c = *s++;
-	    if (!(flags & FMT_ESCAPED)
-		&& (iscntrl(c) || !isprint(c) || c == '\\')) {
+	    if (iscntrl(c) || !isprint(c) || c == '\\') {
 		escaped = 1;
 		*b++ = '\\';
 		switch (c) {
@@ -90,12 +82,9 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n,
 		case '\\':
 		    break;
 		default:
-		    if (!(flags & FMT_WIDE) || !(c & 0200)) {
-			*b++ = (char)('0' + ((c >> 6) & 07));
-			*b++ = (char)('0' + ((c >> 3) & 07));
-			c = '0' + (c & 07);
-		    } else
-			b--;
+		    *b++ = (char)('0' + ((c >> 6) & 07));
+		    *b++ = (char)('0' + ((c >> 3) & 07));
+		    c = '0' + (c & 07);
 		    break;
 		}
 	    } else if (c == '\\') {
@@ -103,15 +92,13 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n,
 		*b++ = (char)c;
 		if (*s)
 		    c = *s++;
-	    } else if ((qe && strchr(qe, c)) ||
-		       ((flags & FMT_SHELL) && !shell
-			&& (c == '$' || c == '`'))) {
+	    } else if (qe && strchr(qe, c)) {
 		escaped = 1;
 		*b++ = '\\';
 	    } else if (!spaced &&
 		       !escaped &&
 		       (isspace(c) ||
-			(((flags & FMT_SHELL) || shell) &&
+			(shell &&
 			 (strchr("\";~&|()<>[]*?", c) ||
 			  (c == '#' && (b == f || isspace((int)*(b - 1)))
 			  )
@@ -139,7 +126,7 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n,
 
 char *fmtesq(const char *as, const char *qs)
 {
-    return fmtquote(as, NULL, qs, strlen(as), 0);
+  return fmtquote(as, NULL, qs, strlen(as));
 }
 
 /*
@@ -148,5 +135,5 @@ char *fmtesq(const char *as, const char *qs)
 
 char *fmtesc(const char *as)
 {
-    return fmtquote(as, NULL, NULL, strlen(as), 0);
+  return fmtquote(as, NULL, NULL, strlen(as));
 }
