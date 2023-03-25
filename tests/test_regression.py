@@ -2601,7 +2601,6 @@ def test_2352_1():
     assert '<image xlink:href="EDA_1.svg" ' in svg, "external file reference missing"
 
 
-@pytest.mark.xfail(strict=True)
 def test_2352_2():
     """
     variant of 2352 that spaces viewBox such that it is on a 200-character line

@@ -233,12 +233,25 @@ static void svg_size (usershape_t *us)
     double n, x0, y0, x1, y1;
     char u[10];
     char *attribute, *value, *re_string;
-    char line[200];
+    agxbuf line = {0};
+    bool eof = false;
     bool wFlag = false, hFlag = false;
 
     fseek(us->f, 0, SEEK_SET);
-    while (fgets(line, sizeof(line), us->f) != NULL && (!wFlag || !hFlag)) {
-	re_string = line;
+    while (!eof && (!wFlag || !hFlag)) {
+	// read next line
+	while (true) {
+	    int c = fgetc(us->f);
+	    if (c == EOF) {
+	        eof = true;
+	        break;
+	    } else if (c == '\n') {
+	        break;
+	    }
+	    agxbputc(&line, (char)c);
+	}
+
+	re_string = agxbuse(&line);
 	match_t match;
 	while (find_attribute(re_string, &match) == 0) {
 	    re_string[match.value_start + match.value_extent] = '\0';
@@ -286,6 +299,7 @@ static void svg_size (usershape_t *us)
     us->dpi = 0;
     us->w = w;
     us->h = h;
+    agxbfree(&line);
 }
 
 static void png_size (usershape_t *us)
