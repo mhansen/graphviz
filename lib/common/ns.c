@@ -1133,22 +1133,6 @@ void tchk(void)
 	fprintf(stderr, "something missing\n");
 }
 
-void check_cutvalues(void)
-{
-    node_t *v;
-    edge_t *e;
-    int i, save;
-
-    for (v = agfstnode(G); v; v = agnxtnode(G, v)) {
-	for (i = 0; (e = ND_tree_out(v).list[i]); i++) {
-	    save = ED_cutvalue(e);
-	    x_cutval(e);
-	    if (save != ED_cutvalue(e))
-		abort();
-	}
-    }
-}
-
 int check_ranks(void)
 {
     int cost = 0;
