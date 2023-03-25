@@ -117,11 +117,6 @@ void prGraph(Agraph_t * g)
     }
 }
 
-cdata *cvt(Agnode_t * n)
-{
-    return DATA(n);
-}
-
 void prData(Agnode_t * n, int pass)
 {
     char *pname;
