@@ -41,11 +41,7 @@ GEOMPROCS_API boxf flip_rec_boxf(boxf b, pointf p);
 GEOMPROCS_API double ptToLine2 (pointf l1, pointf l2, pointf p);
 
 GEOMPROCS_API int lineToBox(pointf p1, pointf p2, boxf b);
-
-GEOMPROCS_API point ccwrotatep(point p, int ccwrot);
 GEOMPROCS_API pointf ccwrotatepf(pointf p, int ccwrot);
-
-GEOMPROCS_API point cwrotatep(point p, int cwrot);
 GEOMPROCS_API pointf cwrotatepf(pointf p, int cwrot);
 
 GEOMPROCS_API void rect2poly(pointf *p);
