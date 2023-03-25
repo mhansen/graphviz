@@ -54,21 +54,6 @@ static void addto (stroke_t* p, double x, double y)
     p->vertices[p->nvertices++] = pt;
 }
 
-static void arcn (stroke_t* p, double x, double y, double r, double a1, double a2)
-{
-    double theta;
-    int i;
-
-    addto (p, x+r*cos(a1), y+r*sin(a1));
-    if (r == 0) return;
-    while (a2 > a1) a2 -= 2*M_PI;
-    theta = a1 - a2; 
-    while (theta > 2*M_PI) theta -= 2*M_PI;
-    theta /= BEZIERSUBDIVISION - 1;
-    for (i = 1; i < BEZIERSUBDIVISION; i++)
-	addto (p, x+r*cos(a1-i*theta), y+r*sin(a1-i*theta));
-}
-
 /*
  * handle zeros
  */
@@ -172,29 +157,16 @@ static vararr_t pathtolines(bezier *bez) {
     return arr;
 }
 
-static void drawbevel(double x, double y, double lineout, int forward, double dir, double dir2, int linejoin, stroke_t* p)
-{
-    double a, a1, a2;
+static void drawbevel(double x, double lineout, int forward, double dir,
+                      double dir2, stroke_t *p) {
+    double a2;
 
     if (forward) {
-	a1 = dir;
 	a2 = dir2;
     } else {
-	a1 = dir2;
 	a2 = dir;
     }
-    if (linejoin == 1) {
-	a = a1 - a2;
-	if (a <= D2R(0.1)) a += D2R(360);
-	if (a < D2R(180)) {
-	    a1 = a + a2;
-	    arcn (p,x,y,lineout,a1,a2);
-	} else {
-	    lineto (p, x + lineout*cos(a2), x + lineout*sin(a2));
-	}
-    } else {
-	lineto (p, x + lineout*cos(a2), x + lineout*sin(a2));
-    }
+    lineto (p, x + lineout*cos(a2), x + lineout*sin(a2));
 }
 
 typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
@@ -309,7 +281,7 @@ stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid) {
 	    lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
 	}
 	if (bevel) {
-	    drawbevel(x, y, lineout, TRUE, direction, direction_2, 0, &p);
+	    drawbevel(x, lineout, TRUE, direction, direction_2, &p);
 	}
     }
 	 /* end circle as needed */
@@ -327,7 +299,7 @@ stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid) {
 	direction_2 = cur_point.dir2 + D2R(180);
 	lineto(&p, x+cos(direction_2)*lineout, y+sin(direction_2)*lineout);
 	if (bevel) { 
-	    drawbevel(x, y, lineout, FALSE, direction, direction_2, 0, &p);
+	    drawbevel(x, lineout, FALSE, direction, direction_2, &p);
 	}
     }
     /* closepath(&p); */
