@@ -81,7 +81,6 @@ static knowntype_t knowntypes[] = {
 static int imagetype (usershape_t *us)
 {
     char header[HDRLEN] = {0};
-    char line[200];
 
     if (us->f && fread(header, 1, HDRLEN, us->f) == HDRLEN) {
         for (size_t i = 0; i < sizeof(knowntypes) / sizeof(knowntype_t); i++) {
@@ -101,11 +100,21 @@ static int imagetype (usershape_t *us)
 		        }
 		    }
 		    /* check for SVG in case of XML */
-		    while (fgets(line, sizeof(line), us->f) != NULL) {
-		        if (!memcmp(line, SVG_MAGIC, sizeof(SVG_MAGIC)-1)) {
+		    char tag[sizeof(SVG_MAGIC) - 1] = {0};
+		    if (fread(tag, 1, sizeof(tag), us->f) != sizeof(tag)) {
+		        return us->type;
+		    }
+		    while (true) {
+		        if (memcmp(tag, SVG_MAGIC, sizeof(SVG_MAGIC) - 1) == 0) {
     			    us->stringtype = "svg";
 			    return (us->type = FT_SVG);
 		        }
+		        int c = fgetc(us->f);
+		        if (c == EOF) {
+			    return us->type;
+		        }
+		        memmove(&tag[0], &tag[1], sizeof(tag) - 1);
+		        tag[sizeof(tag) - 1] = (char)c;
 		    }
 		}
 	    	else if (us->type == FT_RIFF) {

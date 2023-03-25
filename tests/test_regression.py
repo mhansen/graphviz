@@ -2583,7 +2583,6 @@ def test_2352():
     assert '<image xlink:href="EDA.svg" ' in svg, "external file reference missing"
 
 
-@pytest.mark.xfail(strict=True)
 def test_2352_1():
     """
     variant of 2352 with a leading space in front of `<svg`
