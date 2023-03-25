@@ -204,10 +204,8 @@ typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
  * edge, starting with width initwid.
  * The radfunc determines the half-width along the curve. Typically, this will
  * decrease from initwid to 0 as the curlen goes from 0 to totallen.
- * The linejoin parameter has roughly the same meaning as in postscript.
- *  - linejoin = 0 or 1 
  */
-stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid, int linejoin) {
+stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid) {
     int l, n;
     double direction=0, direction_2=0;
     vararr_t arr = pathtolines(bez);
@@ -272,7 +270,7 @@ stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid, int linejoin) {
 	    }
 		 /* direction to junction point */
 	    direction = ndir+D2R(90)+phi;
-	    if (0 != linejoin || lineout > currentmiterlimit * linerad) {
+	    if (lineout > currentmiterlimit * linerad) {
 		bevel = true;
 		lineout = linerad;
 		direction = mymod(ldir-D2R(90),D2R(360));
@@ -311,7 +309,7 @@ stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid, int linejoin) {
 	    lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
 	}
 	if (bevel) {
-	    drawbevel(x, y, lineout, TRUE, direction, direction_2, linejoin, &p);
+	    drawbevel(x, y, lineout, TRUE, direction, direction_2, 0, &p);
 	}
     }
 	 /* end circle as needed */
@@ -329,7 +327,7 @@ stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid, int linejoin) {
 	direction_2 = cur_point.dir2 + D2R(180);
 	lineto(&p, x+cos(direction_2)*lineout, y+sin(direction_2)*lineout);
 	if (bevel) { 
-	    drawbevel(x, y, lineout, FALSE, direction, direction_2, linejoin, &p);
+	    drawbevel(x, y, lineout, FALSE, direction, direction_2, 0, &p);
 	}
     }
     /* closepath(&p); */
@@ -357,7 +355,7 @@ main ()
 
     bez.size = sizeof(pts)/sizeof(pointf);
     bez.list = pts;
-    sp = taper(&bez, halffunc, 20.0, 0);
+    sp = taper(&bez, halffunc, 20.0);
     printf ("newpath\n");
     printf ("%.02f %.02f moveto\n", sp->vertices[0].x, sp->vertices[0].y);
     for (size_t i = 1; i < sp->nvertices; i++)
