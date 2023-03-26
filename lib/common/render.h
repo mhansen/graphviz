@@ -89,7 +89,8 @@ extern "C" {
     RENDER_API char* getObjId (GVJ_t* job, void* obj, agxbuf* xb);
     RENDER_API void emit_graph(GVJ_t * job, graph_t * g);
     RENDER_API void emit_label(GVJ_t * job, emit_state_t emit_state, textlabel_t *);
-    RENDER_API int emit_once(char *message);
+    RENDER_API bool emit_once(char *message);
+    RENDER_API void emit_once_reset(void);
     RENDER_API void emit_map_rect(GVJ_t *job, boxf b);
     RENDER_API void endpath(path *, Agedge_t *, int, pathend_t *, bool);
     RENDER_API void epsf_init(node_t * n);

@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `uint32_t`s.
 - **Breaking**: The `nvertices` field of the `stroke_t` struct is now a
   `size_t`.
+- “no hard-coded metrics” warnings are now only printed once per font.
 
 ### Fixed
 

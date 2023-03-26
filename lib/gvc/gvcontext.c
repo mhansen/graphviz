@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include "builddate.h"
+#include <common/render.h>
 #include <common/types.h>
 #include <gvc/gvplugin.h>
 #include <gvc/gvcjob.h>
@@ -33,9 +34,6 @@ extern void *zmalloc(size_t);
 
 /* from common/textspan.c */
 extern void textfont_dict_close(GVC_t *gvc);
-
-/* from common/emit.c */
-extern void emit_once_reset(void);
 
 /* from common/globals.c */
 extern int graphviz_errors;

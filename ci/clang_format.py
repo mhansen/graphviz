@@ -234,8 +234,6 @@ EXCLUDE = (
     "lib/common/taper.c",
     "lib/common/textspan.c",
     "lib/common/textspan.h",
-    "lib/common/textspan_lut.c",
-    "lib/common/textspan_lut.h",
     "lib/common/timing.c",
     "lib/common/types.h",
     "lib/common/usershape.h",
