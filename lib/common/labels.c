@@ -18,8 +18,8 @@
 
 static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash);
 
-static void storeline(GVC_t *gvc, textlabel_t *lp, char *line, char terminator)
-{
+static void storeline(GVC_t *gvc, textlabel_t *lp, const char *line,
+                      char terminator) {
     pointf size;
     textspan_t *span;
     static textfont_t tf;
@@ -27,7 +27,7 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, char *line, char terminator)
 
     lp->u.txt.span = ZALLOC(oldsz + 1, lp->u.txt.span, textspan_t, oldsz);
     span = &lp->u.txt.span[lp->u.txt.nspans];
-    span->str = line;
+    span->str = gv_strdup(line);
     span->just = terminator;
     if (line && line[0]) {
 	tf.name = lp->fontname;
@@ -50,28 +50,22 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, char *line, char terminator)
 /* compiles <str> into a label <lp> */
 void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 {
-    char c, *p, *line, *lineptr, *str = lp->text;
-    unsigned char byte = 0x00;
-
     lp->dimen.x = lp->dimen.y = 0.0;
-    if (*str == '\0')
+    if (*lp->text == '\0')
 	return;
 
-    line = lineptr = NULL;
-    p = str;
-    line = lineptr = N_GNEW(strlen(p) + 1, char);
-    *line = 0;
-    while ((c = *p++)) {
-	byte = (unsigned char) c;
+    agxbuf line = {0};
+    for (char c, *p = lp->text; (c = *p++);) {
+	unsigned char byte = (unsigned char) c;
 	/* wingraphviz allows a combination of ascii and big-5. The latter
          * is a two-byte encoding, with the first byte in 0xA1-0xFE, and
          * the second in 0x40-0x7e or 0xa1-0xfe. We assume that the input
          * is well-formed, but check that we don't go past the ending '\0'.
          */
 	if (lp->charset == CHAR_BIG5 && 0xA1 <= byte && byte <= 0xFE) {
-	    *lineptr++ = c;
+	    agxbputc(&line, c);
 	    c = *p++;
-	    *lineptr++ = c;
+	    agxbputc(&line, c);
 	    if (!c) /* NB. Protect against unexpected string end here */
 		break;
 	} else {
@@ -80,31 +74,27 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 		case 'n':
 		case 'l':
 		case 'r':
-		    *lineptr++ = '\0';
-		    storeline(gvc, lp, line, *p);
-		    line = lineptr;
+		    storeline(gvc, lp, agxbuse(&line), *p);
 		    break;
 		default:
-		    *lineptr++ = *p;
+		    agxbputc(&line, *p);
 		}
 		if (*p)
 		    p++;
 		/* tcldot can enter real linend characters */
 	    } else if (c == '\n') {
-		*lineptr++ = '\0';
-		storeline(gvc, lp, line, 'n');
-		line = lineptr;
+		storeline(gvc, lp, agxbuse(&line), 'n');
 	    } else {
-		*lineptr++ = c;
+		agxbputc(&line, c);
 	    }
 	}
     }
 
-    if (line != lineptr) {
-	*lineptr++ = '\0';
-	storeline(gvc, lp, line, 'n');
+    if (agxblen(&line) > 0) {
+	storeline(gvc, lp, agxbuse(&line), 'n');
     }
 
+    agxbfree(&line);
     lp->space = lp->dimen;
 }
 
@@ -195,8 +185,7 @@ void free_textspan(textspan_t *tl, size_t cnt) {
 
     if (!tl) return;
     for (size_t i = 0; i < cnt; i++) {
-	if (i == 0)
-	    free(tlp->str);
+	free(tlp->str);
 	if (tlp->layout && tlp->free_layout)
 	    tlp->free_layout (tlp->layout);
 	tlp++;

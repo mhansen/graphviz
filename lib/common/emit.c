@@ -1089,7 +1089,7 @@ static bool selectedlayer(GVJ_t *job, char *spec)
  * using huge numbers of layers, it should be adequate.
  */
 static int *parse_layerselect(GVC_t *gvc, char *p) {
-    int* laylist = N_GNEW(gvc->numLayers+2,int);
+    int* laylist = gv_calloc(gvc->numLayers + 2, sizeof(int));
     int i, cnt = 0;
     for (i = 1; i <=gvc->numLayers; i++) {
 	if (selectedLayer (gvc, i, gvc->numLayers, p)) {
@@ -1463,7 +1463,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 {
     int image_warn = 1;
     size_t ptsize = INITPTS;
-    pointf* pts = N_GNEW(INITPTS, pointf);
+    pointf* pts = gv_calloc(INITPTS, sizeof(pointf));
     exdot_op* op;
     int angle;
     char** styles = NULL;
@@ -4123,7 +4123,7 @@ bool findStopColor (char* colorlist, char* clrs[2], float* frac)
     if (segs.numc > 2)
 	agerr (AGWARN, "More than 2 colors specified for a gradient - ignoring remaining\n");
 
-    clrs[0] = N_GNEW (strlen(colorlist)+1,char); 
+    clrs[0] = gv_calloc(strlen(colorlist) + 1, sizeof(char));
     strcpy(clrs[0], segs.segs[0].color);
     if (segs.segs[1].color) {
 	clrs[1] = clrs[0] + (strlen(clrs[0])+1);

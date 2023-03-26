@@ -17,10 +17,11 @@
  * created and correctly separated.
  */
 
+#include <cgraph/alloc.h>
 #include <dotgen/dot.h>
 #include <dotgen/aspect.h>
 #include <stdbool.h>
-#include <stddef.h>
+#include <stdlib.h>
 
 static int nsiter2(graph_t * g);
 static void create_aux_edges(graph_t * g);
@@ -1042,13 +1043,15 @@ static void make_leafslots(graph_t * g)
 	}
 	if (j <= GD_rank(g)[r].n)
 	    continue;
-	GD_rank(g)[r].v = ALLOC(j + 1, GD_rank(g)[r].v, node_t *);
+	node_t **new_v = gv_calloc(j + 1, sizeof(node_t*));
 	for (i = GD_rank(g)[r].n - 1; i >= 0; i--) {
 	    v = GD_rank(g)[r].v[i];
-	    GD_rank(g)[r].v[ND_order(v)] = v;
+	    new_v[ND_order(v)] = v;
 	}
 	GD_rank(g)[r].n = j;
-	GD_rank(g)[r].v[j] = NULL;
+	new_v[j] = NULL;
+	free(GD_rank(g)[r].v);
+	GD_rank(g)[r].v = new_v;
     }
 }
 
