@@ -84,17 +84,6 @@ libgv_guile_la_CXXFLAGS = $(AM_CXXFLAGS) -Wno-unused-parameter
 gv_guile.cpp: gv.i
 	$(SWIG) -c++ -guile -o $@ $(srcdir)/gv.i
 
-pkgiodir = $(pkglibdir)/io
-IO_data =
-nodist_libgv_io_la_SOURCES = gv_io.cpp $(IO_data)
-libgv_io_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-libgv_io_la_LIBADD = $(BASELIBS) $(IO_LIBS)
-libgv_io_la_LDFLAGS = -module -avoid-version
-libgv_io_la_CPPFLAGS = $(BASECPPFLAGS) $(IO_INCLUDES)
-# $(IO_data): gv_io.cpp
-gv_io.cpp: gv.i
-	$(SWIG) -c++ -io -o $@ $(srcdir)/gv.i
-
 libjavadir = $(pkglibdir)/java
 pkgjavadir = $(libjavadir)/org/graphviz
 JAVA_data = gv.java gvJNI.java SWIGTYPE_p_Agraph_t.java SWIGTYPE_p_Agnode_t.java SWIGTYPE_p_Agedge_t.java SWIGTYPE_p_Agsym_t.java SWIGTYPE_p_FILE.java
@@ -285,15 +274,6 @@ endif
 pkgguile_LTLIBRARIES = libgv_guile.la
 DEVTSTS += test_guile
 endif
-if WITH_IO
-pkgio_DATA = $(IO_data)
-man_MANS += gv.3io
-if ENABLE_MAN_PDFS
-pdf_DATA += gv.3io.pdf
-endif
-pkgio_LTLIBRARIES = libgv_io.la
-DEVTSTS += test_io
-endif
 if WITH_JAVA
 pkgjava_DATA = $(JAVA_data)
 man_MANS += gv.3java
@@ -388,7 +368,7 @@ pkgIndex.tcl: libgv_tcl.la
 endif
 endif
 
-man = gv.3sharp gv.3go gv.3guile gv.3io gv.3java gv.3lua gv.3ocaml \
+man = gv.3sharp gv.3go gv.3guile gv.3java gv.3lua gv.3ocaml \
 	gv.3perl gv.3php gv.3python gv.3r gv.3ruby gv.3tcl
 
 # this rule has a trailing semi-colon for the Make cache to work correctly
@@ -408,10 +388,6 @@ gv_doc_writer.intermediate: gv.i gv_doc_writer.tcl gv_doc_template.tcl gv_doc_la
 	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 .3guile.3guile.pdf:
-	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
-	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
-	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
-.3io.3io.pdf:
 	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
 	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
@@ -451,7 +427,7 @@ gv_doc_writer.intermediate: gv.i gv_doc_writer.tcl gv_doc_template.tcl gv_doc_la
 	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
 	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
-SUFFIXES = .3sharp .3sharp.pdf .3go .3go.pdf .3guile .3guile.pdf .3io .3io.pdf .3java .3java.pdf .3lua .3lua.pdf .3ocaml .3ocaml.pdf .3perl .3perl.pdf .3php .3php.pdf .3python .3python.pdf .3r .3r.pdf .3ruby .3ruby.pdf .3tcl .3tcl.pdf
+SUFFIXES = .3sharp .3sharp.pdf .3go .3go.pdf .3guile .3guile.pdf .3java .3java.pdf .3lua .3lua.pdf .3ocaml .3ocaml.pdf .3perl .3perl.pdf .3php .3php.pdf .3python .3python.pdf .3r .3r.pdf .3ruby .3ruby.pdf .3tcl .3tcl.pdf
 
 install-data-hook:
 if WITH_JAVA
@@ -500,14 +476,6 @@ test_guile: libgv_guile.la
 		ln -fs ../.libs/libgv_guile.so libgv.so; \
 		ln -fs ../$(srcdir)/*.gv ../$(srcdir)/*.guile .; \
 		$(GUILE) -s test.guile)
-
-.PHONY: test_io
-test_io: libgv_io.la
-	-(mkdir -p test_io; cd test_io; \
-		ln -fs ../.libs/libgv_io.so libgv.so; \
-		ln -fs ../$(srcdir)/*.gv ../$(srcdir)/*.io .; \
-		ioc *.io; \
-		LD_LIBRARY_PATH=. io test)
 
 .PHONY: test_java
 test_java: libgv_java.la
@@ -583,7 +551,6 @@ CLEANFILES = test_*/* pkgIndex.tcl \
 	gv_sharp.cpp $(SHARP_data) \
 	gv_go.cpp $(GO_data) \
 	gv_guile.cpp $(GUILE_data) \
-	gv_io.cpp $(IO_data) \
 	gv_java.cpp $(JAVA_data) \
 	gv_javascript.cpp \
 	gv_lua.cpp $(LUA_data) \

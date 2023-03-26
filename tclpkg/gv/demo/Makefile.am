@@ -20,9 +20,6 @@ endif
 if WITH_GUILE
 demoguile_SCRIPTS =
 endif
-if WITH_IO
-demoio_SCRIPTS =
-endif
 if WITH_JAVA
 demojava_SCRIPTS =
 endif

@@ -387,7 +387,6 @@ dnl Check for various typedefs and provide substitutes if they do not exist.
 
 AC_TYPE_PID_T
 AC_TYPE_SSIZE_T
-AC_TYPE_UID_T
 
 AC_CHECK_TYPES([
 	off64_t,
@@ -399,13 +398,10 @@ dnl Checks for header files
 
 # AC_HEADER_STDC
 AC_CHECK_HEADERS( \
-	fcntl.h search.h stropts.h termios.h \
+	fcntl.h search.h stropts.h \
 	sys/time.h sys/types.h sys/select.h sys/socket.h \
 	sys/stat.h sys/mman.h \
 	sys/ioctl.h sys/inotify.h)
-
-# Internationalization macros
-# AM_GNU_GETTEXT
 
 dnl -----------------------------------
 dnl Checks for -lm library
@@ -684,37 +680,6 @@ else
   fi
 fi
 AM_CONDITIONAL(WITH_GUILE, [test "x$use_guile" = "xYes"])
-
-dnl -----------------------------------
-dnl INCLUDES and LIBS for IO   (disabled until supported by swig)
-
-AC_ARG_ENABLE(io,
-  [AS_HELP_STRING([--enable-io=no],[io language bindings])],
-  [], [enable_io=no])
-
-if test "x$enable_io" != "xyes"; then
-  use_io="No (disabled by default - no swig support yet)"
-else
-  if test "x$use_swig" != "xYes"; then
-    use_io="No (swig not available)"
-  else
-    if test `$SWIG -help 2>&1 | $EGREP -c '\-io *- Generate'` = 0; then
-      use_io="No (swig does not support -io option)"
-    else
-      AC_CHECK_PROG(IO,io,io)
-      if test "x$IO" = "x"; then
-        use_io="No (io not available)"
-      else
-        use_io="Yes"
-        IO_INCLUDES=
-        IO_LIBS=
-        AC_SUBST([IO_INCLUDES])
-        AC_SUBST([IO_LIBS])
-      fi
-    fi
-  fi
-fi
-AM_CONDITIONAL(WITH_IO, [test "x$use_io" = "xYes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for JAVA
@@ -2569,7 +2534,6 @@ echo "  gv_sharp:      $use_sharp"
 echo "  gv_d:          $use_d"
 echo "  gv_go:         $use_go"
 echo "  gv_guile:      $use_guile"
-echo "  gv_io:         $use_io"
 echo "  gv_java:       $use_java"
 echo "  gv_javascript: $use_javascript"
 echo "  gv_lua:        $use_lua"

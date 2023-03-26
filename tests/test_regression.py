@@ -550,6 +550,26 @@ def test_1276():
     ), "escaped label not found in GML output"
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1308"
+)
+def test_1308():
+    """
+    processing a malformed graph found by Google Autofuzz should not crash
+    https://gitlab.com/graphviz/graphviz/-/issues/1308
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "1308.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    ret = subprocess.call(["dot", "-Tsvg", "-o", os.devnull, input])
+
+    assert ret in (0, 1), "Graphviz crashed when processing malformed input"
+    assert ret == 1, "Graphviz did not reject malformed input"
+
+
 def test_1314():
     """
     test that a large font size that produces an overflow in Pango is rejected
