@@ -30,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `nvertices` field of the `stroke_t` struct is now a
   `size_t`.
 - “no hard-coded metrics” warnings are now only printed once per font.
+- The Autotools build system now discovers Python paths using `sysconfig`
+  instead of `distutils.sysconfig`, making it compatible with Python 3.12. This
+  alters the installation path of the Python Graphviz module to something more
+  correct. #2332
 
 ### Fixed
 
