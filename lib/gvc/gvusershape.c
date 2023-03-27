@@ -28,7 +28,7 @@
 #include <common/types.h>
 #include <common/memory.h>
 #include <cgraph/agxbuf.h>
-
+#include <cgraph/strview.h>
 #include <common/utils.h>
 #include <gvc/gvplugin_loadimage.h>
 #include <gvc/gvplugin.h>
@@ -72,7 +72,6 @@ static knowntype_t knowntypes[] = {
     { JPEG_MAGIC, sizeof(JPEG_MAGIC)-1,  FT_JPEG, "jpeg", },
     { PDF_MAGIC,  sizeof(PDF_MAGIC)-1,   FT_PDF,  "pdf",  },
     { EPS_MAGIC,  sizeof(EPS_MAGIC)-1,   FT_EPS,  "eps",  },
-/*    { SVG_MAGIC,  sizeof(SVG_MAGIC)-1,  FT_SVG,  "svg",  },  - viewers expect xml preamble */
     { XML_MAGIC,  sizeof(XML_MAGIC)-1,   FT_XML,  "xml",  },
     { RIFF_MAGIC, sizeof(RIFF_MAGIC)-1,  FT_RIFF, "riff", },
     { ICO_MAGIC,  sizeof(ICO_MAGIC)-1,   FT_ICO,  "ico",  },
@@ -81,8 +80,7 @@ static knowntype_t knowntypes[] = {
 
 static int imagetype (usershape_t *us)
 {
-    char header[HDRLEN];
-    char line[200];
+    char header[HDRLEN] = {0};
 
     if (us->f && fread(header, 1, HDRLEN, us->f) == HDRLEN) {
         for (size_t i = 0; i < sizeof(knowntypes) / sizeof(knowntype_t); i++) {
@@ -90,12 +88,33 @@ static int imagetype (usershape_t *us)
 	        us->stringtype = knowntypes[i].stringtype;
 		us->type = knowntypes[i].type;
 		if (us->type == FT_XML) {
+		    // if we did not see the closing of the XML declaration, scan for it
+		    if (memchr(header, '>', HDRLEN) == NULL) {
+		        while (true) {
+    			    int c = fgetc(us->f);
+    			    if (c == EOF) {
+    			        return us->type;
+    			    } else if (c == '>') {
+    			        break;
+    			    }
+		        }
+		    }
 		    /* check for SVG in case of XML */
-		    while (fgets(line, sizeof(line), us->f) != NULL) {
-		        if (!memcmp(line, SVG_MAGIC, sizeof(SVG_MAGIC)-1)) {
+		    char tag[sizeof(SVG_MAGIC) - 1] = {0};
+		    if (fread(tag, 1, sizeof(tag), us->f) != sizeof(tag)) {
+		        return us->type;
+		    }
+		    while (true) {
+		        if (memcmp(tag, SVG_MAGIC, sizeof(SVG_MAGIC) - 1) == 0) {
     			    us->stringtype = "svg";
 			    return (us->type = FT_SVG);
 		        }
+		        int c = fgetc(us->f);
+		        if (c == EOF) {
+			    return us->type;
+		        }
+		        memmove(&tag[0], &tag[1], sizeof(tag) - 1);
+		        tag[sizeof(tag) - 1] = (char)c;
 		    }
 		}
 	    	else if (us->type == FT_RIFF) {
@@ -168,10 +187,8 @@ static int svg_units_convert(double n, char *u) {
 }
 
 typedef struct {
-  size_t key_start;
-  size_t key_extent;
-  size_t value_start;
-  size_t value_extent;
+  strview_t key;
+  strview_t value;
 } match_t;
 
 static int find_attribute(const char *s, match_t *result) {
@@ -179,20 +196,20 @@ static int find_attribute(const char *s, match_t *result) {
   // look for an attribute string matching ([a-z][a-zA-Z]*)="([^"]*)"
   for (size_t i = 0; s[i] != '\0'; ) {
     if (s[i] >= 'a' && s[i] <= 'z') {
-      result->key_start = i;
-      result->key_extent = 1;
+      result->key.data = &s[i];
+      result->key.size = 1;
       ++i;
       while ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')) {
         ++i;
-        ++result->key_extent;
+        ++result->key.size;
       }
       if (s[i] == '=' && s[i + 1] == '"') {
         i += 2;
-        result->value_start = i;
-        result->value_extent = 0;
+        result->value.data = &s[i];
+        result->value.size = 0;
         while (s[i] != '"' && s[i] != '\0') {
           ++i;
-          ++result->value_extent;
+          ++result->value.size;
         }
         if (s[i] == '"') {
           // found a valid attribute
@@ -213,22 +230,31 @@ static void svg_size (usershape_t *us)
     int w = 0, h = 0;
     double n, x0, y0, x1, y1;
     char u[10];
-    char *attribute, *value, *re_string;
-    char line[200];
+    agxbuf line = {0};
+    bool eof = false;
     bool wFlag = false, hFlag = false;
 
     fseek(us->f, 0, SEEK_SET);
-    while (fgets(line, sizeof(line), us->f) != NULL && (!wFlag || !hFlag)) {
-	re_string = line;
+    while (!eof && (!wFlag || !hFlag)) {
+	// read next line
+	while (true) {
+	    int c = fgetc(us->f);
+	    if (c == EOF) {
+	        eof = true;
+	        break;
+	    } else if (c == '\n') {
+	        break;
+	    }
+	    agxbputc(&line, (char)c);
+	}
+
+	const char *re_string = agxbuse(&line);
 	match_t match;
 	while (find_attribute(re_string, &match) == 0) {
-	    re_string[match.value_start + match.value_extent] = '\0';
-	    attribute = re_string + match.key_start;
-	    value = re_string + match.value_start;
-	    re_string += match.value_start + match.value_extent + 1;
+	    re_string = match.value.data + match.value.size + 1;
 
-	    if (match.key_extent == strlen("width") &&
-	        strncmp(attribute, "width", match.key_extent) == 0) {
+	    if (strview_str_eq(match.key, "width")) {
+	        char *value = strview_str(match.value);
 	        if (sscanf(value, "%lf%2s", &n, u) == 2) {
 	            w = svg_units_convert(n, u);
 	            wFlag = true;
@@ -237,11 +263,12 @@ static void svg_size (usershape_t *us)
 	            w = svg_units_convert(n, "pt");
 	            wFlag = true;
 		}
+		free(value);
 		if (hFlag)
 		    break;
 	    }
-	    else if (match.key_extent == strlen("height") &&
-	             strncmp(attribute, "height", match.key_extent) == 0) {
+	    else if (strview_str_eq(match.key, "height")) {
+	        char *value = strview_str(match.value);
 	        if (sscanf(value, "%lf%2s", &n, u) == 2) {
 	            h = svg_units_convert(n, u);
 	            hFlag = true;
@@ -250,23 +277,28 @@ static void svg_size (usershape_t *us)
 	            h = svg_units_convert(n, "pt");
 	            hFlag = true;
 		}
+		free(value);
                 if (wFlag)
 		    break;
 	    }
-	    else if (match.key_extent == strlen("viewBox")
-	      && strncmp(attribute, "viewBox", match.key_extent) == 0
-	      && sscanf(value, "%lf %lf %lf %lf", &x0,&y0,&x1,&y1) == 4) {
-		w = x1 - x0 + 1;
-		h = y1 - y0 + 1;
-	        wFlag = true;
-	        hFlag = true;
-	        break;
+	    else if (strview_str_eq(match.key, "viewBox")) {
+	        char *value = strview_str(match.value);
+	        if (sscanf(value, "%lf %lf %lf %lf", &x0, &y0, &x1, &y1) == 4) {
+	            w = x1 - x0 + 1;
+	            h = y1 - y0 + 1;
+	            wFlag = true;
+	            hFlag = true;
+	            free(value);
+	            break;
+	        }
+		free(value);
 	    }
 	}
     }
     us->dpi = 0;
     us->w = w;
     us->h = h;
+    agxbfree(&line);
 }
 
 static void png_size (usershape_t *us)
