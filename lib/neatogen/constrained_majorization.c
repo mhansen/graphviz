@@ -80,7 +80,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     bool converged;
     int len;
     int num_levels;
-    float *hierarchy_boundaries;
 
     if (graph[0].edists != NULL) {
 	for (i = 0; i < n; i++) {
@@ -164,8 +163,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     }
     if (n == 1)
 	return 0;
-
-    hierarchy_boundaries = N_GNEW(num_levels, float);
 
 	/****************************************************
 	** Compute the all-pairs-shortest-distances matrix **
@@ -395,20 +392,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    new_stress -= vectors_inner_productf(n, coords[k], tmp_coords);
 	}
 
-#ifdef ALTERNATIVE_STRESS_CALC
-	{
-	    double mat_stress = new_stress;
-	    double compute_stress(float **coords, float *lap, int dim,
-				  int n);
-	    new_stress = compute_stress(coords, lap2, dim, n);
-	    if (fabs(mat_stress - new_stress) /
-		min(mat_stress, new_stress) > 0.001) {
-		fprintf(stderr,
-			"Diff stress vals: %lf %lf (iteration #%d)\n",
-			mat_stress, new_stress, iterations);
-	    }
-	}
-#endif
 	/* check for convergence */
 	converged =
 	    fabs(new_stress - old_stress) / fabs(old_stress + 1e-10) <
@@ -437,7 +420,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 		constrained_majorization_new_with_gaps(cMajEnv, b[k],
 						       coords, k,
 						       localConstrMajorIterations,
-						       hierarchy_boundaries,
 						       levels_gap);
 
 	    } else {
@@ -450,7 +432,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    }
 	}
     }
-    free(hierarchy_boundaries);
     deleteCMajEnv(cMajEnv);
 
     if (coords != NULL) {

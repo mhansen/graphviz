@@ -24,7 +24,7 @@ extern "C" {
     extern DistType **compute_apsp(vtx_data *, int);
     extern DistType **compute_apsp_artifical_weights(vtx_data *, int);
     extern double distance_kD(double **, int, int, int);
-    extern void quicksort_place(double *, int *, int, int);
+    extern void quicksort_place(double *, int *, int);
     extern void quicksort_placef(float *, int *, int, int);
     extern void compute_new_weights(vtx_data * graph, int n);
     extern void restore_old_weights(vtx_data * graph, int n,

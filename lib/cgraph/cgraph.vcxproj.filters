@@ -42,6 +42,9 @@
     <ClInclude Include="prisize_t.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -20,6 +20,7 @@ add_library(cgraph SHARED
   likely.h
   list.h
   prisize_t.h
+  sort.h
   stack.h
   startswith.h
   strcasecmp.h

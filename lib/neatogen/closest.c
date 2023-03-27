@@ -179,7 +179,7 @@ static void find_closest_pairs(double *place, int n, int num_pairs,
     for (i = 0; i < n; i++) {
 	ordering[i] = i;
     }
-    quicksort_place(place, ordering, 0, n - 1);
+    quicksort_place(place, ordering, n);
     for (i = 0; i < n; i++) {
 	inv_ordering[ordering[i]] = i;
     }

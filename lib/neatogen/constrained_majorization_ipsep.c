@@ -350,20 +350,6 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	    new_stress -= vectors_inner_productf(n, coords[k], tmp_coords);
 	}
 
-#ifdef ALTERNATIVE_STRESS_CALC
-	{
-	    double mat_stress = new_stress;
-	    double compute_stress(float **coords, float *lap, int dim,
-				  int n);
-	    new_stress = compute_stress(coords, lap2, dim, n);
-	    if (fabs(mat_stress - new_stress) /
-		min(mat_stress, new_stress) > 0.001) {
-		fprintf(stderr,
-			"Diff stress vals: %lf %lf (iteration #%d)\n",
-			mat_stress, new_stress, iterations);
-	    }
-	}
-#endif
 	/* check for convergence */
 	if (Verbose && (iterations % 1 == 0)) {
 	    fprintf(stderr, "%.3f ", new_stress);

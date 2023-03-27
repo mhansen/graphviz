@@ -19,7 +19,6 @@ extern "C" {
 typedef struct {
 	float **A;
 	int n;
-	int *lev;
 	int *iArray1;
 	int *iArray2;
 	int *iArray3;
@@ -28,7 +27,6 @@ typedef struct {
 	float *fArray2;
 	float *fArray3;
 	float *fArray4;
-	float *A_r;
 	int *ordering;
 	int *levels;
 	int num_levels;
@@ -36,11 +34,8 @@ typedef struct {
 
 extern CMajEnv* initConstrainedMajorization(float *, int, int*, int*, int);
 
-extern int constrained_majorization_new(CMajEnv*, float*, float**, 
-                                        int, int, int, float*, float);
-
-extern int constrained_majorization_new_with_gaps(CMajEnv*, float*, float**, 
-                                                  int, int,  float*, float);
+extern void constrained_majorization_new_with_gaps(CMajEnv*, float*, float**, 
+                                                   int, int, float);
 extern void deleteCMajEnv(CMajEnv *e);
 
 extern float** unpackMatrix(float * packedMat, int n);
