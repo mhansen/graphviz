@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (8.0.2)]
 
+### Fixed
+
+- `_Gdtclft_Init` link errors when builting libtcldot_builtin using the
+  Autotools build system have been resolved. #2365
+
 ## [8.0.1] – 2023-03-27
 
 ### Added
