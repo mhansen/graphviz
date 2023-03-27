@@ -84,7 +84,6 @@
     <ClCompile Include="sparse_solve.c" />
     <ClCompile Include="spring_electrical.c" />
     <ClCompile Include="stress_model.c" />
-    <ClCompile Include="uniform_stress.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

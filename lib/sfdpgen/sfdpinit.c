@@ -19,7 +19,6 @@
 #include <ctype.h>
 #include <sfdpgen/spring_electrical.h>
 #include <neatogen/overlap.h>
-#include <sfdpgen/uniform_stress.h>
 #include <sfdpgen/stress_model.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
