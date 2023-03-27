@@ -20,15 +20,12 @@
 #include <common/utils.h>
 #include "convert.h"
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define EMPTY(s)	((s == 0) || (*s == '\0'))
 #define SLEN(s)     (sizeof(s)-1)
-
-#define NODE		1
-#define EDGE		2
-#define GRAPH		3
 
 #define GXL_ATTR    "_gxl_"
 #define GXL_ROLE	"_gxl_role"
@@ -128,8 +125,7 @@ static void iterateBody(gxlstate_t * stp, Agraph_t * g);
 
 static void tabover(FILE * gxlFile)
 {
-    int temp;
-    temp = Level;
+    int temp = Level;
     while (temp--)
 	putc('\t', gxlFile);
 }
@@ -139,17 +135,15 @@ static void tabover(FILE * gxlFile)
  *   ID := (alpha|'_'|':')(NameChar)*
  *   NameChar := alpha|digit|'.'|':'|'-'|'_'
  */
-static int legalGXLName(char *id)
-{
+static bool legalGXLName(const char *id) {
     char c = *id++;
-    if (!isalpha(c) && (c != '_') && (c != ':'))
-	return 0;
+    if (!isalpha(c) && c != '_' && c != ':')
+	return false;
     while ((c = *id++)) {
-	if (!isalnum(c) && (c != '_') && (c != ':') &&
-	    (c != '-') && (c != '.'))
-	    return 0;
+	if (!isalnum(c) && c != '_' && c != ':' && c != '-' && c != '.')
+	    return false;
     }
-    return 1;
+    return true;
 }
 
 // `fputs` wrapper to handle the difference in calling convention to what
@@ -170,26 +164,22 @@ static int xml_url_puts(FILE *f, const char *s) {
   return xml_escape(s, flags, put, f);
 }
 
-static int isGxlGrammar(char *name)
-{
+static bool isGxlGrammar(const char *name) {
   return startswith(name, GXL_ATTR);
 }
 
-static int isLocatorType(char *name)
-{
+static bool isLocatorType(const char *name) {
   return startswith(name, GXL_LOC);
 }
 
-static void *idexists(Dt_t * ids, char *id)
-{
-    return dtmatch(ids, id);
+static bool idexists(Dt_t * ids, char *id) {
+  return dtmatch(ids, id) != NULL;
 }
 
 /* addid:
  * assume id is not in ids.
  */
-static char *addid(Dt_t * ids, char *id)
-{
+static char *addid(Dt_t *ids, const char *id) {
     idv_t *idp = gv_alloc(sizeof(*idp));
 
     idp->name = gv_strdup(id);
@@ -232,21 +222,20 @@ static char *mapLookup(Dt_t * nm, char *name)
     namev_t *objp = dtmatch(nm, name);
     if (objp)
 	return objp->unique_name;
-    else
-	return 0;
+    return NULL;
 }
 
+/* nodeID:
+ * Return id associated with the given node.
+ */
 static char *nodeID(gxlstate_t * stp, Agnode_t * n)
 {
-    char *name, *uniqueName;
-
-    name = agnameof(n);
-    uniqueName = mapLookup(stp->nodeMap, name);
+    char *name = agnameof(n);
+    char *uniqueName = mapLookup(stp->nodeMap, name);
     assert(uniqueName);
     return uniqueName;
 }
 
-#define EXTRA 32		/* space for ':' followed by a number */
 #define EDGEOP "--"		/* cannot use '>'; illegal in ID in GXL */
 
 static char *createEdgeId(gxlstate_t * stp, Agedge_t * e)
@@ -254,7 +243,6 @@ static char *createEdgeId(gxlstate_t * stp, Agedge_t * e)
     int edgeIdCounter = 1;
     char *hname = nodeID(stp, AGHEAD(e));
     char *tname = nodeID(stp, AGTAIL(e));
-    char *rv;
 
     agxbuf bp = {0};
 
@@ -265,27 +253,22 @@ static char *createEdgeId(gxlstate_t * stp, Agedge_t * e)
 	id_name = agxbuse(&bp);
     }
 
-    rv = addid(stp->idList, id_name);
+    char *rv = addid(stp->idList, id_name);
     agxbfree(&bp);
     return rv;
 }
 
 static void addToMap(Dt_t * map, char *name, char *uniqueName)
 {
-    namev_t obj;
-    namev_t *objp;
-
-    obj.name = name;
-    objp = dtinsert(map, &obj);
-    assert(objp->unique_name == 0);
+    namev_t obj = {.name = name};
+    namev_t *objp = dtinsert(map, &obj);
+    assert(objp->unique_name == NULL);
     objp->unique_name = uniqueName;
 }
 
 static void graphAttrs(FILE * gxlFile, Agraph_t * g)
 {
-    char *val;
-
-    val = agget(g, GXL_ROLE);
+    char *val = agget(g, GXL_ROLE);
     if (!EMPTY(val)) {
 	fprintf(gxlFile, " role=\"");
 	xml_puts(gxlFile, val);
@@ -301,9 +284,7 @@ static void graphAttrs(FILE * gxlFile, Agraph_t * g)
 
 static void edgeAttrs(FILE * gxlFile, Agedge_t * e)
 {
-    char *val;
-
-    val = agget(e, GXL_ID);
+    char *val = agget(e, GXL_ID);
     if (!EMPTY(val)) {
 	fprintf(gxlFile, " id=\"");
 	xml_puts(gxlFile, val);
@@ -326,9 +307,7 @@ static void edgeAttrs(FILE * gxlFile, Agedge_t * e)
 
 static void printHref(FILE * gxlFile, void *n)
 {
-    char *val;
-
-    val = agget(n, GXL_TYPE);
+    char *val = agget(n, GXL_TYPE);
     if (!EMPTY(val)) {
 	tabover(gxlFile);
 	fprintf(gxlFile, "\t<type xlink:href=\"");
@@ -341,30 +320,21 @@ static void printHref(FILE * gxlFile, void *n)
 
 
 static void
-writeDict(Agraph_t * g, FILE * gxlFile, char *name, Dict_t * dict,
-	  int isGraph)
-{
-    (void)g;
-
-    Dict_t *view;
-    Agsym_t *sym, *psym;
-
-    view = dtview(dict, NULL);
-    for (sym = dtfirst(dict); sym; sym = dtnext(dict, sym)) {
+writeDict(FILE *gxlFile, const char *name, Dict_t *dict, bool isGraph) {
+    Dict_t *view = dtview(dict, NULL);
+    for (Agsym_t *sym = dtfirst(dict); sym; sym = dtnext(dict, sym)) {
 	if (!isGxlGrammar(sym->name)) {
 	    if (EMPTY(sym->defval)) {	/* try to skip empty str (default) */
 		if (view == NULL)
 		    continue;	/* no parent */
-		psym = dtsearch(view, sym);
+		Agsym_t *psym = dtsearch(view, sym);
 		/* assert(psym); */
 		if (EMPTY(psym->defval))
 		    continue;	/* also empty in parent */
 	    }
 
 	    if (isLocatorType(sym->defval)) {
-		char *locatorVal;
-		locatorVal = sym->defval;
-		locatorVal += 13;
+		char *locatorVal = sym->defval + strlen(GXL_LOC);
 
 		tabover(gxlFile);
 		fprintf(gxlFile, "\t<attr name=\"");
@@ -408,7 +378,7 @@ writeDict(Agraph_t * g, FILE * gxlFile, char *name, Dict_t * dict,
 		if (EMPTY(sym->defval)) {
 		    if (view == NULL)
 			continue;
-		    psym = dtsearch(view, sym);
+		    Agsym_t *psym = dtsearch(view, sym);
 		    if (EMPTY(psym->defval))
 			continue;
 		}
@@ -436,23 +406,19 @@ static void writeDicts(Agraph_t * g, FILE * gxlFile)
 {
     Agdatadict_t *def;
     if ((def = agdatadict(g, FALSE))) {
-	writeDict(g, gxlFile, "graph", def->dict.g, 1);
-	writeDict(g, gxlFile, "node", def->dict.n, 0);
-	writeDict(g, gxlFile, "edge", def->dict.e, 0);
+	writeDict(gxlFile, "graph", def->dict.g, true);
+	writeDict(gxlFile, "node", def->dict.n, false);
+	writeDict(gxlFile, "edge", def->dict.e, false);
     }
 }
 
-static void
-writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
-{
-    char *name;
+static void writeHdr(gxlstate_t *stp, Agraph_t *g, FILE *gxlFile, bool top) {
     char *kind;
-    char *uniqueName;
 
     Level++;
     stp->attrsNotWritten = AGATTRWF(g);
 
-    name = agnameof(g);
+    char *name = agnameof(g);
     if (g->desc.directed)
 	kind = "directed";
     else
@@ -479,8 +445,7 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
 	Headport = agattr(g, AGEDGE, "headport", NULL);
     }
 
-
-    uniqueName = mapLookup(stp->graphMap, name);
+    char *uniqueName = mapLookup(stp->graphMap, name);
     tabover(gxlFile);
     fprintf(gxlFile, "<graph id=\"%s\" edgeids=\"true\" edgemode=\"%s\"",
 	    uniqueName, kind);
@@ -512,12 +477,11 @@ writeHdr(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile, int top)
     AGATTRWF(g) = !(AGATTRWF(g));
 }
 
-static void writeTrl(Agraph_t * g, FILE * gxlFile, int top)
-{
+static void writeTrl(Agraph_t *g, FILE *gxlFile, bool top) {
     tabover(gxlFile);
     fprintf(gxlFile, "</graph>\n");
     Level--;
-    if (!(top) && agparent(g)) {
+    if (!top && agparent(g)) {
 	tabover(gxlFile);
 	fprintf(gxlFile, "</node>\n");
 	Level--;
@@ -527,21 +491,15 @@ static void writeTrl(Agraph_t * g, FILE * gxlFile, int top)
 
 static void writeSubgs(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile)
 {
-    Agraph_t *subg;
-
-    for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
-	writeHdr(stp, subg, gxlFile, FALSE);
+    for (Agraph_t *subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
+	writeHdr(stp, subg, gxlFile, false);
 	writeBody(stp, subg, gxlFile);
-	writeTrl(subg, gxlFile, FALSE);
+	writeTrl(subg, gxlFile, false);
     }
 }
 
-static int writeEdgeName(Agedge_t * e, FILE * gxlFile)
-{
-    int rv;
-    char *p;
-
-    p = agnameof(e);
+static bool writeEdgeName(Agedge_t *e, FILE *gxlFile) {
+    char *p = agnameof(e);
     if (!(EMPTY(p))) {
 	tabover(gxlFile);
 	fprintf(gxlFile, "\t<attr name=\"key\">\n");
@@ -551,32 +509,29 @@ static int writeEdgeName(Agedge_t * e, FILE * gxlFile)
 	fprintf(gxlFile, "</string>\n");
 	tabover(gxlFile);
 	fprintf(gxlFile, "\t</attr>\n");
-	rv = TRUE;
-    } else
-	rv = FALSE;
-    return rv;
+	return true;
+    }
+    return false;
 }
 
 
 static void
 writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 {
-    Agsym_t *sym;
     int cnt = 0;
 
-    if ((AGTYPE(obj) == AGINEDGE) || (AGTYPE(obj) == AGOUTEDGE)) {
+    if (AGTYPE(obj) == AGINEDGE || AGTYPE(obj) == AGOUTEDGE) {
 	if (writeEdgeName(obj, gxlFile))
 	    cnt++;
     }
     Agattr_t *data = agattrrec(obj);
     if (data) {
-	for (sym = dtfirst(defdict); sym; sym = dtnext(defdict, sym)) {
+	for (Agsym_t *sym = dtfirst(defdict); sym; sym = dtnext(defdict, sym)) {
 	    if (!isGxlGrammar(sym->name)) {
-		if ((AGTYPE(obj) == AGINEDGE)
-		    || (AGTYPE(obj) == AGOUTEDGE)) {
-		    if (Tailport && (sym->id == Tailport->id))
+		if (AGTYPE(obj) == AGINEDGE || AGTYPE(obj) == AGOUTEDGE) {
+		    if (Tailport && sym->id == Tailport->id)
 			continue;
-		    if (Headport && (sym->id == Headport->id))
+		    if (Headport && sym->id == Headport->id)
 			continue;
 		}
 		if (data->str[sym->id] != sym->defval) {
@@ -585,9 +540,7 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 			continue;
 
 		    if (isLocatorType(data->str[sym->id])) {
-			char *locatorVal;
-			locatorVal = data->str[sym->id];
-			locatorVal += 13;
+			char *locatorVal = data->str[sym->id] + strlen(GXL_LOC);
 
 			tabover(gxlFile);
 			fprintf(gxlFile, "\t<attr name=\"");
@@ -640,21 +593,15 @@ writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
     AGATTRWF(obj) = !(AGATTRWF(obj));
 }
 
-/* nodeID:
- * Return id associated with the given node.
- */
-static int attrs_written(gxlstate_t * stp, void *obj)
-{
-    return !(AGATTRWF(obj) == stp->attrsNotWritten);
+static bool attrs_written(gxlstate_t * stp, void *obj) {
+  return AGATTRWF(obj) != stp->attrsNotWritten;
 }
 
 static void
 writeNode(gxlstate_t * stp, Agnode_t * n, FILE * gxlFile, Dict_t * d)
 {
-    char *name, *uniqueName;
-
-    name = agnameof(n);
-    uniqueName = nodeID(stp, n);
+    char *name = agnameof(n);
+    char *uniqueName = nodeID(stp, n);
     Level++;
     tabover(gxlFile);
     fprintf(gxlFile, "<node id=\"%s\">\n", uniqueName);
@@ -681,9 +628,7 @@ writeNode(gxlstate_t * stp, Agnode_t * n, FILE * gxlFile, Dict_t * d)
 
 static void writePort(Agedge_t * e, FILE * gxlFile, char *name)
 {
-    char *val;
-
-    val = agget(e, name);
+    char *val = agget(e, name);
     if (val && val[0]) {
 	tabover(gxlFile);
 	fprintf(gxlFile, "\t<attr name=\"");
@@ -698,27 +643,20 @@ static void writePort(Agedge_t * e, FILE * gxlFile, char *name)
     }
 }
 
-static int writeEdgeTest(Agraph_t * g, Agedge_t * e)
-{
-    Agraph_t *subg;
-
+static bool writeEdgeTest(Agraph_t *g, Agedge_t *e) {
     /* can use agedge() because we subverted the dict compar_f */
-    for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
+    for (Agraph_t *subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	if (agsubedge(subg, e, FALSE))
-	    return FALSE;
+	    return false;
     }
-    return TRUE;
+    return true;
 }
 
 static void
 writeEdge(gxlstate_t * stp, Agedge_t * e, FILE * gxlFile, Dict_t * d)
 {
-    Agnode_t *t, *h;
-    char *bp;
-    char *edge_id;
-
-    t = AGTAIL(e);
-    h = AGHEAD(e);
+    Agnode_t *t = AGTAIL(e);
+    Agnode_t *h = AGHEAD(e);
 
     Level++;
     tabover(gxlFile);
@@ -732,11 +670,11 @@ writeEdge(gxlstate_t * stp, Agedge_t * e, FILE * gxlFile, Dict_t * d)
 	fprintf(gxlFile, " isdirected=\"false\"");
     }
 
-    edge_id = agget(e, GXL_ID);
+    char *edge_id = agget(e, GXL_ID);
     if (!EMPTY(edge_id)) {
 	fprintf(gxlFile, ">\n");
     } else {
-	bp = createEdgeId(stp, e);
+	char *bp = createEdgeId(stp, e);
 	fprintf(gxlFile, " id=\"%s\">\n", bp);
     }
 
@@ -758,20 +696,16 @@ writeEdge(gxlstate_t * stp, Agedge_t * e, FILE * gxlFile, Dict_t * d)
 
 static void writeBody(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile)
 {
-    Agnode_t *n;
-    Agnode_t *realn;
-    Agedge_t *e;
-
     writeSubgs(stp, g, gxlFile);
     Agdatadict_t *dd = agdatadict(g, FALSE);
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	realn = agidnode(stp->root, AGID(n), 0);
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
+	Agnode_t *realn = agidnode(stp->root, AGID(n), 0);
 	if (!writeval(realn)) {
 	    writeval(realn) = 1;
 	    writeNode(stp, n, gxlFile, dd->dict.n);
 	}
 
-	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
+	for (Agedge_t *e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    if (writeEdgeTest(g, e))
 		writeEdge(stp, e, gxlFile, dd->dict.e);
 	}
@@ -780,11 +714,8 @@ static void writeBody(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile)
 
 static void iterateHdr(gxlstate_t * stp, Agraph_t * g)
 {
-    char *gxlId;
-    char *name;
-
-    name = agnameof(g);
-    gxlId = agget(g, GXL_ID);
+    char *name = agnameof(g);
+    char *gxlId = agget(g, GXL_ID);
     if (EMPTY(gxlId))
 	gxlId = name;
 
@@ -797,9 +728,7 @@ static void iterateHdr(gxlstate_t * stp, Agraph_t * g)
 
 static void iterate_subgs(gxlstate_t * stp, Agraph_t * g)
 {
-    Agraph_t *subg;
-
-    for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
+    for (Agraph_t *subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	iterateHdr(stp, subg);
 	iterateBody(stp, subg);
     }
@@ -808,16 +737,12 @@ static void iterate_subgs(gxlstate_t * stp, Agraph_t * g)
 
 static void iterateBody(gxlstate_t * stp, Agraph_t * g)
 {
-    Agnode_t *n;
-    Agedge_t *e;
-
     iterate_subgs(stp, g);
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	char *gxlId;
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	char *nodename = agnameof(n);
 
 	if (!mapLookup(stp->nodeMap, nodename)) {
-	    gxlId = agget(n, GXL_ID);
+	    char *gxlId = agget(n, GXL_ID);
 	    if (EMPTY(gxlId))
 		gxlId = nodename;
 	    if (idexists(stp->idList, gxlId) || !legalGXLName(gxlId))
@@ -827,7 +752,7 @@ static void iterateBody(gxlstate_t * stp, Agraph_t * g)
 	    addToMap(stp->nodeMap, nodename, gxlId);
 	}
 
-	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
+	for (Agedge_t *e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    if (writeEdgeTest(g, e)) {
 		char *edge_id = agget(e, GXL_ID);
 		if (!EMPTY(edge_id))
