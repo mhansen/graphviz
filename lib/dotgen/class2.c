@@ -56,7 +56,6 @@ static node_t *leader_of(node_t * v) {
     node_t *rv;
 
     if (ND_ranktype(v) != CLUSTER) {
-	/*assert(v == UF_find(v));  could be leaf, so comment out */
 	rv = UF_find(v);
     } else {
 	clust = ND_clust(v);
@@ -112,7 +111,7 @@ interclrep(graph_t * g, edge_t * e)
     }
     if (ND_clust(t) != ND_clust(h)) {
 	if ((ve = find_fast_edge(t, h))) {
-	    merge_chain(g, e, ve, TRUE);
+	    merge_chain(g, e, ve, true);
 	    return;
 	}
 	if (ND_rank(t) == ND_rank(h))
@@ -120,22 +119,18 @@ interclrep(graph_t * g, edge_t * e)
 	make_chain(g, t, h, e);
 
 	/* mark as cluster edge */
-	for (ve = ED_to_virt(e); ve && (ND_rank(aghead(ve)) <= ND_rank(h));
+	for (ve = ED_to_virt(e); ve && ND_rank(aghead(ve)) <= ND_rank(h);
 	     ve = ND_out(aghead(ve)).list[0])
 	    ED_edge_type(ve) = CLUSTER_EDGE;
     }
     /* else ignore intra-cluster edges at this point */
 }
 
-static int 
-is_cluster_edge(edge_t * e)
-{
-    return ((ND_ranktype(agtail(e)) == CLUSTER)
-	    || (ND_ranktype(aghead(e)) == CLUSTER));
+static bool is_cluster_edge(edge_t *e) {
+  return ND_ranktype(agtail(e)) == CLUSTER || ND_ranktype(aghead(e)) == CLUSTER;
 }
 
-void merge_chain(graph_t * g, edge_t * e, edge_t * f, int flag)
-{
+void merge_chain(graph_t *g, edge_t *e, edge_t *f, bool update_count) {
     edge_t *rep;
     int lastrank = MAX(ND_rank(agtail(e)), ND_rank(aghead(e)));
 
@@ -144,7 +139,7 @@ void merge_chain(graph_t * g, edge_t * e, edge_t * f, int flag)
     rep = f;
     do {
 	/* interclust multi-edges are not counted now */
-	if (flag)
+	if (update_count)
 	    ED_count(rep) += ED_count(e);
 	ED_xpenalty(rep) += ED_xpenalty(e);
 	ED_weight(rep) += ED_weight(e);
@@ -157,8 +152,8 @@ void merge_chain(graph_t * g, edge_t * e, edge_t * f, int flag)
 
 int mergeable(edge_t * e, edge_t * f)
 {
-    if (e && f && (agtail(e) == agtail(f)) && (aghead(e) == aghead(f)) &&
-	(ED_label(e) == ED_label(f)) && ports_eq(e, f))
+    if (e && f && agtail(e) == agtail(f) && aghead(e) == aghead(f) &&
+	ED_label(e) == ED_label(f) && ports_eq(e, f))
 	return TRUE;
     return FALSE;
 }
@@ -185,7 +180,7 @@ void class2(graph_t * g)
 	}
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if ((ND_clust(n) == NULL) && (n == UF_find(n))) {
+	if (ND_clust(n) == NULL && n == UF_find(n)) {
 	    fast_node(g, n);
 	    GD_n_nodes(g)++;
 	}
@@ -203,7 +198,7 @@ void class2(graph_t * g)
 		/* following is new cluster multi-edge code */
 		if (mergeable(prev, e)) {
 		    if (ED_to_virt(prev)) {
-			merge_chain(g, e, ED_to_virt(prev), FALSE);
+			merge_chain(g, e, ED_to_virt(prev), false);
 			other_edge(e);
 		    } else if (ND_rank(agtail(e)) == ND_rank(aghead(e))) {
 			merge_oneway(e, prev);
@@ -217,18 +212,18 @@ void class2(graph_t * g)
 		continue;
 	    }
 	    /* merge multi-edges */
-	    if (prev && (agtail(e) == agtail(prev)) && (aghead(e) == aghead(prev))) {
+	    if (prev && agtail(e) == agtail(prev) && aghead(e) == aghead(prev)) {
 		if (ND_rank(agtail(e)) == ND_rank(aghead(e))) {
 		    merge_oneway(e, prev);
 		    other_edge(e);
 		    continue;
 		}
-		if ((ED_label(e) == NULL) && (ED_label(prev) == NULL)
+		if (ED_label(e) == NULL && ED_label(prev) == NULL
 		    && ports_eq(e, prev)) {
 		    if (Concentrate)
 			ED_edge_type(e) = IGNORED;
 		    else {
-			merge_chain(g, e, ED_to_virt(prev), TRUE);
+			merge_chain(g, e, ED_to_virt(prev), true);
 			other_edge(e);
 		    }
 		    continue;
@@ -247,7 +242,7 @@ void class2(graph_t * g)
 	    h = UF_find(aghead(e));
 
 	    /* non-leader leaf nodes */
-	    if ((agtail(e) != t) || (aghead(e) != h)) {
+	    if (agtail(e) != t || aghead(e) != h) {
 		/* FIX need to merge stuff */
 		continue;
 	    }
@@ -269,23 +264,29 @@ void class2(graph_t * g)
 
 	    /* backward edges */
 	    else {
-		/*other_edge(e); */
 		/* avoid when opp==e in undirected graph */
-		if ((opp = agfindedge(g, aghead(e), agtail(e))) && (aghead(opp) != aghead(e))) {
+		for (opp = agfstout(g, aghead(e)); opp != NULL; opp = agnxtout(g, opp)) {
+		    if (aghead(opp) != agtail(e) || aghead(opp) == aghead(e) ||
+		        ED_edge_type(opp) == IGNORED) {
+			continue;
+		    }
 		    /* shadows a forward edge */
 		    if (ED_to_virt(opp) == NULL)
 			make_chain(g, agtail(opp), aghead(opp), opp);
-		    if ((ED_label(e) == NULL) && (ED_label(opp) == NULL)
+		    if (ED_label(e) == NULL && ED_label(opp) == NULL
 			&& ports_eq(e, opp)) {
 			if (Concentrate) {
 			    ED_edge_type(e) = IGNORED;
 			    ED_conc_opp_flag(opp) = true;
 			} else {	/* see above.  this is getting out of hand */
 			    other_edge(e);
-			    merge_chain(g, e, ED_to_virt(opp), TRUE);
+			    merge_chain(g, e, ED_to_virt(opp), true);
 			}
-			continue;
+			break;
 		    }
+		}
+		if (opp != NULL) {
+		    continue;
 		}
 		make_chain(g, aghead(e), agtail(e), e);
 		prev = e;

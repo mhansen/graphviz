@@ -490,9 +490,7 @@ def test_827():
     b15gv = Path(__file__).parent / "graphs/b15.gv"
     assert b15gv.exists(), "missing test case file"
 
-    ret = subprocess.call(["dot", "-Tsvg", "-o", os.devnull, b15gv])
-
-    assert ret == 1, "Graphviz crashed when processing b15.gv"
+    dot("svg", b15gv)
 
 
 def test_925():
@@ -1565,6 +1563,32 @@ def test_2082():
     # ask Graphviz to process it, which should generate an assertion failure if
     # this bug has been reintroduced
     dot("png", input)
+
+
+def test_2087():
+    """
+    spline routing should be aware of and ignore concentrated edges
+    https://gitlab.com/graphviz/graphviz/-/issues/2087
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2087.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # process it with Graphviz
+    warnings = subprocess.check_output(
+        ["dot", "-Tpng", "-o", os.devnull, input],
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
+
+    # work around macOS warnings
+    warnings = remove_xtype_warnings(warnings).strip()
+
+    # no warnings should have been printed
+    assert (
+        warnings == ""
+    ), "warnings were printed when processing concentrated duplicate edges"
 
 
 @pytest.mark.xfail(strict=True)
