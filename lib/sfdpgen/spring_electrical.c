@@ -55,7 +55,6 @@ spring_electrical_control spring_electrical_control_new(){
   ctrl->overlap = 0;
   ctrl->do_shrinking = 1;
   ctrl->tscheme = QUAD_TREE_HYBRID;
-  ctrl->method = METHOD_SPRING_ELECTRICAL;
   ctrl->initial_scaling = -4;
   ctrl->rotation = 0.;
   ctrl->edge_labeling_scheme = 0;
@@ -74,10 +73,6 @@ static char* tschemes[] = {
   "NONE", "NORMAL", "FAST", "HYBRID"
 };
 
-static char* methods[] = {
-  "SPRING_ELECTRICAL"
-};
-
 void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "spring_electrical_control:\n");
   fprintf (stderr, "  repulsive and attractive exponents: %.03f %.03f\n", ctrl->p, ctrl->q);
@@ -91,7 +86,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
            (int)ctrl->beautify_leaves, 0, ctrl->rotation);
   fprintf (stderr, "  smoothing %s overlap %d initial_scaling %.03f do_shrinking %d\n",
     smoothings[ctrl->smoothing], ctrl->overlap, ctrl->initial_scaling, ctrl->do_shrinking);
-  fprintf (stderr, "  octree scheme %s method %s\n", tschemes[ctrl->tscheme], methods[ctrl->method]);
+  fprintf (stderr, "  octree scheme %s\n", tschemes[ctrl->tscheme]);
   fprintf (stderr, "  edge_labeling_scheme %d\n", ctrl->edge_labeling_scheme);
 }
 
@@ -1502,19 +1497,15 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
       }
     }
 #endif
-    if (ctrl->method == METHOD_SPRING_ELECTRICAL){
-      if (ctrl->tscheme == QUAD_TREE_NONE){
-	spring_electrical_embedding_slow(dim, grid->A, ctrl, xc, flag);
-      } else if (ctrl->tscheme == QUAD_TREE_FAST || (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > QUAD_TREE_HYBRID_SIZE)){
-	if (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > 10 && Verbose){
-	  fprintf(stderr, "QUAD_TREE_HYBRID, size larger than %d, switch to fast quadtree", QUAD_TREE_HYBRID_SIZE);
-	}
-	spring_electrical_embedding_fast(dim, grid->A, ctrl, xc, flag);
-      } else {
-	spring_electrical_embedding(dim, grid->A, ctrl, xc, flag);
+    if (ctrl->tscheme == QUAD_TREE_NONE){
+      spring_electrical_embedding_slow(dim, grid->A, ctrl, xc, flag);
+    } else if (ctrl->tscheme == QUAD_TREE_FAST || (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > QUAD_TREE_HYBRID_SIZE)){
+      if (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > 10 && Verbose){
+	fprintf(stderr, "QUAD_TREE_HYBRID, size larger than %d, switch to fast quadtree", QUAD_TREE_HYBRID_SIZE);
       }
+      spring_electrical_embedding_fast(dim, grid->A, ctrl, xc, flag);
     } else {
-      assert(0);
+      spring_electrical_embedding(dim, grid->A, ctrl, xc, flag);
     }
     if (Multilevel_is_finest(grid)) break;
     if (*flag) {

@@ -24,8 +24,6 @@ enum {QUAD_TREE_HYBRID_SIZE = 10000};
 
 enum {QUAD_TREE_NONE = 0, QUAD_TREE_NORMAL, QUAD_TREE_FAST, QUAD_TREE_HYBRID};
 
-enum {METHOD_STA = -1, METHOD_SPRING_ELECTRICAL};
-
 struct spring_electrical_control_struct {
   double p;/*a negativve real number default to -1. repulsive force = dist^p */
   double q;/*a positive real number default to 2. attractive force = dist^q */
@@ -47,7 +45,6 @@ struct spring_electrical_control_struct {
   int overlap;
   int do_shrinking;
   int tscheme; /* octree scheme. 0 (no octree), 1 (normal), 2 (fast) */
-  int method;/* spring_electical, spring_maxent */
   double initial_scaling;/* how to scale the layout of the graph before passing to overlap removal algorithm.
 			  positive values are absolute in points, negative values are relative
 			  to average label size.

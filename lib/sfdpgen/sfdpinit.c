@@ -100,11 +100,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
 	sizes = NULL;
     pos = getPos(g);
 
-    switch (ctrl->method) {
-    case METHOD_SPRING_ELECTRICAL:
-	multilevel_spring_electrical_embedding(Ndim, A, D, ctrl, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
-	break;
-    }
+    multilevel_spring_electrical_embedding(Ndim, A, D, ctrl, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double *npos = pos + (Ndim * ND_id(n));
@@ -219,7 +215,6 @@ tuneControl (graph_t* g, spring_electrical_control ctrl)
     ctrl->multilevels = late_int(g, agfindgraphattr(g, "levels"), INT_MAX, 0);
     ctrl->smoothing = late_smooth(g, agfindgraphattr(g, "smoothing"), SMOOTHING_NONE);
     ctrl->tscheme = late_quadtree_scheme(g, agfindgraphattr(g, "quadtree"), QUAD_TREE_NORMAL);
-    ctrl->method = METHOD_SPRING_ELECTRICAL;
     ctrl->beautify_leaves = mapBool(agget(g, "beautify"), false);
     ctrl->do_shrinking = mapBool(agget(g, "overlap_shrink"), true) ? TRUE : FALSE;
     ctrl->rotation = late_double(g, agfindgraphattr(g, "rotation"), 0.0, -MAXDOUBLE);
