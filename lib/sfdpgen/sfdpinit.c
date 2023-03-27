@@ -88,10 +88,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
     SparseMatrix D = NULL;
     SparseMatrix A;
 
-    if (ctrl->method == METHOD_SPRING_MAXENT) /* maxent can work with distance matrix */
-	A = makeMatrix(g, &D);
-    else
-	A = makeMatrix(g, NULL);
+    A = makeMatrix(g, NULL);
 
     if (ctrl->overlap >= 0) {
 	if (ctrl->edge_labeling_scheme > 0)
@@ -105,7 +102,6 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
 
     switch (ctrl->method) {
     case METHOD_SPRING_ELECTRICAL:
-    case METHOD_SPRING_MAXENT:
 	multilevel_spring_electrical_embedding(Ndim, A, D, ctrl, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
 	break;
     }
