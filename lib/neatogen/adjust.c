@@ -630,8 +630,7 @@ double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
  * Assumes g is connected and simple, i.e., we can have a->b and b->a
  * but not a->b and a->b
  */
-SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
-{
+SparseMatrix makeMatrix(Agraph_t *g) {
     SparseMatrix A = 0;
     Agnode_t *n;
     Agedge_t *e;
@@ -641,8 +640,6 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
     int i, row;
     double v;
     int type = MATRIX_TYPE_REAL;
-    Agsym_t* symD = NULL;
-    double* valD = NULL;
 
     if (!g)
 	return NULL;
@@ -659,10 +656,6 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
     double *val = gv_calloc(nedges, sizeof(double));
 
     sym = agfindedgeattr(g, "weight");
-    if (D) {
-	symD = agfindedgeattr(g, "len");
-	valD = gv_calloc(nedges, sizeof(double));
-    }
 
     i = 0;
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -674,10 +667,6 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
 		v = 1;
 	    val[i] = v;
 	/* edge length */
-	    if (symD) {
-		if (sscanf (agxget (e, symD), "%lf", &v) != 1) v = 1;
-		valD[i] = v;
-	    }
 	    i++;
 	}
     }
@@ -685,19 +674,16 @@ SparseMatrix makeMatrix(Agraph_t* g, SparseMatrix *D)
     A = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J,
 					    val, type, sizeof(double));
 
-    if (D) *D = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J, valD, type, sizeof(double));
-
     free(I);
     free(J);
     free(val);
-    free (valD);
 
     return A;
 }
 
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
 static void fdpAdjust(graph_t *g, adjust_data *am) {
-    SparseMatrix A0 = makeMatrix(g, NULL);
+    SparseMatrix A0 = makeMatrix(g);
     SparseMatrix A = A0;
     double *sizes;
     double *pos = gv_calloc(Ndim * agnnodes(g), sizeof(double));

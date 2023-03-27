@@ -86,9 +86,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
     int flag, i;
     int n_edge_label_nodes = 0, *edge_label_nodes = NULL;
     SparseMatrix D = NULL;
-    SparseMatrix A;
-
-    A = makeMatrix(g, NULL);
+    SparseMatrix A = makeMatrix(g);
 
     if (ctrl->overlap >= 0) {
 	if (ctrl->edge_labeling_scheme > 0)
