@@ -108,19 +108,6 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
     case METHOD_SPRING_MAXENT:
 	multilevel_spring_electrical_embedding(Ndim, A, D, ctrl, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
 	break;
-    case METHOD_STRESS:{
-	int maxit = 200;
-	double tol = 0.001;
-
-	if (!D){
-	    D = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);/* all distance 1 */
-	} else {
-	    D = SparseMatrix_symmetrize_nodiag(D);
-	}
-
-	stress_model(Ndim, D, &pos, TRUE, maxit, tol, &flag);
-	}
-	break;
     }
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {

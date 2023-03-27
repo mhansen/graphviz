@@ -75,7 +75,7 @@ static char* tschemes[] = {
 };
 
 static char* methods[] = {
-  "SPRING_ELECTRICAL", "SPRING_MAXENT", "STRESS_MAXENT", "STRESS_APPROX", "STRESS"
+  "SPRING_ELECTRICAL", "SPRING_MAXENT", "STRESS_MAXENT", "STRESS_APPROX"
 };
 
 void spring_electrical_control_print(spring_electrical_control ctrl){
