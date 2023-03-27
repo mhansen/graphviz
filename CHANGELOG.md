@@ -69,6 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   circular layout are no longer placed on top of each other. #2283
 - Applying `concentrate=true` to duplicate edges no longer results in errors due
   to non-normal edges being found. #2087
+- `splines=ortho` and `concentrate=true` when used in combination no longer
+  causes crashes during spline construction. #2361
 
 ### Removed
 
