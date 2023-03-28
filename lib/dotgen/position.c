@@ -761,7 +761,7 @@ static void set_ycoords(graph_t * g)
 		for (j = 0; (e = ND_other(n).list[j]); j++) {
 		    if (agtail(e) == aghead(e)) {
 			if (ED_label(e))
-			    ht2 = MAX(ht2, ED_label(e)->dimen.y / 2);
+			    ht2 = fmax(ht2, ED_label(e)->dimen.y / 2);
 		    }
 		}
 
@@ -775,9 +775,9 @@ static void set_ycoords(graph_t * g)
 	    if ((clust = ND_clust(n))) {
 		int yoff = (clust == g ? 0 : late_int (clust, G_margin, CL_OFFSET, 0));
 		if (ND_rank(n) == GD_minrank(clust))
-		    GD_ht2(clust) = MAX(GD_ht2(clust), ht2 + yoff);
+		    GD_ht2(clust) = fmax(GD_ht2(clust), ht2 + yoff);
 		if (ND_rank(n) == GD_maxrank(clust))
-		    GD_ht1(clust) = MAX(GD_ht1(clust), ht2 + yoff);
+		    GD_ht1(clust) = fmax(GD_ht1(clust), ht2 + yoff);
 	    }
 	}
     }
@@ -792,7 +792,7 @@ static void set_ycoords(graph_t * g)
     while (--r >= GD_minrank(g)) {
 	d0 = rank[r + 1].pht2 + rank[r].pht1 + GD_ranksep(g);	/* prim node sep */
 	d1 = rank[r + 1].ht2 + rank[r].ht1 + CL_OFFSET;	/* cluster sep */
-	delta = MAX(d0, d1);
+	delta = fmax(d0, d1);
 	if (rank[r].n > 0)	/* this may reflect some problem */
 		(ND_coord(rank[r].v[0])).y = (ND_coord(rank[r + 1].v[0])).y + delta;
 #ifdef DEBUG
@@ -800,7 +800,7 @@ static void set_ycoords(graph_t * g)
 	    fprintf(stderr, "dot set_ycoords: rank %d is empty\n",
 		    rank[r].n);
 #endif
-	maxht = MAX(maxht, delta);
+	maxht = fmax(maxht, delta);
     }
 
     /* If there are cluster labels and the drawing is rotated, we need special processing to
@@ -817,7 +817,7 @@ static void set_ycoords(graph_t * g)
 	    while (--r >= GD_minrank(g)) {
 		d1 = (ND_coord(rank[r].v[0])).y;
 		delta = d1 - d0;
-		maxht = MAX(maxht, delta);
+		maxht = fmax(maxht, delta);
 		d0 = d1;
 	    }
 	}
