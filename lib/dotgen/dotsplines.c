@@ -1761,8 +1761,6 @@ static int makeLineEdge(graph_t *g, edge_t *fe, points_t *points, node_t** hp) {
     return pn;
 }
 
-/* make_regular_edge:
- */
 static void
 make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind, int cnt, int et)
 {
