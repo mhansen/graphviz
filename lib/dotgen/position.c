@@ -366,18 +366,17 @@ static void contain_clustnodes(graph_t * g)
 	contain_clustnodes(GD_clust(g)[c]);
 }
 
-static int vnode_not_related_to(graph_t * g, node_t * v)
-{
+static bool vnode_not_related_to(graph_t *g, node_t *v) {
     edge_t *e;
 
     if (ND_node_type(v) != VIRTUAL)
-	return FALSE;
+	return false;
     for (e = ND_save_out(v).list[0]; ED_to_orig(e); e = ED_to_orig(e));
     if (agcontains(g, agtail(e)))
-	return FALSE;
+	return false;
     if (agcontains(g, aghead(e)))
-	return FALSE;
-    return TRUE;
+	return false;
+    return true;
 }
 
 /* keepout_othernodes:
