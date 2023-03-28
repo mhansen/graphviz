@@ -1768,7 +1768,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     edge_t *e, *fe, *le, *segfirst;
     pathend_t tend, hend;
     boxf b;
-    int sl, si, smode, i, j, dx, longedge;
+    int sl, si, i, j, dx, longedge;
     points_t pointfs = {0};
     points_t pointfs2 = {0};
 
@@ -1832,14 +1832,15 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	    tend.boxes[tend.boxn++] = b;
 	longedge = 0;
-	smode = FALSE, si = -1;
+	bool smode = false;
+	si = -1;
 	while (ND_node_type(hn) == VIRTUAL && !sinfo.splineMerge(hn)) {
 	    longedge = 1;
 	    boxes_append(&boxes, rank_box(sp, g, ND_rank(tn)));
 	    if (!smode
 	        && ((sl = straight_len(hn)) >=
 	    	((GD_has_labels(g->root) & EDGE_LABEL) ? 4 + 1 : 2 + 1))) {
-	        smode = TRUE;
+	        smode = true;
 	        si = 1, sl -= 2;
 	    }
 	    if (!smode || si > 0) {
@@ -1896,7 +1897,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	        tend.boxes[tend.boxn++] = b;
 	    P->start.theta = -M_PI / 2, P->start.constrained = true;
-	    smode = FALSE;
+	    smode = false;
 	}
 	boxes_append(&boxes, rank_box(sp, g, ND_rank(tn)));
 	b = hend.nb = maximal_bbox(g, sp, hn, e, NULL);
