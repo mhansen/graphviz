@@ -20,6 +20,7 @@
 #include <cgraph/alloc.h>
 #include <dotgen/dot.h>
 #include <dotgen/aspect.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -654,9 +655,9 @@ static void adjustRanks(graph_t * g, int margin_total)
 	graph_t *subg = GD_clust(g)[c];
 	adjustRanks(subg, margin+margin_total);
 	if (GD_maxrank(subg) == GD_maxrank(g))
-	    ht1 = MAX(ht1, GD_ht1(subg) + margin);
+	    ht1 = fmax(ht1, GD_ht1(subg) + margin);
 	if (GD_minrank(subg) == GD_minrank(g))
-	    ht2 = MAX(ht2, GD_ht2(subg) + margin);
+	    ht2 = fmax(ht2, GD_ht2(subg) + margin);
     }
 
     GD_ht1(g) = ht1;
@@ -675,8 +676,8 @@ static void adjustRanks(graph_t * g, int margin_total)
 
     /* update the global ranks */
     if (g != dot_root(g)) {
-	rank[GD_minrank(g)].ht2 = MAX(rank[GD_minrank(g)].ht2, GD_ht2(g));
-	rank[GD_maxrank(g)].ht1 = MAX(rank[GD_maxrank(g)].ht1, GD_ht1(g));
+	rank[GD_minrank(g)].ht2 = fmax(rank[GD_minrank(g)].ht2, GD_ht2(g));
+	rank[GD_maxrank(g)].ht1 = fmax(rank[GD_maxrank(g)].ht1, GD_ht1(g));
     }
 }
 
