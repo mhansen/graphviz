@@ -947,7 +947,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 {
     double xf = 0.0, yf = 0.0, actual, desired;
     node_t *n;
-    bool scale_it, filled;
+    bool filled;
     point sz;
 
     rec_bb(g, g);
@@ -959,7 +959,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 	    sz.x = sz.y;
 	    sz.y = t;
 	}
-	scale_it = TRUE;
+	bool scale_it = true;
 	if (GD_drawing(g)->ratio_kind == R_AUTO)
 	    filled = idealsize(g, .5);
 	else
@@ -967,7 +967,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 	if (filled) {
 	    /* fill is weird because both X and Y can stretch */
 	    if (GD_drawing(g)->size.x <= 0)
-		scale_it = FALSE;
+		scale_it = false;
 	    else {
 		xf = (double) GD_drawing(g)->size.x / (double) sz.x;
 		yf = (double) GD_drawing(g)->size.y / (double) sz.y;
@@ -983,7 +983,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 	    }
 	} else if (GD_drawing(g)->ratio_kind == R_EXPAND) {
 	    if (GD_drawing(g)->size.x <= 0)
-		scale_it = FALSE;
+		scale_it = false;
 	    else {
 		xf = (double) GD_drawing(g)->size.x /
 		    (double) GD_bb(g).UR.x;
@@ -993,7 +993,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 		    double scale = MIN(xf, yf);
 		    xf = yf = scale;
 		} else
-		    scale_it = FALSE;
+		    scale_it = false;
 	    }
 	} else if (GD_drawing(g)->ratio_kind == R_VALUE) {
 	    desired = GD_drawing(g)->ratio;
@@ -1006,7 +1006,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 		yf = 1.0;
 	    }
 	} else
-	    scale_it = FALSE;
+	    scale_it = false;
 	if (scale_it) {
 	    if (GD_flip(g)) {
 		double t = xf;
