@@ -76,7 +76,7 @@ libtcldot_builtin_la_SOURCES = \
 libtcldot_builtin_la_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=1
 libtcldot_builtin_la_LDFLAGS = -no-undefined -module -avoid-version
 
-libtcldot_builtin_la_LIBADD = $(TCLHANDLE_LIBS) \
+libtcldot_builtin_la_LIBADD = $(TCLHANDLE_LIBS) $(GDTCLFT_LIBS) \
 	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout_C.la \
 	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout_C.la \
 	$(top_builddir)/plugin/core/libgvplugin_core_C.la \
