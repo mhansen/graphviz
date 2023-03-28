@@ -1770,7 +1770,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     edge_t *e, *fe, *le, *segfirst;
     pathend_t tend, hend;
     boxf b;
-    int sl, si, smode, i, j, dx, hackflag, longedge;
+    int sl, si, smode, i, j, dx, longedge;
     points_t pointfs = {0};
     points_t pointfs2 = {0};
 
@@ -1780,7 +1780,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 
     sl = 0;
     e = edges[ind];
-    hackflag = FALSE;
+    bool hackflag = false;
     if (abs(ND_rank(agtail(e)) - ND_rank(aghead(e))) > 1) {
 	fwdedgeai = *(Agedgeinfo_t*)e->base.data;
 	fwdedgea.out = *e;
@@ -1806,7 +1806,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	ED_head_port(&fwdedgea.out).p.x = ED_head_port(&fwdedgea.out).p.y = 0;
 	ED_to_orig(&fwdedgea.out) = e;
 	e = &fwdedgea.out;
-	hackflag = TRUE;
+	hackflag = true;
     } else {
 	if (ED_tree_index(e) & BWDEDGE) {
 	    MAKEFWDEDGE(&fwdedgea.out, e);
