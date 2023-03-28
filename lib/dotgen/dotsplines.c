@@ -979,19 +979,17 @@ static int edgelblcmpfn(edge_t** ptr0, edge_t** ptr1)
 	    sz0 = ED_label(e0)->dimen;
 	    sz1 = ED_label(e1)->dimen;
 	    if (sz0.x > sz1.x) return -1;
-	    else if (sz0.x < sz1.x) return 1;
-	    else if (sz0.y > sz1.y) return -1;
-	    else if (sz0.y < sz1.y) return 1;
-	    else return 0;
+	    if (sz0.x < sz1.x) return 1;
+	    if (sz0.y > sz1.y) return -1;
+	    if (sz0.y < sz1.y) return 1;
+	    return 0;
 	}
-	else
-	    return -1;
+	return -1;
     }
-    else if (ED_label(e1)) {
+    if (ED_label(e1)) {
  	return 1;
     }
-    else
- 	return 0;
+    return 0;
 }
 
 #define LBL_SPACE  6  /* space between labels, in points */
