@@ -71,7 +71,8 @@ largeMinlen (double l)
 static void
 connectGraph (graph_t* g)
 {
-    int i, j, r, found;
+    int i, j, r;
+    bool found;
     node_t* tp;
     node_t* hp;
     node_t* sn;
@@ -80,14 +81,14 @@ connectGraph (graph_t* g)
 
     for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
 	rp = GD_rank(g)+r;
-	found =FALSE;
+	found = false;
         tp = NULL;
 	for (i = 0; i < rp->n; i++) {
 	    tp = rp->v[i];
 	    if (ND_save_out(tp).list) {
         	for (j = 0; (e = ND_save_out(tp).list[j]); j++) {
 		    if ((ND_rank(aghead(e)) > r) || (ND_rank(agtail(e)) > r)) {
-			found = TRUE;
+			found = true;
 			break;
 		    }
         	}
@@ -96,7 +97,7 @@ connectGraph (graph_t* g)
 	    if (ND_save_in(tp).list) {
         	for (j = 0; (e = ND_save_in(tp).list[j]); j++) {
 		    if ((ND_rank(agtail(e)) > r) || (ND_rank(aghead(e)) > r)) {
-			found = TRUE;
+			found = true;
 			break;
 		    }
         	}
