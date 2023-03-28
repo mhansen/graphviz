@@ -1771,15 +1771,13 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     pathend_t tend, hend;
     boxf b;
     int sl, si, smode, i, j, dx, hackflag, longedge;
-    static points_t pointfs;
-    static points_t pointfs2;
+    points_t pointfs = {0};
+    points_t pointfs2 = {0};
 
     fwdedgea.out.base.data = (Agrec_t*)&fwdedgeai;
     fwdedgeb.out.base.data = (Agrec_t*)&fwdedgebi;
     fwdedge.out.base.data = (Agrec_t*)&fwdedgei;
 
-    points_clear(&pointfs);
-    points_clear(&pointfs2);
     sl = 0;
     e = edges[ind];
     hackflag = FALSE;
@@ -1878,6 +1876,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    if (pn == 0) {
 	        free(ps);
 	        boxes_free(&boxes);
+	        points_free(&pointfs);
+	        points_free(&pointfs2);
 	        return;
 	    }
 	
@@ -1929,6 +1929,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
         }
 	if (pn == 0) {
 	    free(ps);
+	    points_free(&pointfs);
+	    points_free(&pointfs2);
 	    return;
 	}
 	for (i = 0; i < pn; i++) {
@@ -1944,6 +1946,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     if (cnt == 1) {
 	clip_and_install(fe, hn, points_at(&pointfs, 0), (int)points_size(&pointfs),
 	                 &sinfo);
+	points_free(&pointfs);
+	points_free(&pointfs2);
 	return;
     }
     dx = sp->Multisep * (cnt - 1) / 2;
@@ -1968,6 +1972,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	clip_and_install(e, aghead(e), points_at(&pointfs2, 0),
 	                 (int)points_size(&pointfs2), &sinfo);
     }
+    points_free(&pointfs);
+    points_free(&pointfs2);
 }
 
 /* regular edges */
