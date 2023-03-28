@@ -152,22 +152,20 @@ static int nsiter2(graph_t * g)
     return maxiter;
 }
 
-static int go(node_t * u, node_t * v)
-{
+static bool go(node_t *u, node_t *v) {
     int i;
     edge_t *e;
 
     if (u == v)
-	return TRUE;
+	return true;
     for (i = 0; (e = ND_out(u).list[i]); i++) {
 	if (go(aghead(e), v))
-	    return TRUE;
+	    return true;
     }
-    return FALSE;
+    return false;
 }
 
-static int canreach(node_t * u, node_t * v)
-{
+static bool canreach(node_t *u, node_t *v) {
     return go(u, v);
 }
 
