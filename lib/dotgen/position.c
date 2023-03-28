@@ -88,7 +88,7 @@ connectGraph (graph_t* g)
 	    tp = rp->v[i];
 	    if (ND_save_out(tp).list) {
         	for (j = 0; (e = ND_save_out(tp).list[j]); j++) {
-		    if ((ND_rank(aghead(e)) > r) || (ND_rank(agtail(e)) > r)) {
+		    if (ND_rank(aghead(e)) > r || ND_rank(agtail(e)) > r) {
 			found = true;
 			break;
 		    }
@@ -97,7 +97,7 @@ connectGraph (graph_t* g)
 	    }
 	    if (ND_save_in(tp).list) {
         	for (j = 0; (e = ND_save_in(tp).list[j]); j++) {
-		    if ((ND_rank(agtail(e)) > r) || (ND_rank(aghead(e)) > r)) {
+		    if (ND_rank(agtail(e)) > r || ND_rank(aghead(e)) > r) {
 			found = true;
 			break;
 		    }
@@ -270,7 +270,7 @@ make_LR_constraints(graph_t * g)
 		    e0 = e1;
 		    e1 = ff;
 		}
-		m0 = (ED_minlen(e) * GD_nodesep(g)) / 2;
+		m0 = ED_minlen(e) * GD_nodesep(g) / 2;
 		m1 = m0 + ND_rw(aghead(e0)) + ND_lw(agtail(e0));
 		/* these guards are needed because the flat edges
 		 * work very poorly with cluster layout */
@@ -405,7 +405,7 @@ static void keepout_othernodes(graph_t * g)
 	for (i = ND_order(v) - 1; i >= 0; i--) {
 	    u = GD_rank(dot_root(g))[r].v[i];
 	    /* can't use "is_a_vnode_of" because elists are swapped */
-	    if ((ND_node_type(u) == NORMAL) || vnode_not_related_to(g, u)) {
+	    if (ND_node_type(u) == NORMAL || vnode_not_related_to(g, u)) {
 		make_aux_edge(u, GD_ln(g), margin + ND_rw(u), 0);
 		break;
 	    }
@@ -413,7 +413,7 @@ static void keepout_othernodes(graph_t * g)
 	for (i = ND_order(v) + GD_rank(g)[r].n; i < GD_rank(dot_root(g))[r].n;
 	     i++) {
 	    u = GD_rank(dot_root(g))[r].v[i];
-	    if ((ND_node_type(u) == NORMAL) || vnode_not_related_to(g, u)) {
+	    if (ND_node_type(u) == NORMAL || vnode_not_related_to(g, u)) {
 		make_aux_edge(GD_rn(g), u, margin + ND_lw(u), 0);
 		break;
 	    }
@@ -624,7 +624,7 @@ static void adjustSimple(graph_t * g, int delta, int margin_total)
 		ND_coord(rank[r].v[0]).y += deltop;
 	}
     }
-    GD_ht2(g) += (delta - bottom);
+    GD_ht2(g) += delta - bottom;
     GD_ht1(g) += bottom;
 }
 
@@ -663,7 +663,7 @@ static void adjustRanks(graph_t * g, int margin_total)
     GD_ht1(g) = ht1;
     GD_ht2(g) = ht2;
 
-    if ((g != dot_root(g)) && GD_label(g)) {
+    if (g != dot_root(g) && GD_label(g)) {
 	lht = MAX(GD_border(g)[LEFT_IX].y, GD_border(g)[RIGHT_IX].y);
 	maxr = GD_maxrank(g);
 	minr = GD_minrank(g);
@@ -852,8 +852,8 @@ static void dot_compute_bb(graph_t * g, graph_t * root)
     pointf LL, UR;
 
     if (g == dot_root(g)) {
-	LL.x = (double)(INT_MAX);
-	UR.x = (double)(-INT_MAX);
+	LL.x = (double)INT_MAX;
+	UR.x = (double)-INT_MAX;
 	for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
 	    int rnkn = GD_rank(g)[r].n;
 	    if (rnkn == 0)
@@ -952,7 +952,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
     point sz;
 
     rec_bb(g, g);
-    if ((GD_maxrank(g) > 0) && (GD_drawing(g)->ratio_kind)) {
+    if (GD_maxrank(g) > 0 && GD_drawing(g)->ratio_kind) {
 	sz.x = GD_bb(g).UR.x - GD_bb(g).LL.x;
 	sz.y = GD_bb(g).UR.y - GD_bb(g).LL.y;	/* normalize */
 	if (GD_flip(g)) {
@@ -964,7 +964,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 	if (GD_drawing(g)->ratio_kind == R_AUTO)
 	    filled = idealsize(g, .5);
 	else
-	    filled = (GD_drawing(g)->ratio_kind == R_FILL);
+	    filled = GD_drawing(g)->ratio_kind == R_FILL;
 	if (filled) {
 	    /* fill is weird because both X and Y can stretch */
 	    if (GD_drawing(g)->size.x <= 0)
@@ -972,7 +972,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 	    else {
 		xf = (double) GD_drawing(g)->size.x / (double) sz.x;
 		yf = (double) GD_drawing(g)->size.y / (double) sz.y;
-		if ((xf < 1.0) || (yf < 1.0)) {
+		if (xf < 1.0 || yf < 1.0) {
 		    if (xf < yf) {
 			yf = yf / xf;
 			xf = 1.0;
@@ -1057,14 +1057,13 @@ static void make_leafslots(graph_t * g)
 
 int ports_eq(edge_t * e, edge_t * f)
 {
-    return ((ED_head_port(e).defined == ED_head_port(f).defined)
-	    && (((ED_head_port(e).p.x == ED_head_port(f).p.x) &&
-		 (ED_head_port(e).p.y == ED_head_port(f).p.y))
+    return ED_head_port(e).defined == ED_head_port(f).defined
+	    && ((ED_head_port(e).p.x == ED_head_port(f).p.x &&
+		 ED_head_port(e).p.y == ED_head_port(f).p.y)
 		|| !ED_head_port(e).defined)
-	    && (((ED_tail_port(e).p.x == ED_tail_port(f).p.x) &&
-		 (ED_tail_port(e).p.y == ED_tail_port(f).p.y))
-		|| !ED_tail_port(e).defined)
-	);
+	    && ((ED_tail_port(e).p.x == ED_tail_port(f).p.x &&
+		 ED_tail_port(e).p.y == ED_tail_port(f).p.y)
+		|| !ED_tail_port(e).defined);
 }
 
 static void expand_leaves(graph_t * g)
@@ -1116,7 +1115,7 @@ static void make_lrvn(graph_t * g)
     rn = virtual_node(dot_root(g));
     ND_node_type(rn) = SLACKNODE;
 
-    if (GD_label(g) && (g != dot_root(g)) && !GD_flip(agroot(g))) {
+    if (GD_label(g) && g != dot_root(g) && !GD_flip(agroot(g))) {
 	int w = MAX(GD_border(g)[BOTTOM_IX].x, GD_border(g)[TOP_IX].x);
 	make_aux_edge(ln, rn, w, 0);
     }
@@ -1175,16 +1174,16 @@ static bool idealsize(graph_t * g, double minallowed)
     b.y = GD_bb(g).UR.y;
     xf = relpage.x / b.x;
     yf = relpage.y / b.y;
-    if ((xf >= 1.0) && (yf >= 1.0))
+    if (xf >= 1.0 && yf >= 1.0)
 	return false;		/* fits on one page */
 
     f = MIN(xf, yf);
     xf = yf = MAX(f, minallowed);
 
-    R = ceil((xf * b.x) / relpage.x);
-    xf = ((R * relpage.x) / b.x);
-    R = ceil((yf * b.y) / relpage.y);
-    yf = ((R * relpage.y) / b.y);
+    R = ceil(xf * b.x / relpage.x);
+    xf = R * relpage.x / b.x;
+    R = ceil(yf * b.y / relpage.y);
+    yf = R * relpage.y / b.y;
     GD_drawing(g)->size.x = b.x * xf;
     GD_drawing(g)->size.y = b.y * yf;
     return true;
