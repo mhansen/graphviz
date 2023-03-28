@@ -1887,7 +1887,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    }
 	
 	    if (pointn + pn > numpts) {
-                /* This should be enough to include 3 extra points added by
+                /* This should be enough to include 2 extra points added by
                  * straight_path below.
                  */
 		numpts = 2*(pointn+pn); 
@@ -2301,7 +2301,6 @@ static edge_t *straight_path(edge_t * e, int cnt, pointf * plist, int *np)
 	f = ND_out(aghead(f)).list[0];
     plist[(*np)++] = plist[n - 1];
     plist[(*np)++] = plist[n - 1];
-    plist[(*np)] = ND_coord(agtail(f));  /* will be overwritten by next spline */
 
     return f;
 }
