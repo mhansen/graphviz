@@ -27,7 +27,7 @@ $(top_builddir)/graphviz_version.h: config.h
 	$(EGREP) 'PACKAGE|VERSION|GVPLUGIN' config.h >> $(top_builddir)/graphviz_version.h
 
 EXTRA_DIST = graphviz.spec \
-	autogen.sh config/depcomp config/config.rpath \
+	config/depcomp config/config.rpath \
 	builddate.h \
 	m4/README m4/lib-ld.m4 m4/lib-link.m4 m4/lib-prefix.m4 \
 	Doxyfile.in Doxyfile \
