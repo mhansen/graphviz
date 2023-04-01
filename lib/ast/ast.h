@@ -22,12 +22,6 @@ extern "C" {
 #define PATH_MAX    1024
 #endif
 
-#define PATH_REGULAR    010
-#define PATH_EXECUTE      001
-#define PATH_READ 004
-#define PATH_WRITE        002
-#define PATH_ABSOLUTE     020
-
 /*
  * strgrpmatch() flags
  */
@@ -36,15 +30,6 @@ extern "C" {
 #define STR_LEFT    02		/* implicit left anchor     */
 #define STR_RIGHT   04		/* implicit right anchor    */
 #define STR_ICASE   010		/* ignore case          */
-
-/*
- * fmtquote() flags
- */
-
-#define FMT_ALWAYS  0x01	/* always quote         */
-#define FMT_ESCAPED 0x02	/* already escaped      */
-#define FMT_SHELL   0x04	/* escape $ ` too       */
-#define FMT_WIDE    0x08	/* don't escape 8 bit chars */
 
 #define CC_bel      0007	/* bel character        */
 #define CC_esc      0033	/* esc character        */
@@ -59,8 +44,7 @@ extern "C" {
     extern char *pathpath(char *, const char *);
     extern char *pathfind(const char *, const char *, const char *, char *,
 			  size_t);
-    extern char *pathaccess(char *, const char *, const char *,
-			    const char *, int);
+    extern char *pathaccess(char*, const char*, const char*, const char*);
     extern char *pathcanon(char*);
     extern const char *pathcat(char *, const char *, int, const char *,
 			 const char *);
@@ -70,8 +54,7 @@ extern "C" {
     extern char *fmtesq(const char *, const char *);
     extern char *fmtesc(const char *as);
     extern char *fmtbuf(size_t n);
-    extern char *fmtquote(const char *, const char *, const char *, size_t,
-			  int);
+    extern char *fmtquote(const char*, const char*, const char*, size_t);
 
     extern int strmatch(const char *, const char *);
     extern int strgrpmatch(const char *, const char *, int *, int, int);

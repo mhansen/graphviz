@@ -134,7 +134,7 @@ extern "C" {
     RENDER_API void shape_clip(node_t * n, pointf curve[4]);
     RENDER_API void make_simple_label (GVC_t * gvc, textlabel_t* rv);
     RENDER_API int stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate);
-    RENDER_API stroke_t taper (bezier*, double (*radfunc_t)(double,double,double), double initwid, int linejoin, int linecap);
+    RENDER_API stroke_t taper (bezier*, double (*radfunc_t)(double,double,double), double initwid);
     RENDER_API pointf textspan_size(GVC_t * gvc, textspan_t * span);
     RENDER_API Dt_t * textfont_dict_open(GVC_t *gvc);
     RENDER_API void textfont_dict_close(GVC_t *gvc);

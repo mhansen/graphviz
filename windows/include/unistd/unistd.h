@@ -8,12 +8,9 @@
 #include <stdlib.h>
 #include <io.h>
 #include <process.h> /* for getpid() and the exec..() family */
-#include <direct.h> /* for _getcwd() and _chdir() */
+#include <direct.h> /* for _getcwd() */
 #include <BaseTsd.h>
 #include <sys/stat.h>
-
-#define srandom srand
-#define random rand
 
 /* Values for the second argument to access.
    These may be OR'd together.  */
@@ -25,12 +22,9 @@
 #define S_ISDIR(mode) (((mode) & _S_IFDIR) == _S_IFDIR)
 
 #define access _access
-#define dup2 _dup2
-#define execve _execve
 #define ftruncate _chsize
 #define fileno _fileno
 #define getcwd _getcwd
-#define chdir _chdir
 #define isatty _isatty
 #define lseek _lseek
 /* read, write, and close are NOT being #defined here, because while there are file handle specific versions for Windows, they probably don't work for sockets. You need to look at your app and consider whether to call e.g. closesocket(). */

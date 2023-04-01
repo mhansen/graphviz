@@ -286,7 +286,7 @@ prformat(void* vp, Sffmt_t* dp)
 	case 'q':
 	case 'Q':
 		s = *(char**)vp;
-		*(char**)vp = fmtquote(s, "$'", "'", strlen(s), 0);
+		*(char**)vp = fmtquote(s, "$'", "'", strlen(s));
 		dp->fmt = 's';
 		dp->size = -1;
 		break;

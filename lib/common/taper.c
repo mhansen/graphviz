@@ -54,21 +54,6 @@ static void addto (stroke_t* p, double x, double y)
     p->vertices[p->nvertices++] = pt;
 }
 
-static void arcn (stroke_t* p, double x, double y, double r, double a1, double a2)
-{
-    double theta;
-    int i;
-
-    addto (p, x+r*cos(a1), y+r*sin(a1));
-    if (r == 0) return;
-    while (a2 > a1) a2 -= 2*M_PI;
-    theta = a1 - a2; 
-    while (theta > 2*M_PI) theta -= 2*M_PI;
-    theta /= BEZIERSUBDIVISION - 1;
-    for (i = 1; i < BEZIERSUBDIVISION; i++)
-	addto (p, x+r*cos(a1-i*theta), y+r*sin(a1-i*theta));
-}
-
 /*
  * handle zeros
  */
@@ -172,29 +157,16 @@ static vararr_t pathtolines(bezier *bez) {
     return arr;
 }
 
-static void drawbevel(double x, double y, double lineout, int forward, double dir, double dir2, int linejoin, stroke_t* p)
-{
-    double a, a1, a2;
+static void drawbevel(double x, double lineout, int forward, double dir,
+                      double dir2, stroke_t *p) {
+    double a2;
 
     if (forward) {
-	a1 = dir;
 	a2 = dir2;
     } else {
-	a1 = dir2;
 	a2 = dir;
     }
-    if (linejoin == 1) {
-	a = a1 - a2;
-	if (a <= D2R(0.1)) a += D2R(360);
-	if (a < D2R(180)) {
-	    a1 = a + a2;
-	    arcn (p,x,y,lineout,a1,a2);
-	} else {
-	    lineto (p, x + lineout*cos(a2), x + lineout*sin(a2));
-	}
-    } else {
-	lineto (p, x + lineout*cos(a2), x + lineout*sin(a2));
-    }
+    lineto (p, x + lineout*cos(a2), x + lineout*sin(a2));
 }
 
 typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
@@ -204,12 +176,8 @@ typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
  * edge, starting with width initwid.
  * The radfunc determines the half-width along the curve. Typically, this will
  * decrease from initwid to 0 as the curlen goes from 0 to totallen.
- * The linejoin and linecap parameters have roughly the same meaning as in postscript.
- *  - linejoin = 0 or 1 
- *  - linecap = 0 or 1 or 2 
  */
-stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, int linecap)
-{
+stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid) {
     int l, n;
     double direction=0, direction_2=0;
     vararr_t arr = pathtolines(bez);
@@ -256,16 +224,8 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	    lineout = linerad;
 	    if (i == 0) {
 		direction = ndir + D2R(90);
-		if (linecap == 2) {
-		    x -= cos(ndir)*lineout;
-		    y -= sin(ndir)*lineout;
-		}
 	    } else {
 		direction = ldir - D2R(90);
-		if (linecap == 2) {
-		    x -= cos(ldir)*lineout;
-		    y -= sin(ldir)*lineout;
-		}
 	    }
 	    direction_2 = direction;
 	} else {
@@ -282,7 +242,7 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	    }
 		 /* direction to junction point */
 	    direction = ndir+D2R(90)+phi;
-	    if (0 != linejoin || lineout > currentmiterlimit * linerad) {
+	    if (lineout > currentmiterlimit * linerad) {
 		bevel = true;
 		lineout = linerad;
 		direction = mymod(ldir-D2R(90),D2R(360));
@@ -321,16 +281,12 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	    lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
 	}
 	if (bevel) {
-	    drawbevel(x, y, lineout, TRUE, direction, direction_2, linejoin, &p);
+	    drawbevel(x, lineout, TRUE, direction, direction_2, &p);
 	}
     }
 	 /* end circle as needed */
-    if (linecap == 1) {
-	arcn(&p, x,y,lineout,direction,direction+D2R(180));
-    } else {
-	direction += D2R(180);
-	lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
-    }
+    direction += D2R(180);
+    lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
 	 /* side 2 */
     assert(pathcount > 0);
     for (size_t i = pathcount - 2; i != SIZE_MAX; i--) {
@@ -343,12 +299,8 @@ stroke_t taper (bezier* bez, radfunc_t radfunc, double initwid, int linejoin, in
 	direction_2 = cur_point.dir2 + D2R(180);
 	lineto(&p, x+cos(direction_2)*lineout, y+sin(direction_2)*lineout);
 	if (bevel) { 
-	    drawbevel(x, y, lineout, FALSE, direction, direction_2, linejoin, &p);
+	    drawbevel(x, lineout, FALSE, direction, direction_2, &p);
 	}
-    }
-	 /* start circle if needed */
-    if (linecap == 1) {
-	arcn(&p, x,y,lineout,direction,direction+D2R(180));
     }
     /* closepath(&p); */
     free(pathpoints);
@@ -375,7 +327,7 @@ main ()
 
     bez.size = sizeof(pts)/sizeof(pointf);
     bez.list = pts;
-    sp = taper(&bez, halffunc, 20.0, 0, 0);
+    sp = taper(&bez, halffunc, 20.0);
     printf ("newpath\n");
     printf ("%.02f %.02f moveto\n", sp->vertices[0].x, sp->vertices[0].y);
     for (size_t i = 1; i < sp->nvertices; i++)

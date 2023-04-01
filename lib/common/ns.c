@@ -1133,58 +1133,6 @@ void tchk(void)
 	fprintf(stderr, "something missing\n");
 }
 
-void check_cutvalues(void)
-{
-    node_t *v;
-    edge_t *e;
-    int i, save;
-
-    for (v = agfstnode(G); v; v = agnxtnode(G, v)) {
-	for (i = 0; (e = ND_tree_out(v).list[i]); i++) {
-	    save = ED_cutvalue(e);
-	    x_cutval(e);
-	    if (save != ED_cutvalue(e))
-		abort();
-	}
-    }
-}
-
-int check_ranks(void)
-{
-    int cost = 0;
-    node_t *n;
-    edge_t *e;
-
-    for (n = agfstnode(G); n; n = agnxtnode(G, n)) {
-	for (e = agfstout(G, n); e; e = agnxtout(G, e)) {
-	    cost += (ED_weight(e)) * abs(LENGTH(e));
-	    if (ND_rank(aghead(e)) - ND_rank(agtail(e)) - ED_minlen(e) < 0)
-		abort();
-	}
-    }
-    fprintf(stderr, "rank cost %d\n", cost);
-    return cost;
-}
-
-void checktree(void)
-{
-    int i, n = 0, m = 0;
-    node_t *v;
-    edge_t *e;
-
-    for (v = agfstnode(G); v; v = agnxtnode(G, v)) {
-	for (i = 0; (e = ND_tree_out(v).list[i]); i++)
-	    n++;
-	if (i != ND_tree_out(v).size)
-	    abort();
-	for (i = 0; (e = ND_tree_in(v).list[i]); i++)
-	    m++;
-	if (i != ND_tree_in(v).size)
-	    abort();
-    }
-    fprintf(stderr, "%d %d %d\n", Tree_edge.size, n, m);
-}
-
 void check_fast_node(node_t * n)
 {
     node_t *nptr;

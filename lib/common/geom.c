@@ -173,44 +173,6 @@ static pointf rotatepf(pointf p, int cwrot)
     return P;
 }
 
-static point rotatep(point p, int cwrot)
-{
-    pointf pf;
-
-    P2PF(p, pf);
-    pf = rotatepf(pf, cwrot);
-    PF2P(pf, p);
-    return p;
-}
-
-point cwrotatep(point p, int cwrot)
-{
-    int x = p.x, y = p.y;
-    switch (cwrot) {
-    case 0:
-	break;
-    case 90:
-	p.x = y;
-	p.y = -x;
-	break;
-    case 180:
-	p.x = x;
-	p.y = -y;
-	break;
-    case 270:
-	p.x = y;
-	p.y = x;
-	break;
-    default:
-	if (cwrot < 0)
-	    return ccwrotatep(p, -cwrot);
-        if (cwrot > 360)
-	    return cwrotatep(p, cwrot%360);
-	return rotatep(p, cwrot);
-    }
-    return p;
-}
-
 pointf cwrotatepf(pointf p, int cwrot)
 {
     double x = p.x, y = p.y;
@@ -235,34 +197,6 @@ pointf cwrotatepf(pointf p, int cwrot)
         if (cwrot > 360)
 	    return cwrotatepf(p, cwrot%360);
 	return rotatepf(p, cwrot);
-    }
-    return p;
-}
-
-point ccwrotatep(point p, int ccwrot)
-{
-    int x = p.x, y = p.y;
-    switch (ccwrot) {
-    case 0:
-	break;
-    case 90:
-	p.x = -y;
-	p.y = x;
-	break;
-    case 180:
-	p.x = x;
-	p.y = -y;
-	break;
-    case 270:
-	p.x = y;
-	p.y = x;
-	break;
-    default:
-	if (ccwrot < 0)
-	    return cwrotatep(p, -ccwrot);
-        if (ccwrot > 360)
-	    return ccwrotatep(p, ccwrot%360);
-	return rotatep(p, 360-ccwrot);
     }
     return p;
 }
