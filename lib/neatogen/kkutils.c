@@ -127,10 +127,10 @@ double distance_kD(double **coords, int dim, int i, int j)
     return sqrt(sum);
 }
 
-static float* fvals;
-static int
-fcmpf (int* ip1, int* ip2)
-{
+static int fcmpf(const void *a, const void *b, void *context) {
+    const int *ip1 = a;
+    const int *ip2 = b;
+    float *fvals = context;
     float d1 = fvals[*ip1];
     float d2 = fvals[*ip2];
     if (d1 < d2) {
@@ -145,8 +145,7 @@ fcmpf (int* ip1, int* ip2)
 void quicksort_placef(float *place, int *ordering, int first, int last)
 {
     if (first < last) {
-	fvals = place;
-	qsort(ordering+first, last-first+1, sizeof(ordering[0]), (qsort_cmpf)fcmpf);
+	gv_sort(ordering + first, last - first + 1, sizeof(ordering[0]), fcmpf, place);
     }
 }
 

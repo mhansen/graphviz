@@ -18,7 +18,7 @@
 
 static char *strdup_and_subst_obj0 (char *str, void *obj, int escBackslash);
 
-static void storeline(GVC_t *gvc, textlabel_t *lp, const char *line,
+static void storeline(GVC_t *gvc, textlabel_t *lp, char *line,
                       char terminator) {
     pointf size;
     textspan_t *span;
@@ -27,7 +27,7 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, const char *line,
 
     lp->u.txt.span = ZALLOC(oldsz + 1, lp->u.txt.span, textspan_t, oldsz);
     span = &lp->u.txt.span[lp->u.txt.nspans];
-    span->str = gv_strdup(line);
+    span->str = line;
     span->just = terminator;
     if (line && line[0]) {
 	tf.name = lp->fontname;
@@ -74,7 +74,7 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 		case 'n':
 		case 'l':
 		case 'r':
-		    storeline(gvc, lp, agxbuse(&line), *p);
+		    storeline(gvc, lp, agxbdisown(&line), *p);
 		    break;
 		default:
 		    agxbputc(&line, *p);
@@ -83,7 +83,7 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
 		    p++;
 		/* tcldot can enter real linend characters */
 	    } else if (c == '\n') {
-		storeline(gvc, lp, agxbuse(&line), 'n');
+		storeline(gvc, lp, agxbdisown(&line), 'n');
 	    } else {
 		agxbputc(&line, c);
 	    }
@@ -91,7 +91,7 @@ void make_simple_label(GVC_t * gvc, textlabel_t * lp)
     }
 
     if (agxblen(&line) > 0) {
-	storeline(gvc, lp, agxbuse(&line), 'n');
+	storeline(gvc, lp, agxbdisown(&line), 'n');
     }
 
     agxbfree(&line);
