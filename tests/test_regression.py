@@ -205,11 +205,6 @@ def test_144(testcase: str):
     tail_point = edge["_tldraw_"][2]["pt"]
     head_is_top = head_point[1] > tail_point[1]
 
-    # FIXME: remove when #144 is fixed
-    if testcase == "144_ortho.dot":
-        assert routed_up != head_is_top, "#144 fixed?"
-        return
-
     # this should be consistent with the direction the edge is drawn
     assert routed_up == head_is_top, "heap/tail confusion"
 
