@@ -4,5 +4,5 @@ digraph Test {
     edge [dir = both, arrowhead = dot, arrowtail = curve, headlabel="Head", taillabel="Tail"];  
     A -> B;
     A -> C;
-    D -> C; 
+    D -> C;
 }
