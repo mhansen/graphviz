@@ -19,7 +19,6 @@
 #include <ctype.h>
 #include <sfdpgen/spring_electrical.h>
 #include <neatogen/overlap.h>
-#include <sfdpgen/uniform_stress.h>
 #include <sfdpgen/stress_model.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
@@ -87,12 +86,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
     int flag, i;
     int n_edge_label_nodes = 0, *edge_label_nodes = NULL;
     SparseMatrix D = NULL;
-    SparseMatrix A;
-
-    if (ctrl->method == METHOD_SPRING_MAXENT) /* maxent can work with distance matrix */
-	A = makeMatrix(g, &D);
-    else
-	A = makeMatrix(g, NULL);
+    SparseMatrix A = makeMatrix(g);
 
     if (ctrl->overlap >= 0) {
 	if (ctrl->edge_labeling_scheme > 0)
@@ -104,28 +98,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
 	sizes = NULL;
     pos = getPos(g);
 
-    switch (ctrl->method) {
-    case METHOD_SPRING_ELECTRICAL:
-    case METHOD_SPRING_MAXENT:
-	multilevel_spring_electrical_embedding(Ndim, A, D, ctrl, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
-	break;
-    case METHOD_UNIFORM_STRESS:
-	uniform_stress(Ndim, A, pos);
-	break;
-    case METHOD_STRESS:{
-	int maxit = 200;
-	double tol = 0.001;
-
-	if (!D){
-	    D = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);/* all distance 1 */
-	} else {
-	    D = SparseMatrix_symmetrize_nodiag(D);
-	}
-
-	stress_model(Ndim, D, &pos, TRUE, maxit, tol, &flag);
-	}
-	break;
-    }
+    multilevel_spring_electrical_embedding(Ndim, A, D, ctrl, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double *npos = pos + (Ndim * ND_id(n));
@@ -240,7 +213,6 @@ tuneControl (graph_t* g, spring_electrical_control ctrl)
     ctrl->multilevels = late_int(g, agfindgraphattr(g, "levels"), INT_MAX, 0);
     ctrl->smoothing = late_smooth(g, agfindgraphattr(g, "smoothing"), SMOOTHING_NONE);
     ctrl->tscheme = late_quadtree_scheme(g, agfindgraphattr(g, "quadtree"), QUAD_TREE_NORMAL);
-    ctrl->method = METHOD_SPRING_ELECTRICAL;
     ctrl->beautify_leaves = mapBool(agget(g, "beautify"), false);
     ctrl->do_shrinking = mapBool(agget(g, "overlap_shrink"), true) ? TRUE : FALSE;
     ctrl->rotation = late_double(g, agfindgraphattr(g, "rotation"), 0.0, -MAXDOUBLE);

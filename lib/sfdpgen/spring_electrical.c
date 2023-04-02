@@ -55,7 +55,6 @@ spring_electrical_control spring_electrical_control_new(){
   ctrl->overlap = 0;
   ctrl->do_shrinking = 1;
   ctrl->tscheme = QUAD_TREE_HYBRID;
-  ctrl->method = METHOD_SPRING_ELECTRICAL;
   ctrl->initial_scaling = -4;
   ctrl->rotation = 0.;
   ctrl->edge_labeling_scheme = 0;
@@ -74,10 +73,6 @@ static char* tschemes[] = {
   "NONE", "NORMAL", "FAST", "HYBRID"
 };
 
-static char* methods[] = {
-  "SPRING_ELECTRICAL", "SPRING_MAXENT", "STRESS_MAXENT", "STRESS_APPROX", "STRESS", "UNIFORM_STRESS", "FULL_STRESS", "NONE"
-};
-
 void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "spring_electrical_control:\n");
   fprintf (stderr, "  repulsive and attractive exponents: %.03f %.03f\n", ctrl->p, ctrl->q);
@@ -91,7 +86,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
            (int)ctrl->beautify_leaves, 0, ctrl->rotation);
   fprintf (stderr, "  smoothing %s overlap %d initial_scaling %.03f do_shrinking %d\n",
     smoothings[ctrl->smoothing], ctrl->overlap, ctrl->initial_scaling, ctrl->do_shrinking);
-  fprintf (stderr, "  octree scheme %s method %s\n", tschemes[ctrl->tscheme], methods[ctrl->method]);
+  fprintf (stderr, "  octree scheme %s\n", tschemes[ctrl->tscheme]);
   fprintf (stderr, "  edge_labeling_scheme %d\n", ctrl->edge_labeling_scheme);
 }
 
@@ -962,270 +957,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   free(distances);
 }
 
-static void scale_coord(int n, int dim, double *x, int *id, int *jd, double *d, double dj){
-  int i, j, k;
-  double w_ij, dist, s = 0, stop = 0, sbot = 0., nz = 0;
-
-  if (dj == 0.) return;
-  for (i = 0; i < n; i++){
-    for (j = id[i]; j < id[i+1]; j++){
-      if (jd[j] == i) continue;
-      dist = distance_cropped(x, dim, i, jd[j]);
-      if (d){
-	dj = d[j];
-      }
-      assert(dj > 0);
-      w_ij = 1./(dj*dj);
-      /* spring force */
-      for (k = 0; k < dim; k++){
-	stop += w_ij*dj*dist;
-	sbot += w_ij*dist*dist;
-      }
-      s += dist; nz++;
-    }
-  }
-  s = stop/sbot;
-  for (i = 0; i < n*dim; i++) x[i] *= s;
-  fprintf(stderr,"scaling factor = %f\n",s);
-}
-
-static double dmean_get(int n, int *id, double* d){
-  double dmean = 0;
-  int i, j;
-
-  if (!d) return 1.;
-  for (i = 0; i < n; i++){
-    for (j = id[i]; j < id[i+1]; j++){
-      dmean += d[j];
-    }
-  }
-  return dmean/((double) id[n]);
-}
-
-static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *x, double rho, int *flag){
-  /* x is a point to a 1D array, x[i*dim+j] gives the coordinate of the i-th node at dimension j.
-
-     Minimize \Sum_{(i,j)\in E} w_ij (||x_i-x_j||-d_ij)^2 - \rho \Sum_{(i,j)\NotIn E} Log ||x_i-x_j||
-
-     or
-
-     Minimize \Sum_{(i,j)\in E} w_ij (||x_i-x_j||-d_ij)^2 - \rho \Sum_{(i,j)\NotIn E} ||x_i-x_j||^p
-
-     The derivatives are
-
-     d E/d x_i = \Sum_{(i,j)\in E} w_ij (||x_i-x_j||-d_ij) (x_i-x_j)/||x_i-x_j|| - \rho \Sum_{(i,j)\NotIn E} (x_i-x_j)/||x_i-x_j||^2
-
-     or
-
-      d E/d x_i = \Sum_{(i,j)\in E} w_ij (||x_i-x_j||-d_ij) (x_i-x_j)/||x_i-x_j|| - \rho \Sum_{(i,j)\NotIn E} ||x_i-x_j||^(p-2) (x_i-x_j)
-
-      if D == NULL, unit weight assumed
-
-  */
-  SparseMatrix A = A0;
-  int m, n;
-  int i, j, k;
-  double p = ctrl->p, C = ctrl->C, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, w_ij, dj = 1.;
-  int *ia = NULL, *ja = NULL;
-  int *id = NULL, *jd = NULL;
-  double *d, dmean;
-  double *xold = NULL;
-  double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
-  int iter = 0;
-  int adaptive_cooling = ctrl->adaptive_cooling;
-  QuadTree qt = NULL;
-  int USE_QT = FALSE;
-  int nsuper = 0, nsupermax = 10;
-  double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0;
-  int max_qtree_level = 10;
-#ifdef DEBUG
-  double stress = 0;
-#endif
-
-  if (!A || maxiter <= 0) return;
-  m = A->m, n = A->n;
-  if (n <= 0 || dim <= 0) return;
-
-  if (ctrl->tscheme != QUAD_TREE_NONE && n >= ctrl->quadtree_size) {
-    USE_QT = TRUE;
-    center = gv_calloc(nsupermax * dim, sizeof(double));
-    supernode_wgts = gv_calloc(nsupermax, sizeof(double));
-    distances = gv_calloc(nsupermax, sizeof(double));
-  }
-
-  *flag = 0;
-  if (m != n) {
-    *flag = ERROR_NOT_SQUARE_MATRIX;
-    goto RETURN;
-  }
-
-
-  assert(A->format == FORMAT_CSR);
-  A = SparseMatrix_symmetrize(A, true);
-  ia = A->ia;
-  ja = A->ja;
-  if (D){
-    id = D->ia;
-    jd = D->ja;
-    d = (double*) D->a;
-  } else {
-    id = ia; jd = ja; d = NULL;
-  }
-  if (rho < 0) {
-    dmean = dmean_get(n, id, d);
-    rho = rho*(id[n]/((((double) n)*((double) n)) - id[n]))/pow(dmean, p+1);
-    fprintf(stderr,"dmean = %f, rho = %f\n",dmean, rho);
-  }
-
-  if (ctrl->random_start){
-    fprintf(stderr, "send random coordinates\n");
-    srand(ctrl->random_seed);
-    for (i = 0; i < dim*n; i++) x[i] = drand();
-  /* rescale x to give minimum stress:
-     Min \Sum_{(i,j)\in E} w_ij (s ||x_i-x_j||-d_ij)^2
-     thus
-     s = (\Sum_{(ij)\in E} w_ij d_ij ||x_i-x_j||)/(\Sum_{(i,j)\in E} w_ij ||x_i-x_j||^2)
-  */
-
-  }
-  scale_coord(n, dim, x, id, jd, d, dj);
-
-
-
-  if (C < 0) ctrl->C = C = 0.2;
-  if (p >= 0) ctrl->p = p = -1;
-
-#ifdef DEBUG_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout_0_%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
-  f = gv_calloc(dim, sizeof(double));
-  xold = gv_calloc(dim * n, sizeof(double));
-  do {
-    iter++;
-    memcpy(xold, x, sizeof(double)*dim*n);
-    Fnorm0 = Fnorm;
-    Fnorm = 0.;
-    nsuper_avg = 0;
-#ifdef DEBUG
-    stress = 0;
-#endif
-
-    if (USE_QT) {
-      qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
-    }
-
-    /*
-      .    d E/d x_i = \Sum_{(i,j)\in E} w_ij (||x_i-x_j||-d_ij) (x_i-x_j)/||x_i-x_j|| - \rho \Sum_{(i,j)\NotIn E} (x_i-x_j)/||x_i-x_j||^2
-      or
-      .    d E/d x_i = \Sum_{(i,j)\in E} w_ij (||x_i-x_j||-d_ij) (x_i-x_j)/||x_i-x_j|| - \rho \Sum_{(i,j)\NotIn E} ||x_i-x_j||^(p-2) (x_i-x_j)
-    */
-    for (i = 0; i < n; i++){
-      for (k = 0; k < dim; k++) f[k] = 0.;
-
-      /* spring (attractive or repulsive) force   w_ij (||x_i-x_j||-d_ij) (x_i-x_j)/||x_i-x_j|| */
-      for (j = id[i]; j < id[i+1]; j++){
-	if (jd[j] == i) continue;
-	dist = distance_cropped(x, dim, i, jd[j]);
-	if (d){
-	  dj = d[j];
-	}
-	assert(dj > 0);
-	/* spring force */
-	w_ij = 1./pow(dj, ctrl->q + 1);
-	for (k = 0; k < dim; k++){
-	  f[k] += -w_ij*(x[i*dim+k] - x[jd[j]*dim+k])*pow(dist - dj, ctrl->q)/dist;
-	}
-
-#ifdef DEBUG
-	w_ij = 1./(dj*dj);
-	for (k = 0; k < dim; k++){
-	  stress += (dist - dj)*(dist - dj)*w_ij;
-	}
-#endif
-
-
-	/* discount repulsive force between neighboring vertices which will be applied next, that way there is no
-	   repulsive forces between neighboring vertices */
-	for (k = 0; k < dim; k++){
-	  f[k] -= rho*(x[i*dim+k] - x[jd[j]*dim+k])/pow(dist, 1.- p);
-	}
-
-      }
-
-      /* repulsive force ||x_i-x_j||^(1 - p) (x_i - x_j) */
-      if (USE_QT){
-	QuadTree_get_supernodes(qt, ctrl->bh, &(x[dim*i]), i, &nsuper, &nsupermax,
-				&center, &supernode_wgts, &distances, &counts);
-	nsuper_avg += nsuper;
-	for (j = 0; j < nsuper; j++){
-	  dist = MAX(distances[j], MINDIST);
-	  for (k = 0; k < dim; k++){
-	    f[k] += rho*supernode_wgts[j]*(x[i*dim+k] - center[j*dim+k])/pow(dist, 1.- p);
-	  }
-	}
-      } else {
-	for (j = 0; j < n; j++){
-	  if (j == i) continue;
-	  dist = distance_cropped(x, dim, i, j);
-	  for (k = 0; k < dim; k++){
-	    f[k] += rho*(x[i*dim+k] - x[j*dim+k])/pow(dist, 1.- p);
-	  }
-	}
-      }
-	
-      /* normalize force */
-      F = 0.;
-      for (k = 0; k < dim; k++) F += f[k]*f[k];
-      F = sqrt(F);
-      Fnorm += F;
-
-      if (F > 0) for (k = 0; k < dim; k++) f[k] /= F;
-
-      for (k = 0; k < dim; k++) x[i*dim+k] += step*f[k];
-
-    }/* done vertex i */
-
-    if (qt) QuadTree_delete(qt);
-    nsuper_avg /= n;
-#ifdef DEBUG_PRINT
-    stress /= (double) A->nz;
-    if (Verbose) {
-      fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nsuper = %d nz = %d stress = %f                                  ",iter, step, Fnorm, (int) nsuper_avg,A->nz, stress);
-    }
-#else
-    (void)nsuper_avg;
-#endif
-
-    step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
-  } while (step > tol && iter < maxiter);
-
-#ifdef DEBUG_PRINT
-  if (Verbose) fputs("\n", stderr);
-#endif
-
-
-  if (ctrl->beautify_leaves) beautify_leaves(dim, A, x);
-
- RETURN:
-  free(xold);
-  if (A != A0) SparseMatrix_delete(A);
-  free(f);
-  free(center);
-  free(supernode_wgts);
-  free(distances);
-}
-
-
-
 void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D, spring_electrical_control ctrl, double *x, int *flag){
   /* x is a point to a 1D array, x[i*dim+j] gives the coordinate of the i-th node at dimension j. Same as the spring-electrical except we also
      introduce force due to spring length
@@ -1713,18 +1444,8 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
   if (n <= 0 || dim <= 0) return;
 
   if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
-    if (ctrl->method == METHOD_SPRING_MAXENT){
-      A = SparseMatrix_symmetrize_nodiag(A);
-      assert(D0);
-      D = SparseMatrix_symmetrize_nodiag(D);
-    } else {
-      A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
-    }
+    A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   } else {
-    if (ctrl->method == METHOD_SPRING_MAXENT){
-      assert(D0);
-      D = SparseMatrix_remove_diagonal(D);
-    }
     A = SparseMatrix_remove_diagonal(A);
   }
 
@@ -1776,42 +1497,15 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
       }
     }
 #endif
-    if (ctrl->method == METHOD_SPRING_ELECTRICAL){
-      if (ctrl->tscheme == QUAD_TREE_NONE){
-	spring_electrical_embedding_slow(dim, grid->A, ctrl, xc, flag);
-      } else if (ctrl->tscheme == QUAD_TREE_FAST || (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > QUAD_TREE_HYBRID_SIZE)){
-	if (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > 10 && Verbose){
-	  fprintf(stderr, "QUAD_TREE_HYBRID, size larger than %d, switch to fast quadtree", QUAD_TREE_HYBRID_SIZE);
-	}
-	spring_electrical_embedding_fast(dim, grid->A, ctrl, xc, flag);
-      } else {
-	spring_electrical_embedding(dim, grid->A, ctrl, xc, flag);
+    if (ctrl->tscheme == QUAD_TREE_NONE){
+      spring_electrical_embedding_slow(dim, grid->A, ctrl, xc, flag);
+    } else if (ctrl->tscheme == QUAD_TREE_FAST || (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > QUAD_TREE_HYBRID_SIZE)){
+      if (ctrl->tscheme == QUAD_TREE_HYBRID && grid->A->m > 10 && Verbose){
+	fprintf(stderr, "QUAD_TREE_HYBRID, size larger than %d, switch to fast quadtree", QUAD_TREE_HYBRID_SIZE);
       }
-    } else if (ctrl->method == METHOD_SPRING_MAXENT){
-      double rho = 0.05;
-
-      ctrl->step = 1;
-      ctrl->adaptive_cooling = TRUE;
-      if (Multilevel_is_coarsest(grid)){
-	ctrl->maxiter=500;
-	rho = 0.5;
-      } else {
-	ctrl->maxiter=100;
-      }
-
-      if (Multilevel_is_finest(grid)) {/* gradually reduce influence of entropy */
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho, flag);
-	ctrl->random_start = FALSE;
-	ctrl->step = .05;
-	ctrl->adaptive_cooling = FALSE;
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho/2, flag);
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho/8, flag);
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho/32, flag);
-      } else {
-	spring_maxent_embedding(dim, grid->A, grid->D, ctrl, xc, rho, flag);
-      }
+      spring_electrical_embedding_fast(dim, grid->A, ctrl, xc, flag);
     } else {
-      assert(0);
+      spring_electrical_embedding(dim, grid->A, ctrl, xc, flag);
     }
     if (Multilevel_is_finest(grid)) break;
     if (*flag) {

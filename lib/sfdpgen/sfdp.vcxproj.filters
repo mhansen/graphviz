@@ -38,8 +38,5 @@
     <ClCompile Include="stress_model.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="uniform_stress.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

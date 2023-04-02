@@ -11,7 +11,6 @@ add_library(sfdpgen STATIC
   sparse_solve.h
   spring_electrical.h
   stress_model.h
-  uniform_stress.h
 
   # Source files
   Multilevel.c
@@ -20,7 +19,6 @@ add_library(sfdpgen STATIC
   sparse_solve.c
   spring_electrical.c
   stress_model.c
-  uniform_stress.c
 )
 
 target_include_directories(sfdpgen PRIVATE
