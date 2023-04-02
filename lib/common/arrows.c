@@ -435,8 +435,8 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 	}
 	ps[endp] = ps[endp + 1] = s;
 	ps[endp + 2] = ps[endp + 3] = t;
-	spl->eflag = eflag, spl->ep = p;
-	spl->sflag = sflag, spl->sp = q;
+	spl->sflag = sflag, spl->sp = p;
+	spl->eflag = eflag, spl->ep = q;
 	return;
     }
     if (eflag) {

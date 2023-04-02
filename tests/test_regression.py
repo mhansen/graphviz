@@ -177,41 +177,42 @@ def test_144(testcase: str):
     out = dot("json", input)
     data = json.loads(out)
 
-    # find the two nodes, “A” and “B”
+    # find the nodes “A”, “B” and “C”
     A = [x for x in data["objects"] if x["name"] == "A"][0]
     B = [x for x in data["objects"] if x["name"] == "B"][0]
+    C = [x for x in data["objects"] if x["name"] == "C"][0]
 
-    # find the edge between them
-    edge = [
+    # find the straight A→B and the angular A→C edges
+    straight_edge = [
         x for x in data["edges"] if x["tail"] == A["_gvid"] and x["head"] == B["_gvid"]
     ][0]
+    angular_edge = [
+        x for x in data["edges"] if x["tail"] == A["_gvid"] and x["head"] == C["_gvid"]
+    ][0]
 
-    # the edge between them should have been routed vertically
-    points = edge["_draw_"][1]["points"]
-    xs = [x for x, _ in points]
+    # the A→B edge should have been routed vertically down
+    straight_points = straight_edge["_draw_"][1]["points"]
+    xs = [x for x, _ in straight_points]
+    ys = [y for _, y in straight_points]
     assert all(x == xs[0] for x in xs), "A->B not routed vertically"
+    assert ys == sorted(ys, reverse=True), "A->B is not routed down"
 
-    # determine whether it is routed down or up
-    ys = [y for _, y in points]
-    if ys == sorted(ys):
-        routed_up = True
-    elif list(reversed(ys)) == sorted(ys):
-        routed_up = False
-    else:
-        pytest.fail("A->B seems routed neither straight up nor down")
+    # determine Graphviz’ idea of head and tail ends
+    straight_head_point = straight_edge["_hdraw_"][3]["points"][0]
+    straight_tail_point = straight_edge["_tdraw_"][3]["points"][0]
+    assert straight_head_point[1] < straight_tail_point[1], "A->B head/tail confusion"
 
-    # determine Graphviz’ idea of which end is the head and which is the tail
-    head_point = edge["_hldraw_"][2]["pt"]
-    tail_point = edge["_tldraw_"][2]["pt"]
-    head_is_top = head_point[1] > tail_point[1]
+    # the A→C edge should have been routed in zigzag down and right
+    angular_points = angular_edge["_draw_"][1]["points"]
+    xs = [x for x, _ in angular_points]
+    ys = [y for _, y in angular_points]
+    assert xs == sorted(xs), "A->B is not routed down"
+    assert ys == sorted(ys, reverse=True), "A->B is not routed right"
 
-    # FIXME: remove when #144 is fixed
-    if testcase == "144_ortho.dot":
-        assert routed_up != head_is_top, "#144 fixed?"
-        return
-
-    # this should be consistent with the direction the edge is drawn
-    assert routed_up == head_is_top, "heap/tail confusion"
+    # determine Graphviz’ idea of head and tail ends
+    angular_head_point = angular_edge["_hdraw_"][3]["points"][0]
+    angular_tail_point = angular_edge["_tdraw_"][3]["points"][0]
+    assert angular_head_point[0] > angular_tail_point[0], "A->C head/tail confusion"
 
 
 def test_146():
