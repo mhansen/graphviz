@@ -16,6 +16,7 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/list.h>
 #include <common/boxes.h>
 #include <dotgen/dot.h>
 #include <limits.h>
@@ -62,6 +63,8 @@ typedef struct {
     boxf* Rank_box;
 } spline_info_t;
 
+DEFINE_LIST(points, pointf)
+
 static void adjustregularpath(path *, int, int);
 static Agedge_t *bot_bound(Agedge_t *, int);
 static bool pathscross(Agnode_t *, Agnode_t *, Agedge_t *, Agedge_t *);
@@ -81,7 +84,7 @@ static void recover_slack(Agedge_t *, path *);
 static void resize_vn(Agnode_t *, int, int, int);
 static void setflags(Agedge_t *, int, int, int);
 static int straight_len(Agnode_t *);
-static Agedge_t *straight_path(Agedge_t *, int, pointf *, int *);
+static Agedge_t *straight_path(Agedge_t*, int, points_t*);
 static Agedge_t *top_bound(Agedge_t *, int);
 
 #define GROWEDGES (edges = ALLOC (n_edges + CHUNK, edges, edge_t*))
@@ -976,19 +979,17 @@ static int edgelblcmpfn(edge_t** ptr0, edge_t** ptr1)
 	    sz0 = ED_label(e0)->dimen;
 	    sz1 = ED_label(e1)->dimen;
 	    if (sz0.x > sz1.x) return -1;
-	    else if (sz0.x < sz1.x) return 1;
-	    else if (sz0.y > sz1.y) return -1;
-	    else if (sz0.y < sz1.y) return 1;
-	    else return 0;
+	    if (sz0.x < sz1.x) return 1;
+	    if (sz0.y > sz1.y) return -1;
+	    if (sz0.y < sz1.y) return 1;
+	    return 0;
 	}
-	else
-	    return -1;
+	return -1;
     }
-    else if (ED_label(e1)) {
+    if (ED_label(e1)) {
  	return 1;
     }
-    else
- 	return 0;
+    return 0;
 }
 
 #define LBL_SPACE  6  /* space between labels, in points */
@@ -1690,9 +1691,7 @@ static bool leftOf(pointf p1, pointf p2, pointf p3) {
  * This is done because the usual code handles the interaction of
  * multiple edges better.
  */
-static int 
-makeLineEdge(graph_t* g, edge_t* fe, pointf* points, node_t** hp)
-{
+static int makeLineEdge(graph_t *g, edge_t *fe, points_t *points, node_t** hp) {
     int delr, pn;
     node_t* hn;
     node_t* tn;
@@ -1740,24 +1739,26 @@ makeLineEdge(graph_t* g, edge_t* fe, pointf* points, node_t** hp)
 	    lp.y += height/2.0;
 	}
 
-	points[1] = points[0] = startp;
-	points[2] = points[3] = points[4] = lp;
-	points[5] = points[6] = endp;
+	points_append(points, startp);
+	points_append(points, startp);
+	points_append(points, lp);
+	points_append(points, lp);
+	points_append(points, lp);
+	points_append(points, endp);
+	points_append(points, endp);
 	pn = 7;
     }
     else {
-	points[1] = points[0] = startp;
-	points[3] = points[2] = endp;
+	points_append(points, startp);
+	points_append(points, startp);
+	points_append(points, endp);
+	points_append(points, endp);
 	pn = 4;
     }
 
     return pn;
 }
 
-#define NUMPTS 2000
-
-/* make_regular_edge:
- */
 static void
 make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind, int cnt, int et)
 {
@@ -1767,26 +1768,17 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     edge_t *e, *fe, *le, *segfirst;
     pathend_t tend, hend;
     boxf b;
-    int sl, si, smode, i, j, dx, hackflag, longedge;
-    static pointf* pointfs;
-    static pointf* pointfs2;
-    static int numpts;
-    static int numpts2;
-    int pointn;
+    int sl, si, i, j, dx, longedge;
+    points_t pointfs = {0};
+    points_t pointfs2 = {0};
 
     fwdedgea.out.base.data = (Agrec_t*)&fwdedgeai;
     fwdedgeb.out.base.data = (Agrec_t*)&fwdedgebi;
     fwdedge.out.base.data = (Agrec_t*)&fwdedgei;
 
-    if (!pointfs) {
-	pointfs = gv_calloc(NUMPTS, sizeof(pointf));
-   	pointfs2 = gv_calloc(NUMPTS, sizeof(pointf));
-	numpts = NUMPTS;
-	numpts2 = NUMPTS;
-    }
     sl = 0;
     e = edges[ind];
-    hackflag = FALSE;
+    bool hackflag = false;
     if (abs(ND_rank(agtail(e)) - ND_rank(aghead(e))) > 1) {
 	fwdedgeai = *(Agedgeinfo_t*)e->base.data;
 	fwdedgea.out = *e;
@@ -1812,7 +1804,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	ED_head_port(&fwdedgea.out).p.x = ED_head_port(&fwdedgea.out).p.y = 0;
 	ED_to_orig(&fwdedgea.out) = e;
 	e = &fwdedgea.out;
-	hackflag = TRUE;
+	hackflag = true;
     } else {
 	if (ED_tree_index(e) & BWDEDGE) {
 	    MAKEFWDEDGE(&fwdedgea.out, e);
@@ -1823,12 +1815,11 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 
     /* compute the spline points for the edge */
 
-    if (et == EDGETYPE_LINE && (pointn = makeLineEdge (g, fe, pointfs, &hn))) {
+    if (et == EDGETYPE_LINE && makeLineEdge(g, fe, &pointfs, &hn)) {
     }
     else {
 	bool is_spline = et == EDGETYPE_SPLINE;
 	boxes_t boxes = {0};
-	pointn = 0;
 	segfirst = e;
 	tn = agtail(e);
 	hn = aghead(e);
@@ -1841,14 +1832,15 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	    tend.boxes[tend.boxn++] = b;
 	longedge = 0;
-	smode = FALSE, si = -1;
+	bool smode = false;
+	si = -1;
 	while (ND_node_type(hn) == VIRTUAL && !sinfo.splineMerge(hn)) {
 	    longedge = 1;
 	    boxes_append(&boxes, rank_box(sp, g, ND_rank(tn)));
 	    if (!smode
 	        && ((sl = straight_len(hn)) >=
 	    	((GD_has_labels(g->root) & EDGE_LABEL) ? 4 + 1 : 2 + 1))) {
-	        smode = TRUE;
+	        smode = true;
 	        si = 1, sl -= 2;
 	    }
 	    if (!smode || si > 0) {
@@ -1883,21 +1875,16 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    if (pn == 0) {
 	        free(ps);
 	        boxes_free(&boxes);
+	        points_free(&pointfs);
+	        points_free(&pointfs2);
 	        return;
 	    }
 	
-	    if (pointn + pn > numpts) {
-                /* This should be enough to include 3 extra points added by
-                 * straight_path below.
-                 */
-		numpts = 2*(pointn+pn); 
-		pointfs = RALLOC(numpts, pointfs, pointf);
-	    }
 	    for (i = 0; i < pn; i++) {
-		pointfs[pointn++] = ps[i];
+		points_append(&pointfs, ps[i]);
 	    }
 	    free(ps);
-	    e = straight_path(ND_out(hn).list[0], sl, pointfs, &pointn);
+	    e = straight_path(ND_out(hn).list[0], sl, &pointfs);
 	    recover_slack(segfirst, P);
 	    segfirst = e;
 	    tn = agtail(e);
@@ -1910,7 +1897,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	        tend.boxes[tend.boxn++] = b;
 	    P->start.theta = -M_PI / 2, P->start.constrained = true;
-	    smode = FALSE;
+	    smode = false;
 	}
 	boxes_append(&boxes, rank_box(sp, g, ND_rank(tn)));
 	b = hend.nb = maximal_bbox(g, sp, hn, e, NULL);
@@ -1941,14 +1928,12 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
         }
 	if (pn == 0) {
 	    free(ps);
+	    points_free(&pointfs);
+	    points_free(&pointfs2);
 	    return;
 	}
-	if (pointn + pn > numpts) {
-	    numpts = 2*(pointn+pn); 
-	    pointfs = RALLOC(numpts, pointfs, pointf);
-	}
 	for (i = 0; i < pn; i++) {
-	    pointfs[pointn++] = ps[i];
+	    points_append(&pointfs, ps[i]);
 	}
 	free(ps);
 	recover_slack(segfirst, P);
@@ -1958,32 +1943,36 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     /* make copies of the spline points, one per multi-edge */
 
     if (cnt == 1) {
-	clip_and_install(fe, hn, pointfs, pointn, &sinfo);
+	clip_and_install(fe, hn, points_at(&pointfs, 0), (int)points_size(&pointfs),
+	                 &sinfo);
+	points_free(&pointfs);
+	points_free(&pointfs2);
 	return;
     }
     dx = sp->Multisep * (cnt - 1) / 2;
-    for (i = 1; i < pointn - 1; i++)
-	pointfs[i].x -= dx;
+    for (size_t k = 1; k + 1 < points_size(&pointfs); k++)
+	points_at(&pointfs, k)->x -= dx;
 
-    if (numpts > numpts2) {
-	numpts2 = numpts; 
-	pointfs2 = RALLOC(numpts2, pointfs2, pointf);
-    }
-    for (i = 0; i < pointn; i++)
-	pointfs2[i] = pointfs[i];
-    clip_and_install(fe, hn, pointfs2, pointn, &sinfo);
+    for (size_t k = 0; k < points_size(&pointfs); k++)
+	points_append(&pointfs2, points_get(&pointfs, k));
+    clip_and_install(fe, hn, points_at(&pointfs2, 0),
+                     (int)points_size(&pointfs2), &sinfo);
     for (j = 1; j < cnt; j++) {
 	e = edges[ind + j];
 	if (ED_tree_index(e) & BWDEDGE) {
 	    MAKEFWDEDGE(&fwdedge.out, e);
 	    e = &fwdedge.out;
 	}
-	for (i = 1; i < pointn - 1; i++)
-	    pointfs[i].x += sp->Multisep;
-	for (i = 0; i < pointn; i++)
-	    pointfs2[i] = pointfs[i];
-	clip_and_install(e, aghead(e), pointfs2, pointn, &sinfo);
+	for (size_t k = 1; k + 1 < points_size(&pointfs); k++)
+	    points_at(&pointfs, k)->x += sp->Multisep;
+	points_clear(&pointfs2);
+	for (size_t k = 0; k < points_size(&pointfs); k++)
+	    points_append(&pointfs2, points_get(&pointfs, k));
+	clip_and_install(e, aghead(e), points_at(&pointfs2, 0),
+	                 (int)points_size(&pointfs2), &sinfo);
     }
+    points_free(&pointfs);
+    points_free(&pointfs2);
 }
 
 /* regular edges */
@@ -2292,16 +2281,14 @@ static int straight_len(node_t * n)
     return cnt;
 }
 
-static edge_t *straight_path(edge_t * e, int cnt, pointf * plist, int *np)
-{
-    int n = *np;
+static edge_t *straight_path(edge_t *e, int cnt, points_t *plist) {
     edge_t *f = e;
 
     while (cnt--)
 	f = ND_out(aghead(f)).list[0];
-    plist[(*np)++] = plist[n - 1];
-    plist[(*np)++] = plist[n - 1];
-    plist[(*np)] = ND_coord(agtail(f));  /* will be overwritten by next spline */
+    assert(!points_is_empty(plist));
+    points_append(plist, points_get(plist, points_size(plist) - 1));
+    points_append(plist, points_get(plist, points_size(plist) - 1));
 
     return f;
 }

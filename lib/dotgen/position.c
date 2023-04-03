@@ -20,6 +20,7 @@
 #include <cgraph/alloc.h>
 #include <dotgen/dot.h>
 #include <dotgen/aspect.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -71,7 +72,8 @@ largeMinlen (double l)
 static void
 connectGraph (graph_t* g)
 {
-    int i, j, r, found;
+    int i, j, r;
+    bool found;
     node_t* tp;
     node_t* hp;
     node_t* sn;
@@ -80,14 +82,14 @@ connectGraph (graph_t* g)
 
     for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
 	rp = GD_rank(g)+r;
-	found =FALSE;
+	found = false;
         tp = NULL;
 	for (i = 0; i < rp->n; i++) {
 	    tp = rp->v[i];
 	    if (ND_save_out(tp).list) {
         	for (j = 0; (e = ND_save_out(tp).list[j]); j++) {
-		    if ((ND_rank(aghead(e)) > r) || (ND_rank(agtail(e)) > r)) {
-			found = TRUE;
+		    if (ND_rank(aghead(e)) > r || ND_rank(agtail(e)) > r) {
+			found = true;
 			break;
 		    }
         	}
@@ -95,8 +97,8 @@ connectGraph (graph_t* g)
 	    }
 	    if (ND_save_in(tp).list) {
         	for (j = 0; (e = ND_save_in(tp).list[j]); j++) {
-		    if ((ND_rank(agtail(e)) > r) || (ND_rank(aghead(e)) > r)) {
-			found = TRUE;
+		    if (ND_rank(agtail(e)) > r || ND_rank(aghead(e)) > r) {
+			found = true;
 			break;
 		    }
         	}
@@ -151,22 +153,20 @@ static int nsiter2(graph_t * g)
     return maxiter;
 }
 
-static int go(node_t * u, node_t * v)
-{
+static bool go(node_t *u, node_t *v) {
     int i;
     edge_t *e;
 
     if (u == v)
-	return TRUE;
+	return true;
     for (i = 0; (e = ND_out(u).list[i]); i++) {
 	if (go(aghead(e), v))
-	    return TRUE;
+	    return true;
     }
-    return FALSE;
+    return false;
 }
 
-static int canreach(node_t * u, node_t * v)
-{
+static bool canreach(node_t *u, node_t *v) {
     return go(u, v);
 }
 
@@ -270,7 +270,7 @@ make_LR_constraints(graph_t * g)
 		    e0 = e1;
 		    e1 = ff;
 		}
-		m0 = (ED_minlen(e) * GD_nodesep(g)) / 2;
+		m0 = ED_minlen(e) * GD_nodesep(g) / 2;
 		m1 = m0 + ND_rw(aghead(e0)) + ND_lw(agtail(e0));
 		/* these guards are needed because the flat edges
 		 * work very poorly with cluster layout */
@@ -366,18 +366,17 @@ static void contain_clustnodes(graph_t * g)
 	contain_clustnodes(GD_clust(g)[c]);
 }
 
-static int vnode_not_related_to(graph_t * g, node_t * v)
-{
+static bool vnode_not_related_to(graph_t *g, node_t *v) {
     edge_t *e;
 
     if (ND_node_type(v) != VIRTUAL)
-	return FALSE;
+	return false;
     for (e = ND_save_out(v).list[0]; ED_to_orig(e); e = ED_to_orig(e));
     if (agcontains(g, agtail(e)))
-	return FALSE;
+	return false;
     if (agcontains(g, aghead(e)))
-	return FALSE;
-    return TRUE;
+	return false;
+    return true;
 }
 
 /* keepout_othernodes:
@@ -405,7 +404,7 @@ static void keepout_othernodes(graph_t * g)
 	for (i = ND_order(v) - 1; i >= 0; i--) {
 	    u = GD_rank(dot_root(g))[r].v[i];
 	    /* can't use "is_a_vnode_of" because elists are swapped */
-	    if ((ND_node_type(u) == NORMAL) || vnode_not_related_to(g, u)) {
+	    if (ND_node_type(u) == NORMAL || vnode_not_related_to(g, u)) {
 		make_aux_edge(u, GD_ln(g), margin + ND_rw(u), 0);
 		break;
 	    }
@@ -413,7 +412,7 @@ static void keepout_othernodes(graph_t * g)
 	for (i = ND_order(v) + GD_rank(g)[r].n; i < GD_rank(dot_root(g))[r].n;
 	     i++) {
 	    u = GD_rank(dot_root(g))[r].v[i];
-	    if ((ND_node_type(u) == NORMAL) || vnode_not_related_to(g, u)) {
+	    if (ND_node_type(u) == NORMAL || vnode_not_related_to(g, u)) {
 		make_aux_edge(GD_rn(g), u, margin + ND_lw(u), 0);
 		break;
 	    }
@@ -624,7 +623,7 @@ static void adjustSimple(graph_t * g, int delta, int margin_total)
 		ND_coord(rank[r].v[0]).y += deltop;
 	}
     }
-    GD_ht2(g) += (delta - bottom);
+    GD_ht2(g) += delta - bottom;
     GD_ht1(g) += bottom;
 }
 
@@ -655,15 +654,15 @@ static void adjustRanks(graph_t * g, int margin_total)
 	graph_t *subg = GD_clust(g)[c];
 	adjustRanks(subg, margin+margin_total);
 	if (GD_maxrank(subg) == GD_maxrank(g))
-	    ht1 = MAX(ht1, GD_ht1(subg) + margin);
+	    ht1 = fmax(ht1, GD_ht1(subg) + margin);
 	if (GD_minrank(subg) == GD_minrank(g))
-	    ht2 = MAX(ht2, GD_ht2(subg) + margin);
+	    ht2 = fmax(ht2, GD_ht2(subg) + margin);
     }
 
     GD_ht1(g) = ht1;
     GD_ht2(g) = ht2;
 
-    if ((g != dot_root(g)) && GD_label(g)) {
+    if (g != dot_root(g) && GD_label(g)) {
 	lht = MAX(GD_border(g)[LEFT_IX].y, GD_border(g)[RIGHT_IX].y);
 	maxr = GD_maxrank(g);
 	minr = GD_minrank(g);
@@ -676,8 +675,8 @@ static void adjustRanks(graph_t * g, int margin_total)
 
     /* update the global ranks */
     if (g != dot_root(g)) {
-	rank[GD_minrank(g)].ht2 = MAX(rank[GD_minrank(g)].ht2, GD_ht2(g));
-	rank[GD_maxrank(g)].ht1 = MAX(rank[GD_maxrank(g)].ht1, GD_ht1(g));
+	rank[GD_minrank(g)].ht2 = fmax(rank[GD_minrank(g)].ht2, GD_ht2(g));
+	rank[GD_maxrank(g)].ht1 = fmax(rank[GD_maxrank(g)].ht1, GD_ht1(g));
     }
 }
 
@@ -761,7 +760,7 @@ static void set_ycoords(graph_t * g)
 		for (j = 0; (e = ND_other(n).list[j]); j++) {
 		    if (agtail(e) == aghead(e)) {
 			if (ED_label(e))
-			    ht2 = MAX(ht2, ED_label(e)->dimen.y / 2);
+			    ht2 = fmax(ht2, ED_label(e)->dimen.y / 2);
 		    }
 		}
 
@@ -775,9 +774,9 @@ static void set_ycoords(graph_t * g)
 	    if ((clust = ND_clust(n))) {
 		int yoff = (clust == g ? 0 : late_int (clust, G_margin, CL_OFFSET, 0));
 		if (ND_rank(n) == GD_minrank(clust))
-		    GD_ht2(clust) = MAX(GD_ht2(clust), ht2 + yoff);
+		    GD_ht2(clust) = fmax(GD_ht2(clust), ht2 + yoff);
 		if (ND_rank(n) == GD_maxrank(clust))
-		    GD_ht1(clust) = MAX(GD_ht1(clust), ht2 + yoff);
+		    GD_ht1(clust) = fmax(GD_ht1(clust), ht2 + yoff);
 	    }
 	}
     }
@@ -792,7 +791,7 @@ static void set_ycoords(graph_t * g)
     while (--r >= GD_minrank(g)) {
 	d0 = rank[r + 1].pht2 + rank[r].pht1 + GD_ranksep(g);	/* prim node sep */
 	d1 = rank[r + 1].ht2 + rank[r].ht1 + CL_OFFSET;	/* cluster sep */
-	delta = MAX(d0, d1);
+	delta = fmax(d0, d1);
 	if (rank[r].n > 0)	/* this may reflect some problem */
 		(ND_coord(rank[r].v[0])).y = (ND_coord(rank[r + 1].v[0])).y + delta;
 #ifdef DEBUG
@@ -800,7 +799,7 @@ static void set_ycoords(graph_t * g)
 	    fprintf(stderr, "dot set_ycoords: rank %d is empty\n",
 		    rank[r].n);
 #endif
-	maxht = MAX(maxht, delta);
+	maxht = fmax(maxht, delta);
     }
 
     /* If there are cluster labels and the drawing is rotated, we need special processing to
@@ -817,7 +816,7 @@ static void set_ycoords(graph_t * g)
 	    while (--r >= GD_minrank(g)) {
 		d1 = (ND_coord(rank[r].v[0])).y;
 		delta = d1 - d0;
-		maxht = MAX(maxht, delta);
+		maxht = fmax(maxht, delta);
 		d0 = d1;
 	    }
 	}
@@ -852,8 +851,8 @@ static void dot_compute_bb(graph_t * g, graph_t * root)
     pointf LL, UR;
 
     if (g == dot_root(g)) {
-	LL.x = (double)(INT_MAX);
-	UR.x = (double)(-INT_MAX);
+	LL.x = (double)INT_MAX;
+	UR.x = (double)-INT_MAX;
 	for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
 	    int rnkn = GD_rank(g)[r].n;
 	    if (rnkn == 0)
@@ -948,11 +947,11 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 {
     double xf = 0.0, yf = 0.0, actual, desired;
     node_t *n;
-    bool scale_it, filled;
+    bool filled;
     point sz;
 
     rec_bb(g, g);
-    if ((GD_maxrank(g) > 0) && (GD_drawing(g)->ratio_kind)) {
+    if (GD_maxrank(g) > 0 && GD_drawing(g)->ratio_kind) {
 	sz.x = GD_bb(g).UR.x - GD_bb(g).LL.x;
 	sz.y = GD_bb(g).UR.y - GD_bb(g).LL.y;	/* normalize */
 	if (GD_flip(g)) {
@@ -960,19 +959,19 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 	    sz.x = sz.y;
 	    sz.y = t;
 	}
-	scale_it = TRUE;
+	bool scale_it = true;
 	if (GD_drawing(g)->ratio_kind == R_AUTO)
 	    filled = idealsize(g, .5);
 	else
-	    filled = (GD_drawing(g)->ratio_kind == R_FILL);
+	    filled = GD_drawing(g)->ratio_kind == R_FILL;
 	if (filled) {
 	    /* fill is weird because both X and Y can stretch */
 	    if (GD_drawing(g)->size.x <= 0)
-		scale_it = FALSE;
+		scale_it = false;
 	    else {
 		xf = (double) GD_drawing(g)->size.x / (double) sz.x;
 		yf = (double) GD_drawing(g)->size.y / (double) sz.y;
-		if ((xf < 1.0) || (yf < 1.0)) {
+		if (xf < 1.0 || yf < 1.0) {
 		    if (xf < yf) {
 			yf = yf / xf;
 			xf = 1.0;
@@ -984,7 +983,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 	    }
 	} else if (GD_drawing(g)->ratio_kind == R_EXPAND) {
 	    if (GD_drawing(g)->size.x <= 0)
-		scale_it = FALSE;
+		scale_it = false;
 	    else {
 		xf = (double) GD_drawing(g)->size.x /
 		    (double) GD_bb(g).UR.x;
@@ -994,7 +993,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 		    double scale = MIN(xf, yf);
 		    xf = yf = scale;
 		} else
-		    scale_it = FALSE;
+		    scale_it = false;
 	    }
 	} else if (GD_drawing(g)->ratio_kind == R_VALUE) {
 	    desired = GD_drawing(g)->ratio;
@@ -1007,7 +1006,7 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 		yf = 1.0;
 	    }
 	} else
-	    scale_it = FALSE;
+	    scale_it = false;
 	if (scale_it) {
 	    if (GD_flip(g)) {
 		double t = xf;
@@ -1057,14 +1056,13 @@ static void make_leafslots(graph_t * g)
 
 int ports_eq(edge_t * e, edge_t * f)
 {
-    return ((ED_head_port(e).defined == ED_head_port(f).defined)
-	    && (((ED_head_port(e).p.x == ED_head_port(f).p.x) &&
-		 (ED_head_port(e).p.y == ED_head_port(f).p.y))
+    return ED_head_port(e).defined == ED_head_port(f).defined
+	    && ((ED_head_port(e).p.x == ED_head_port(f).p.x &&
+		 ED_head_port(e).p.y == ED_head_port(f).p.y)
 		|| !ED_head_port(e).defined)
-	    && (((ED_tail_port(e).p.x == ED_tail_port(f).p.x) &&
-		 (ED_tail_port(e).p.y == ED_tail_port(f).p.y))
-		|| !ED_tail_port(e).defined)
-	);
+	    && ((ED_tail_port(e).p.x == ED_tail_port(f).p.x &&
+		 ED_tail_port(e).p.y == ED_tail_port(f).p.y)
+		|| !ED_tail_port(e).defined);
 }
 
 static void expand_leaves(graph_t * g)
@@ -1116,7 +1114,7 @@ static void make_lrvn(graph_t * g)
     rn = virtual_node(dot_root(g));
     ND_node_type(rn) = SLACKNODE;
 
-    if (GD_label(g) && (g != dot_root(g)) && !GD_flip(agroot(g))) {
+    if (GD_label(g) && g != dot_root(g) && !GD_flip(agroot(g))) {
 	int w = MAX(GD_border(g)[BOTTOM_IX].x, GD_border(g)[TOP_IX].x);
 	make_aux_edge(ln, rn, w, 0);
     }
@@ -1175,16 +1173,16 @@ static bool idealsize(graph_t * g, double minallowed)
     b.y = GD_bb(g).UR.y;
     xf = relpage.x / b.x;
     yf = relpage.y / b.y;
-    if ((xf >= 1.0) && (yf >= 1.0))
+    if (xf >= 1.0 && yf >= 1.0)
 	return false;		/* fits on one page */
 
     f = MIN(xf, yf);
     xf = yf = MAX(f, minallowed);
 
-    R = ceil((xf * b.x) / relpage.x);
-    xf = ((R * relpage.x) / b.x);
-    R = ceil((yf * b.y) / relpage.y);
-    yf = ((R * relpage.y) / b.y);
+    R = ceil(xf * b.x / relpage.x);
+    xf = R * relpage.x / b.x;
+    R = ceil(yf * b.y / relpage.y);
+    yf = R * relpage.y / b.y;
     GD_drawing(g)->size.x = b.x * xf;
     GD_drawing(g)->size.y = b.y * yf;
     return true;

@@ -171,24 +171,24 @@ SparseMatrix SparseMatrix_symmetrize_nodiag(SparseMatrix A){
   return SparseMatrix_remove_diagonal(A);
 }
 
-int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only){
-  if (!A) return FALSE;
+bool SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only) {
+  if (!A) return false;
 
   /* assume no repeated entries! */
   SparseMatrix B;
   int *ia, *ja, *ib, *jb, type, m;
   int *mask;
-  int res = FALSE;
+  bool res = false;
   int i, j;
   assert(A->format == FORMAT_CSR);/* only implemented for CSR right now */
 
-  if (SparseMatrix_known_symmetric(A)) return TRUE;
-  if (test_pattern_symmetry_only && SparseMatrix_known_strucural_symmetric(A)) return TRUE;
+  if (SparseMatrix_known_symmetric(A)) return true;
+  if (test_pattern_symmetry_only && SparseMatrix_known_strucural_symmetric(A)) return true;
 
-  if (A->m != A->n) return FALSE;
+  if (A->m != A->n) return false;
 
   B = SparseMatrix_transpose(A);
-  if (!B) return FALSE;
+  if (!B) return false;
 
   ia = A->ia;
   ja = A->ja;
@@ -218,7 +218,7 @@ int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only){
 	if (fabs(b[j] - a[mask[jb[j]]]) > SYMMETRY_EPSILON) goto RETURN;
       }
     }
-    res = TRUE;
+    res = true;
     break;
   }
   case MATRIX_TYPE_COMPLEX:{
@@ -237,7 +237,7 @@ int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only){
 	if (fabs(b[2*j+1] - a[2*mask[jb[j]]+1]) > SYMMETRY_EPSILON) goto RETURN;
       }
     }
-    res = TRUE;
+    res = true;
     break;
   }
   case MATRIX_TYPE_INTEGER:{
@@ -254,7 +254,7 @@ int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only){
 	if (bi[j] != ai[mask[jb[j]]]) goto RETURN;
       }
     }
-    res = TRUE;
+    res = true;
     break;
   }
   case MATRIX_TYPE_PATTERN:
@@ -266,7 +266,7 @@ int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only){
 	if (mask[jb[j]] < ia[i]) goto RETURN;
       }
     }
-    res = TRUE;
+    res = true;
     break;
   case MATRIX_TYPE_UNKNOWN:
     goto RETURN;
