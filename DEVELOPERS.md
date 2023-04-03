@@ -251,6 +251,8 @@ for the project. We do not have the resources to coordinate with all these
 people prior to a release, but this information is here to give you an idea of
 who will be affected by a new Graphviz release.
 
+* [Alpine](https://git.alpinelinux.org/aports/tree/main/graphviz),
+  Natanael Copa ncopa@alpinelinux.org
 * [Chocolatey](https://chocolatey.org/packages/Graphviz/),
   [@RedBaron2 on Github](https://github.com/RedBaron2)
 * [Debian](https://packages.debian.org/sid/graphviz),

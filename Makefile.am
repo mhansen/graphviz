@@ -27,7 +27,7 @@ $(top_builddir)/graphviz_version.h: config.h
 	$(EGREP) 'PACKAGE|VERSION|GVPLUGIN' config.h >> $(top_builddir)/graphviz_version.h
 
 EXTRA_DIST = graphviz.spec \
-	autogen.sh config/depcomp config/config.rpath \
+	config/depcomp config/config.rpath \
 	builddate.h \
 	m4/README m4/lib-ld.m4 m4/lib-link.m4 m4/lib-prefix.m4 \
 	Doxyfile.in Doxyfile \
@@ -55,13 +55,5 @@ deb: dist
 .PHONY: pkg
 pkg: dist
 	tar xzf graphviz-$(VERSION).tar.gz && make -C graphviz-$(VERSION)/macosx/build && mv graphviz-$(VERSION)/macosx/build/graphviz-*.pkg .
-
-# codespell is a python script:
-#      https://github.com/lucasdemarchi/codespell
-# install with:
-#      pip install codespell
-.PHONY: spellcheck
-spellcheck:
-	codespell -d -q 3 --skip="*.po,*.ts"
 
 DISTCLEANFILES = config.cache builddate.h FEATURE/* graphviz-$(VERSION)*
